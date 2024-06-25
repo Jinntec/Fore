@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
 
-    <title>Instance Generator</title>
+    <title>Data Generator</title>
 
     <link href="../../resources/fore.css" rel="stylesheet">
     <link href="../../resources/vars.css" rel="stylesheet">
@@ -19,31 +19,20 @@
 </head>
 <body>
 <div class="wrapper">
-    <h1>Instance data generator</h1>
+    <h1>Data data generator</h1>
     <p>To customize the data to be generated edit 'template.xml' file alongside this page.</p>
     <fx-fore>
         <fx-model>
-            <fx-instance>
                 <data>
                     <counter>0</counter>
                     <n>10</n>
                 </data>
-            </fx-instance>
 
-            <fx-instance id="generated">
-                <data>
+                <data id="generated">
                 </data>
-            </fx-instance>
 
-            <fx-instance id="template" src="template.xml">
-                <!--<fx-instance id="template">
-                    <data>
-                        <item>
-                            <foo/>
-                            <bar></bar>
-                        </item>
-                    </data>-->
-            </fx-instance>
+            <data id="template" data-src="template.xml">
+            </data>
             <fx-function signature="random() as xs:string" type="text/xpath">
                 string-join(random-number-generator())
             </fx-function>
@@ -80,7 +69,7 @@
 
         <p>Total:{count(data('generated')/*)}</p>
         <p>Count:{counter} of {n}</p>
-        <h2>Generated instance data</h2>
+        <h2>Generated data</h2>
         <textarea>
                 {log('generated')}
         </textarea>

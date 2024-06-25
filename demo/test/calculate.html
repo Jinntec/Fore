@@ -7,11 +7,12 @@
     <title>invoice</title>
 
     <style>
-        body, .wrapper{
-            margin:0;
-            padding:0;
+        body, .wrapper {
+            margin: 0;
+            padding: 0;
         }
-        .wrapper{
+
+        .wrapper {
             width: 21cm;
             height: 29.7cm;
             background: lightyellow;
@@ -22,19 +23,18 @@
 <div class="wrapper">
     <fx-fore>
         <fx-model>
-            <fx-instance id="default">
-                <data>
-                    <prerequisite name="targetServer" description="checking target server...">checking</prerequisite>
-                    <prerequisite name="github" description="checking github...">checking</prerequisite>
-                    <prerequisite name="airtable" description="checking airtable...">checking</prerequisite>
-                    <prerequisite name="filesystem" description="checking the filesystem...">checking</prerequisite>
-                    <prerequisite name="tuttle" description="checking Tuttle...">checking</prerequisite>
-                    <prerequisite name="proceed" description="checking if all prerequisites are matched...">checking</prerequisite>
-                </data>
-            </fx-instance>
+            <data>
+                <prerequisite name="targetServer" description="checking target server...">checking</prerequisite>
+                <prerequisite name="github" description="checking github...">checking</prerequisite>
+                <prerequisite name="airtable" description="checking airtable...">checking</prerequisite>
+                <prerequisite name="filesystem" description="checking the filesystem...">checking</prerequisite>
+                <prerequisite name="tuttle" description="checking Tuttle...">checking</prerequisite>
+                <prerequisite name="proceed" description="checking if all prerequisites are matched...">checking
+                </prerequisite>
+            </data>
 
             <fx-bind ref="prerequisite[5]" calculate="context()/prerequisite[1]"></fx-bind>
-<!--            <fx-bind ref="prerequisite[5]" calculate="'foo'"></fx-bind>-->
+            <!--            <fx-bind ref="prerequisite[5]" calculate="'foo'"></fx-bind>-->
 
         </fx-model>
 

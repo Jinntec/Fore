@@ -112,7 +112,7 @@
             const wc = document.querySelector('wc-codemirror');
             const val = wc.value;
             console.log('val ', val);
-            const inst = f.getModel().getdata('default').instanceData.outerHTML;
+            const inst = f.getModel().getdata('default').data.outerHTML;
             wc.setValue(inst);
             wc.editor.refresh();
         });

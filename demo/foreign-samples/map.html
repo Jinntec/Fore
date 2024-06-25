@@ -18,7 +18,7 @@
     </style>
 
     <model xmlns="http://www.w3.org/2002/xforms">
-        <instance id="map">
+        <data id="map">
             <map xmlns="">
                 <zoom>10</zoom>
                 <lasty>22058667</lasty><lastx>34477602</lastx>
@@ -43,7 +43,7 @@
                     <move><x/><y/></move>
                 </mouse>
             </map>
-        </instance>
+        </data>
         <bind ref="scale" calculate="power(2, 26 - ../zoom)"/>
         <bind ref="maxpos" calculate="power(2, 26)"/>
         <bind ref="posx" calculate="(../lastx - (../mouse/move/x * (../scale div ../tilesize))) mod ../maxpos"/>

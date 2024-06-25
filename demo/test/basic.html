@@ -6,13 +6,13 @@
 
     <title>Custom inline functions</title>
 
-<!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+    <!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
 
     <link href="../resources/demo.css" rel="stylesheet">
     <script type="module" src="./codemirror/jinn-codemirror.js"></script>
-	    <script type="module" src="./demo.js"></script>
+    <script type="module" src="./demo.js"></script>
     <style>
-        fx-control{
+        fx-control {
             width: 100%;
         }
     </style>
@@ -27,41 +27,35 @@
             <fx-fore>
 
                 <fx-model id="model1">
-                    <fx-instance>
-                        <data>
-                            <fx-fore>
-                                <model>
-                                    <instance>
-                                        <data>
-                                            <param1></param1>
-                                            <param2></param2>
-                                        </data>
-                                    </instance>
-                                </model>
+                    <data>
+                        <fx-fore>
+                            <model>
+                                <data>
+                                    <param1></param1>
+                                    <param2></param2>
+                                </data>
+                            </model>
 
-                                <action event="customTarget" target="eventTarget">
-                                    <setvalue ref="param1" value="event('param1')"></setvalue>
-                                    <setvalue ref="param2" value="event('param2')"></setvalue>
-                                </action>
+                            <action event="customTarget" target="eventTarget">
+                                <setvalue ref="param1" value="event('param1')"></setvalue>
+                                <setvalue ref="param2" value="event('param2')"></setvalue>
+                            </action>
 
-                                <div id="eventTarget"></div>
-                                <h3>{param1}</h3>
-                                <h3>{param2}</h3>
-                            </fx-fore>
-                        </data>
-                    </fx-instance>
-                    <fx-instance id="converted">
-                        <data></data>
-                    </fx-instance>
+                            <div id="eventTarget"></div>
+                            <h3>{param1}</h3>
+                            <h3>{param2}</h3>
+                        </fx-fore>
+                    </data>
+                    <data id="converted"></data>
 
                     <fx-function
-                        signature="convert($element as element()) as element()*"
-                        type="text/xquf">
-					  copy $xml := $element modify (
-					  for $ref in $xml/main/ref
-					  	return replace node $ref/text() with $xml/references/ref[@id=$ref/@link]/text()
-					  ) return $xml
-					</fx-function>
+                            signature="convert($element as element()) as element()*"
+                            type="text/xquf">
+                        copy $xml := $element modify (
+                        for $ref in $xml/main/ref
+                        return replace node $ref/text() with $xml/references/ref[@id=$ref/@link]/text()
+                        ) return $xml
+                    </fx-function>
                 </fx-model>
                 <fx-group>
 
@@ -70,17 +64,17 @@
                         <jinn-codemirror mode="xml" class="widget"></jinn-codemirror>
                     </fx-control>
 
-<!--
-                    <fx-trigger>
-                        <button>convert</button>
-                        <fx-replace ref="data('converted')/*[1]" with="convert(data('default')/fx-fore)"></fx-replace>
-                    </fx-trigger>
--->
+                    <!--
+                                        <fx-trigger>
+                                            <button>convert</button>
+                                            <fx-replace ref="data('converted')/*[1]" with="convert(data('default')/fx-fore)"></fx-replace>
+                                        </fx-trigger>
+                    -->
 
 
                     <fx-control ref="convert(data('default')/fx-fore)" as="node">
                         <h3>The transformed XML:</h3>
-                        <jinn-codemirror mode="xml" readonly="readonly" class="widget" ></jinn-codemirror>
+                        <jinn-codemirror mode="xml" readonly="readonly" class="widget"></jinn-codemirror>
                     </fx-control>
 
 

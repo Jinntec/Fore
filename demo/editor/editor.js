@@ -79,7 +79,7 @@
     console.log('dropped element', droppedElement);
 
     const elements = document.getElementById('elements');
-    const templateForElement = elements.instanceData.querySelector(`fx-${elementName}`);
+    const templateForElement = elements.data.querySelector(`fx-${elementName}`);
     console.log('found template element', templateForElement);
 
 

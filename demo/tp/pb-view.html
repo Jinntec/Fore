@@ -16,7 +16,7 @@
         }
 
         .wrap {
-            width:92%;
+            width: 92%;
 
             padding-left: 5rem;
         }
@@ -69,12 +69,12 @@
         fx-inspector {
             position: relative;
             height: 100vh;
-            width:400px;
+            width: 400px;
             /*top: 0;*/
 
         }
 
-        fx-fore{
+        fx-fore {
             display: grid;
             grid-template-columns: auto 400px;
         }
@@ -89,23 +89,20 @@
 <body>
 <fx-fore>
     <fx-model>
-        <fx-instance>
-            <data>
-                <endpoint>http://localhost:8080/exist/apps/tei-publisher</endpoint>
-                <feature name="highlight2">.tei-foreign,pb-highlight,pb-popover</feature>
-                <feature name="norm2">.choice,.choice-alternate,br</feature>
-                <!--
-                todo: investigate. Using 'wrapper' swallows the element in this example
-                <wrapper>
-                    <div>foo</div>
-                </wrapper>
-                -->
-                <content>
-                    <div>foo</div>
-                </content>
-            </data>
-        </fx-instance>
-        <!--            <fx-instance xpath-default-namespace="http://www.w3.org/1999/xhtml" src="view.html" id="content" type="html"></fx-instance>-->
+        <data>
+            <endpoint>http://localhost:8080/exist/apps/tei-publisher</endpoint>
+            <feature name="highlight2">.tei-foreign,pb-highlight,pb-popover</feature>
+            <feature name="norm2">.choice,.choice-alternate,br</feature>
+            <!--
+            todo: investigate. Using 'wrapper' swallows the element in this example
+            <wrapper>
+                <div>foo</div>
+            </wrapper>
+            -->
+            <content>
+                <div>foo</div>
+            </content>
+        </data>
         <fx-instance xpath-default-namespace="http://www.w3.org/1999/xhtml" id="content" src="view.html"></fx-instance>
     </fx-model>
 
@@ -115,11 +112,11 @@
     <fx-message level="sticky" event="pb-update" if="event('target.id')">pb-update fired on {event('target.id')}
     </fx-message>
 
-<!--    <fx-insert context="data('content')" origin="event('root')" event="pb-update"></fx-insert>-->
+    <!--    <fx-insert context="data('content')" origin="event('root')" event="pb-update"></fx-insert>-->
 
 
     <fx-action event="ready">
-<!--        <fx-load id="load1" attach-to="#transcript">-->
+        <!--        <fx-load id="load1" attach-to="#transcript">-->
         <fx-load id="load1" attach-to="#transcript" await="pb-update">
             <template>
                 <pb-view id="view1" src="document1" view="page" append-footnotes animation
@@ -127,7 +124,7 @@
             </template>
         </fx-load>
         <fx-message level="sticky">First view loaded</fx-message>
-        <fx-load attach-to="#transcript2" await="pb-update"  delay="1000">
+        <fx-load attach-to="#transcript2" await="pb-update" delay="1000">
             <template>
                 <pb-view id="view2" src="document1" view="page" append-footnotes animation
                          subscribe="transcription" emit="transcription"></pb-view>
@@ -203,19 +200,19 @@
         </pb-page>
 
         <div id="shadowed"></div>
-<!--
-        <h2>Content fetched from shadowDOM of pb-view</h2>
-        <h3>{data('content')//span[@class='tei-hi1 document_g']}</h3>
-        &lt;!&ndash; todo: investigate why output does not produce same result as template expression here       &ndash;&gt;
-        <fx-ouput ref="data('content')//*"
-                  style="display: block;padding: 1rem 0;"
-                  mediatype="html"></fx-ouput>
-        <fx-repeat ref="data('content')//p">
-            <template>
-                <div>{.}</div>
-            </template>
-        </fx-repeat>
--->
+        <!--
+                <h2>Content fetched from shadowDOM of pb-view</h2>
+                <h3>{data('content')//span[@class='tei-hi1 document_g']}</h3>
+                &lt;!&ndash; todo: investigate why output does not produce same result as template expression here       &ndash;&gt;
+                <fx-ouput ref="data('content')//*"
+                          style="display: block;padding: 1rem 0;"
+                          mediatype="html"></fx-ouput>
+                <fx-repeat ref="data('content')//p">
+                    <template>
+                        <div>{.}</div>
+                    </template>
+                </fx-repeat>
+        -->
     </div>
     <!--        <fx-output ref="content" mediatype="html"></fx-output>-->
     <!--        <fx-output ref="data('content')/*[1]" mediatype="html"></fx-output>-->

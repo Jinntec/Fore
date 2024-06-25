@@ -179,7 +179,6 @@
 */
 
         main fx-bind,
-        main fx-instance,
         main fx-submission,
         main fx-function
         {
@@ -294,23 +293,19 @@
 <!--                <fx-insert ref="data('attributes')" origin="event('current')"></fx-insert>-->
             </fx-action>
             <fx-model id="targetModel">
-                <fx-instance id="attributes">
-                    <data>
-                        <fx-instance id="foo"></fx-instance>
+                    <data id="attributes">
+                        <data id="foo"></data>
 <!--
                         <attribute name="id"></attribute>
                         <attribute name="src"></attribute>
                         <attribute name="type"></attribute>
 -->
                     </data>
-                </fx-instance>
-                <fx-instance id="propvars">
-                    <data>
+                    <data> id="propvars"
                         <currentElement>
 
                         </currentElement>
                     </data>
-                </fx-instance>
             </fx-model>
             <fx-group id="ui">
                 <fx-repeat ref="data('attributes')//@*">

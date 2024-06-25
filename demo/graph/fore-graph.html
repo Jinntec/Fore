@@ -34,11 +34,9 @@
 
 <fx-fore id="page-selector">
     <fx-model>
-        <fx-instance>
-            <data>
-                <page>recalculate.htm</page>
-            </data>
-        </fx-instance>
+        <data>
+            <page>recalculate.htm</page>
+        </data>
     </fx-model>
     <header>
         <fx-action event="load-page" target="#document">
@@ -65,7 +63,7 @@
     (function () {
 
         const fore = document.querySelectorAll('fx-fore > *');
-        renderGraph(fore,'fore-graph')
+        renderGraph(fore, 'fore-graph')
 
     })();
 

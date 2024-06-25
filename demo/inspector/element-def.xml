@@ -642,7 +642,7 @@
             </attribute>
         </attributes>
         <description>`fx-delete`
-            deletes nodes from instance data.
+            deletes nodes from data.
         </description>
         <events>
             <event>
@@ -1168,7 +1168,7 @@
             </attribute>
         </attributes>
         <description>`fx-insert`
-            inserts nodes into data instances
+            inserts nodes into data
         </description>
         <events>
             <event>
@@ -4111,7 +4111,7 @@
                 <type>object</type>
             </attribute>
         </attributes>
-        <description>FxBind declaratively attaches constraints to nodes in the data (instances).
+        <description>FxBind declaratively attaches constraints to nodes in the data.
 
             It's major task is to create ModelItem Objects for each Node in the data their ref is pointing to.
 
@@ -4234,7 +4234,7 @@
             fx-fore is the outermost container for each form. A form can have exactly one model
             with arbitrary number of instances.
 
-            Main responsibilities are initialization and updating of model and instances, update of UI (refresh) and
+            Main responsibilities are initialization and updating of model and data, update of UI (refresh) and
             global messaging.
         </description>
         <events>
@@ -4416,7 +4416,7 @@
         </properties>
     </element>
     <element>
-        <description>Container for data instances.
+        <description>Container for data.
 
             Offers several ways of loading data from either inline content or via 'src' attribute which will use the
             fetch
@@ -4427,8 +4427,8 @@
                 <name>instance-loaded</name>
             </event>
         </events>
-        <name>fx-instance</name>
-        <path>./src/fx-instance.js</path>
+        <name>data</name>
+        <path>./src/DataElement.js</path>
         <properties>
             <property>
                 <default>"parentNode"</default>
@@ -4460,7 +4460,7 @@
             </property>
             <property>
                 <default>[]</default>
-                <name>instances</name>
+                <name>data</name>
                 <type>never[]</type>
             </property>
             <property>

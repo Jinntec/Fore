@@ -19,14 +19,12 @@
         <template>
             <fx-fore>
                 <fx-model>
-                    <fx-instance id="default" src="typeins-de.json" type="json">
+                    <data id="default" data-src="typeins-de.json" data-type="json">
                         <div>Hello</div>
-                    </fx-instance>
-                    <fx-instance id="vars">
-                        <data>
-                            <selected></selected>
-                        </data>
-                    </fx-instance>
+                    </data>
+                    <data id="vars">
+                        <selected></selected>
+                    </data>
                     <fx-submission id="switch-lang"
                                    method="get"
                                    replace="data"
@@ -35,9 +33,9 @@
                 </fx-model>
 
                 <h1>i18n</h1>
-                <p>This example uses a single instance which holds the current language. It simply loads
+                <p>This example uses a single data element which holds the current language. It simply loads
                 one language as the default with <code>src</code> and switches between different languages by exchanging the
-                instance with a submission.</p>
+                data with a submission.</p>
                 <fx-group>
                     <fx-control ref="data('vars')/selected">
                         <label>Selected</label>

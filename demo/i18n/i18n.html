@@ -19,20 +19,20 @@
         <template>
             <fx-fore>
                 <fx-model>
-                    <fx-instance id="default" src="en.json" type="json">
+                    <data id="default" data-src="en.json" data-type="json">
                         <div>Hello</div>
-                    </fx-instance>
+                    </data>
                     <fx-submission id="switch-lang"
                                    method="get"
                                    replace="data"
-                                   instance="default">
+                                   data="default">
                     </fx-submission>
                 </fx-model>
 
                 <h1>i18n</h1>
-                <p>This example uses a single instance which holds the current language. It simply loads
+                <p>This example uses a single data element which holds the current language. It simply loads
                 one language as the default with <code><a href="https://jinntec.github.io/fore-docs/elements/model/instance/#attributes"target="_blank">src</a></code> and switches between different languages by exchanging the
-                instance with a submission.</p>
+                data with a submission.</p>
                 <fx-group ref="data()?form">
                     <fx-output ref="?object-description">
                         <label slot="label">object-description</label>

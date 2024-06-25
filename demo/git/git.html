@@ -48,7 +48,7 @@
             <fx-submission id="s-get-issues"
                            url="{vcs[1]/url}/repos/{vcs[1]/owner}/{vcs[1]/repo}/issues"
                            replace="data"
-                           instance="issues">
+                           data="issues">
                 <fx-header name="User-Agent" value="'Fore'"></fx-header>
                 <fx-header name="X-Github-Api-Version" value="'2022-11-28'"></fx-header>
                 <fx-header name="Authorization" value="'Bearer ' || vcs[1]/token"></fx-header>

@@ -190,7 +190,7 @@
                            url="data/geo.xml"
                            method="get"
                            replace="data"
-                           instance="geodata"
+                           data="geodata"
                            validate="false">
             </fx-submission>
 
@@ -202,7 +202,7 @@
 
             <fx-submission id="s-login" ref="data('login')?*"
                            url="data/login.json" method="get" replace="data"
-                           instance="login" validate="false">
+                           data="login" validate="false">
                 <fx-setvalue ref="data('vars')/loggedin" event="submit-error">false</fx-setvalue>
                 <fx-setvalue ref="data('vars')/loggedin" event="submit-done">true</fx-setvalue>
             </fx-submission>

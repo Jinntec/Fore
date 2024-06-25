@@ -1,7 +1,7 @@
 <data>
     <fx-fore id="fx-action">
         <fx-model>
-            <fx-instance>
+            <data>
                 <defaultAction> </defaultAction>
                 <delay> </delay>
                 <event> </event>
@@ -12,7 +12,7 @@
                 <propagate> </propagate>
                 <target> </target>
                 <whileExpr> </whileExpr>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -62,7 +62,7 @@
     </fx-fore>
     <fx-fore id="fx-append">
         <fx-model>
-            <fx-instance>
+            <data>
                 <clear> </clear>
                 <repeat> </repeat>
                 <defaultAction> </defaultAction>
@@ -75,7 +75,7 @@
                 <propagate> </propagate>
                 <target> </target>
                 <whileExpr> </whileExpr>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -131,7 +131,7 @@
     </fx-fore>
     <fx-fore id="fx-confirm">
         <fx-model>
-            <fx-instance>
+            <data>
                 <defaultAction> </defaultAction>
                 <delay> </delay>
                 <event> </event>
@@ -142,7 +142,7 @@
                 <propagate> </propagate>
                 <target> </target>
                 <whileExpr> </whileExpr>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -192,7 +192,7 @@
     </fx-fore>
     <fx-fore id="fx-copy">
         <fx-model>
-            <fx-instance>
+            <data>
                 <to> </to>
                 <defaultAction> </defaultAction>
                 <delay> </delay>
@@ -205,7 +205,7 @@
                 <target> </target>
                 <whileExpr> </whileExpr>
                 <ref> </ref>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -261,7 +261,7 @@
     </fx-fore>
     <fx-fore id="fx-delete">
         <fx-model>
-            <fx-instance>
+            <data>
                 <defaultAction> </defaultAction>
                 <delay> </delay>
                 <event> </event>
@@ -272,7 +272,7 @@
                 <propagate> </propagate>
                 <target> </target>
                 <whileExpr> </whileExpr>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -322,7 +322,7 @@
     </fx-fore>
     <fx-fore id="fx-dispatch">
         <fx-model>
-            <fx-instance>
+            <data>
                 <defaultAction> </defaultAction>
                 <delay> </delay>
                 <event> </event>
@@ -333,7 +333,7 @@
                 <propagate> </propagate>
                 <target> </target>
                 <whileExpr> </whileExpr>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -383,7 +383,7 @@
     </fx-fore>
     <fx-fore id="fx-hide">
         <fx-model>
-            <fx-instance>
+            <data>
                 <defaultAction> </defaultAction>
                 <delay> </delay>
                 <event> </event>
@@ -394,7 +394,7 @@
                 <propagate> </propagate>
                 <target> </target>
                 <whileExpr> </whileExpr>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -444,7 +444,7 @@
     </fx-fore>
     <fx-fore id="fx-insert">
         <fx-model>
-            <fx-instance>
+            <data>
                 <defaultAction> </defaultAction>
                 <delay> </delay>
                 <event> </event>
@@ -455,7 +455,7 @@
                 <propagate> </propagate>
                 <target> </target>
                 <whileExpr> </whileExpr>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -505,7 +505,7 @@
     </fx-fore>
     <fx-fore id="fx-load">
         <fx-model>
-            <fx-instance>
+            <data>
                 <attachTo> </attachTo>
                 <url> </url>
                 <defaultAction> </defaultAction>
@@ -524,7 +524,7 @@
                 <context> </context>
                 <model> </model>
                 <modelItem> </modelItem>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -598,7 +598,7 @@
     </fx-fore>
     <fx-fore id="fx-message">
         <fx-model>
-            <fx-instance>
+            <data>
                 <defaultAction> </defaultAction>
                 <delay> </delay>
                 <event> </event>
@@ -615,7 +615,7 @@
                 <context> </context>
                 <model> </model>
                 <modelItem> </modelItem>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -683,7 +683,7 @@
     </fx-fore>
     <fx-fore id="fx-refresh">
         <fx-model>
-            <fx-instance>
+            <data>
                 <defaultAction> </defaultAction>
                 <delay> </delay>
                 <event> </event>
@@ -700,7 +700,7 @@
                 <context> </context>
                 <model> </model>
                 <modelItem> </modelItem>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -768,7 +768,7 @@
     </fx-fore>
     <fx-fore id="fx-reload">
         <fx-model>
-            <fx-instance>
+            <data>
                 <defaultAction> </defaultAction>
                 <delay> </delay>
                 <event> </event>
@@ -791,7 +791,7 @@
                 <context> </context>
                 <model> </model>
                 <modelItem> </modelItem>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -877,7 +877,7 @@
     </fx-fore>
     <fx-fore id="fx-replace">
         <fx-model>
-            <fx-instance>
+            <data>
                 <replaceNode> </replaceNode>
                 <with> </with>
                 <defaultAction> </defaultAction>
@@ -902,7 +902,7 @@
                 <context> </context>
                 <model> </model>
                 <modelItem> </modelItem>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -994,7 +994,7 @@
     </fx-fore>
     <fx-fore id="fx-return">
         <fx-model>
-            <fx-instance>
+            <data>
                 <defaultAction> </defaultAction>
                 <delay> </delay>
                 <event> </event>
@@ -1017,7 +1017,7 @@
                 <context> </context>
                 <model> </model>
                 <modelItem> </modelItem>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -1103,7 +1103,7 @@
     </fx-fore>
     <fx-fore id="fx-send">
         <fx-model>
-            <fx-instance>
+            <data>
                 <defaultAction> </defaultAction>
                 <delay> </delay>
                 <event> </event>
@@ -1126,7 +1126,7 @@
                 <context> </context>
                 <model> </model>
                 <modelItem> </modelItem>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -1212,7 +1212,7 @@
     </fx-fore>
     <fx-fore id="fx-setfocus">
         <fx-model>
-            <fx-instance>
+            <data>
                 <defaultAction> </defaultAction>
                 <delay> </delay>
                 <event> </event>
@@ -1235,7 +1235,7 @@
                 <context> </context>
                 <model> </model>
                 <modelItem> </modelItem>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -1321,7 +1321,7 @@
     </fx-fore>
     <fx-fore id="fx-setvalue">
         <fx-model>
-            <fx-instance>
+            <data>
                 <valueAttr> </valueAttr>
                 <defaultAction> </defaultAction>
                 <delay> </delay>
@@ -1340,7 +1340,7 @@
                 <model> </model>
                 <modelItem> </modelItem>
                 <ref> </ref>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -1414,7 +1414,7 @@
     </fx-fore>
     <fx-fore id="fx-show">
         <fx-model>
-            <fx-instance>
+            <data>
                 <defaultAction> </defaultAction>
                 <delay> </delay>
                 <event> </event>
@@ -1437,7 +1437,7 @@
                 <context> </context>
                 <model> </model>
                 <modelItem> </modelItem>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -1523,7 +1523,7 @@
     </fx-fore>
     <fx-fore id="fx-toggle">
         <fx-model>
-            <fx-instance>
+            <data>
                 <defaultAction> </defaultAction>
                 <delay> </delay>
                 <event> </event>
@@ -1546,7 +1546,7 @@
                 <context> </context>
                 <model> </model>
                 <modelItem> </modelItem>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -1632,7 +1632,7 @@
     </fx-fore>
     <fx-fore id="fx-update">
         <fx-model>
-            <fx-instance>
+            <data>
                 <defaultAction> </defaultAction>
                 <delay> </delay>
                 <event> </event>
@@ -1655,7 +1655,7 @@
                 <context> </context>
                 <model> </model>
                 <modelItem> </modelItem>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -1741,7 +1741,7 @@
     </fx-fore>
     <fx-fore id="fx-function">
         <fx-model>
-            <fx-instance>
+            <data>
                 <nodeset> </nodeset>
                 <context> </context>
                 <model> </model>
@@ -1752,7 +1752,7 @@
                 <context> </context>
                 <model> </model>
                 <modelItem> </modelItem>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -1802,7 +1802,7 @@
     </fx-fore>
     <fx-fore id="fx-bind">
         <fx-model>
-            <fx-instance>
+            <data>
                 <nodeset> </nodeset>
                 <context> </context>
                 <model> </model>
@@ -1813,7 +1813,7 @@
                 <context> </context>
                 <model> </model>
                 <modelItem> </modelItem>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -1863,11 +1863,11 @@
     </fx-fore>
     <fx-fore id="fx-fore">
         <fx-model>
-            <fx-instance>
+            <data>
                 <lazyRefresh> </lazyRefresh>
                 <model> </model>
                 <ready> </ready>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -1896,7 +1896,7 @@
     </fx-fore>
     <fx-fore id="fx-header">
         <fx-model>
-            <fx-instance>
+            <data>
                 <nodeset> </nodeset>
                 <context> </context>
                 <model> </model>
@@ -1907,7 +1907,7 @@
                 <context> </context>
                 <model> </model>
                 <modelItem> </modelItem>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -1955,9 +1955,9 @@
                 </fx-group>
 -->
     </fx-fore>
-    <fx-fore id="fx-instance">
+    <fx-fore id="data">
         <fx-model>
-            <fx-instance/>
+            <data/>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -1977,7 +1977,7 @@
     </fx-fore>
     <fx-fore id="fx-model">
         <fx-model>
-            <fx-instance/>
+            <data/>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -1997,7 +1997,7 @@
     </fx-fore>
     <fx-fore id="fx-submission">
         <fx-model>
-            <fx-instance>
+            <data>
                 <nodeset> </nodeset>
                 <context> </context>
                 <model> </model>
@@ -2008,7 +2008,7 @@
                 <context> </context>
                 <model> </model>
                 <modelItem> </modelItem>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -2058,7 +2058,7 @@
     </fx-fore>
     <fx-fore id="fx-var">
         <fx-model>
-            <fx-instance>
+            <data>
                 <nodeset> </nodeset>
                 <context> </context>
                 <model> </model>
@@ -2069,7 +2069,7 @@
                 <context> </context>
                 <model> </model>
                 <modelItem> </modelItem>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -2119,7 +2119,7 @@
     </fx-fore>
     <fx-fore id="fx-abstract-control">
         <fx-model>
-            <fx-instance>
+            <data>
                 <nodeset> </nodeset>
                 <context> </context>
                 <model> </model>
@@ -2130,7 +2130,7 @@
                 <context> </context>
                 <model> </model>
                 <modelItem> </modelItem>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -2180,7 +2180,7 @@
     </fx-fore>
     <fx-fore id="fx-alert">
         <fx-model>
-            <fx-instance>
+            <data>
                 <nodeset> </nodeset>
                 <context> </context>
                 <model> </model>
@@ -2191,7 +2191,7 @@
                 <context> </context>
                 <model> </model>
                 <modelItem> </modelItem>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -2241,7 +2241,7 @@
     </fx-fore>
     <fx-fore id="fx-case">
         <fx-model>
-            <fx-instance/>
+            <data/>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -2261,9 +2261,9 @@
     </fx-fore>
     <fx-fore id="fx-container">
         <fx-model>
-            <fx-instance>
+            <data>
                 <ref> </ref>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -2286,12 +2286,12 @@
     </fx-fore>
     <fx-fore id="fx-control">
         <fx-model>
-            <fx-instance>
+            <data>
                 <as> </as>
                 <ref> </ref>
                 <update-event> </update-event>
                 <value-prop> </value-prop>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -2323,9 +2323,9 @@
     </fx-fore>
     <fx-fore id="fx-dialog">
         <fx-model>
-            <fx-instance>
+            <data>
                 <id> </id>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -2348,9 +2348,9 @@
     </fx-fore>
     <fx-fore id="fx-group">
         <fx-model>
-            <fx-instance>
+            <data>
                 <ref> </ref>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -2373,9 +2373,9 @@
     </fx-fore>
     <fx-fore id="fx-hint">
         <fx-model>
-            <fx-instance>
+            <data>
                 <ref> </ref>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -2398,7 +2398,7 @@
     </fx-fore>
     <fx-fore id="fx-inspector">
         <fx-model>
-            <fx-instance/>
+            <data/>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -2418,10 +2418,10 @@
     </fx-fore>
     <fx-fore id="fx-items">
         <fx-model>
-            <fx-instance>
+            <data>
                 <ref> </ref>
                 <valueAttr> </valueAttr>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -2447,11 +2447,11 @@
     </fx-fore>
     <fx-fore id="fx-output">
         <fx-model>
-            <fx-instance>
+            <data>
                 <mediatype> </mediatype>
                 <ref> </ref>
                 <valueAttr> </valueAttr>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -2480,12 +2480,12 @@
     </fx-fore>
     <fx-fore id="fx-repeat-attributes">
         <fx-model>
-            <fx-instance>
+            <data>
                 <focusOnCreate> </focusOnCreate>
                 <index> </index>
                 <repeatSize> </repeatSize>
                 <ref> </ref>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -2517,7 +2517,7 @@
     </fx-fore>
     <fx-fore id="fx-repeat">
         <fx-model>
-            <fx-instance/>
+            <data/>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -2537,7 +2537,7 @@
     </fx-fore>
     <fx-fore id="fx-repeatitem">
         <fx-model>
-            <fx-instance/>
+            <data/>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -2557,9 +2557,9 @@
     </fx-fore>
     <fx-fore id="fx-switch">
         <fx-model>
-            <fx-instance>
+            <data>
                 <ref> </ref>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>
@@ -2582,9 +2582,9 @@
     </fx-fore>
     <fx-fore id="fx-trigger">
         <fx-model>
-            <fx-instance>
+            <data>
                 <ref> </ref>
-            </fx-instance>
+            </data>
         </fx-model>
         <fx-group>
             <label>Attributes</label>

@@ -35,11 +35,9 @@
 <body>
     <fx-fore>
         <fx-model>
-            <fx-instance id="default" type="xml">
-                <data></data>
-            </fx-instance>
-            <fx-instance id="json-input" src="profile.json" type="json"></fx-instance>
-            <fx-instance id="json-output"></fx-instance>
+            <data id="default" data-type="xml"></data>
+            <data id="json-input" data-src="profile.json" data-type="json"></data>
+            <data id="json-output"></data>
 
             <fx-action event="model-construct-done">
                 <fx-replace ref="data()" with="json2xml(data('json-input'))"></fx-replace>

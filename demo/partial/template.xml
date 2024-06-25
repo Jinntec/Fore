@@ -53,7 +53,6 @@
                     <!--  msPart ist als Ganzes wiederholbar  -->
                     <!--  @xml:id erforderlich für Referenzierung unten  -->
                     <msPart xml:id="5efea3ad-8020-4685-bea3-ad8020368566" type="main">
-                        <!--   ### end of runtime instance inlining  -->
                         <msIdentifier>
                             <!--  12a) Aufbewahrung  -->
                             <repository/>

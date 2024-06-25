@@ -17,11 +17,9 @@
             <setvalue ref="data('helper')/changed" event="value-changed">true</setvalue>
 
             <model id="record">
-                <instance>
-                    <data>
-                        <show-completed>false</show-completed>
-                    </data>
-                </instance>
+                <data>
+                    <show-completed>false</show-completed>
+                </data>
                 <bind ref="task" relevant="../show-completed='true' or ./@complete='false'">
                     <bind ref="./text()" required="true()"></bind>
                 </bind>
@@ -42,13 +40,11 @@
                     <message event="submit-done">Todos loaded from localStorage</message>
                 </submission>
 
-                <instance id="helper">
-                    <data>
+                    <data id="helper">
                         <template>
                             <task complete="false" due=""></task>
                         </template>
                     </data>
-                </instance>
             </model>
 
             <h1>Todo

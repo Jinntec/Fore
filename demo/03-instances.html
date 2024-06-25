@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
 
-    <title>Instances</title>
+    <title>Data</title>
 
     <!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
     <link href="../resources/demo.css" rel="stylesheet">
@@ -32,7 +32,7 @@
                         <foobar></foobar>
                     </data>
                     <data id="second">
-                        <item>second instance</item>
+                        <item>second data </item>
                     </data>
                     .
                     .
@@ -42,18 +42,18 @@
         </template>
     </demo-snippet>
     <h3>Description</h3>
-    <p>We got 2 instances that create 2 separate XML documents. The first in document order is
+    <p>We got 2 data elements that create 2 separate XML documents. The first in document order is
         the <b>default instance</b>. All following ones need to have an <code>id</code>.</p>
 
     <p class="note">It's important to understand that the data are not part of the html page but
-        exist as separate document in memory. Therefore you cannot inspect the state of the instance data with a
+        exist as separate document in memory. Therefore you cannot inspect the state of the data with a
         developer tool.</p>
 
-    <p>This not only ensures the integrity of the instance data but also allows us to work with real
+    <p>This not only ensures the integrity of the data but also allows us to work with real
         XML documents.</p>
 
-    <h3>Limitations of inline instances</h3>
-    <p class="note">Inline instances use the HTML DOM of the browser which e.g.
+    <h3>Limitations of inline data</h3>
+    <p class="note">Inline data use the HTML DOM of the browser which e.g.
         only supports lowercase element names, no namespaces etc. If you intend to work with
         full XML documents you need to use external to use external files with the <code>src</code> attribute. See
         next example.</p>
@@ -80,11 +80,11 @@
         </template>
     </demo-snippet>
 
-    <p>To refer to a node in a non-default instance you have to use the <code><a
+    <p>To refer to a node in a non-default data element you have to use the <code><a
             href="https://jinntec.github.io/fore-docs/functions/#data" target="_blank">data()</a></code>
         function which takes
         the <code><a href="https://jinntec.github.io/fore-docs/glossary/#id-resolution" target="_blank">id</a></code> as
-        parameter. This returns the root-node of that instance.</p>
+        parameter. This returns the root-node of the data.</p>
 
 
 </div>
