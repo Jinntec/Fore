@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-expressions */
-import { html, fixtureSync, expect, elementUpdated } from '@open-wc/testing';
+import {
+  html, fixtureSync, expect, elementUpdated,
+} from '@open-wc/testing';
 
 import '../index.js';
 import * as fx from 'fontoxpath';
@@ -36,7 +38,7 @@ describe('setvalue tests', () => {
     console.log('plain eval: ', xp);
 
     const btn = el.querySelector('#btn');
-   await btn.performActions();
+    await btn.performActions();
 
     const out = el.querySelector('#output');
     expect(out.modelItem.value).to.equal('Hello Universe');
@@ -73,7 +75,7 @@ describe('setvalue tests', () => {
     console.log('plain eval: ', xp);
 
     const btn = el.querySelector('#btn');
-   await btn.performActions();
+    await btn.performActions();
 
     const out = el.querySelector('#output');
     expect(out.modelItem.value).to.equal('Hello World!');
@@ -110,7 +112,7 @@ describe('setvalue tests', () => {
     console.log('plain eval: ', xp);
 
     const btn = el.querySelector('#btn');
-   await btn.performActions();
+    await btn.performActions();
 
     const out = el.querySelector('#output');
     expect(out.modelItem.value).to.equal('Hello Universe');
@@ -147,7 +149,7 @@ describe('setvalue tests', () => {
     console.log('plain eval: ', xp);
 
     const btn = el.querySelector('#btn');
-   await btn.performActions();
+    await btn.performActions();
 
     const out = el.querySelector('#output');
     expect(out.modelItem.value).to.equal('');

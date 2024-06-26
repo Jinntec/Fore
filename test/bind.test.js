@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-expressions */
-import { html, fixture, fixtureSync, expect, elementUpdated, oneEvent } from '@open-wc/testing';
+import {
+  html, fixture, fixtureSync, expect, elementUpdated, oneEvent,
+} from '@open-wc/testing';
 
 import '../index.js';
 
@@ -18,7 +20,7 @@ describe('bind Tests', () => {
       </fx-fore>
     `);
 
-//      await elementUpdated(el);
+    //      await elementUpdated(el);
 	  await oneEvent(el, 'ready');
     const bind = document.getElementById('b-greeting');
     expect(bind).to.exist;
@@ -272,7 +274,6 @@ describe('bind Tests', () => {
         expect('#output').dom.to.have.text('');
         // expect('#output').dom.not.to.be.displayed()
 
-
         // expect(out).is(":visible"), true)
         console.log('++++++++++++++++++++++++++++ ', model.modexlItems);
 
@@ -517,7 +518,5 @@ describe('bind Tests', () => {
     await oneEvent(el, 'refresh-done');
     const nestedBind = el.querySelector('#nested');
     expect(nestedBind.instanceId).to.equal('second');
-
   });
-
 });

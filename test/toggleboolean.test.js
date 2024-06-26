@@ -1,4 +1,6 @@
-import { html, fixtureSync, expect, oneEvent } from '@open-wc/testing';
+import {
+  html, fixtureSync, expect, oneEvent,
+} from '@open-wc/testing';
 
 import '../src/fx-instance.js';
 import '../src/fx-var.js';
@@ -54,6 +56,4 @@ describe('toggleboolean Tests', () => {
     const toggle = el.querySelector('#toggle');
     expect(toggle.innerText).to.equal('true');
   });
-
-
 });

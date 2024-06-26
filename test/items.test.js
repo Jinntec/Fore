@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-expressions */
-import { html, fixtureSync, expect, oneEvent } from '@open-wc/testing';
+import {
+  html, fixtureSync, expect, oneEvent,
+} from '@open-wc/testing';
 
 import '../index.js';
 
@@ -391,6 +393,5 @@ describe('fx-items tests', () => {
     const checkboxes = el.querySelectorAll('input');
     expect(checkboxes[0].checked).to.be.true;
     expect(checkboxes[1].checked).to.be.true;
-
   });
 });

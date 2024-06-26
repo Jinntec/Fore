@@ -9,14 +9,14 @@ import '../../index.js';
  * @customElement
  */
 export class InstanceInspector extends HTMLElement {
-    constructor() {
-        super();
-        this.attachShadow({mode: 'open'})
-    }
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+  }
 
-    connectedCallback() {
-        this.id= this.getAttribute('id');
-        const style = `
+  connectedCallback() {
+    this.id = this.getAttribute('id');
+    const style = `
           :host {
             display:block;
             background:blue;           
@@ -27,7 +27,7 @@ export class InstanceInspector extends HTMLElement {
             height:100%;
           }
         `;
-        const html = `
+    const html = `
         <section>
             <fx-control ref="instance('${this.id}')" as="node">
                 <label>${this.id}</label>
@@ -37,20 +37,17 @@ export class InstanceInspector extends HTMLElement {
         <slot></slot>
         `;
 
-        this.innerHTML = `
+    this.innerHTML = `
             <style>
                 ${style}
             </style>
             ${html}
         `;
 
-
-        this.closest('fx-fore').refresh();
-
-    }
-
+    this.closest('fx-fore').refresh();
+  }
 }
 
 if (!customElements.get('instance-inspector')) {
-    customElements.define('instance-inspector', InstanceInspector);
+  customElements.define('instance-inspector', InstanceInspector);
 }

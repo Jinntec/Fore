@@ -1,4 +1,6 @@
-import { html, fixtureSync, expect, oneEvent } from '@open-wc/testing';
+import {
+  html, fixtureSync, expect, oneEvent,
+} from '@open-wc/testing';
 
 import '../index.js';
 import * as fx from 'fontoxpath';
@@ -47,7 +49,7 @@ describe('replace Tests', () => {
     expect(initial).to.exist;
 
     const trigger = el.querySelector('fx-trigger');
-   await trigger.performActions();
+    await trigger.performActions();
 
     const replaced = fx.evaluateXPath('list', inst, null, {});
     expect(replaced).to.exist;
@@ -89,7 +91,7 @@ describe('replace Tests', () => {
     expect(initial).to.exist;
 
     const trigger = el.querySelector('fx-trigger');
-   await trigger.performActions();
+    await trigger.performActions();
 
     const replaced = fx.evaluateXPath('//value/@replaced', inst, null, {});
     expect(replaced).to.exist;

@@ -1,7 +1,7 @@
-import { evaluateXPath,evaluateXPathToString, resolveId } from '../xpath-evaluation.js';
+import { evaluateXPath, evaluateXPathToString, resolveId } from '../xpath-evaluation.js';
 import FxControl from './fx-control.js';
 import { Fore } from '../fore.js';
-import { XPathUtil} from "../xpath-util.js";
+import { XPathUtil } from '../xpath-util.js';
 
 /**
  * FxItems provices a templated list over its bound nodes. It is not standalone but expects to be used
@@ -52,10 +52,10 @@ export class FxItems extends FxControl {
       const items = this.querySelectorAll('[value]');
 
       if (e.target.nodeName === 'LABEL') {
-	      const target = resolveId(e.target.getAttribute('for'), this);
-	      target.focus();
+        const target = resolveId(e.target.getAttribute('for'), this);
+        target.focus();
       }
-	});
+    });
     this.addEventListener('click', e => {
       e.preventDefault;
       e.stopPropagation();
@@ -122,10 +122,10 @@ export class FxItems extends FxControl {
     const lblExpr = Fore.getExpression(label.textContent);
 
     // ### xml / JSON
-    if(node.nodeType){
+    if (node.nodeType) {
       const lblEvaluated = evaluateXPathToString(lblExpr, node, this);
       label.textContent = lblEvaluated;
-    } else{
+    } else {
       const labelExpr = Fore.getExpression(lblExpr);
       label.textContent = node[labelExpr];
     }
@@ -139,9 +139,9 @@ export class FxItems extends FxControl {
     // const cutted = expr.substring(1, expr.length - 1);
     const cutted = Fore.getExpression(expr);
     let evaluated;
-    if(node.nodeType){
-      evaluated =  evaluateXPathToString(cutted, node, newEntry);
-    }else{
+    if (node.nodeType) {
+      evaluated = evaluateXPathToString(cutted, node, newEntry);
+    } else {
       evaluated = node[cutted];
     }
 

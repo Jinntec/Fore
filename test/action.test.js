@@ -1,4 +1,6 @@
-import { html, fixtureSync, expect, oneEvent, elementUpdated } from '@open-wc/testing';
+import {
+  html, fixtureSync, expect, oneEvent, elementUpdated,
+} from '@open-wc/testing';
 
 import '../src/fx-instance.js';
 import '../src/ui/fx-container.js';

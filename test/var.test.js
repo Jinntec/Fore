@@ -1,4 +1,6 @@
-import { html, fixtureSync, expect, oneEvent } from '@open-wc/testing';
+import {
+  html, fixtureSync, expect, oneEvent,
+} from '@open-wc/testing';
 
 import '../src/fx-instance.js';
 import '../src/fx-var.js';
@@ -102,7 +104,7 @@ describe('var Tests', () => {
     await oneEvent(el, 'refresh-done');
 
     const trigger = el.querySelector('fx-trigger.start');
-      const action = el.querySelector('fx-action');
+    const action = el.querySelector('fx-action');
 	  await trigger.performActions();
 
     const output = el.querySelector('fx-output');

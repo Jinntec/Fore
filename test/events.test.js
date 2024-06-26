@@ -1,4 +1,6 @@
-import { html, fixtureSync, expect, oneEvent } from '@open-wc/testing';
+import {
+  html, fixtureSync, expect, oneEvent,
+} from '@open-wc/testing';
 
 import '../src/fx-instance.js';
 import '../src/ui/fx-container.js';
@@ -172,7 +174,6 @@ describe('Event Tests', () => {
     );
 	  	  await oneEvent(el, 'refresh-done');
 
-
     const inst = el
       .getModel()
       .getDefaultInstance()
@@ -282,7 +283,7 @@ describe('Event Tests', () => {
     el.querySelector('button').click();
     await oneEvent(el, 'refresh-done');
 
-      const div = el.querySelector('#result');
+    const div = el.querySelector('#result');
 	  // Event phase 1 is 'capture'
     expect(div.innerText).to.equal('1');
   });
@@ -318,9 +319,8 @@ describe('Event Tests', () => {
     el.querySelector('button').click();
     await oneEvent(el, 'refresh-done');
 
-      const div = el.querySelector('#result');
+    const div = el.querySelector('#result');
 	  // Event phase 3 is 'bubble'
     expect(div.innerText).to.equal('3');
   });
-
 });

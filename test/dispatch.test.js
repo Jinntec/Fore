@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-expressions */
-import { html, fixtureSync, expect, oneEvent } from '@open-wc/testing';
+import {
+  html, fixtureSync, expect, oneEvent,
+} from '@open-wc/testing';
 
 import '../index.js';
 
@@ -25,12 +27,12 @@ describe('fx-dispatch tests', () => {
     await oneEvent(el, 'refresh-done');
 
     const bar = document.getElementById('bar');
-    bar.addEventListener('foo', event => {
+    bar.addEventListener('foo', (event) => {
       bar.innerText = event.detail.string;
     });
 
     const trigger = el.querySelector('fx-trigger');
-   await trigger.performActions();
+    await trigger.performActions();
 
     expect(bar.innerText).to.equal('aString');
   });
@@ -59,12 +61,12 @@ describe('fx-dispatch tests', () => {
     await oneEvent(el, 'refresh-done');
 
     const bar = document.getElementById('bar');
-    bar.addEventListener('foo', event => {
+    bar.addEventListener('foo', (event) => {
       bar.innerText = event.detail.instance;
     });
 
     const trigger = el.querySelector('fx-trigger');
-   await trigger.performActions();
+    await trigger.performActions();
 
     expect(bar.innerText).to.equal('<data>\n<foo>fooVal</foo>\n<bar>barVal</bar>\n</data>');
   });
@@ -96,13 +98,13 @@ describe('fx-dispatch tests', () => {
 
     const bar = document.getElementById('bar');
     const dVal = document.getElementById('displayValue');
-    bar.addEventListener('foo', event => {
+    bar.addEventListener('foo', (event) => {
       bar.innerText = event.detail.instance;
       dVal.innerText = event.detail.string;
     });
 
     const trigger = el.querySelector('fx-trigger');
-   await trigger.performActions();
+    await trigger.performActions();
 
     expect(bar.innerText).to.equal('<data>\n<foo>fooVal</foo>\n<bar>barVal</bar>\n</data>');
     expect(dVal.innerText).to.equal('aString');
@@ -137,13 +139,13 @@ describe('fx-dispatch tests', () => {
 
     const bar = document.getElementById('bar');
     const dVal = document.getElementById('displayValue');
-    bar.addEventListener('foo', event => {
+    bar.addEventListener('foo', (event) => {
       bar.innerText = event.detail.instance;
       dVal.innerText = event.detail.string;
     });
 
     const trigger = el.querySelector('fx-trigger');
-   await trigger.performActions();
+    await trigger.performActions();
 
     expect(bar.innerText).to.equal('<data>\n<foo>fooVal</foo>\n<bar>barVal</bar>\n</data>');
     expect(dVal.innerText).to.equal('aString');
@@ -185,7 +187,7 @@ describe('fx-dispatch tests', () => {
         */
 
     const trigger = el.querySelector('fx-trigger');
-   await trigger.performActions();
+    await trigger.performActions();
 
     expect(bar.innerText).to.equal('foobar');
   });

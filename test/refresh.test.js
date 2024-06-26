@@ -1,4 +1,6 @@
-import { html, fixtureSync, expect, oneEvent } from '@open-wc/testing';
+import {
+  html, fixtureSync, expect, oneEvent,
+} from '@open-wc/testing';
 
 import '../src/fx-instance.js';
 import '../src/ui/fx-container.js';
@@ -189,7 +191,7 @@ describe('refresh Tests', () => {
     expect(sw.modelItem.value).to.equal('page2');
 
     const b = el.querySelector('#changePage');
-   await b.performActions();
+    await b.performActions();
 
     expect(sw.modelItem.value).to.equal('page3');
     expect(sw.modelItem.boundControls).to.exist;
@@ -291,7 +293,6 @@ describe('refresh Tests', () => {
     /*
     const b = el.querySelector('#changePage');
    await b.performActions();
-
 
     const page1 = el.querySelector('#page1');
     expect(page1.classList.contains('selected-case')).to.be.false;

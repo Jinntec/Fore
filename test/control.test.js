@@ -1,8 +1,10 @@
 /* eslint-disable no-unused-expressions */
-import { html, fixtureSync, expect, elementUpdated, oneEvent } from '@open-wc/testing';
+import {
+  html, fixtureSync, expect, elementUpdated, oneEvent,
+} from '@open-wc/testing';
 
 import '../index.js';
-import * as fx from "fontoxpath";
+import * as fx from 'fontoxpath';
 
 describe('control tests', () => {
   it('shows control alert defined on control', async () => {
@@ -166,13 +168,11 @@ describe('control tests', () => {
     await oneEvent(el, 'refresh-done');
     const model = document.getElementById('model1');
 
-
     const ctrl = el.querySelector('#ctrl');
     expect(ctrl.getModelItem()).to.exist;
     expect(ctrl.getModelItem().alerts).to.exist;
     expect(ctrl.getModelItem().alerts.length).to.equal(1);
     expect(ctrl.getModelItem().alerts[0]).to.equal('string must be exactly one character long');
-
   });
 
   it('has a control child with value "A"', async () => {
@@ -274,7 +274,7 @@ describe('control tests', () => {
     expect(input.hasAttribute('required')).to.be.true;
   });
 
-/*
+  /*
   it.only('changes readonly state to optional', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
@@ -305,14 +305,12 @@ describe('control tests', () => {
     expect(input.widget).to.exist;
     expect(input.hasAttribute('required')).to.be.true;
 
-
     const trigger = el.querySelector('fx-trigger');
     trigger.performActions();
     expect(input.hasAttribute('required')).to.be.false;
 
   });
 */
-
 
   it('gets invalid state attribute', async () => {
     const el = await fixtureSync(html`
@@ -331,7 +329,7 @@ describe('control tests', () => {
     `);
 
     // await elementUpdated(el);
-    let { detail } = await oneEvent(el, 'refresh-done');
+    const { detail } = await oneEvent(el, 'refresh-done');
     const input = document.getElementById('input1');
     const mi = input.getModelItem();
     expect(mi.constraint).to.be.false;
@@ -339,7 +337,7 @@ describe('control tests', () => {
     expect(input.hasAttribute('invalid')).to.be.false;
 
     // modifying value
-    input.setValue('foo'); //modified to trigger first refresh that shows validity state
+    input.setValue('foo'); // modified to trigger first refresh that shows validity state
     await oneEvent(input, 'invalid');
     expect(input.hasAttribute('invalid')).to.be.true;
   });
@@ -361,7 +359,7 @@ describe('control tests', () => {
     `);
 
     // await elementUpdated(el);
-    let { detail } = await oneEvent(el, 'refresh-done');
+    const { detail } = await oneEvent(el, 'refresh-done');
     const input = document.getElementById('input1');
     const mi = input.getModelItem();
     expect(mi.required).to.be.true;
@@ -370,11 +368,10 @@ describe('control tests', () => {
     expect(input.classList.contains('isEmpty')).to.be.true;
 
     // modifying value
-    input.setValue('foo'); //modified to trigger first refresh that shows validity state
+    input.setValue('foo'); // modified to trigger first refresh that shows validity state
     await oneEvent(input, 'value-changed');
 
     expect(input.classList.contains('isEmpty')).to.be.false;
-
   });
 
   // untestable - correct results interactively but not in this test
@@ -395,19 +392,18 @@ describe('control tests', () => {
     `);
 
     // await elementUpdated(el);
-    let { detail } = await oneEvent(el, 'refresh-done');
+    const { detail } = await oneEvent(el, 'refresh-done');
     const input = document.getElementById('input1');
     const mi = input.getModelItem();
     expect(input.classList.contains('visited')).to.be.false;
 
     // modifying value
-    input.setValue('foo'); //modified to trigger first refresh that shows validity state
+    input.setValue('foo'); // modified to trigger first refresh that shows validity state
     // await oneEvent(input, 'value-changed');
     // input.focus();
     input.blur();
-    console.log('claslist',input.classList)
+    console.log('claslist', input.classList);
     expect(input.classList.contains('visited')).to.be.true;
-
   });
 
   it('creates non existing attributes', async () => {
@@ -429,7 +425,7 @@ describe('control tests', () => {
     `);
 
     // await elementUpdated(el);
-    let { detail } = await oneEvent(el, 'refresh-done');
+    const { detail } = await oneEvent(el, 'refresh-done');
 
     const instance = el.querySelector('fx-instance');
     const item = fx.evaluateXPathToFirstNode('//item', instance.instanceData, null, {});
@@ -437,7 +433,6 @@ describe('control tests', () => {
     expect(item).to.exist;
     expect(item.hasAttribute('attr2')).to.be.true;
     expect(item.hasAttribute('attr3')).to.be.true;
-
   });
 
   /*
@@ -457,13 +452,11 @@ describe('control tests', () => {
                     <fx-input id="input1" label="A-label" ref="a">
                     </fx-input>
 
-
                 </fx-fore>`)
         );
 
         await elementUpdated(el);
         // let { detail } = await oneEvent(el, 'refresh-done');
-
 
         const input = document.getElementById('input1');
         input.value='baz';
@@ -479,17 +472,12 @@ describe('control tests', () => {
         // model.updateModel();
         // el.refresh();
 
-
-
-
         await oneEvent(el, 'refresh-done');
 
         console.log('modelitem ', input.modelItem);
         // let { detail1 } = await oneEvent(input, 'value-changed');
 
         expect(input.modelItem.value).to.be.equal('baz');
-
-
 
     });
 */

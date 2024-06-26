@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-expressions */
-import { html, oneEvent, fixtureSync, expect } from '@open-wc/testing';
+import {
+  html, oneEvent, fixtureSync, expect,
+} from '@open-wc/testing';
 
 import '../index.js';
 
@@ -81,7 +83,7 @@ describe('fx-switch Tests', () => {
 
     const trigger = el.querySelectorAll('fx-trigger');
 
-   await trigger[1].performActions();
+    await trigger[1].performActions();
 
     const cases = el.querySelectorAll('fx-case');
     expect(cases[0].classList.contains('selected-case')).to.be.false;
@@ -261,7 +263,6 @@ describe('fx-switch Tests', () => {
     expect(cases[2].classList.contains('selected-case')).to.be.true;
   });
 
-
   it('refreshes just the default case', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
@@ -332,7 +333,6 @@ describe('fx-switch Tests', () => {
 
     const control3 = el.querySelector('[ref="item3"]');
     expect(control3.value).to.equal(null);
-
   });
 
 /*
@@ -395,7 +395,6 @@ describe('fx-switch Tests', () => {
 
     const control3 = el.querySelector('[ref="item3"]');
     expect(control3.value).to.equal('');
-
 
   });
 */

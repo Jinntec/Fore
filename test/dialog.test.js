@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-expressions */
-import { html, fixture, fixtureSync, expect, elementUpdated, oneEvent } from '@open-wc/testing';
+import {
+  html, fixture, fixtureSync, expect, elementUpdated, oneEvent,
+} from '@open-wc/testing';
 
 import '../index.js';
 
@@ -30,9 +32,9 @@ describe('Dialog Tests', () => {
     const dialog = document.getElementById('dialog1');
     expect(dialog).to.exist;
 
-    let fired=false;
-    dialog.addEventListener('dialog-shown', (e)=>{
-      fired=true;
+    let fired = false;
+    dialog.addEventListener('dialog-shown', (e) => {
+      fired = true;
     });
 
     const trigger = document.querySelector('fx-trigger');
@@ -42,7 +44,6 @@ describe('Dialog Tests', () => {
     expect(dialog).to.be.visible;
     expect(dialog.classList.contains('show')).to.be.true;
     expect(fired).to.be.true;
-
   });
 
   it('Dialog is hidden on fx-show action and dispatches dialog-shown event', async () => {
@@ -73,18 +74,16 @@ describe('Dialog Tests', () => {
     const dialog = document.getElementById('dialog1');
     expect(dialog).to.exist;
 
-    let fired=false;
-    dialog.addEventListener('dialog-hidden', (e)=>{
-      fired=true;
+    let fired = false;
+    dialog.addEventListener('dialog-hidden', (e) => {
+      fired = true;
     });
 
     const trigger = document.querySelector('fx-trigger');
     trigger.widget.click();
 
     // await oneEvent(dialog, 'dialog-shown');
-    console.log('####',dialog.style);
+    console.log('####', dialog.style);
     expect(fired).to.be.true;
-
   });
-
 });

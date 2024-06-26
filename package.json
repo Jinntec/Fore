@@ -53,6 +53,7 @@
     "deepmerge": "^4.2.2",
     "es-dev-server": "^2.1.0",
     "eslint": "^8.16.0",
+    "eslint-plugin-prettier": "^5.1.3",
     "husky": "^8.0.1",
     "jsdoc": "^3.6.10",
     "lint-staged": "^12.4.3",
@@ -70,8 +71,8 @@
   },
   "scripts": {
     "test": "karma start",
-    "lint:eslint": "eslint --ext .js,.html . --ignore-path .eslintignore",
-    "format:eslint": "eslint --ext .js,.html . --fix --ignore-path .eslintignore",
+    "lint:eslint": "eslint .",
+    "format:eslint": "eslint . --fix",
     "lint:prettier": "prettier \"**/*.js\" --check --ignore-path .eslintignore",
     "format:prettier": "prettier \"**/*.js\" --write --ignore-path .eslintignore",
     "docs": "wca src -f json --outFile fore-elements.json",
@@ -105,38 +106,6 @@
   ],
   "author": "Joern Turner",
   "license": "MIT",
-  "eslintConfig": {
-    "extends": [
-      "@open-wc/eslint-config",
-      "eslint-config-prettier"
-    ],
-    "ignorePatterns": [
-      "demo/**",
-      "resources/**",
-      "doc/**/*"
-    ],
-    "rules": {
-      "no-console": "off",
-      "no-alert": "off",
-      "import/no-extraneous-dependencies": [
-        "off",
-        {
-          "devDependencies": [
-            "demo/**/*.html",
-            "doc/**/*.html"
-          ]
-        }
-      ],
-      "no-param-reassign": [
-        "off",
-        {
-          "dependencies": [
-            "src/fx-model.js"
-          ]
-        }
-      ]
-    }
-  },
   "engines": {
     "node": ">= 16.19.1"
   },

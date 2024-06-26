@@ -66,7 +66,7 @@ export function newElement(elem, attrs) {
   return el;
 }
 
- // Helper function for options view
+// Helper function for options view
 export function drawOptionRow(optionCode, optionText) {
   const row = newElement('span', { class: 'adi-opt' });
   row.innerHTML = `<label><input type="checkbox" data-opt="${optionCode}">${optionText}</label>`;

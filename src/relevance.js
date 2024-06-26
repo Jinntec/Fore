@@ -1,19 +1,17 @@
-import {Fore} from "./fore.js";
+import { Fore } from './fore.js';
 
 export class Relevance {
-
-  static handleRelevance(boundElement){
+  static handleRelevance(boundElement) {
     const modelItem = boundElement.getModelItem();
 
     if (modelItem && modelItem.relevant) {
       boundElement.removeAttribute('nonrelevant');
-      boundElement.setAttribute('relevant','');
-      Fore.dispatch(this,'relevant',{});
-
+      boundElement.setAttribute('relevant', '');
+      Fore.dispatch(this, 'relevant', {});
     } else {
       boundElement.removeAttribute('relevant');
-      boundElement.setAttribute('nonrelevant','');
-      Fore.dispatch(this,'nonrelevant',{});
+      boundElement.setAttribute('nonrelevant', '');
+      Fore.dispatch(this, 'nonrelevant', {});
     }
   }
 
@@ -58,17 +56,16 @@ export class Relevance {
           Array.from(attributes).forEach(attr => {
             if (element.nonrelevant === 'empty' && !Relevance._isRelevant(element, attr)) {
               clone.setAttribute(attr.nodeName, '');
-            }else
-            if (Relevance._isRelevant(element, attr)) {
+            } else if (Relevance._isRelevant(element, attr)) {
               clone.setAttribute(attr.nodeName, attr.value);
             } else {
               // if (element.nonrelevant === 'empty') {
               //   clone.setAttribute(attr.nodeName, '');
               // } else{
-                clone.removeAttribute(attr.nodeName);
+              clone.removeAttribute(attr.nodeName);
               // }
             }
-/*
+            /*
             if (Relevance._isRelevant(element, attr)) {
               clone.setAttribute(attr.nodeName, attr.value);
             } else if (element.nonrelevant === 'empty') {
@@ -90,16 +87,15 @@ export class Relevance {
     const mi = element.getModel().getModelItem(node);
 
     // ### remove empty attributes as these usually are not expected in most XML languages.
-    if(node.nodeType === Node.ATTRIBUTE_NODE
-        && node.nodeValue === ''){
+    if (node.nodeType === Node.ATTRIBUTE_NODE && node.nodeValue === '') {
       return false;
     }
     // ### no modelItem means no constraints
-    if(!mi){
+    if (!mi) {
       return true;
     }
     // ### modelItem 'relevant' is defined and 'true'
-    if ( mi.relevant) {
+    if (mi.relevant) {
       return true;
     }
 

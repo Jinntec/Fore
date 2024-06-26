@@ -70,7 +70,7 @@ describe('DepGraph', () => {
     const falsyData = ['', 0, null, undefined, false];
     graph.addNode('Foo');
 
-    falsyData.forEach(data => {
+    falsyData.forEach((data) => {
       graph.setNodeData('Foo', data);
 
       // expect(graph.hasNode("Foo")).toBeTrue();
@@ -194,7 +194,7 @@ describe('DepGraph', () => {
     graph.addDependency('c', 'a');
     graph.addDependency('d', 'a');
 
-    window.addEventListener('compute-exception', e => {
+    window.addEventListener('compute-exception', (e) => {
       expect(e.detail.path).to.eql(['b', 'c', 'a', 'b']);
     });
     // expect.throws(() => graph.dependenciesOf("b"), new DepGraphCycleError(["b", "c", "a", "b"]));
@@ -220,8 +220,8 @@ describe('DepGraph', () => {
   });
 
   it(
-    'should include all nodes in overall order even from ' +
-      'cycles in disconnected subgraphs when circular is true',
+    'should include all nodes in overall order even from '
+      + 'cycles in disconnected subgraphs when circular is true',
     () => {
       const graph = new DepGraph({ circular: true });
 
@@ -260,7 +260,7 @@ describe('DepGraph', () => {
     graph.addDependency('c', 'a');
     graph.addDependency('d', 'a');
 
-    window.addEventListener('compute-exception', e => {
+    window.addEventListener('compute-exception', (e) => {
       expect(e.detail.path).to.eql(['a', 'b', 'c', 'a']);
     });
 
@@ -282,7 +282,7 @@ describe('DepGraph', () => {
     graph.addDependency('b', 'c');
     graph.addDependency('c', 'a');
 
-    window.addEventListener('compute-exception', e => {
+    window.addEventListener('compute-exception', (e) => {
       expect(e.detail.path).to.eql(['a', 'b', 'c', 'a']);
     });
     /*
@@ -293,8 +293,8 @@ describe('DepGraph', () => {
   });
 
   it(
-    'should detect cycles in overall order when there are several ' +
-      'disconnected subgraphs (with one that does not have a cycle',
+    'should detect cycles in overall order when there are several '
+      + 'disconnected subgraphs (with one that does not have a cycle',
     () => {
       const graph = new DepGraph();
 
@@ -309,7 +309,7 @@ describe('DepGraph', () => {
       graph.addDependency('b_2', 'b_3');
       graph.addDependency('b_3', 'b_1');
 
-      window.addEventListener('compute-exception', e => {
+      window.addEventListener('compute-exception', (e) => {
         expect(e.detail.path).to.eql(['b_1', 'b_2', 'b_3', 'b_1']);
       });
 

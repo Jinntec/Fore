@@ -32,9 +32,7 @@ function markdown(src) {
   }
 
   function blockquote(src) {
-    return src.replace(rx_blockquote, (all, content) =>
-      element('blockquote', blockquote(highlight(content.replace(/^ *&gt; */gm, '')))),
-    );
+    return src.replace(rx_blockquote, (all, content) => element('blockquote', blockquote(highlight(content.replace(/^ *&gt; */gm, '')))));
   }
 
   function list(src) {
@@ -52,10 +50,10 @@ function markdown(src) {
       return `\n${
         ol
           ? `<ol start="${
-              num
-                ? `${ol}">`
-                : `${parseInt(ol, 36) - 9}" style="list-style-type:${low ? 'low' : 'upp'}er-alpha">`
-            }${entry}</ol>`
+            num
+              ? `${ol}">`
+              : `${parseInt(ol, 36) - 9}" style="list-style-type:${low ? 'low' : 'upp'}er-alpha">`
+          }${entry}</ol>`
           : element('ul', entry)
       }`;
     });
@@ -64,24 +62,23 @@ function markdown(src) {
   function highlight(src) {
     return src.replace(
       rx_highlight,
-      (all, _, p1, emp, sub, sup, small, big, p2, content) =>
-        _ +
-        element(
+      (all, _, p1, emp, sub, sup, small, big, p2, content) => _
+        + element(
           emp
             ? p2
               ? 'strong'
               : 'em'
             : sub
-            ? p2
-              ? 's'
-              : 'sub'
-            : sup
-            ? 'sup'
-            : small
-            ? 'small'
-            : big
-            ? 'big'
-            : 'code',
+              ? p2
+                ? 's'
+                : 'sub'
+              : sup
+                ? 'sup'
+                : small
+                  ? 'small'
+                  : big
+                    ? 'big'
+                    : 'code',
           highlight(content),
         ),
     );
@@ -131,16 +128,12 @@ function markdown(src) {
     const sep = table.match(rx_thead)[1];
     return `\n${element(
       'table',
-      table.replace(rx_row, (row, ri) =>
-        row == sep
-          ? ''
-          : element(
-              'tr',
-              row.replace(rx_cell, (all, cell, ci) =>
-                ci ? element(sep && !ri ? 'th' : 'td', unesc(highlight(cell || ''))) : '',
-              ),
-            ),
-      ),
+      table.replace(rx_row, (row, ri) => (row == sep
+        ? ''
+        : element(
+          'tr',
+          row.replace(rx_cell, (all, cell, ci) => (ci ? element(sep && !ri ? 'th' : 'td', unesc(highlight(cell || ''))) : '')),
+        ))),
     )}`;
   });
 

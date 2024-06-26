@@ -7,12 +7,13 @@ import versionInjector from 'rollup-plugin-version-injector';
 
 // eslint-disable-next-line no-unused-vars
 const { dependencies } = require('./package.json');
+
 export default [
   {
     input: './index.js',
     output: [
       {
-        file: `dist/fore.js`,
+        file: 'dist/fore.js',
         format: 'es',
         sourcemap: true,
       },
@@ -38,7 +39,7 @@ export default [
     input: './index.js',
     output: [
       {
-        file: `dist/fore-dev.js`,
+        file: 'dist/fore-dev.js',
         format: 'es',
         sourcemap: true,
       },

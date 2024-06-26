@@ -1,7 +1,9 @@
-import { html, oneEvent, fixtureSync, expect } from '@open-wc/testing';
+import {
+  html, oneEvent, fixtureSync, expect,
+} from '@open-wc/testing';
 
 import '../index.js';
-import {evaluateXPathToNodes,evaluateXPath} from "fontoxpath";
+import { evaluateXPathToNodes, evaluateXPath } from 'fontoxpath';
 
 describe('functions', () => {
   describe('Functions in JavaScript', () => {
@@ -225,7 +227,7 @@ describe('functions', () => {
 
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-   await trigger.performActions();
+    await trigger.performActions();
 
     const indexVal = document.getElementById('index').innerText;
     expect(Number(indexVal)).to.equal(3);
@@ -360,7 +362,6 @@ describe('functions', () => {
 
     expect(contextPs[0].innerText).to.equal(currentPs[0].innerText, 'The second result in the P should be correct');
     expect(contextPs[1].innerText).to.equal(currentPs[1].innerText, 'The second result in the P should be correct');
-
   });
 /*
   it.only('context() function returns correct nodesets', async () => {
@@ -379,7 +380,7 @@ describe('functions', () => {
         <fx-group ref="group">
             <fx-control ref="item/@attr">
               <fx-setvalue event="value-changed" ref="copy" value="context()"></fx-setvalue>
-            </fx-control>     
+            </fx-control>
             <div id="result">{copy}</div>
         </fx-group>
       </fx-fore>

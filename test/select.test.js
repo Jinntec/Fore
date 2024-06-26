@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-expressions */
-import { html, fixture, expect, elementUpdated, oneEvent } from '@open-wc/testing';
+import {
+  html, fixture, expect, elementUpdated, oneEvent,
+} from '@open-wc/testing';
 
 import '../index.js';
 
@@ -129,5 +131,4 @@ describe('fx-control with select tests', () => {
     expect(select.children[4].nodeName).to.equal('OPTION');
     expect(select.children[4].textContent).to.equal('option3');
   });
-
 });

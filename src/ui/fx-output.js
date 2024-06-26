@@ -8,7 +8,7 @@ import getInScopeContext from '../getInScopeContext.js';
  * todo: review placing of value. should probably work with value attribute and not allow slotted content.
  */
 export class FxOutput extends XfAbstractControl {
-/*
+  /*
   static get properties() {
     return {
       ...super.properties,
@@ -63,7 +63,7 @@ export class FxOutput extends XfAbstractControl {
     // console.log('widget ', this.widget);
     this.mediatype = this.hasAttribute('mediatype') ? this.getAttribute('mediatype') : null;
 
-/*
+    /*
     this.addEventListener('slotchange', e => {
       console.log('slotchange ', e);
     });
@@ -121,27 +121,25 @@ export class FxOutput extends XfAbstractControl {
 
     if (this.mediatype === 'html') {
       if (this.modelItem.node) {
-
         const defaultSlot = this.shadowRoot.querySelector('#default');
         const { node } = this.modelItem;
         if (node.nodeType) {
-
           valueWrapper.append(node);
           // this.appendChild(node);
           return;
         }
 
         // ### try to parse as string
-        const tmpDoc = new DOMParser().parseFromString(node,'text/html');
+        const tmpDoc = new DOMParser().parseFromString(node, 'text/html');
         const theNode = tmpDoc.body.childNodes;
         // console.log('actual node', theNode)
-        Array.from(theNode).forEach(n =>{
+        Array.from(theNode).forEach(n => {
           valueWrapper.append(n);
         });
         // valueWrapper.append(theNode);
 
         // valueWrapper.innerHTML=node;
-/*
+        /*
         if (node.nodeType) {
           this.appendChild(node);
           return;
@@ -151,7 +149,7 @@ export class FxOutput extends XfAbstractControl {
           this.appendChild(obj[1]);
         });
 */
-/*
+        /*
         Object.entries(node).map(obj => {
           // valueWrapper.appendChild(obj[1]);
           this.appendChild(obj[1]);
@@ -168,11 +166,11 @@ export class FxOutput extends XfAbstractControl {
       return;
     }
 
-    if(this.mediatype === 'image'){
+    if (this.mediatype === 'image') {
       const img = document.createElement('img');
-		img.setAttribute('src',this.value);
-		// Reset the output before adding the image
-		this.innerHTML = '';
+      img.setAttribute('src', this.value);
+      // Reset the output before adding the image
+      this.innerHTML = '';
       valueWrapper.appendChild(img);
       return;
     }

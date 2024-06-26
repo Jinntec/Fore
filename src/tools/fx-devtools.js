@@ -4,168 +4,166 @@ import './fx-json-instance.js';
 // import './fx-minimap.js';
 
 export class FxDevtools extends HTMLElement {
+  static get properties() {
+    return {
+      fore: {
+        type: Object,
+        description: 'The fx-fore element the devtools are attached to',
+      },
+      instances: {
+        type: Array,
+        description: 'Instances of selected Fore element',
+      },
+      selector: {
+        type: String,
+        description: 'optional selector to attach to a certain fx-fore element with given id',
+      },
+    };
+  }
 
-    static get properties() {
-        return {
-            fore:{
-                type:Object,
-                description:"The fx-fore element the devtools are attached to"
-            },
-            instances:{
-                type:Array,
-                description:"Instances of selected Fore element"
-            },
-            selector: {
-                type: String,
-                description: "optional selector to attach to a certain fx-fore element with given id",
-            }
-        };
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+    Object.keys(this.constructor.properties).forEach(propertyName => {
+      const property = this.constructor.properties[propertyName];
+      const attribute = property.attribute || propertyName;
+      const value = this.getAttribute(attribute) || property.default;
+      const typedValue = property.type(value);
+      this[propertyName] = typedValue;
+    });
+
+    this.isResizing = false;
+    this.lastY = 0;
+    this.defaultHeight = '40vh';
+
+    this.buttonByInstanceId = new Map();
+
+    const attachToFore = fore => {
+      this.fore = fore;
+      this.instances = [...this.fore.getModel().instances];
+      // console.log('instances',this.instances);
+      const header = this.shadowRoot.querySelector('.instances header');
+      header.textContent = 'Data ';
+      this.instances.forEach(instance => {
+        const btn = document.createElement('button');
+        btn.setAttribute('type', 'button');
+        btn.textContent = instance.id;
+        header.appendChild(btn);
+        this.buttonByInstanceId.set(instance.id, btn);
+        btn.addEventListener('click', () => this.selectInstance(instance.id));
+      });
+      if (!this.instances.length) {
+        return;
+      }
+      this.selectInstance(this.instances[0].id);
+    };
+
+    const fore = document.querySelector('fx-fore');
+    if (fore) {
+      // If there's no `fore` element, there cannot be an inspector
+      if (fore.inited) {
+        // The fore element is already initialized. We can attach immediately.
+        // This can happen if the fore element does not use anything asynchronous and loads right away.
+        attachToFore(fore);
+      } else {
+        fore.addEventListener('model-construct-done', () => attachToFore(fore));
+      }
     }
 
-    constructor() {
-        super();
-        this.attachShadow({mode: 'open'});
-        Object.keys(this.constructor.properties).forEach((propertyName) => {
-        	  const property = this.constructor.properties[propertyName];
-        	  const attribute = property.attribute || propertyName;
-        	  const value = this.getAttribute(attribute) || property.default;
-        	  const typedValue = property.type(value);
-        	  this[propertyName] = typedValue;
-        });
+    window.document.addEventListener('log-active-element', e => {
+      const target = e ? e.detail?.target || e.target : window.event.srcElement;
 
-        this.isResizing = false;
-        this.lastY = 0;
-        this.defaultHeight = '40vh';
+      // Note that the event target or srcElement may be the document node.
+      const closestFore = target.nodeType === Node.DOCUMENT_NODE ? null : target.closest('fx-fore');
+      if (closestFore) {
+        attachToFore(closestFore);
+      }
 
-		this.buttonByInstanceId = new Map();
-
-        const attachToFore = (fore) => {
-            this.fore = fore;
-            this.instances = [...this.fore.getModel().instances];
-            // console.log('instances',this.instances);
-            const header = this.shadowRoot.querySelector('.instances header');
-            header.textContent = 'Data ';
-            this.instances.forEach(instance => {
-                const btn = document.createElement('button');
-                btn.setAttribute('type','button');
-                btn.textContent = instance.id;
-                header.appendChild(btn);
-                this.buttonByInstanceId.set(instance.id, btn);
-                btn.addEventListener('click', () => this.selectInstance(instance.id));
-            });
-			if (!this.instances.length) {
-				return;
-			}
-            this.selectInstance(this.instances[0].id);
-        };
-
-        const fore = document.querySelector('fx-fore');
-		if (fore) {
-			// If there's no `fore` element, there cannot be an inspector
-			if (fore.inited) {
-				// The fore element is already initialized. We can attach immediately.
-				// This can happen if the fore element does not use anything asynchronous and loads right away.
-				attachToFore(fore);
-			} else {
-				fore.addEventListener('model-construct-done', () => attachToFore(fore));
-			}
-		}
-
-		window.document.addEventListener('log-active-element', (e) => {
-			const target = e ? e.detail?.target || e.target : window.event.srcElement;
-
-			// Note that the event target or srcElement may be the document node.
-            const closestFore = target.nodeType === Node.DOCUMENT_NODE ? null : target.closest('fx-fore');
-            if (closestFore) {
-                attachToFore(closestFore);
-            }
-
-			const instance = this.instances.find(
-				instance => {
-					if (instance.type !== 'xml') {
-						// TODO: handle JSON instances!
-						return false;
-					}
-					return instance.instanceData.contains(target);
-				});
-            // const instance = this._getInstanceForTarget(target);
-
-			if (instance) {
-				this.selectInstance(instance.id);
-			}
-		});
-    }
-
-    _getInstanceForTarget(node){
-        this.instances.forEach(instance => {
-            if(instance.type === 'xml' && instance.instanceData.contains(node)){
-                return instance;
-            }
-            if(instance.type === 'json'){
-                return instance;
-            }
-        });
-    }
-
-	selectInstance (instanceId) {
-		const button = this.buttonByInstanceId.get(instanceId);
-		if (!button) {
-			return;
-		}
-		if (button.classList.contains('selected-btn')) {
-			return;
-		}
-
-		const selectedBtn = this.shadowRoot.querySelector('.selected-btn');
-        if(selectedBtn){
-            selectedBtn.classList.remove('selected-btn');
+      const instance = this.instances.find(instance => {
+        if (instance.type !== 'xml') {
+          // TODO: handle JSON instances!
+          return false;
         }
+        return instance.instanceData.contains(target);
+      });
+      // const instance = this._getInstanceForTarget(target);
 
-        button.classList.add('selected-btn');
+      if (instance) {
+        this.selectInstance(instance.id);
+      }
+    });
+  }
 
-        const instancePanel = this.shadowRoot.querySelector('.instance-panel');
-        instancePanel.innerHTML = "";
+  _getInstanceForTarget(node) {
+    this.instances.forEach(instance => {
+      if (instance.type === 'xml' && instance.instanceData.contains(node)) {
+        return instance;
+      }
+      if (instance.type === 'json') {
+        return instance;
+      }
+    });
+  }
 
-        this.instances = [...this.fore.querySelectorAll('fx-instance')];
-        const instance = Array.from(this.instances).find(inst => inst.id === instanceId);
-        // console.log('wanted instance', instance);
-
-        const panelContent = this._renderInstancePanel(instance);
-        // console.log('panelContent', panelContent);
-        // instancePanel.innerHTML = panelContent;
-        instancePanel.append(panelContent);
-	}
-
-    connectedCallback() {
-        this.render();
-        // document.body.style.height = document.body.scrollHeight + 320 + 'px';
+  selectInstance(instanceId) {
+    const button = this.buttonByInstanceId.get(instanceId);
+    if (!button) {
+      return;
+    }
+    if (button.classList.contains('selected-btn')) {
+      return;
     }
 
-    _startResize(event) {
-        this.isResizing = true;
-        this.lastY = event.clientY;
+    const selectedBtn = this.shadowRoot.querySelector('.selected-btn');
+    if (selectedBtn) {
+      selectedBtn.classList.remove('selected-btn');
     }
 
-    _resizePanel(event) {
-        if (!this.isResizing) return;
-        const delta = event.clientY - this.lastY;
-        this.style.height = `${this.offsetHeight - delta}px`;
-        this.lastHeight = this.style.height;
-        this.lastY = event.clientY;
-    }
+    button.classList.add('selected-btn');
 
-    _stopResize(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        this.isResizing = false;
-        document.body.style.height = 'inherit'; // reset before calculating scrollheight
-        document.body.style.width = 'inherit'; // reset before calculating scrollheight
-        const newHeight = document.body.scrollHeight + this.offsetHeight;
-        document.body.style.height = `${newHeight}px`;
-    }
+    const instancePanel = this.shadowRoot.querySelector('.instance-panel');
+    instancePanel.innerHTML = '';
 
-    render() {
-        const style = `
+    this.instances = [...this.fore.querySelectorAll('fx-instance')];
+    const instance = Array.from(this.instances).find(inst => inst.id === instanceId);
+    // console.log('wanted instance', instance);
+
+    const panelContent = this._renderInstancePanel(instance);
+    // console.log('panelContent', panelContent);
+    // instancePanel.innerHTML = panelContent;
+    instancePanel.append(panelContent);
+  }
+
+  connectedCallback() {
+    this.render();
+    // document.body.style.height = document.body.scrollHeight + 320 + 'px';
+  }
+
+  _startResize(event) {
+    this.isResizing = true;
+    this.lastY = event.clientY;
+  }
+
+  _resizePanel(event) {
+    if (!this.isResizing) return;
+    const delta = event.clientY - this.lastY;
+    this.style.height = `${this.offsetHeight - delta}px`;
+    this.lastHeight = this.style.height;
+    this.lastY = event.clientY;
+  }
+
+  _stopResize(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isResizing = false;
+    document.body.style.height = 'inherit'; // reset before calculating scrollheight
+    document.body.style.width = 'inherit'; // reset before calculating scrollheight
+    const newHeight = document.body.scrollHeight + this.offsetHeight;
+    document.body.style.height = `${newHeight}px`;
+  }
+
+  render() {
+    const style = `
       @import '../../resources/fore.css';
       
         :host {
@@ -320,9 +318,9 @@ export class FxDevtools extends HTMLElement {
             cursor: ew-resize;
         }
       `;
-        // console.log('render instances',this.instances);
+    // console.log('render instances',this.instances);
 
-        const html = `
+    const html = `
         <section class="wrapper">
             <slot></slot>
             <details class="fx-devtools" open>
@@ -357,88 +355,90 @@ export class FxDevtools extends HTMLElement {
         </section>
       `;
 
-        this.shadowRoot.innerHTML = `
+    this.shadowRoot.innerHTML = `
           <style>
               ${style}
           </style>
           ${html}
       `;
 
-        // resizing handler
-        this.resizer = this.shadowRoot.querySelector('.resizer');
-        this.resizer.addEventListener('mousedown', this._startResize.bind(this));
-        document.addEventListener('mousemove', this._resizePanel.bind(this));
-        document.addEventListener('mouseup', this._stopResize.bind(this));
+    // resizing handler
+    this.resizer = this.shadowRoot.querySelector('.resizer');
+    this.resizer.addEventListener('mousedown', this._startResize.bind(this));
+    document.addEventListener('mousemove', this._resizePanel.bind(this));
+    document.addEventListener('mouseup', this._stopResize.bind(this));
 
-        // setup handler for option button on the right of the panel
-        const optionsTrigger = this.shadowRoot.querySelector('#optionsTrigger');
-        optionsTrigger.addEventListener('click', () => {
-            const tr = this.shadowRoot.querySelector('#options');
-            tr.classList.toggle('open');
-            tr.classList.contains('open')? optionsTrigger.style.background = 'lightsteelblue': optionsTrigger.style.background = 'transparent';
-        });
+    // setup handler for option button on the right of the panel
+    const optionsTrigger = this.shadowRoot.querySelector('#optionsTrigger');
+    optionsTrigger.addEventListener('click', () => {
+      const tr = this.shadowRoot.querySelector('#options');
+      tr.classList.toggle('open');
+      tr.classList.contains('open')
+        ? (optionsTrigger.style.background = 'lightsteelblue')
+        : (optionsTrigger.style.background = 'transparent');
+    });
 
-        // opening/closing the devtools
-        const caption = this.shadowRoot.querySelector('.fx-devtools');
-        caption.addEventListener('click', ev => {
-            if(ev.target.nodeName === 'DIV' && ev.target.classList.contains('resizer')) {
-                return;
-            }
-            if(ev.target.parentNode.open){
-                this.removeAttribute('open');
-                this.lastHeight = this.style.height;
-                this.style.height='3em';
-            }else{
-                this.setAttribute('open','');
-                this.style.height= this.lastHeight ? this.lastHeight: '40vh';
-            }
-        });
+    // opening/closing the devtools
+    const caption = this.shadowRoot.querySelector('.fx-devtools');
+    caption.addEventListener('click', ev => {
+      if (ev.target.nodeName === 'DIV' && ev.target.classList.contains('resizer')) {
+        return;
+      }
+      if (ev.target.parentNode.open) {
+        this.removeAttribute('open');
+        this.lastHeight = this.style.height;
+        this.style.height = '3em';
+      } else {
+        this.setAttribute('open', '');
+        this.style.height = this.lastHeight ? this.lastHeight : '40vh';
+      }
+    });
 
-        this.classList.add('open');
+    this.classList.add('open');
 
-/*
+    /*
         document.addEventListener('value-changed', e =>{
             console.log('value-changed hitting glass', e.target);
         })
 */
+  }
 
-    }
+  _handleOpen(ev) {
+    // console.log('that works')
 
-    _handleOpen(ev){
-        // console.log('that works')
+    document.body.style.height = '';
+  }
 
-        document.body.style.height = '';
-    }
+  _renderInstancePanel(instance) {
+    if (instance.type === 'xml') {
+      const domInspector = document.createElement('fx-dom-inspector');
+      domInspector.setInstance(instance);
+      domInspector.setAttribute('instance', instance.id);
+      return domInspector;
 
-    _renderInstancePanel(instance){
-        if(instance.type === 'xml'){
-            const domInspector = document.createElement('fx-dom-inspector');
-			domInspector.setInstance(instance);
-            domInspector.setAttribute('instance', instance.id);
-            return domInspector;
-
-            /*
+      /*
                         return
                             `<fx-dom-inspector instance="${instance.id}"> </fx-dom-inspector>`
             */
-        } if(instance.type === 'json'){
-            const jsonInspector = document.createElement('fx-json-instance');
-            jsonInspector.setAttribute('instance', instance.id);
-            const span = document.createElement('span');
-            span.setAttribute('slot','header');
-            jsonInspector.append(span);
-            return jsonInspector;
-/*
+    }
+    if (instance.type === 'json') {
+      const jsonInspector = document.createElement('fx-json-instance');
+      jsonInspector.setAttribute('instance', instance.id);
+      const span = document.createElement('span');
+      span.setAttribute('slot', 'header');
+      jsonInspector.append(span);
+      return jsonInspector;
+      /*
             return `
                 <fx-json-instance instance="${instance.id}">
                     <span slot="header"></span>
                 </fx-json-instance>
             `
 */
-        }
     }
+  }
 }
 
 if (!customElements.get('fx-devtools')) {
-    customElements.define('fx-devtools', FxDevtools);
+  customElements.define('fx-devtools', FxDevtools);
 }

@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-expressions */
-import { html, oneEvent, fixtureSync, expect, elementUpdated } from '@open-wc/testing';
+import {
+  html, oneEvent, fixtureSync, expect, elementUpdated,
+} from '@open-wc/testing';
 
 import '../index.js';
 
@@ -103,21 +105,13 @@ describe('scoped resolution tests', () => {
     await oneEvent(el, 'ready');
     await elementUpdated(el);
 
-    el.querySelectorAll('.thumb .fingername').forEach(fingerOutput => {
+    el.querySelectorAll('.thumb .fingername').forEach((fingerOutput) => {
       expect(fingerOutput.value).to.equal('thumb');
     });
-    el.querySelectorAll('.pointer .fingername').forEach(fingerOutput =>
-      expect(fingerOutput.value).to.equal('pointer'),
-    );
-    el.querySelectorAll('.middle .fingername').forEach(fingerOutput =>
-      expect(fingerOutput.value).to.equal('middle'),
-    );
-    el.querySelectorAll('.ring .fingername').forEach(fingerOutput =>
-      expect(fingerOutput.value).to.equal('ring'),
-    );
-    el.querySelectorAll('.pinky .fingername').forEach(fingerOutput =>
-      expect(fingerOutput.value).to.equal('pinky'),
-    );
+    el.querySelectorAll('.pointer .fingername').forEach(fingerOutput => expect(fingerOutput.value).to.equal('pointer'));
+    el.querySelectorAll('.middle .fingername').forEach(fingerOutput => expect(fingerOutput.value).to.equal('middle'));
+    el.querySelectorAll('.ring .fingername').forEach(fingerOutput => expect(fingerOutput.value).to.equal('ring'));
+    el.querySelectorAll('.pinky .fingername').forEach(fingerOutput => expect(fingerOutput.value).to.equal('pinky'));
   });
 
   it('inscopeContext for second child bind is equal to its parent', async () => {
@@ -390,7 +384,7 @@ describe('scoped resolution tests', () => {
     expect(controls[1].value).to.equal('78');
   });
 
-	it('resolves group within repeat (external instance)', async () => {
+  it('resolves group within repeat (external instance)', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
@@ -415,8 +409,8 @@ describe('scoped resolution tests', () => {
     // const model = el.querySelector('fx-fore fx-model');
     await oneEvent(el, 'ready');
 
-		const controls = el.querySelectorAll('fx-control');
-		console.log(el.outerHTML);
+    const controls = el.querySelectorAll('fx-control');
+    console.log(el.outerHTML);
     expect(controls.length).to.equal(2);
 
     expect(controls[0].value).to.equal('66');
@@ -460,8 +454,6 @@ describe('scoped resolution tests', () => {
     const output = el.querySelector('fx-output');
     expect(output).to.exist;
     expect(output.value).to.equal('ok');
-
-
   });
   it('resolves correctly when a fx-control binds with the instance() function', async () => {
     const el = await fixtureSync(html`
@@ -500,8 +492,5 @@ describe('scoped resolution tests', () => {
     // const output = el.querySelector('fx-output');
     // expect(output).to.exist;
     // expect(output.value).to.equal('ok');
-
-
   });
-
 });
