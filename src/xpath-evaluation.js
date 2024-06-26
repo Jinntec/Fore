@@ -885,7 +885,7 @@ registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'parse' },
   ['xs:string?'],
   'element()?',
-  (dynamicContext, string) => {
+  (_dynamicContext, string) => {
     const parser = new DOMParser();
     const out = parser.parseFromString(string, 'application/xml');
     console.log('parse', out);
@@ -998,6 +998,9 @@ const instance = (dynamicContext, string) => {
   // Spec: https://www.w3.org/TR/xforms-xpath/#The_XForms_Function_Library#The_instance.28.29_Function
   // TODO: handle no string passed (null will be passed instead)
 
+  /**
+   * @type {import('./fx-fore.js').FxFore}
+   */
   const formElement = fxEvaluateXPathToFirstNode(
     'ancestor-or-self::fx-fore[1]',
     dynamicContext.currentContext.formElement,
@@ -1068,20 +1071,8 @@ registerCustomXPathFunction(
   'item()?',
   instance,
 );
-const getAttributes = value => {
-  if (Array.isArray(value)) {
-    return ' type="array"';
-  }
-  if (typeof value === 'number') {
-    return ' type="number"';
-  }
-  if (typeof value === 'boolean') {
-    return ' type="boolean"';
-  }
-  return '';
-};
 
-const jsonToXml = (dynamicContext, json) => {
+const jsonToXml = (_dynamicContext, json) => {
   const escapeXml = str =>
     str.replace(
       /[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD]/g,
@@ -1140,7 +1131,7 @@ registerCustomXPathFunction(
   'item()?',
   jsonToXml,
 );
-const xmlToJson = (dynamicContext, xml) => {
+const xmlToJson = (_dynamicContext, xml) => {
   const isElementNode = node => node.nodeType === Node.ELEMENT_NODE;
 
   const isTextNode = node => node.nodeType === Node.TEXT_NODE;
@@ -1171,6 +1162,7 @@ const xmlToJson = (dynamicContext, xml) => {
     if (isTextNode(node)) {
       return node.textContent;
     }
+    return undefined;
   };
 
   const parser = new DOMParser();
@@ -1195,7 +1187,7 @@ registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'depends' },
   ['node()*'],
   'item()?',
-  (dynamicContext, nodes) =>
+  (_dynamicContext, nodes) =>
     // console.log('depends on : ', nodes[0]);
     nodes[0],
 );
@@ -1285,50 +1277,50 @@ registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'base64encode' },
   ['xs:string?'],
   'xs:string?',
-  (dynamicContext, string) => btoa(string),
+  (_dynamicContext, string) => btoa(string),
 );
 
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'local-date' },
   [],
   'xs:string?',
-  (dynamicContext, string) => new Date().toLocaleDateString(),
+  (_dynamicContext, _string) => new Date().toLocaleDateString(),
 );
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'local-dateTime' },
   [],
   'xs:string?',
-  (dynamicContext, string) => new Date().toLocaleString(),
+  (_dynamicContext, _string) => new Date().toLocaleString(),
 );
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri' },
   [],
   'xs:string?',
-  (dynamicContext, string) => window.location.href,
+  (_dynamicContext, _string) => window.location.href,
 );
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-fragment' },
   [],
   'xs:string?',
-  (dynamicContext, arg) => window.location.hash,
+  (_dynamicContext, _arg) => window.location.hash,
 );
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-host' },
   [],
   'xs:string?',
-  (dynamicContext, arg) => window.location.host,
+  (_dynamicContext, _arg) => window.location.host,
 );
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-query' },
   [],
   'xs:string?',
-  (dynamicContext, arg) => window.location.search,
+  (_dynamicContext, _arg) => window.location.search,
 );
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-relpath' },
   [],
   'xs:string?',
-  (dynamicContext, arg) => {
+  (_dynamicContext, _arg) => {
     const path = new URL(window.location.href).pathname;
     return path.substring(0, path.lastIndexOf('/') + 1);
   },
@@ -1337,19 +1329,19 @@ registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-path' },
   [],
   'xs:string?',
-  (dynamicContext, arg) => new URL(window.location.href).pathname,
+  (_dynamicContext, _arg) => new URL(window.location.href).pathname,
 );
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-port' },
   [],
   'xs:string?',
-  (dynamicContext, arg) => window.location.port,
+  (_dynamicContext, _arg) => window.location.port,
 );
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-param' },
   ['xs:string?'],
   'xs:string?',
-  (dynamicContext, arg) => {
+  (_dynamicContext, arg) => {
     if (!arg) return null;
 
     const { search } = window.location;
@@ -1362,13 +1354,13 @@ registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-scheme' },
   [],
   'xs:string?',
-  (dynamicContext, arg) => new URL(window.location.href).protocol,
+  (_dynamicContext, _arg) => new URL(window.location.href).protocol,
 );
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-scheme-specific-part' },
   [],
   'xs:string?',
-  (dynamicContext, arg) => {
+  (_dynamicContext, _arg) => {
     const uri = window.location.href;
     return uri.substring(uri.indexOf(':') + 1, uri.length);
   },

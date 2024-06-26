@@ -4,6 +4,7 @@ import { FlatCompat } from '@eslint/eslintrc';
 
 const compat = new FlatCompat();
 
+/** @type {import('@typescript-eslint/utils/ts-eslint').FlatConfig.ConfigArray} */
 export default [
   ...compat.config(openWcEslintConfig),
   {
@@ -32,6 +33,12 @@ export default [
         'off',
         {
           dependencies: ['src/fx-model.js'],
+        },
+      ],
+      'no-unused-vars': [
+        'warn',
+        {
+          argsIgnorePattern: '^_.*',
         },
       ],
     },
