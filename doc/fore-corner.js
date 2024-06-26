@@ -1,14 +1,14 @@
-import {FxOutput} from "../src/ui/fx-output";
+import { FxOutput } from '../src/ui/fx-output';
 
-export class ForeCorner extends HTMLElement{
-    constructor() {
-        super();
-        this.attachShadow({ mode: 'open' });
-        this.href = '';
-    }
+export class ForeCorner extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+    this.href = '';
+  }
 
-    connectedCallback() {
-        const style = `
+  connectedCallback() {
+    const style = `
           :host {
             display: block;
             max-width:100%;
@@ -46,25 +46,23 @@ export class ForeCorner extends HTMLElement{
         
         `;
 
-        this.href = this.getAttribute('href');
-        const outputHtml = `
+    this.href = this.getAttribute('href');
+    const outputHtml = `
             <a href="${this.href}">
                 <div class="logo-corner">
                     <img class="logo fore" src="/doc/light-blue1.png">
                 </div>
             </a>
         `;
-    
-        this.shadowRoot.innerHTML = `
+
+    this.shadowRoot.innerHTML = `
             <style>
                 ${style}
             </style>
             ${outputHtml}
         `;
-
-    }
-
+  }
 }
 if (!customElements.get('fore-corner')) {
-    customElements.define('fore-corner', ForeCorner);
+  customElements.define('fore-corner', ForeCorner);
 }

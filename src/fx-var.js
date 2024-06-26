@@ -16,8 +16,8 @@ export class FxVariable extends ForeElementMixin {
     this.attachShadow({ mode: 'open' });
     this.name = '';
     this.valueQuery = '';
-      this.value = null;
-	  this.precedingVariables = [];
+    this.value = null;
+    this.precedingVariables = [];
   }
 
   connectedCallback() {
@@ -32,9 +32,9 @@ export class FxVariable extends ForeElementMixin {
     this.value = typedValueFactory(values, domFacade);
   }
 
-	/**
-	 * @param {Map<string, FxVariable>} inScopeVariables
-	 */
+  /**
+   * @param {Map<string, FxVariable>} inScopeVariables
+   */
   setInScopeVariables(inScopeVariables) {
     if (inScopeVariables.has(this.name)) {
       console.error(`The variable ${this.name} is declared more than once`);

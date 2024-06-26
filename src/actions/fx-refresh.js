@@ -1,7 +1,7 @@
 import { AbstractAction } from './abstract-action.js';
 import { Fore } from '../fore.js';
-import {resolveId} from "../xpath-evaluation.js";
-import {XPathUtil} from "../xpath-util.js";
+import { resolveId } from '../xpath-evaluation.js';
+import { XPathUtil } from '../xpath-util.js';
 
 /**
  * `fx-refresh`
@@ -12,12 +12,12 @@ import {XPathUtil} from "../xpath-util.js";
 class FxRefresh extends AbstractAction {
   async perform() {
     this.dispatchEvent(
-        new CustomEvent('execute-action', {
-          composed: true,
-          bubbles: true,
-          cancelable:true,
-          detail: { action: this, event:this.event},
-        }),
+      new CustomEvent('execute-action', {
+        composed: true,
+        bubbles: true,
+        cancelable: true,
+        detail: { action: this, event: this.event },
+      }),
     );
 
     if (this.hasAttribute('self')) {
@@ -28,12 +28,12 @@ class FxRefresh extends AbstractAction {
         return;
       }
     }
-    if(this.hasAttribute('force')){
+    if (this.hasAttribute('force')) {
       console.log(`### <<<<< refresh() force ${this} >>>>>`);
       this.getOwnerForm().forceRefresh();
       return;
     }
-    if(this.hasAttribute('control')){
+    if (this.hasAttribute('control')) {
       const targetId = this.getAttribute('control');
       console.log(`### <<<<< refresh() control '${targetId}' >>>>>`);
       const ctrl = resolveId(targetId, this);

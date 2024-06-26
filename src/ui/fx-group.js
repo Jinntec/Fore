@@ -33,10 +33,12 @@ class FxGroup extends FxContainer {
     super();
     this.collapse = false;
   }
+
   connectedCallback() {
     super.connectedCallback();
-    this.setAttribute('role','group');
+    this.setAttribute('role', 'group');
   }
+
   render() {
     return `
       <slot></slot>
@@ -89,7 +91,7 @@ class FxGroup extends FxContainer {
 
   async refresh(force) {
     super.refresh(force);
-    Fore.refreshChildren(this,force);
+    Fore.refreshChildren(this, force);
   }
 }
 

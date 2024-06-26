@@ -15,12 +15,12 @@ export class FxFunction extends ForeElementMixin {
 
     this.signature = this.hasAttribute('signature') ? this.getAttribute('signature') : null;
     this.type = this.hasAttribute('type') ? this.getAttribute('type') : null;
-    this.shadowRoot.innerHTML = `<slot></slot>`;
+    this.shadowRoot.innerHTML = '<slot></slot>';
 
     this.override = this.hasAttribute('override') ? this.getAttribute('override') : 'true';
     this.functionBody = this.innerText;
 
-	registerFunction(this, this);
+    registerFunction(this, this);
   }
 }
 if (!customElements.get('fx-function')) {

@@ -1,6 +1,8 @@
 /* eslint-disable no-unused-expressions */
 // eslint-disable-next-line no-unused-vars
-import { html, fixtureSync, expect, oneEvent } from '@open-wc/testing';
+import {
+  html, fixtureSync, expect, oneEvent,
+} from '@open-wc/testing';
 import * as fx from 'fontoxpath';
 import { Relevance } from '../src/relevance.js';
 
@@ -78,7 +80,7 @@ describe('submission tests', () => {
 
     const sm = el.querySelector('#submission');
     expect(sm).to.exist;
-      await sm.submit();
+    await sm.submit();
     // const result = sm.selectRelevant('xml');
     const result = Relevance.selectRelevant(sm, 'xml');
     const vehicle = fx.evaluateXPath('vehicle', result, null, {});
@@ -238,7 +240,7 @@ describe('submission tests', () => {
 
     await oneEvent(el, 'refresh-done');
 
-/*
+    /*
     const sm = el.querySelector('#submission');
     expect(sm).to.exist;
 
@@ -400,8 +402,6 @@ describe('submission tests', () => {
 
     expect(root.hasAttribute('xmlns')).to.be.true;
     expect(root.getAttribute('xmlns')).to.equal('http://www.tei-c.org/ns/1.0');
-
-
   });
 
   it('checks constraints and dispatches error when invalid', async () => {
@@ -438,7 +438,7 @@ describe('submission tests', () => {
     sm.submit();
 
     await oneEvent(sm, 'submit-error');
-    const out=el.querySelector('fx-output');
+    const out = el.querySelector('fx-output');
     expect(out.value).to.equal('true');
   });
 
@@ -476,9 +476,7 @@ describe('submission tests', () => {
     sm.submit();
 
     await oneEvent(sm, 'submit-error');
-    const out=el.querySelector('fx-output');
+    const out = el.querySelector('fx-output');
     expect(out.value).to.equal('true');
   });
-
-
 });

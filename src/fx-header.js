@@ -1,11 +1,11 @@
-import ForeElementMixin from "./ForeElementMixin.js";
+import ForeElementMixin from './ForeElementMixin.js';
 
 export class FxHeader extends ForeElementMixin {
   constructor() {
     super();
     this.style.display = 'none';
     this.attachShadow({ mode: 'open' });
-    this.shadowRoot.innerHTML = ``;
+    this.shadowRoot.innerHTML = '';
 
     if (!this.hasAttribute('name')) {
       throw new Error('required attribute "name" missing');
@@ -14,7 +14,7 @@ export class FxHeader extends ForeElementMixin {
   }
 
   connectedCallback() {
-    this.shadowRoot.innerHTML = ``;
+    this.shadowRoot.innerHTML = '';
   }
 }
 if (!customElements.get('fx-header')) {
