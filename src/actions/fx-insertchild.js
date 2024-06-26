@@ -5,8 +5,8 @@ import {
   evaluateXPathToFirstNode,
   evaluateXPathToNumber,
 } from '../xpath-evaluation.js';
-import {XPathUtil} from "../xpath-util";
-import {Fore} from '../fore.js';
+import { XPathUtil } from '../xpath-util';
+import { Fore } from '../fore.js';
 
 /**
  * `fx-insert`
@@ -26,8 +26,8 @@ export class FxInsertchild extends AbstractAction {
       at: {
         type: Number,
       },
-      child:{
-        type: String
+      child: {
+        type: String,
       },
       parent: {
         type: String,
@@ -57,7 +57,6 @@ export class FxInsertchild extends AbstractAction {
     this.origin = this.hasAttribute('origin') ? this.getAttribute('origin') : null; // last item of context seq
     this.keepValues = !!this.hasAttribute('keep-values');
 
-
     const style = `
         :host{
             display:none;
@@ -74,7 +73,6 @@ export class FxInsertchild extends AbstractAction {
                    position="${this.position}"></fx-insert>
                    
     `;
-
   }
 
   async perform() {
@@ -82,9 +80,7 @@ export class FxInsertchild extends AbstractAction {
     const insert = this.shadowRoot.querySelector('fx-insert');
     await insert.perform();
     this.needsUpdate = true;
-
   }
-
 }
 
 if (!customElements.get('fx-insertChild')) {

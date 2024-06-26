@@ -21,7 +21,13 @@ export class FxModel extends HTMLElement {
     super();
     // this.id = '';
 
+    /**
+     * @type {import('./fx-instance.js').FxInstance[]}
+     */
     this.instances = [];
+    /**
+     * @type {import('./modelitem.js').ModelItem[]}
+     */
     this.modelItems = [];
     this.defaultContext = {};
     this.changed = [];
@@ -40,7 +46,7 @@ export class FxModel extends HTMLElement {
 
   connectedCallback() {
     // console.log('connectedCallback ', this);
-    this.setAttribute('inert', true);
+    this.setAttribute('inert', 'true');
     this.shadowRoot.innerHTML = `
             <slot></slot>
         `;
@@ -120,7 +126,7 @@ export class FxModel extends HTMLElement {
     const instances = this.querySelectorAll('fx-instance');
     if (instances.length > 0) {
       const promises = [];
-      instances.forEach((instance) => {
+      instances.forEach(instance => {
         promises.push(instance.init());
       });
 
@@ -189,7 +195,7 @@ export class FxModel extends HTMLElement {
       return;
     }
 
-    binds.forEach((bind) => {
+    binds.forEach(bind => {
       bind.init(this);
     });
 
@@ -220,7 +226,7 @@ export class FxModel extends HTMLElement {
     // ### create the subgraph for all changed modelItems
     if (this.changed.length !== 0) {
       // ### build the subgraph
-      this.changed.forEach((modelItem) => {
+      this.changed.forEach(modelItem => {
         this.subgraph.addNode(modelItem.path, modelItem.node);
         // const dependents = this.mainGraph.dependantsOf(modelItem.path, false);
         // this._addSubgraphDependencies(modelItem.path);
@@ -230,7 +236,7 @@ export class FxModel extends HTMLElement {
           const all = this.mainGraph.dependantsOf(modelItem.path, false);
           const dependents = all.reverse();
           if (dependents.length !== 0) {
-            dependents.forEach((dep) => {
+            dependents.forEach(dep => {
               // const subdep = this.mainGraph.dependentsOf(dep,false);
               // subgraph.addDependency(dep, modelItem.path);
               const val = this.mainGraph.getNodeData(dep);
@@ -253,7 +259,7 @@ export class FxModel extends HTMLElement {
 
       // ### compute the subgraph
       const ordered = this.subgraph.overallOrder(false);
-      ordered.forEach((path) => {
+      ordered.forEach(path => {
         if (this.mainGraph.hasNode(path)) {
           const node = this.mainGraph.getNodeData(path);
           this.compute(node, path);
@@ -265,7 +271,7 @@ export class FxModel extends HTMLElement {
       Fore.dispatch(this, 'recalculate-done', { graph: this.subgraph, computes: this.computes });
     } else {
       const v = this.mainGraph.overallOrder(false);
-      v.forEach((path) => {
+      v.forEach(path => {
         const node = this.mainGraph.getNodeData(path);
         this.compute(node, path);
       });
@@ -313,8 +319,8 @@ export class FxModel extends HTMLElement {
 
   /**
    * (re-) computes a modelItem.
-   * @param node - the node the modelItem is attached to
-   * @param path - the canonical XPath of the node
+   * @param {Node} node - the node the modelItem is attached to
+   * @param {string} path - the canonical XPath of the node
    */
   compute(node, path) {
     const modelItem = this.getModelItem(node);
@@ -380,7 +386,7 @@ export class FxModel extends HTMLElement {
     // reset submission validation
     // this.parentNode.classList.remove('submit-validation-failed')
     let valid = true;
-    this.modelItems.forEach((modelItem) => {
+    this.modelItems.forEach(modelItem => {
       // console.log('validating node ', modelItem.node);
       const { bind } = modelItem;
       if (bind) {
@@ -441,7 +447,7 @@ export class FxModel extends HTMLElement {
 
   /**
    *
-   * @param node
+   * @param {Node} node
    * @returns {ModelItem}
    */
   getModelItem(node) {
@@ -450,12 +456,15 @@ export class FxModel extends HTMLElement {
 
   /**
    * get the default evaluation context for this model.
-   * @returns {Element} the
+   * @returns {Element}
    */
   getDefaultContext() {
     return this.instances[0].getDefaultContext();
   }
 
+  /**
+   * @returns {import('./fx-instance.js').FxInstance}
+   */
   getDefaultInstance() {
     if (this.instances.length) {
       return this.instances[0];
@@ -480,16 +489,18 @@ export class FxModel extends HTMLElement {
     if (!found) {
       const instArray = Array.from(this.instances);
       found = instArray.find(inst => inst.id === id);
-      const parentFore = this.fore.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE
-        ? this.fore.parentNode.host.closest('fx-fore')
-        : this.fore.parentNode.closest('fx-fore');
+      const parentFore =
+        this.fore.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE
+          ? this.fore.parentNode.host.closest('fx-fore')
+          : this.fore.parentNode.closest('fx-fore');
     }
     // ### lookup in parent Fore if present
     if (!found) {
       // const parentFore = this.fore.parentNode.closest('fx-fore');
-      const parentFore = this.fore.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE
-        ? this.fore.parentNode.host.closest('fx-fore')
-        : this.fore.parentNode.closest('fx-fore');
+      const parentFore =
+        this.fore.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE
+          ? this.fore.parentNode.host.closest('fx-fore')
+          : this.fore.parentNode.closest('fx-fore');
       if (parentFore) {
         console.log('shared instances from parent', this.parentNode.id);
         const parentInstances = parentFore.getModel().instances;

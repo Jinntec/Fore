@@ -8,28 +8,61 @@
 export class ModelItem {
   /**
    *
-   * @param {path} calculated normalized path expression linking to data
-   * @param {ref} ref relative binding expression
-   * @param {*} isReadonly - boolean to signal readonly/readwrite state
-   * @param {*} relevant - boolean to signal relevant/non-relevant state
-   * @param {*} required - boolean to signal required/optional state
-   * @param {*} required - boolean boolean to signal valid/invalid state
-   * @param {*} type - string expression to set a datatype
-   * @param {*} node - the node the 'ref' expression is referring to
-   * @param {*} bind - the fx-bind element having created this modelItem
+   * @param {string} path calculated normalized path expression linking to data
+   * @param {string} ref relative binding expression
+   * @param {boolean} readonly - boolean to signal readonly/readwrite state
+   * @param {boolean} relevant - boolean to signal relevant/non-relevant state
+   * @param {boolean} required - boolean to signal required/optional state
+   * @param {boolean} constraint - boolean boolean to signal valid/invalid state
+   * @param {string} type - string expression to set a datatype
+   * @param {Node} node - the node the 'ref' expression is referring to
+   * @param {import('./fx-bind').FxBind} bind - the fx-bind element having created this modelItem
    */
   constructor(path, ref, readonly, relevant, required, constraint, type, node, bind) {
+    /**
+     * @type {string}
+     */
     this.path = path;
+    /**
+     * @type {string}
+     */
     this.ref = ref;
+    /**
+     * @type {boolean}
+     */
     this.constraint = constraint;
+    /**
+     * @type {boolean}
+     */
     this.readonly = readonly;
+    /**
+     * @type {boolean}
+     */
     this.relevant = relevant;
+    /**
+     * @type {boolean}
+     */
     this.required = required;
+    /**
+     * @type {string}
+     */
     this.type = type;
+    /**
+     * @type {Node}
+     */
     this.node = node;
+    /**
+     * @type {import('./fx-bind').FxBind}
+     */
     this.bind = bind;
     this.changed = false;
+    /**
+     * @type {import('./ui/fx-alert').FxAlert[]}
+     */
     this.alerts = [];
+    /**
+     * @type {import('./ui/fx-control').default[]}
+     */
     this.boundControls = [];
     // this.value = this._getValue();
   }
@@ -50,7 +83,7 @@ export class ModelItem {
   }
 
   /**
-   * @param  {Node} newValue
+   * @param  {Node} newVal
    */
   set value(newVal) {
     // console.log('modelitem.setvalue oldVal', this.value);

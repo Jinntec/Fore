@@ -28,6 +28,7 @@ export class XPathUtil {
    *
    * @param {string} querySelector
    * @param {Node} start
+   * @returns {HTMLElement}
    */
   static getClosest(querySelector, start) {
     while ((start && !start.matches) || !start.matches(querySelector)) {

@@ -156,7 +156,7 @@ export default class ForeElementMixin extends HTMLElement {
    * @param {string} expr an attribute value containing curly brackets containing XPath expressions to evaluate
    * @param {Node} node the attribute node used for scoped resolution
    * @returns {string}
-   * @private
+   * @protected
    */
   evaluateAttributeTemplateExpression(expr, node) {
     const matches = expr.match(/{[^}]*}/g);
@@ -194,6 +194,9 @@ export default class ForeElementMixin extends HTMLElement {
     return parent.getAttribute('ref');
   }
 
+  /**
+   * @returns {import('./fx-instance.js').FxInstance}
+   */
   getInstance() {
     if (this.ref.startsWith('instance(')) {
       const instId = XPathUtil.getInstanceId(this.ref);
