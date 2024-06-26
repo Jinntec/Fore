@@ -1,8 +1,8 @@
 import '../fx-model.js';
 import { AbstractAction } from './abstract-action.js';
-import { evaluateXPath, evaluateXPathToString } from '../xpath-evaluation.js';
-import { Fore } from '../fore';
-import getInScopeContext from '../getInScopeContext';
+import { evaluateXPath } from '../xpath-evaluation.js';
+import { Fore } from '../fore.js';
+import getInScopeContext from '../getInScopeContext.js';
 import { XPathUtil } from '../xpath-util.js';
 
 /**
@@ -57,6 +57,9 @@ export default class FxCall extends AbstractAction {
    * find action and execute it
    */
   async _callAction() {
+    /**
+     * @type {import('./fx-action.js').FxAction}
+     */
     const action = document.querySelector(`#${this.action}`);
     if (action) {
       await action.perform();
