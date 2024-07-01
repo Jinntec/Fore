@@ -209,13 +209,13 @@
                 <confirm>false</confirm>
             </data>
         </fx-model>
-        <fx-repeat id="project" ref="project"  style="grid-template-columns: repeat({count(data()/project)},1fr);">
+        <fx-repeat id="project" ref="project"  style="grid-template-columns: repeat({count($default/project)},1fr);">
             <template>
                 <div class="header">
                     <fx-control ref="@name"></fx-control>
                     <fx-trigger class="iconbtn addProject" title="add card">
                         <button>+</button>
-                        <fx-insert ref="task" at="1" position="before" origin="data()/template/task"></fx-insert>
+                        <fx-insert ref="task" at="1" position="before" origin="$default/template/task"></fx-insert>
                     </fx-trigger>
                     <fx-trigger class="iconbtn deleteProject">
                         <button>x</button>

@@ -562,7 +562,7 @@
                                         <!-- ##### 1. store away the value of the xml:id of this part as fx-var is failing here for some reason ##### -->
                                         <!--
                                                                         <fx-setvalue ref="$vars/parent"
-                                                                                     value="data()//msPart[index('parts')]/@xml:id"></fx-setvalue>
+                                                                                     value="$default//msPart[index('parts')]/@xml:id"></fx-setvalue>
                                         -->
 
                                         <!-- ##### 2. insert a new bibl element ##### -->
@@ -941,7 +941,7 @@
                     <input id="historyTerm" type="checkbox" class="widget"/>
                     <fx-insert event="value-changed"
                                if="context()/text()='true'"
-                               context="data()//textClass/keywords[@scheme='https://edh.ub.uni-heidelberg.de/edep/terms']"
+                               context="$default//textClass/keywords[@scheme='https://edh.ub.uni-heidelberg.de/edep/terms']"
                                ref="term"
                                origin="$templates/term[@ref='#social-economic-legal-history']"></fx-insert>
 
@@ -957,7 +957,7 @@
                     <input id="geographyTerm" type="checkbox" class="widget"/>
                     <fx-insert event="value-changed"
                                if="context()/text()='true'"
-                               context="data()//textClass/keywords[@scheme='https://edh.ub.uni-heidelberg.de/edep/terms']"
+                               context="$default//textClass/keywords[@scheme='https://edh.ub.uni-heidelberg.de/edep/terms']"
                                ref="term"
                                origin="$templates/term[@ref='#geography']"></fx-insert>
 
@@ -973,7 +973,7 @@
                     <input id="militaryTerm" type="checkbox" class="widget"/>
                     <fx-insert event="value-changed"
                                if="context()/text()='true'"
-                               context="data()//textClass/keywords[@scheme='https://edh.ub.uni-heidelberg.de/edep/terms']"
+                               context="$default//textClass/keywords[@scheme='https://edh.ub.uni-heidelberg.de/edep/terms']"
                                ref="term"
                                origin="$templates/term[@ref='#military']"></fx-insert>
 

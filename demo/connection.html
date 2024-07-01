@@ -41,14 +41,14 @@
                 <!--                    <fx-setvalue ref="message" value="event('message')"></fx-setvalue>-->
                 <!--                    <fx-update></fx-update>-->
                 <!--                    <fx-refresh force></fx-refresh>-->
-                <!-- <fx-insert context="data()/transcript" ref="message" origin="context()"></fx-insert> -->
-                <!-- <fx-setvalue ref="data()/transcript/message[last()]" value="event('message')"></fx-setvalue> -->
+                <!-- <fx-insert context="$default/transcript" ref="message" origin="context()"></fx-insert> -->
+                <!-- <fx-setvalue ref="$default/transcript/message[last()]" value="event('message')"></fx-setvalue> -->
             </fx-action>
             <!--                <fx-setvalue event="channel-message" ref="message" value="event('message')"></fx-setvalue>-->
             <!--
                             <fx-action event="channel-message">
                                 <fx-message>connection message {event('message')}</fx-message>
-                                <fx-insert context="data()//transcript" ref="message"  origin="data()/message"></fx-insert>
+                                <fx-insert context="$default//transcript" ref="message"  origin="$default/message"></fx-insert>
                             </fx-action>
             -->
             <!-- <fx-message event="close">connection close</fx-message> -->

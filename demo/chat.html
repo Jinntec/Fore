@@ -56,11 +56,11 @@
             </transcript>
         </data>
 
-        <fx-connection id="chat" ref="data()/message" url="ws://localhost:8088" message-format="text">
+        <fx-connection id="chat" ref="$default/message" url="ws://localhost:8088" message-format="text">
             <fx-message event="open">connection open</fx-message>
             <fx-action event="channel-message">
-                <fx-insert context="data()/transcript" ref="message"  origin="context()"></fx-insert>
-                <fx-setvalue ref="data()/transcript/message[last()]" value="event('message')"></fx-setvalue>
+                <fx-insert context="$default/transcript" ref="message"  origin="context()"></fx-insert>
+                <fx-setvalue ref="$default/transcript/message[last()]" value="event('message')"></fx-setvalue>
             </fx-action>
             <fx-message event="close">connection close</fx-message>
             <fx-message event="error">connection error {event('detail')}</fx-message>
@@ -79,7 +79,7 @@
         <fx-control ref="message" update-event="enter">
             <textarea placeholder="your message..." class="widget"></textarea>
             <fx-action event="value-changed" if=". != ''">
-                <fx-insert context="data()//transcript" ref="message"  origin="context()"></fx-insert>
+                <fx-insert context="$default//transcript" ref="message"  origin="context()"></fx-insert>
                 <fx-send connection="chat"></fx-send>
                 <fx-setvalue ref="."></fx-setvalue>
             </fx-action>

@@ -33,7 +33,7 @@
 
         <fx-action event="item-created">
             <fx-message>{event('nodeset')/name} pos: {event('pos')}</fx-message>
-<!--            <fx-insert context="data()/element[name='fx-action']/attributes/attribute[]" ref="value" origin="$vars/value"></fx-insert>-->
+<!--            <fx-insert context="$default/element[name='fx-action']/attributes/attribute[]" ref="value" origin="$vars/value"></fx-insert>-->
 <!--            <fx-insert context="context('r-attrs')/.[event('pos')]" ref="value" origin="$vars/value"></fx-insert>-->
 <!--            <fx-insert context="$payload/attributes" ref="attribute" origin="$payload/attribute"></fx-insert>-->
 <!--            <fx-update></fx-update>-->

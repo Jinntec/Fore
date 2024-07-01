@@ -51,7 +51,7 @@
                     <fx-insert origin="$template/item"
                                ref="$generated/item"></fx-insert>
                     <fx-message value="counter"></fx-message>
-                    <fx-var name="cnt" value="data()/counter"></fx-var>
+                    <fx-var name="cnt" value="$default/counter"></fx-var>
                     <fx-setvalue ref="$generated/item[last()]/@prop3" value="string($cnt)"></fx-setvalue>
                     <fx-setvalue ref="$generated/item[last()]/@prop4" value="random-number-generator()?number"></fx-setvalue>
                     <fx-setvalue ref="$generated/item[last()]/@prop5" value="number(random-number-generator()?number) * 10"></fx-setvalue>

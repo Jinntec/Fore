@@ -185,7 +185,7 @@
                            method="get"
                            url="elements/{$default/current}.md"
                            replace="data"
-                           into="data()/element[contains(@tags , instance()/tag)][index('elements')]">
+                           into="$default/element[contains(@tags , instance()/tag)][index('elements')]">
                 <fx-message event="submit-error" value="$default/current || '.md cannot be loaded'"></fx-message>
             </fx-submission>
 
@@ -235,7 +235,7 @@
                         {@name}
 						  <fx-action event="click" if="string-length(.)=0">
                             <fx-message>clicked {.}</fx-message>
-                            <fx-setvalue ref="$default/current" value="data()/element[contains(@tags , ../tag)][index('elements')]/@name"></fx-setvalue>
+                            <fx-setvalue ref="$default/current" value="$default/element[contains(@tags , ../tag)][index('elements')]/@name"></fx-setvalue>
                             <fx-send submission="loadMd"></fx-send>
                         </fx-action>
                     </summary>

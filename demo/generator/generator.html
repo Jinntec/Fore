@@ -67,7 +67,7 @@
            </select>
        </fx-control>
 
-       <fx-repeat ref="data()//*">
+       <fx-repeat ref="$default//*">
            <template>
                <fx-control ref="@name" class="level-{count(ancestor::*)}">
                    <label>{local-name(..)}</label>

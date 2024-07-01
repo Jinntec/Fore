@@ -66,7 +66,7 @@
 
     <!--
                     <fx-message target="leiden" event="update" targetId="xml-editor">leiden updated</fx-message>
-                    <fx-replace target="leiden" event="update" ref="data()" with="parse(event('content'))"></fx-replace>
+                    <fx-replace target="leiden" event="update" ref="$default" with="parse(event('content'))"></fx-replace>
     -->
     <!--                <fx-update event="update"></fx-update>-->
     <!--                <fx-refresh event="update" force="force"></fx-refresh>-->
@@ -96,14 +96,14 @@
         ### parsed and replaces the default instance which contains the epidoc elements.
     -->
     <!--                <fx-message target="leiden" event="update" targetId="xml-editor">leiden updated</fx-message>-->
-    <fx-replace target="leiden" event="update" ref="data()" with="parse(event('content'))"></fx-replace>
+    <fx-replace target="leiden" event="update" ref="$default" with="parse(event('content'))"></fx-replace>
 
     <!--                </fx-control>-->
 
 
     <!-- update instance with serialized value from xml editor -->
 
-    <fx-control ref="data()" value-prop="content" as="node">
+    <fx-control ref="$default" value-prop="content" as="node">
         <jinn-codemirror id="xmleditor" mode="xml" schema="epidoc.json" namespace="http://www.tei-c.org/ns/1.0"
                          class="widget">
             <div slot="toolbar">
@@ -122,10 +122,10 @@
                             <fx-message target="xmleditor" event="invalid">the markup is invalid</fx-message>
                             <fx-message target="xmleditor" event="valid">the markup is valid</fx-message>
         -->
-        <fx-replace ref="data()" with="parse(event('content'))" event="update"></fx-replace>
+        <fx-replace ref="$default" with="parse(event('content'))" event="update"></fx-replace>
     </fx-control>
 
-    <!--                {data()}-->
+    <!--                {$default}-->
 
 
     <fx-inspector open></fx-inspector>

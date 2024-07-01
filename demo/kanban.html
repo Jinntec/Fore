@@ -299,7 +299,7 @@
                         <fx-control ref="@name"></fx-control>
                         <fx-trigger class="iconbtn addcolumn" title="add card">
                             <button>+</button>
-                            <fx-insert ref="task" at="1" position="before" origin="data()/template/task"></fx-insert>
+                            <fx-insert ref="task" at="1" position="before" origin="$default/template/task"></fx-insert>
                             <fx-refresh></fx-refresh>
                             <fx-setfocus control="task"></fx-setfocus>
                         </fx-trigger>

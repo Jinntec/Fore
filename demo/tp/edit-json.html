@@ -40,7 +40,7 @@
             <data id="json-output"></data>
 
             <fx-action event="model-construct-done">
-                <fx-replace ref="data()" with="json2xml(data('json-input'))"></fx-replace>
+                <fx-replace ref="$default" with="json2xml(data('json-input'))"></fx-replace>
             </fx-action>
 
         </fx-model>
@@ -72,7 +72,7 @@
             </fx-repeat>
             <fx-trigger>
                 <button>convertToJSON</button>
-                <fx-replace ref="data('json-output')" with="xml2json(data())"></fx-replace>
+                <fx-replace ref="data('json-output')" with="xml2json($default)"></fx-replace>
             </fx-trigger>
         </main>
     </div>

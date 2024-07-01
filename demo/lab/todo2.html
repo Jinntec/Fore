@@ -69,15 +69,15 @@
             <div>Just a hello from my parent: {$shared/greetings}</div>
             <div id="clock">started at {$helper/time}</div>
             <div class="info">
-                You have {count(data()/task[@complete='true'])} completed tasks
+                You have {count($default/task[@complete='true'])} completed tasks
             </div>
 
             <div class="info open">
-                {if(count(data()/task[@complete='false'])!=0) then "You have " || count(data()/task[@complete='false']) || " open tasks" else ""}
+                {if(count($default/task[@complete='false'])!=0) then "You have " || count($default/task[@complete='false']) || " open tasks" else ""}
             </div>
 
             <div class="info big">
-                {if(count(data()/task[@complete='false'])=0) then "You're all done!" else ""}
+                {if(count($default/task[@complete='false'])=0) then "You're all done!" else ""}
             </div>
 
             <fx-setfocus target="#document" control="task" event="value-changed"></fx-setfocus>

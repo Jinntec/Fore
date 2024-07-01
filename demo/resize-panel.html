@@ -60,7 +60,7 @@
                         <fx-action event="mousedown">
                             <fx-message>got click {event('clientY')} </fx-message>
                             <fx-setvalue ref="resizing">true</fx-setvalue>
-                            <fx-setvalue ref="data()/last" value="event('clientY')"></fx-setvalue>
+                            <fx-setvalue ref="$default/last" value="event('clientY')"></fx-setvalue>
                         </fx-action>
                         <fx-action event="mousemove" target="#document" if="resizing='true'">
                             <fx-message>got move {event('clientY') - last} </fx-message>

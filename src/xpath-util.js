@@ -105,7 +105,7 @@ export class XPathUtil {
         if (!ref) {
             return 'default';
         }
-        if (ref.startsWith('data()')) {
+        if (ref.startsWith('$')) {
             return 'default';
         }
         if (ref.startsWith('data(')) {

@@ -22,7 +22,7 @@
         </datae>
     </fx-model>
 
-    <fx-control ref="data()/fx-fore" as="node">
+    <fx-control ref="$default/fx-fore" as="node">
         <jinn-xml-editor class="widget"></jinn-xml-editor>
     </fx-control>
 
@@ -35,7 +35,7 @@
             <option value="fx-function">function</option>
             <option value="fx-submission">submission</option>
         </datalist>
-        <fx-insert event="value-changed" context="data()//fx-model" ref="$vars/selected" origin="data('i-elements')//*[name()=$vars/selected]" ></fx-insert>
+        <fx-insert event="value-changed" context="$default//fx-model" ref="$vars/selected" origin="data('i-elements')//*[name()=$vars/selected]" ></fx-insert>
     </fx-control>
 <!--    <fx-inspector open></fx-inspector>-->
 </fx-fore>

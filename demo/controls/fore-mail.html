@@ -86,7 +86,7 @@
 
             <label for="from">From</label>
             <fx-action event="click" target="from" if="string-length((//from/email[last()])) != 0">
-                <fx-insert ref="from/email" origin="data()/email" ></fx-insert>
+                <fx-insert ref="from/email" origin="$default/email" ></fx-insert>
             </fx-action>
             <fx-repeat id="from" ref="from/email" id="from">
                 <template>

@@ -64,12 +64,12 @@
 
                 </fx-model>
                 <fx-replace ref="$result"
-                            with="pre-process-corresp(data())"
+                            with="pre-process-corresp($default)"
                             event="ready"></fx-replace>
                 <fx-group>
 
                     <h2>XQuery update facility function</h2>
-                    <fx-control ref="data()" as="node" >
+                    <fx-control ref="$default" as="node" >
                         <h3>The input:</h3>
                         <jinn-codemirror mode="xml" class="widget"></jinn-codemirror>
                     </fx-control>

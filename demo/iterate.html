@@ -61,8 +61,8 @@
             <fx-trigger>
               <button>create 10 messages</button>
               <fx-action iterate="1 to 10">
-                <fx-message>message {data()/cnt}</fx-message>
-                <fx-setvalue ref="data()/cnt" value="number(.) + 1"></fx-setvalue>
+                <fx-message>message {$default/cnt}</fx-message>
+                <fx-setvalue ref="$default/cnt" value="number(.) + 1"></fx-setvalue>
               </fx-action>
             </fx-trigger>
           </fx-fore>
@@ -108,43 +108,43 @@
 
             <fx-trigger>
               <button id="remove-btn">Remove selected</button>
-                <fx-delete ref="." iterate="data()/item[@selected='true']"></fx-delete>
-                <fx-message>({count(data()/item)} left)</fx-message>
+                <fx-delete ref="." iterate="$default/item[@selected='true']"></fx-delete>
+                <fx-message>({count($default/item)} left)</fx-message>
             </fx-trigger>
             <fx-trigger>
               <button>Remove selected, with confirm modal</button>
-              <fx-action iterate="data()/item[@selected='true']">
+              <fx-action iterate="$default/item[@selected='true']">
                 <fx-confirm
-                        iterate="data()/item[@selected='true']"
+                        iterate="$default/item[@selected='true']"
                         message="Are you sure you want to delete '{.}'">
                   <fx-delete ref="."></fx-delete>
-                  <fx-message>Deleting {.} ({count(data()/item)} left)</fx-message>
+                  <fx-message>Deleting {.} ({count($default/item)} left)</fx-message>
                 </fx-confirm>
               </fx-action>
 <!--
               <fx-confirm
-                iterate="data()/item[@selected='true']"
+                iterate="$default/item[@selected='true']"
 				message="Are you sure you want to delete '{.}'">
                   <fx-delete ref="."></fx-delete>
-                  <fx-message>Deleting {.} ({count(data()/item)} left)</fx-message>
+                  <fx-message>Deleting {.} ({count($default/item)} left)</fx-message>
                 </fx-confirm>
 -->
             </fx-trigger>
             <fx-trigger>
               <button id="select-all-btn">Select all</button>
-              <fx-setvalue ref="@selected" iterate="data()/item[@selected='false']" value="'true'"></fx-setvalue>
+              <fx-setvalue ref="@selected" iterate="$default/item[@selected='false']" value="'true'"></fx-setvalue>
             </fx-trigger>
             <fx-trigger>
               <button id="unselect-all-btn">Select none</button>
-              <fx-setvalue ref="@selected" iterate="data()/item[@selected='true']" value="'false'"></fx-setvalue>
+              <fx-setvalue ref="@selected" iterate="$default/item[@selected='true']" value="'false'"></fx-setvalue>
             </fx-trigger>
             <fx-trigger>
               <button id="duplicate-selected-btn">Duplicate Selected</button>
               <fx-insert
-                iterate="data()/item[@selected='true']"
-                context="data()"
+                iterate="$default/item[@selected='true']"
+                context="$default"
                 origin="."
-                at="count(data()/item)"
+                at="count($default/item)"
                 position="after"
                 ref="item"
                 ></fx-insert>
@@ -152,12 +152,12 @@
             <fx-trigger>
               <button id="sort-btn">Sort selected to front</button>
               <fx-action
-                iterate="data()/item[@selected='true']">
+                iterate="$default/item[@selected='true']">
                 <fx-insert
                   origin="."
                   at="1"
                   position="after"
-                  ref="data()/item"
+                  ref="$default/item"
                   ></fx-insert>
                 <fx-delete ref="."></fx-delete>
               </fx-action>
@@ -167,12 +167,12 @@
               <button id="reset-btn">Reset</button>
               <fx-delete
                       ref="."
-                      iterate="data()/item"></fx-delete>
+                      iterate="$default/item"></fx-delete>
               <fx-insert
                       iterate="$template/item"
-                      context="data()"
+                      context="$default"
                       origin="."
-                      at="count(data()/item)"
+                      at="count($default/item)"
                       position="after"
                       ref="item"
               ></fx-insert>
