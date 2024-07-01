@@ -66,8 +66,11 @@
             min-width: 220px;
         }
         fx-repeat::before{
-            content:'List';
+            content:'Goods';
             font-size:1.2rem;
+        }
+        #buying::before{
+            content:'Cart';
         }
 
         fx-repeatitem {
@@ -89,6 +92,7 @@
         }
         fx-trigger{
             display: inline-block;
+            float:right;
         }
         .index{
             margin:1rem 0;
@@ -102,12 +106,14 @@
         }
 
         [repeat-index] {
+            /*
             backdrop-filter: blur(3px);
             background-color: rgba(255,255,255, 0.3);
             box-shadow: rgba(0, 0, 0, 0.4) 4px 2px 4px;
             border: 2px rgba(255,255,255,0.4) solid;
             border-bottom: 2px rgba(40,40,40,0.35) solid;
             border-right: 2px rgba(40,40,40,0.35) solid;
+            */
         }
         [repeat-index] input{
             color:black;
@@ -132,10 +138,10 @@
                     <fx-instance id="buying">
                         <data>
                             <list>
-                                <a>1</a>
                             </list>
                         </data>
                     </fx-instance>
+
                     <fx-instance id="shopping">
                         <data>
                             <list>
@@ -143,10 +149,10 @@
                                 <a>Yoghurt</a>
                                 <a>Bread</a>
                             </list>
-							<blank><a></a></blank>
+							<blank><a></a><b></b></blank>
                         </data>
                     </fx-instance>
-				<fx-bind ref="instance('shopping')/list/a" relevant="string-length(.) = 0 or (every $a in instance('buying')/list/a satisfies not($a = .))">
+<!--                    <fx-bind ref="instance('shopping')/list/a" relevant="string-length(.) = 0 or (every $a in instance('buying')/list/a satisfies not($a = .))"></fx-bind>-->
                 </fx-model>
 
 
@@ -155,33 +161,44 @@
                 to the parent element you want to insert into. The <code>ref</code> will give the name of the inserted
                 element. As a template for insertion the <code>origin</code> attribute needs to point to some
                 existing nodes somewhere.</p>
-                <fx-repeat id="todos" ref="instance('shopping')/list/a">
+                <fx-repeat id="shopping" ref="instance('shopping')/list/a">
                     <template>
                         <fx-control id="task" ref="."></fx-control>
                         <fx-trigger>
-                            <button class="deletebtn">X</button>
-                            <fx-delete ref="."></fx-delete>
-
-
-							<fx-trigger>
-							  <button>Copy to second list</button>
-							  <fx-insert context="instance('buying')/list" ref="instance('buying')/list" origin="instance('shopping')/list/a[index('todos')]"></fx-insert>
-							</fx-trigger>
+                            <button>buy</button>
+                            <fx-insert context="instance('buying')/list"
+                                       ref="a"
+                                       origin="context('shopping')"></fx-insert>
                         </fx-trigger>
                     </template>
                 </fx-repeat>
 
+                <fx-repeat id="buying" ref="instance('buying')/list/a">
+                    <template>
+                        <fx-output ref="."></fx-output>
+                        <fx-trigger>
+                            <button class="deletebtn">X</button>
+                            <fx-delete ref="."></fx-delete>
+                        </fx-trigger>
+                    </template>
+                </fx-repeat>
+
+<!--
                 <fx-trigger>
                     <button>insert with context</button>
                     <fx-insert context="instance('shopping')/list" ref="a" origin="../blank/a"></fx-insert>
                 </fx-trigger>
+-->
+<!-- todo
+                <fx-trigger>
+                    <button>Copy to second list</button>
+                    <fx-insertchild parent="instance('shopping')/list" ref="a" origin="../blank/b"></fx-insertchild>
+                </fx-trigger>
+-->
 
-                <div class="index">Index is: {index('todos')}</div>
-                <div class="index">Contents is: {instance('buying')//a => string-join(' ')}</div>
-                        <fx-trigger>
-                            <button class="deletebtn">X</button>
-							<fx-delete ref="instance('buying')/list/a"></fx-delete>
-							</fx-trigger>
+
+<!--                <div class="index">Index is: {index('todos')}</div>-->
+<!--                <div class="index">Contents is: {instance('buying')//a => string-join(' ')}</div>-->
 
                 <details class="log" open>
                     <summary>Data</summary>
