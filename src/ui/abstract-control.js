@@ -163,7 +163,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
 
 	  if (this.localName !== 'fx-control') return;
 		  if (isDifferent(this.oldVal, this.value, oldValue)) {
-          Fore.dispatch(this, 'value-changed', { path: this.modelItem.path , value:this.modelItem.value});
+          Fore.dispatch(this, 'value-changed', { path: this.modelItem.path , value:this.modelItem.value, oldvalue:this.oldVal});
 	  }
       }
     }
