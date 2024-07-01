@@ -63,15 +63,13 @@ export class XPathUtil {
             return host;
           }
         } else */
-        if (start.parentNode &&
-            (start.parentNode.nodeType !== Node.DOCUMENT_NODE || start.parentNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE)) {
-            /*
-                  if (start.parentNode.hasAttribute('ref')) {
-                    return start.parentNode;
-                  }
-                  return XPathUtil.getParentBindingElement(start.parentNode);
-            */
-
+        if(start.parentNode){
+            if (start.parentNode.nodeType === Node.DOCUMENT_NODE){
+                return null;
+            }
+            if(start.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+                return start.parentNode.host.closest('[ref]');
+            }
             return start.parentNode.closest('[ref]');
         }
         return null;
