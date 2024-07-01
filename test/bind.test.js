@@ -470,14 +470,14 @@ describe('bind Tests', () => {
                         </items>
                     </data>
 
-                    <fx-bind ref="data('second')">
+                    <fx-bind ref="$second">
                         <fx-bind id="wrap" ref=".//item">
                             <fx-bind id="nested" ref="part" constraint="false()"></fx-bind>
                         </fx-bind>
                     </fx-bind>
 
                 </fx-model>
-                <fx-repeat ref="data('second')//item">
+                <fx-repeat ref="$second//item">
                     <template>
                         <fx-control ref=".">
                             <label>Part:</label>

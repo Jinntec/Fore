@@ -24,7 +24,7 @@
                 <hypotheses>1</hypotheses>
             </data>
         </fx-instance>
-        <fx-bind id="hyp" ref="data('temp')/hypotheses" calculate="count(//gramGrp[@type='segmentation'])"></fx-bind>
+        <fx-bind id="hyp" ref="$temp/hypotheses" calculate="count(//gramGrp[@type='segmentation'])"></fx-bind>
 
     </fx-model>
 
@@ -40,7 +40,7 @@
         <section class="tp-section">
             <div class="tp-row">
                 <h2 class="tp-width-sidebar">Segmentation and Semantics
-                    (<fx-output id="output" ref="data('temp')/hypotheses">counting...</fx-output>)
+                    (<fx-output id="output" ref="$temp/hypotheses">counting...</fx-output>)
                 </h2>
                 <div class="tp-width-secondary">
                     <section class="form-horizontal">

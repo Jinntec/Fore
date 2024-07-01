@@ -260,7 +260,7 @@ describe('insert Tests', () => {
 
                 <fx-trigger>
                     <button>insert at end</button>
-                    <fx-insert ref="data('default')/data" origin="data('templ')/foo"></fx-insert>
+                    <fx-insert ref="$default/data" origin="$templ/foo"></fx-insert>
                 </fx-trigger>
             </fx-fore>
         `);

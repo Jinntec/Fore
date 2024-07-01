@@ -246,7 +246,7 @@
 
                 <fx-trigger>
                     <button>Append a copy of origin node</button>
-                    <fx-insert ref="task" origin="data('templ')/task"></fx-insert>
+                    <fx-insert ref="task" origin="$templ/task"></fx-insert>
                 </fx-trigger>
 
                 <div class="index">Index is: {index('todos')}</div>
@@ -276,7 +276,7 @@
 
                 <fx-trigger>
                     <button>Append to an empty parent</button>
-                    <fx-insert context="subtask" ref="task" origin="data('templ')/task"></fx-insert>
+                    <fx-insert context="subtask" ref="task" origin="$templ/task"></fx-insert>
                 </fx-trigger>
                 <fx-repeat ref="subtask/task">
                     <template>

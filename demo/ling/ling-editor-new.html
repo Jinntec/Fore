@@ -53,7 +53,7 @@
                 <foo></foo>
             </data>
         </fx-instance>
-        <fx-bind id="hyp" ref="data('temp')/hypotheses"
+        <fx-bind id="hyp" ref="$temp/hypotheses"
                  calculate="count(//gramGrp[@type='segmentation'])"></fx-bind>
         <fx-function signature="local:toggleDetails()" type="text/javascript">
             console.log('toggleDetails func');
@@ -183,7 +183,7 @@
                         <button>Add</button>
                         <fx-action>
                             <!--                                <fx-action src="toggledetails.js"></fx-action>-->
-                            <!--                                <fx-setvalue ref="data('tmp')/foo" value="local:toggleDetails()"></fx-setvalue>-->
+                            <!--                                <fx-setvalue ref="$tmp/foo" value="local:toggleDetails()"></fx-setvalue>-->
                             <fx-dispatch name="click" targetid="dialects"></fx-dispatch>
                             <fx-insert ref="usg" origin="data('i-template')//usg[@type='lang']"/>
                         </fx-action>
@@ -324,7 +324,7 @@
 
         <!-- begin section segmentation -->
         <section class="tp-section">
-            <h2>Segmentation and Semantics ({count(data('default')//gramGrp[@type='segmentation'])})</h2>
+            <h2>Segmentation and Semantics ({count($default//gramGrp[@type='segmentation'])})</h2>
             <section class="form-horizontal">
                 <fx-group ref="//entry">
                     <section class="tp-row tp-repeat-add">
@@ -334,7 +334,7 @@
                                 <fx-trigger>
                                     <button>add</button>
                                     <fx-insert context="//entry" ref="gramGrp"
-                                               origin="data('default')//gramGrp[@type='segmentation']"></fx-insert>
+                                               origin="$default//gramGrp[@type='segmentation']"></fx-insert>
                                 </fx-trigger>
                             </div>
                         </div>

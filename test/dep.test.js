@@ -43,7 +43,7 @@ describe('DepGraph', () => {
     graph.addNode('Foo');
 
     // expect(graph.getNodeData("Foo")).toBe("Foo");
-    expect(graph.getNodeData('Foo')).to.equal('Foo');
+    expect(graph.getNode$Foo).to.equal('Foo');
   });
 
   it('should be able to associate a node name with data on node add', () => {
@@ -52,7 +52,7 @@ describe('DepGraph', () => {
     graph.addNode('Foo', 'data');
 
     // expect(graph.getNodeData("Foo")).toBe("data");
-    expect(graph.getNodeData('Foo')).to.equal('data');
+    expect(graph.getNode$Foo).to.equal('data');
   });
 
   it('should be able to add undefined as node data', () => {
@@ -61,7 +61,7 @@ describe('DepGraph', () => {
     graph.addNode('Foo', undefined);
 
     // expect(graph.getNodeData("Foo")).toBeUndefined();
-    expect(graph.getNodeData('Foo')).to.be.undefined;
+    expect(graph.getNode$Foo).to.be.undefined;
   });
 
   it('should return true when using hasNode with a node which has falsy data', () => {
@@ -78,7 +78,7 @@ describe('DepGraph', () => {
 
       // Just an extra check to make sure that the saved data is correct
       // expect(graph.getNodeData("Foo")).toBe(data);
-      expect(graph.getNodeData('Foo')).to.equal(data);
+      expect(graph.getNode$Foo).to.equal(data);
     });
   });
 
@@ -89,7 +89,7 @@ describe('DepGraph', () => {
     graph.setNodeData('Foo', 'data2');
 
     // expect(graph.getNodeData("Foo")).toBe("data2");
-    expect(graph.getNodeData('Foo')).to.equal('data2');
+    expect(graph.getNode$Foo).to.equal('data2');
   });
 
   it('should throw an error if we try to set data for a non-existing node', () => {
@@ -105,7 +105,7 @@ describe('DepGraph', () => {
     const graph = new DepGraph();
 
     expect(() => {
-      graph.getNodeData('Foo');
+      graph.getNode$Foo;
     }).to.throw('Node does not exist: Foo');
     // }).toThrow(new Error("Node does not exist: Foo"));
   });
@@ -503,14 +503,14 @@ describe('DepGraph', () => {
 
     const cloned = graph.clone();
     expect(graph === cloned).to.equal(false);
-    expect(graph.getNodeData('a') === cloned.getNodeData('a')).to.equal(true);
+    expect(graph.getNode$a === cloned.getNode$a).to.equal(true);
 
-    graph.getNodeData('a').a = 43;
-    expect(cloned.getNodeData('a').a).to.equal(43);
+    graph.getNode$a.a = 43;
+    expect(cloned.getNode$a.a).to.equal(43);
 
     cloned.setNodeData('a', { a: 42 });
-    expect(cloned.getNodeData('a').a).to.equal(42);
-    expect(graph.getNodeData('a') === cloned.getNodeData('a')).to.equal(false);
+    expect(cloned.getNode$a.a).to.equal(42);
+    expect(graph.getNode$a === cloned.getNode$a).to.equal(false);
   });
 
   it('should find entry nodes', () => {

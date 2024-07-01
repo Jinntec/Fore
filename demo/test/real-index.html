@@ -11,9 +11,9 @@
     <fx-fore>
         <fx-model>
             <fx-action event="model-construct-done" if="exists(data('query-params')/project)">
-                <fx-message>hey {data('projects')/project[./@id=data('query-params')/project]/string()}</fx-message>
+                <fx-message>hey {$projects/project[./@id=data('query-params')/project]/string()}</fx-message>
 <!--                <fx-toggle case="c-form"></fx-toggle>-->
-                <fx-setvalue ref="project" value="data('projects')/project[./@id=data('query-params')/project]/string()"></fx-setvalue>
+                <fx-setvalue ref="project" value="$projects/project[./@id=data('query-params')/project]/string()"></fx-setvalue>
             </fx-action>
 
             <data>
@@ -105,8 +105,8 @@
             </fx-instance>
 
         </fx-model>
-        Found: {data('projects')/project[./@id=data('query-params')/project]}
-        <fx-repeat ref="data('projects')/project">
+        Found: {$projects/project[./@id=data('query-params')/project]}
+        <fx-repeat ref="$projects/project">
             <template>
                 <div><a href="real-index.html?project={@id}">{.}</a></div>
             </template>

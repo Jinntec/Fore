@@ -44,7 +44,7 @@
                 </p>
                 <fx-control ref="listitem" update-event="input">
                     <label>dynamic list</label>
-                    <select ref="data('list')?*" class="widget">
+                    <select ref="$list?*" class="widget">
                         <template>
                             <option value="{?value}">{?name}</option>
                         </template>

@@ -198,7 +198,7 @@
                 <p>With <code>origin</code> you can select nodes to be used as templates for insertion.</p>
                 <fx-trigger>
                     <button>insert 'foo'</button>
-                    <fx-insert ref="data('default')/data" origin="data('templ')/foo"></fx-insert>
+                    <fx-insert ref="$default/data" origin="$templ/foo"></fx-insert>
                 </fx-trigger>
                 <span>Value of 'foo': {foo}</span>
 
@@ -212,14 +212,14 @@
                 <h2>Insert a template node before the first</h2>
                 <fx-trigger>
                     <button>insert as first from origin</button>
-                    <fx-insert ref="task" origin="data('templ')/task" at="1" position="before"></fx-insert>
+                    <fx-insert ref="task" origin="$templ/task" at="1" position="before"></fx-insert>
                 </fx-trigger>
 
                 <h2>Insert at end of list from template</h2>
                 <p>No <code>at</code> given means we append the template to the list</p>
                 <fx-trigger>
                     <button>insert at end from origin</button>
-                    <fx-insert ref="task" origin="data('templ')/task"></fx-insert>
+                    <fx-insert ref="task" origin="$templ/task"></fx-insert>
                 </fx-trigger>
 
                 <h2>Inserting using the current repeat index</h2>

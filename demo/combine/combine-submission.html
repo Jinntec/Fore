@@ -53,7 +53,7 @@
                         <fx-submission id="doSave"
                                        url="#echo"
                                        method="post"
-                                       ref="data('result')"
+                                       ref="$result"
                                        replace="data"
                                        data="result">
                             <fx-message event="submit">doSave</fx-message>
@@ -61,7 +61,7 @@
                         </fx-submission>
 
                         <data id="result" data-ns="http://www.tei-c.org/ns/1.0"></data>
-                        <fx-bind ref="data('result')//listBibl" relevant="exists(bibl)"></fx-bind>
+                        <fx-bind ref="$result//listBibl" relevant="exists(bibl)"></fx-bind>
 
                     </fx-model>
 
@@ -76,7 +76,7 @@
                         <fx-send submission="save"></fx-send>
                     </fx-trigger>
 
-                    <fx-repeat ref="data('full')//bibl">
+                    <fx-repeat ref="$full//bibl">
                         <template>
                             {ptr/@target}
                         </template>

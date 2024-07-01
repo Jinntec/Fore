@@ -263,7 +263,7 @@ describe('submission tests', () => {
                             url="#echo"
                             replace="data"
                             data="result"
-                            targetref="data('result')/result"
+                            targetref="$result/result"
                     >
                     </fx-submission>
                 </fx-model>
@@ -315,7 +315,7 @@ describe('submission tests', () => {
                     <fx-output ref="data()?foo">
                         <label slot="label">data()?foo =</label>
                     </fx-output>
-                    <fx-output id="out" ref="data('response')?foo">
+                    <fx-output id="out" ref="$response?foo">
                         <label slot="label">This message comes from replaced data:</label>
                     </fx-output>
                 </fx-group>

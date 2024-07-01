@@ -106,9 +106,9 @@ describe('instance Tests', () => {
                         <item>second</item>
                     </data>
 
-                    <fx-bind ref="data('second')/item"></fx-bind>
+                    <fx-bind ref="$second/item"></fx-bind>
                 </fx-model>
-                <fx-output ref="data('second')//item"></fx-output>
+                <fx-output ref="$second//item"></fx-output>
             </fx-fore>
         `);
 
@@ -145,7 +145,7 @@ describe('instance Tests', () => {
                     </data>
 
                     <fx-bind
-                            ref="data('second')/item"
+                            ref="$second/item"
                             required="boolean-from-string('maybe!~')"
                     ></fx-bind>
                 </fx-model>
@@ -178,7 +178,7 @@ describe('instance Tests', () => {
                         <item>Maybe</item>
                     </data>
                 </fx-model>
-                <span id="the-span">{data('second')/item}</span>
+                <span id="the-span">{$second/item}</span>
             </fx-fore>
         `);
 
@@ -345,7 +345,7 @@ describe('instance Tests', () => {
                 </fx-model>
 
                 <div id="outer">{value}</div>
-                <div id="anotherouter">{data('another')/value}</div>
+                <div id="anotherouter">{$another/value}</div>
 
                 <fx-fore>
                     <fx-model>
@@ -358,7 +358,7 @@ describe('instance Tests', () => {
                     </fx-model>
 
                     <div id="inner">{value}</div>
-                    <div id="anotherinner">{data('another')/value}</div>
+                    <div id="anotherinner">{$another/value}</div>
 
                 </fx-fore>
             </fx-fore>

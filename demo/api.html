@@ -154,10 +154,10 @@
             <h1>Fore API</h1>
             <p class="warning">This is not an up-to-date API of Fore but just another example working with a more
             complex JSON structure.</p>
-            <div class="version">Version: {data('package')?version}</div>
-            <fx-control id="selected" ref="data('vars')/selected" update-event="change">
+            <div class="version">Version: {$package?version}</div>
+            <fx-control id="selected" ref="$vars/selected" update-event="change">
                 <label>Jump to</label>
-                <select class="widget" ref="data('default')?tags?*">
+                <select class="widget" ref="$default?tags?*">
                     <template>
                         <option value="{?name}">{?name}</option>
                     </template>

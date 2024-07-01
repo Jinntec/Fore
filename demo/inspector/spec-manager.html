@@ -27,7 +27,7 @@
         </fx-instance>
     </fx-model>
 
-    <fx-control ref="data('vars')/selected-element" update-event="input">
+    <fx-control ref="$vars/selected-element" update-event="input">
         <label>Element</label>
         <select ref="data()/element/name" class="widget">
             <template>
@@ -36,7 +36,7 @@
         </select>
     </fx-control>
 
-    <fx-repeat ref="element[name=data('vars')/selected-element]/attributes/attribute">
+    <fx-repeat ref="element[name=$vars/selected-element]/attributes/attribute">
         <template>
             <div>
                 <fx-control ref="name">

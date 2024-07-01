@@ -75,7 +75,7 @@ describe('group tests', () => {
                     <fx-submission id="s-load"
                                    method="post"
                                    url="#echo"
-                                   ref="data('data')"
+                                   ref="$data"
                                    replace="instance"
                                    instance="default"></fx-submission>
                 </fx-model>

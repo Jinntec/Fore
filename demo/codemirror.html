@@ -73,7 +73,7 @@
         <fx-group>
 
 <!--
-            <fx-output ref="data('default')">
+            <fx-output ref="$default">
                 <wc-codemirror mode="xml" class="widget">
                     <script type="wc-content">
                     </script>
@@ -81,9 +81,9 @@
             </fx-output>
 -->
 
-            <fx-code ref="data('default')"></fx-code>
+            <fx-code ref="$default"></fx-code>
 <!--
-            <fx-code ref="data('default')">
+            <fx-code ref="$default">
                 <wc-codemirror mode="xml" class="widget">
                     <script type="wc-content">
                     </script>
@@ -112,7 +112,7 @@
             const wc = document.querySelector('wc-codemirror');
             const val = wc.value;
             console.log('val ', val);
-            const inst = f.getModel().getdata('default').data.outerHTML;
+            const inst = f.getModel().get$default.data.outerHTML;
             wc.setValue(inst);
             wc.editor.refresh();
         });

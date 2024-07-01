@@ -454,7 +454,7 @@ export class FxModel extends HTMLElement {
         if (this.data.length) {
             return this.data[0];
         }
-        return this.getData('default');
+        return this.get$default;
     }
 
     getData(id) {

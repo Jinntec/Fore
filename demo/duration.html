@@ -27,15 +27,15 @@
     <fx-fore>
         <fx-action event="ready">
             <fx-var name="mins" value="minutes"></fx-var>
-            <fx-setvalue ref="data('vars')/hours"
+            <fx-setvalue ref="$vars/hours"
                          value="
                             if($mins > 45) then
                                 floor(number($mins) div 60)
                             else '0'">
             </fx-setvalue>
-            <fx-setvalue ref="data('vars')/mins" value="if($mins > 45) then (number($mins) mod 60) else string($mins)"></fx-setvalue>
+            <fx-setvalue ref="$vars/mins" value="if($mins > 45) then (number($mins) mod 60) else string($mins)"></fx-setvalue>
 
-            <fx-setvalue ref="data('vars')/ready">true</fx-setvalue>
+            <fx-setvalue ref="$vars/ready">true</fx-setvalue>
         </fx-action>
         <fx-model style="display:none;">
 
@@ -49,21 +49,21 @@
                 <ready></ready>
             </data>
 
-            <fx-bind ref="data('vars')/hours" constraint="data()/minutes != 0"></fx-bind>
-            <fx-bind ref="data('vars')/mins" constraint="data()/minutes != 0"></fx-bind>
+            <fx-bind ref="$vars/hours" constraint="data()/minutes != 0"></fx-bind>
+            <fx-bind ref="$vars/mins" constraint="data()/minutes != 0"></fx-bind>
 
         </fx-model>
-        <fx-message event="value-changed" if="data('vars')/ready='true'">{data()/minutes}</fx-message>
+        <fx-message event="value-changed" if="$vars/ready='true'">{data()/minutes}</fx-message>
         <fx-return ref="data()/minutes" event="value-changed"></fx-return>
 
         <div class="duration">
             <fx-action event="value-changed">
                 <fx-setvalue ref="data()/minutes"
-                             value="number(data('vars')/hours) * 60 + number(data('vars')/mins)"></fx-setvalue>
+                             value="number($vars/hours) * 60 + number($vars/mins)"></fx-setvalue>
             </fx-action>
 
             <label>Duration</label>
-            <fx-control id="duration" ref="data('vars')/hours" update-event="input">
+            <fx-control id="duration" ref="$vars/hours" update-event="input">
                 <select class="widget">
                     <option value="0">0</option>
                     <option value="1">1</option>
@@ -78,12 +78,12 @@
 <!--
                 <fx-action event="value-changed">
                     <fx-setvalue ref="data()/minutes"
-                                 value="number(data('vars')/hours) * 60 + number(data('vars')/mins)"></fx-setvalue>
+                                 value="number($vars/hours) * 60 + number($vars/mins)"></fx-setvalue>
                 </fx-action>
 -->
 
             </fx-control>
-            <fx-control id="minutes" ref="data('vars')/mins" update-event="input">
+            <fx-control id="minutes" ref="$vars/mins" update-event="input">
                 <select class="widget">
                     <option value="0">0</option>
                     <option value="15">15</option>
@@ -94,7 +94,7 @@
 <!--
                 <fx-action event="value-changed">
                     <fx-setvalue ref="data()/minutes"
-                                 value="number(data('vars')/hours) * 60 + number(data('vars')/mins)"></fx-setvalue>
+                                 value="number($vars/hours) * 60 + number($vars/mins)"></fx-setvalue>
                 </fx-action>
 -->
                 <fx-alert>Please select a duration</fx-alert>

@@ -13,10 +13,10 @@
     <div class="wrapper">
         <fx-fore id="todo">
             <fx-send submission="load" event="model-construct-done"></fx-send>
-            <fx-setvalue ref="data('helper')/changed" event="value-changed">true</fx-setvalue>
+            <fx-setvalue ref="$helper/changed" event="value-changed">true</fx-setvalue>
 
-            <fx-action event="clock" target="#document" if="string-length(data('helper')/time) = 0">
-                <fx-setvalue ref="data('helper')/time" value="event('time')"></fx-setvalue>
+            <fx-action event="clock" target="#document" if="string-length($helper/time) = 0">
+                <fx-setvalue ref="$helper/time" value="event('time')"></fx-setvalue>
             </fx-action>
 
 
@@ -63,11 +63,11 @@
             <h1>Todo
                 <fx-trigger class="btn add">
                     <button>+</button>
-                    <fx-insert ref="task" origin="data('helper')/template/task" at="1" position="before"></fx-insert>
+                    <fx-insert ref="task" origin="$helper/template/task" at="1" position="before"></fx-insert>
                 </fx-trigger>
             </h1>
-            <div>Just a hello from my parent: {data('shared')/greetings}</div>
-            <div id="clock">started at {data('helper')/time}</div>
+            <div>Just a hello from my parent: {$shared/greetings}</div>
+            <div id="clock">started at {$helper/time}</div>
             <div class="info">
                 You have {count(data()/task[@complete='true'])} completed tasks
             </div>

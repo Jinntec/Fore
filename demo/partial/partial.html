@@ -61,11 +61,11 @@
 
                 <fx-trigger>
                     <button>merge</button>
-                    <fx-replace ref="data('default')" with="merge(data('default'), data('partial')/*)"></fx-replace>
+                    <fx-replace ref="$default" with="merge($default, $partial/*)"></fx-replace>
                 </fx-trigger>
 
                 <code>
-                    {merge(data('default'), data('partial'))"}
+                    {merge($default, $partial)"}
                 </code>
             </fx-fore>
 <!--

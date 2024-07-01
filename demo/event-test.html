@@ -35,12 +35,12 @@
                         <fx-property name="string" value="group"></fx-property>
                     </fx-dispatch>
                     <fx-dispatch name="click" targetid="displayValue" event="value-changed">
-                        <fx-property name="data" expr="data('default')"></fx-property>
+                        <fx-property name="data" expr="$default"></fx-property>
                     </fx-dispatch>
 
                     <fx-control ref="foo">
                         <fx-dispatch name="click" targetid="bar" event="value-changed">
-                            <fx-property name="data" expr="data('default')"></fx-property>
+                            <fx-property name="data" expr="$default"></fx-property>
                             <fx-property name="string" value="control"></fx-property>
                         </fx-dispatch>
                     </fx-control>

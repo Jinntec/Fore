@@ -55,10 +55,10 @@
                 <section>
                     <fx-trigger>
                         <button>Change JSON instance</button>
-                        <fx-setvalue ref="data('json')?value">Changed json value</fx-setvalue>
+                        <fx-setvalue ref="$json?value">Changed json value</fx-setvalue>
                     </fx-trigger>
 
-                    <fx-output ref="data('json')?value">
+                    <fx-output ref="$json?value">
                         <label slot="label">Default instance value</label>
                     </fx-output>
 

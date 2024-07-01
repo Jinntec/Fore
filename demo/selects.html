@@ -109,7 +109,7 @@
                             <fx-control ref="selected" update-event="change">
                                 <label>Country</label>
                                 <select class="widget"
-                                        ref="data('countries')//country[@continent = data('default')/continent]"
+                                        ref="$countries//country[@continent = $default/continent]"
                                         selection="open">
                                     <template>
                                         <option value="{@code}">{.}</option>
@@ -124,7 +124,7 @@
                         </div>
                     </div>
 
-                    <!--                    <fx-output ref="data('default')" mediatype="xml"></fx-output>-->
+                    <!--                    <fx-output ref="$default" mediatype="xml"></fx-output>-->
                 </fx-group>
             </fx-fore>
         </template>
@@ -144,7 +144,7 @@
         </template>
     </demo-snippet>
     <!--
-        <fx-output ref="data('default')">
+        <fx-output ref="$default">
             <wc-codemirror mode="xml" class="widget">
                 <script type="wc-content">
                     <countries>

@@ -94,7 +94,7 @@
 
                         <fx-control ref="fruit" update-event="change">
                             <label>native select</label>
-                            <select ref="data('fruits')//fruit" class="widget">
+                            <select ref="$fruits//fruit" class="widget">
                                 <template>
                                     <option value="{@value}">{.}</option>
                                 </template>
@@ -118,7 +118,7 @@
 
                         <fx-control ref="fruit2" update-event="change">
                             <label>native select</label>
-                            <select ref="data('fruits')//fruit" class="widget" selection="open">
+                            <select ref="$fruits//fruit" class="widget" selection="open">
                                 <template>
                                     <option value="{@value}">{.}</option>
                                 </template>

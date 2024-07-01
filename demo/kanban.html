@@ -283,7 +283,7 @@
 <!--        <p>Cards and Colums can be moved with Drag and Drop.</p>-->
         <main>
             <header>
-                <fx-control ref="data('vars')/search" update-event="input" >
+                <fx-control ref="$vars/search" update-event="input" >
                     <label for="searchCtl">Search</label>
                     <input id="searchCtl" type="search" placeholder="input a search term - at least 2 characters">
                 </fx-control>
@@ -313,7 +313,7 @@
                     <fx-repeat id="r-task" ref="task" tabindex="0" data-cy="{@name}">
                         <template draggable="true" drop-target="r-task">
                           <div
-							class="card {let $search := data('vars')/search return if (string-length($search) > 1 and @name => contains($search)) then 'match' else ''}"
+							class="card {let $search := $vars/search return if (string-length($search) > 1 and @name => contains($search)) then 'match' else ''}"
 							tabindex="1"
 							data-cy="{../@name}-{count(preceding-sibling::task)}"
 							data-cy-name="{@name}">

@@ -63,7 +63,7 @@
 					</fx-function>
 
                 </fx-model>
-                <fx-replace ref="data('result')"
+                <fx-replace ref="$result"
                             with="pre-process-corresp(data())"
                             event="ready"></fx-replace>
                 <fx-group>
@@ -75,7 +75,7 @@
                     </fx-control>
 
 
-                    <fx-control ref="data('result')" as="node">
+                    <fx-control ref="$result" as="node">
                         <h3>The transformed XML:</h3>
                         <jinn-codemirror mode="xml" readonly="readonly" class="widget" ></jinn-codemirror>
                     </fx-control>

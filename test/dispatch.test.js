@@ -77,7 +77,7 @@ describe('fx-dispatch tests', () => {
                 <fx-trigger>
                     <button>dispatch it</button>
                     <fx-dispatch name="foo" targetid="bar">
-                        <fx-property name="instance" expr="data('default')"></fx-property>
+                        <fx-property name="instance" expr="$default"></fx-property>
                         <fx-property name="string" value="aString"></fx-property>
                     </fx-dispatch>
                 </fx-trigger>
@@ -115,7 +115,7 @@ describe('fx-dispatch tests', () => {
                     <button>dispatch it</button>
                     <fx-action>
                         <fx-dispatch name="foo" targetid="bar">
-                            <fx-property name="instance" expr="data('default')"></fx-property>
+                            <fx-property name="instance" expr="$default"></fx-property>
                             <fx-property name="string" value="aString"></fx-property>
                         </fx-dispatch>
                     </fx-action>

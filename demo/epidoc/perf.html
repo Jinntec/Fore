@@ -43,11 +43,11 @@
 <!--        <fx-setfocus control="title" event="ready"></fx-setfocus>-->
 
         <fx-model>
-<!--            <fx-action event="model-construct-done" if="exists(data('params')/id)">-->
+<!--            <fx-action event="model-construct-done" if="exists($params/id)">-->
             <fx-action event="model-construct-done">
-                <fx-send submission="s-login" if="data('vars')/loggedin != 'true'" />
+                <fx-send submission="s-login" if="$vars/loggedin != 'true'" />
                 <fx-send submission="s-load-inscription"></fx-send>
-<!--                <fx-send submission="s-load-inscription" if="exists(data('params')/id)"></fx-send>-->
+<!--                <fx-send submission="s-load-inscription" if="exists($params/id)"></fx-send>-->
             </fx-action>
 
             <data id="default" src="data/HD025278.xml"
@@ -55,7 +55,7 @@
                 <data></data>
             </data>
 
-            <fx-bind ref="data('default')">
+            <fx-bind ref="$default">
                 <fx-bind ref=".//fileDesc/titleStmt/title" required="true()" constraint="string-length(.) != 0">
                 </fx-bind>
 
@@ -120,9 +120,9 @@
                     </languages>
                 </data>
             </data>
-            <fx-bind ref="data('vars')/can-delete" relevant="index('parts') gt 1"></fx-bind>
-            <fx-bind ref="data('vars')/loggedin" relevant=".='true'"></fx-bind>
-            <fx-bind ref="data('vars')/xml-valid" calculate="editorsValid()" constraint=".='true'"></fx-bind>
+            <fx-bind ref="$vars/can-delete" relevant="index('parts') gt 1"></fx-bind>
+            <fx-bind ref="$vars/loggedin" relevant=".='true'"></fx-bind>
+            <fx-bind ref="$vars/xml-valid" calculate="editorsValid()" constraint=".='true'"></fx-bind>
 
 
             <data xmlns="http://www.tei-c.org/ns/1.0" id="epidoc-editor" src="data/epidoc-snippet.xml"
@@ -146,14 +146,14 @@
                     <!--
                     ### initializing state for 30) 31) 32) dummy switches
                     -->
-                    <fx-setvalue ref="data('vars')/history-term"
-                                 value="if(exists(data('default')//term[@ref='#social-economic-legal-history'])) then 'true' else 'false'"></fx-setvalue>
+                    <fx-setvalue ref="$vars/history-term"
+                                 value="if(exists($default//term[@ref='#social-economic-legal-history'])) then 'true' else 'false'"></fx-setvalue>
 
-                    <fx-setvalue ref="data('vars')/geography-term"
-                                 value="if(exists(data('default')//term[@ref='#geography'])) then 'true' else 'false'"></fx-setvalue>
+                    <fx-setvalue ref="$vars/geography-term"
+                                 value="if(exists($default//term[@ref='#geography'])) then 'true' else 'false'"></fx-setvalue>
 
-                    <fx-setvalue ref="data('vars')/military-term"
-                                 value="if(exists(data('default')//term[@ref='#military'])) then 'true' else 'false'"></fx-setvalue>
+                    <fx-setvalue ref="$vars/military-term"
+                                 value="if(exists($default//term[@ref='#military'])) then 'true' else 'false'"></fx-setvalue>
 
                 </fx-action>
             </fx-submission>
@@ -171,7 +171,7 @@
             </fx-submission>
 
             <fx-submission id="s-save"
-                           url="api/inscription?id={data('params')/id}"
+                           url="api/inscription?id={$params/id}"
                            method="post"
                            replace="data">
                 <fx-message event="submit-done">Daten wurden aktualisiert</fx-message>
@@ -200,11 +200,11 @@
 
             <data id="login" type="json">{}</data>
 
-            <fx-submission id="s-login" ref="data('login')?*"
+            <fx-submission id="s-login" ref="$login?*"
                            url="data/login.json" method="get" replace="data"
                            data="login" validate="false">
-                <fx-setvalue ref="data('vars')/loggedin" event="submit-error">false</fx-setvalue>
-                <fx-setvalue ref="data('vars')/loggedin" event="submit-done">true</fx-setvalue>
+                <fx-setvalue ref="$vars/loggedin" event="submit-error">false</fx-setvalue>
+                <fx-setvalue ref="$vars/loggedin" event="submit-done">true</fx-setvalue>
             </fx-submission>
 
             <fx-function signature="editorsValid() as xs:boolean" type="text/javascript">
@@ -239,7 +239,7 @@
                 <!-- 16a) -->
                 <fx-control ref="//physDesc/objectDesc/supportDesc/support/objectType/@ref" update-event="change">
                     <label>Inschriftträger</label>
-                    <select ref="data('objtyp')?*" class="widget" selection="open">
+                    <select ref="$objtyp?*" class="widget" selection="open">
                         <template>
                             <option value="{?value}">{?name}</option>
                         </template>
@@ -257,7 +257,7 @@
                 <fx-control ref="//physDesc/objectDesc/supportDesc/support/material/@ref" update-event="change"
                             class="orange">
                     <label>Material</label>
-                    <select ref="data('material')?*" class="widget" selection="open">
+                    <select ref="$material?*" class="widget" selection="open">
                         <template>
                             <option value="{?value}">{?name}</option>
                         </template>
@@ -280,32 +280,32 @@
                                 <fx-control ref="$corresp">
                                     <label>GeoId</label>
                                     <fx-action event="value-changed">
-                                        <fx-setvalue ref="data('vars')/geoid" value="$corresp"></fx-setvalue>
+                                        <fx-setvalue ref="$vars/geoid" value="$corresp"></fx-setvalue>
                                         <fx-send submission="s-load-geodata"/>
                                     </fx-action>
                                 </fx-control>
 
-                                <fx-output ref="data('geodata')/place[@xml:id=$corresp]/region[@type='province']">
+                                <fx-output ref="$geodata/place[@xml:id=$corresp]/region[@type='province']">
                                     <label slot="label">Provinz/augusteische Region</label>
                                 </fx-output>
 
-                                <fx-output ref="data('geodata')/place[@xml:id=$corresp]/country">
+                                <fx-output ref="$geodata/place[@xml:id=$corresp]/country">
                                     <label slot="label">Land</label>
                                 </fx-output>
 
-                                <fx-output ref="data('geodata')/place[@xml:id=$corresp]/region[@type='region']">
+                                <fx-output ref="$geodata/place[@xml:id=$corresp]/region[@type='region']">
                                     <label slot="label">Region</label>
                                 </fx-output>
 
-                                <fx-output ref="data('geodata')/place[@xml:id=$corresp]/placeName[@type='ancient']">
+                                <fx-output ref="$geodata/place[@xml:id=$corresp]/placeName[@type='ancient']">
                                     <label slot="label">Fundort (antik)</label>
                                 </fx-output>
 
-                                <fx-output ref="data('geodata')/place[@xml:id=$corresp]/placeName[@type='modern']">
+                                <fx-output ref="$geodata/place[@xml:id=$corresp]/placeName[@type='modern']">
                                     <label slot="label">Fundort (modern)</label>
                                 </fx-output>
 
-                                <fx-output ref="data('geodata')/place[@xml:id=$corresp]/placeName[@type='findspot']">
+                                <fx-output ref="$geodata/place[@xml:id=$corresp]/placeName[@type='findspot']">
                                     <label slot="label">Fundstelle</label>
                                 </fx-output>
 
@@ -364,7 +364,7 @@
 
                                         <fx-insert context="msContents/msItem/listBibl[@type='transmission']"
                                                    ref="bibl"
-                                                   origin="data('templates')//bibl"/>
+                                                   origin="$templates//bibl"/>
                                     </fx-trigger>
                                 </legend>
                                 <fx-repeat class="nested-repeat" id="bib"
@@ -435,7 +435,7 @@
                             <!-- 15) -->
                             <fx-control ref="msContents/msItem/@class">
                                 <label>Inschriftengattung</label>
-                                <select ref="data('typeins')?*" class="widget" selection="open">
+                                <select ref="$typeins?*" class="widget" selection="open">
                                     <template>
                                         <option value="{?value}">{?name}</option>
                                     </template>
@@ -462,7 +462,7 @@
                                 <!-- 34) -->
                                 <fx-control ref="physDesc/objectDesc/layoutDesc/layout/rs[@type='palaeography']/@ref">
                                     <label>Paläographie</label>
-                                    <select ref="data('palaeo')/item" class="widget" selection="open">
+                                    <select ref="$palaeo/item" class="widget" selection="open">
                                         <template>
                                             <option value="{.}">{.}</option>
                                         </template>
@@ -500,7 +500,7 @@
                             <!-- 25) -->
                             <fx-control ref="msContents/msItem/textLang/@mainLang">
                                 <label>Sprache</label>
-                                <fx-items ref="data('vars')/languages/lang" class="widget">
+                                <fx-items ref="$vars/languages/lang" class="widget">
                                     <template>
                                                     <span class="fx-checkbox">
                                                         <input type="checkbox" value="{@code}"/>
@@ -525,7 +525,7 @@
 
                                         <fx-insert context="msContents/msItem/listBibl[@type='previousEditions']"
                                                    ref="bibl"
-                                                   origin="data('templates')//bibl"/>
+                                                   origin="$templates//bibl"/>
                                     </fx-trigger>
                                 </legend>
                                 <fx-repeat class="nested-repeat" id="bib"
@@ -561,14 +561,14 @@
                                         <!-- ##### when a new entry is created.. ##### -->
                                         <!-- ##### 1. store away the value of the xml:id of this part as fx-var is failing here for some reason ##### -->
                                         <!--
-                                                                        <fx-setvalue ref="data('vars')/parent"
+                                                                        <fx-setvalue ref="$vars/parent"
                                                                                      value="data()//msPart[index('parts')]/@xml:id"></fx-setvalue>
                                         -->
 
                                         <!-- ##### 2. insert a new bibl element ##### -->
                                         <fx-insert context="msContents/msItem/listBibl[@type='bibliography']"
                                                    ref="bibl"
-                                                   origin="data('templates')//bibl"></fx-insert>
+                                                   origin="$templates//bibl"></fx-insert>
                                     </fx-trigger>
                                 </legend>
                                 <fx-repeat class="nested-repeat" id="bib"
@@ -604,7 +604,7 @@
 
                                         <fx-insert context="msContents/msItem/listBibl[@type='images']"
                                                    ref="bibl"
-                                                   origin="data('templates')//bibl"/>
+                                                   origin="$templates//bibl"/>
                                     </fx-trigger>
                                 </legend>
                                 <fx-repeat class="nested-repeat" id="bib"
@@ -636,7 +636,7 @@
 
                                         <fx-insert context="facsimile"
                                                    ref="graphic"
-                                                   origin="data('mspart')//facsimile/graphic"></fx-insert>
+                                                   origin="$mspart//facsimile/graphic"></fx-insert>
                                     </fx-trigger>
                                 </legend>
                                 <fx-repeat class="nested-repeat" ref="facsimile/graphic">
@@ -802,9 +802,9 @@
 
             moved this out of repeat to ensure it's not id clashing
             ##### -->
-            <!--            <fx-replace ref="data('default')//body/div[@type='edition']/div[fn:last()]" -->
+            <!--            <fx-replace ref="$default//body/div[@type='edition']/div[fn:last()]" -->
             <!--
-                        <fx-replace ref="data('templates')/epidoc"
+                        <fx-replace ref="$templates/epidoc"
                                     with="parse(event('content'))"
                                     event="update"
                                     target="epidoc-editor3"></fx-replace>
@@ -817,7 +817,7 @@
                 <button>Hinzufügen</button>
                 <fx-action>
                     <!-- insert a new msPart  -->
-                    <fx-insert ref="//msPart" origin="data('mspart')"/>
+                    <fx-insert ref="//msPart" origin="$mspart"/>
                     <!-- update and refresh so the repeat index is updated -->
                     <fx-update/>
                     <fx-refresh/>
@@ -830,7 +830,7 @@
                     <fx-setvalue ref="//msPart[index('parts')]/facsimile/@corresp" value="'#' || $uuid"/>
 
                     <!-- add required textpart to edition
-                    <fx-insert ref="//body/div[@type='edition']/div" origin="data('templates')//div[@type='edition']/div"/>
+                    <fx-insert ref="//body/div[@type='edition']/div" origin="$templates//div[@type='edition']/div"/>
                     <fx-update/>
                     <fx-refresh/>
                     <fx-setvalue ref="//body/div[@type='edition']/div[fn:last()]/@corresp" value="$uuid"/>
@@ -842,7 +842,7 @@
                         <fx-group class="group-10 padded">
                             <label>Kommentar</label>
                             <fx-control class="commentary"
-                                        ref="data('default')//body/div[@type='commentary']" as="node" update-event="update">
+                                        ref="$default//body/div[@type='commentary']" as="node" update-event="update">
                                 <jinn-xml-editor class="widget" unwrap="unwrap" namespace="http://www.tei-c.org/ns/1.0">
                                     <div slot="toolbar">
                                         <button data-command="selectElement" title="Select element around current cursor position">&lt;|></button>
@@ -861,7 +861,7 @@
             -->
             <fx-group class="group-10 padded">
                 <label>Kommentar</label>
-                <fx-control class="commentary" ref="data('default')//body/div[@type='commentary']" as="node"
+                <fx-control class="commentary" ref="$default//body/div[@type='commentary']" as="node"
                             update-event="blur">
                     <jinn-xml-editor id="commentary" class="widget" unwrap="unwrap"
                                      namespace="http://www.tei-c.org/ns/1.0">
@@ -883,7 +883,7 @@
                     </jinn-xml-editor>
                 </fx-control>
 
-                <!--fx-replace ref="data('default')//body/div[@type='commentary']"
+                <!--fx-replace ref="$default//body/div[@type='commentary']"
                             with="parse(event('content'))"
                             target="commentary"
                             event="update"></fx-replace-->
@@ -936,50 +936,50 @@
                 <!-- 29) missing -->
                 <!-- 30) -->
                 <!-- dummy switch to insert or delete 'term' elements in main instance -->
-                <fx-control ref="data('vars')/history-term" value-prop="checked" update-event="input">
+                <fx-control ref="$vars/history-term" value-prop="checked" update-event="input">
                     <label for="historyTerm">Sozial-,Wirschafts-/Rechtsgeschichte</label>
                     <input id="historyTerm" type="checkbox" class="widget"/>
                     <fx-insert event="value-changed"
                                if="context()/text()='true'"
                                context="data()//textClass/keywords[@scheme='https://edh.ub.uni-heidelberg.de/edep/terms']"
                                ref="term"
-                               origin="data('templates')/term[@ref='#social-economic-legal-history']"></fx-insert>
+                               origin="$templates/term[@ref='#social-economic-legal-history']"></fx-insert>
 
                     <fx-delete event="value-changed"
                                if="context()/text()='false'"
-                               ref="data('default')//term[@ref='#social-economic-legal-history']"></fx-delete>
+                               ref="$default//term[@ref='#social-economic-legal-history']"></fx-delete>
                 </fx-control>
 
                 <!-- 31) -->
                 <!-- dummy switch to insert or delete 'term' elements in main instance -->
-                <fx-control ref="data('vars')/geography-term" value-prop="checked" update-event="input">
+                <fx-control ref="$vars/geography-term" value-prop="checked" update-event="input">
                     <label for="geographyTerm">Geographie</label>
                     <input id="geographyTerm" type="checkbox" class="widget"/>
                     <fx-insert event="value-changed"
                                if="context()/text()='true'"
                                context="data()//textClass/keywords[@scheme='https://edh.ub.uni-heidelberg.de/edep/terms']"
                                ref="term"
-                               origin="data('templates')/term[@ref='#geography']"></fx-insert>
+                               origin="$templates/term[@ref='#geography']"></fx-insert>
 
                     <fx-delete event="value-changed"
                                if="context()/text()='false'"
-                               ref="data('default')//term[@ref='#geography']"></fx-delete>
+                               ref="$default//term[@ref='#geography']"></fx-delete>
                 </fx-control>
 
                 <!-- 32) -->
                 <!-- dummy switch to insert or delete 'term' elements in main instance -->
-                <fx-control ref="data('vars')/military-term" value-prop="checked" update-event="input">
+                <fx-control ref="$vars/military-term" value-prop="checked" update-event="input">
                     <label for="militaryTerm">Militär</label>
                     <input id="militaryTerm" type="checkbox" class="widget"/>
                     <fx-insert event="value-changed"
                                if="context()/text()='true'"
                                context="data()//textClass/keywords[@scheme='https://edh.ub.uni-heidelberg.de/edep/terms']"
                                ref="term"
-                               origin="data('templates')/term[@ref='#military']"></fx-insert>
+                               origin="$templates/term[@ref='#military']"></fx-insert>
 
                     <fx-delete event="value-changed"
                                if="context()/text()='false'"
-                               ref="data('default')//term[@ref='#military']"></fx-delete>
+                               ref="$default//term[@ref='#military']"></fx-delete>
                 </fx-control>
 
             </fx-group>
@@ -1007,11 +1007,11 @@
             <section class="buttonBar">
                 <fx-trigger class="saveBtn" debounce="1000">
                     <button>Speichern</button>
-                    <fx-action if="not(exists(data('params')/id))">
+                    <fx-action if="not(exists($params/id))">
                         <fx-send submission="s-login"/>
                         <fx-send submission="s-create"/>
                     </fx-action>
-                    <fx-action if="exists(data('params')/id)">
+                    <fx-action if="exists($params/id)">
                         <fx-send submission="s-login"/>
                         <fx-send submission="s-save"/>
                     </fx-action>
@@ -1024,7 +1024,7 @@
                 </fx-trigger>
             </section>
 
-            <fx-control ref="data('vars')/xml-valid" class="valid-warning">
+            <fx-control ref="$vars/xml-valid" class="valid-warning">
                 <fx-alert>Bitte XML korrigieren, um zu speichern.</fx-alert>
                 <input style="display:none;"></input>
             </fx-control>

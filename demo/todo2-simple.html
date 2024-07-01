@@ -14,7 +14,7 @@
     <div class="wrapper">
         <fx-fore id="todo" convert>
             <send submission="load" event="model-construct-done"></send>
-            <setvalue ref="data('helper')/changed" event="value-changed">true</setvalue>
+            <setvalue ref="$helper/changed" event="value-changed">true</setvalue>
 
             <model id="record">
                 <data>
@@ -50,7 +50,7 @@
             <h1>Todo
                 <trigger class="btn add">
                     <button>+</button>
-                    <insert ref="task" origin="data('helper')/template/task"></insert>
+                    <insert ref="task" origin="$helper/template/task"></insert>
                 </trigger>
             </h1>
             <div class="info">

@@ -220,7 +220,7 @@
                     <fx-trigger class="iconbtn deleteProject">
                         <button>x</button>
                         <fx-confirm message="really delete?">
-                            <fx-delete ref="." if="data('default')/confirm"></fx-delete>
+                            <fx-delete ref="." if="$default/confirm"></fx-delete>
                         </fx-confirm>
                     </fx-trigger>
                 </div>
@@ -236,7 +236,7 @@
                                 <div class="subheader">Checklist
                                     <fx-trigger class="iconbtn">
                                         <button>+</button>
-                                        <fx-insert ref="activity" at="1" position="before" origin="data('default')/template/activity"></fx-insert>
+                                        <fx-insert ref="activity" at="1" position="before" origin="$default/template/activity"></fx-insert>
                                     </fx-trigger>
                                 </div>
                                 <fx-repeat id="activity" class="activity" ref="activity">

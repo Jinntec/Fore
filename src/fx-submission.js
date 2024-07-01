@@ -335,7 +335,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
         if (this.data) {
             targetData = this.model.getData(this.data);
         } else {
-            targetData = this.model.getData('default');
+            targetData = this.model.get$default;
         }
         if (!targetData) {
             throw new Error(`target instance not found: ${targetData}`);

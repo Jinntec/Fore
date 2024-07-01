@@ -196,7 +196,7 @@
                         <!-- 14) -->
                         <fx-control ref="physDesc/objectDesc/supportDesc/support/rs/@ref">
                             <label>Dekor</label>
-                            <select ref="data('decor')?item?*" class="widget">
+                            <select ref="$decor?item?*" class="widget">
                                 <option value="yes">Ja</option>
                                 <option value="no">Nein</option>
                                 <option value="uncertain">unsicher</option>
@@ -216,7 +216,7 @@
                         <!-- 16a) -->
                         <fx-control ref="//physDesc/objectDesc/supportDesc/support/objectdata-type">
                             <label>Inschriftträger</label>
-                            <select ref="data('objtyp')?*" class="widget">
+                            <select ref="$objtyp?*" class="widget">
                                 <template>
                                     <option value="{?value}">{?name}</option>
                                 </template>
@@ -233,7 +233,7 @@
                         <!-- 18) -->
                         <fx-control ref="//physDesc/objectDesc/supportDesc/support/material" update-event="change" class="orange">
                             <label>Material</label>
-                            <select ref="data('material')/category[@name=data('tmp')/material-group]/material/@name" class="widget">
+                            <select ref="$material/category[@name=$tmp/material-group]/material/@name" class="widget">
                                 <template>
                                     <option value="{string(.)}">{.}</option>
                                 </template>

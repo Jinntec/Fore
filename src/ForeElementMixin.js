@@ -198,7 +198,7 @@ export const foreElementMixin = superclass =>
         const instId = XPathUtil.getDataId(this.ref);
         return this.getModel().getData(instId);
       }
-      return this.getModel().getData('default');
+      return this.getModel().get$default;
     }
 
     _getParentBindingElement(start) {

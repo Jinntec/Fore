@@ -23,7 +23,7 @@
 <!--
             <fx-insert if="not(exists(//msDesc/msIdentifier/repository))"
                        ref="//msDesc/msIdentifier/idno"
-                       origin="data('template')//msDesc/msIdentifier/repository"
+                       origin="$template//msDesc/msIdentifier/repository"
                        position="before"></fx-insert>
             <fx-update></fx-update>
 -->
@@ -31,7 +31,7 @@
             <fx-action iterate="//msPart" event="model-construct-done">
                 <fx-insert if="not(exists(.//msItem/listBibl[@type='transmission']))"
                            context=".//msItem"
-                           origin="data('template')//msItem/listBibl[@type='transmission']"></fx-insert>
+                           origin="$template//msItem/listBibl[@type='transmission']"></fx-insert>
             </fx-action>
             <fx-action iterate="//msPart" event="model-construct-done">
                 <!-- ##### todo: adding a second action within the iterated block breaks the actions -->
@@ -43,12 +43,12 @@
 <!--
                 <fx-insert if="not(exists(.//msItem/listBibl[@type='transmission']))"
                            context=".//msItem"
-                           origin="data('template')//msItem/listBibl[@type='transmission']"></fx-insert>
+                           origin="$template//msItem/listBibl[@type='transmission']"></fx-insert>
                 <fx-update></fx-update>
 -->
                 <fx-insert if="not(exists(.//msItem/listBibl[@type='images']))"
                            context=".//msItem"
-                           origin="data('template')//msItem/listBibl[@type='images']"></fx-insert>
+                           origin="$template//msItem/listBibl[@type='images']"></fx-insert>
                 <fx-update></fx-update>
 
             </fx-action>

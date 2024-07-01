@@ -37,9 +37,9 @@
                 one language as the default with <code>src</code> and switches between different languages by exchanging the
                 data with a submission.</p>
                 <fx-group>
-                    <fx-control ref="data('vars')/selected">
+                    <fx-control ref="$vars/selected">
                         <label>Selected</label>
-                        <fx-items ref="data('default')?*" class="widget">
+                        <fx-items ref="$default?*" class="widget">
                             <template>
                                 <div class="fx-checkbox">
                                     <input type="radio" name="group" value="{value}"/>
@@ -48,7 +48,7 @@
                             </template>
                         </fx-items>
                     </fx-control>
-                    {data('vars')/selected}
+                    {$vars/selected}
                 </fx-group>
 
                 <fx-trigger>
