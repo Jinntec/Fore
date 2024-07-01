@@ -221,16 +221,16 @@ describe('refresh Tests', () => {
                 </fx-trigger>
 
                 <div class="info">
-                    You have {count(data()/task[@complete='true'])} completed tasks
+                    You have {count($default/task[@complete='true'])} completed tasks
                 </div>
 
                 <div class="info open">
-                    {if(count(data()/task[@complete='false'])!=0) then "You have " ||
-                    count(data()/task[@complete='false']) || " open tasks" else ""}
+                    {if(count($default/task[@complete='false'])!=0) then "You have " ||
+                    count($default/task[@complete='false']) || " open tasks" else ""}
                 </div>
 
                 <div class="info big">
-                    {if(count(data()/task[@complete='false'])=0) then "You're all done!" else ""}
+                    {if(count($default/task[@complete='false'])=0) then "You're all done!" else ""}
                 </div>
                 <fx-repeat id="task" ref="task">
                     <template>

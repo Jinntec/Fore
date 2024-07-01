@@ -312,7 +312,7 @@ describe('delete Tests', () => {
 
                     <fx-trigger>
                         <label>delete</label>
-                        <fx-delete ref="data()"></fx-delete>
+                        <fx-delete ref="$default"></fx-delete>
                     </fx-trigger>
                 </fx-group>
             </fx-fore>
@@ -356,7 +356,7 @@ describe('delete Tests', () => {
 
                     <fx-trigger>
                         <label>delete</label>
-                        <fx-delete ref="data()/data"></fx-delete>
+                        <fx-delete ref="$default/data"></fx-delete>
                     </fx-trigger>
                 </fx-group>
             </fx-fore>

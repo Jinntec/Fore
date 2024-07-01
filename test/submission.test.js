@@ -85,7 +85,7 @@ describe('submission tests', () => {
         const car = fx.evaluateXPath('exists(car)', result, null, {});
         expect(car).to.be.true;
 
-        const motor = fx.evaluateXPath('car/motor/data()', result, null, {});
+        const motor = fx.evaluateXPath('car/motor/$default', result, null, {});
         expect(motor).to.equal('electric');
 
         const thing = fx.evaluateXPath('exists(thing)', result, null, {});
@@ -312,8 +312,8 @@ describe('submission tests', () => {
                         <button>replace data with json</button>
                         <fx-send submission="submission"></fx-send>
                     </fx-trigger>
-                    <fx-output ref="data()?foo">
-                        <label slot="label">data()?foo =</label>
+                    <fx-output ref="$default?foo">
+                        <label slot="label">$default?foo =</label>
                     </fx-output>
                     <fx-output id="out" ref="$response?foo">
                         <label slot="label">This message comes from replaced data:</label>

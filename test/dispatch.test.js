@@ -45,7 +45,7 @@ describe('fx-dispatch tests', () => {
                 <fx-trigger>
                     <button>dispatch it</button>
                     <fx-dispatch name="foo" targetid="bar">
-                        <fx-property name="instance" expr="data()"></fx-property>
+                        <fx-property name="instance" expr="$default"></fx-property>
                     </fx-dispatch>
                 </fx-trigger>
             </fx-fore>

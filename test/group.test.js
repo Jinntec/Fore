@@ -92,7 +92,7 @@ describe('group tests', () => {
                     </fx-control>
                     <fx-trigger id="t2">
                         <button>switch non-relevant again</button>
-                        <fx-delete ref="data()/foo"></fx-delete>
+                        <fx-delete ref="$default/foo"></fx-delete>
                     </fx-trigger>
                 </fx-group>
             </fx-fore>
