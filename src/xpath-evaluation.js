@@ -334,7 +334,6 @@ function functionNameResolver({prefix, localName}, _arity) {
         case 'base64encode':
         case 'boolean-from-string':
         case 'current':
-        case 'data':
         case 'depends':
         case 'event':
         case 'fore-attr':
@@ -970,42 +969,6 @@ registerCustomXPathFunction(
     },
 );
 
-const data = (dynamicContext, string) => {
-
-    const formElement = fxEvaluateXPathToFirstNode(
-        'ancestor-or-self::fx-fore[1]',
-        dynamicContext.currentContext.formElement,
-        null,
-        null,
-        {namespaceResolver: xhtmlNamespaceResolver},
-    );
-
-    let lookup = null;
-    if(string === null || string === 'default'){
-        lookup = formElement.getModel().getDefaultData();
-    }else{
-        lookup = formElement.getModel().getData(string);
-        if(!lookup){
-            document.querySelector('fx-fore').dispatchEvent(new CustomEvent('error', {
-                composed: true,
-                bubbles: true,
-                detail: {
-                    origin: 'functions',
-                    message: `Data not found '${localName}'`,
-                    level:'Error'
-                },
-            }));
-        }
-    }
-
-    const context = lookup.getDefaultContext();
-    if (!context) {
-        debugger;
-        return null;
-    }
-    return context;
-};
-
 registerCustomXPathFunction(
     {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'index'},
     ['xs:string?'],
@@ -1024,21 +987,6 @@ registerCustomXPathFunction(
         return Number(1);
     },
 );
-
-registerCustomXPathFunction(
-    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'data'},
-    [],
-    'item()?',
-    domFacade => data(domFacade, null),
-);
-
-registerCustomXPathFunction(
-    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'data'},
-    ['xs:string?'],
-    'item()?',
-    data,
-);
-
 
 const getAttributes = (value) => {
     if (Array.isArray(value)) {
