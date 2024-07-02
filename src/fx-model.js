@@ -21,7 +21,7 @@ export class FxModel extends HTMLElement {
         super();
         // this.id = '';
 
-        this.data = [];
+        this.data = new Map();
         this.modelItems = [];
         this.defaultContext = {};
         this.changed = [];
@@ -119,7 +119,7 @@ export class FxModel extends HTMLElement {
             dataElements.forEach(data =>{
                 const dataElement = new DataElement(data);
                 promises.push(dataElement.init());
-                this.data.push(dataElement);
+                this.data.set(!data.hasAttribute('id') ? 'default': data.id,dataElement);
             });
             await Promise.all(promises);
 
@@ -451,10 +451,10 @@ export class FxModel extends HTMLElement {
     }
 
     getDefaultData() {
-        if (this.data.length) {
-            return this.data[0];
-        }
-        return this.get$default;
+        //todo: what if default instance has a different name?
+        const keys = Array.from(this.data.keys());
+        console.log('keys', keys)
+        return this.data.get(keys[0]);
     }
 
     getData(id) {
@@ -466,7 +466,7 @@ export class FxModel extends HTMLElement {
         if (!found) {
             // const dataArray = Array.from(this.data);
 
-            found = this.data.find(data => data.getId() === id);
+            found = this.data.get(id);
             const parentFore = this.fore.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE
                 ? this.fore.parentNode.host.closest('fx-fore')
                 : this.fore.parentNode.closest('fx-fore');
