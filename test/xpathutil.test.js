@@ -25,8 +25,8 @@ describe('XPathUtil Tests', () => {
     it('isAbsolutePath returns true when no path starts with "/"', async () => {
         expect(XPathUtil.isAbsolutePath('/foo')).to.equal(true);
     });
-    it('isAbsolutePath returns true when no path starts with "data("', async () => {
-        expect(XPathUtil.isAbsolutePath('instance()')).to.equal(true);
+    it('isAbsolutePath returns true when no path starts with "$"', async () => {
+        expect(XPathUtil.isAbsolutePath('$')).to.equal(true);
     });
 
     it('returns correct parentBindElement', async () => {

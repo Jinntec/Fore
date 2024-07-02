@@ -174,7 +174,7 @@ class FxAppend extends AbstractAction {
   }
 
   getDataId() {
-    if (this.ref.startsWith('data(')) {
+    if (this.ref.startsWith('$')) {
       return 'not implemented';
     }
     return 'default';

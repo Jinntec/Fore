@@ -223,7 +223,7 @@ describe('instance Tests', () => {
                 </fx-model>
 
                 <span id="default-span">{greeting}</span>
-                <span id="pointed-span">{data("instance-1")/greeting}</span>
+                <span id="pointed-span">{$instance-1)/greeting}</span>
             </fx-fore>
         `);
 

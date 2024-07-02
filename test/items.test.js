@@ -103,7 +103,7 @@ describe('fx-items tests', () => {
                     <data id="i-functions" data-src="/base/test/functions.xml"></data>
                 </fx-model>
                 <fx-control ref="//m/@function" update-event="input">
-                    <fx-items ref="data('i-functions')//option" class="widget">
+                    <fx-items ref="$i-functions//option" class="widget">
                         <template>
               <span class="fx-checkbox">
                 <input id="check" name="option" type="checkbox" value="{@xml:id}"/>
@@ -150,7 +150,7 @@ describe('fx-items tests', () => {
                     <data id="i-functions" data-src="/base/test/functions.xml"></data>
                 </fx-model>
                 <fx-control ref="//m/@function" update-event="input">
-                    <fx-items ref="data('i-functions')//option" class="widget">
+                    <fx-items ref="$i-functions//option" class="widget">
                         <template>
               <span class="fx-checkbox">
                 <input id="check" name="option" type="checkbox" value="{@xml:id}"/>
@@ -199,7 +199,7 @@ describe('fx-items tests', () => {
                     <data id="i-functions" data-src="/base/test/functions.xml"></data>
                 </fx-model>
                 <fx-control ref="//m/@function" update-event="input">
-                    <fx-items ref="data('i-functions')//option" class="widget">
+                    <fx-items ref="$i-functions//option" class="widget">
                         <template>
               <span class="fx-checkbox">
                 <input id="check" name="option" type="checkbox" value="{@xml:id}"/>
