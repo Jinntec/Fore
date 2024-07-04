@@ -1,18 +1,18 @@
 import {
-    evaluateXPath as fxEvaluateXPath,
-    evaluateXPathToBoolean as fxEvaluateXPathToBoolean,
-    evaluateXPathToFirstNode as fxEvaluateXPathToFirstNode,
-    evaluateXPathToNodes as fxEvaluateXPathToNodes,
-    evaluateXPathToNumber as fxEvaluateXPathToNumber,
-    evaluateXPathToString as fxEvaluateXPathToString,
-    evaluateXPathToStrings as fxEvaluateXPathToStrings,
-    parseScript,
-    registerCustomXPathFunction,
-    registerXQueryModule,
+  evaluateXPath as fxEvaluateXPath,
+  evaluateXPathToBoolean as fxEvaluateXPathToBoolean,
+  evaluateXPathToFirstNode as fxEvaluateXPathToFirstNode,
+  evaluateXPathToNodes as fxEvaluateXPathToNodes,
+  evaluateXPathToNumber as fxEvaluateXPathToNumber,
+  evaluateXPathToString as fxEvaluateXPathToString,
+  evaluateXPathToStrings as fxEvaluateXPathToStrings,
+  parseScript,
+  registerCustomXPathFunction,
+  registerXQueryModule,
 } from 'fontoxpath';
 
-import {XPathUtil} from './xpath-util.js';
-import {prettifyXml} from './functions/common-function.js';
+import { XPathUtil } from './xpath-util.js';
+import { prettifyXml } from './functions/common-function.js';
 
 const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
 
@@ -23,35 +23,36 @@ const createdNamespaceResolversByXPathQueryAndNode = new Map();
 export const globallyDeclaredFunctionLocalNames = [];
 
 function getCachedNamespaceResolver(xpath, node) {
-    if (!createdNamespaceResolversByXPathQueryAndNode.has(xpath)) {
-        return null;
-    }
-    return createdNamespaceResolversByXPathQueryAndNode.get(xpath).get(node) || null;
+  if (!createdNamespaceResolversByXPathQueryAndNode.has(xpath)) {
+    return null;
+  }
+  return createdNamespaceResolversByXPathQueryAndNode.get(xpath).get(node) || null;
 }
 
 function setCachedNamespaceResolver(xpath, node, resolver) {
-    if (!createdNamespaceResolversByXPathQueryAndNode.has(xpath)) {
-        return createdNamespaceResolversByXPathQueryAndNode.set(xpath, new Map());
-    }
-    return createdNamespaceResolversByXPathQueryAndNode.get(xpath).set(node, resolver);
+  if (!createdNamespaceResolversByXPathQueryAndNode.has(xpath)) {
+    return createdNamespaceResolversByXPathQueryAndNode.set(xpath, new Map());
+  }
+  return createdNamespaceResolversByXPathQueryAndNode.get(xpath).set(node, resolver);
 }
 
 const xhtmlNamespaceResolver = prefix => {
-    if (!prefix) {
-        return 'http://www.w3.org/1999/xhtml';
-    }
-    return undefined;
+  if (!prefix) {
+    return 'http://www.w3.org/1999/xhtml';
+  }
+  return undefined;
 };
 export function isInShadow(node) {
-    return node.getRootNode() instanceof ShadowRoot;
+  return node.getRootNode() instanceof ShadowRoot;
 }
 
 /**
  * Resolve an id in scope. Behaves like the algorithm defined on https://www.w3.org/community/xformsusers/wiki/XForms_2.0#idref-resolve
  */
 export function resolveId(id, sourceObject, nodeName = null) {
-	const query = 'outermost(ancestor-or-self::fx-fore[1]/(descendant::fx-fore|descendant::*[@id = $id]))[not(self::fx-fore)]';
-    /*
+  const query =
+    'outermost(ancestor-or-self::fx-fore[1]/(descendant::fx-fore|descendant::*[@id = $id]))[not(self::fx-fore)]';
+  /*
         if (nodeName === 'fx-instance') {
             // Instance elements can only be in the `model` element
             // query = 'ancestor-or-self::fx-fore[1]/fx-model/fx-instance[@id = $id]';
@@ -63,119 +64,121 @@ export function resolveId(id, sourceObject, nodeName = null) {
         return document.getElementById(id);
 	}
     */
-	if (sourceObject.nodeType === Node.TEXT_NODE) {
-		sourceObject = sourceObject.parentNode;
-	}
-	if (sourceObject.nodeType === Node.ATTRIBUTE_NODE) {
-		sourceObject = sourceObject.ownerElement;
-	}
-    if(sourceObject.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE){
-        sourceObject = sourceObject.parentNode.host;
+  if (sourceObject.nodeType === Node.TEXT_NODE) {
+    sourceObject = sourceObject.parentNode;
+  }
+  if (sourceObject.nodeType === Node.ATTRIBUTE_NODE) {
+    sourceObject = sourceObject.ownerElement;
+  }
+  if (sourceObject.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+    sourceObject = sourceObject.parentNode.host;
+  }
+  const ownerForm =
+    sourceObject.localName === 'fx-fore' ? sourceObject : sourceObject.closest('fx-fore');
+  const elementsWithId = ownerForm.querySelectorAll(`[id='${id}']`);
+  if (elementsWithId.length === 1) {
+    // A single one is found. Assume no ID reuse.
+    const targetObject = elementsWithId[0];
+    if (nodeName && targetObject.localName !== nodeName) {
+      return null;
     }
-	const ownerForm = sourceObject.localName === 'fx-fore' ? sourceObject : sourceObject.closest('fx-fore');
-	const elementsWithId = ownerForm.querySelectorAll(`[id='${id}']`);
-	if (elementsWithId.length === 1) {
-        // A single one is found. Assume no ID reuse.
-        const targetObject = elementsWithId[0];
-        if (nodeName && targetObject.localName !== nodeName) {
-            return null;
-        }
-        return targetObject;
-	}
+    return targetObject;
+  }
 
-    const allMatchingTargetObjects = fxEvaluateXPathToNodes(query,
-        sourceObject,
-        null,
-        {id},
-        {namespaceResolver: xhtmlNamespaceResolver},
-    );
+  const allMatchingTargetObjects = fxEvaluateXPathToNodes(
+    query,
+    sourceObject,
+    null,
+    { id },
+    { namespaceResolver: xhtmlNamespaceResolver },
+  );
 
-    if (allMatchingTargetObjects.length === 0) {
-        return null;
-    }
-
-    if (
-        allMatchingTargetObjects.length === 1 &&
-        fxEvaluateXPathToBoolean(
-            '(ancestor::fx-fore | ancestor::fx-repeat)[last()]/self::fx-fore',
-            allMatchingTargetObjects[0],
-            null,
-            null,
-            {namespaceResolver: xhtmlNamespaceResolver},
-        )
-    ) {
-        // If the target element is not repeated, then the search for the target object is trivial since
-        // there is only one associated with the target element that bears the matching ID. This is true
-        // regardless of whether or not the source object is repeated. However, if the target element is
-        // repeated, then additional information must be used to help select a target object from among
-        // those associated with the identified target element.
-        const targetObject = allMatchingTargetObjects[0];
-        if (nodeName && targetObject.localName !== nodeName) {
-            return null;
-        }
-        return targetObject;
-    }
-
-    // SPEC:
-
-    // 12.2.1 References to Elements within a repeat Element
-
-    // When the target element that is identified by the IDREF of a source object has one or more
-    // repeat elements as ancestors, then the set of ancestor repeats are partitioned into two
-    // subsets, those in common with the source element and those that are not in common. Any ancestor
-    // repeat elements of the target element not in common with the source element are descendants of
-    // the repeat elements that the source and target element have in common, if any.
-
-    // For the repeat elements that are in common, the desired target object exists in the same set of
-    // run-time objects that contains the source object. Then, for each ancestor repeat of the target
-    // element that is not in common with the source element, the current index of the repeat
-    // determines the set of run-time objects that contains the desired target object.
-    for (const ancestorRepeatItem of fxEvaluateXPathToNodes(
-        'ancestor::fx-repeatitem => reverse()',
-        sourceObject,
-        null,
-        null,
-        {namespaceResolver: xhtmlNamespaceResolver},
-    )) {
-        const foundTargetObjects = allMatchingTargetObjects.filter(to =>
-            XPathUtil.contains(ancestorRepeatItem, to),
-        );
-        switch (foundTargetObjects.length) {
-            case 0:
-                // Nothing found: ignore
-                break;
-            case 1: {
-                // A single one is found: the target object is directly in a common repeat
-                const targetObject = foundTargetObjects[0];
-                if (nodeName && targetObject.localName !== nodeName) {
-                    return null;
-                }
-                return targetObject;
-            }
-            default: {
-                // Multiple target objects are found: they are in a repeat that is not common with the source object
-                // We found a target object in a common repeat! We now need to find the one that is in the repeatitem identified at the current index
-                const targetObject = foundTargetObjects.find(to =>
-                    fxEvaluateXPathToNodes(
-                        'every $ancestor of ancestor::fx-repeatitem satisfies $ancestor is $ancestor/../child::fx-repeatitem[../@repeat-index]',
-                        to,
-                        null,
-                        {},
-                    ),
-                );
-                if (!targetObject) {
-                    // Nothing valid found for whatever reason. This might be something dynamic?
-                    return null;
-                }
-                if (nodeName && targetObject.localName !== nodeName) {
-                    return null;
-                }
-                return targetObject;
-            }
-        }
-    }
-    // We found no target objects in common repeats. The id is unresolvable
+  if (allMatchingTargetObjects.length === 0) {
     return null;
+  }
+
+  if (
+    allMatchingTargetObjects.length === 1 &&
+    fxEvaluateXPathToBoolean(
+      '(ancestor::fx-fore | ancestor::fx-repeat)[last()]/self::fx-fore',
+      allMatchingTargetObjects[0],
+      null,
+      null,
+      { namespaceResolver: xhtmlNamespaceResolver },
+    )
+  ) {
+    // If the target element is not repeated, then the search for the target object is trivial since
+    // there is only one associated with the target element that bears the matching ID. This is true
+    // regardless of whether or not the source object is repeated. However, if the target element is
+    // repeated, then additional information must be used to help select a target object from among
+    // those associated with the identified target element.
+    const targetObject = allMatchingTargetObjects[0];
+    if (nodeName && targetObject.localName !== nodeName) {
+      return null;
+    }
+    return targetObject;
+  }
+
+  // SPEC:
+
+  // 12.2.1 References to Elements within a repeat Element
+
+  // When the target element that is identified by the IDREF of a source object has one or more
+  // repeat elements as ancestors, then the set of ancestor repeats are partitioned into two
+  // subsets, those in common with the source element and those that are not in common. Any ancestor
+  // repeat elements of the target element not in common with the source element are descendants of
+  // the repeat elements that the source and target element have in common, if any.
+
+  // For the repeat elements that are in common, the desired target object exists in the same set of
+  // run-time objects that contains the source object. Then, for each ancestor repeat of the target
+  // element that is not in common with the source element, the current index of the repeat
+  // determines the set of run-time objects that contains the desired target object.
+  for (const ancestorRepeatItem of fxEvaluateXPathToNodes(
+    'ancestor::fx-repeatitem => reverse()',
+    sourceObject,
+    null,
+    null,
+    { namespaceResolver: xhtmlNamespaceResolver },
+  )) {
+    const foundTargetObjects = allMatchingTargetObjects.filter(to =>
+      XPathUtil.contains(ancestorRepeatItem, to),
+    );
+    switch (foundTargetObjects.length) {
+      case 0:
+        // Nothing found: ignore
+        break;
+      case 1: {
+        // A single one is found: the target object is directly in a common repeat
+        const targetObject = foundTargetObjects[0];
+        if (nodeName && targetObject.localName !== nodeName) {
+          return null;
+        }
+        return targetObject;
+      }
+      default: {
+        // Multiple target objects are found: they are in a repeat that is not common with the source object
+        // We found a target object in a common repeat! We now need to find the one that is in the repeatitem identified at the current index
+        const targetObject = foundTargetObjects.find(to =>
+          fxEvaluateXPathToNodes(
+            'every $ancestor of ancestor::fx-repeatitem satisfies $ancestor is $ancestor/../child::fx-repeatitem[../@repeat-index]',
+            to,
+            null,
+            {},
+          ),
+        );
+        if (!targetObject) {
+          // Nothing valid found for whatever reason. This might be something dynamic?
+          return null;
+        }
+        if (nodeName && targetObject.localName !== nodeName) {
+          return null;
+        }
+        return targetObject;
+      }
+    }
+  }
+  // We found no target objects in common repeats. The id is unresolvable
+  return null;
 }
 
 // Make namespace resolving use the `instance` element that is related to here
@@ -184,32 +187,28 @@ const xmlDocument = new DOMParser().parseFromString('<xml />', 'text/xml');
 const dataReferencesByQuery = new Map();
 
 function findDataReferences(xpathQuery) {
-	if (!xpathQuery.includes('instance')) {
-		// No call to the instance function anyway: short-circuit and prevent AST processing
-		return [];
-	}
-	if (dataReferencesByQuery.has(xpathQuery)) {
-	  	return dataReferencesByQuery.get(xpathQuery);
-	}
-    const xpathAST = parseScript(xpathQuery, {}, xmlDocument);
-    const dataReferences = fxEvaluateXPathToStrings(
-        `descendant::xqx:functionCallExpr
-				[xqx:functionName = "data"]
-				/xqx:arguments
-				/xqx:stringConstantExpr
-				/xqx:value`,
-        xpathAST,
-        null,
-        {},
-        {
-            namespaceResolver: prefix =>
-                prefix === 'xqx' ? 'http://www.w3.org/2005/XQueryX' : undefined,
-        },
-    );
+  if (!xpathQuery.includes('$')) {
+    // No call to the data variables anyway: short-circuit and prevent AST processing
+    return [];
+  }
+  if (dataReferencesByQuery.has(xpathQuery)) {
+    return dataReferencesByQuery.get(xpathQuery);
+  }
+  const xpathAST = parseScript(xpathQuery, {}, xmlDocument);
+  const dataReferences = fxEvaluateXPathToStrings(
+    `descendant::xqx:varRef/xqx:name`,
+    xpathAST,
+    null,
+    {},
+    {
+      namespaceResolver: prefix =>
+        prefix === 'xqx' ? 'http://www.w3.org/2005/XQueryX' : undefined,
+    },
+  );
 
-	dataReferencesByQuery.set(xpathQuery, dataReferences);
+  dataReferencesByQuery.set(xpathQuery, dataReferences);
 
-	return dataReferences;
+  return dataReferences;
 }
 
 /**
@@ -227,149 +226,149 @@ function findDataReferences(xpathQuery) {
  * @param  {string}   prefix          The prefix to resolve
  */
 function createNamespaceResolver(xpathQuery, formElement) {
-    const cachedResolver = getCachedNamespaceResolver(xpathQuery, formElement);
-    if (cachedResolver) {
-        return cachedResolver;
+  const cachedResolver = getCachedNamespaceResolver(xpathQuery, formElement);
+  if (cachedResolver) {
+    return cachedResolver;
+  }
+  let dataReferences = findDataReferences(xpathQuery);
+  if (dataReferences.length === 0) {
+    // No data variable usage. Look up further in the hierarchy to see if we can deduce the intended context from there
+    const ancestorComponent =
+      formElement.parentNode &&
+      formElement.parentNode.nodeType === formElement.ELEMENT &&
+      formElement.parentNode.closest('[ref]');
+    if (ancestorComponent) {
+      const resolver = createNamespaceResolver(
+        ancestorComponent.getAttribute('ref'),
+        ancestorComponent,
+      );
+      setCachedNamespaceResolver(xpathQuery, formElement, resolver);
+      return resolver;
     }
-	let dataReferences = findDataReferences(xpathQuery);
-    if (dataReferences.length === 0) {
-        // No instance functions. Look up further in the hierarchy to see if we can deduce the intended context from there
-        const ancestorComponent = formElement.parentNode &&
-			  formElement.parentNode.nodeType === formElement.ELEMENT &&
-			  formElement.parentNode.closest('[ref]');
-        if (ancestorComponent) {
-            const resolver = createNamespaceResolver(
-                ancestorComponent.getAttribute('ref'),
-                ancestorComponent,
-            );
-            setCachedNamespaceResolver(xpathQuery, formElement, resolver);
-            return resolver;
-        }
-        // Nothing found: let's just assume we're supposed to use the `default` instance
-        dataReferences = ['default'];
+    // Nothing found: let's just assume we're supposed to use the `default` data
+    dataReferences = ['default'];
+  }
+
+  if (dataReferences.length === 1) {
+    // console.log(`resolving ${xpathQuery} with ${instanceReferences[0]}`);
+    let data;
+    if (dataReferences[0] === 'default') {
+      const actualForeElement = fxEvaluateXPathToFirstNode(
+        'ancestor-or-self::fx-fore[1]',
+        formElement,
+        null,
+        null,
+        { namespaceResolver: xhtmlNamespaceResolver },
+      );
+
+      data = actualForeElement && actualForeElement.querySelector('data');
+    } else {
+      data = resolveId(dataReferences[0], formElement, 'data');
     }
-
-    if (dataReferences.length === 1) {
-        // console.log(`resolving ${xpathQuery} with ${instanceReferences[0]}`);
-        let data;
-        if (dataReferences[0] === 'default') {
-            const actualForeElement = fxEvaluateXPathToFirstNode(
-                'ancestor-or-self::fx-fore[1]',
-                formElement,
-                null,
-                null,
-                {namespaceResolver: xhtmlNamespaceResolver},
-            );
-
-            data = actualForeElement && actualForeElement.querySelector('data');
-        } else {
-            data = resolveId(dataReferences[0], formElement, 'data');
-        }
-        if (data && data.hasAttribute('data-ns')) {
-            const xpathDefaultNamespace = data.getAttribute('data-ns');
-            /*
+    if (data && data.hasAttribute('data-ns')) {
+      const xpathDefaultNamespace = data.getAttribute('data-ns');
+      /*
             console.log(
               `Resolving the xpath ${xpathQuery} with the default namespace set to ${xpathDefaultNamespace}`,
             );
       */
-            const resolveNamespacePrefix = prefix => {
-                if (!prefix) {
-                    return xpathDefaultNamespace;
-                }
-                return undefined;
-            };
-            setCachedNamespaceResolver(xpathQuery, formElement, resolveNamespacePrefix);
-            return resolveNamespacePrefix;
+      const resolveNamespacePrefix = prefix => {
+        if (!prefix) {
+          return xpathDefaultNamespace;
         }
+        return undefined;
+      };
+      setCachedNamespaceResolver(xpathQuery, formElement, resolveNamespacePrefix);
+      return resolveNamespacePrefix;
     }
-    if (dataReferences.length > 1) {
-        console.warn(
-            `More than one instance is used in the query "${xpathQuery}". The default namespace resolving will be used`,
-        );
+  }
+  if (dataReferences.length > 1) {
+    console.warn(
+      `More than one data variable is used in the query "${xpathQuery}". The default namespace resolving will be used`,
+    );
+  }
+
+  const xpathDefaultNamespace =
+    fxEvaluateXPathToString('ancestor-or-self::*/@xpath-default-namespace[last()]', formElement) ||
+    '';
+
+  const resolveNamespacePrefix = function resolveNamespacePrefix(prefix) {
+    if (prefix === '') {
+      return xpathDefaultNamespace;
     }
 
-    const xpathDefaultNamespace =
-        fxEvaluateXPathToString('ancestor-or-self::*/@xpath-default-namespace[last()]', formElement) ||
-        '';
+    // Note: ideally we should use Node#lookupNamespaceURI. However, the nodes we are passed are
+    // XML. The best we can do is emulate the `xmlns:xxx` namespace declarations by regarding them as
+    // attributes. Which they technically ARE NOT!
 
-    const resolveNamespacePrefix = function resolveNamespacePrefix(prefix) {
-        if (prefix === '') {
-            return xpathDefaultNamespace;
-        }
+    return fxEvaluateXPathToString(
+      'ancestor-or-self::*/@*[name() = "xmlns:" || $prefix][last()]',
+      formElement,
+      null,
+      { prefix },
+    );
+  };
 
-        // Note: ideally we should use Node#lookupNamespaceURI. However, the nodes we are passed are
-        // XML. The best we can do is emulate the `xmlns:xxx` namespace declarations by regarding them as
-        // attributes. Which they technically ARE NOT!
-
-        return fxEvaluateXPathToString(
-            'ancestor-or-self::*/@*[name() = "xmlns:" || $prefix][last()]',
-            formElement,
-            null,
-            {prefix},
-        );
-    };
-
-    setCachedNamespaceResolver(xpathQuery, formElement, resolveNamespacePrefix);
-    return resolveNamespacePrefix;
+  setCachedNamespaceResolver(xpathQuery, formElement, resolveNamespacePrefix);
+  return resolveNamespacePrefix;
 }
 
 function createNamespaceResolverForNode(query, contextNode, formElement) {
-    if (((contextNode && contextNode.ownerDocument) || contextNode) === window.document) {
-        // Running a query on the HTML DOM. Don't bother resolving namespaces in any other way
-        return xhtmlNamespaceResolver;
-    }
-    return createNamespaceResolver(query, formElement);
+  if (((contextNode && contextNode.ownerDocument) || contextNode) === window.document) {
+    // Running a query on the HTML DOM. Don't bother resolving namespaces in any other way
+    return xhtmlNamespaceResolver;
+  }
+  return createNamespaceResolver(query, formElement);
 }
-
 
 /**
  * Implementation of the functionNameResolver passed to FontoXPath to
  * redirect function resolving for unprefixed functions to either the fn or the xf namespace
  */
 // eslint-disable-next-line no-unused-vars
-function functionNameResolver({prefix, localName}, _arity) {
-    switch (localName) {
-        // TODO: put the full XForms library functions set here
-        case 'context':
-        case 'base64encode':
-        case 'boolean-from-string':
-        case 'current':
-        case 'depends':
-        case 'event':
-        case 'fore-attr':
-        case 'index':
-        case 'json2xml':
-        case 'xml2Json':
-        case 'log':
-        case 'parse':
-        case 'local-date':
-        case 'local-dateTime':
-        case 'logtree':
-        case 'uri':
-        case 'uri-fragment':
-        case 'uri-host':
-        case 'uri-param':
-        case 'uri-path':
-        case 'uri-relpath':
-        case 'uri-port':
-        case 'uri-query':
-        case 'uri-scheme':
-        case 'uri-scheme-specific-part':
-            return {namespaceURI: XFORMS_NAMESPACE_URI, localName};
-        default:
-            if (prefix === '' && globallyDeclaredFunctionLocalNames.includes(localName)) {
-                // The function has been declared without a prefix and is called here without a prefix.
-                // Just make this work. It is the developer-friendly way
-                return {namespaceURI: 'http://www.w3.org/2005/xquery-local-functions', localName};
-            }
-            if (prefix === 'fn' || prefix === '') {
-                return {namespaceURI: 'http://www.w3.org/2005/xpath-functions', localName};
-            }
-            if (prefix === 'local') {
-                return {namespaceURI: 'http://www.w3.org/2005/xquery-local-functions', localName};
-            }
-            return null;
-    }
+function functionNameResolver({ prefix, localName }, _arity) {
+  switch (localName) {
+    // TODO: put the full XForms library functions set here
+    case 'context':
+    case 'base64encode':
+    case 'boolean-from-string':
+    case 'current':
+    case 'depends':
+    case 'event':
+    case 'fore-attr':
+    case 'index':
+    case 'json2xml':
+    case 'xml2Json':
+    case 'log':
+    case 'parse':
+    case 'local-date':
+    case 'local-dateTime':
+    case 'logtree':
+    case 'uri':
+    case 'uri-fragment':
+    case 'uri-host':
+    case 'uri-param':
+    case 'uri-path':
+    case 'uri-relpath':
+    case 'uri-port':
+    case 'uri-query':
+    case 'uri-scheme':
+    case 'uri-scheme-specific-part':
+      return { namespaceURI: XFORMS_NAMESPACE_URI, localName };
+    default:
+      if (prefix === '' && globallyDeclaredFunctionLocalNames.includes(localName)) {
+        // The function has been declared without a prefix and is called here without a prefix.
+        // Just make this work. It is the developer-friendly way
+        return { namespaceURI: 'http://www.w3.org/2005/xquery-local-functions', localName };
+      }
+      if (prefix === 'fn' || prefix === '') {
+        return { namespaceURI: 'http://www.w3.org/2005/xpath-functions', localName };
+      }
+      if (prefix === 'local') {
+        return { namespaceURI: 'http://www.w3.org/2005/xquery-local-functions', localName };
+      }
+      return null;
+  }
 }
 
 /**
@@ -381,37 +380,36 @@ function functionNameResolver({prefix, localName}, _arity) {
  * @return  {Object}  A key-value mapping of the variables
  */
 function getVariablesInScope(formElement) {
-    let closestActualFormElement = formElement;
-    while (closestActualFormElement && !('inScopeVariables' in closestActualFormElement)) {
-        closestActualFormElement = closestActualFormElement.nodeType === Node.ATTRIBUTE_NODE ?
-			closestActualFormElement.ownerElement :
-			closestActualFormElement.parentNode;
+  let closestActualFormElement = formElement;
+  while (closestActualFormElement && !('inScopeVariables' in closestActualFormElement)) {
+    closestActualFormElement =
+      closestActualFormElement.nodeType === Node.ATTRIBUTE_NODE
+        ? closestActualFormElement.ownerElement
+        : closestActualFormElement.parentNode;
+  }
+
+  if (!closestActualFormElement) {
+    return {};
+  }
+
+  const variables = {};
+  if (closestActualFormElement.inScopeVariables) {
+    for (const key of closestActualFormElement.inScopeVariables.keys()) {
+      const varElementOrValue = closestActualFormElement.inScopeVariables.get(key);
+      if (!varElementOrValue) {
+        continue;
+      }
+      if (varElementOrValue.nodeType) {
+        // We are a var element, set the value to the value computed there
+        variables[key] = varElementOrValue.value;
+        // variables[key] = varElementOrValue.inScopeVariables.get(key);
+      } else {
+        // We are a direct value. This is used to leak in event variables
+        variables[key] = varElementOrValue;
+      }
     }
-
-    if (!closestActualFormElement) {
-        return {};
-    }
-
-    const variables = {};
-    if (closestActualFormElement.inScopeVariables) {
-        for (const key of closestActualFormElement.inScopeVariables.keys()) {
-            const varElementOrValue = closestActualFormElement.inScopeVariables.get(key);
-            if (!varElementOrValue) {
-				continue;
-
-			}
-			if (varElementOrValue.nodeType) {
-				// We are a var element, set the value to the value computed there
-                variables[key] = varElementOrValue.value;
-                // variables[key] = varElementOrValue.inScopeVariables.get(key);
-			} else {
-				// We are a direct value. This is used to leak in event variables
-                variables[key] = varElementOrValue;
-			}
-
-        }
-    }
-    return variables;
+  }
+  return variables;
 }
 
 /**
@@ -446,43 +444,45 @@ export function evaluateXPath(xpath, contextNode, formElement, variables = {}, o
     );
 }
 */
-export function evaluateXPath(xpath, contextNode, formElement, variables = {}, options={}) {
-    try{
-        const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
-        const variablesInScope = getVariablesInScope(formElement);
+export function evaluateXPath(xpath, contextNode, formElement, variables = {}, options = {}) {
+  try {
+    const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
+    const variablesInScope = getVariablesInScope(formElement);
 
-        const result = fxEvaluateXPath(
-            xpath,
-            contextNode,
-            null,
-            {...variablesInScope, ...variables},
-            fxEvaluateXPath.ALL_RESULTS_TYPE,
-            {
-                debug: true,
-                currentContext: {formElement, variables},
-                moduleImports: {
-                    xf: XFORMS_NAMESPACE_URI,
-                },
-                functionNameResolver,
-                namespaceResolver,
-                language: options.language || evaluateXPath.XPATH_3_1
-            },
-        );
-        // console.log('evaluateXPath',xpath, result);
-        return result;
-    }catch (e){
-        formElement.dispatchEvent(new CustomEvent('error', {
-            composed: false,
-            bubbles: true,
-            detail: {
-                origin: formElement,
-                message: `Expression '${xpath}' failed`,
-                expr:xpath,
-                level:'Error'
-            },
-        }));
+    const result = fxEvaluateXPath(
+      xpath,
+      contextNode,
+      null,
+      { ...variablesInScope, ...variables },
+      fxEvaluateXPath.ALL_RESULTS_TYPE,
+      {
+        debug: true,
+        currentContext: { formElement, variables },
+        moduleImports: {
+          xf: XFORMS_NAMESPACE_URI,
+        },
+        functionNameResolver,
+        namespaceResolver,
+        language: options.language || evaluateXPath.XPATH_3_1,
+      },
+    );
+    // console.log('evaluateXPath',xpath, result);
+    return result;
+  } catch (e) {
+    formElement.dispatchEvent(
+      new CustomEvent('error', {
+        composed: false,
+        bubbles: true,
+        detail: {
+          origin: formElement,
+          message: `Expression '${xpath}' failed`,
+          expr: xpath,
+          level: 'Error',
+        },
+      }),
+    );
 
-/*
+    /*
         formElement.dispatchEvent(
             new CustomEvent('error', {
                 composed: false,
@@ -496,9 +496,9 @@ export function evaluateXPath(xpath, contextNode, formElement, variables = {}, o
             }),
         );
 */
-		// Return 'nothing' in hope the rest of the page can forgive this
-        return [];
-    }
+    // Return 'nothing' in hope the rest of the page can forgive this
+    return [];
+  }
 }
 /**
  * Evaluate an XPath to the first Node
@@ -509,32 +509,34 @@ export function evaluateXPath(xpath, contextNode, formElement, variables = {}, o
  * @return {Node}  The first node found by the XPath
  */
 export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
-    try{
-        const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
-        const variablesInScope = getVariablesInScope(formElement);
-        const result = fxEvaluateXPathToFirstNode(xpath, contextNode, null, variablesInScope, {
-            defaultFunctionNamespaceURI: XFORMS_NAMESPACE_URI,
-            moduleImports: {
-                xf: XFORMS_NAMESPACE_URI,
-            },
-            currentContext: {formElement},
-            functionNameResolver,
-            namespaceResolver,
-        });
-        // console.log('evaluateXPathToFirstNode',xpath, result);
-        return result;
-    } catch (e){
-        formElement.dispatchEvent(new CustomEvent('error', {
-            composed: false,
-            bubbles: true,
-            detail: {
-                origin: formElement,
-                message: `Expression '${xpath}' failed`,
-                expr:xpath,
-                level:'Error'
-            },
-        }));
-    }
+  try {
+    const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
+    const variablesInScope = getVariablesInScope(formElement);
+    const result = fxEvaluateXPathToFirstNode(xpath, contextNode, null, variablesInScope, {
+      defaultFunctionNamespaceURI: XFORMS_NAMESPACE_URI,
+      moduleImports: {
+        xf: XFORMS_NAMESPACE_URI,
+      },
+      currentContext: { formElement },
+      functionNameResolver,
+      namespaceResolver,
+    });
+    // console.log('evaluateXPathToFirstNode',xpath, result);
+    return result;
+  } catch (e) {
+    formElement.dispatchEvent(
+      new CustomEvent('error', {
+        composed: false,
+        bubbles: true,
+        detail: {
+          origin: formElement,
+          message: `Expression '${xpath}' failed`,
+          expr: xpath,
+          level: 'Error',
+        },
+      }),
+    );
+  }
 }
 
 /**
@@ -546,32 +548,34 @@ export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
  * @return {Node[]}  All nodes
  */
 export function evaluateXPathToNodes(xpath, contextNode, formElement) {
-    try{
-        const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
-        const variablesInScope = getVariablesInScope(formElement);
+  try {
+    const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
+    const variablesInScope = getVariablesInScope(formElement);
 
-        const result = fxEvaluateXPathToNodes(xpath, contextNode, null, variablesInScope, {
-            currentContext: {formElement},
-            functionNameResolver,
-            moduleImports: {
-                xf: XFORMS_NAMESPACE_URI,
-            },
-            namespaceResolver,
-        });
-        // console.log('evaluateXPathToNodes',xpath, result);
-        return result;
-    }catch (e){
-        formElement.dispatchEvent(new CustomEvent('error', {
-            composed: false,
-            bubbles: true,
-            detail: {
-                origin: formElement,
-                message: `Expression '${xpath}' failed`,
-                expr:xpath,
-                level:'Error'
-            },
-        }));
-    }
+    const result = fxEvaluateXPathToNodes(xpath, contextNode, null, variablesInScope, {
+      currentContext: { formElement },
+      functionNameResolver,
+      moduleImports: {
+        xf: XFORMS_NAMESPACE_URI,
+      },
+      namespaceResolver,
+    });
+    // console.log('evaluateXPathToNodes',xpath, result);
+    return result;
+  } catch (e) {
+    formElement.dispatchEvent(
+      new CustomEvent('error', {
+        composed: false,
+        bubbles: true,
+        detail: {
+          origin: formElement,
+          message: `Expression '${xpath}' failed`,
+          expr: xpath,
+          level: 'Error',
+        },
+      }),
+    );
+  }
 }
 
 /**
@@ -583,30 +587,32 @@ export function evaluateXPathToNodes(xpath, contextNode, formElement) {
  * @return {boolean}
  */
 export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
-    try{
-        const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
-        const variablesInScope = getVariablesInScope(formElement);
+  try {
+    const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
+    const variablesInScope = getVariablesInScope(formElement);
 
-        return fxEvaluateXPathToBoolean(xpath, contextNode, null, variablesInScope, {
-            currentContext: {formElement},
-            functionNameResolver,
-            moduleImports: {
-                xf: XFORMS_NAMESPACE_URI,
-            },
-            namespaceResolver,
-        });
-    }catch (e){
-        formElement.dispatchEvent(new CustomEvent('error', {
-            composed: false,
-            bubbles: true,
-            detail: {
-                origin: formElement,
-                message: `Expression '${xpath}' failed`,
-                expr:xpath,
-                level:'Error'
-            },
-        }));
-    }
+    return fxEvaluateXPathToBoolean(xpath, contextNode, null, variablesInScope, {
+      currentContext: { formElement },
+      functionNameResolver,
+      moduleImports: {
+        xf: XFORMS_NAMESPACE_URI,
+      },
+      namespaceResolver,
+    });
+  } catch (e) {
+    formElement.dispatchEvent(
+      new CustomEvent('error', {
+        composed: false,
+        bubbles: true,
+        detail: {
+          origin: formElement,
+          message: `Expression '${xpath}' failed`,
+          expr: xpath,
+          level: 'Error',
+        },
+      }),
+    );
+  }
 }
 
 /**
@@ -621,36 +627,38 @@ export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
  * @return {string}
  */
 export function evaluateXPathToString(
-    xpath,
-    contextNode,
-    formElement,
-    domFacade = null,
-    namespaceReferenceNode = formElement,
+  xpath,
+  contextNode,
+  formElement,
+  domFacade = null,
+  namespaceReferenceNode = formElement,
 ) {
-    try{
-        const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
-        const variablesInScope = getVariablesInScope(formElement);
+  try {
+    const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
+    const variablesInScope = getVariablesInScope(formElement);
 
-        return fxEvaluateXPathToString(xpath, contextNode, domFacade, variablesInScope, {
-            currentContext: {formElement},
-            functionNameResolver,
-            moduleImports: {
-                xf: XFORMS_NAMESPACE_URI,
-            },
-            namespaceResolver,
-        });
-    }catch (e) {
-        formElement.dispatchEvent(new CustomEvent('error', {
-            composed: false,
-            bubbles: true,
-            detail: {
-                origin: formElement,
-                message: `Expression '${xpath}' failed`,
-                expr:xpath,
-                level:'Error'
-            },
-        }));
-    }
+    return fxEvaluateXPathToString(xpath, contextNode, domFacade, variablesInScope, {
+      currentContext: { formElement },
+      functionNameResolver,
+      moduleImports: {
+        xf: XFORMS_NAMESPACE_URI,
+      },
+      namespaceResolver,
+    });
+  } catch (e) {
+    formElement.dispatchEvent(
+      new CustomEvent('error', {
+        composed: false,
+        bubbles: true,
+        detail: {
+          origin: formElement,
+          message: `Expression '${xpath}' failed`,
+          expr: xpath,
+          level: 'Error',
+        },
+      }),
+    );
+  }
 }
 
 /**
@@ -665,37 +673,42 @@ export function evaluateXPathToString(
  * @return {string}
  */
 export function evaluateXPathToStrings(
-    xpath,
-    contextNode,
-    formElement,
-    domFacade = null,
-    namespaceReferenceNode = formElement,
+  xpath,
+  contextNode,
+  formElement,
+  domFacade = null,
+  namespaceReferenceNode = formElement,
 ) {
-    try{
-        const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
-        return fxEvaluateXPathToStrings( xpath, contextNode, domFacade,
-            {},
-            {
-                currentContext: {formElement},
-                functionNameResolver,
-                moduleImports: {
-                    xf: XFORMS_NAMESPACE_URI,
-                },
-                namespaceResolver,
-            },
-        );
-    } catch (e){
-        formElement.dispatchEvent(new CustomEvent('error', {
-            composed: false,
-            bubbles: true,
-            detail: {
-                origin: formElement,
-                message: `Expression '${xpath}' failed`,
-                expr:xpath,
-                level:'Error'
-            },
-        }));
-    }
+  try {
+    const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
+    return fxEvaluateXPathToStrings(
+      xpath,
+      contextNode,
+      domFacade,
+      {},
+      {
+        currentContext: { formElement },
+        functionNameResolver,
+        moduleImports: {
+          xf: XFORMS_NAMESPACE_URI,
+        },
+        namespaceResolver,
+      },
+    );
+  } catch (e) {
+    formElement.dispatchEvent(
+      new CustomEvent('error', {
+        composed: false,
+        bubbles: true,
+        detail: {
+          origin: formElement,
+          message: `Expression '${xpath}' failed`,
+          expr: xpath,
+          level: 'Error',
+        },
+      }),
+    );
+  }
 }
 
 /**
@@ -710,72 +723,74 @@ export function evaluateXPathToStrings(
  * @return {Number}
  */
 export function evaluateXPathToNumber(
-    xpath,
-    contextNode,
-    formElement,
-    domFacade = null,
-    namespaceReferenceNode = formElement,
+  xpath,
+  contextNode,
+  formElement,
+  domFacade = null,
+  namespaceReferenceNode = formElement,
 ) {
-    try{
-        const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
-        const variablesInScope = getVariablesInScope(formElement);
+  try {
+    const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
+    const variablesInScope = getVariablesInScope(formElement);
 
-        return fxEvaluateXPathToNumber(xpath, contextNode, domFacade, variablesInScope, {
-            currentContext: {formElement},
-            functionNameResolver,
-            moduleImports: {
-                xf: XFORMS_NAMESPACE_URI,
-            },
-            namespaceResolver,
-        });
-    }catch (e) {
-        formElement.dispatchEvent(new CustomEvent('error', {
-            composed: false,
-            bubbles: true,
-            detail: {
-                origin: formElement,
-                message: `Expression '${xpath}' failed`,
-                expr:xpath,
-                level:'Error'
-            },
-        }));
-    }
+    return fxEvaluateXPathToNumber(xpath, contextNode, domFacade, variablesInScope, {
+      currentContext: { formElement },
+      functionNameResolver,
+      moduleImports: {
+        xf: XFORMS_NAMESPACE_URI,
+      },
+      namespaceResolver,
+    });
+  } catch (e) {
+    formElement.dispatchEvent(
+      new CustomEvent('error', {
+        composed: false,
+        bubbles: true,
+        detail: {
+          origin: formElement,
+          message: `Expression '${xpath}' failed`,
+          expr: xpath,
+          level: 'Error',
+        },
+      }),
+    );
+  }
 }
 
 const contextFunction = (dynamicContext, string) => {
-    const caller = dynamicContext.currentContext.formElement;
-	let data = null;
-    if (string) {
-        data = resolveId(string, caller);
-	} else {
-		data = XPathUtil.getParentBindingElement(caller);
-	}
-    if (data) {
-        if (data.nodeName === 'FX-REPEAT') {
-            const {nodeset} = data;
-            for (let parent = caller; parent; parent = parent.parentNode) {
-                if (parent.parentNode === data) {
-                    const offset = Array.from(parent.parentNode.children).indexOf(parent);
-                    return nodeset[offset];
-                }
-            }
+  const caller = dynamicContext.currentContext.formElement;
+  let data = null;
+  if (string) {
+    data = resolveId(string, caller);
+  } else {
+    data = XPathUtil.getParentBindingElement(caller);
+  }
+  if (data) {
+    if (data.nodeName === 'FX-REPEAT') {
+      const { nodeset } = data;
+      for (let parent = caller; parent; parent = parent.parentNode) {
+        if (parent.parentNode === data) {
+          const offset = Array.from(parent.parentNode.children).indexOf(parent);
+          return nodeset[offset];
         }
-        return data.nodeset;
+      }
     }
+    return data.nodeset;
+  }
 
-    return caller.getInScopeContext();
+  return caller.getInScopeContext();
 };
 
 // todo: implement
 const currentFunction = (dynamicContext, string) => {
-    const caller = dynamicContext.currentContext.formElement;
-    return null;
+  const caller = dynamicContext.currentContext.formElement;
+  return null;
 };
 
 const elementFunction = (dynamicContext, string) => {
-    const caller = dynamicContext.currentContext.formElement;
-    const newElement = document.createElement(string);
-    return newElement;
+  const caller = dynamicContext.currentContext.formElement;
+  const newElement = document.createElement(string);
+  return newElement;
 };
 
 /**
@@ -783,10 +798,10 @@ const elementFunction = (dynamicContext, string) => {
  * @return instance data for given id serialized to string.
  */
 registerCustomXPathFunction(
-    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'context'},
-    [],
-    'item()?',
-    contextFunction,
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'context' },
+  [],
+  'item()?',
+  contextFunction,
 );
 
 /**
@@ -794,24 +809,24 @@ registerCustomXPathFunction(
  * @return instance data for given id serialized to string.
  */
 registerCustomXPathFunction(
-    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'context'},
-    ['xs:string'],
-    'item()?',
-    contextFunction,
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'context' },
+  ['xs:string'],
+  'item()?',
+  contextFunction,
 );
 
 registerCustomXPathFunction(
-    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'current'},
-    ['xs:string'],
-    'item()?',
-    currentFunction,
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'current' },
+  ['xs:string'],
+  'item()?',
+  currentFunction,
 );
 
 registerCustomXPathFunction(
-    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'element'},
-    ['xs:string'],
-    'item()?',
-    elementFunction,
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'element' },
+  ['xs:string'],
+  'item()?',
+  elementFunction,
 );
 
 /**
@@ -819,53 +834,53 @@ registerCustomXPathFunction(
  * @return instance data for given id serialized to string.
  */
 registerCustomXPathFunction(
-    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'log'},
-    ['xs:string?'],
-    'xs:string?',
-    (dynamicContext, string) => {
-        const {formElement} = dynamicContext.currentContext;
-        const data = resolveId(string, formElement, 'data');
-        if (data) {
-            if (data.getAttribute('type') === 'json') {
-                console.warn('log() does not work for JSON yet');
-                // return JSON.stringify(instance.getDefaultContext());
-            } else {
-                const def = new XMLSerializer().serializeToString(data.getDefaultContext());
-                return prettifyXml(def);
-            }
-        }
-        return null;
-    },
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'log' },
+  ['xs:string?'],
+  'xs:string?',
+  (dynamicContext, string) => {
+    const { formElement } = dynamicContext.currentContext;
+    const data = resolveId(string, formElement, 'data');
+    if (data) {
+      if (data.getAttribute('type') === 'json') {
+        console.warn('log() does not work for JSON yet');
+        // return JSON.stringify(instance.getDefaultContext());
+      } else {
+        const def = new XMLSerializer().serializeToString(data.getDefaultContext());
+        return prettifyXml(def);
+      }
+    }
+    return null;
+  },
 );
 registerCustomXPathFunction(
-    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'fore-attr'},
-    ['xs:string?'],
-    'xs:string?',
-    (dynamicContext, string) => {
-        const {formElement} = dynamicContext.currentContext;
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'fore-attr' },
+  ['xs:string?'],
+  'xs:string?',
+  (dynamicContext, string) => {
+    const { formElement } = dynamicContext.currentContext;
 
-        let parent = formElement;
-        if(formElement.nodeType === Node.TEXT_NODE){
-            parent = formElement.parentNode;
-        }
-        const foreElement = parent.closest('fx-fore');
-        if(foreElement.hasAttribute(string)){
-            return foreElement.getAttribute(string);
-        }
-        return null;
-    },
+    let parent = formElement;
+    if (formElement.nodeType === Node.TEXT_NODE) {
+      parent = formElement.parentNode;
+    }
+    const foreElement = parent.closest('fx-fore');
+    if (foreElement.hasAttribute(string)) {
+      return foreElement.getAttribute(string);
+    }
+    return null;
+  },
 );
 
 registerCustomXPathFunction(
-    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'parse'},
-    ['xs:string?'],
-    'element()?',
-    (dynamicContext, string) => {
-        const parser = new DOMParser();
-        const out = parser.parseFromString(string, "application/xml");
-        console.log('parse', out);
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'parse' },
+  ['xs:string?'],
+  'element()?',
+  (dynamicContext, string) => {
+    const parser = new DOMParser();
+    const out = parser.parseFromString(string, 'application/xml');
+    console.log('parse', out);
 
-        /*
+    /*
                 const {formElement} = dynamicContext.currentContext;
                 const instance = resolveId(string, formElement, 'fx-instance');
                 if (instance) {
@@ -878,53 +893,53 @@ registerCustomXPathFunction(
                     }
                 }
         */
-        return out.firstElementChild;
-    },
+    return out.firstElementChild;
+  },
 );
 
 function buildTree(tree, data) {
-    if (!data) return;
-    if (data.nodeType === Node.ELEMENT_NODE) {
-        if (data.children) {
-            const details = document.createElement('details');
-            details.setAttribute('data-path', data.nodeName);
-            const summary = document.createElement('summary');
+  if (!data) return;
+  if (data.nodeType === Node.ELEMENT_NODE) {
+    if (data.children) {
+      const details = document.createElement('details');
+      details.setAttribute('data-path', data.nodeName);
+      const summary = document.createElement('summary');
 
-            let display = ` <${data.nodeName}`;
-            Array.from(data.attributes).forEach(attr => {
-                display += ` ${attr.nodeName}="${attr.nodeValue}"`;
-            });
+      let display = ` <${data.nodeName}`;
+      Array.from(data.attributes).forEach(attr => {
+        display += ` ${attr.nodeName}="${attr.nodeValue}"`;
+      });
 
-            let contents;
-            if (
-                data.firstChild &&
-                data.firstChild.nodeType === Node.TEXT_NODE &&
-                data.firstChild.data.trim() !== ''
-            ) {
-                // console.log('whoooooooooopp');
-                contents = data.firstChild.nodeValue;
-                display += `>${contents}</${data.nodeName}>`;
-            } else {
-                display += '>';
-            }
-            summary.textContent = display;
+      let contents;
+      if (
+        data.firstChild &&
+        data.firstChild.nodeType === Node.TEXT_NODE &&
+        data.firstChild.data.trim() !== ''
+      ) {
+        // console.log('whoooooooooopp');
+        contents = data.firstChild.nodeValue;
+        display += `>${contents}</${data.nodeName}>`;
+      } else {
+        display += '>';
+      }
+      summary.textContent = display;
 
-            details.appendChild(summary);
-            if (data.childElementCount !== 0) {
-                details.setAttribute('open', 'open');
-            } else {
-                summary.setAttribute('style', 'list-style:none;');
-            }
-            tree.appendChild(details);
+      details.appendChild(summary);
+      if (data.childElementCount !== 0) {
+        details.setAttribute('open', 'open');
+      } else {
+        summary.setAttribute('style', 'list-style:none;');
+      }
+      tree.appendChild(details);
 
-            Array.from(data.children).forEach(child => {
-                // if(child.nodeType === Node.ELEMENT_NODE){
-                // child.parentNode.appendChild(buildTree(child));
-                buildTree(details, child);
-                // }
-            });
-        }
-    } /* else if(data.nodeType === Node.ATTRIBUTE_NODE){
+      Array.from(data.children).forEach(child => {
+        // if(child.nodeType === Node.ELEMENT_NODE){
+        // child.parentNode.appendChild(buildTree(child));
+        buildTree(details, child);
+        // }
+      });
+    }
+  } /* else if(data.nodeType === Node.ATTRIBUTE_NODE){
         //create span for now
         // const span = document.createElement('span');
         // span.style.background = 'grey';
@@ -935,176 +950,174 @@ function buildTree(tree, data) {
         tree.textContent = data;
     } */
 
-    // return tree;
+  // return tree;
 }
 
 registerCustomXPathFunction(
-    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'logtree'},
-    ['xs:string?'],
-    'element()?',
-    (dynamicContext, string) => {
-        const {formElement} = dynamicContext.currentContext;
-        const data = resolveId(string, formElement, 'data');
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'logtree' },
+  ['xs:string?'],
+  'element()?',
+  (dynamicContext, string) => {
+    const { formElement } = dynamicContext.currentContext;
+    const data = resolveId(string, formElement, 'data');
 
-        if (data) {
-            // const def = new XMLSerializer().serializeToString(instance.getDefaultContext());
-            // const def = JSON.stringify(instance.getDefaultContext());
+    if (data) {
+      // const def = new XMLSerializer().serializeToString(instance.getDefaultContext());
+      // const def = JSON.stringify(instance.getDefaultContext());
 
-            const treeDiv = document.createElement('div');
-            treeDiv.setAttribute('class', 'logtree');
-            // const datatree = buildTree(tree,instance.getDefaultContext());
-            // return tree.appendChild(datatree);
-            // return  buildTree(root,instance.getDefaultContext());;
-            const form = dynamicContext.currentContext.formElement;
-            const logtree = form.querySelector('.logtree');
-            if (logtree) {
-                logtree.parentNode.removeChild(logtree);
-            }
-            const tree = buildTree(treeDiv, data.getDefaultContext());
-            if (tree) {
-                form.appendChild(tree);
-            }
-        }
-        return null;
-    },
+      const treeDiv = document.createElement('div');
+      treeDiv.setAttribute('class', 'logtree');
+      // const datatree = buildTree(tree,instance.getDefaultContext());
+      // return tree.appendChild(datatree);
+      // return  buildTree(root,instance.getDefaultContext());;
+      const form = dynamicContext.currentContext.formElement;
+      const logtree = form.querySelector('.logtree');
+      if (logtree) {
+        logtree.parentNode.removeChild(logtree);
+      }
+      const tree = buildTree(treeDiv, data.getDefaultContext());
+      if (tree) {
+        form.appendChild(tree);
+      }
+    }
+    return null;
+  },
 );
 
 registerCustomXPathFunction(
-    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'index'},
-    ['xs:string?'],
-    'xs:integer?',
-    (dynamicContext, string) => {
-        const {formElement} = dynamicContext.currentContext;
-        if (string === null) {
-            return 1;
-        }
-        const repeat = resolveId(string, formElement, 'fx-repeat');
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'index' },
+  ['xs:string?'],
+  'xs:integer?',
+  (dynamicContext, string) => {
+    const { formElement } = dynamicContext.currentContext;
+    if (string === null) {
+      return 1;
+    }
+    const repeat = resolveId(string, formElement, 'fx-repeat');
 
-        // const def = instance.getInstanceData();
-        if (repeat) {
-            return repeat.getAttribute('index');
-        }
-        return Number(1);
-    },
+    // const def = instance.getInstanceData();
+    if (repeat) {
+      return repeat.getAttribute('index');
+    }
+    return Number(1);
+  },
 );
 
-const getAttributes = (value) => {
-    if (Array.isArray(value)) {
-        return ` type="array"`;
-    } else if (typeof value === 'number') {
-        return ` type="number"`;
-    } else if (typeof value === 'boolean') {
-        return ` type="boolean"`;
-    }
-    return '';
+const getAttributes = value => {
+  if (Array.isArray(value)) {
+    return ` type="array"`;
+  }
+  if (typeof value === 'number') {
+    return ` type="number"`;
+  }
+  if (typeof value === 'boolean') {
+    return ` type="boolean"`;
+  }
+  return '';
 };
 
 const jsonToXml = (dynamicContext, json) => {
-    const escapeXml = (str) => {
-        return str.replace(/[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD]/g, (char) => {
-            return `\\u${char.charCodeAt(0).toString(16).padStart(4, '0')}`;
-        });
-    };
+  const escapeXml = str =>
+    str.replace(
+      /[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD]/g,
+      char => `\\u${char.charCodeAt(0).toString(16).padStart(4, '0')}`,
+    );
 
-    const convert = (obj, parent) => {
-        const type = typeof obj;
-        if (type === 'number') {
-            parent.setAttribute('type', 'number');
-            parent.textContent = obj.toString();
-        } else if (type === 'boolean') {
-            parent.setAttribute('type', 'boolean');
-            parent.textContent = obj.toString();
-        } else if (obj === null) {
-            const node = document.createElement('_');
-            node.setAttribute('type', 'null');
-            parent.appendChild(node);
-        } else if (type === 'string') {
-            parent.textContent = escapeXml(obj);
-        } else if (Array.isArray(obj)) {
-            parent.setAttribute('type', 'array');
-            obj.forEach((item) => {
-                const node = document.createElement('_');
-                convert(item, node);
-                node.textContent = item;
-                parent.appendChild(node);
-            });
-        } else if (type === 'object') {
-            parent.setAttribute('type', 'object');
-            Object.entries(obj).forEach(([key, value]) => {
-                if(value){
-                    const childNode = document.createElement(key.replace(/[^a-zA-Z0-9_]/g, '_'));
-                    convert(value, childNode);
-                    parent.appendChild(childNode);
-                }
-            });
+  const convert = (obj, parent) => {
+    const type = typeof obj;
+    if (type === 'number') {
+      parent.setAttribute('type', 'number');
+      parent.textContent = obj.toString();
+    } else if (type === 'boolean') {
+      parent.setAttribute('type', 'boolean');
+      parent.textContent = obj.toString();
+    } else if (obj === null) {
+      const node = document.createElement('_');
+      node.setAttribute('type', 'null');
+      parent.appendChild(node);
+    } else if (type === 'string') {
+      parent.textContent = escapeXml(obj);
+    } else if (Array.isArray(obj)) {
+      parent.setAttribute('type', 'array');
+      obj.forEach(item => {
+        const node = document.createElement('_');
+        convert(item, node);
+        node.textContent = item;
+        parent.appendChild(node);
+      });
+    } else if (type === 'object') {
+      parent.setAttribute('type', 'object');
+      Object.entries(obj).forEach(([key, value]) => {
+        if (value) {
+          const childNode = document.createElement(key.replace(/[^a-zA-Z0-9_]/g, '_'));
+          convert(value, childNode);
+          parent.appendChild(childNode);
         }
-    };
-
-    const root = document.createElement('json');
-    if(Array.isArray(json)){
-        root.setAttribute('type', 'array');
-    }else{
-        root.setAttribute('type', 'object');
+      });
     }
-    convert(json, root);
-    // return root.outerHTML;
-    console.log('xml',root)
-    return root;
+  };
+
+  const root = document.createElement('json');
+  if (Array.isArray(json)) {
+    root.setAttribute('type', 'array');
+  } else {
+    root.setAttribute('type', 'object');
+  }
+  convert(json, root);
+  // return root.outerHTML;
+  console.log('xml', root);
+  return root;
 };
 
 registerCustomXPathFunction(
-    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'json2xml'},
-    ['item()?'],
-    'item()?',
-    jsonToXml
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'json2xml' },
+  ['item()?'],
+  'item()?',
+  jsonToXml,
 );
 const xmlToJson = (dynamicContext, xml) => {
-    const isElementNode = (node) => {
-        return node.nodeType === Node.ELEMENT_NODE;
-    };
+  const isElementNode = node => node.nodeType === Node.ELEMENT_NODE;
 
-    const isTextNode = (node) => {
-        return node.nodeType === Node.TEXT_NODE;
-    };
+  const isTextNode = node => node.nodeType === Node.TEXT_NODE;
 
-    const parseNode = (node) => {
-        if (isElementNode(node)) {
-            const obj = {};
-            if (node.hasAttributes()) {
-                obj['type'] = node.getAttribute('type');
-            }
-            if (node.childNodes.length === 1 && isTextNode(node.firstChild)) {
-                return node.textContent;
-            }
-            for (const child of node.childNodes) {
-                const childName = child.nodeName;
-                const childValue = parseNode(child);
-                if (obj[childName]) {
-                    if (!Array.isArray(obj[childName])) {
-                        obj[childName] = [obj[childName]];
-                    }
-                    obj[childName].push(childValue);
-                } else {
-                    obj[childName] = childValue;
-                }
-            }
-            return obj;
-        } else if (isTextNode(node)) {
-            return node.textContent;
+  const parseNode = node => {
+    if (isElementNode(node)) {
+      const obj = {};
+      if (node.hasAttributes()) {
+        obj.type = node.getAttribute('type');
+      }
+      if (node.childNodes.length === 1 && isTextNode(node.firstChild)) {
+        return node.textContent;
+      }
+      for (const child of node.childNodes) {
+        const childName = child.nodeName;
+        const childValue = parseNode(child);
+        if (obj[childName]) {
+          if (!Array.isArray(obj[childName])) {
+            obj[childName] = [obj[childName]];
+          }
+          obj[childName].push(childValue);
+        } else {
+          obj[childName] = childValue;
         }
+      }
+      return obj;
+    }
+    if (isTextNode(node)) {
+      return node.textContent;
+    }
+  };
 
-    };
-
-    const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(xml, 'application/xml');
-    const root = xmlDoc.documentElement;
-    return parseNode(root);
+  const parser = new DOMParser();
+  const xmlDoc = parser.parseFromString(xml, 'application/xml');
+  const root = xmlDoc.documentElement;
+  return parseNode(root);
 };
 registerCustomXPathFunction(
-    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'xmltoJson'},
-    ['item()?'],
-    'item()?',
-    xmlToJson
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'xmltoJson' },
+  ['item()?'],
+  'item()?',
+  xmlToJson,
 );
 
 /*
@@ -1113,54 +1126,58 @@ const xml = '<json type="object"><given>Mark</given><family>Smith</family></json
 console.log(xmlToJson(xml));
 */
 
-
 registerCustomXPathFunction(
-    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'depends'},
-    ['node()*'],
-    'item()?',
-    (dynamicContext, nodes) =>
-        // console.log('depends on : ', nodes[0]);
-        nodes[0],
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'depends' },
+  ['node()*'],
+  'item()?',
+  (dynamicContext, nodes) =>
+    // console.log('depends on : ', nodes[0]);
+    nodes[0],
 );
 
 registerCustomXPathFunction(
-    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'event'},
-    ['xs:string?'],
-    'item()?',
-    (dynamicContext, arg) => {
-        if (!arg) return null;
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'event' },
+  ['xs:string?'],
+  'item()?',
+  (dynamicContext, arg) => {
+    if (!arg) return null;
 
-		for (let ancestor = dynamicContext.currentContext.formElement;
-			 ancestor;
-			 ancestor = ancestor.parentNode) {
-			if (!ancestor.currentEvent) {
-				continue;
-			}
+    for (
+      let ancestor = dynamicContext.currentContext.formElement;
+      ancestor;
+      ancestor = ancestor.parentNode
+    ) {
+      if (!ancestor.currentEvent) {
+        continue;
+      }
 
-			// We have a current event. read the property either from detail, or from the event
-			// itself.
-			// Check detail for custom events! This is how that is passed along
-			if (ancestor.currentEvent.detail && typeof ancestor.currentEvent.detail === 'object' && arg in ancestor.currentEvent.detail) {
-				return ancestor.currentEvent.detail[arg];
-			}
+      // We have a current event. read the property either from detail, or from the event
+      // itself.
+      // Check detail for custom events! This is how that is passed along
+      if (
+        ancestor.currentEvent.detail &&
+        typeof ancestor.currentEvent.detail === 'object' &&
+        arg in ancestor.currentEvent.detail
+      ) {
+        return ancestor.currentEvent.detail[arg];
+      }
 
-			// arg might be `code`, so currentEvent.code should work
-            if(arg.includes('.')){
-                return _propertyLookup(ancestor.currentEvent, arg);
-            }
-			return ancestor.currentEvent[arg] || null;
-
-		}
-        return null;
-    },
-);
-
-function _propertyLookup(obj,path){
-    const parts = path.split(".");
-    if (parts.length==1){
-        return obj[parts[0]];
+      // arg might be `code`, so currentEvent.code should work
+      if (arg.includes('.')) {
+        return _propertyLookup(ancestor.currentEvent, arg);
+      }
+      return ancestor.currentEvent[arg] || null;
     }
-    return _propertyLookup(obj[parts[0]], parts.slice(1).join("."));
+    return null;
+  },
+);
+
+function _propertyLookup(obj, path) {
+  const parts = path.split('.');
+  if (parts.length == 1) {
+    return obj[parts[0]];
+  }
+  return _propertyLookup(obj[parts[0]], parts.slice(1).join('.'));
 }
 
 // Implement the XForms standard functions here.
@@ -1200,103 +1217,94 @@ registerXQueryModule(`
  * @return {string}
  */
 registerCustomXPathFunction(
-    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'base64encode'},
-    ['xs:string?'],
-    'xs:string?',
-    (dynamicContext, string) => btoa(string),
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'base64encode' },
+  ['xs:string?'],
+  'xs:string?',
+  (dynamicContext, string) => btoa(string),
 );
 
 registerCustomXPathFunction(
-    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'local-date'},
-    [],
-    'xs:string?',
-    (dynamicContext, string) => new Date().toLocaleDateString(),
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'local-date' },
+  [],
+  'xs:string?',
+  (dynamicContext, string) => new Date().toLocaleDateString(),
 );
 registerCustomXPathFunction(
-    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'local-dateTime'},
-    [],
-    'xs:string?',
-    (dynamicContext, string) => {
-        return new Date().toLocaleString();
-    },
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'local-dateTime' },
+  [],
+  'xs:string?',
+  (dynamicContext, string) => new Date().toLocaleString(),
 );
 registerCustomXPathFunction(
-    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri'},
-    [],
-    'xs:string?',
-    (dynamicContext, string) => window.location.href,
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri' },
+  [],
+  'xs:string?',
+  (dynamicContext, string) => window.location.href,
 );
 registerCustomXPathFunction(
-    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-fragment'},
-    [],
-    'xs:string?',
-    (dynamicContext, arg) => window.location.hash,
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-fragment' },
+  [],
+  'xs:string?',
+  (dynamicContext, arg) => window.location.hash,
 );
 registerCustomXPathFunction(
-    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-host'},
-    [],
-    'xs:string?',
-    (dynamicContext, arg) => window.location.host,
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-host' },
+  [],
+  'xs:string?',
+  (dynamicContext, arg) => window.location.host,
 );
 registerCustomXPathFunction(
-    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-query'},
-    [],
-    'xs:string?',
-    (dynamicContext, arg) => window.location.search,
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-query' },
+  [],
+  'xs:string?',
+  (dynamicContext, arg) => window.location.search,
 );
 registerCustomXPathFunction(
-    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-relpath'},
-    [],
-    'xs:string?',
-    (dynamicContext, arg) => {
-        const path = new URL(window.location.href).pathname;
-        return path.substring(0,path.lastIndexOf('/') + 1);
-    },
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-relpath' },
+  [],
+  'xs:string?',
+  (dynamicContext, arg) => {
+    const path = new URL(window.location.href).pathname;
+    return path.substring(0, path.lastIndexOf('/') + 1);
+  },
 );
 registerCustomXPathFunction(
-    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-path'},
-    [],
-    'xs:string?',
-    (dynamicContext, arg) => {
-        return new URL(window.location.href).pathname;
-    },
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-path' },
+  [],
+  'xs:string?',
+  (dynamicContext, arg) => new URL(window.location.href).pathname,
 );
 registerCustomXPathFunction(
-    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-port'},
-    [],
-    'xs:string?',
-    (dynamicContext, arg) => {
-        return window.location.port;
-    },
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-port' },
+  [],
+  'xs:string?',
+  (dynamicContext, arg) => window.location.port,
 );
 registerCustomXPathFunction(
-    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-param'},
-    ['xs:string?'],
-    'xs:string?',
-    (dynamicContext, arg) => {
-        if (!arg) return null;
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-param' },
+  ['xs:string?'],
+  'xs:string?',
+  (dynamicContext, arg) => {
+    if (!arg) return null;
 
-        const search = window.location.search;
-        const urlparams = new URLSearchParams(search);
-        const param = urlparams.get(arg);
-        return param ? param : '';
-
-    },
+    const { search } = window.location;
+    const urlparams = new URLSearchParams(search);
+    const param = urlparams.get(arg);
+    return param || '';
+  },
 );
 registerCustomXPathFunction(
-    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-scheme'},
-    [],
-    'xs:string?',
-    (dynamicContext, arg) => {
-        return new URL(window.location.href).protocol;
-    },
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-scheme' },
+  [],
+  'xs:string?',
+  (dynamicContext, arg) => new URL(window.location.href).protocol,
 );
 registerCustomXPathFunction(
-    {namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-scheme-specific-part'},
-    [],
-    'xs:string?',
-    (dynamicContext, arg) => {
-        const uri = window.location.href;
-        return uri.substring(uri.indexOf(':') + 1, uri.length);
-    },
+  { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-scheme-specific-part' },
+  [],
+  'xs:string?',
+  (dynamicContext, arg) => {
+    const uri = window.location.href;
+    return uri.substring(uri.indexOf(':') + 1, uri.length);
+  },
 );

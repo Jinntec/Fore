@@ -6,7 +6,7 @@ import {
   evaluateXPathToString,
 } from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
-import {Fore} from './fore.js';
+import { Fore } from './fore.js';
 
 /**
  * Mixin containing all general functions that are shared by all Fore element classes.
@@ -62,6 +62,9 @@ export const foreElementMixin = superclass =>
       this.inScopeVariables = new Map();
     }
 
+    /**
+     * @returns {import('./fx-model.js').FxModel}
+     */
     getModel() {
       // console.log('getModel this ', this);
       if (this.model) {
@@ -101,7 +104,7 @@ export const foreElementMixin = superclass =>
     evalInContext() {
       // const inscopeContext = this.getInScopeContext();
       const model = this.getModel();
-      if(!model){
+      if (!model) {
         return;
       }
       let inscopeContext;
@@ -113,9 +116,7 @@ export const foreElementMixin = superclass =>
       }
       if (!inscopeContext && this.getModel().data.length !== 0) {
         // ### always fall back to default context with there's neither a 'context' or 'ref' present
-        inscopeContext = this.getModel()
-          .getDefaultData()
-          .getDefaultContext();
+        inscopeContext = this.getModel().getDefaultData().getDefaultContext();
         // console.warn('no in scopeContext for ', this);
         // console.warn('using default context ', this);
         // return;
@@ -138,13 +139,8 @@ export const foreElementMixin = superclass =>
         this.nodeset = evaluateXPath(this.ref, inscopeContext[0], this);
       } else {
         // this.nodeset = fx.evaluateXPathToFirstNode(this.ref, inscopeContext, null, {namespaceResolver: this.namespaceResolver});
-        if(!inscopeContext) return;
-        const { nodeType } = inscopeContext;
-        if (nodeType && !XPathUtil.isAbsolutePath(this.ref)) {
-          this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext, this);
-        } else {
-          [this.nodeset] = evaluateXPath(this.ref, inscopeContext, this);
-        }
+        if (!inscopeContext) return;
+        [this.nodeset] = evaluateXPath(this.ref, inscopeContext, this);
       }
       // console.log('UiElement evaluated to nodeset: ', this.nodeset);
     }
@@ -172,7 +168,6 @@ export const foreElementMixin = superclass =>
       return expr;
     }
 
-
     isNotBound() {
       return !this.hasAttribute('ref');
     }
@@ -193,12 +188,15 @@ export const foreElementMixin = superclass =>
       return parent.getAttribute('ref');
     }
 
+    /**
+     * Get the data this ref likely works with.
+     */
     getData() {
-      if (this.ref.startsWith('data(')) {
+      if (this.ref.startsWith('$')) {
         const instId = XPathUtil.getDataId(this.ref);
         return this.getModel().getData(instId);
       }
-      return this.getModel().get$default;
+      return this.getModel().getDefaultData();
     }
 
     _getParentBindingElement(start) {

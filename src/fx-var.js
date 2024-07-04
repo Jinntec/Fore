@@ -33,6 +33,9 @@ export class FxVariable extends foreElementMixin(HTMLElement) {
     this.value = typedValueFactory(values, domFacade);
   }
 
+  /**
+   * @param {Map<string, {value: unknown}>} inScopeVariables
+   */
   setInScopeVariables(inScopeVariables) {
     if (inScopeVariables.has(this.name)) {
       console.error(`The variable ${this.name} is declared more than once`);
