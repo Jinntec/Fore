@@ -10,16 +10,33 @@
     <link href="../../resources/demo.css" rel="stylesheet">
 
     <style>
-        [mediatype]{
-            border:thin solid var(--paper-light-blue-500);
-            padding: 1rem;
-        }
         fx-fore{
             width:calc(100% - 2rem);
         }
         demo-snippet {
             border:none;
         }
+        .side-by-side{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            padding:0;
+            grid-gap:0.5rem;
+
+            &> *,
+            textarea{
+               width:100%;
+                height:100%;
+            }
+            [mediatype]{
+                border:thin solid var(--paper-light-blue-500);
+            }
+
+            fx-output{
+               padding:0.15rem;
+            }
+
+        }
+
     </style>
     <script type="text/javascript" src="../../src/drawdown.js"></script>
 
@@ -136,8 +153,12 @@ this is a paragraph
                         return converted;
                     </fx-function>
                 </fx-model>
-                <fx-output value="markdown(md-page/text())" mediatype="markdown"></fx-output>
-
+                <div class="side-by-side">
+                    <fx-control ref="instance()/md-page" debounce="300" update-event="input">
+                        <textarea class="widget"></textarea>
+                    </fx-control>
+                    <fx-output value="markdown(md-page/text())" mediatype="markdown"></fx-output>
+                </div>
             </fx-fore>
         </template>
     </demo-snippet>

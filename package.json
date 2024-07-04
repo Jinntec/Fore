@@ -59,6 +59,7 @@
     "lit-html": "^2.2.5",
     "mocha": "^10.0.0",
     "np": "^8.0.4",
+    "replace-in-file": "^8.0.2",
     "rimraf": "^3.0.2",
     "rollup": "^2.75.4",
     "rollup-plugin-babel": "^4.4.0",
