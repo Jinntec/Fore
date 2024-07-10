@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>Multi value auto-complete</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+    <style>
+        fx-repeatitem,
+        fx-repeatitem[relevant]{
+            position: relative;
+            opacity: 1;
+            background: lightblue;
+            border-radius: 1rem;
+            padding: 0.25rem 1rem;
+            display:inline-block;
+            margin:0 0.25rem;
+        }
+        fx-trigger {
+            button {
+                border-radius: 50%;
+                border: thin solid;
+                padding: 0.25rem 0.5rem;
+            }
+        }
+
+    </style>
+</head>
+<body>
+<fx-fore>
+
+    <fx-model>
+        <fx-var name="$m" value="instance('multiple')"></fx-var>
+
+        <fx-instance>
+            <data>
+                <option value="1">Chocolate</option>
+                <option value="2">Coconut</option>
+                <option value="3">Mint</option>
+                <option value="4">Strawberry</option>
+                <option value="5">Vanilla</option>
+            </data>
+        </fx-instance>
+
+        <fx-instance id="multiple">
+            <data>
+                <lookup></lookup>
+                <value>
+                </value>
+                <part></part>
+            </data>
+        </fx-instance>
+    </fx-model>
+    <fx-var name="val" value="instance('multiple')"></fx-var>
+    <fx-repeat id="r-multi" ref="instance('multiple')/value/part">
+        <template>
+            {.} {instance()/*[@id = .]}
+            <fx-trigger ref="." class="deletePart">
+                <button>X</button>
+                <fx-delete ref="."></fx-delete>
+            </fx-trigger>
+        </template>
+    </fx-repeat>
+    <fx-control ref="instance('multiple')/lookup" update-event="enter">
+        <input type="search" list="suggestions" class="widget" placeholder="select an item...">
+        <datalist id="suggestions" data-ref="instance()/*[not(@value = instance('multiple')/value/part)]">
+            <template>
+                <option value="{@value}">{.}</option>
+            </template>
+        </datalist>
+        <fx-action event="value-changed" if=". != ''">
+            <fx-insert context="instance('multiple')/value" ref="part" origin="instance('multiple')/part"></fx-insert>
+            <fx-setvalue ref="instance('multiple')/value/part[last()]"
+                         value="context()"></fx-setvalue>
+            <fx-setvalue ref="instance('multiple')/lookup" value="''"></fx-setvalue>
+        </fx-action>
+    </fx-control>
+<!--
+    <fx-var name="val" value="instance('multiple')"></fx-var>
+    <fx-repeat id="r-multi" ref="$m/multi/val">
+        <template>
+            {.}
+            <fx-trigger ref="." class="deletePart">
+                <button>X</button>
+                <fx-delete ref="."></fx-delete>
+            </fx-trigger>
+        </template>
+    </fx-repeat>
+    <fx-control ref="$m/lookup" update-event="enter">
+        <input list="flavors1" class="widget">
+        <datalist id="flavors1" data-ref="instance()/flavor[not(@id = $m/multi/val)]">
+            <template>
+                <option value="{@id}">{.}</option>
+            </template>
+        </datalist>
+        <fx-action event="value-changed" if=". != ''">
+            <fx-insert context="$m/multi" ref="val" origin="$m/val"></fx-insert>
+            <fx-setvalue ref="$m/multi/val[last()]"
+                         value="context()"></fx-setvalue>
+            <fx-setvalue ref="$m/lookup" value="''"></fx-setvalue>
+        </fx-action>
+
+
+    </fx-control>
+-->
+<!--    {instance('multiple')/lookup}/{instance('multiple')/multi}-->
+</fx-fore>
+<script type="module" src="../../index.js"></script>
+</body>
+</html>
