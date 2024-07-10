@@ -336,18 +336,6 @@ export default class FxControl extends XfAbstractControl {
             return;
         }
 
-        if (this.valueProp === 'selectedOptions') {
-            const valueSet = new Set(this.value.split(' '));
-            for (const option of [...this.widget.querySelectorAll('option')]) {
-                if (valueSet.has(option.value)) {
-                    option.selected = true;
-                } else {
-                    option.selected = false;
-                }
-            }
-            return;
-        }
-
         if (this.hasAttribute('as')) {
             const as = this.getAttribute('as');
 
@@ -589,6 +577,19 @@ export default class FxControl extends XfAbstractControl {
                 }
                 this.boundInitialized = true;
             }
+
+            if (this.valueProp === 'selectedOptions') {
+                const valueSet = new Set(this.value.split(' '));
+                const options = this.getWidget().querySelectorAll('option');
+                for (const option of [...options]) {
+                    if (valueSet.has(option.value)) {
+                        option.selected = true;
+                    } else {
+                        option.selected = false;
+                    }
+                }
+            }
+
         }
     }
 
