@@ -50,7 +50,7 @@ Object.setPrototypeOf(DepGraphCycleError, Error);
 function createDFS(edges, leavesOnly, result, circular) {
   const visited = {};
   // eslint-disable-next-line func-names
-  return function(start) {
+  return function (start) {
     // console.log('start ', start);
     if (visited[start]) {
       return;

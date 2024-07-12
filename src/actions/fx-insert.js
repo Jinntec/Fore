@@ -5,8 +5,8 @@ import {
   evaluateXPathToFirstNode,
   evaluateXPathToNumber,
 } from '../xpath-evaluation.js';
-import {XPathUtil} from "../xpath-util";
-import {Fore} from '../fore.js';
+import { XPathUtil } from '../xpath-util';
+import { Fore } from '../fore.js';
 
 /**
  * `fx-insert`
@@ -60,7 +60,7 @@ export class FxInsert extends AbstractAction {
     this.keepValues = !!this.hasAttribute('keep-values');
   }
 
-  _getOriginSequence(inscope, targetSequence){
+  _getOriginSequence(inscope, targetSequence) {
     let originSequence;
     if (this.origin) {
       // ### if there's an origin attribute use it
@@ -143,7 +143,7 @@ export class FxInsert extends AbstractAction {
         inscopeContext,
         this.getOwnerForm(),
       );
-		inscope = inscopeContext;
+      inscope = inscopeContext;
     }
 
     if (this.hasAttribute('ref')) {
@@ -171,7 +171,6 @@ export class FxInsert extends AbstractAction {
         insertLocationNode = inscope;
         inscope.appendChild(originSequenceClone);
         index = 1;
-
       }
     } else {
       /* ### insert at position given by 'at' or use the last item in the targetSequence ### */
@@ -238,22 +237,20 @@ export class FxInsert extends AbstractAction {
     // const xpath = XPathUtil.getPath(originSequenceClone.parentNode, instanceId);
     const xpath = XPathUtil.getPath(insertLocationNode.parentNode, instanceId);
 
-
-
     const path = Fore.getDomNodeIndexString(originSequenceClone);
     this.dispatchEvent(
       new CustomEvent('execute-action', {
         composed: true,
         bubbles: true,
-        cancelable:true,
-        detail: { action: this, event:this.event, path },
+        cancelable: true,
+        detail: { action: this, event: this.event, path },
       }),
     );
 
-    Fore.dispatch(inst,'insert',{
+    Fore.dispatch(inst, 'insert', {
       'inserted-nodes': originSequenceClone,
       'insert-location-node': insertLocationNode,
-      'position': this.position
+      position: this.position,
     });
 
     // todo: this actually should dispatch to respective instance
@@ -270,7 +267,7 @@ export class FxInsert extends AbstractAction {
     );
 
     this.needsUpdate = true;
-    console.log('Changed!', xpath)
+    console.log('Changed!', xpath);
     return [xpath];
   }
 

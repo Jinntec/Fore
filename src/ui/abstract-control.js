@@ -1,24 +1,24 @@
 import '../fx-model.js';
-import { foreElementMixin } from '../ForeElementMixin.js';
+import ForeElementMixin from '../ForeElementMixin.js';
 import { ModelItem } from '../modelitem.js';
 import { Fore } from '../fore.js';
 import getInScopeContext from '../getInScopeContext.js';
-import { evaluateXPathToFirstNode} from '../xpath-evaluation.js';
+import { evaluateXPathToFirstNode } from '../xpath-evaluation.js';
 
-function isDifferent (oldNodeValue, oldControlValue, newControlValue) {
-    if (oldNodeValue === null) {
-		return false;
-    }
+function isDifferent(oldNodeValue, oldControlValue, newControlValue) {
+  if (oldNodeValue === null) {
+    return false;
+  }
 
-    if (newControlValue && oldControlValue && newControlValue.nodeType && oldControlValue.nodeType) {
-		return newControlValue.outerHTML !== oldControlValue.outerHTML;
-    }
+  if (newControlValue && oldControlValue && newControlValue.nodeType && oldControlValue.nodeType) {
+    return newControlValue.outerHTML !== oldControlValue.outerHTML;
+  }
 
-	if (oldControlValue === newControlValue) {
-		return false;
-	}
+  if (oldControlValue === newControlValue) {
+    return false;
+  }
 
-    return true;
+  return true;
 }
 
 /**
@@ -26,7 +26,7 @@ function isDifferent (oldNodeValue, oldControlValue, newControlValue) {
  * is a general base class for control elements.
  *
  */
-export default class AbstractControl extends foreElementMixin(HTMLElement) {
+export default class AbstractControl extends ForeElementMixin {
   constructor() {
     super();
     this.value = null;
@@ -48,10 +48,10 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
    * (re)apply all modelItem state properties to this control. model -> UI
    */
   async refresh(force) {
-    if(force) this.force=true;
+    if (force) this.force = true;
     // console.log('### AbstractControl.refresh on : ', this);
 
-      // Save the old value of this control. this may be the stringified version, contrast to the node in `nodeset`
+    // Save the old value of this control. this may be the stringified version, contrast to the node in `nodeset`
     const oldValue = this.value;
 
     // if(this.repeated) return
@@ -68,42 +68,45 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     if (this.isBound()) {
       // this.control = this.querySelector('#control');
 
-      if(!this.nodeset){
-
+      if (!this.nodeset) {
         const create = this.closest('[create]');
-        if(create){
+        if (create) {
           // ### check if parent element exists
-          let attrName; let parentPath; let parentNode;
+          let attrName;
+          let parentPath;
+          let parentNode;
 
-          if(this.ref.includes('/')){
+          if (this.ref.includes('/')) {
             parentPath = this.ref.substring(0, this.ref.indexOf('/'));
             const inscope = getInScopeContext(this.parentNode, this.ref);
-            parentNode = evaluateXPathToFirstNode(parentPath,inscope,this);
+            parentNode = evaluateXPathToFirstNode(parentPath, inscope, this);
 
-            if(parentNode && parentNode.nodeType === Node.ELEMENT_NODE){
-              if(this.ref.includes('@')){
-                attrName = this.ref.substring(this.ref.indexOf('/')+2);
-                parentNode.setAttribute(attrName,'');
-              }else{
-                Fore.dispatch(this,'warn',{message:'"create" is not implemented for elements'})
+            if (parentNode && parentNode.nodeType === Node.ELEMENT_NODE) {
+              if (this.ref.includes('@')) {
+                attrName = this.ref.substring(this.ref.indexOf('/') + 2);
+                parentNode.setAttribute(attrName, '');
+              } else {
+                Fore.dispatch(this, 'warn', {
+                  message: '"create" is not implemented for elements',
+                });
               }
             }
-          }else{
+          } else {
             const inscope = getInScopeContext(this, this.ref);
 
-            if(this.ref.includes('@')) {
+            if (this.ref.includes('@')) {
               attrName = this.ref.substring(this.ref.indexOf('@') + 1);
               inscope.setAttribute(attrName, '');
-            }else{
-              Fore.dispatch(this,'warn',{message:'"create" is not implemented for elements'})
+            } else {
+              Fore.dispatch(this, 'warn', { message: '"create" is not implemented for elements' });
               // inscope = getInScopeContext(this.parentNode, this.ref);
             }
           }
-        }else{
+        } else {
           // ### this actually makes the control nonrelevant
           // todo: we should call a template function here to allow detachment of event-listeners and resetting eventual state
           // this.style.display = 'none';
-          this.setAttribute('nonrelevant','');
+          this.setAttribute('nonrelevant', '');
         }
         return;
       }
@@ -155,23 +158,25 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         this.handleModelItemProperties();
 
         // if(!this.closest('fx-fore').ready) return; // state change event do not fire during init phase (initial refresh)
-        if(this.getOwnerForm().initialRun){
-          Fore.dispatch(this,'init',{});
+        if (this.getOwnerForm().initialRun) {
+          Fore.dispatch(this, 'init', {});
         }
         if (!this.getOwnerForm().ready) return; // state change event do not fire during init phase (initial refresh)
-          // if oldVal is null we haven't received a concrete value yet
+        // if oldVal is null we haven't received a concrete value yet
 
-	  if (this.localName !== 'fx-control') return;
-		  if (isDifferent(this.oldVal, this.value, oldValue)) {
-          Fore.dispatch(this, 'value-changed', { path: this.modelItem.path , value:this.modelItem.value, oldvalue:this.oldVal});
-	  }
+        if (this.localName !== 'fx-control') return;
+        if (isDifferent(this.oldVal, this.value, oldValue)) {
+          Fore.dispatch(this, 'value-changed', {
+            path: this.modelItem.path,
+            value: this.modelItem.value,
+            oldvalue: this.oldVal,
+          });
+        }
       }
     }
   }
 
-  refreshFromModelItem(modelItem){
-
-  }
+  refreshFromModelItem(modelItem) {}
 
   /**
    *
@@ -207,13 +212,13 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
   // eslint-disable-next-line class-methods-use-this
   handleRequired() {
     // console.log('mip required', this.modelItem.required);
-      this.widget = this.getWidget();
-	  const wasRequired = this.isRequired();
+    this.widget = this.getWidget();
+    const wasRequired = this.isRequired();
 
-    if(!this.modelItem.required){
+    if (!this.modelItem.required) {
       this.widget.removeAttribute('required');
       this.removeAttribute('required');
-      if (wasRequired !== this.modelItem.required){
+      if (wasRequired !== this.modelItem.required) {
         this._dispatchEvent('optional');
       }
       return;
@@ -235,20 +240,19 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
       this._dispatchEvent('required');
     }
 
-/*
+    /*
     if (this.isRequired() !== this.modelItem.required) {
       this._updateRequired();
     }
 */
   }
 
-
   _updateRequired() {
     if (this.modelItem.required) {
       // if (this.getOwnerForm().ready){
       if (this.visited || this.force) {
-      // if (this.visited ) {
-      //   if (this.widget.value === '') {
+        // if (this.visited ) {
+        //   if (this.widget.value === '') {
         if (this.modelItem.value === '') {
           this.classList.add('isEmpty');
           this._toggleValid(false);
@@ -267,13 +271,13 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     }
   }
 
-  _toggleValid(valid){
-    if(valid){
+  _toggleValid(valid) {
+    if (valid) {
       this.removeAttribute('invalid');
-      this.setAttribute('valid','');
-    }else{
+      this.setAttribute('valid', '');
+    } else {
       this.removeAttribute('valid');
-      this.setAttribute('invalid','');
+      this.setAttribute('invalid', '');
     }
   }
 
@@ -302,19 +306,18 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
       if (this.modelItem.constraint) {
         // if (alert) alert.style.display = 'none';
         this._dispatchEvent('valid');
-        this.setAttribute('valid','');
+        this.setAttribute('valid', '');
         this.removeAttribute('invalid');
       } else {
         this.setAttribute('invalid', '');
         this.removeAttribute('valid');
         // ### constraint is invalid - handle alerts
-/*
+        /*
         if (alert) {
           alert.style.display = 'block';
         }
 */
         if (this.modelItem.alerts.length !== 0) {
-
           const controlAlert = this.querySelector('fx-alert');
           if (!controlAlert) {
             const { alerts } = this.modelItem;
@@ -342,7 +345,7 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     this.removeAttribute('nonrelevant');
     if (Array.isArray(item) && item.length === 0) {
       this._dispatchEvent('nonrelevant');
-      this.setAttribute('nonrelevant','');
+      this.setAttribute('nonrelevant', '');
       // this.style.display = 'none';
       return;
     }
@@ -350,12 +353,12 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
       if (this.modelItem.relevant) {
         this._dispatchEvent('relevant');
         // this._fadeIn(this, this.display);
-        this.setAttribute('relevant','');
+        this.setAttribute('relevant', '');
         // this.style.display = this.display;
       } else {
         this._dispatchEvent('nonrelevant');
         // this._fadeOut(this);
-        this.setAttribute('nonrelevant','');
+        this.setAttribute('nonrelevant', '');
         // this.style.display = 'none';
       }
     }

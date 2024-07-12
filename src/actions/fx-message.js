@@ -1,6 +1,6 @@
 import { AbstractAction } from './abstract-action.js';
-import {evaluateXPathToString} from "../xpath-evaluation.js";
-import {Fore} from "../fore.js";
+import { evaluateXPathToString } from '../xpath-evaluation.js';
+import { Fore } from '../fore.js';
 import getInScopeContext from '../getInScopeContext.js';
 
 /**
@@ -16,18 +16,18 @@ class FxMessage extends AbstractAction {
     this.attachShadow({ mode: 'open' });
   }
 
-	static get properties () {
-		return {
-			...AbstractAction.properties,
-			modelItem:undefined,
-			messageTextContent: {
-				type: String,
-				get value() {
-					return "here!";
-				}
-			}
-		};
-	}
+  static get properties() {
+    return {
+      ...AbstractAction.properties,
+      modelItem: undefined,
+      messageTextContent: {
+        type: String,
+        get value() {
+          return 'here!';
+        },
+      },
+    };
+  }
 
   connectedCallback() {
     super.connectedCallback();
@@ -35,7 +35,7 @@ class FxMessage extends AbstractAction {
     this.level = this.hasAttribute('level') ? this.getAttribute('level') : 'ephemeral';
     this.message = '';
 
-	this.messageTextContent = this.textContent;
+    this.messageTextContent = this.textContent;
     const style = `
         :host{
             display:none;
@@ -49,7 +49,7 @@ class FxMessage extends AbstractAction {
     `;
   }
 
-/*
+  /*
   disconnectedCallback() {
     // super.disconnectedCallback();
     this.targetElement.removeEventListener(this.event, e => this.execute(e));
@@ -68,7 +68,7 @@ class FxMessage extends AbstractAction {
     if (this.hasAttribute('value')) {
       this.message = this._getValue();
     } else {
-		this.getOwnerForm().evaluateTemplateExpression(this.messageTextContent, this.firstChild);
+      this.getOwnerForm().evaluateTemplateExpression(this.messageTextContent, this.firstChild);
       this.message = this.textContent;
     }
 
@@ -76,7 +76,7 @@ class FxMessage extends AbstractAction {
       new CustomEvent('message', {
         composed: false,
         bubbles: true,
-        detail: { level: this.level, message:this.message },
+        detail: { level: this.level, message: this.message },
       }),
     );
   }
@@ -97,7 +97,6 @@ class FxMessage extends AbstractAction {
     }
     return null;
   }
-
 }
 
 if (!customElements.get('fx-message')) {

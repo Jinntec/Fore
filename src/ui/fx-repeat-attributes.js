@@ -2,8 +2,8 @@ import { Fore } from '../fore.js';
 import { evaluateXPath } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 import { XPathUtil } from '../xpath-util.js';
-import {foreElementMixin} from "../ForeElementMixin.js";
-import {withDraggability} from "../withDraggability.js";
+import ForeElementMixin from '../ForeElementMixin.js';
+import { withDraggability } from '../withDraggability.js';
 
 /**
  * `fx-repeat`
@@ -20,7 +20,7 @@ import {withDraggability} from "../withDraggability.js";
  *
  * todo: it should be seriously be considered to extend FxContainer instead but needs refactoring first.
  */
-export class FxRepeatAttributes extends withDraggability(foreElementMixin(HTMLElement), false) {
+export class FxRepeatAttributes extends withDraggability(ForeElementMixin, false) {
   static get properties() {
     return {
       ...super.properties,
@@ -39,8 +39,8 @@ export class FxRepeatAttributes extends withDraggability(foreElementMixin(HTMLEl
       repeatIndex: {
         type: Number,
       },
-      repeatSize:{
-        type:Number,
+      repeatSize: {
+        type: Number,
       },
       nodeset: {
         type: Array,
@@ -52,13 +52,13 @@ export class FxRepeatAttributes extends withDraggability(foreElementMixin(HTMLEl
     super();
     this.ref = '';
     this.dataTemplate = [];
-    this.isDraggable=null;
+    this.isDraggable = null;
     this.focusOnCreate = '';
     this.initDone = false;
     this.repeatIndex = 1;
     this.nodeset = [];
     this.inited = false;
-    this.host= {};
+    this.host = {};
     this.index = 1;
     this.repeatSize = 0;
     this.attachShadow({ mode: 'open', delegatesFocus: true });
@@ -71,7 +71,6 @@ export class FxRepeatAttributes extends withDraggability(foreElementMixin(HTMLEl
   set repeatSize(size) {
     super.repeatSize = size;
   }
-
 
   setIndex(index) {
     // console.log('new repeat index ', index);
@@ -89,14 +88,14 @@ export class FxRepeatAttributes extends withDraggability(foreElementMixin(HTMLEl
   }
 
   get index() {
-        return parseInt(this.getAttribute('index'), 10);
+    return parseInt(this.getAttribute('index'), 10);
   }
 
   set index(idx) {
     this.setAttribute('index', idx);
   }
 
-  _getRepeatedItems(){
+  _getRepeatedItems() {
     const refd = this.querySelector('[data-ref]');
     return refd.children;
   }
@@ -133,12 +132,10 @@ export class FxRepeatAttributes extends withDraggability(foreElementMixin(HTMLEl
 
     // if (this.getOwnerForm().lazyRefresh) {
     this.mutationObserver = new MutationObserver(mutations => {
-
       if (mutations[0].type === 'childList') {
         const added = mutations[0].addedNodes[0];
         if (added) {
-
-          const instance = XPathUtil.resolveInstance(this,this.ref);
+          const instance = XPathUtil.resolveInstance(this, this.ref);
           const path = XPathUtil.getPath(added, instance);
           // this.dispatch('path-mutated',{'path':path,'nodeset':this.nodeset,'index': this.index});
           // this.index = index;
@@ -199,7 +196,7 @@ export class FxRepeatAttributes extends withDraggability(foreElementMixin(HTMLEl
     return inited;
   }
 
-  _getRef(){
+  _getRef() {
     return this.getAttribute('ref');
   }
 
@@ -231,7 +228,6 @@ export class FxRepeatAttributes extends withDraggability(foreElementMixin(HTMLEl
   }
 
   async refresh(force) {
-
     if (!this.inited) this.init();
     this._evalNodeset();
 
@@ -256,7 +252,6 @@ export class FxRepeatAttributes extends withDraggability(foreElementMixin(HTMLEl
         // this._fadeOut(itemToRemove);
         // Fore.fadeOutElement(itemToRemove)
         this.getOwnerForm().someInstanceDataStructureChanged = true;
-
       }
     }
 
@@ -265,18 +260,17 @@ export class FxRepeatAttributes extends withDraggability(foreElementMixin(HTMLEl
         // add new repeatitem
 
         const clonedTemplate = this._clone();
-        if(!clonedTemplate) return;
+        if (!clonedTemplate) return;
 
         // ### cloned templates are always appended to the binding element - the one having the data-ref
         const bindingElement = this.querySelector('[data-ref]');
         bindingElement.appendChild(clonedTemplate);
         clonedTemplate.classList.add('fx-repeatitem');
-        clonedTemplate.setAttribute('index',position);
+        clonedTemplate.setAttribute('index', position);
 
         clonedTemplate.addEventListener('click', this._dispatchIndexChange);
         // this.addEventListener('focusin', this._handleFocus);
         clonedTemplate.addEventListener('focusin', this._dispatchIndexChange);
-
 
         // this._initVariables(clonedTemplate);
 
@@ -310,9 +304,13 @@ export class FxRepeatAttributes extends withDraggability(foreElementMixin(HTMLEl
   }
 
   _dispatchIndexChange() {
-      this.dispatchEvent(
-          new CustomEvent('item-changed', { composed: false, bubbles: true, detail: { item: this , index:this.index } }),
-      );
+    this.dispatchEvent(
+      new CustomEvent('item-changed', {
+        composed: false,
+        bubbles: true,
+        detail: { item: this, index: this.index },
+      }),
+    );
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -349,13 +347,12 @@ export class FxRepeatAttributes extends withDraggability(foreElementMixin(HTMLEl
   }
 
   async _initTemplate() {
-
     // const defaultSlot = this.shadowRoot.querySelector('slot');
     // todo: this is still weak - should handle that better maybe by an explicit slot?
     // this.template = this.firstElementChild;
     this.template = this.querySelector('template');
 
-/*
+    /*
     if (this.template === null) {
       // console.error('### no template found for this repeat:', this.id);
       // todo: catch this on form element
@@ -368,13 +365,12 @@ export class FxRepeatAttributes extends withDraggability(foreElementMixin(HTMLEl
       );
     }
 */
-    if(!this.template) {
+    if (!this.template) {
       return;
     }
 
     this.shadowRoot.appendChild(this.template);
   }
-
 
   _initVariables(newRepeatItem) {
     const inScopeVariables = new Map(this.inScopeVariables);
@@ -391,7 +387,7 @@ export class FxRepeatAttributes extends withDraggability(foreElementMixin(HTMLEl
 
   _clone() {
     this.template = this.shadowRoot.querySelector('template');
-    if(!this.template) return;
+    if (!this.template) return;
     return this.template.content.firstElementChild.cloneNode(true);
   }
 

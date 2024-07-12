@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-expressions */
-import { html, fixture, expect, elementUpdated, oneEvent, fixtureSync } from '@open-wc/testing';
+import {
+  html, fixture, expect, elementUpdated, oneEvent, fixtureSync,
+} from '@open-wc/testing';
 
 import '../index.js';
 

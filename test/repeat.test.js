@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-expressions */
-import { html, oneEvent, fixtureSync, expect, elementUpdated } from '@open-wc/testing';
+import {
+  html, oneEvent, fixtureSync, expect, elementUpdated,
+} from '@open-wc/testing';
 
 import '../index.js';
 import { FxModel } from '../src/fx-model.js';
@@ -255,7 +257,6 @@ describe('repeat Tests', () => {
                             </data>
                         </fx-instance>
 
-
                         <fx-bind ref="task" readonly="count(../task) < 3">
                             <fx-bind ref="./text()" required="true()"></fx-bind>
                             <fx-bind ref="@complete" type="xs:boolean"></fx-bind>
@@ -285,9 +286,7 @@ describe('repeat Tests', () => {
         const repeat = el.querySelector('fx-repeat');
         await elementUpdated(repeat);
 
-
         // expect(repeat.getModelItem()).to.equal(null);
-
 
     });
 */
@@ -332,7 +331,7 @@ describe('repeat Tests', () => {
     await oneEvent(el, 'refresh-done');
 
     const button = el.querySelector('fx-trigger');
-   await button.performActions();
+    await button.performActions();
     const repeat = el.querySelector('fx-repeat');
 
     expect(repeat).to.exist;
@@ -380,7 +379,7 @@ describe('repeat Tests', () => {
     await oneEvent(el, 'refresh-done');
 
     const button = el.querySelector('fx-trigger');
-   await button.performActions();
+    await button.performActions();
     const repeat = el.querySelector('fx-repeat');
     expect(repeat.index).to.equal(3);
     // appended item should have repeatindex set
@@ -472,7 +471,7 @@ describe('repeat Tests', () => {
 
     // hits the first button which is the delete button here
     const append = el.querySelector('#append');
-   await append.performActions();
+    await append.performActions();
 
     const repeat = el.querySelector('#r-todos');
     expect(repeat).to.exist;
@@ -535,7 +534,7 @@ describe('repeat Tests', () => {
 
     // hits the first button which is the delete button here
     const append = el.querySelector('#outerappend');
-   await append.performActions();
+    await append.performActions();
 
     const repeat = el.querySelector('#r-todos');
     expect(repeat).to.exist;
@@ -631,6 +630,5 @@ describe('repeat Tests', () => {
     expect(rItems[0].hasAttribute('repeat-index')).to.be.false;
     expect(rItems[1].hasAttribute('repeat-index')).to.be.true;
     expect(repeat.index).to.equal(2);
-
   });
 });
