@@ -1,6 +1,7 @@
 // import { foreElementMixin } from '../ForeElementMixin';
 
 import { FxContainer } from './fx-container.js';
+import { Fore } from '../fore.js';
 
 /**
  * `fx-case`
@@ -15,6 +16,26 @@ class FxCase extends FxContainer {
     super();
   }
 */
+  static get properties() {
+    return {
+      ...super.properties,
+      label: {
+        type: String,
+      },
+      name: {
+        type: String,
+      },
+      selected: {
+        type: String,
+      },
+      selector: {
+        type: String,
+      },
+      src: {
+        type: String,
+      },
+    };
+  }
 
   connectedCallback() {
     if (this.hasAttribute('label')) {
@@ -25,6 +46,12 @@ class FxCase extends FxContainer {
     }
     if (this.hasAttribute('selected')) {
       this.selected = this.getAttribute('selected');
+    }
+    if (this.hasAttribute('selector')) {
+      this.selector = this.hasAttribute('selector') ? this.getAttribute('selector') : 'fx-fore';
+    }
+    if (this.hasAttribute('src')) {
+      this.src = this.getAttribute('src');
     }
 
     const style = `
@@ -41,7 +68,25 @@ class FxCase extends FxContainer {
                 ${style}
             </style>
             ${html}
-    `;
+        `;
+
+    this.addEventListener('select', () => {
+      if (this.src) {
+        this._loadFromSrc();
+      }
+      this.getOwnerForm().refresh(true);
+    });
+  }
+
+  /**
+   * loads a Fore from an URL given by `src`.
+   *
+   * Will extract the `fx-fore` element from that target file and use and replace current `fx-fore` element with the loaded one.
+   * @private
+   */
+  async _loadFromSrc() {
+    // console.log('########## loading Fore from ', this.src, '##########');
+    await Fore.loadForeFromSrc(this, this.src, this.selector);
   }
 }
 

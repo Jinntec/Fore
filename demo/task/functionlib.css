@@ -1,0 +1,47 @@
+body{
+    font-family: Arial, sans-serif;
+}
+header, main{
+    max-width: 62rem;
+    margin:0 auto;
+    background: #efefef;
+    padding: 1rem;
+}
+section{
+    background: white;
+    padding: 0.5rem;
+    margin:1rem 0;
+    border-radius: 0.5rem;
+}
+fx-function::before{
+    content:attr(signature);
+    font-size:1.2rem;
+    color: black;
+    font-family:Monospace;
+    display: block;
+    position:absolute;
+    top:0;
+    font-weight: bolder;
+    border-bottom: thin solid #888888;
+}
+fx-function::after {
+    content: 'type="' attr(type) '"';
+    color: #333333;
+    display: block;
+    position: absolute;
+    top: 0;
+    padding: 0;
+    right: 0;
+    font-size: small;
+}
+fx-function {
+    position: relative;
+    display: block;
+    white-space-collapse: collapse;
+    color:black;
+    background: white;
+    padding: 1rem 0.25rem;
+    border-radius:0.5rem;
+    white-space: pre-wrap;
+    margin:1rem 0;
+}
