@@ -93,10 +93,34 @@ class FxSwitch extends FxContainer {
   }
 
   /**
+   * Replace an old case with a new case element.
+   *
+   * @param {import('./fx-case.js').FxCase} oldCase
+   * @param {import('./fx-case.js').FxCase} newCase
+   */
+  replaceCase(oldCase, newCase) {
+    this.cases.splice(this.cases.indexOf(oldCase), 1, newCase);
+
+    if (oldCase === this.selectedCase) {
+      this.selectedCase = newCase;
+      this.formerCase = newCase;
+      newCase.classList.add('selected-case');
+      newCase.classList.remove('deselected-case');
+      newCase.inert = true;
+      // Tell the owner form we might have new template expressions here
+      this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh();
+    } else {
+      newCase.classList.add('deselected-case');
+      newCase.classList.remove('selected-case');
+      newCase.inert = true;
+    }
+  }
+
+  /**
    * Activates a fx-case element by switching CSS classes.
    * Dispatches 'select' and 'deselect' events as appropriate.
    *
-   * @param caseElement the fx-case element to activate
+   * @param {import('./fx-case.js').FxCase} caseElement the fx-case element to activate
    */
   toggle(caseElement) {
     this.selectedCase = caseElement;
@@ -121,6 +145,7 @@ class FxSwitch extends FxContainer {
 
     // Tell the owner form we might have new template expressions here
     this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh();
+    this.getOwnerForm().getModel().updateModel();
   }
 }
 
