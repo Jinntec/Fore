@@ -41,41 +41,40 @@ class FxSwitch extends FxContainer {
         ${html}
     `;
     this.cases = [];
-    this.formerCase=null;
+    this.formerCase = null;
     this.selectedCase = null;
-
   }
 
   async refresh(force) {
     super.refresh(force);
     // console.log('refresh on switch ');
-    if(this.cases.length === 0){
+    if (this.cases.length === 0) {
       this.cases = Array.from(this.querySelectorAll(':scope > fx-case'));
     }
 
     if (this.isBound()) {
       this._handleBoundSwitch();
     }
-    if(!this.selectedCase){
+    if (!this.selectedCase) {
       this.selectedCase = this.cases[0]; // first is always default
       this.toggle(this.selectedCase);
     }
 
-    Fore.refreshChildren(this.selectedCase,force);
+    Fore.refreshChildren(this.selectedCase, force);
   }
 
-  _dispatchEvents(){
-    if(this.formerCase && this.formerCase !== this.selectedCase){
-      Fore.dispatch(this.formerCase,'deselect',{});
+  _dispatchEvents() {
+    if (this.formerCase && this.formerCase !== this.selectedCase) {
+      Fore.dispatch(this.formerCase, 'deselect', {});
     }
-    if(this.selectedCase.classList.contains('selected-case')){
-      Fore.dispatch(this.selectedCase,'select',{});
+    if (this.selectedCase.classList.contains('selected-case')) {
+      Fore.dispatch(this.selectedCase, 'select', {});
     }
   }
 
-  _resetVisited(){
+  _resetVisited() {
     const visited = this.selectedCase.querySelectorAll('.visited');
-    Array.from(visited).forEach(v =>{
+    Array.from(visited).forEach(v => {
       v.classList.remove('visited');
     });
   }
@@ -94,10 +93,34 @@ class FxSwitch extends FxContainer {
   }
 
   /**
+   * Replace an old case with a new case element.
+   *
+   * @param {import('./fx-case.js').FxCase} oldCase
+   * @param {import('./fx-case.js').FxCase} newCase
+   */
+  replaceCase(oldCase, newCase) {
+    this.cases.splice(this.cases.indexOf(oldCase), 1, newCase);
+
+    if (oldCase === this.selectedCase) {
+      this.selectedCase = newCase;
+      this.formerCase = newCase;
+      newCase.classList.add('selected-case');
+      newCase.classList.remove('deselected-case');
+      newCase.inert = true;
+      // Tell the owner form we might have new template expressions here
+      this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh();
+    } else {
+      newCase.classList.add('deselected-case');
+      newCase.classList.remove('selected-case');
+      newCase.inert = true;
+    }
+  }
+
+  /**
    * Activates a fx-case element by switching CSS classes.
    * Dispatches 'select' and 'deselect' events as appropriate.
    *
-   * @param caseElement the fx-case element to activate
+   * @param {import('./fx-case.js').FxCase} caseElement the fx-case element to activate
    */
   toggle(caseElement) {
     this.selectedCase = caseElement;
@@ -114,7 +137,7 @@ class FxSwitch extends FxContainer {
       }
     });
 
-    if(this.selectedCase !== caseElement){
+    if (this.selectedCase !== caseElement) {
       this.selectedCase = caseElement;
     }
     this._dispatchEvents();
@@ -122,6 +145,7 @@ class FxSwitch extends FxContainer {
 
     // Tell the owner form we might have new template expressions here
     this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh();
+    this.getOwnerForm().getModel().updateModel();
   }
 }
 

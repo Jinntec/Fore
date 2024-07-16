@@ -1,8 +1,10 @@
 /* eslint-disable no-unused-expressions */
-import { html, fixture, fixtureSync, expect, elementUpdated, oneEvent } from '@open-wc/testing';
+import {
+  html, fixture, fixtureSync, expect, elementUpdated, oneEvent,
+} from '@open-wc/testing';
 
 import '../index.js';
-import {evaluateXPathToNodes} from "fontoxpath";
+import { evaluateXPathToNodes } from 'fontoxpath';
 
 describe('delete Tests', () => {
   it('deletes an item and sets index', async () => {
@@ -49,7 +51,7 @@ describe('delete Tests', () => {
 
     // hits the first button which is the delete button here
     const buttons = el.querySelectorAll('fx-trigger');
-   await buttons[2].performActions();
+    await buttons[2].performActions();
 
     const repeat = el.querySelector('fx-repeat');
     expect(repeat).to.exist;
@@ -57,7 +59,7 @@ describe('delete Tests', () => {
     const rItems = repeat.querySelectorAll('fx-repeatitem');
     expect(rItems.length).to.equal(3);
     expect(rItems[2].hasAttribute('repeat-index')).to.be.true;
-      expect(repeat.getAttribute('index')).to.equal('3');
+    expect(repeat.getAttribute('index')).to.equal('3');
   });
 
   it('does not delete readonly item', async () => {
@@ -105,7 +107,7 @@ describe('delete Tests', () => {
 
     // hits the first button which is the delete button here
     const button = el.querySelector('fx-trigger');
-   await button.performActions();
+    await button.performActions();
 
     const repeat = el.querySelector('fx-repeat');
     expect(repeat).to.exist;
@@ -150,7 +152,7 @@ describe('delete Tests', () => {
 
     // hits the first button which is the delete button here
     const button = el.querySelector('fx-trigger');
-   await button.performActions();
+    await button.performActions();
 
     const repeat = el.querySelector('fx-repeat');
     expect(repeat).to.exist;
@@ -195,7 +197,7 @@ describe('delete Tests', () => {
 
     // hits the first button which is the delete button here
     const button = el.querySelector('fx-trigger');
-   await button.performActions();
+    await button.performActions();
 
     const repeat = el.querySelector('fx-repeat');
     expect(repeat).to.exist;
@@ -205,7 +207,6 @@ describe('delete Tests', () => {
     // expect(rItems[0].hasAttribute('repeat-index')).to.be.true;
     expect(el.getModel().modelItems.length).to.equal(1);
     expect(el.getModel().modelItems[0].value).to.equal('Make tutorial part 1');
-
   });
 
   it('deletes second task', async () => {
@@ -242,7 +243,7 @@ describe('delete Tests', () => {
 
     // hits the first button which is the delete button here
     const button = el.querySelector('fx-trigger');
-   await button.performActions();
+    await button.performActions();
 
     const repeat = el.querySelector('fx-repeat');
     expect(repeat).to.exist;
@@ -252,7 +253,6 @@ describe('delete Tests', () => {
     // expect(rItems[0].hasAttribute('repeat-index')).to.be.true;
     expect(el.getModel().modelItems.length).to.equal(1);
     expect(el.getModel().modelItems[0].value).to.equal('Pick up Milk');
-
   });
 
   it('deletes last item', async () => {
@@ -289,7 +289,7 @@ describe('delete Tests', () => {
 
     // hits the first button which is the delete button here
     const button = el.querySelector('fx-trigger');
-   await button.performActions();
+    await button.performActions();
 
     const repeat = el.querySelector('fx-repeat');
     expect(repeat).to.exist;
@@ -299,7 +299,6 @@ describe('delete Tests', () => {
     // expect(rItems[0].hasAttribute('repeat-index')).to.be.true;
     expect(el.getModel().modelItems.length).to.equal(1);
     expect(el.getModel().modelItems[0].value).to.equal('Pick up Milk');
-
   });
 
   it('does not delete instance itself', async () => {
@@ -336,7 +335,7 @@ describe('delete Tests', () => {
 
     // hits the first button which is the delete button here
     const button = el.querySelector('fx-trigger');
-   await button.performActions();
+    await button.performActions();
 
     const repeat = el.querySelector('fx-repeat');
     expect(repeat).to.exist;
@@ -345,7 +344,6 @@ describe('delete Tests', () => {
     expect(rItems.length).to.equal(2);
     // expect(rItems[0].hasAttribute('repeat-index')).to.be.true;
     expect(el.getModel().modelItems.length).to.equal(2);
-
   });
 
   it('does not delete instance root', async () => {
@@ -382,7 +380,7 @@ describe('delete Tests', () => {
 
     // hits the first button which is the delete button here
     const button = el.querySelector('fx-trigger');
-   await button.performActions();
+    await button.performActions();
 
     const repeat = el.querySelector('fx-repeat');
     expect(repeat).to.exist;
@@ -391,10 +389,9 @@ describe('delete Tests', () => {
     expect(rItems.length).to.equal(2);
 
     const instance = el.querySelector('fx-instance');
-    console.log('isntance',instance);
+    console.log('isntance', instance);
     const firstChild = instance.instanceData.firstElementChild;
     expect(firstChild.nodeName).to.equal('data');
-
   });
 
   it('deletes from non-default instance', async () => {
@@ -429,12 +426,11 @@ describe('delete Tests', () => {
 
     // hits the first button which is the delete button here
     const button = el.querySelector('fx-trigger');
-   await button.performActions();
+    await button.performActions();
 
     const instance = el.querySelector('fx-instance[id="items"]');
-    const items = evaluateXPathToNodes('item',instance.instanceData)
+    const items = evaluateXPathToNodes('item', instance.instanceData);
     expect(items.length).to.equal(0);
-
   });
 
   it('deletes one from non-default instance', async () => {
@@ -465,8 +461,6 @@ describe('delete Tests', () => {
     expect(repeat.nodeset.length).to.equal(2);
     expect(repeat.nodeset[0].textContent).to.equal('item1');
     expect(repeat.nodeset[1].textContent).to.equal('item3');
-
-
   });
   it('deletes one from non-default instance', async () => {
     const el = await fixtureSync(html`
@@ -500,7 +494,5 @@ describe('delete Tests', () => {
     expect(repeat.nodeset.length).to.equal(2);
     expect(repeat.nodeset[0].textContent).to.equal('item1');
     expect(repeat.nodeset[1].textContent).to.equal('item3');
-
   });
-
 });

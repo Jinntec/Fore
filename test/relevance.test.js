@@ -1,8 +1,10 @@
-import { html, fixtureSync, expect, oneEvent } from '@open-wc/testing';
+import {
+  html, fixtureSync, expect, oneEvent,
+} from '@open-wc/testing';
 
 import '../index.js';
-import {Relevance} from "../src/relevance";
-import * as fx from "fontoxpath";
+import * as fx from 'fontoxpath';
+import { Relevance } from '../src/relevance';
 
 describe('Relevance Tests', () => {
   it('does not display control whose xml binding does not exist', async () => {
@@ -45,7 +47,6 @@ describe('Relevance Tests', () => {
 
     const control = el.querySelector('fx-output');
     expect(control.hasAttribute('nonrelevant')).to.be.true;
-
   });
 
   it('does not display trigger whose xml binding does not exist', async () => {
@@ -288,8 +289,7 @@ describe('Relevance Tests', () => {
 
     const sm = el.querySelector('#submission');
     expect(sm).to.exist;
-    const dataBefore =
-    await sm.submit();
+    const dataBefore = await sm.submit();
     // const result = sm.selectRelevant('xml');
     // const result = Relevance.selectRelevant(sm, 'xml');
 
@@ -315,5 +315,4 @@ describe('Relevance Tests', () => {
     expect(vehicle.hasAttribute('attr5')).to.be.true;
     expect(vehicle.getAttribute('attr5')).to.equal('');
   });
-
 });

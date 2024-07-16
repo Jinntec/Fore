@@ -1,4 +1,4 @@
-import {FxAction} from "./fx-action.js";
+import { FxAction } from './fx-action.js';
 
 /**
  * `fx-confirm`
@@ -8,18 +8,18 @@ import {FxAction} from "./fx-action.js";
  * @demo demo/project.html
  */
 export class FxConfirm extends FxAction {
-	static get properties () {
-		return {
-			...FxAction.properties,
-			message: {
-				type:String
-			}
-		};
-	}
+  static get properties() {
+    return {
+      ...FxAction.properties,
+      message: {
+        type: String,
+      },
+    };
+  }
 
   connectedCallback() {
-    if (super.connectedCallback){
-		super.connectedCallback();
+    if (super.connectedCallback) {
+      super.connectedCallback();
     }
     this.message = this.hasAttribute('message') ? this.getAttribute('message') : null;
   }

@@ -40,7 +40,6 @@ export default class FxReplace extends AbstractAction {
     const target = evaluateXPathToFirstNode(this.with, this.nodeset, this);
     if (!target) return;
 
-
     this.replace(this.nodeset, target);
   }
 

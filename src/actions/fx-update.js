@@ -9,12 +9,12 @@ import { AbstractAction } from './abstract-action.js';
 class FxUpdate extends AbstractAction {
   async perform() {
     this.dispatchEvent(
-        new CustomEvent('execute-action', {
-          composed: true,
-          bubbles: true,
-          cancelable:true,
-          detail: { action: this, event:this.event},
-        }),
+      new CustomEvent('execute-action', {
+        composed: true,
+        bubbles: true,
+        cancelable: true,
+        detail: { action: this, event: this.event },
+      }),
     );
 
     this.getModel().updateModel();
