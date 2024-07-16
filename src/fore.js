@@ -61,7 +61,7 @@ export class Fore {
    * @param {string} replace the element with a `src` attribute to resolvé.
    * @param {string} src the Url to resolve
    * @param {string} selector a querySelector expression to fetch certain element from loaded document
-   * @returns {Promise<void>}
+   * @returns {Promise<HTMLElement>} The replacement element
    */
   static async loadForeFromSrc(replace, src, selector) {
     if (!src) {
@@ -70,39 +70,34 @@ export class Fore {
           message: "No 'src' attribute present",
         },
       });
+      return null;
     }
-    await Fore.loadHtml(src).then((data) => {
-      const parsed = new DOMParser().parseFromString(data, 'text/html');
-      // const theFore = parsed.querySelector('fx-fore');
-      const foreElement = parsed.querySelector(selector);
-      // console.log('foreElement', foreElement)
-      if (!foreElement) {
-        Fore.dispatch(this, 'error', {
-          detail: {
-            message: `Fore element not found in '${src}'. Maybe wrapped within 'template' element?`,
-          },
-        });
-      }
-      foreElement.setAttribute('from-src', src);
-      const thisAttrs = replace.attributes;
-      Array.from(thisAttrs).forEach((attr) => {
-        if (attr.name !== 'src') {
-          foreElement.setAttribute(attr.name, attr.value);
-        }
+    const data = await Fore.loadHtml(src);
+    const parsed = new DOMParser().parseFromString(data, 'text/html');
+    // const theFore = parsed.querySelector('fx-fore');
+    const foreElement = parsed.querySelector(selector);
+    // console.log('foreElement', foreElement)
+    if (!foreElement) {
+      Fore.dispatch(this, 'error', {
+        detail: {
+          message: `Fore element not found in '${src}'. Maybe wrapped within 'template' element?`,
+        },
       });
-      replace.replaceWith(foreElement);
-      return foreElement;
+    }
+    foreElement.setAttribute('from-src', src);
+    const thisAttrs = replace.attributes;
+    Array.from(thisAttrs).forEach(attr => {
+      if (attr.name !== 'src') {
+        foreElement.setAttribute(attr.name, attr.value);
+      }
     });
+    replace.replaceWith(foreElement);
+    return foreElement;
   }
 
-  /**
-   * Builds a predicate string that identifies this node.
-   * @todo Likely unused
-   * @param  {Node} node
-   */
   static buildPredicates(node) {
     let attrPredicate = '';
-    Array.from(node.attributes).forEach((attr) => {
+    Array.from(node.attributes).forEach(attr => {
       // attrMap.set(attr.nodeName,attr.nodeValue);
       // if(attr.nodeName !== 'xmlns'){
       //   if(attr.nodeValue !== ''){
@@ -283,7 +278,7 @@ export class Fore {
    * @returns {Promise<void>}
    */
   static async refreshChildren(startElement, force) {
-    const refreshed = new Promise((resolve) => {
+    const refreshed = new Promise(resolve => {
       /*
       if there's an 'refresh-on-view' attribute the element wants to be handled by
       handleIntersect function that calls the refresh of the respective element and
@@ -302,7 +297,7 @@ export class Fore {
 */
       const { children } = startElement;
       if (children) {
-        Array.from(children).forEach((element) => {
+        Array.from(children).forEach(element => {
           if (element.nodeName.toUpperCase() === 'FX-FORE') {
             resolve('done');
             return;
@@ -339,12 +334,12 @@ export class Fore {
   static convertFromSimple(startElement, targetElement) {
     const children = startElement.childNodes;
     if (children) {
-      Array.from(children).forEach((node) => {
+      Array.from(children).forEach(node => {
         const lookFor = `FX-${node.nodeName.toUpperCase()}`;
         if (
-          Fore.MODEL_ELEMENTS.includes(lookFor)
-          || Fore.UI_ELEMENTS.includes(lookFor)
-          || Fore.ACTION_ELEMENTS.includes(lookFor)
+          Fore.MODEL_ELEMENTS.includes(lookFor) ||
+          Fore.UI_ELEMENTS.includes(lookFor) ||
+          Fore.ACTION_ELEMENTS.includes(lookFor)
         ) {
           const conv = targetElement.ownerDocument.createElement(lookFor);
           console.log('conv', node, conv);
@@ -369,7 +364,7 @@ export class Fore {
   }
 
   static copyAttributes(source, target) {
-    return Array.from(source.attributes).forEach((attribute) => {
+    return Array.from(source.attributes).forEach(attribute => {
       target.setAttribute(attribute.nodeName, attribute.nodeValue);
     });
   }
@@ -410,11 +405,12 @@ export class Fore {
       // return response.text();
       return response.text().then(result =>
         // console.log('xml ********', result);
-        new DOMParser().parseFromString(result, 'text/html'));
+        new DOMParser().parseFromString(result, 'text/html'),
+      );
     }
     if (
-      responseContentType.startsWith('text/plain')
-      || responseContentType.startsWith('text/markdown')
+      responseContentType.startsWith('text/plain') ||
+      responseContentType.startsWith('text/markdown')
     ) {
       // console.log("********** inside  res plain *********");
       return response.text();
@@ -514,10 +510,7 @@ export class Fore {
     const reg = /(>)(<)(\/*)/g;
     const wsexp = / *(.*) +\n/g;
     const contexp = /(<.+>)(.+\n)/g;
-    xml = xml
-      .replace(reg, '$1\n$2$3')
-      .replace(wsexp, '$1\n')
-      .replace(contexp, '$1\n$2');
+    xml = xml.replace(reg, '$1\n$2$3').replace(wsexp, '$1\n').replace(contexp, '$1\n$2');
     let formatted = '';
     const lines = xml.split('\n');
     let indent = 0;

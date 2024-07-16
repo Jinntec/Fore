@@ -10,12 +10,7 @@ import { Fore } from '../fore.js';
  *  * todo: implement
  * @customElement
  */
-class FxCase extends FxContainer {
-  /*
-  constructor() {
-    super();
-  }
-*/
+export class FxCase extends FxContainer {
   static get properties() {
     return {
       ...super.properties,
@@ -70,11 +65,16 @@ class FxCase extends FxContainer {
             ${html}
         `;
 
-    this.addEventListener('select', () => {
+    this.addEventListener('select', async () => {
+      const ownerForm = this.getOwnerForm();
       if (this.src) {
-        this._loadFromSrc();
+        // We will replace the node. So this node will be detached after these async function
+        // calls. Save all important state first.
+        const { parentNode } = this;
+        const replacement = await this._loadFromSrc();
+        parentNode.replaceCase(this, replacement);
       }
-      this.getOwnerForm().refresh(true);
+      ownerForm.refresh(true);
     });
   }
 
@@ -86,7 +86,7 @@ class FxCase extends FxContainer {
    */
   async _loadFromSrc() {
     // console.log('########## loading Fore from ', this.src, '##########');
-    await Fore.loadForeFromSrc(this, this.src, this.selector);
+    return Fore.loadForeFromSrc(this, this.src, this.selector);
   }
 }
 
