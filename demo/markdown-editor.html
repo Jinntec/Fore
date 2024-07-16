@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>Markdown Editor</title>
+    <link href="../resources/demo.css" rel="stylesheet">
+
+    <style>
+        .wrapper{
+            position:relative;
+
+        }
+        section, textarea{
+            width:100%;
+            height:60vh;
+
+        }
+        fx-control, fx-output{
+            display:block;
+
+
+        }
+
+        .view, .edit{
+            position:absolute;
+
+        }
+
+        .view fx-control{
+            display:none;
+        }
+        .edit fx-control{
+            display:block;
+
+            fx-trigger{
+                position:absolute;
+                right:0;
+
+                a, a:link, a:visited{
+                    text-decoration:none;
+                }
+            }
+        }
+        .edit fx-output{
+            display:none;
+        }
+        .view fx-output{
+            display:block;
+        }
+    </style>
+    <script type="text/javascript" src="../src/drawdown.js"></script>
+
+</head>
+<body>
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+
+<div class="wrapper">
+    <h1>Markdown editor</h1>
+    <p>Click below to edit the markdown. </p>
+<!--
+    <demo-snippet>
+        <template>
+-->
+            <fx-fore>
+
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <md-page>
+# this is my nice md page
+
+this is a paragraph
+
+## another heading
+                            </md-page>
+                        </data>
+                    </fx-instance>
+                    <fx-instance id="vars">
+                        <data>
+                            <mode>view</mode>
+                        </data>
+                    </fx-instance>
+
+                    <fx-function signature="markdown($input as xs:string?) as xs:string"
+                                 type="text/javascript">
+                        const source = $input;
+                        const converted = markdown(source);
+                        return converted;
+                    </fx-function>
+                </fx-model>
+<!-- todo - this fails
+                <fx-var name="mode" value="'view'"></fx-var>
+
+                <div>{$mode}</div>
+-->
+                <section class="{instance('vars')/mode}">
+<!--                    <fx-setvalue event="click" ref="instance('vars')/mode">view</fx-setvalue>-->
+
+                    <fx-control ref="instance()/md-page" debounce="300" >
+                        <!--                <fx-control ref="md-page" debounce="300" >-->
+                        <textarea class="widget"></textarea>
+                        <fx-setvalue event="value-changed" ref="instance('vars')/mode">view</fx-setvalue>
+                        <fx-trigger>
+                            <a href="#">x</a>
+                            <fx-setvalue ref="instance('vars')/mode">view</fx-setvalue>
+                        </fx-trigger>
+                    </fx-control>
+                    <fx-output value="markdown(md-page/text())" mediatype="markdown">
+                        <fx-setvalue event="click" ref="instance('vars')/mode">edit</fx-setvalue>
+                    </fx-output>
+
+                </section>
+            </fx-fore>
+<!--
+        </template>
+    </demo-snippet>
+-->
+</div>
+<script type="module" src="./demo.js"></script>
+</body>
+</html>
