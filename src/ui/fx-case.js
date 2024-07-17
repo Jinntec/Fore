@@ -1,6 +1,7 @@
 // import { foreElementMixin } from '../ForeElementMixin';
 
 import { FxContainer } from './fx-container.js';
+import { Fore } from '../fore.js';
 
 /**
  * `fx-case`
@@ -9,12 +10,27 @@ import { FxContainer } from './fx-container.js';
  *  * todo: implement
  * @customElement
  */
-class FxCase extends FxContainer {
-  /*
-  constructor() {
-    super();
+export class FxCase extends FxContainer {
+  static get properties() {
+    return {
+      ...super.properties,
+      label: {
+        type: String,
+      },
+      name: {
+        type: String,
+      },
+      selected: {
+        type: String,
+      },
+      selector: {
+        type: String,
+      },
+      src: {
+        type: String,
+      },
+    };
   }
-*/
 
   connectedCallback() {
     if (this.hasAttribute('label')) {
@@ -25,6 +41,12 @@ class FxCase extends FxContainer {
     }
     if (this.hasAttribute('selected')) {
       this.selected = this.getAttribute('selected');
+    }
+    if (this.hasAttribute('selector')) {
+      this.selector = this.hasAttribute('selector') ? this.getAttribute('selector') : 'fx-fore';
+    }
+    if (this.hasAttribute('src')) {
+      this.src = this.getAttribute('src');
     }
 
     const style = `
@@ -41,7 +63,32 @@ class FxCase extends FxContainer {
                 ${style}
             </style>
             ${html}
-    `;
+        `;
+
+    this.addEventListener('select', async () => {
+      const ownerForm = this.getOwnerForm();
+      if (this.src) {
+        // We will replace the node. So this node will be detached after these async function
+        // calls. Save all important state first.
+        const { parentNode } = this;
+        const replacement = await this._loadFromSrc();
+        await parentNode.replaceCase(this, replacement);
+      }
+      const model = ownerForm.getModel();
+      model.updateModel();
+      ownerForm.refresh(true);
+    });
+  }
+
+  /**
+   * loads a Fore from an URL given by `src`.
+   *
+   * Will extract the `fx-fore` element from that target file and use and replace current `fx-fore` element with the loaded one.
+   * @private
+   */
+  async _loadFromSrc() {
+    // console.log('########## loading Fore from ', this.src, '##########');
+    return Fore.loadForeFromSrc(this, this.src, this.selector);
   }
 }
 
