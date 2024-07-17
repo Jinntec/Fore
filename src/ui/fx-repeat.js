@@ -23,6 +23,7 @@ import { withDraggability } from '../withDraggability.js';
  * @demo demo/todo.html
  *
  * todo: it should be seriously be considered to extend FxContainer instead but needs refactoring first.
+ * @extends {ForeElementMixin}
  */
 export class FxRepeat extends withDraggability(ForeElementMixin, false) {
   static get properties() {
@@ -78,6 +79,8 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
     this.index = index;
     const rItems = this.querySelectorAll(':scope > fx-repeatitem');
     this.applyIndex(rItems[this.index - 1]);
+
+    this.getOwnerForm().refresh(true);
   }
 
   applyIndex(repeatItem) {
@@ -109,8 +112,8 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
     this.addEventListener('item-changed', e => {
       const { item } = e.detail;
       const idx = Array.from(this.children).indexOf(item);
-      this.applyIndex(this.children[idx]);
-      this.index = idx + 1;
+      // Warning: index is one-based
+      this.setIndex(idx + 1);
     });
     // todo: review - this is just used by append action - event consolidation ?
     document.addEventListener('index-changed', e => {
