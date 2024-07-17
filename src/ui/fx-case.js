@@ -72,8 +72,10 @@ export class FxCase extends FxContainer {
         // calls. Save all important state first.
         const { parentNode } = this;
         const replacement = await this._loadFromSrc();
-        parentNode.replaceCase(this, replacement);
+        await parentNode.replaceCase(this, replacement);
       }
+      const model = ownerForm.getModel();
+      model.updateModel();
       ownerForm.refresh(true);
     });
   }
