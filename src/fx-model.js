@@ -51,15 +51,15 @@ export class FxModel extends HTMLElement {
             <slot></slot>
         `;
 
-    this.addEventListener(
-      'model-construct-done',
-      () => {
-        this.modelConstructed = true;
+/*
+      this.addEventListener('model-construct-done', () => {
+        // this.modelConstructed = true;
         // console.log('model-construct-done fired ', this.modelConstructed);
         // console.log('model-construct-done fired ', e.detail.model.instances);
       },
       { once: true },
     );
+*/
 
     this.skipUpdate = false;
     this.fore = this.parentNode;
@@ -132,24 +132,25 @@ export class FxModel extends HTMLElement {
 
       // Wait until all the instances are built
       await Promise.all(promises);
-
-      this.instances = Array.from(instances);
-      // console.log('_modelConstruct this.instances ', this.instances);
-      // Await until the model-construct-done event is handled off
-      await Fore.dispatch(this, 'model-construct-done', { model: this });
-      this.inited = true;
-      this.updateModel();
-    } else {
-      // ### if there's no instance one will created
-      console.log(`### <<<<< dispatching model-construct-done for '${this.fore.id}' >>>>>`);
-      await this.dispatchEvent(
-        new CustomEvent('model-construct-done', {
-          composed: false,
-          bubbles: true,
-          detail: { model: this },
-        }),
-      );
-    }
+            this.instances = Array.from(instances);
+            // console.log('_modelConstruct this.instances ', this.instances);
+			// Await until the model-construct-done event is handled off
+            this.modelConstructed = true;
+            await Fore.dispatch(this, 'model-construct-done', {model: this});
+            this.inited = true;
+            this.updateModel();
+        } else {
+            // ### if there's no instance one will created
+            console.log(`### <<<<< dispatching model-construct-done for '${this.fore.id}' >>>>>`);
+            this.modelConstructed = true;
+            await this.dispatchEvent(
+                new CustomEvent('model-construct-done', {
+                    composed: false,
+                    bubbles: true,
+                    detail: {model: this},
+                }),
+            );
+        }
 
     const functionlibImports = Array.from(this.querySelectorAll('fx-functionlib'));
     await Promise.all(functionlibImports.map(lib => lib.readyPromise));
@@ -465,12 +466,17 @@ export class FxModel extends HTMLElement {
   /**
    * @returns {import('./fx-instance.js').FxInstance}
    */
-  getDefaultInstance() {
-    if (this.instances.length) {
-      return this.instances[0];
+    getDefaultInstance() {
+/*
+        if (this.instances.length === 0) {
+            throw new Error('No instances defined. Fore cannot work without any <data/> elements.');
+        }
+*/
+        if (this.instances.length) {
+			return this.instances[0];
+		}
+		return this.getInstance('default');
     }
-    return this.getInstance('default');
-  }
 
   getDefaultInstanceData() {
     return this.instances[0].getInstanceData();
