@@ -1,16 +1,13 @@
-
 export class FxLogItem extends HTMLElement {
-
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
     this.eventName = '';
     this.shortName = '';
     this.shortInfo = '';
-    this.shortPath='';
-    this.xpath ='';
+    this.shortPath = '';
+    this.xpath = '';
   }
-
 
   connectedCallback() {
     const style = `
@@ -100,13 +97,12 @@ export class FxLogItem extends HTMLElement {
 
     this.eventName = this.getAttribute('event-name');
     this.shortName = this.getAttribute('short-name');
-    this.shortInfo = this.hasAttribute('short-info') ? this.getAttribute('short-info'):'';
+    this.shortInfo = this.hasAttribute('short-info') ? this.getAttribute('short-info') : '';
     this.xpath = this.getAttribute('xpath');
 
-
-    const cut = this.xpath.substring(this.xpath.indexOf('/fx-fore'), this.xpath.length);;
-    const xpathCut = "/" + cut;
-    const shortPath = xpathCut.replaceAll('fx-','');
+    const cut = this.xpath.substring(this.xpath.indexOf('/fx-fore'), this.xpath.length);
+    const xpathCut = `/${cut}`;
+    const shortPath = xpathCut.replaceAll('fx-', '');
 
     const html = `
        <details class="info send">
@@ -126,7 +122,6 @@ export class FxLogItem extends HTMLElement {
         ${html}
     `;
   }
-
 }
 if (!customElements.get('fx-log-item')) {
   customElements.define('fx-log-item', FxLogItem);

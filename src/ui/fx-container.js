@@ -1,30 +1,30 @@
 import '../fx-model.js';
-import { foreElementMixin } from '../ForeElementMixin.js';
-import {Fore} from "../fore.js";
+import ForeElementMixin from '../ForeElementMixin.js';
 
 /**
  * `fx-container` -
  * is a general class for container elements.
  *
  */
-export class FxContainer extends foreElementMixin(HTMLElement) {
+export class FxContainer extends ForeElementMixin {
   static get properties() {
     return {
       ...super.properties,
-/*
+      /*
       src: {
         type: String,
       },
 */
     };
   }
+
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
   }
 
   connectedCallback() {
-    this.src = this.hasAttribute('src') ? this.getAttribute('src'):null;
+    this.src = this.hasAttribute('src') ? this.getAttribute('src') : null;
     const style = `
         :host {
             display: block;
@@ -44,7 +44,7 @@ export class FxContainer extends foreElementMixin(HTMLElement) {
 
     this.getOwnerForm().registerLazyElement(this);
 
-/*
+    /*
     this.addEventListener('mousedown', e => {
 
       if(e.target === this){
@@ -53,7 +53,6 @@ export class FxContainer extends foreElementMixin(HTMLElement) {
       }
     } );
 */
-
   }
 
   /**
@@ -64,7 +63,7 @@ export class FxContainer extends foreElementMixin(HTMLElement) {
     // console.log('### FxContainer.refresh on : ', this);
 
     // if loading from 'src' needs to be done do it now
-/*
+    /*
     if(this.src){
       await Fore.loadForeFromSrc(this,this.src,'fx-group')
           .then(foreElement =>{
@@ -104,8 +103,8 @@ export class FxContainer extends foreElementMixin(HTMLElement) {
     // console.log('mip valid', this.modelItem.enabled);
     if (!this.modelItem) {
       // console.log('container is not relevant');
-      this.removeAttribute('relevant','');
-      this.setAttribute('nonrelevant','');
+      this.removeAttribute('relevant', '');
+      this.setAttribute('nonrelevant', '');
       this.dispatchEvent(new CustomEvent('disabled', {}));
       return;
     }
@@ -113,12 +112,12 @@ export class FxContainer extends foreElementMixin(HTMLElement) {
     if (this.isEnabled() !== this.modelItem.enabled) {
       if (this.modelItem.relevant) {
         // this.style.display = 'block';
-        this.removeAttribute('nonrelevant','');
-        this.setAttribute('relevant','');
+        this.removeAttribute('nonrelevant', '');
+        this.setAttribute('relevant', '');
         this.dispatchEvent(new CustomEvent('enabled', {}));
       } else {
-        this.removeAttribute('relevant','');
-        this.setAttribute('nonrelevant','');
+        this.removeAttribute('relevant', '');
+        this.setAttribute('nonrelevant', '');
         this.dispatchEvent(new CustomEvent('disabled', {}));
       }
     }

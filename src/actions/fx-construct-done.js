@@ -1,6 +1,6 @@
 import { AbstractAction } from './abstract-action.js';
-import {FxAction} from "./fx-action.js";
-import {Fore} from "../fore.js";
+import { FxAction } from './fx-action.js';
+import { Fore } from '../fore.js';
 
 /**
  * `fx-action`
@@ -14,8 +14,8 @@ export class FxConstructDone extends FxAction {
     // eslint-disable-next-line wc/guard-super-call
     super.connectedCallback();
     console.log('parentNode', this.parentNode);
-    if(this.parentNode.nodeName !== 'FX-MODEL'){
-      Fore.dispatch(this, 'error', {message:'parent is not a model'})
+    if (this.parentNode.nodeName !== 'FX-MODEL') {
+      Fore.dispatch(this, 'error', { message: 'parent is not a model' });
       return;
     }
     this.parentNode.addEventListener('model-construct-done', e => {

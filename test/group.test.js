@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-expressions */
-import { html, fixtureSync, expect, elementUpdated, oneEvent } from '@open-wc/testing';
+import {
+  html, fixtureSync, expect, elementUpdated, oneEvent,
+} from '@open-wc/testing';
 
 import '../index.js';
 
@@ -30,9 +32,8 @@ describe('group tests', () => {
     setTimeout(() => group.refresh());
     await oneEvent(group, 'enabled');
 
-    console.log('failing expect here')
+    console.log('failing expect here');
     expect(group.hasAttribute('relevant')).to.be.true;
-
   });
 
   it('group does not show if bound to non-existing node', async () => {
@@ -61,7 +62,6 @@ describe('group tests', () => {
 
     await oneEvent(group, 'disabled');
     expect(group.hasAttribute('nonrelevant')).to.be.true;
-
   });
 
   it('group changes state when becoming relevant/nonrelevant', async () => {
@@ -128,9 +128,5 @@ describe('group tests', () => {
     t2.performActions();
     await oneEvent(group, 'disabled');
     expect(group.hasAttribute('nonrelevant')).to.be.true;
-
-
   });
-
-
 });
