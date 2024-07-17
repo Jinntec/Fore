@@ -64,6 +64,7 @@ class FxSwitch extends FxContainer {
   }
 
   _dispatchEvents() {
+    if(this.selectedCase === this.formerCase) return;
     if (this.formerCase && this.formerCase !== this.selectedCase) {
       Fore.dispatch(this.formerCase, 'deselect', {});
     }
@@ -98,7 +99,7 @@ class FxSwitch extends FxContainer {
    * @param {import('./fx-case.js').FxCase} oldCase
    * @param {import('./fx-case.js').FxCase} newCase
    */
-  replaceCase(oldCase, newCase) {
+  async replaceCase(oldCase, newCase) {
     this.cases.splice(this.cases.indexOf(oldCase), 1, newCase);
 
     if (oldCase === this.selectedCase) {
