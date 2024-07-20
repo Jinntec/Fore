@@ -46,7 +46,7 @@ export class Fore {
         message: `Response has wrong contentType '${responseContentType}'. Should be 'text/html'`,
         level: 'Error',
       });
-    } catch (e) {
+    } catch (error) {
       Fore.dispatch(this, 'error', {
         message: `Html couldn't be loaded from '${url}'`,
         level: 'Error',
@@ -58,7 +58,7 @@ export class Fore {
    * loads a Fore element from given `src`. Always returns the first occurrence of a `<fx-fore>`. The retured element
    * will replace the `replace` element in the DOM.
    *
-   * @param {string} replace the element with a `src` attribute to resolvé.
+   * @param {Element} replace the element with a `src` attribute to resolvé.
    * @param {string} src the Url to resolve
    * @param {string} selector a querySelector expression to fetch certain element from loaded document
    * @returns {Promise<HTMLElement>} The replacement element
@@ -83,6 +83,7 @@ export class Fore {
           message: `Fore element not found in '${src}'. Maybe wrapped within 'template' element?`,
         },
       });
+      return;
     }
     foreElement.setAttribute('from-src', src);
     const thisAttrs = replace.attributes;

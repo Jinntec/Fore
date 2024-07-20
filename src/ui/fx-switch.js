@@ -107,7 +107,7 @@ class FxSwitch extends FxContainer {
       this.formerCase = newCase;
       newCase.classList.add('selected-case');
       newCase.classList.remove('deselected-case');
-      newCase.inert = true;
+      newCase.inert = false;
       // Tell the owner form we might have new template expressions here
       this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh();
     } else {

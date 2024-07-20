@@ -263,6 +263,57 @@ describe('fx-switch Tests', () => {
     expect(cases[2].classList.contains('selected-case')).to.be.true;
   });
 
+  it('has inert state', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-switch>
+          <fx-case id="one">
+            some exclusive content
+          </fx-case>
+          <fx-case id="two">
+            some further content
+          </fx-case>
+          <fx-case id="three">
+            some completely unneeded content
+          </fx-case>
+        </fx-switch>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'ready');
+    const cases = el.querySelectorAll('fx-case');
+    expect(cases[0].inert).to.be.false;
+    expect(cases[1].hasAttribute('inert')).to.be.true
+    expect(cases[2].hasAttribute('inert')).to.be.true;
+  });
+
+  it('toggles inert state', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-toggle case="three" event="ready"></fx-toggle>
+        <fx-switch>
+          <fx-case id="one">
+            some exclusive content
+          </fx-case>
+          <fx-case id="two">
+            some further content
+          </fx-case>
+          <fx-case id="three">
+            some completely unneeded content
+          </fx-case>
+        </fx-switch>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'ready');
+
+    const cases = el.querySelectorAll('fx-case');
+
+    expect(cases[0].inert).to.be.true;
+    expect(cases[1].hasAttribute('inert')).to.be.true
+    expect(cases[2].hasAttribute('inert')).to.be.false;
+  });
+
   it('refreshes just the default case', async () => {
     const el = await fixtureSync(html`
       <fx-fore>

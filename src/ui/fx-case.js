@@ -42,9 +42,7 @@ export class FxCase extends FxContainer {
     if (this.hasAttribute('selected')) {
       this.selected = this.getAttribute('selected');
     }
-    if (this.hasAttribute('selector')) {
-      this.selector = this.hasAttribute('selector') ? this.getAttribute('selector') : 'fx-fore';
-    }
+    this.selector = this.hasAttribute('selector') ? this.getAttribute('selector') : 'fx-case';
     if (this.hasAttribute('src')) {
       this.src = this.getAttribute('src');
     }
@@ -72,6 +70,14 @@ export class FxCase extends FxContainer {
         // calls. Save all important state first.
         const { parentNode } = this;
         const replacement = await this._loadFromSrc();
+        if(!replacement){
+          Fore.dispatch(this, 'error', {
+            detail: {
+              message: `HTML page couldn't be loaded`,
+            },
+          });
+          return;
+        }
         await parentNode.replaceCase(this, replacement);
       }
       const model = ownerForm.getModel();
