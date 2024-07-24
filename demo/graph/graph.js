@@ -1,12 +1,12 @@
 function legend(nodesData, targetElement) {
-  var x = -targetElement.clientWidth / 2 + 50;
-  var y = -targetElement.clientHeight / 2 + 50;
-  var step = 70;
+  const x = -targetElement.clientWidth / 2 + 50;
+  const y = -targetElement.clientHeight / 2 + 50;
+  const step = 70;
 
   nodesData.push({
     id: 1000,
-    x: x,
-    y: y,
+    x,
+    y,
     label: 'calculate',
     group: 'calculate',
     value: 1,
@@ -15,7 +15,7 @@ function legend(nodesData, targetElement) {
   });
   nodesData.push({
     id: 1001,
-    x: x,
+    x,
     y: y + step,
     label: 'readonly',
     group: 'readonly',
@@ -53,14 +53,14 @@ function renderGraph(graph, targetElement) {
   const entryNodes = graph.nodes;
 
   // build the nodes data
-  Object.keys(entryNodes).filter(node => {
+  Object.keys(entryNodes).filter((node) => {
     console.log('node', node);
     if (!node.includes(':')) {
       // nodesData.push({id: node, label: node, shape:'circle',size:250,group:node});
       const realNode = graph.getNodeData(node);
       nodesData.push({
         id: node,
-        label: realNode.textContent + '\n' + node,
+        label: `${realNode.textContent}\n${node}`,
         shape: 'circle',
         size: 250,
         group: 'node',
@@ -69,7 +69,9 @@ function renderGraph(graph, targetElement) {
       });
     } else {
       const prop = node.substring(node.indexOf(':') + 1, node.length);
-      nodesData.push({ id: node, label: prop, shape: 'diamond', group: prop });
+      nodesData.push({
+        id: node, label: prop, shape: 'diamond', group: prop,
+      });
     }
   });
 
@@ -81,7 +83,7 @@ function renderGraph(graph, targetElement) {
 
   let index = 0;
   // console.log('outgoingEdges', graph.outgoingEdges);
-  ordered.forEach(node => {
+  ordered.forEach((node) => {
     // console.log('item', node);
     // console.log('deps', graph.outgoingEdges[node]);
     if (node.includes(':')) {
@@ -92,23 +94,23 @@ function renderGraph(graph, targetElement) {
 
       if (node !== from) {
         edgeData.push({
-          from: from,
+          from,
           to: node,
-          label: index + '',
+          label: `${index}`,
           // relation:prop,
           font: { background: 'white', opacity: 0.5 },
           shadow: true,
         });
       }
 
-      deps.forEach(dep => {
+      deps.forEach((dep) => {
         // console.log('dep', dep);
         const noderef = node.substring(0, node.indexOf(':'));
         if (noderef !== dep) {
           edgeData.push({
             from: node,
             to: dep,
-            label: index + '',
+            label: `${index}`,
             relation: prop,
             font: { background: 'white', opacity: 0.5 },
           });
@@ -138,17 +140,19 @@ function renderGraph(graph, targetElement) {
   // console.log('overallOrder', graph.overallOrder(false));
   // console.log('edgeData', edgeData);
 
-  var container = document.getElementById(targetElement);
-  var data = {
+  const container = document.getElementById(targetElement);
+  const data = {
     nodes: nodesData,
     edges: edgeData,
   };
-  var options = {
+  const options = {
     interaction: {
       zoomSpeed: 0.3,
     },
     nodes: {
-      margin: { top: 10, left: 10, bottom: 10, right: 10 },
+      margin: {
+        top: 10, left: 10, bottom: 10, right: 10,
+      },
       font: {
         size: 22,
       },
@@ -158,7 +162,7 @@ function renderGraph(graph, targetElement) {
       },
     },
     layout: {
-      improvedLayout:true,
+      improvedLayout: true,
       clusterThreshold: 150,
       hierarchical: {
         sortMethod: 'directed',
@@ -206,5 +210,5 @@ function renderGraph(graph, targetElement) {
       },
     },
   };
-  var network = new vis.Network(container, data, options);
+  const network = new vis.Network(container, data, options);
 }

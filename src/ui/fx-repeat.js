@@ -1,11 +1,10 @@
 import './fx-repeatitem.js';
 
 import { Fore } from '../fore.js';
-import { foreElementMixin } from '../ForeElementMixin.js';
+import ForeElementMixin from '../ForeElementMixin.js';
 import { evaluateXPath } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 import { XPathUtil } from '../xpath-util.js';
-import { FxFore } from '../fx-fore.js';
 import { withDraggability } from '../withDraggability.js';
 
 // import {DependencyNotifyingDomFacade} from '../DependencyNotifyingDomFacade';
@@ -24,8 +23,9 @@ import { withDraggability } from '../withDraggability.js';
  * @demo demo/todo.html
  *
  * todo: it should be seriously be considered to extend FxContainer instead but needs refactoring first.
+ * @extends {ForeElementMixin}
  */
-export class FxRepeat extends withDraggability(foreElementMixin(HTMLElement), false) {
+export class FxRepeat extends withDraggability(ForeElementMixin, false) {
   static get properties() {
     return {
       ...super.properties,
@@ -79,6 +79,8 @@ export class FxRepeat extends withDraggability(foreElementMixin(HTMLElement), fa
     this.index = index;
     const rItems = this.querySelectorAll(':scope > fx-repeatitem');
     this.applyIndex(rItems[this.index - 1]);
+
+    this.getOwnerForm().refresh(true);
   }
 
   applyIndex(repeatItem) {
@@ -107,14 +109,14 @@ export class FxRepeat extends withDraggability(foreElementMixin(HTMLElement), fa
     this.ref = this.getAttribute('ref');
     // this.ref = this._getRef();
     // console.log('### fx-repeat connected ', this.id);
-    this.addEventListener('item-changed', (e) => {
+    this.addEventListener('item-changed', e => {
       const { item } = e.detail;
       const idx = Array.from(this.children).indexOf(item);
       this.applyIndex(this.children[idx]);
       this.index = idx + 1;
     });
     // todo: review - this is just used by append action - event consolidation ?
-    document.addEventListener('index-changed', (e) => {
+    document.addEventListener('index-changed', e => {
       e.stopPropagation();
       if (!e.target === this) return;
       // const { item } = e.detail;
@@ -132,7 +134,7 @@ export class FxRepeat extends withDraggability(foreElementMixin(HTMLElement), fa
     */
 
     // if (this.getOwnerForm().lazyRefresh) {
-    this.mutationObserver = new MutationObserver((mutations) => {
+    this.mutationObserver = new MutationObserver(mutations => {
       // console.log('mutations', mutations);
 
       if (mutations[0].type === 'childList') {
@@ -209,9 +211,9 @@ export class FxRepeat extends withDraggability(foreElementMixin(HTMLElement), fa
   }
 
   /**
-     * repeat has no own modelItems
-     * @private
-     */
+   * repeat has no own modelItems
+   * @private
+   */
   _evalNodeset() {
     // const inscope = this.getInScopeContext();
     const inscope = getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
@@ -338,7 +340,7 @@ export class FxRepeat extends withDraggability(foreElementMixin(HTMLElement), fa
       } else {
         requestAnimationFrame(fade);
       }
-    }());
+    })();
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -357,7 +359,7 @@ export class FxRepeat extends withDraggability(foreElementMixin(HTMLElement), fa
         requestAnimationFrame(fade);
       }
       // }, 40);
-    }());
+    })();
   }
 
   _initTemplate() {
@@ -365,7 +367,9 @@ export class FxRepeat extends withDraggability(foreElementMixin(HTMLElement), fa
     // console.log('### init template for repeat ', this.id, this.template);
     // todo: this.dropTarget not needed?
     this.dropTarget = this.template.getAttribute('drop-target');
-    this.isDraggable = this.template.hasAttribute('draggable') ? this.template.getAttribute('draggable') : null;
+    this.isDraggable = this.template.hasAttribute('draggable')
+      ? this.template.getAttribute('draggable')
+      : null;
 
     if (this.template === null) {
       // todo: catch this on form element
@@ -408,7 +412,7 @@ export class FxRepeat extends withDraggability(foreElementMixin(HTMLElement), fa
         }
         registerVariables(child);
       }
-    }(newRepeatItem));
+    })(newRepeatItem);
   }
 
   _clone() {
@@ -419,7 +423,7 @@ export class FxRepeat extends withDraggability(foreElementMixin(HTMLElement), fa
   }
 
   _removeIndexMarker() {
-    Array.from(this.children).forEach((item) => {
+    Array.from(this.children).forEach(item => {
       item.removeAttribute('repeat-index');
     });
   }

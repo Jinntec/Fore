@@ -6,7 +6,6 @@
 
     <title>Project Task planner</title>
 
-
     <link href="../resources/fore.css" rel="stylesheet">
     <!--    <link href="../resources/vars.css" rel="stylesheet">-->
         <link href="../resources/demo.css" rel="stylesheet">
@@ -209,7 +208,7 @@
                 <confirm>false</confirm>
             </data>
         </fx-model>
-        <fx-repeat id="project" ref="project"  style="grid-template-columns: repeat({count($default/project)},1fr);">
+        <fx-repeat id="project" ref="project" style="grid-template-columns: repeat({count($default/project)},1fr);">
             <template>
                 <div class="header">
                     <fx-control ref="@name"></fx-control>

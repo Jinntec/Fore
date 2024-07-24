@@ -1,11 +1,13 @@
-import {html, fixtureSync, expect, oneEvent} from '@open-wc/testing';
+import {
+  html, fixtureSync, expect, oneEvent,
+} from '@open-wc/testing';
 
 import '../src/fx-var.js';
 import '../src/fx-bind.js';
 
 describe('toggleboolean Tests', () => {
-    it('toggles Boolean value from false to true', async () => {
-        const el = await fixtureSync(html`
+  it('toggles Boolean value from false to true', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-toggleboolean ref="toggle" event="model-construct-done"></fx-toggleboolean>
                 <fx-model>
@@ -16,13 +18,13 @@ describe('toggleboolean Tests', () => {
                 <div id="toggle">{toggle}</div>
             </fx-fore>
         `);
-        await oneEvent(el, 'ready');
-        const toggle = el.querySelector('#toggle');
-        expect(toggle.innerText).to.equal('true');
-    });
+    await oneEvent(el, 'ready');
+    const toggle = el.querySelector('#toggle');
+    expect(toggle.innerText).to.equal('true');
+  });
 
-    it('toggles Boolean value from true to false', async () => {
-        const el = await fixtureSync(html`
+  it('toggles Boolean value from true to false', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-toggleboolean ref="toggle" event="model-construct-done"></fx-toggleboolean>
                 <fx-model>
@@ -33,22 +35,20 @@ describe('toggleboolean Tests', () => {
                 <div id="toggle">{toggle}</div>
             </fx-fore>
         `);
-        await oneEvent(el, 'ready');
-        const toggle = el.querySelector('#toggle');
-        expect(toggle.innerText).to.equal('false');
-    });
+    await oneEvent(el, 'ready');
+    const toggle = el.querySelector('#toggle');
+    expect(toggle.innerText).to.equal('false');
+  });
 
-    it('toggles lazy-created node to true for first toggle', async () => {
-        const el = await fixtureSync(html`
-            <fx-fore>
-                <fx-toggleboolean ref="toggle" event="instance-loaded"></fx-toggleboolean>
-                <div id="toggle">{toggle}</div>
-            </fx-fore>
-        `);
-        await oneEvent(el, 'ready');
-        const toggle = el.querySelector('#toggle');
-        expect(toggle.innerText).to.equal('true');
-    });
-
-
+  it('toggles lazy-created node to true for first toggle', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-toggleboolean ref="toggle" event="instance-loaded"></fx-toggleboolean>
+        <div id="toggle">{toggle}</div>
+      </fx-fore>
+    `);
+    await oneEvent(el, 'ready');
+    const toggle = el.querySelector('#toggle');
+    expect(toggle.innerText).to.equal('true');
+  });
 });

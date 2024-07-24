@@ -1,5 +1,5 @@
 import { DependencyNotifyingDomFacade } from './DependencyNotifyingDomFacade.js';
-import { foreElementMixin } from './ForeElementMixin.js';
+import ForeElementMixin from './ForeElementMixin.js';
 import { ModelItem } from './modelitem.js';
 import {
   evaluateXPathToBoolean,
@@ -22,7 +22,7 @@ import getInScopeContext from './getInScopeContext.js';
  *
  * @customElements
  */
-export class FxBind extends foreElementMixin(HTMLElement) {
+export class FxBind extends ForeElementMixin {
   static READONLY_DEFAULT = false;
 
   static REQUIRED_DEFAULT = false;
@@ -92,7 +92,6 @@ export class FxBind extends foreElementMixin(HTMLElement) {
 
         General question: are there valid use-cases for using a 'filter' expression to narrow the nodeset
           where to apply constraints? Guess yes and if it's 'just' for reducing the amount of necessary modelItem objects.
-
 
         */
         // const foreignRefs = this.getReferences(this.ref);
@@ -179,7 +178,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
 
   _processChildren(model) {
     const childbinds = this.querySelectorAll(':scope > fx-bind');
-    Array.from(childbinds).forEach(bind => {
+    Array.from(childbinds).forEach((bind) => {
       // console.log('init child bind ', bind);
       bind.init(model);
     });
@@ -208,14 +207,14 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     if (this.ref === '' || this.ref === null) {
       this.nodeset = inscopeContext;
     } else if (Array.isArray(inscopeContext)) {
-      inscopeContext.forEach(n => {
+      inscopeContext.forEach((n) => {
         if (XPathUtil.isSelfReference(this.ref)) {
           this.nodeset = inscopeContext;
         } else {
           // eslint-disable-next-line no-lonely-if
           if (this.ref) {
             const localResult = evaluateXPathToNodes(this.ref, n, this);
-            localResult.forEach(item => {
+            localResult.forEach((item) => {
               this.nodeset.push(item);
             });
             /*
@@ -243,7 +242,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     if (Array.isArray(this.nodeset)) {
       // console.log('################################################ ', this.nodeset);
       // Array.from(this.nodeset).forEach((n, index) => {
-      Array.from(this.nodeset).forEach(n => {
+      Array.from(this.nodeset).forEach((n) => {
         // console.log('node ',n);
         // this._createModelItem(n, index);
         this._createModelItem(n);
@@ -332,7 +331,6 @@ export class FxBind extends foreElementMixin(HTMLElement) {
       newItem.addAlert(alert);
     }
 
-
     this.getModel().registerModelItem(newItem);
   }
 
@@ -355,7 +353,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
   getReferences(propertyExpr) {
     const touchedNodes = new Set();
     const domFacade = new DependencyNotifyingDomFacade(otherNode => touchedNodes.add(otherNode));
-    this.nodeset.forEach(node => {
+    this.nodeset.forEach((node) => {
       evaluateXPathToString(propertyExpr, node, this, domFacade);
     });
     return Array.from(touchedNodes.values());
@@ -428,9 +426,6 @@ export class FxBind extends foreElementMixin(HTMLElement) {
     }
     this.dataId = 'default';
   }
-
-
-
 }
 
 if (!customElements.get('fx-bind')) {

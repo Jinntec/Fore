@@ -1,8 +1,8 @@
-import { foreElementMixin } from './ForeElementMixin.js';
+import ForeElementMixin from './ForeElementMixin.js';
 import { Fore } from './fore.js';
 import { FxModel } from './fx-model.js';
 
-class FxConnection extends foreElementMixin(HTMLElement) {
+class FxConnection extends ForeElementMixin {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
@@ -53,13 +53,13 @@ ${
       this._messageFormat = this.getAttribute('message-format');
     }
 
-	        this._render();
+    this._render();
 
-    this.getOwnerForm().addEventListener('model-construct-done', (e) => {
+    this.getOwnerForm().addEventListener('model-construct-done', e => {
       console.log('Fore model ready');
       this._connect();
 
-	    this.evalInContext();
+      this.evalInContext();
     });
   }
 
@@ -147,11 +147,11 @@ ${
       case 'xml':
         const parser = new DOMParser();
         message = parser.parseFromString(event.data, 'application/xml');
-	    this.getModelItem().value = message;
-	    FxModel.dataChanged = true;
-	    this.getModel().changed.push(this.modelItem);
-	    this.getModel().updateModel();
-	    this.getOwnerForm().refresh(true);
+        this.getModelItem().value = message;
+        FxModel.dataChanged = true;
+        this.getModel().changed.push(this.modelItem);
+        this.getModel().updateModel();
+        this.getOwnerForm().refresh(true);
         break;
       case 'text':
         message = event.data;

@@ -283,6 +283,9 @@ function createNamespaceResolver(xpathQuery, formElement) {
   const xpathDefaultNamespace = fxEvaluateXPathToString('ancestor-or-self::*/@xpath-default-namespace[last()]', formElement)
     || '';
 
+  /**
+   * @type {NamespaceResolver}
+   */
   const resolveNamespacePrefix = function resolveNamespacePrefix(prefix) {
     if (prefix === '') {
       return xpathDefaultNamespace;
@@ -368,7 +371,7 @@ function functionNameResolver({ prefix, localName }, _arity) {
  *
  * @param  {Node}  formElement  The element that declares the XPath
  *
- * @return  {Object}  A key-value mapping of the variables
+ * @returns  {Object}  A key-value mapping of the variables
  */
 function getVariablesInScope(formElement) {
   let closestActualFormElement = formElement;
@@ -408,7 +411,9 @@ function getVariablesInScope(formElement) {
  *
  * @param  {string} xpath  The XPath to run
  * @param  {Node} contextNode The start of the XPath
- * @param  {{parentNode}|ForeElementMixin} formElement  The form element associated to the XPath
+ * @param  {import('./ForeElementMixin.js').default} formElement  The form element associated to the XPath
+ * @param  {Object} variables  Any variables to pass to the XPath
+ * @param  {Object} options  Any options to pass to the XPath
  */
 /*
 export function evaluateXPath(xpath, contextNode, formElement, variables = {}, options={}, domFacade = null) {
@@ -453,7 +458,7 @@ export function evaluateXPath(xpath, contextNode, formElement, variables = {}, o
         },
         functionNameResolver,
         namespaceResolver,
-        language: options.language || evaluateXPath.XPATH_3_1,
+        language: options.language || fxEvaluateXPath.XPATH_3_1_LANGUAGE,
       },
     );
     // console.log('evaluateXPath',xpath, result);
@@ -495,8 +500,8 @@ export function evaluateXPath(xpath, contextNode, formElement, variables = {}, o
  *
  * @param  {string} xpath  The XPath to run
  * @param  {Node} contextNode The start of the XPath
- * @param  {Node} formElement  The form element associated to the XPath
- * @return {Node}  The first node found by the XPath
+ * @param  {import('./ForeElementMixin.js').default} formElement  The form element associated to the XPath
+ * @returns {Node} The first node found in the XPath
  */
 export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
   try {
@@ -534,7 +539,7 @@ export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
  *
  * @param  {string} xpath  The XPath to run
  * @param  {Node} contextNode The start of the XPath
- * @param  {Node} formElement  The form element associated to the XPath
+ * @param  {import('./ForeElementMixin.js').default} formElement  The form element associated to the XPath
  * @return {Node[]}  All nodes
  */
 export function evaluateXPathToNodes(xpath, contextNode, formElement) {
@@ -573,7 +578,7 @@ export function evaluateXPathToNodes(xpath, contextNode, formElement) {
  *
  * @param  {string} xpath  The XPath to run
  * @param  {Node} contextNode The start of the XPath
- * @param  {Node} formElement  The form element associated to the XPath
+ * @param  {import('./ForeElementMixin.js').default} formElement  The form element associated to the XPath
  * @return {boolean}
  */
 export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
@@ -611,18 +616,13 @@ export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
  * @param  {string}     xpath             The XPath to run
  * @param  {Node}       contextNode       The start of the XPath
  * @param  {Node}       formElement       The form element associated to the XPath
- * @param  {DomFacade}  [domFacade=null]  A DomFacade is used in bindings to intercept DOM
+ * @param  {Node}       formElement       The element where the XPath is defined: used for namespace resolving
+ * @param  {import('fontoxpath').IDomFacade}  [domFacade=null]  A DomFacade is used in bindings to intercept DOM
  * access. This is used to determine dependencies between bind elements.
  * @param  {Node}       formElement       The element where the XPath is defined: used for namespace resolving
  * @return {string}
  */
-export function evaluateXPathToString(
-  xpath,
-  contextNode,
-  formElement,
-  domFacade = null,
-  namespaceReferenceNode = formElement,
-) {
+export function evaluateXPathToString(xpath, contextNode, formElement, domFacade = null) {
   try {
     const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
     const variablesInScope = getVariablesInScope(formElement);
@@ -657,18 +657,12 @@ export function evaluateXPathToString(
  * @param  {string}     xpath             The XPath to run
  * @param  {Node}       contextNode       The start of the XPath
  * @param  {Node}       formElement       The form element associated to the XPath
- * @param  {DomFacade}  [domFacade=null]  A DomFacade is used in bindings to intercept DOM
- * access. This is used to determine dependencies between bind elements.
  * @param  {Node}       formElement       The element where the XPath is defined: used for namespace resolving
- * @return {string}
+ * @param  {import('fontoxpath').IDomFacade}  [domFacade=null]  A DomFacade is used in bindings to intercept DOM
+ * access. This is used to determine dependencies between bind elements.
+ * @return {string[]}
  */
-export function evaluateXPathToStrings(
-  xpath,
-  contextNode,
-  formElement,
-  domFacade = null,
-  namespaceReferenceNode = formElement,
-) {
+export function evaluateXPathToStrings(xpath, contextNode, formElement, domFacade = null) {
   try {
     const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
     return fxEvaluateXPathToStrings(
@@ -709,16 +703,11 @@ export function evaluateXPathToStrings(
  * @param  {Node}       formElement       The form element associated to the XPath
  * @param  {DomFacade}  [domFacade=null]  A DomFacade is used in bindings to intercept DOM
  * @param  {Node}       formElement       The element where the XPath is defined: used for namespace resolving
+ * @param  {import('fontoxpath').IDomFacade}  [domFacade=null]  A DomFacade is used in bindings to intercept DOM
  * access. This is used to determine dependencies between bind elements.
- * @return {Number}
+ * @return {number}
  */
-export function evaluateXPathToNumber(
-  xpath,
-  contextNode,
-  formElement,
-  domFacade = null,
-  namespaceReferenceNode = formElement,
-) {
+export function evaluateXPathToNumber(xpath, contextNode, formElement, domFacade = null) {
   try {
     const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
     const variablesInScope = getVariablesInScope(formElement);
@@ -1119,7 +1108,7 @@ registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'depends' },
   ['node()*'],
   'item()?',
-  (dynamicContext, nodes) =>
+  (_dynamicContext, nodes) =>
     // console.log('depends on : ', nodes[0]);
     nodes[0],
 );
@@ -1209,50 +1198,50 @@ registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'base64encode' },
   ['xs:string?'],
   'xs:string?',
-  (dynamicContext, string) => btoa(string),
+  (_dynamicContext, string) => btoa(string),
 );
 
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'local-date' },
   [],
   'xs:string?',
-  (dynamicContext, string) => new Date().toLocaleDateString(),
+  (_dynamicContext, _string) => new Date().toLocaleDateString(),
 );
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'local-dateTime' },
   [],
   'xs:string?',
-  (dynamicContext, string) => new Date().toLocaleString(),
+  (_dynamicContext, _string) => new Date().toLocaleString(),
 );
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri' },
   [],
   'xs:string?',
-  (dynamicContext, string) => window.location.href,
+  (_dynamicContext, _string) => window.location.href,
 );
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-fragment' },
   [],
   'xs:string?',
-  (dynamicContext, arg) => window.location.hash,
+  (_dynamicContext, _arg) => window.location.hash,
 );
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-host' },
   [],
   'xs:string?',
-  (dynamicContext, arg) => window.location.host,
+  (_dynamicContext, _arg) => window.location.host,
 );
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-query' },
   [],
   'xs:string?',
-  (dynamicContext, arg) => window.location.search,
+  (_dynamicContext, _arg) => window.location.search,
 );
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-relpath' },
   [],
   'xs:string?',
-  (dynamicContext, arg) => {
+  (_dynamicContext, _arg) => {
     const path = new URL(window.location.href).pathname;
     return path.substring(0, path.lastIndexOf('/') + 1);
   },
@@ -1261,19 +1250,19 @@ registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-path' },
   [],
   'xs:string?',
-  (dynamicContext, arg) => new URL(window.location.href).pathname,
+  (_dynamicContext, _arg) => new URL(window.location.href).pathname,
 );
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-port' },
   [],
   'xs:string?',
-  (dynamicContext, arg) => window.location.port,
+  (_dynamicContext, _arg) => window.location.port,
 );
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-param' },
   ['xs:string?'],
   'xs:string?',
-  (dynamicContext, arg) => {
+  (_dynamicContext, arg) => {
     if (!arg) return null;
 
     const { search } = window.location;
@@ -1286,13 +1275,13 @@ registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-scheme' },
   [],
   'xs:string?',
-  (dynamicContext, arg) => new URL(window.location.href).protocol,
+  (_dynamicContext, _arg) => new URL(window.location.href).protocol,
 );
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'uri-scheme-specific-part' },
   [],
   'xs:string?',
-  (dynamicContext, arg) => {
+  (_dynamicContext, _arg) => {
     const uri = window.location.href;
     return uri.substring(uri.indexOf(':') + 1, uri.length);
   },

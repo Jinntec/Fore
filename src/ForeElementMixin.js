@@ -10,39 +10,38 @@ import { Fore } from './fore.js';
 
 /**
  * Mixin containing all general functions that are shared by all Fore element classes.
- * @param superclass
- * @returns {{readonly properties: {ref: {type: StringConstructor}, context: {type: ObjectConstructor}, nodeset: {type: ObjectConstructor}, model: {type: ObjectConstructor}, inScopeVariables: {type: MapConstructor}, modelItem: {type: ObjectConstructor}}, new(): ForeElementMixin, context: null, model: null, modelItem: {}, ref: *|string, inScopeVariables: null, nodeset: *, prototype: ForeElementMixin}}
+ * @extends {HTMLElement}
  */
-export const foreElementMixin = superclass => class ForeElementMixin extends superclass {
+export default class ForeElementMixin extends HTMLElement {
   static get properties() {
     return {
       /**
-         * context object for evaluation
-         */
+       * context object for evaluation
+       */
       context: {
         type: Object,
       },
       /**
-         * the model of this element
-         */
+       * the model of this element
+       */
       model: {
         type: Object,
       },
       /**
-         * The modelitem object associated to the bound node holding the evaluated state.
-         */
+       * The modelitem object associated to the bound node holding the evaluated state.
+       */
       modelItem: {
         type: Object,
       },
       /**
-         * the node(s) bound by this element
-         */
+       * the node(s) bound by this element
+       */
       nodeset: {
         type: Object,
       },
       /**
-         * XPath binding expression pointing to bound node
-         */
+       * XPath binding expression pointing to bound node
+       */
       ref: {
         type: String,
       },
@@ -58,12 +57,15 @@ export const foreElementMixin = superclass => class ForeElementMixin extends sup
     this.model = null;
     this.modelItem = {};
     this.ref = this.hasAttribute('ref') ? this.getAttribute('ref') : '';
+    /**
+     * @type {Map<string, import('./fx-var.js').FxVariable>}
+     */
     this.inScopeVariables = new Map();
   }
 
   /**
-     * @returns {import('./fx-model.js').FxModel}
-     */
+   * @returns {import('./fx-model.js').FxModel}
+   */
   getModel() {
     // console.log('getModel this ', this);
     if (this.model) {
@@ -76,9 +78,9 @@ export const foreElementMixin = superclass => class ForeElementMixin extends sup
   }
 
   /**
-     *
-     * @returns {{parentNode}|ForeElementMixin}
-     */
+   *
+   * @returns {import('./fx-fore.js').FxFore} The fx-fore element associated with this form node
+   */
   getOwnerForm() {
     let currentElement = this;
     while (currentElement && currentElement.parentNode) {
@@ -98,8 +100,8 @@ export const foreElementMixin = superclass => class ForeElementMixin extends sup
   }
 
   /**
-     * evaluation of fx-bind and UiElements differ in details so that each class needs it's own implementation.
-     */
+   * evaluation of fx-bind and UiElements differ in details so that each class needs it's own implementation.
+   */
   evalInContext() {
     // const inscopeContext = this.getInScopeContext();
     const model = this.getModel();
@@ -113,9 +115,9 @@ export const foreElementMixin = superclass => class ForeElementMixin extends sup
     if (this.hasAttribute('ref')) {
       inscopeContext = getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
     }
-    if (!inscopeContext && this.getModel().data.length !== 0) {
+    if (!inscopeContext && this.getModel().instances.length !== 0) {
       // ### always fall back to default context with there's neither a 'context' or 'ref' present
-      inscopeContext = this.getModel().getDefaultData().getDefaultContext();
+      inscopeContext = this.getModel().getDefaultInstance().getDefaultContext();
       // console.warn('no in scopeContext for ', this);
       // console.warn('using default context ', this);
       // return;
@@ -124,33 +126,38 @@ export const foreElementMixin = superclass => class ForeElementMixin extends sup
       this.nodeset = inscopeContext;
     } else if (Array.isArray(inscopeContext)) {
       /*
-        inscopeContext.forEach(n => {
-          if (XPathUtil.isSelfReference(this.ref)) {
-            this.nodeset = inscopeContext;
-          } else {
-            const localResult = evaluateXPathToFirstNode(this.ref, n, this);
-            // console.log('local result: ', localResult);
-            this.nodeset.push(localResult);
-          }
-        });
-*/
+			inscopeContext.forEach(n => {
+			  if (XPathUtil.isSelfReference(this.ref)) {
+				this.nodeset = inscopeContext;
+			  } else {
+				const localResult = evaluateXPathToFirstNode(this.ref, n, this);
+				// console.log('local result: ', localResult);
+				this.nodeset.push(localResult);
+			  }
+			});
+	*/
       // this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext[0], this);
       this.nodeset = evaluateXPath(this.ref, inscopeContext[0], this);
     } else {
       // this.nodeset = fx.evaluateXPathToFirstNode(this.ref, inscopeContext, null, {namespaceResolver: this.namespaceResolver});
       if (!inscopeContext) return;
-      [this.nodeset] = evaluateXPath(this.ref, inscopeContext, this);
+      const { nodeType } = inscopeContext;
+      if (nodeType && !XPathUtil.isAbsolutePath(this.ref)) {
+        this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext, this);
+      } else {
+        [this.nodeset] = evaluateXPath(this.ref, inscopeContext, this);
+      }
     }
     // console.log('UiElement evaluated to nodeset: ', this.nodeset);
   }
 
   /**
-     * resolves template expressions for a single attribute
-     * @param expr an attribute value containing curly brackets containing XPath expressions to evaluate
-     * @param node the attribute node used for scoped resolution
-     * @returns {*}
-     * @private
-     */
+   * resolves template expressions for a single attribute
+   * @param {string} expr an attribute value containing curly brackets containing XPath expressions to evaluate
+   * @param {Node} node the attribute node used for scoped resolution
+   * @returns {string}
+   * @protected
+   */
   evaluateAttributeTemplateExpression(expr, node) {
     const matches = expr.match(/{[^}]*}/g);
     if (matches) {
@@ -189,6 +196,8 @@ export const foreElementMixin = superclass => class ForeElementMixin extends sup
 
   /**
      * Get the data this ref likely works with.
+*
+*  @returns {import('./fx-instance.js').FxInstance}
      */
   getData() {
     if (this.ref.startsWith('$')) {
@@ -213,6 +222,9 @@ export const foreElementMixin = superclass => class ForeElementMixin extends sup
     return null;
   }
 
+  /**
+   * @returns {import('./modelitem.js').ModelItem}
+   */
   getModelItem() {
     // return this.model.bindingMap.find(m => m.refnode === this.nodeset);
     // return this.getModel().bindingMap.find(m => m.refnode === this.nodeset);
@@ -242,11 +254,12 @@ export const foreElementMixin = superclass => class ForeElementMixin extends sup
   }
 
   /**
-     * Returns the effective value for the element.
-     * a: look for 'value' attribute and if present evaluate it and return the resulting value
-     * b: look for textContent and return the value if present
-     * c: return null
-     */
+   * Returns the effective value for the element.
+   * a: look for 'value' attribute and if present evaluate it and return the resulting value
+   * b: look for textContent and return the value if present
+   * c: return null
+   * @returns {string}
+   */
   getValue() {
     if (this.hasAttribute('value')) {
       const valAttr = this.getAttribute('value');
@@ -264,11 +277,18 @@ export const foreElementMixin = superclass => class ForeElementMixin extends sup
     return null;
   }
 
+  /**
+   * @returns {Node}
+   */
   getInScopeContext() {
     return getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
   }
 
+  /**
+   * Set variables in scope here
+   * @param {Map} inScopeVariables
+   */
   setInScopeVariables(inScopeVariables) {
     this.inScopeVariables = inScopeVariables;
   }
-};
+}

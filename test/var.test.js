@@ -1,11 +1,13 @@
-import {html, fixtureSync, expect, oneEvent} from '@open-wc/testing';
+import {
+  html, fixtureSync, expect, oneEvent,
+} from '@open-wc/testing';
 
 import '../src/fx-var.js';
 import '../src/fx-bind.js';
 
 describe('var Tests', () => {
-    it('can declare a variable', async () => {
-        const el = await fixtureSync(html`
+  it('can declare a variable', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model>
                     <data>
@@ -17,14 +19,14 @@ describe('var Tests', () => {
             </fx-fore>
         `);
 
-        await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'refresh-done');
 
-        const control1 = el.querySelector('#output');
-        expect(control1.innerText).to.equal('2');
-    });
+    const control1 = el.querySelector('#output');
+    expect(control1.innerText).to.equal('2');
+  });
 
-    it('can declare a variable in a repeat', async () => {
-        const el = await fixtureSync(html`
+  it('can declare a variable in a repeat', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model>
                     <data>
@@ -46,24 +48,24 @@ describe('var Tests', () => {
             </fx-fore>
         `);
 
-        await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'refresh-done');
 
-        const control1 = el.querySelector('span[index="1"]');
-        expect(control1).to.be.ok;
-        expect(control1.innerText).to.equal('4-1');
-        const control2 = el.querySelector('span[index="2"]');
-        expect(control2).to.be.ok;
-        expect(control2.innerText).to.equal('4-2');
-        const control3 = el.querySelector('span[index="3"]');
-        expect(control3).to.be.ok;
-        expect(control3.innerText).to.equal('4-3');
-        const control4 = el.querySelector('span[index="4"]');
-        expect(control4).to.be.ok;
-        expect(control4.innerText).to.equal('4-4');
-    });
+    const control1 = el.querySelector('span[index="1"]');
+    expect(control1).to.be.ok;
+    expect(control1.innerText).to.equal('4-1');
+    const control2 = el.querySelector('span[index="2"]');
+    expect(control2).to.be.ok;
+    expect(control2.innerText).to.equal('4-2');
+    const control3 = el.querySelector('span[index="3"]');
+    expect(control3).to.be.ok;
+    expect(control3.innerText).to.equal('4-3');
+    const control4 = el.querySelector('span[index="4"]');
+    expect(control4).to.be.ok;
+    expect(control4.innerText).to.equal('4-4');
+  });
 
-    it('handles variables in actions', async () => {
-        const el = await fixtureSync(html`
+  it('handles variables in actions', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model>
                     <data>
@@ -92,13 +94,13 @@ describe('var Tests', () => {
             </fx-fore>
         `);
 
-        await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'refresh-done');
 
-        const trigger = el.querySelector('fx-trigger.start');
-        const action = el.querySelector('fx-action');
-        await trigger.performActions();
+    const trigger = el.querySelector('fx-trigger.start');
+    const action = el.querySelector('fx-action');
+	  await trigger.performActions();
 
-        const output = el.querySelector('fx-output');
-        expect(output.value).to.equal('10');
-    });
+    const output = el.querySelector('fx-output');
+    expect(output.value).to.equal('10');
+  });
 });

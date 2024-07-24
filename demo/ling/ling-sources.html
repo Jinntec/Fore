@@ -9,16 +9,15 @@
 <fx-fore>
     <fx-model id="model-1">
         <fx-instance
-            id="default" 
-            src="data/ling-sources.xml" 
+            id="default"
+            src="data/ling-sources.xml"
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
-        
+
         <fx-instance
             id="i-template"
             src="data/template.xml"
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
 
-      
         <fx-instance id="temp">
             <data>
                 <hypotheses>1</hypotheses>
@@ -35,7 +34,7 @@
     </header>
 
     <main>
-    
+
         <!-- begin section segmentation -->
         <section class="tp-section">
             <div class="tp-row">
@@ -95,9 +94,9 @@
                                                     </div>
                                                 </div>
                                             </section>
-                                            
+
                                             <fx-repeat ref="listBibl/cit[@type='source']" id="r-cit-source">
-                                                <template>                                                    
+                                                <template>
                                                     <div class="tp-row">
                                                         <div class="tp-form-group-col"><label class="tp-label">Title</label>
                                                             <fx-control class="tp-input -form-control"
@@ -118,8 +117,7 @@
                                                     </div>
                                                 </template>
                                             </fx-repeat>
-                                        
-                                        
+
                                     <!-- End Bibliography -->
 
                                         <!-- delete segmentation -->

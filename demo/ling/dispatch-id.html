@@ -14,10 +14,9 @@
         <data id="default"
              data-src="data/segmentation.xml"
               data-ns="http://www.tei-c.org/ns/1.0"></data>
-        
+
              <data id="functions"
                      data-src="data/xml/functions.xml"></data>
-        
 
     </fx-model>
 
@@ -36,7 +35,6 @@
                     <section class="form-horizontal">
                         <fx-group ref="//entry">
                             <section class="tp-row tp-row-input-group"><label class="tp-label">Functions taken out of the repeat (but targetting the same part of the instance) </label>
-                                                
 
                                 <fx-control ref="//m[@type='prefix'][@n='1']/@function">
                                     <fx-items ref="$functions//option" class="widget">
@@ -65,13 +63,13 @@
                                 <fx-repeat ref="gramGrp[@type='segmentation']" id="r-gramGrp">
                                     <template>
                                         <fx-group ref="."><!-- gen. characteristic l.1 -->
-                                            
+
                                             <h4>Lexeme</h4>
                                             <!-- Preroot -->
                                             <section class="tp-form-group-col"><label
                                                     class="tp-label">Real word form</label>
                                                 <fx-control ref="m[@type = 'prefix' and @n = 1]">
-                                                
+
                                                 </fx-control>
                                             </section>
                                             <section class="tp-form-group-col"><label class="tp-label">Canonical form</label>
@@ -94,7 +92,6 @@
                                             </section>
                                             <!-- Preroot functions -->
                                             <section class="tp-row tp-row-input-group"><label class="tp-label">Functions</label>
-                                                
 
                                                 <fx-control ref="m[@type='prefix'][@n='1']/@function">
                                                     <fx-items ref="$functions//option" class="widget">
@@ -107,8 +104,7 @@
                                                     </fx-items>
                                                 </fx-control>
                                             </section>
-                                            
-                    
+
                                             <!-- delete segmentation -->
                                             <div class="tp-row tp-repeat-buttons">
                                                 <div class="tp-repeat-button-right">

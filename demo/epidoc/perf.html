@@ -16,9 +16,6 @@
     <link rel="stylesheet" href="../../resources/fore.css"/>
     <link rel="stylesheet" href="edep-theme2.css"/>
 
-
-
-
     <style>
         .valid {
             position: fixed;
@@ -71,7 +68,6 @@
                 </fx-bind>
             </fx-bind>
 
-
             <data id="typeins" src="data/typeins.json" type="json">
 
             </data>
@@ -123,7 +119,6 @@
             <fx-bind ref="$vars/can-delete" relevant="index('parts') gt 1"></fx-bind>
             <fx-bind ref="$vars/loggedin" relevant=".='true'"></fx-bind>
             <fx-bind ref="$vars/xml-valid" calculate="editorsValid()" constraint=".='true'"></fx-bind>
-
 
             <data xmlns="http://www.tei-c.org/ns/1.0" id="epidoc-editor" src="data/epidoc-snippet.xml"
                          xpath-default-namespace="http://www.tei-c.org/ns/1.0">
@@ -486,7 +481,6 @@
                             </fx-control>
                         </fx-group>
 
-
                         <fx-group class="group-5">
                             <!-- 24) -->
                             <fx-control ref="//layoutDesc/layout/rs[@type='metric']">
@@ -785,7 +779,6 @@
 
                     <!--                    </div>-->
 
-
                     <fx-trigger class="delete {if(count(./preceding-sibling::msPart) = 0) then 'hidden' else ''}">
                         <button>Löschen</button>
                         <!--                        <fx-confirm message="really delete?">-->
@@ -793,7 +786,6 @@
                         <!--                        </fx-confirm>-->
                         <!--                            <fx-delete ref="."></fx-delete>-->
                     </fx-trigger>
-
 
                 </template>
             </fx-repeat>
@@ -811,7 +803,6 @@
                         <fx-refresh event="update" force="force" target="epidoc-editor3"></fx-refresh>
                         <jinn-epidoc-editor id="epidoc-editor3" class="widget" schema="resources/scripts/epidoc.json"/>
             -->
-
 
             <fx-trigger class="add">
                 <button>Hinzufügen</button>
@@ -888,7 +879,6 @@
                             target="commentary"
                             event="update"></fx-replace-->
             </fx-group>
-
 
             <!-- 26) -->
             <fx-group ref="//msDesc" class="group-6">
@@ -999,7 +989,6 @@
             <!-- 35a) -->
             <!-- 35c) -->
             <!-- 35d) -->
-
 
             <!-- 47) -->
             <!-- 45) -->

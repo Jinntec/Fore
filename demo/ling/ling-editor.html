@@ -9,10 +9,10 @@
 <fx-fore>
     <fx-model id="model-1">
         <fx-instance
-            id="default" 
-            src="data/default.xml" 
+            id="default"
+            src="data/default.xml"
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
-        
+
         <fx-instance
             id="i-template"
             src="data/template.xml"
@@ -26,15 +26,15 @@
         <fx-instance id="i-relations" src="data/xml/relations.xml"/>
 
         <fx-instance
-            xmlns="" 
-            id="i-dialects" 
-            src="data/xml/dialects.xml" 
+            xmlns=""
+            id="i-dialects"
+            src="data/xml/dialects.xml"
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
 
         <fx-instance
-            xmlns="" 
-            id="i-genders" 
-            src="data/xml/genders.xml" 
+            xmlns=""
+            id="i-genders"
+            src="data/xml/genders.xml"
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
 
         <fx-instance id="i-cert" src="data/xml/cert.xml"/>
@@ -62,14 +62,14 @@
     </header>
 
     <main>
-    <!-- begin section general -->    
+    <!-- begin section general -->
         <section class="tp-section" >
             <div class="tp-row">
                 <h2 class="tp-width-sidebar">Name in Context</h2>
                 <div class="tp-width-main">
 
                     <!-- Name forms: form[@type='lemma'] -->
-                    <fx-group class="form-horizontal" id="general"  ref="//entry/form[@type='lemma']">
+                    <fx-group class="form-horizontal" id="general" ref="//entry/form[@type='lemma']">
                         <div class="tp-form-group-col">
                             <label class="tp-label">Greek</label>
                             <fx-control class="tp-input -form-control" ref="orth[@type='greek']">
@@ -153,7 +153,7 @@
                         </div>
                     </fx-group>
 
-                    <div class="tp-row">                                
+                    <div class="tp-row">
                         <div class="tp-row tp-repeat-add">
                             <fx-label class="tp-form-header">
                                 <h4 class="tp-row tp-repeat-headline">Significant relative name</h4>
@@ -162,7 +162,7 @@
                                 <button>add</button>
                                 <fx-insert context="//entry/re" ref="//entry/re/form"
                                             origin="data('i-template')/re/form"></fx-insert>
-                            </fx-trigger>              
+                            </fx-trigger>
                         </div>
 
                         <fx-repeat ref="//entry/re/form" id="r-relations">
@@ -189,7 +189,7 @@
                                     <div class="tp-button-row tp-delete">
                                         <fx-trigger class="-btn -btn-default">
                                             <button>delete</button>
-                                            
+
                                             <fx-delete nodeset="//entry//re"/>
                                         </fx-trigger>
                                     </div>
@@ -198,13 +198,13 @@
                             </template>
                             </fx-repeat>
                         <!-- </fx-group> -->
-                        
+
                     </div>
                 </div>
             </div>
         </section>
     <!-- // end section general -->
-        
+
     <!-- begin section dialects -->
         <section class="tp-section">
             <div class="tp-row">
@@ -232,7 +232,6 @@
                                     <fx-group ref=".">
                                         <div class="tp-ffrow">
 
-
                                             <div class="tp-form-group-col">
                                                 <label class="tp-label">Dialectal/Areal/Bilingual</label>
                                                 <fx-control class="tp-input -form-control"
@@ -244,10 +243,10 @@
                                                 </select>
                                                 </fx-control>
                                             </div>
-                                            
+
                                             <div class="tp-form-group-col">
                                                 <label class="tp-label">(Check if uncertain)</label>
-                                                
+
                                                 <fx-control ref="@cert">
                                                     <fx-items ref="data('i-cert')//option" class="widget">
                                                         <template>
@@ -295,8 +294,8 @@
                                     <div class="tp-button-row tp-add"><label>Add name variant</label>
                                         <fx-trigger>
                                             <button>add</button>
-                                            <fx-insert 
-                                                context="//entry" 
+                                            <fx-insert
+                                                context="//entry"
                                                 ref="form"
                                                 origin="data('i-template')//form[@type='variant']"></fx-insert>
                                         </fx-trigger>
@@ -423,12 +422,11 @@
                                 <template>
                                     <details>
                                         <summary><h3>Segmentation hypothesis</h3></summary>
-                                    
-                                    
+
                                         <section class="tp-row">
                                             <div class="tp-form-group-col">
                                                 <label class="tp-label">Certainty</label>
-                                                
+
                                                 <fx-control ref="@cert">
                                                     <fx-items ref="data('i-cert')//option" class="widget">
                                                         <template>
@@ -443,7 +441,7 @@
                                             <div class="tp-form-group-col">
                                                 <div class="row">
                                                     <div class="col-xs-8">
-                                                        <label class="tp-label">Complex Structuration and Semantics</label>                                                          
+                                                        <label class="tp-label">Complex Structuration and Semantics</label>
                                                         <fx-control class="tp-input -form-control" ref="@subtype">
                                                             <select ref="data('i-classification')//option" class="widget">
                                                                 <template>
@@ -583,7 +581,7 @@
                                                 </fx-dispatch>
                                             </fx-trigger>
                                         </section>
-                                    
+
                                         <!-- Root 1 functions -->
                                         <section class="tp-row tp-row-input-group">
                                             <label class="tp-label">Functions 1</label>
@@ -598,7 +596,7 @@
                                                 </fx-items>
                                             </fx-control>
                                         </section>
-                                        
+
                                         <!-- Root 1 rest: headedness etc -->
                                         <section class="tp-row">
                                             <div class="tp-column-3">
@@ -615,7 +613,7 @@
                                                 </fx-control>
                                             </div>
                                             <div class="tp-column-3">
-                                                <label class="tp-label">Abbreviation marker</label>    
+                                                <label class="tp-label">Abbreviation marker</label>
                                                 <fx-control ref="m[@type='radical'][@n='1']/@ana">
                                                     <fx-items class="widget">
                                                         <span class="fx-checkbox">
@@ -644,7 +642,6 @@
                                         </section>
                                         <!-- End Root 1 -->
 
-
                                         <hr/>
 
                                         <!-- Root 2 -->
@@ -669,7 +666,7 @@
                                                 </fx-dispatch>
                                             </fx-trigger>
                                         </section>
-                                    
+
                                         <!-- Root 2 functions -->
                                         <section class="tp-row tp-row-input-group">
                                             <label class="tp-label">Functions 2</label>
@@ -684,7 +681,7 @@
                                                 </fx-items>
                                             </fx-control>
                                         </section>
-                                        
+
                                         <!-- Root 2 rest: headedness etc -->
                                         <section class="tp-row">
                                             <div class="tp-column-3">
@@ -701,7 +698,7 @@
                                                 </fx-control>
                                             </div>
                                             <div class="tp-column-3">
-                                                <label class="tp-label">Abbreviation marker</label>    
+                                                <label class="tp-label">Abbreviation marker</label>
                                                 <fx-control ref="m[@type='radical'][@n='2']/@ana">
                                                     <fx-items class="widget">
                                                         <span class="fx-checkbox">
@@ -794,7 +791,7 @@
                                                     <h4 class="h3">Lexical Connections</h4>
                                                 </section>
                                             </summary>
-                                        
+
                                             <section class="tp-row tp-repeat-add">
                                                 <h5 class="h4 tp-repeat-headline">Lexical or Lexicographic
                                                     Significant
@@ -811,9 +808,9 @@
                                                     </div>
                                                 </div>
                                             </section>
-                                            
+
                                             <fx-repeat ref="listBibl/cit[@type='source']" id="r-cit-source">
-                                                <template>                                                    
+                                                <template>
                                                     <div class="tp-row">
                                                         <div class="tp-form-group-col"><label
                                                                 class="tp-label">Quote</label>
@@ -854,7 +851,7 @@
                                                     </div>
                                                 </template>
                                             </fx-repeat>
-                                        
+
                                             <section class="tp-row tp-repeat-add">
                                                 <h5 class="h4 tp-repeat-headline">
                                                     References in Modern Lexicology and Linguistics
@@ -974,7 +971,7 @@
                                                     </div>
                                                 </template>
                                             </fx-repeat>
-                                        
+
                                             <section class="tp-row tp-repeat-add">
                                                 <h5 class="h4 tp-repeat-headline">Modern References</h5>
                                                 <div class="tp-repeat-button-left">

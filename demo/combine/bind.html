@@ -23,7 +23,6 @@
                        origin="$template/gender"></fx-insert>
             <fx-update></fx-update>
 
-
             <!-- insert birth template if not exists and insert after gender-->
             <fx-insert if="not(exists(birth))"
                        ref="gender"
@@ -35,7 +34,6 @@
                        ref="$default/*"
                        origin="$template/note" position="after"></fx-insert>
             <fx-update></fx-update>
-
 
         </fx-action>
 

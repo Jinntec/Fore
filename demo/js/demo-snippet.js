@@ -156,23 +156,23 @@ Polymer({
     },
   },
 
-  attached: function() {
+  attached() {
     this._observer = dom(this.$.content).observeNodes(
-      function(info) {
+      (info) => {
         this._updateMarkdown();
-      }.bind(this),
+      },
     );
   },
 
-  detached: function() {
+  detached() {
     if (this._observer) {
       dom(this.$.content).unobserveNodes(this._observer);
       this._observer = null;
     }
   },
 
-  _updateMarkdown: function() {
-    var template = dom(this).queryDistributedElements('template')[0];
+  _updateMarkdown() {
+    const template = dom(this).queryDistributedElements('template')[0];
 
     // If there's no template, render empty code.
     if (!template) {
@@ -180,7 +180,7 @@ Polymer({
       return;
     }
 
-    var snippet = this.$.marked.unindent(template.innerHTML);
+    let snippet = this.$.marked.unindent(template.innerHTML);
 
     // Hack: In safari + shady dom, sometime we get an empty 'class' attribute.
     // if we do, delete it.
@@ -189,7 +189,7 @@ Polymer({
     // Boolean properties are displayed as checked="", so remove the ="" bit.
     snippet = snippet.replace(/=""/g, '');
 
-    this._markdown = '```\n' + snippet + '\n' + '```';
+    this._markdown = `\`\`\`\n${snippet}\n` + '```';
     // Stamp the template.
     if (!template.hasAttribute('is')) {
       // Don't need to listen for more changes (since stamping the template
@@ -201,15 +201,15 @@ Polymer({
     this.dispatchEvent(new CustomEvent('dom-ready'));
   },
 
-  _copyToClipboard: function() {
+  _copyToClipboard() {
     // From
     // https://github.com/google/material-design-lite/blob/master/docs/_assets/snippets.js
-    var snipRange = document.createRange();
+    const snipRange = document.createRange();
     snipRange.selectNodeContents(this.$.code);
-    var selection = window.getSelection();
+    const selection = window.getSelection();
     selection.removeAllRanges();
     selection.addRange(snipRange);
-    var result = false;
+    let result = false;
     try {
       result = document.execCommand('copy');
       this.$.copyButton.textContent = 'done';
@@ -226,7 +226,7 @@ Polymer({
     return result;
   },
 
-  _resetCopyButtonState: function() {
+  _resetCopyButtonState() {
     this.$.copyButton.textContent = 'copy';
   },
 });

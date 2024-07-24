@@ -1,11 +1,13 @@
 /* eslint-disable no-unused-expressions */
-import {html, oneEvent, fixtureSync, expect, elementUpdated} from '@open-wc/testing';
+import {
+  html, oneEvent, fixtureSync, expect, elementUpdated,
+} from '@open-wc/testing';
 
 import '../index.js';
 
 describe('scoped resolution tests', () => {
-    it('inscopeContext for child bind is equal to its parent', async () => {
-        const el = await fixtureSync(html`
+  it('inscopeContext for child bind is equal to its parent', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model id="record">
                     <data>
@@ -22,18 +24,18 @@ describe('scoped resolution tests', () => {
             </fx-fore>
         `);
 
-        await elementUpdated(el);
-        const model = el.querySelector('fx-model');
-        expect(model.modelItems.length).to.equal(2);
+    await elementUpdated(el);
+    const model = el.querySelector('fx-model');
+    expect(model.modelItems.length).to.equal(2);
 
-        const parent = el.querySelector('#parent');
-        const child = el.querySelector('#child');
+    const parent = el.querySelector('#parent');
+    const child = el.querySelector('#child');
 
-        expect(child.getInScopeContext()).to.equal(parent.nodeset);
-    });
+    expect(child.getInScopeContext()).to.equal(parent.nodeset);
+  });
 
-    it('inscopeContext in a repeat', async () => {
-        const el = await fixtureSync(html`
+  it('inscopeContext in a repeat', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model id="record">
                     <data>
@@ -97,93 +99,85 @@ describe('scoped resolution tests', () => {
                         </fx-repeat>
                     </template>
                 </fx-repeat>
-            </fx-fore>
-        `);
+      </fx-fore>
+    `);
 
-        await oneEvent(el, 'ready');
-        await elementUpdated(el);
+    await oneEvent(el, 'ready');
+    await elementUpdated(el);
 
-        el.querySelectorAll('.thumb .fingername').forEach(fingerOutput => {
-            expect(fingerOutput.value).to.equal('thumb');
-        });
-        el.querySelectorAll('.pointer .fingername').forEach(fingerOutput =>
-            expect(fingerOutput.value).to.equal('pointer'),
-        );
-        el.querySelectorAll('.middle .fingername').forEach(fingerOutput =>
-            expect(fingerOutput.value).to.equal('middle'),
-        );
-        el.querySelectorAll('.ring .fingername').forEach(fingerOutput =>
-            expect(fingerOutput.value).to.equal('ring'),
-        );
-        el.querySelectorAll('.pinky .fingername').forEach(fingerOutput =>
-            expect(fingerOutput.value).to.equal('pinky'),
-        );
+    el.querySelectorAll('.thumb .fingername').forEach((fingerOutput) => {
+      expect(fingerOutput.value).to.equal('thumb');
     });
+    el.querySelectorAll('.pointer .fingername').forEach(fingerOutput => expect(fingerOutput.value).to.equal('pointer'));
+    el.querySelectorAll('.middle .fingername').forEach(fingerOutput => expect(fingerOutput.value).to.equal('middle'));
+    el.querySelectorAll('.ring .fingername').forEach(fingerOutput => expect(fingerOutput.value).to.equal('ring'));
+    el.querySelectorAll('.pinky .fingername').forEach(fingerOutput => expect(fingerOutput.value).to.equal('pinky'));
+  });
 
-    it('inscopeContext for second child bind is equal to its parent', async () => {
-        const el = await fixtureSync(html`
-            <fx-fore>
-                <fx-model id="record">
-                    <data>
-                        <arm side="left">
-                            <hand>
-                                <finger index="3">middle</finger>
-                            </hand>
-                        </arm>
-                    </data>
-                    <fx-bind id="parent" ref="arm">
-                        <fx-bind id="child1" ref="@side"></fx-bind>
-                        <fx-bind id="child2" ref="hand"></fx-bind>
-                    </fx-bind>
-                </fx-model>
-            </fx-fore>
-        `);
+  it('inscopeContext for second child bind is equal to its parent', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="record">
+            <data>
+              <arm side="left">
+                <hand>
+                  <finger index="3">middle</finger>
+                </hand>
+              </arm>
+            </data>
+          <fx-bind id="parent" ref="arm">
+            <fx-bind id="child1" ref="@side"></fx-bind>
+            <fx-bind id="child2" ref="hand"></fx-bind>
+          </fx-bind>
+        </fx-model>
+      </fx-fore>
+    `);
 
-        await elementUpdated(el);
-        const model = el.querySelector('fx-model');
-        expect(model.modelItems.length).to.equal(3);
+    await elementUpdated(el);
+    const model = el.querySelector('fx-model');
+    expect(model.modelItems.length).to.equal(3);
 
-        const parent = el.querySelector('#parent');
-        const child = el.querySelector('#child2');
-        expect(child.getInScopeContext()).to.equal(parent.nodeset);
-    });
+    const parent = el.querySelector('#parent');
+    const child = el.querySelector('#child2');
+    expect(child.getInScopeContext()).to.equal(parent.nodeset);
+  });
 
-    it('inscopeContext for subchild bind is equal to its parent', async () => {
-        const el = await fixtureSync(html`
-            <fx-fore>
-                <fx-model id="record">
-                    <data>
-                        <arm side="left">
-                            <hand>
-                                <finger index="3">middle</finger>
-                            </hand>
-                        </arm>
-                    </data>
-                    <fx-bind id="parent" ref="arm">
-                        <fx-bind id="child1" ref="@side"></fx-bind>
-                        <fx-bind id="child2" ref="hand">
-                            <fx-bind id="subchild" ref="finger"></fx-bind>
-                        </fx-bind>
-                    </fx-bind>
-                </fx-model>
-            </fx-fore>
-        `);
+  it('inscopeContext for subchild bind is equal to its parent', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="record">
+            <data>
+              <arm side="left">
+                <hand>
+                  <finger index="3">middle</finger>
+                </hand>
+              </arm>
+            </data>
+          <fx-bind id="parent" ref="arm">
+            <fx-bind id="child1" ref="@side"></fx-bind>
+            <fx-bind id="child2" ref="hand">
+              <fx-bind id="subchild" ref="finger"></fx-bind>
+            </fx-bind>
+          </fx-bind>
+        </fx-model>
+      </fx-fore>
+    `);
 
-        await elementUpdated(el);
-        const model = el.querySelector('fx-model');
-        expect(model.modelItems.length).to.equal(4);
+    await elementUpdated(el);
+    const model = el.querySelector('fx-model');
+    expect(model.modelItems.length).to.equal(4);
 
-        const child = el.querySelector('#child2');
-        const subchild = el.querySelector('#subchild');
+    const child = el.querySelector('#child2');
+    const subchild = el.querySelector('#subchild');
 
-        const c = subchild.getInScopeContext();
-        expect(c).to.equal(child.nodeset);
-    });
+    const c = subchild.getInScopeContext();
+    expect(c).to.equal(child.nodeset);
+  });
 
-    it('has 2 arms as nodeset', async () => {
-        const el = await fixtureSync(html`
-            <fx-fore>
-                <fx-model id="record">
+  it('has 2 arms as nodeset', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="record">
                     <data>
                         <arm side="left">
                             <hand>
@@ -206,14 +200,14 @@ describe('scoped resolution tests', () => {
             </fx-fore>
         `);
 
-        await elementUpdated(el);
+    await elementUpdated(el);
 
-        const parent = el.querySelector('#parent');
-        expect(parent.nodeset.length).to.equal(2);
-    });
+    const parent = el.querySelector('#parent');
+    expect(parent.nodeset.length).to.equal(2);
+  });
 
-    it('has a 3 finger nodeset for the left arm', async () => {
-        const el = await fixtureSync(html`
+  it('has a 3 finger nodeset for the left arm', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model id="record">
                     <data>
@@ -240,16 +234,16 @@ describe('scoped resolution tests', () => {
             </fx-fore>
         `);
 
-        await elementUpdated(el);
-        const model = el.querySelector('fx-model');
-        expect(model.modelItems.length).to.equal(10);
+    await elementUpdated(el);
+    const model = el.querySelector('fx-model');
+    expect(model.modelItems.length).to.equal(10);
 
-        const parent = el.querySelector('#parent');
-        expect(parent.nodeset.length).to.equal(2);
-    });
+    const parent = el.querySelector('#parent');
+    expect(parent.nodeset.length).to.equal(2);
+  });
 
-    it('correctly binds form controls', async () => {
-        const el = await fixtureSync(html`
+  it('correctly binds form controls', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model id="record">
                     <data>
@@ -284,20 +278,20 @@ describe('scoped resolution tests', () => {
             </fx-fore>
         `);
 
-        const model = el.querySelector('fx-model');
+    const model = el.querySelector('fx-model');
 
-        await oneEvent(el, 'refresh-done');
-        expect(model.modelItems.length).to.equal(8);
+    await oneEvent(el, 'refresh-done');
+    expect(model.modelItems.length).to.equal(8);
 
-        let out = el.querySelector('#output');
-        expect(out.modelItem.value).to.equal('index');
+    let out = el.querySelector('#output');
+    expect(out.modelItem.value).to.equal('index');
 
-        out = el.querySelector('#output3');
-        expect(out.modelItem.value).to.equal('right');
-    });
+    out = el.querySelector('#output3');
+    expect(out.modelItem.value).to.equal('right');
+  });
 
-    it('returns the context of nearest fx-fore elements next in document hierarchy upwards ', async () => {
-        const el = await fixtureSync(html`
+  it('returns the context of nearest fx-fore elements next in document hierarchy upwards ', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model>
                     <data>
@@ -334,18 +328,18 @@ describe('scoped resolution tests', () => {
             </fx-fore>
         `);
 
-        // const model = el.querySelector('fx-fore fx-model');
-        await oneEvent(el, 'ready');
-        const control = el.querySelector('fx-fore fx-fore fx-control');
-        expect(control.getAttribute('ref')).to.equal('email');
+    // const model = el.querySelector('fx-fore fx-model');
+    await oneEvent(el, 'ready');
+    const control = el.querySelector('fx-fore fx-fore fx-control');
+    expect(control.getAttribute('ref')).to.equal('email');
 
-        const model = el.querySelector('fx-fore fx-fore fx-model');
-        expect(model.modelItems.length).to.equal(1);
-        expect(model.modelItems[0].value).to.equal('default');
-    });
+    const model = el.querySelector('fx-fore fx-fore fx-model');
+    expect(model.modelItems.length).to.equal(1);
+    expect(model.modelItems[0].value).to.equal('default');
+  });
 
-    it('resolves group within repeat', async () => {
-        const el = await fixtureSync(html`
+  it('resolves group within repeat', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model>
                     <data>
@@ -369,18 +363,18 @@ describe('scoped resolution tests', () => {
             </fx-fore>
         `);
 
-        // const model = el.querySelector('fx-fore fx-model');
-        await oneEvent(el, 'ready');
+    // const model = el.querySelector('fx-fore fx-model');
+    await oneEvent(el, 'ready');
 
-        const controls = el.querySelectorAll('fx-control');
-        expect(controls.length).to.equal(2);
+    const controls = el.querySelectorAll('fx-control');
+    expect(controls.length).to.equal(2);
 
-        expect(controls[0].value).to.equal('66');
-        expect(controls[1].value).to.equal('78');
-    });
+    expect(controls[0].value).to.equal('66');
+    expect(controls[1].value).to.equal('78');
+  });
 
-    it('resolves group within repeat (external instance)', async () => {
-        const el = await fixtureSync(html`
+  it('resolves group within repeat (external instance)', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model>
                     <data data-src="/base/test/HD025278.xml" data-ns="http://www.tei-c.org/ns/1.0"></data>
@@ -401,90 +395,85 @@ describe('scoped resolution tests', () => {
             </fx-fore>
         `);
 
-        // const model = el.querySelector('fx-fore fx-model');
-        await oneEvent(el, 'ready');
+    // const model = el.querySelector('fx-fore fx-model');
+    await oneEvent(el, 'ready');
 
-        const controls = el.querySelectorAll('fx-control');
-        console.log(el.outerHTML);
-        expect(controls.length).to.equal(2);
+    const controls = el.querySelectorAll('fx-control');
+    console.log(el.outerHTML);
+    expect(controls.length).to.equal(2);
 
-        expect(controls[0].value).to.equal('66');
-        expect(controls[1].value).to.equal('78');
-    });
+    expect(controls[0].value).to.equal('66');
+    expect(controls[1].value).to.equal('78');
+  });
 
-    it('resolves correctly within a fx-control in template expression and actions', async () => {
-        const el = await fixtureSync(html`
+  it('resolves correctly within a fx-control in template expression and actions', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model>
                     <data>
                         <ptr target="target"></ptr>
                         <check></check>
                     </data>
-                </fx-model>
-                <fx-control ref="ptr/@target">
-                    <label>{.}</label>
-                    <fx-action event="init" if="string-length(.) != 0">
-                        <fx-setvalue ref="../../check">ok</fx-setvalue>
-                    </fx-action>
-                </fx-control>
-                <fx-output ref="check"></fx-output>
-                <fx-inspector></fx-inspector>
-            </fx-fore>
-        `);
+        </fx-model>
+        <fx-control ref="ptr/@target">
+          <label>{.}</label>
+          <fx-action event="init"  if="string-length(.) != 0">
+            <fx-setvalue ref="../../check">ok</fx-setvalue>
+          </fx-action>
+        </fx-control>
+        <fx-output ref="check"></fx-output>
+        <fx-inspector></fx-inspector>
+      </fx-fore>
+    `);
 
-        // const model = el.querySelector('fx-fore fx-model');
-        await oneEvent(el, 'ready');
+    // const model = el.querySelector('fx-fore fx-model');
+    await oneEvent(el, 'ready');
 
-        const control = el.querySelector('fx-control');
-        expect(control).to.exist;
+    const control = el.querySelector('fx-control');
+    expect(control).to.exist;
 
-        const label = el.querySelector('label');
-        expect(label).to.exist;
+    const label = el.querySelector('label');
+    expect(label).to.exist;
 
-        expect(label.textContent).to.equal('target');
+    expect(label.textContent).to.equal('target');
 
-        await oneEvent(el, 'refresh-done');
-        const output = el.querySelector('fx-output');
-        expect(output).to.exist;
-        expect(output.value).to.equal('ok');
-
-
-    });
-    it('resolves correctly when a fx-control binds with the instance() function', async () => {
-        const el = await fixtureSync(html`
-            <fx-fore>
-                <fx-model>
-                    <data>
-                        <ptr target="target"></ptr>
-                        <check></check>
-                    </data>
+    await oneEvent(el, 'refresh-done');
+    const output = el.querySelector('fx-output');
+    expect(output).to.exist;
+    expect(output.value).to.equal('ok');
+  });
+  it('resolves correctly when a fx-control binds with the instance() function', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+            <data>
+              <ptr target="target"></ptr>
+              <check></check>
+            </data>
                     <data id="var">
-                        <var1>aValue</var1>
-                    </data>
-                </fx-model>
+              <var1>aValue</var1>
+            </data>
+        </fx-model>
                 <fx-control ref="$var/var1">
-                    <label>{.}</label>
-                </fx-control>
-            </fx-fore>
-        `);
+          <label>{.}</label>
+        </fx-control>
+      </fx-fore>
+    `);
 
-        // const model = el.querySelector('fx-fore fx-model');
-        await oneEvent(el, 'ready');
+    // const model = el.querySelector('fx-fore fx-model');
+    await oneEvent(el, 'ready');
 
-        const control = el.querySelector('fx-control');
-        expect(control).to.exist;
-        control.getWidget().click();
+    const control = el.querySelector('fx-control');
+    expect(control).to.exist;
+    control.getWidget().click();
 
-        const label = el.querySelector('label');
-        expect(label).to.exist;
-        expect(label.textContent).to.equal('aValue');
+    const label = el.querySelector('label');
+    expect(label).to.exist;
+    expect(label.textContent).to.equal('aValue');
 
-        // await oneEvent(el, 'refresh-done');
-        // const output = el.querySelector('fx-output');
-        // expect(output).to.exist;
-        // expect(output.value).to.equal('ok');
-
-
-    });
-
+    // await oneEvent(el, 'refresh-done');
+    // const output = el.querySelector('fx-output');
+    // expect(output).to.exist;
+    // expect(output.value).to.equal('ok');
+  });
 });

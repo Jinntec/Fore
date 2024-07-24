@@ -2,7 +2,7 @@ import { Fore } from '../fore.js';
 import { evaluateXPath } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 import { XPathUtil } from '../xpath-util.js';
-import { foreElementMixin } from '../ForeElementMixin.js';
+import ForeElementMixin from '../ForeElementMixin.js';
 import { withDraggability } from '../withDraggability.js';
 
 /**
@@ -20,7 +20,7 @@ import { withDraggability } from '../withDraggability.js';
  *
  * todo: it should be seriously be considered to extend FxContainer instead but needs refactoring first.
  */
-export class FxRepeatAttributes extends withDraggability(foreElementMixin(HTMLElement), false) {
+export class FxRepeatAttributes extends withDraggability(ForeElementMixin, false) {
   static get properties() {
     return {
       ...super.properties,
@@ -305,7 +305,11 @@ export class FxRepeatAttributes extends withDraggability(foreElementMixin(HTMLEl
 
   _dispatchIndexChange() {
     this.dispatchEvent(
-      new CustomEvent('item-changed', { composed: false, bubbles: true, detail: { item: this, index: this.index } }),
+      new CustomEvent('item-changed', {
+        composed: false,
+        bubbles: true,
+        detail: { item: this, index: this.index },
+      }),
     );
   }
 

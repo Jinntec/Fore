@@ -52,8 +52,8 @@ export class FxItems extends FxControl {
       const items = this.querySelectorAll('[value]');
 
       if (e.target.nodeName === 'LABEL') {
-	      const target = resolveId(e.target.getAttribute('for'), this);
-	      target.focus();
+        const target = resolveId(e.target.getAttribute('for'), this);
+        target.focus();
       }
     });
     this.addEventListener('click', (e) => {

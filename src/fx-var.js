@@ -1,17 +1,14 @@
 import { createTypedValueFactory, domFacade } from 'fontoxpath';
 import { Fore } from './fore.js';
 import { evaluateXPath } from './xpath-evaluation.js';
-import { foreElementMixin } from './ForeElementMixin.js';
+import ForeElementMixin from './ForeElementMixin.js';
 import getInScopeContext from './getInScopeContext.js';
 
 // We are getting sequences here (evaluateXPath is returning all items, as an array)
 // So wrap them into something so FontoXPath also understands they are sequences, always.
 const typedValueFactory = createTypedValueFactory('item()*');
 
-/**
- * @ts-check
- */
-export class FxVariable extends foreElementMixin(HTMLElement) {
+export class FxVariable extends ForeElementMixin {
   constructor() {
     super();
 
@@ -19,6 +16,7 @@ export class FxVariable extends foreElementMixin(HTMLElement) {
     this.name = '';
     this.valueQuery = '';
     this.value = null;
+    this.precedingVariables = [];
   }
 
   connectedCallback() {
@@ -34,7 +32,7 @@ export class FxVariable extends foreElementMixin(HTMLElement) {
   }
 
   /**
-   * @param {Map<string, {value: unknown}>} inScopeVariables
+   * @param {Map<string, FxVariable>} inScopeVariables
    */
   setInScopeVariables(inScopeVariables) {
     if (inScopeVariables.has(this.name)) {

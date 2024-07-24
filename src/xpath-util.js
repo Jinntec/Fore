@@ -2,8 +2,11 @@ import * as fx from 'fontoxpath';
 
 export class XPathUtil {
   /**
-     * Alternative to `contains` that respects shadowroots
-     */
+   * Alternative to `contains` that respects shadowroots
+   * @param {Node} ancestor
+   * @param {Node} descendant
+   * @returns {boolean}
+   */
   static contains(ancestor, descendant) {
     while (descendant) {
       if (descendant === ancestor) {
@@ -21,10 +24,14 @@ export class XPathUtil {
   }
 
   /**
-     * Alternative to `closest` that respects subcontrol boundaries
-     */
+   * Alternative to `closest` that respects subcontrol boundaries
+   *
+   * @param {string} querySelector
+   * @param {Node} start
+   * @returns {HTMLElement}
+   */
   static getClosest(querySelector, start) {
-    while (start && !start.matches || !start.matches(querySelector)) {
+    while ((start && !start.matches) || !start.matches(querySelector)) {
       if (start.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
         // We are passing a shadow root boundary
         start = start.host;
@@ -51,10 +58,10 @@ export class XPathUtil {
   }
 
   /**
-     * returns next bound element upwards in tree
-     * @param start where to start the search
-     * @returns {*|null}
-     */
+   * returns next bound element upwards in tree
+   * @param {Node} start where to start the search
+   * @returns {*|null}
+   */
   static getParentBindingElement(start) {
     /*    if (start.parentNode.host) {
           const { host } = start.parentNode;
@@ -62,8 +69,11 @@ export class XPathUtil {
             return host;
           }
         } else */
-    if (start.parentNode
-            && (start.parentNode.nodeType !== Node.DOCUMENT_NODE || start.parentNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE)) {
+    if (
+      start.parentNode &&
+      (start.parentNode.nodeType !== Node.DOCUMENT_NODE ||
+        start.parentNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE)
+    ) {
       /*
                   if (start.parentNode.hasAttribute('ref')) {
                     return start.parentNode;
@@ -77,12 +87,12 @@ export class XPathUtil {
   }
 
   /**
-     * Checks whether the specified path expression is an absolute path.
-     *
-     * @param path the path expression.
-     * @return <code>true</code> if specified path expression is an absolute
-     * path, otherwise <code>false</code>.
-     */
+   * Checks whether the specified path expression is an absolute path.
+   *
+   * @param {string} path the path expression.
+   * @returns {boolean} <code>true</code> if specified path expression is an absolute
+   * path, otherwise <code>false</code>.
+   */
   static isAbsolutePath(path) {
     return path != null && (path.startsWith('/') || path.startsWith('instance('));
   }
@@ -92,14 +102,14 @@ export class XPathUtil {
   }
 
   /**
-     * returns the instance id from a complete XPath using `instance()` function.
-     *
-     * Will return 'default' in case no ref is given at all or the `instance()` function is called without arg.
-     *
-     * Otherwise instance id is extracted from function and returned. If all fails null is returned.
-     * @param ref
-     * @returns {string}
-     */
+   * returns the instance id from a complete XPath using `instance()` function.
+   *
+   * Will return 'default' in case no ref is given at all or the `instance()` function is called without arg.
+   *
+   * Otherwise instance id is extracted from function and returned. If all fails null is returned.
+   * @param ref
+   * @returns {string}
+   */
   static getDataId(ref) {
     if (!ref) {
       return 'default';
@@ -114,6 +124,11 @@ export class XPathUtil {
     return null;
   }
 
+  /**
+   * @param {HTMLElement} boundElement
+   * @param {string} path
+   * @returns {string}
+   */
   static resolveData(boundElement, path) {
     let dataId = XPathUtil.getDataId(path);
     if (!dataId) {
@@ -130,6 +145,10 @@ export class XPathUtil {
     return 'default';
   }
 
+  /**
+   * @param {Node} node
+   * @returns string
+   */
   static getDocPath(node) {
     const path = fx.evaluateXPathToString('path()', node);
     // Path is like `$default/x[1]/y[1]`
@@ -137,6 +156,11 @@ export class XPathUtil {
     return shortened.startsWith('/') ? `${shortened}` : `/${shortened}`;
   }
 
+  /**
+   * @param {Node} node
+   * @param {string} instanceId
+   * @returns string
+   */
   static getPath(node, dataId) {
     const path = fx.evaluateXPathToString('path()', node);
     // Path is like `$default/x[1]/y[1]`
@@ -144,6 +168,10 @@ export class XPathUtil {
     return shortened.startsWith('/') ? `$${dataId}${shortened}` : `$${dataId}/${shortened}`;
   }
 
+  /**
+   * @param {string} path
+   * @returns string
+   */
   static shortenPath(path) {
     const tmp = path.replaceAll(/(Q{(.*?)\})/g, '');
     // cut off leading slash
@@ -152,6 +180,10 @@ export class XPathUtil {
     return tmp1.substring(tmp1.indexOf('/'), tmp.length);
   }
 
+  /**
+   * @param {string} dep
+   * @returns {string}
+   */
   static getBasePath(dep) {
     const split = dep.split(':');
     return split[0];

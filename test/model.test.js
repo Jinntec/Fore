@@ -1,11 +1,13 @@
 /* eslint-disable no-unused-expressions */
-import {html, oneEvent, fixtureSync, expect} from '@open-wc/testing';
+import {
+  html, oneEvent, fixtureSync, expect,
+} from '@open-wc/testing';
 
 import '../index.js';
 
 describe('model tests', () => {
-    it('rebuilds and recalcuates correctly intitially', async () => {
-        const el = await fixtureSync(html`
+  it('rebuilds and recalcuates correctly intitially', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model id="model1">
                     <data>
@@ -35,13 +37,13 @@ describe('model tests', () => {
             </fx-fore>
         `);
 
-        await oneEvent(el, 'refresh-done');
-        const model = el.querySelector('fx-model');
-        console.log('modelitems ', model.modelItems);
-        expect(model.modelItems.length).to.equal(3);
-        // const mainGraph = model.mainGraph.overallOrder();
-        // expect(mainGraph.length).to.equal(6);
-        /*
+    await oneEvent(el, 'refresh-done');
+    const model = el.querySelector('fx-model');
+    console.log('modelitems ', model.modelItems);
+    expect(model.modelItems.length).to.equal(3);
+    // const mainGraph = model.mainGraph.overallOrder();
+    // expect(mainGraph.length).to.equal(6);
+    /*
         expect(mainGraph).to.eql([
           '/b[1]',
           '/a[1]:readonly',
@@ -52,36 +54,36 @@ describe('model tests', () => {
         ]);
     */
 
-        const mi1 = model.modelItems[0];
-        expect(mi1.value).to.equal('A');
-        expect(mi1.readonly).to.equal(false);
-        expect(mi1.required).to.equal(true);
-        expect(mi1.relevant).to.equal(true);
-        expect(mi1.constraint).to.equal(true);
-        expect(mi1.type).to.equal('xs:string');
-        expect(mi1.path).to.equal('$default/a[1]');
+    const mi1 = model.modelItems[0];
+    expect(mi1.value).to.equal('A');
+    expect(mi1.readonly).to.equal(false);
+    expect(mi1.required).to.equal(true);
+    expect(mi1.relevant).to.equal(true);
+    expect(mi1.constraint).to.equal(true);
+    expect(mi1.type).to.equal('xs:string');
+    expect(mi1.path).to.equal('$default/a[1]');
 
-        const mi2 = model.modelItems[1];
-        expect(mi2.value).to.equal('B');
-        expect(mi2.readonly).to.equal(false);
-        expect(mi2.required).to.equal(true);
-        expect(mi2.relevant).to.equal(true);
-        expect(mi2.constraint).to.equal(true);
-        expect(mi2.type).to.equal('xs:string');
-        expect(mi2.path).to.equal('$default/b[1]');
+    const mi2 = model.modelItems[1];
+    expect(mi2.value).to.equal('B');
+    expect(mi2.readonly).to.equal(false);
+    expect(mi2.required).to.equal(true);
+    expect(mi2.relevant).to.equal(true);
+    expect(mi2.constraint).to.equal(true);
+    expect(mi2.type).to.equal('xs:string');
+    expect(mi2.path).to.equal('$default/b[1]');
 
-        const mi3 = model.modelItems[2];
-        expect(mi3.value).to.equal('C');
-        expect(mi3.readonly).to.equal(false);
-        expect(mi3.required).to.equal(false);
-        expect(mi3.relevant).to.equal(true);
-        expect(mi3.constraint).to.equal(true);
-        expect(mi3.type).to.equal('xs:string');
-        expect(mi3.path).to.equal('$default/c[1]');
-    });
+    const mi3 = model.modelItems[2];
+    expect(mi3.value).to.equal('C');
+    expect(mi3.readonly).to.equal(false);
+    expect(mi3.required).to.equal(false);
+    expect(mi3.relevant).to.equal(true);
+    expect(mi3.constraint).to.equal(true);
+    expect(mi3.type).to.equal('xs:string');
+    expect(mi3.path).to.equal('$default/c[1]');
+  });
 
-    it('rebuilds and recalcuates correctly after value change', async () => {
-        const el = await fixtureSync(html`
+  it('rebuilds and recalcuates correctly after value change', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model id="model1">
                     <data>
@@ -111,46 +113,46 @@ describe('model tests', () => {
             </fx-fore>
         `);
 
-        await oneEvent(el, 'refresh-done');
-        const model = el.querySelector('fx-model');
-        console.log('modelitems ', model.modelItems);
+    await oneEvent(el, 'refresh-done');
+    const model = el.querySelector('fx-model');
+    console.log('modelitems ', model.modelItems);
 
-        const mi = model.modelItems[1]; // <b>B</b>
-        expect(mi.path).to.equal('$default/b[1]');
+    const mi = model.modelItems[1]; // <b>B</b>
+    expect(mi.path).to.equal('$default/b[1]');
 
-        mi.value = 'BB'; // making <c>C</c> non-relevant
-        model.updateModel();
+    mi.value = 'BB'; // making <c>C</c> non-relevant
+    model.updateModel();
 
-        const mi1 = model.modelItems[0];
-        expect(mi1.value).to.equal('A');
-        expect(mi1.readonly).to.equal(true);
-        expect(mi1.required).to.equal(false);
-        expect(mi1.relevant).to.equal(true);
-        expect(mi1.constraint).to.equal(true);
-        expect(mi1.type).to.equal('xs:string');
-        expect(mi1.path).to.equal('$default/a[1]');
+    const mi1 = model.modelItems[0];
+    expect(mi1.value).to.equal('A');
+    expect(mi1.readonly).to.equal(true);
+    expect(mi1.required).to.equal(false);
+    expect(mi1.relevant).to.equal(true);
+    expect(mi1.constraint).to.equal(true);
+    expect(mi1.type).to.equal('xs:string');
+    expect(mi1.path).to.equal('$default/a[1]');
 
-        const mi2 = model.modelItems[1];
-        expect(mi2.value).to.equal('BB');
-        expect(mi2.readonly).to.equal(false);
-        expect(mi2.required).to.equal(true);
-        expect(mi2.relevant).to.equal(true);
-        expect(mi2.constraint).to.equal(true);
-        expect(mi2.type).to.equal('xs:string');
-        expect(mi2.path).to.equal('$default/b[1]');
+    const mi2 = model.modelItems[1];
+    expect(mi2.value).to.equal('BB');
+    expect(mi2.readonly).to.equal(false);
+    expect(mi2.required).to.equal(true);
+    expect(mi2.relevant).to.equal(true);
+    expect(mi2.constraint).to.equal(true);
+    expect(mi2.type).to.equal('xs:string');
+    expect(mi2.path).to.equal('$default/b[1]');
 
-        const mi3 = model.modelItems[2];
-        expect(mi3.value).to.equal('C');
-        expect(mi3.readonly).to.equal(false);
-        expect(mi3.required).to.equal(false);
-        expect(mi3.relevant).to.equal(false);
-        expect(mi3.constraint).to.equal(true);
-        expect(mi3.type).to.equal('xs:string');
-        expect(mi3.path).to.equal('$default/c[1]');
-    });
+    const mi3 = model.modelItems[2];
+    expect(mi3.value).to.equal('C');
+    expect(mi3.readonly).to.equal(false);
+    expect(mi3.required).to.equal(false);
+    expect(mi3.relevant).to.equal(false);
+    expect(mi3.constraint).to.equal(true);
+    expect(mi3.type).to.equal('xs:string');
+    expect(mi3.path).to.equal('$default/c[1]');
+  });
 
-    it('recalcuates the whole graph (maingraph)', async () => {
-        const el = await fixtureSync(html`
+  it('recalcuates the whole graph (maingraph)', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-action event="ready">
                     <fx-update></fx-update>
@@ -211,21 +213,21 @@ describe('model tests', () => {
             </fx-fore>
         `);
 
-        await oneEvent(el, 'refresh-done');
-        const model = el.querySelector('fx-model');
-        // console.log('modelitems ', model.modelItems);
+    await oneEvent(el, 'refresh-done');
+    const model = el.querySelector('fx-model');
+    // console.log('modelitems ', model.modelItems);
 
-        // there are 8 modelItems
-        expect(model.modelItems.length).to.equal(8);
-        expect(Object.keys(model.mainGraph.nodes).length).to.equal(15);
+    // there are 8 modelItems
+    expect(model.modelItems.length).to.equal(8);
+    expect(Object.keys(model.mainGraph.nodes).length).to.equal(15);
 
-        // there are 15 nodes in mainGraph
-        // const graphCount = model.mainGraph.overallOrder(false);
-        // expect(graphCount.length).to.equal(15);
-    });
+    // there are 15 nodes in mainGraph
+    // const graphCount = model.mainGraph.overallOrder(false);
+    // expect(graphCount.length).to.equal(15);
+  });
 
-    it('recalcuates only the changed "a" subgraph of modelItems', async () => {
-        const el = await fixtureSync(html`
+  it('recalcuates only the changed "a" subgraph of modelItems', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model>
                     <data>
@@ -283,28 +285,28 @@ describe('model tests', () => {
             </fx-fore>
         `);
 
-        await oneEvent(el, 'ready');
-        const model = el.querySelector('fx-model');
-        // console.log('modelitems ', model.modelItems);
+    await oneEvent(el, 'ready');
+    const model = el.querySelector('fx-model');
+    // console.log('modelitems ', model.modelItems);
 
-        // there are 8 modelItems
-        expect(model.modelItems.length).to.equal(8);
-        expect(Object.keys(model.mainGraph.nodes).length).to.equal(15);
+    // there are 8 modelItems
+    expect(model.modelItems.length).to.equal(8);
+    expect(Object.keys(model.mainGraph.nodes).length).to.equal(15);
 
-        const changed = model.computes;
-        expect(changed).to.equal(6);
+    const changed = model.computes;
+    expect(changed).to.equal(6);
 
-        const cControl = el.querySelector('#c');
-        expect(cControl.getModelItem().value).to.equal('110');
+    const cControl = el.querySelector('#c');
+    expect(cControl.getModelItem().value).to.equal('110');
 
-        const dControl = el.querySelector('#d');
-        expect(dControl.getModelItem().value).to.equal('21');
+    const dControl = el.querySelector('#d');
+    expect(dControl.getModelItem().value).to.equal('21');
 
-        const eControl = el.querySelector('#e');
-        expect(eControl.getModelItem().value).to.equal('16');
-    });
-    it('recalcuates only the changed "b" subgraph of modelItems', async () => {
-        const el = await fixtureSync(html`
+    const eControl = el.querySelector('#e');
+    expect(eControl.getModelItem().value).to.equal('16');
+  });
+  it('recalcuates only the changed "b" subgraph of modelItems', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model>
                     <data>
@@ -362,23 +364,23 @@ describe('model tests', () => {
             </fx-fore>
         `);
 
-        await oneEvent(el, 'ready');
-        const model = el.querySelector('fx-model');
-        // console.log('modelitems ', model.modelItems);
-        expect(Object.keys(model.mainGraph.nodes).length).to.equal(15);
+    await oneEvent(el, 'ready');
+    const model = el.querySelector('fx-model');
+    // console.log('modelitems ', model.modelItems);
+    expect(Object.keys(model.mainGraph.nodes).length).to.equal(15);
 
-        const changed = model.computes;
-        expect(changed).to.equal(4);
+    const changed = model.computes;
+    expect(changed).to.equal(4);
 
-        const cControl = el.querySelector('#c');
-        expect(cControl.getModelItem().value).to.equal('110');
+    const cControl = el.querySelector('#c');
+    expect(cControl.getModelItem().value).to.equal('110');
 
-        const dControl = el.querySelector('#d');
-        expect(dControl.getModelItem().value).to.equal('21');
-    });
+    const dControl = el.querySelector('#d');
+    expect(dControl.getModelItem().value).to.equal('21');
+  });
 
-    it('recalcuates only the changed "x" subgraph of modelItems', async () => {
-        const el = await fixtureSync(html`
+  it('recalcuates only the changed "x" subgraph of modelItems', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model>
                     <data>
@@ -436,27 +438,27 @@ describe('model tests', () => {
             </fx-fore>
         `);
 
-        await oneEvent(el, 'ready');
-        const model = el.querySelector('fx-model');
-        // console.log('modelitems ', model.modelItems);
+    await oneEvent(el, 'ready');
+    const model = el.querySelector('fx-model');
+    // console.log('modelitems ', model.modelItems);
 
-        const changed = model.computes;
-        expect(changed).to.equal(2);
+    const changed = model.computes;
+    expect(changed).to.equal(2);
 
-        expect(Object.keys(model.mainGraph.nodes).length).to.equal(15);
+    expect(Object.keys(model.mainGraph.nodes).length).to.equal(15);
 
-        const {subgraph} = model;
-        expect(subgraph).to.exist;
+    const { subgraph } = model;
+    expect(subgraph).to.exist;
 
-        const xControl = el.querySelector('#x');
-        expect(xControl.getModelItem().value).to.equal('6');
+    const xControl = el.querySelector('#x');
+    expect(xControl.getModelItem().value).to.equal('6');
 
-        const yControl = el.querySelector('#y');
-        expect(yControl.getModelItem().value).to.equal('11');
-    });
+    const yControl = el.querySelector('#y');
+    expect(yControl.getModelItem().value).to.equal('11');
+  });
 
-    it('recalcuates node "string"', async () => {
-        const el = await fixtureSync(html`
+  it('recalcuates node "string"', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model>
                     <data>
@@ -496,19 +498,19 @@ describe('model tests', () => {
             </fx-fore>
         `);
 
-        await oneEvent(el, 'ready');
-        const model = el.querySelector('fx-model');
-        expect(model.mainGraph.nodes).to.exist;
-        expect(Object.keys(model.mainGraph.nodes)).to.exist;
-        expect(Object.keys(model.mainGraph.nodes).length).to.equal(4);
+    await oneEvent(el, 'ready');
+    const model = el.querySelector('fx-model');
+    expect(model.mainGraph.nodes).to.exist;
+    expect(Object.keys(model.mainGraph.nodes)).to.exist;
+    expect(Object.keys(model.mainGraph.nodes).length).to.equal(4);
 
-        const control = el.querySelector('#transform');
-        expect(control).to.exist;
-        expect(control.getAttribute('style')).to.equal('transform:translate(0px);');
-        control.setValue(10);
-        // control.blur();
-        expect(control.modelItem.value).to.equal('10');
+    const control = el.querySelector('#transform');
+    expect(control).to.exist;
+    expect(control.getAttribute('style')).to.equal('transform:translate(0px);');
+    control.setValue(10);
+    // control.blur();
+    expect(control.modelItem.value).to.equal('10');
 
-        expect(control.getAttribute('style')).to.equal('transform:translate(20px);');
-    });
+    expect(control.getAttribute('style')).to.equal('transform:translate(20px);');
+  });
 });

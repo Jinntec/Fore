@@ -1,11 +1,10 @@
 import getInScopeContext from './getInScopeContext.js';
 
 export const withDraggability = (superclass, isAlsoDraggable) =>
-
-/**
- * Adds draggability to generic components.
- * Add the `dnd` attribute to make it draggable
- */
+  /**
+   * Adds draggability to generic components.
+   * Add the `dnd` attribute to make it draggable
+   */
   class DraggableComponent extends superclass {
     static get properties() {
       return {

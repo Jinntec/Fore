@@ -26,6 +26,9 @@ export class FxModel extends HTMLElement {
      * @type {Map<string, DataElement>}
      */
     this.data = new Map();
+    /**
+     * @type {import('./modelitem.js').ModelItem[]}
+     */
     this.modelItems = [];
     this.defaultContext = {};
     this.changed = [];
@@ -44,7 +47,7 @@ export class FxModel extends HTMLElement {
 
   connectedCallback() {
     // console.log('connectedCallback ', this);
-    this.setAttribute('inert', true);
+    this.setAttribute('inert', 'true');
     this.shadowRoot.innerHTML = `
             <slot></slot>
         `;
@@ -227,8 +230,8 @@ export class FxModel extends HTMLElement {
       bind.init(this);
     });
 
-    console.log(`mainGraph`, this.mainGraph);
-    console.log(`rebuild mainGraph calc order`, this.mainGraph.overallOrder());
+    console.log('mainGraph', this.mainGraph);
+    console.log('rebuild mainGraph calc order', this.mainGraph.overallOrder());
 
     // this.dispatchEvent(new CustomEvent('rebuild-done', {detail: {maingraph: this.mainGraph}}));
     Fore.dispatch(this, 'rebuild-done', { maingraph: this.mainGraph });
@@ -347,8 +350,8 @@ export class FxModel extends HTMLElement {
 
   /**
    * (re-) computes a modelItem.
-   * @param node - the node the modelItem is attached to
-   * @param path - the canonical XPath of the node
+   * @param {Node} node - the node the modelItem is attached to
+   * @param {string} path - the canonical XPath of the node
    */
   compute(node, path) {
     const modelItem = this.getModelItem(node);
@@ -475,7 +478,7 @@ export class FxModel extends HTMLElement {
 
   /**
    *
-   * @param node
+   * @param {Node} node
    * @returns {ModelItem}
    */
   getModelItem(node) {
@@ -484,7 +487,7 @@ export class FxModel extends HTMLElement {
 
   /**
    * get the default evaluation context for this model.
-   * @returns {Element} the
+   * @returns {Element}
    */
   getDefaultContext() {
     return this.data[0].getDefaultContext();

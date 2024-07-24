@@ -57,6 +57,9 @@ export default class FxCall extends AbstractAction {
      * find action and execute it
       */
   async _callAction() {
+    /**
+     * @type {import('./fx-action.js').FxAction}
+     */
     const action = document.querySelector(`#${this.action}`);
     if (action) {
       await action.perform();

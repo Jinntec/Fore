@@ -91,7 +91,7 @@ export class FxInspector extends HTMLElement {
       // console.log('pre', pre);
       const fore = this.closest('fx-fore');
 
-      Array.from(pre).forEach((element) => {
+      Array.from(pre).forEach(element => {
         const inst = fore.getModel().getInstance(element.getAttribute('id'));
         if (inst.getAttribute('type') === 'xml') {
           element.innerText = this.serializeDOM(inst.instanceData);
@@ -116,18 +116,18 @@ export class FxInspector extends HTMLElement {
             <slot></slot>
             <span class="handle"></span>
                 ${instances.map(
-    instance => `
+                  instance => `
                   <details>
                       <summary>${instance.id}</summary>
                       <pre id="${instance.id}"></pre>
                   </details>
                 `,
-  )}
+                )}
             </div>
         `;
 
     const handle = this.shadowRoot.querySelector('.handle');
-    handle.addEventListener('click', (e) => {
+    handle.addEventListener('click', e => {
       // console.log('toggling');
       if (this.hasAttribute('open')) {
         this.removeAttribute('open');

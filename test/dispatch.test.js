@@ -1,182 +1,184 @@
 /* eslint-disable no-unused-expressions */
-import {html, fixtureSync, expect, oneEvent} from '@open-wc/testing';
+import {
+  html, fixtureSync, expect, oneEvent,
+} from '@open-wc/testing';
 
 import '../index.js';
 
 describe('fx-dispatch tests', () => {
-    it('dispatches an event with a static property', async () => {
-        const el = await fixtureSync(html`
-            <fx-fore>
-                <fx-model>
-                    <data></data>
-                </fx-model>
-                <fx-trigger>
-                    <button>dispatch it</button>
-                    <fx-dispatch name="foo" targetid="bar">
-                        <fx-property name="string" value="aString"></fx-property>
-                    </fx-dispatch>
-                </fx-trigger>
-            </fx-fore>
-            <div id="bar"></div>
-        `);
+  it('dispatches an event with a static property', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+            <data></data>
+        </fx-model>
+        <fx-trigger>
+          <button>dispatch it</button>
+          <fx-dispatch name="foo" targetid="bar">
+            <fx-property name="string" value="aString"></fx-property>
+          </fx-dispatch>
+        </fx-trigger>
+      </fx-fore>
+      <div id="bar"></div>
+    `);
 
-        await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'refresh-done');
 
-        const bar = document.getElementById('bar');
-        bar.addEventListener('foo', event => {
-            bar.innerText = event.detail.string;
-        });
-
-        const trigger = el.querySelector('fx-trigger');
-        await trigger.performActions();
-
-        expect(bar.innerText).to.equal('aString');
+    const bar = document.getElementById('bar');
+    bar.addEventListener('foo', (event) => {
+      bar.innerText = event.detail.string;
     });
 
-    it('dispatches an event with a dynamic property', async () => {
-        const el = await fixtureSync(html`
-            <fx-fore>
-                <fx-model>
-                    <data>
-                        <foo>fooVal</foo>
-                        <bar>barVal</bar>
-                    </data>
-                </fx-model>
-                <fx-trigger>
-                    <button>dispatch it</button>
-                    <fx-dispatch name="foo" targetid="bar">
+    const trigger = el.querySelector('fx-trigger');
+    await trigger.performActions();
+
+    expect(bar.innerText).to.equal('aString');
+  });
+
+  it('dispatches an event with a dynamic property', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+            <data>
+              <foo>fooVal</foo>
+              <bar>barVal</bar>
+            </data>
+        </fx-model>
+        <fx-trigger>
+          <button>dispatch it</button>
+          <fx-dispatch name="foo" targetid="bar">
                         <fx-property name="instance" expr="$default"></fx-property>
-                    </fx-dispatch>
-                </fx-trigger>
-            </fx-fore>
-            <div id="bar"></div>
-        `);
+          </fx-dispatch>
+        </fx-trigger>
+      </fx-fore>
+      <div id="bar"></div>
+    `);
 
-        await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'refresh-done');
 
-        const bar = document.getElementById('bar');
-        bar.addEventListener('foo', event => {
-            bar.innerText = event.detail.instance;
-        });
-
-        const trigger = el.querySelector('fx-trigger');
-        await trigger.performActions();
-
-        expect(bar.innerText).to.equal('<data>\n<foo>fooVal</foo>\n<bar>barVal</bar>\n</data>');
+    const bar = document.getElementById('bar');
+    bar.addEventListener('foo', (event) => {
+      bar.innerText = event.detail.instance;
     });
 
-    it('dispatches an event with a mixed properties', async () => {
-        const el = await fixtureSync(html`
-            <fx-fore>
-                <fx-model>
-                    <data>
-                        <foo>fooVal</foo>
-                        <bar>barVal</bar>
-                    </data>
-                </fx-model>
-                <fx-trigger>
-                    <button>dispatch it</button>
-                    <fx-dispatch name="foo" targetid="bar">
+    const trigger = el.querySelector('fx-trigger');
+    await trigger.performActions();
+
+    expect(bar.innerText).to.equal('<data>\n<foo>fooVal</foo>\n<bar>barVal</bar>\n</data>');
+  });
+
+  it('dispatches an event with a mixed properties', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+            <data>
+              <foo>fooVal</foo>
+              <bar>barVal</bar>
+            </data>
+        </fx-model>
+        <fx-trigger>
+          <button>dispatch it</button>
+          <fx-dispatch name="foo" targetid="bar">
                         <fx-property name="instance" expr="$default"></fx-property>
-                        <fx-property name="string" value="aString"></fx-property>
-                    </fx-dispatch>
-                </fx-trigger>
-            </fx-fore>
-            <div id="bar"></div>
-            <div id="displayValue"></div>
-        `);
+            <fx-property name="string" value="aString"></fx-property>
+          </fx-dispatch>
+        </fx-trigger>
+      </fx-fore>
+      <div id="bar"></div>
+      <div id="displayValue"></div>
+    `);
 
-        await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'refresh-done');
 
-        const bar = document.getElementById('bar');
-        const dVal = document.getElementById('displayValue');
-        bar.addEventListener('foo', event => {
-            bar.innerText = event.detail.instance;
-            dVal.innerText = event.detail.string;
-        });
-
-        const trigger = el.querySelector('fx-trigger');
-        await trigger.performActions();
-
-        expect(bar.innerText).to.equal('<data>\n<foo>fooVal</foo>\n<bar>barVal</bar>\n</data>');
-        expect(dVal.innerText).to.equal('aString');
+    const bar = document.getElementById('bar');
+    const dVal = document.getElementById('displayValue');
+    bar.addEventListener('foo', (event) => {
+      bar.innerText = event.detail.instance;
+      dVal.innerText = event.detail.string;
     });
 
-    it('fires within an fx-action', async () => {
-        const el = await fixtureSync(html`
-            <fx-fore>
-                <fx-model>
-                    <data>
-                        <foo>fooVal</foo>
-                        <bar>barVal</bar>
-                    </data>
-                </fx-model>
-                <fx-trigger>
-                    <button>dispatch it</button>
-                    <fx-action>
-                        <fx-dispatch name="foo" targetid="bar">
+    const trigger = el.querySelector('fx-trigger');
+    await trigger.performActions();
+
+    expect(bar.innerText).to.equal('<data>\n<foo>fooVal</foo>\n<bar>barVal</bar>\n</data>');
+    expect(dVal.innerText).to.equal('aString');
+  });
+
+  it('fires within an fx-action', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+            <data>
+              <foo>fooVal</foo>
+              <bar>barVal</bar>
+            </data>
+        </fx-model>
+        <fx-trigger>
+          <button>dispatch it</button>
+          <fx-action>
+            <fx-dispatch name="foo" targetid="bar">
                             <fx-property name="instance" expr="$default"></fx-property>
-                            <fx-property name="string" value="aString"></fx-property>
-                        </fx-dispatch>
-                    </fx-action>
-                </fx-trigger>
-            </fx-fore>
-            <div id="bar"></div>
-            <div id="displayValue"></div>
-        `);
+              <fx-property name="string" value="aString"></fx-property>
+            </fx-dispatch>
+          </fx-action>
+        </fx-trigger>
+      </fx-fore>
+      <div id="bar"></div>
+      <div id="displayValue"></div>
+    `);
 
-        await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'refresh-done');
 
-        const bar = document.getElementById('bar');
-        const dVal = document.getElementById('displayValue');
-        bar.addEventListener('foo', event => {
-            bar.innerText = event.detail.instance;
-            dVal.innerText = event.detail.string;
-        });
-
-        const trigger = el.querySelector('fx-trigger');
-        await trigger.performActions();
-
-        expect(bar.innerText).to.equal('<data>\n<foo>fooVal</foo>\n<bar>barVal</bar>\n</data>');
-        expect(dVal.innerText).to.equal('aString');
+    const bar = document.getElementById('bar');
+    const dVal = document.getElementById('displayValue');
+    bar.addEventListener('foo', (event) => {
+      bar.innerText = event.detail.instance;
+      dVal.innerText = event.detail.string;
     });
 
-    it('fires from another event', async () => {
-        const el = await fixtureSync(html`
-            <fx-fore>
-                <fx-model>
-                    <data>
-                        <foo>fooVal</foo>
-                        <bar>barVal</bar>
-                    </data>
-                </fx-model>
-                <fx-trigger>
-                    <button>change value</button>
-                    <fx-setvalue ref="foo">foo</fx-setvalue>
-                </fx-trigger>
+    const trigger = el.querySelector('fx-trigger');
+    await trigger.performActions();
 
-                <fx-control ref="foo">
-                    <fx-dispatch name="click" targetid="bar" event="value-changed">
-                        <fx-property name="string" value="aString"></fx-property>
-                    </fx-dispatch>
-                </fx-control>
-            </fx-fore>
-            <div id="bar" onclick="event.target.innerHTML = 'foobar'"></div>
-        `);
+    expect(bar.innerText).to.equal('<data>\n<foo>fooVal</foo>\n<bar>barVal</bar>\n</data>');
+    expect(dVal.innerText).to.equal('aString');
+  });
 
-        await oneEvent(el, 'refresh-done');
+  it('fires from another event', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+            <data>
+              <foo>fooVal</foo>
+              <bar>barVal</bar>
+            </data>
+        </fx-model>
+        <fx-trigger>
+          <button>change value</button>
+          <fx-setvalue ref="foo">foo</fx-setvalue>
+        </fx-trigger>
 
-        const bar = document.getElementById('bar');
-        const control = el.querySelector('fx-control');
-        /*
-                    bar.addEventListener('click', (event) => {
-                        bar.innerText = event.detail.instance;
-                    });
-            */
+        <fx-control ref="foo">
+          <fx-dispatch name="click" targetid="bar" event="value-changed">
+            <fx-property name="string" value="aString"></fx-property>
+          </fx-dispatch>
+        </fx-control>
+      </fx-fore>
+      <div id="bar" onclick="event.target.innerHTML = 'foobar'"></div>
+    `);
 
-        const trigger = el.querySelector('fx-trigger');
-        await trigger.performActions();
+    await oneEvent(el, 'refresh-done');
 
-        expect(bar.innerText).to.equal('foobar');
-    });
+    const bar = document.getElementById('bar');
+    const control = el.querySelector('fx-control');
+    /*
+                bar.addEventListener('click', (event) => {
+                    bar.innerText = event.detail.instance;
+                });
+        */
+
+    const trigger = el.querySelector('fx-trigger');
+    await trigger.performActions();
+
+    expect(bar.innerText).to.equal('foobar');
+  });
 });

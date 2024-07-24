@@ -1,6 +1,6 @@
 import { Fore } from './fore.js';
 import { Relevance } from './relevance.js';
-import { foreElementMixin } from './ForeElementMixin.js';
+import ForeElementMixin from './ForeElementMixin.js';
 import { evaluateXPathToString, evaluateXPath } from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
 import { XPathUtil } from './xpath-util.js';
@@ -8,7 +8,7 @@ import { XPathUtil } from './xpath-util.js';
 /**
  * todo: validate='false'
  */
-export class FxSubmission extends foreElementMixin(HTMLElement) {
+export class FxSubmission extends ForeElementMixin {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
@@ -287,7 +287,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
       // this.method = 'post';
       const params = new URLSearchParams();
       // console.log('nodes to serialize', relevantNodes);
-      Array.from(relevantNodes.children).forEach((child) => {
+      Array.from(relevantNodes.children).forEach(child => {
         params.append(child.nodeName, child.textContent);
       });
       return params;
@@ -321,7 +321,7 @@ export class FxSubmission extends foreElementMixin(HTMLElement) {
 
     // ### add header defined by fx-header elements
     const headerElems = this.querySelectorAll('fx-header');
-    Array.from(headerElems).forEach((header) => {
+    Array.from(headerElems).forEach(header => {
       const { name } = header;
       const val = header.getValue();
       headers.append(name, val);

@@ -1,13 +1,12 @@
 import '../fx-model.js';
-import { foreElementMixin } from '../ForeElementMixin.js';
-import { Fore } from '../fore.js';
+import ForeElementMixin from '../ForeElementMixin.js';
 
 /**
  * `fx-container` -
  * is a general class for container elements.
  *
  */
-export class FxContainer extends foreElementMixin(HTMLElement) {
+export class FxContainer extends ForeElementMixin {
   static get properties() {
     return {
       ...super.properties,

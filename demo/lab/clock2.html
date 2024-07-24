@@ -47,7 +47,6 @@
                     <fx-bind ref="second" calculate="seconds-from-time(xs:time(../time))"></fx-bind>
                     <fx-bind ref="s-deg" calculate="../second * 6"></fx-bind>
 
-
                     <fx-function signature="now() as xs:string" type="text/javascript">
                         const now = new Date();
                         return `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;

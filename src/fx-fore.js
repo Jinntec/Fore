@@ -225,7 +225,7 @@ export class FxFore extends HTMLElement {
   connectedCallback() {
     this.style.visibility = 'hidden';
     console.time('init');
-    this.strict = this.hasAttribute('strict') ? true : false;
+    this.strict = !!this.hasAttribute('strict');
     /*
         document.addEventListener('ready', (e) =>{
           if(e.target !== this){
@@ -339,6 +339,13 @@ export class FxFore extends HTMLElement {
       document.body.appendChild(devtools);
     }
   }
+
+  /**
+   * Add a model item to the refresh list
+   *
+   * @param {import('./modelitem.js').ModelItem} modelItem
+   * @returns {void}
+   */
   addToRefresh(modelItem) {
     const found = this.toRefresh.find(mi => mi.path === modelItem.path);
     if (!found) {
@@ -666,8 +673,8 @@ export class FxFore extends HTMLElement {
 
   /**
    * evaluate a template expression on a node either text- or attribute node.
-   * @param expr The string to parse for expressions
-   * @param node the node which will get updated with evaluation result
+   * @param {string} expr The string to parse for expressions
+   * @param {Node} node the node which will get updated with evaluation result
    */
   evaluateTemplateExpression(expr, node) {
     // ### do not evaluate template expressions with nonrelevant sections
@@ -882,7 +889,6 @@ export class FxFore extends HTMLElement {
                 const steps = ref.split('/');
                 steps.forEach(step => {
                   console.log('step ', step);
-
 
                 });
               }

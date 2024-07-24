@@ -1,11 +1,13 @@
-import {html, fixtureSync, expect, oneEvent} from '@open-wc/testing';
+import {
+  html, fixtureSync, expect, oneEvent,
+} from '@open-wc/testing';
 
 import '../index.js';
 import * as fx from 'fontoxpath';
 
 describe('replace Tests', () => {
-    it('replaces a node with one from another instance', async () => {
-        const el = await fixtureSync(html`
+  it('replaces a node with one from another instance', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model id="model1">
                     <data>
@@ -33,30 +35,30 @@ describe('replace Tests', () => {
             </fx-fore>
         `);
 
-        await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'refresh-done');
 
-        const inst = el
-            .getModel()
-            .getDefaultData()
-            .getDefaultContext();
-        const initial = fx.evaluateXPath('//value', inst);
-        expect(initial).to.exist;
+    const inst = el
+      .getModel()
+      .getDefaultData()
+      .getDefaultContext();
+    const initial = fx.evaluateXPath('//value', inst);
+    expect(initial).to.exist;
 
-        const trigger = el.querySelector('fx-trigger');
-        await trigger.performActions();
+    const trigger = el.querySelector('fx-trigger');
+    await trigger.performActions();
 
-        const replaced = fx.evaluateXPath('list', inst, null, {});
-        expect(replaced).to.exist;
-        const values = fx.evaluateXPathToNodes('list/value', inst, null, {});
-        expect(values.length).to.equal(3);
-        expect(values[0].outerHTML).to.equal('<value>A</value>');
-        expect(values[1].outerHTML).to.equal('<value>B</value>');
-        expect(values[2].outerHTML).to.equal('<value>C</value>');
-        console.log('values', values);
-    });
+    const replaced = fx.evaluateXPath('list', inst, null, {});
+    expect(replaced).to.exist;
+    const values = fx.evaluateXPathToNodes('list/value', inst, null, {});
+    expect(values.length).to.equal(3);
+    expect(values[0].outerHTML).to.equal('<value>A</value>');
+    expect(values[1].outerHTML).to.equal('<value>B</value>');
+    expect(values[2].outerHTML).to.equal('<value>C</value>');
+    console.log('values', values);
+  });
 
-    it('replaces an attribute with one from another location', async () => {
-        const el = await fixtureSync(html`
+  it('replaces an attribute with one from another location', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model id="model1">
                     <data>
@@ -73,22 +75,22 @@ describe('replace Tests', () => {
             </fx-fore>
         `);
 
-        await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'refresh-done');
 
-        const inst = el
-            .getModel()
-            .getDefaultData()
-            .getDefaultContext();
-        const initial = fx.evaluateXPath('//value', inst);
-        expect(initial).to.exist;
+    const inst = el
+      .getModel()
+      .getDefaultData()
+      .getDefaultContext();
+    const initial = fx.evaluateXPath('//value', inst);
+    expect(initial).to.exist;
 
-        const trigger = el.querySelector('fx-trigger');
-        await trigger.performActions();
+    const trigger = el.querySelector('fx-trigger');
+    await trigger.performActions();
 
-        const replaced = fx.evaluateXPath('//value/@replaced', inst, null, {});
-        expect(replaced).to.exist;
-        console.log('replaced', replaced);
-        console.log('replaced inst', inst);
-        expect(replaced).to.equal('foo');
-    });
+    const replaced = fx.evaluateXPath('//value/@replaced', inst, null, {});
+    expect(replaced).to.exist;
+    console.log('replaced', replaced);
+    console.log('replaced inst', inst);
+    expect(replaced).to.equal('foo');
+  });
 });

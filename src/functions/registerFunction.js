@@ -75,15 +75,20 @@ export default function (functionObject, formElement) {
     case 'text/xpath': {
       const typedValueFactories = paramParts.map(param => createTypedValueFactory(param.variableType));
       const language = type === 'text/xpath'
-        ? 'XPath3.1' : type === 'text/xquery'
-          ? 'XQuery3.1' : 'XQueryUpdate3.1';
+        ? 'XPath3.1'
+        : type === 'text/xquery'
+          ? 'XQuery3.1'
+          : 'XQueryUpdate3.1';
       const fun = (domFacade, ...args) => evaluateXPath(
         functionObject.functionBody,
         formElement.getInScopeContext(),
         formElement.getOwnerForm(),
         paramParts.reduce((variablesByName, paramPart, i) => {
           // Because we know the XPath type here (from the function declaration) we do not have to depend on the implicit typings
-				  variablesByName[paramPart.variableName.replace('$', '')] = typedValueFactories[i](args[i], domFacade);
+          variablesByName[paramPart.variableName.replace('$', '')] = typedValueFactories[i](
+            args[i],
+            domFacade,
+          );
           return variablesByName;
         }, {}),
         { language },

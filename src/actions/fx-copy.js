@@ -48,7 +48,7 @@ export default class FxCopy extends AbstractAction {
     }
   }
 
-/*
+  /*
     setValue(modelItem, newVal) {
         const item = modelItem;
         if (!item) return;

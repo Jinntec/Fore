@@ -18,8 +18,8 @@
 <fx-fore>
     <fx-model id="model-1">
         <fx-instance
-            id="default" 
-            src="data/ling-checkboxes.xml" 
+            id="default"
+            src="data/ling-checkboxes.xml"
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
         <fx-instance id="i-functions" src="data/xml/functions.xml"/>
     </fx-model>
@@ -29,7 +29,7 @@
     </header>
 
 <!--    <main>-->
-    <!-- begin section general -->    
+    <!-- begin section general -->
     <fx-control ref="//m/@function" update-event="input">
         <fx-items ref="data('i-functions')//option" class="widget">
             <template>
@@ -40,10 +40,8 @@
             </template>
         </fx-items>
     </fx-control>
-                    
+
     <!-- // end section general -->
-        
-       
 
 <!--    </main>-->
     <pre>

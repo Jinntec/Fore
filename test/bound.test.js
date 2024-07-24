@@ -1,11 +1,13 @@
 /* eslint-disable no-unused-expressions */
-import {html, fixture, expect, elementUpdated, oneEvent, fixtureSync} from '@open-wc/testing';
+import {
+  html, fixture, expect, elementUpdated, oneEvent, fixtureSync,
+} from '@open-wc/testing';
 
 import '../index.js';
 
 describe('fx-control tests', () => {
-    it('is creates a native input when no control is provided', async () => {
-        const el = await fixture(html`
+  it('is creates a native input when no control is provided', async () => {
+    const el = await fixture(html`
             <fx-fore>
                 <fx-model id="model1">
                     <data>
@@ -23,24 +25,24 @@ describe('fx-control tests', () => {
             </fx-fore>
         `);
 
-        // await elementUpdated(el);
-        const bound = el.querySelector('#input1');
-        expect(bound).to.exist;
+    // await elementUpdated(el);
+    const bound = el.querySelector('#input1');
+    expect(bound).to.exist;
 
-        const input = bound.widget;
-        expect(input).to.exist;
+    const input = bound.widget;
+    expect(input).to.exist;
 
-        expect(bound.modelItem.value).to.equal('foobar');
-        expect(input.value).to.equal('foobar');
+    expect(bound.modelItem.value).to.equal('foobar');
+    expect(input.value).to.equal('foobar');
 
-        bound.modelItem.value = 'new';
-        // input.blur();
-        // await oneEvent(bound, 'value-changed');
-        // expect(bound.modelItem.value).to.equal('new');
-    });
+    bound.modelItem.value = 'new';
+    // input.blur();
+    // await oneEvent(bound, 'value-changed');
+    // expect(bound.modelItem.value).to.equal('new');
+  });
 
-    it('is initialized', async () => {
-        const el = await fixture(html`
+  it('is initialized', async () => {
+    const el = await fixture(html`
             <fx-fore>
                 <fx-model id="model1">
                     <data>
@@ -59,18 +61,18 @@ describe('fx-control tests', () => {
             </fx-fore>
         `);
 
-        // await elementUpdated(el);
-        // await oneEvent(el, 'refresh-done');
+    // await elementUpdated(el);
+    // await oneEvent(el, 'refresh-done');
 
-        const bound = el.querySelector('#input1');
-        expect(bound).to.exist;
+    const bound = el.querySelector('#input1');
+    expect(bound).to.exist;
 
-        const control = document.querySelector('.widget');
-        expect(bound.widget).to.equal(control);
-    });
+    const control = document.querySelector('.widget');
+    expect(bound.widget).to.equal(control);
+  });
 
-    it('creates fx-control', async () => {
-        const el = await fixture(html`
+  it('creates fx-control', async () => {
+    const el = await fixture(html`
             <fx-fore>
                 <fx-model id="model1">
                     <data>
@@ -89,13 +91,13 @@ describe('fx-control tests', () => {
             </fx-fore>
         `);
 
-        await elementUpdated(el);
-        const bound = el.querySelector('#input1');
-        expect(bound).to.exist;
-    });
+    await elementUpdated(el);
+    const bound = el.querySelector('#input1');
+    expect(bound).to.exist;
+  });
 
-    it('it updates when update event fires', async () => {
-        const el = await fixture(html`
+  it('it updates when update event fires', async () => {
+    const el = await fixture(html`
             <fx-fore>
                 <fx-model id="model1">
                     <data>
@@ -117,19 +119,19 @@ describe('fx-control tests', () => {
             </fx-fore>
         `);
 
-        // await elementUpdated(el);
+    // await elementUpdated(el);
 
-        const bound = el.querySelector('#input1');
-        expect(bound).to.exist;
+    const bound = el.querySelector('#input1');
+    expect(bound).to.exist;
 
-        const i1 = document.getElementById('input1');
-        i1.value = 'foo';
-        i1.blur();
-        expect(i1.value).to.equal('foo');
-    });
+    const i1 = document.getElementById('input1');
+    i1.value = 'foo';
+    i1.blur();
+    expect(i1.value).to.equal('foo');
+  });
 
-    it('initialzes native select', async () => {
-        const el = await fixture(html`
+  it('initialzes native select', async () => {
+    const el = await fixture(html`
             <fx-fore>
                 <fx-model>
                     <data>
@@ -149,21 +151,21 @@ describe('fx-control tests', () => {
             </fx-fore>
         `);
 
-        // await elementUpdated(el);
+    // await elementUpdated(el);
 
-        const bound = el.querySelector('fx-control');
-        expect(bound).to.exist;
-        expect(bound.valueProp).to.equal('value');
-        expect(bound[bound.valueProp]).to.equal('foo');
+    const bound = el.querySelector('fx-control');
+    expect(bound).to.exist;
+    expect(bound.valueProp).to.equal('value');
+    expect(bound[bound.valueProp]).to.equal('foo');
 
-        const select = el.querySelector('select');
-        expect(select).to.exist;
-        console.log('select value ', select.value);
-        // expect(select.value).to.equal('foo');
-    });
+    const select = el.querySelector('select');
+    expect(select).to.exist;
+    console.log('select value ', select.value);
+    // expect(select.value).to.equal('foo');
+  });
 
-    it('does not show trigger bound to non-existing node', async () => {
-        const el = await fixture(html`
+  it('does not show trigger bound to non-existing node', async () => {
+    const el = await fixture(html`
             <fx-fore>
                 <fx-model>
                     <data>
@@ -176,15 +178,15 @@ describe('fx-control tests', () => {
             </fx-fore>
         `);
 
-        // await elementUpdated(el);
+    // await elementUpdated(el);
 
-        const bound = el.querySelector('fx-trigger');
-        expect(bound).to.exist;
-        expect(bound.hasAttribute('nonrelevant')).to.be.true;
-    });
+    const bound = el.querySelector('fx-trigger');
+    expect(bound).to.exist;
+    expect(bound.hasAttribute('nonrelevant')).to.be.true;
+  });
 
-    it('Correctly checks lone checkboxes', async () => {
-        const el = await fixtureSync(html`
+  it('Correctly checks lone checkboxes', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model id="model1">
                     <data>
@@ -209,18 +211,18 @@ describe('fx-control tests', () => {
             </fx-fore>
         `);
 
-        // await elementUpdated(el);
-        await oneEvent(el, 'refresh-done');
+    // await elementUpdated(el);
+    await oneEvent(el, 'refresh-done');
 
-        const checkbox = el.querySelector('#checkbox input');
-        checkbox.click();
+    const checkbox = el.querySelector('#checkbox input');
+    checkbox.click();
 
-        const resultSpan = el.querySelector('#result');
-        expect(resultSpan.innerText).to.equal('foobar');
-    });
+    const resultSpan = el.querySelector('#result');
+    expect(resultSpan.innerText).to.equal('foobar');
+  });
 
-    it('Correctly unchecks lone checkboxes', async () => {
-        const el = await fixtureSync(html`
+  it('Correctly unchecks lone checkboxes', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model id="model1">
                     <data>
@@ -245,12 +247,12 @@ describe('fx-control tests', () => {
             </fx-fore>
         `);
 
-        // await elementUpdated(el);
-        await oneEvent(el, 'refresh-done');
+    // await elementUpdated(el);
+    await oneEvent(el, 'refresh-done');
 
-        const checkbox = el.querySelector('#checkbox input');
-        checkbox.click();
-        const resultSpan = el.querySelector('#result');
-        expect(resultSpan.innerText).to.equal('');
-    });
+    const checkbox = el.querySelector('#checkbox input');
+    checkbox.click();
+    const resultSpan = el.querySelector('#result');
+    expect(resultSpan.innerText).to.equal('');
+  });
 });

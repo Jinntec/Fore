@@ -10,7 +10,7 @@ import { FxContainer } from './fx-container.js';
  * @customElement
  */
 class FxCase extends FxContainer {
-/*
+  /*
   constructor() {
     super();
   }

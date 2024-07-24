@@ -1,12 +1,12 @@
 function legend(nodesData, targetElement) {
-  var x = -targetElement.clientWidth / 2 + 50;
-  var y = -targetElement.clientHeight / 2 + 50;
-  var step = 70;
+  const x = -targetElement.clientWidth / 2 + 50;
+  const y = -targetElement.clientHeight / 2 + 50;
+  const step = 70;
 
   nodesData.push({
     id: 1000,
-    x: x,
-    y: y,
+    x,
+    y,
     label: 'calculate',
     group: 'calculate',
     value: 1,
@@ -15,7 +15,7 @@ function legend(nodesData, targetElement) {
   });
   nodesData.push({
     id: 1001,
-    x: x,
+    x,
     y: y + step,
     label: 'readonly',
     group: 'readonly',
@@ -53,30 +53,31 @@ function renderGraph(foreNodes, targetElement) {
   const entryNodes = foreNodes;
 
   // build the nodes data
-  Object.keys(entryNodes).filter(node => {
+  Object.keys(entryNodes).filter((node) => {
     console.log('node', node);
-      nodesData.push({
-        id: node,
-        label: node.textContent + '\n' + node,
-        shape: 'circle',
-        size: 250,
-        group: 'node',
-        shadow: false,
-        selectable: false,
-      });
+    nodesData.push({
+      id: node,
+      label: `${node.textContent}\n${node}`,
+      shape: 'circle',
+      size: 250,
+      group: 'node',
+      shadow: false,
+      selectable: false,
+    });
   });
 
-
-  var data = {
+  const data = {
     nodes: nodesData,
     edges: edgeData,
   };
-  var options = {
+  const options = {
     interaction: {
       zoomSpeed: 0.3,
     },
     nodes: {
-      margin: { top: 10, left: 10, bottom: 10, right: 10 },
+      margin: {
+        top: 10, left: 10, bottom: 10, right: 10,
+      },
       font: {
         size: 22,
       },
@@ -86,7 +87,7 @@ function renderGraph(foreNodes, targetElement) {
       },
     },
     layout: {
-      improvedLayout:true,
+      improvedLayout: true,
       clusterThreshold: 150,
       hierarchical: {
         sortMethod: 'directed',
@@ -134,6 +135,6 @@ function renderGraph(foreNodes, targetElement) {
       },
     },
   };
-  var container = document.getElementById(targetElement);
-  var network = new vis.Network(container, data, options);
+  const container = document.getElementById(targetElement);
+  const network = new vis.Network(container, data, options);
 }

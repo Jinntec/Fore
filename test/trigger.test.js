@@ -1,11 +1,13 @@
 /* eslint-disable no-unused-expressions */
-import {html, fixtureSync, expect, oneEvent} from '@open-wc/testing';
+import {
+  html, fixtureSync, expect, oneEvent,
+} from '@open-wc/testing';
 
 import '../index.js';
 
 describe('trigger tests', () => {
-    it('disables trigger when in readonly state', async () => {
-        const el = await fixtureSync(html`
+  it('disables trigger when in readonly state', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model>
                     <data>
@@ -20,19 +22,19 @@ describe('trigger tests', () => {
             </fx-fore>
         `);
 
-        await oneEvent(el, 'refresh-done');
-        const trigger = el.querySelector('fx-trigger');
-        expect(trigger).to.exist;
-        expect(trigger.hasAttribute('readonly')).to.be.true;
+    await oneEvent(el, 'refresh-done');
+    const trigger = el.querySelector('fx-trigger');
+    expect(trigger).to.exist;
+    expect(trigger.hasAttribute('readonly')).to.be.true;
 
-        const widget = trigger.firstElementChild;
-        expect(widget).to.exist;
-        expect(widget.hasAttribute('readonly')).to.be.true;
-        expect(widget.hasAttribute('disabled')).to.be.true;
-    });
+    const widget = trigger.firstElementChild;
+    expect(widget).to.exist;
+    expect(widget.hasAttribute('readonly')).to.be.true;
+    expect(widget.hasAttribute('disabled')).to.be.true;
+  });
 
-    it('toggles readonly state off', async () => {
-        const el = await fixtureSync(html`
+  it('toggles readonly state off', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model>
                     <data>
@@ -53,18 +55,18 @@ describe('trigger tests', () => {
             </fx-fore>
         `);
 
-        // await oneEvent(el, 'refresh-done');
-        const trigger = el.querySelector('fx-trigger');
-        expect(trigger).to.exist;
+    // await oneEvent(el, 'refresh-done');
+    const trigger = el.querySelector('fx-trigger');
+    expect(trigger).to.exist;
 
-        const enable = document.getElementById('enable');
-        await enable.performActions();
+    const enable = document.getElementById('enable');
+    await enable.performActions();
 
-        expect(trigger.hasAttribute('readonly')).to.be.false;
-    });
+    expect(trigger.hasAttribute('readonly')).to.be.false;
+  });
 
-    it('toggles readonly state on', async () => {
-        const el = await fixtureSync(html`
+  it('toggles readonly state on', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model>
                     <data>
@@ -85,12 +87,12 @@ describe('trigger tests', () => {
             </fx-fore>
         `);
 
-        const trigger = el.querySelector('fx-trigger');
-        expect(trigger).to.exist;
-        await oneEvent(el, 'refresh-done');
+    const trigger = el.querySelector('fx-trigger');
+    expect(trigger).to.exist;
+    await oneEvent(el, 'refresh-done');
 
-        await el.querySelector('#setReadonly').performActions();
+	  await el.querySelector('#setReadonly').performActions();
 
-        expect(trigger.hasAttribute('readonly')).to.be.true;
-    });
+    expect(trigger.hasAttribute('readonly')).to.be.true;
+  });
 });

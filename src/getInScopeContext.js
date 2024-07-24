@@ -1,6 +1,10 @@
 import { evaluateXPathToFirstNode } from './xpath-evaluation.js';
 import { XPathUtil } from './xpath-util.js';
 
+/**
+ * @param {Node} node
+ * @returns {HTMLElement}
+ */
 function _getElement(node) {
   if (node && node.nodeType && node.nodeType === Node.ATTRIBUTE_NODE) {
     // The context of an attribute is the ref of the element it's defined on
@@ -55,6 +59,14 @@ function _getInitialContext(node, ref) {
   return defaultData.getDefaultContext();
 }
 
+/**
+ * Get the inscope context for an XPath defined on an element, attribute or in a textnode. Uses the
+ * current iterate status, repeats, etcetera
+ *
+ * @param {Node} node The context node at this point. Can be an attribute
+ * @param {string} ref The XPath to resolve for
+ * @return {Node} The context item for this XPath
+ */
 export default function getInScopeContext(node, ref) {
   // console.log('getInScopeContext', ref, node);
 
@@ -74,7 +86,9 @@ export default function getInScopeContext(node, ref) {
     return parentBind.nodeset;
   }
 
-  const parentActionWithIterateExpr = parentElement.matches('[iterate]') ? parentElement : XPathUtil.getClosest('[iterate]', parentElement.parentNode);
+  const parentActionWithIterateExpr = parentElement.matches('[iterate]')
+    ? parentElement
+    : XPathUtil.getClosest('[iterate]', parentElement.parentNode);
   if (parentActionWithIterateExpr && parentActionWithIterateExpr.currentContext) {
     return parentActionWithIterateExpr.currentContext;
   }

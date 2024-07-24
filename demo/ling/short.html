@@ -13,13 +13,13 @@
         <fx-instance id="default"
                      src="data/default.xml"
                      xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
-        
+
         <fx-bind ref="//orth[@type = 'latin']" required="true()"></fx-bind>
 
         <fx-instance id="i-template"
                      src="data/template.xml"
                      xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
-        
+
         <fx-instance id="i-controller">
             <data xmlns="">
                 <morpheme/>
@@ -44,12 +44,12 @@
         <fx-instance id="i-cert" src="data/xml/cert.xml"/>
 
         <fx-instance
-            id="i-dialects" src="data/xml/dialects.xml" 
-            xmlns:tei="http://www.tei-c.org/ns/1.0" 
+            id="i-dialects" src="data/xml/dialects.xml"
+            xmlns:tei="http://www.tei-c.org/ns/1.0"
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
         <fx-instance
-            id="i-genders" src="data/xml/genders.xml" 
-            xmlns:tei="http://www.tei-c.org/ns/1.0" 
+            id="i-genders" src="data/xml/genders.xml"
+            xmlns:tei="http://www.tei-c.org/ns/1.0"
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"/>
 
         <fx-submission id="s-load-data" method="get" replace="data" ref="data('i-default')" validate="false"
@@ -188,7 +188,7 @@
                                         <label>Add dialect</label>
                                         <fx-trigger class="-btn -btn-default ">
                                             <button>Add</button>
-                                            <fx-insert 
+                                            <fx-insert
                                                 ref="usg"
                                                 origin="data('i-template')//usg[@type='lang']"/>
                                         </fx-trigger>
@@ -215,7 +215,7 @@
                                                 </select>
                                             </fx-control>
                                             </div>
-                                            
+
                                             <div class="tp-form-group-col"><label class="tp-label">Uncertain</label>
                                                 <fx-control class="tp-input -form-control" ref="@cert">
                                                     <select ref="data('i-cert')//option" class="widget">
@@ -299,7 +299,7 @@
                                                         <div class="col-xs-4"><label class="tp-label">Struct.
                                                             uncertain</label>
                                                             <fx-control ref="@ana">
-                                                                
+
                                                                 <select ref="data('i-cert')//option" class="widget">
                                                                     <template>
                                                                         <option value="{@value}">{string()}</option>
@@ -412,7 +412,7 @@
                                                         <div class="tp-form-group-col">
                                                             <label class="tp-label">Inflect</label>
                                                             <fx-control ref="m[@type = 'suffix' and @n = '1']/@subtype">
-                                                                <select class="widget">                                                                
+                                                                <select class="widget">
                                                                     <option value="">-</option>
                                                                     <option value="suff">yes</option>
                                                                 </select>
@@ -496,7 +496,7 @@
     <paper-dialog-scrollable>
         <input type="text" name="query"/>
         <div class="results">
-            
+
         </div>
     </paper-dialog-scrollable>
     <div class="buttons">

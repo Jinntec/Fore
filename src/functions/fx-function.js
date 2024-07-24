@@ -1,12 +1,10 @@
-import { foreElementMixin } from '../ForeElementMixin.js';
+import ForeElementMixin from '../ForeElementMixin.js';
 import registerFunction from './registerFunction.js';
 
 /**
  * Allows to extend a form with local custom functions.
- *
- * @extends {HTMLElement}
  */
-export class FxFunction extends foreElementMixin(HTMLElement) {
+export class FxFunction extends ForeElementMixin {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });

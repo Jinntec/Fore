@@ -1,5 +1,5 @@
 import '../fx-model.js';
-import { foreElementMixin } from '../ForeElementMixin.js';
+import ForeElementMixin from '../ForeElementMixin.js';
 import { ModelItem } from '../modelitem.js';
 import { Fore } from '../fore.js';
 import getInScopeContext from '../getInScopeContext.js';
@@ -26,7 +26,7 @@ function isDifferent(oldNodeValue, oldControlValue, newControlValue) {
  * is a general base class for control elements.
  *
  */
-export default class AbstractControl extends foreElementMixin(HTMLElement) {
+export default class AbstractControl extends ForeElementMixin {
   constructor() {
     super();
     this.value = null;
@@ -72,7 +72,9 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
         const create = this.closest('[create]');
         if (create) {
           // ### check if parent element exists
-          let attrName; let parentPath; let parentNode;
+          let attrName;
+          let parentPath;
+          let parentNode;
 
           if (this.ref.includes('/')) {
             parentPath = this.ref.substring(0, this.ref.indexOf('/'));
@@ -162,15 +164,17 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
 
 	  if (this.localName !== 'fx-control') return;
 		  if (isDifferent(this.oldVal, this.value, oldValue)) {
-          Fore.dispatch(this, 'value-changed', { path: this.modelItem.path, value: this.modelItem.value });
+          Fore.dispatch(this, 'value-changed', {
+            path: this.modelItem.path,
+            value: this.modelItem.value,
+            oldvalue: this.oldVal,
+          });
 	  }
       }
     }
   }
 
-  refreshFromModelItem(modelItem) {
-
-  }
+  refreshFromModelItem(modelItem) {}
 
   /**
    *
@@ -245,8 +249,8 @@ export default class AbstractControl extends foreElementMixin(HTMLElement) {
     if (this.modelItem.required) {
       // if (this.getOwnerForm().ready){
       if (this.visited || this.force) {
-      // if (this.visited ) {
-      //   if (this.widget.value === '') {
+        // if (this.visited ) {
+        //   if (this.widget.value === '') {
         if (this.modelItem.value === '') {
           this.classList.add('isEmpty');
           this._toggleValid(false);

@@ -1,11 +1,13 @@
-import {html, fixtureSync, expect, oneEvent, elementUpdated} from '@open-wc/testing';
+import {
+  html, fixtureSync, expect, oneEvent, elementUpdated,
+} from '@open-wc/testing';
 
 import '../src/ui/fx-container.js';
 import '../src/fx-bind.js';
 
 describe('action Tests', () => {
-    it('setvalue action of control works and triggers update', async () => {
-        const el = await fixtureSync(html`
+  it('setvalue action of control works and triggers update', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model id="model1">
                     <data>
@@ -17,22 +19,22 @@ describe('action Tests', () => {
             </fx-fore>
         `);
 
-        await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'refresh-done');
 
-        const control = el.querySelector('fx-control');
-        expect(control.value).to.equal('A');
-        expect(control.getModelItem().value).to.equal('A');
+    const control = el.querySelector('fx-control');
+    expect(control.value).to.equal('A');
+    expect(control.getModelItem().value).to.equal('A');
 
-        control.value = 'B';
-        expect(control.value).to.equal('B');
-        control.setValue('B'); // mutate model by triggering modelItem change
+    control.value = 'B';
+    expect(control.value).to.equal('B');
+    control.setValue('B'); // mutate model by triggering modelItem change
 
-        expect(control.value).to.equal('B');
-        expect(control.getModelItem().value).to.equal('B');
-    });
+    expect(control.value).to.equal('B');
+    expect(control.getModelItem().value).to.equal('B');
+  });
 
-    it('triggers action, executes and updates', async () => {
-        const el = await fixtureSync(html`
+  it('triggers action, executes and updates', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model id="model1">
                     <data>
@@ -48,21 +50,21 @@ describe('action Tests', () => {
             </fx-fore>
         `);
 
-        await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'refresh-done');
 
-        const control = el.querySelector('fx-control');
-        expect(control.value).to.equal('A');
-        expect(control.getModelItem().value).to.equal('A');
+    const control = el.querySelector('fx-control');
+    expect(control.value).to.equal('A');
+    expect(control.getModelItem().value).to.equal('A');
 
-        const trigger = el.querySelector('fx-trigger');
-        await trigger.performActions();
+    const trigger = el.querySelector('fx-trigger');
+    await trigger.performActions();
 
-        expect(control.value).to.equal('B');
-        expect(control.getModelItem().value).to.equal('B');
-    });
+    expect(control.value).to.equal('B');
+    expect(control.getModelItem().value).to.equal('B');
+  });
 
-    it('triggers action, evaluates variables, executes and updates', async () => {
-        const el = await fixtureSync(html`
+  it('triggers action, evaluates variables, executes and updates', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model id="model1">
                     <data>
@@ -79,21 +81,21 @@ describe('action Tests', () => {
             </fx-fore>
         `);
 
-        await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'refresh-done');
 
-        const control = el.querySelector('fx-control');
-        expect(control.value).to.equal('A');
-        expect(control.getModelItem().value).to.equal('A');
+    const control = el.querySelector('fx-control');
+    expect(control.value).to.equal('A');
+    expect(control.getModelItem().value).to.equal('A');
 
-        const trigger = el.querySelector('fx-trigger');
-        await trigger.performActions();
+    const trigger = el.querySelector('fx-trigger');
+    await trigger.performActions();
 
-        expect(control.value).to.equal('My variable value');
-        expect(control.getModelItem().value).to.equal('My variable value');
-    });
+    expect(control.value).to.equal('My variable value');
+    expect(control.getModelItem().value).to.equal('My variable value');
+  });
 
-    it('falsy condition prevents performing the action', async () => {
-        const el = await fixtureSync(html`
+  it('falsy condition prevents performing the action', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model id="model1">
                     <data>
@@ -110,21 +112,21 @@ describe('action Tests', () => {
             </fx-fore>
         `);
 
-        await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'refresh-done');
 
-        const control = el.querySelector('fx-control');
-        expect(control.value).to.equal('A');
-        expect(control.getModelItem().value).to.equal('A');
+    const control = el.querySelector('fx-control');
+    expect(control.value).to.equal('A');
+    expect(control.getModelItem().value).to.equal('A');
 
-        const trigger = el.querySelector('fx-trigger');
-        await trigger.performActions();
+    const trigger = el.querySelector('fx-trigger');
+    await trigger.performActions();
 
-        expect(control.value).to.equal('A');
-        expect(control.getModelItem().value).to.equal('A');
-    });
+    expect(control.value).to.equal('A');
+    expect(control.getModelItem().value).to.equal('A');
+  });
 
-    it('truthy condition performs the action', async () => {
-        const el = await fixtureSync(html`
+  it('truthy condition performs the action', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model id="model1">
                     <data>
@@ -141,31 +143,31 @@ describe('action Tests', () => {
             </fx-fore>
         `);
 
-        await oneEvent(el, 'refresh-done');
-        // await elementUpdated(el);
+    await oneEvent(el, 'refresh-done');
+    // await elementUpdated(el);
 
-        const trigger = el.querySelector('fx-trigger');
+    const trigger = el.querySelector('fx-trigger');
 
-        // const setval = el.querySelector('fx-trigger');
-        trigger.addEventListener('action-performed', () => {
-            console.log('action is received ################');
-            const control = el.querySelector('fx-control');
-            expect(control.value).to.equal('B');
-            expect(control.getModelItem().value).to.equal('B');
-        });
-
-        const control = el.querySelector('fx-control');
-        expect(control.value).to.equal('A');
-        expect(control.getModelItem().value).to.equal('A');
-
-        await trigger.performActions();
-
-        // await oneEvent (setval,'action-performed');
-        console.log('now its done');
+    // const setval = el.querySelector('fx-trigger');
+    trigger.addEventListener('action-performed', () => {
+      console.log('action is received ################');
+      const control = el.querySelector('fx-control');
+      expect(control.value).to.equal('B');
+      expect(control.getModelItem().value).to.equal('B');
     });
 
-    it('truthy condition performs the action, with variables', async () => {
-        const el = await fixtureSync(html`
+    const control = el.querySelector('fx-control');
+    expect(control.value).to.equal('A');
+    expect(control.getModelItem().value).to.equal('A');
+
+    await trigger.performActions();
+
+    // await oneEvent (setval,'action-performed');
+    console.log('now its done');
+  });
+
+  it('truthy condition performs the action, with variables', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model id="model1">
                     <data>
@@ -184,24 +186,24 @@ describe('action Tests', () => {
             </fx-fore>
         `);
 
-        await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'refresh-done');
 
-        const control = el.querySelector('fx-control');
-        expect(control.value).to.equal('A');
-        expect(control.getModelItem().value).to.equal('A');
+    const control = el.querySelector('fx-control');
+    expect(control.value).to.equal('A');
+    expect(control.getModelItem().value).to.equal('A');
 
-        const trigger = el.querySelector('fx-trigger');
-        await trigger.performActions();
+    const trigger = el.querySelector('fx-trigger');
+    await trigger.performActions();
 
-        const setval = el.querySelector('fx-setvalue');
-        await (setval, 'action-performed');
+    const setval = el.querySelector('fx-setvalue');
+    await (setval, 'action-performed');
 
-        expect(control.value).to.equal('B');
-        expect(control.getModelItem().value).to.equal('B');
-    });
+    expect(control.value).to.equal('B');
+    expect(control.getModelItem().value).to.equal('B');
+  });
 
-    it('truthy condition performs the action, with using the default inscopecontext', async () => {
-        const el = await fixtureSync(html`
+  it('truthy condition performs the action, with using the default inscopecontext', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model id="model1">
                     <data>
@@ -226,38 +228,38 @@ describe('action Tests', () => {
             </fx-fore>
         `);
 
-        await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'refresh-done');
 
-        const [firstDiv, secondDiv] = el.querySelectorAll('div');
-        const firstControl = firstDiv.querySelector('fx-control');
-        expect(firstControl.value).to.equal('A', 'Before change nothing should happen in the control');
-        expect(firstControl.getModelItem().value).to.equal(
-            'A',
-            'Before change nothing should happen in the model',
-        );
+    const [firstDiv, secondDiv] = el.querySelectorAll('div');
+    const firstControl = firstDiv.querySelector('fx-control');
+    expect(firstControl.value).to.equal('A', 'Before change nothing should happen in the control');
+    expect(firstControl.getModelItem().value).to.equal(
+      'A',
+      'Before change nothing should happen in the model',
+    );
 
-        const firstTrigger = firstDiv.querySelector('fx-trigger');
-        await firstTrigger.performActions();
+    const firstTrigger = firstDiv.querySelector('fx-trigger');
+    await firstTrigger.performActions();
 
-        expect(firstControl.value).to.equal('X');
-        expect(firstControl.getModelItem().value).to.equal('X');
+    expect(firstControl.value).to.equal('X');
+    expect(firstControl.getModelItem().value).to.equal('X');
 
-        const secondControl = secondDiv.querySelector('fx-control');
-        expect(secondControl.value).to.equal('B');
-        expect(secondControl.getModelItem().value).to.equal('B');
+    const secondControl = secondDiv.querySelector('fx-control');
+    expect(secondControl.value).to.equal('B');
+    expect(secondControl.getModelItem().value).to.equal('B');
 
-        const secondTrigger = secondDiv.querySelector('fx-trigger');
-        await secondTrigger.performActions();
+    const secondTrigger = secondDiv.querySelector('fx-trigger');
+    await secondTrigger.performActions();
 
-        expect(secondControl.value).to.equal('B', 'As the "if" did not match, nothing should happen');
-        expect(secondControl.getModelItem().value).to.equal(
-            'B',
-            'As the "if" did not match, nothing should happen',
-        );
-    });
+    expect(secondControl.value).to.equal('B', 'As the "if" did not match, nothing should happen');
+    expect(secondControl.getModelItem().value).to.equal(
+      'B',
+      'As the "if" did not match, nothing should happen',
+    );
+  });
 
-    it('fx-action executes its children', async () => {
-        const el = await fixtureSync(html`
+  it('fx-action executes its children', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model id="model1">
                     <data>
@@ -278,28 +280,28 @@ describe('action Tests', () => {
             </fx-fore>
         `);
 
-        await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'refresh-done');
 
-        const control1 = el.querySelector('#c1');
-        expect(control1.value).to.equal('A');
-        expect(control1.getModelItem().value).to.equal('A');
+    const control1 = el.querySelector('#c1');
+    expect(control1.value).to.equal('A');
+    expect(control1.getModelItem().value).to.equal('A');
 
-        const control2 = el.querySelector('#c2');
-        expect(control2.value).to.equal('false');
-        expect(control2.getModelItem().value).to.equal('false');
+    const control2 = el.querySelector('#c2');
+    expect(control2.value).to.equal('false');
+    expect(control2.getModelItem().value).to.equal('false');
 
-        const trigger = el.querySelector('fx-trigger');
-        await trigger.performActions();
+    const trigger = el.querySelector('fx-trigger');
+    await trigger.performActions();
 
-        expect(control1.value).to.equal('B');
-        expect(control1.getModelItem().value).to.equal('B');
+    expect(control1.value).to.equal('B');
+    expect(control1.getModelItem().value).to.equal('B');
 
-        expect(control2.value).to.equal('true');
-        expect(control2.getModelItem().value).to.equal('true');
-    });
+    expect(control2.value).to.equal('true');
+    expect(control2.getModelItem().value).to.equal('true');
+  });
 
-    it('fx-action only evaluates variables once', async () => {
-        const el = await fixtureSync(html`
+  it('fx-action only evaluates variables once', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model id="model1">
                     <data>
@@ -321,28 +323,28 @@ describe('action Tests', () => {
             </fx-fore>
         `);
 
-        await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'refresh-done');
 
-        const control1 = el.querySelector('#c1');
-        expect(control1.value).to.equal('A');
-        expect(control1.getModelItem().value).to.equal('A');
+    const control1 = el.querySelector('#c1');
+    expect(control1.value).to.equal('A');
+    expect(control1.getModelItem().value).to.equal('A');
 
-        const control2 = el.querySelector('#c2');
-        expect(control2.value).to.equal('NIL');
-        expect(control2.getModelItem().value).to.equal('NIL');
+    const control2 = el.querySelector('#c2');
+    expect(control2.value).to.equal('NIL');
+    expect(control2.getModelItem().value).to.equal('NIL');
 
-        const trigger = el.querySelector('fx-trigger');
-        await trigger.performActions();
+    const trigger = el.querySelector('fx-trigger');
+    await trigger.performActions();
 
-        expect(control1.value).to.equal('B');
-        expect(control1.getModelItem().value).to.equal('B');
+    expect(control1.value).to.equal('B');
+    expect(control1.getModelItem().value).to.equal('B');
 
-        expect(control2.value).to.equal('A');
-        expect(control2.getModelItem().value).to.equal('A');
-    });
+    expect(control2.value).to.equal('A');
+    expect(control2.getModelItem().value).to.equal('A');
+  });
 
-    it('executes while condition is true', async () => {
-        const el = await fixtureSync(html`
+  it('executes while condition is true', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model>
                     <data>
@@ -357,16 +359,16 @@ describe('action Tests', () => {
             </fx-fore>
         `);
 
-        await oneEvent(el, 'refresh-done');
-        const trigger = el.querySelector('fx-trigger');
-        await trigger.performActions();
+    await oneEvent(el, 'refresh-done');
+    const trigger = el.querySelector('fx-trigger');
+    await trigger.performActions();
 
-        const control1 = el.querySelector('fx-output');
-        expect(control1.value).to.equal('10');
-    });
+    const control1 = el.querySelector('fx-output');
+    expect(control1.value).to.equal('10');
+  });
 
-    it('executes while condition is true, with using variables', async () => {
-        const el = await fixtureSync(html`
+  it('executes while condition is true, with using variables', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model>
                     <data>
@@ -389,16 +391,16 @@ describe('action Tests', () => {
             </fx-fore>
         `);
 
-        await oneEvent(el, 'refresh-done');
-        const trigger = el.querySelector('fx-trigger');
-        await trigger.performActions();
+    await oneEvent(el, 'refresh-done');
+    const trigger = el.querySelector('fx-trigger');
+    await trigger.performActions();
 
-        const control1 = el.querySelector('fx-output');
-        expect(control1.value).to.equal('10');
-    });
+    const control1 = el.querySelector('fx-output');
+    expect(control1.value).to.equal('10');
+  });
 
-    it('executes while condition is true, using inscopecontext', async () => {
-        const el = await fixtureSync(html`
+  it('executes while condition is true, using inscopecontext', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model>
                     <data>
@@ -422,15 +424,15 @@ describe('action Tests', () => {
             </fx-fore>
         `);
 
-        await oneEvent(el, 'refresh-done');
-        const [firstDiv, secondDiv] = el.querySelectorAll('div');
-        const firstTrigger = firstDiv.querySelector('fx-trigger');
-        await firstTrigger.performActions();
+    await oneEvent(el, 'refresh-done');
+    const [firstDiv, secondDiv] = el.querySelectorAll('div');
+    const firstTrigger = firstDiv.querySelector('fx-trigger');
+    await firstTrigger.performActions();
 
-        const firstControl = firstDiv.querySelector('fx-output');
-        expect(firstControl.value).to.equal('10');
+    const firstControl = firstDiv.querySelector('fx-output');
+    expect(firstControl.value).to.equal('10');
 
-        /*
+    /*
         const secondTrigger = secondDiv.querySelector('fx-trigger');
        await secondTrigger.performActions();
 
@@ -443,9 +445,9 @@ describe('action Tests', () => {
         const secondControl = secondDiv.querySelector('fx-output');
         expect(secondControl.value).to.equal('15');
     */
-    });
-    it('executes while condition is true, using inscopecontext - part 2', async () => {
-        const el = await fixtureSync(html`
+  });
+  it('executes while condition is true, using inscopecontext - part 2', async () => {
+    const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model>
                     <data>
@@ -469,14 +471,14 @@ describe('action Tests', () => {
             </fx-fore>
         `);
 
-        // waiting for Fore to dispatch refresh-done for the first time
-        await oneEvent(el, 'refresh-done');
-        const [firstDiv, secondDiv] = el.querySelectorAll('div');
+    // waiting for Fore to dispatch refresh-done for the first time
+    await oneEvent(el, 'refresh-done');
+    const [firstDiv, secondDiv] = el.querySelectorAll('div');
 
-        const secondTrigger = secondDiv.querySelector('fx-trigger');
-        await secondTrigger.performActions();
+    const secondTrigger = secondDiv.querySelector('fx-trigger');
+    await secondTrigger.performActions();
 
-        const secondControl = secondDiv.querySelector('fx-output');
-        expect(secondControl.value).to.equal('15');
-    });
+    const secondControl = secondDiv.querySelector('fx-output');
+    expect(secondControl.value).to.equal('15');
+  });
 });

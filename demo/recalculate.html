@@ -58,8 +58,6 @@
                         One depends the other
                     </h1>
 
-
-
                     <p>There are several constraints in place here. You can play with the values to see the effects</p>
                     <ul>
                         <li>'a' will be readonly if 'b' is longer than 1</li>
@@ -68,13 +66,13 @@
                         <li>'c' is relevant only if 'b' has the value 'B'</li>
                     </ul>
                     <div class="display">
-                        <fx-output id="output" ref="a">
+                        <fx-output ref="a">
                             <label slot="label">a:</label>
                         </fx-output>
-                        <fx-output id="output" ref="b">
+                        <fx-output ref="b">
                             <fx-label slot="label">b:</fx-label>
                         </fx-output>
-                        <fx-output id="output" ref="c">
+                        <fx-output ref="c">
                             <fx-label slot="label">c:</fx-label>
                         </fx-output>
                     </div>
@@ -88,7 +86,6 @@
                     <fx-control ref="c" update-event="input">
                         <label>C</label>
                     </fx-control>
-
 
                 </fx-group>
                 <h2>Recalculations always happen in correct order</h2>

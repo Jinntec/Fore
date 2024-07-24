@@ -12,7 +12,7 @@
 <fx-fore>
     <fx-model id="model-1">
         <fx-instance id="default" src="data/default.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
-        
+
         <fx-instance id="i-template"
         src="data/template.xml"
         xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
@@ -50,22 +50,22 @@
                                 <fx-repeat ref="gramGrp[@type='segmentation']" id="r-gramGrp">
                                     <template>
                                         <!-- <fx-group ref="."> -->
-                                            
+
                                             <h4>Lexeme</h4>
                                             <!-- Preroot -->
                                             <section class="tp-form-group-col"><label
                                                     class="tp-label">Real word form</label>
                                                 <fx-control ref="m[@type = 'prefix' and @n = 1]">
-                                                
+
                                                 </fx-control>
                                             </section>
-                                            
+
                                                                                         <!-- Bibliography -->
 
                                                                                         <section class="tp-row tp-repeat-headline">
                                                                                             <h4 class="h3">Lexical Connections</h4>
                                                                                         </section>
-                                                                                        
+
                                                                                         <!-- <fx-group> -->
                                                                                             <section class="tp-row tp-repeat-add">
                                                                                                 <h5 class="h4 tp-repeat-headline">
@@ -77,7 +77,7 @@
                                                                                                             <button>add</button>
                                                                                                             <fx-insert ref="listBibl/cit"
                                                                                                                        origin="data('i-template')//cit[@type='auxiliary']"></fx-insert>
-                                            
+
                                                                                                         </fx-trigger>
                                                                                                     </div>
                                                                                                 </div>
@@ -85,7 +85,7 @@
                                                                                             <fx-repeat ref="listBibl/cit[@type='auxiliary']" id="r-cit-auxiliary">
                                                                                                 <template>
                                                                                                     <div class="tp-row tp-repeat-headline"></div>
-                                                                                                    
+
                                                                                                     <div class="tp-row">
                                                                                                         <div class="tp-form-group-col"><label class="tp-label">Reference</label>
                                                                                                             <fx-control class="tp-input -form-control"
@@ -95,7 +95,7 @@
                                                                                                             <fx-control class="tp-input -form-control"
                                                                                                                         ref="bibl/author"></fx-control>
                                                                                                         </div>
-                                                                                                        
+
                                                                                                     </div>
                                                                                                     <div class="tp-row tp-repeat-buttons">
                                                                                                         <div class="tp-repeat-button-right">
@@ -112,14 +112,9 @@
                                                                                                 </template>
                                                                                             </fx-repeat>
                                                                                         <!-- </fx-group> -->
-                                                                                        
-                                                                                       
-                                                                                       
-                                            
+
                                                                 <!-- Bibliography -->
-                                            
-                                            
-                    
+
                                             <!-- delete segmentation -->
                                             <div class="tp-row tp-repeat-buttons">
                                                 <div class="tp-repeat-button-right">
