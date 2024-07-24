@@ -1,6 +1,6 @@
 // import { foreElementMixin } from '../ForeElementMixin';
 
-import {FxContainer} from "./fx-container.js";
+import { FxContainer } from './fx-container.js';
 
 /**
  * `fx-case`
@@ -42,7 +42,6 @@ class FxCase extends FxContainer {
             </style>
             ${html}
     `;
-
   }
 }
 

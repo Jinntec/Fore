@@ -34,10 +34,9 @@ export function containsOnlyText(node, checkChildren) {
   if (checkChildren) {
     for (let i = 0, len = node.childNodes.length; i < len; i += 1) {
       nodeTmp = node.childNodes[i];
-      result =
-        nodeTmp.nodeType === Node.TEXT_NODE ||
-        nodeTmp.nodeType === Node.COMMENT_NODE ||
-        nodeTmp.nodeType === Node.CDATA_SECTION_NODE;
+      result = nodeTmp.nodeType === Node.TEXT_NODE
+        || nodeTmp.nodeType === Node.COMMENT_NODE
+        || nodeTmp.nodeType === Node.CDATA_SECTION_NODE;
 
       if (!result) {
         break;
@@ -45,10 +44,9 @@ export function containsOnlyText(node, checkChildren) {
     }
   } else {
     // check the node type if it doesn't have any children
-    result =
-      node.nodeType === Node.TEXT_NODE ||
-      node.nodeType === Node.COMMENT_NODE ||
-      node.nodeType === Node.CDATA_SECTION_NODE;
+    result = node.nodeType === Node.TEXT_NODE
+      || node.nodeType === Node.COMMENT_NODE
+      || node.nodeType === Node.CDATA_SECTION_NODE;
   }
 
   return result;
@@ -66,7 +64,7 @@ export function newElement(elem, attrs) {
   return el;
 }
 
- // Helper function for options view
+// Helper function for options view
 export function drawOptionRow(optionCode, optionText) {
   const row = newElement('span', { class: 'adi-opt' });
   row.innerHTML = `<label><input type="checkbox" data-opt="${optionCode}">${optionText}</label>`;

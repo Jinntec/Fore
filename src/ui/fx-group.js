@@ -33,10 +33,12 @@ class FxGroup extends FxContainer {
     super();
     this.collapse = false;
   }
+
   connectedCallback() {
     super.connectedCallback();
-    this.setAttribute('role','group');
+    this.setAttribute('role', 'group');
   }
+
   render() {
     return `
       <slot></slot>
@@ -56,14 +58,14 @@ class FxGroup extends FxContainer {
     const children = Array.from(node.children);
     // console.log('_initializeChildren ', children);
 
-    children.forEach(child => {
+    children.forEach((child) => {
       // console.log('child ', child);
 
       if (Fore.isUiElement(child.nodeName)) {
         child.init(this.model);
       } else if (child.children.length !== 0) {
         const grantChildren = Array.from(child.children);
-        grantChildren.forEach(grantChild => {
+        grantChildren.forEach((grantChild) => {
           this.initializeChildren(grantChild);
         });
       }
@@ -89,7 +91,7 @@ class FxGroup extends FxContainer {
 
   async refresh(force) {
     super.refresh(force);
-    Fore.refreshChildren(this,force);
+    Fore.refreshChildren(this, force);
   }
 }
 

@@ -228,8 +228,8 @@ export class DataElement {
       return response.json();
     }
     if (
-      responseContentType.startsWith('application/xml') ||
-      responseContentType.startsWith('text/xml')
+      responseContentType.startsWith('application/xml')
+      || responseContentType.startsWith('text/xml')
     ) {
       const text = await response.text();
       return new DOMParser().parseFromString(text, 'application/xml');

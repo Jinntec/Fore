@@ -3,7 +3,7 @@ const merge = require('deepmerge');
 const { bsSettings } = require('@open-wc/testing-karma-bs');
 const createBaseConfig = require('./karma.conf.js');
 
-module.exports = config => {
+module.exports = (config) => {
   config.set(
     merge(bsSettings(config), createBaseConfig(config), {
       browserStack: {

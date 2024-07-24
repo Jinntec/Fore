@@ -1,5 +1,5 @@
 import { AbstractAction } from './abstract-action.js';
-import {Fore} from "../fore.js";
+import { Fore } from '../fore.js';
 
 /**
  * `fx-reload`
@@ -10,24 +10,23 @@ import {Fore} from "../fore.js";
  * @demo demo/project.html
  */
 export class FxReload extends AbstractAction {
-
   connectedCallback() {
-    if(super.connectedCallback){
-    super.connectedCallback();
+    if (super.connectedCallback) {
+      super.connectedCallback();
     }
     this.addEventListener('reload', () => {
       window.location.reload();
-    },{once:true});
+    }, { once: true });
   }
 
   async perform() {
     this.dispatchEvent(
-        new CustomEvent('execute-action', {
-          composed: true,
-          bubbles: true,
-          cancelable:true,
-          detail: { action: this, event:this.event},
-        }),
+      new CustomEvent('execute-action', {
+        composed: true,
+        bubbles: true,
+        cancelable: true,
+        detail: { action: this, event: this.event },
+      }),
     );
 
     Fore.dispatch(this, 'reload', {});
@@ -37,4 +36,3 @@ export class FxReload extends AbstractAction {
 if (!customElements.get('fx-reload')) {
   window.customElements.define('fx-reload', FxReload);
 }
-

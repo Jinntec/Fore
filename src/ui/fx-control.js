@@ -99,7 +99,7 @@ export default class FxControl extends XfAbstractControl {
 
     this.widget = this.getWidget();
 
-    this.addEventListener('mousedown', e => {
+    this.addEventListener('mousedown', (e) => {
       // ### prevent mousedown events on all control content that is not the widget or within the widget
       if (!Fore.isWidget(e.target) && !e.target?.classList.contains('fx-hint')) {
         e.preventDefault();
@@ -130,7 +130,7 @@ export default class FxControl extends XfAbstractControl {
 
     // ### convenience marker event
     if (this.updateEvent === 'enter') {
-      this.widget.addEventListener('keyup', event => {
+      this.widget.addEventListener('keyup', (event) => {
         if (event.keyCode === 13) {
           // console.info('handling Event:', event.type, listenOn);
           // Cancel the default action, if needed
@@ -154,19 +154,19 @@ export default class FxControl extends XfAbstractControl {
         ),
       );
     } else {
-      listenOn.addEventListener(this.updateEvent, event => {
+      listenOn.addEventListener(this.updateEvent, (event) => {
         this.setValue(this._getValueFromHtmlDom());
       });
       listenOn.addEventListener(
         'blur',
-        event => {
+        (event) => {
           this.setValue(this._getValueFromHtmlDom());
         },
         { once: true },
       );
     }
 
-    this.addEventListener('return', e => {
+    this.addEventListener('return', (e) => {
       // console.log('catched return action on ', this);
       // console.log('return detail', e.detail);
 
@@ -271,10 +271,11 @@ export default class FxControl extends XfAbstractControl {
       this.modelItem.node.replaceWith(node.cloneNode(true));
     } else if (node.nodeType === Node.TEXT_NODE) {
       this.modelItem.node.nodeValue = node.textContent;
-    } else
+    } else {
       Fore.dispatch(this, 'warn', {
         message: 'trying to replace a node that is neither an Attribute, Elemment or Text node',
       });
+    }
     // this.getOwnerForm().refresh();
   }
 
@@ -283,10 +284,10 @@ export default class FxControl extends XfAbstractControl {
             ${this.label ? `${this.label}` : ''}
             <slot></slot>
             ${
-              this.hasAttribute('as') && this.getAttribute('as') === 'node'
-                ? `<fx-replace id="replace" ref=".">`
-                : `<fx-setvalue id="setvalue" ref="${ref}"></fx-setvalue>`
-            }
+  this.hasAttribute('as') && this.getAttribute('as') === 'node'
+    ? '<fx-replace id="replace" ref=".">'
+    : `<fx-setvalue id="setvalue" ref="${ref}"></fx-setvalue>`
+}
 
         `;
   }
@@ -441,8 +442,7 @@ export default class FxControl extends XfAbstractControl {
       if (responseContentType.startsWith('text/html')) {
         data = await response.text().then(result =>
           // console.log('xml ********', result);
-          new DOMParser().parseFromString(result, 'text/html'),
-        );
+          new DOMParser().parseFromString(result, 'text/html'));
       } else {
         data = 'done';
       }
@@ -453,7 +453,7 @@ export default class FxControl extends XfAbstractControl {
       imported.classList.add('widget'); // is the new widget
       imported.addEventListener(
         'model-construct-done',
-        e => {
+        (e) => {
           const defaultData = imported.querySelector('data');
           if (this.initial) {
             const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
@@ -555,7 +555,7 @@ export default class FxControl extends XfAbstractControl {
 
       // ### clear items
       const { children } = widget;
-      Array.from(children).forEach(child => {
+      Array.from(children).forEach((child) => {
         if (child.nodeName.toLowerCase() !== 'template') {
           child.parentNode.removeChild(child);
         }
@@ -569,9 +569,9 @@ export default class FxControl extends XfAbstractControl {
       if (template) {
         // ### handle 'selection'  open and insert an empty option in that case
         if (
-          this.widget.nodeName === 'SELECT' &&
-          this.widget.hasAttribute('selection') &&
-          this.widget.getAttribute('selection') === 'open'
+          this.widget.nodeName === 'SELECT'
+          && this.widget.hasAttribute('selection')
+          && this.widget.getAttribute('selection') === 'open'
         ) {
           const firstTemplateChild = this.template.firstElementChild;
           // todo: create the element which is used in the template  instead of 'option'
@@ -583,7 +583,7 @@ export default class FxControl extends XfAbstractControl {
           // console.log('nodeset', nodeset);
           const fragment = document.createDocumentFragment();
           // console.time('offscreen');
-          Array.from(nodeset).forEach(node => {
+          Array.from(nodeset).forEach((node) => {
             // console.log('#### node', node);
             // ### initialize new entry
             const newEntry = this.createEntry();
@@ -648,7 +648,7 @@ export default class FxControl extends XfAbstractControl {
   // eslint-disable-next-line class-methods-use-this
   _getValueAttribute(element) {
     let result;
-    Array.from(element.attributes).forEach(attribute => {
+    Array.from(element.attributes).forEach((attribute) => {
       const attrVal = attribute.value;
       if (attrVal.indexOf('{') !== -1) {
         // console.log('avt found ', attribute);

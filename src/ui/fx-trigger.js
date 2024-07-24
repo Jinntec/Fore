@@ -23,18 +23,18 @@ export class FxTrigger extends XfAbstractControl {
     const slot = this.shadowRoot.querySelector('slot');
     slot.addEventListener('slotchange', () => {
       const elements = slot.assignedElements({ flatten: true });
-      if(!elements[0].getAttribute('tabindex')){
+      if (!elements[0].getAttribute('tabindex')) {
         elements[0].setAttribute('tabindex', '0');
       }
-      if(elements[0].nodeName !== 'BUTTON'){
+      if (elements[0].nodeName !== 'BUTTON') {
         elements[0].setAttribute('role', 'button');
       }
 
       const element = elements[0];
 
-      this.addEventListener('mousedown', e => {
+      this.addEventListener('mousedown', (e) => {
         console.log('target', e.target.nodeName);
-          e.target.focus();
+        e.target.focus();
       });
 
       if (this.debounceDelay) {
@@ -42,7 +42,7 @@ export class FxTrigger extends XfAbstractControl {
           'click',
           leadingDebounce(
             this,
-            e => {
+            (e) => {
               this.performActions(e);
             },
             this.debounceDelay,
@@ -55,7 +55,7 @@ export class FxTrigger extends XfAbstractControl {
       // # terrible hack but browser behaves strange - seems to fire a 'click' for a button when it receives a
       // # 'Space' or 'Enter' key
       if (element.nodeName !== 'BUTTON') {
-        element.addEventListener('keypress', e => {
+        element.addEventListener('keypress', (e) => {
           if (e.code === 'Space' || e.code === 'Enter') {
             this.performActions(e);
           }
@@ -108,7 +108,7 @@ export class FxTrigger extends XfAbstractControl {
           // We are handling the event. Stop it from going further
           e.preventDefault();
           e.stopPropagation();
-          if(e.type && child.event && e.type !== child.event) return;
+          if (e.type && child.event && e.type !== child.event) return;
         }
         // eslint-disable-next-line no-await-in-loop
         await child.execute(e);

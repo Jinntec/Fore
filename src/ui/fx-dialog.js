@@ -39,10 +39,10 @@ export class FxDialog extends HTMLElement {
         this.classList.remove('show');
       });
     }
-    this.setAttribute('role','dialog');
-    this.setAttribute('aria-modal','false');
+    this.setAttribute('role', 'dialog');
+    this.setAttribute('aria-modal', 'false');
 
-/*
+    /*
     this.addEventListener('transitionend', () => {
       console.log('transitionend');
       // this.style.display = 'none';
@@ -64,7 +64,7 @@ export class FxDialog extends HTMLElement {
   open() {
     window.addEventListener(
       'keyup',
-      e => {
+      (e) => {
         if (e.key === 'Escape') {
           this.hide();
         }

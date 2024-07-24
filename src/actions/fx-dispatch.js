@@ -10,20 +10,20 @@ import { evaluateXPath, resolveId } from '../xpath-evaluation.js';
  * can be accessed in usual JavaScript way.
  */
 export class FxDispatch extends AbstractAction {
-    static get properties() {
-        return {
-            ...super.properties,
-            name: {
-                type: String,
-            },
-            targetid: {
-                type: String,
-            },
-            details: {
-                type: String,
-            },
-        };
-    }
+  static get properties() {
+    return {
+      ...super.properties,
+      name: {
+        type: String,
+      },
+      targetid: {
+        type: String,
+      },
+      details: {
+        type: String,
+      },
+    };
+  }
 
   constructor() {
     super();
@@ -72,7 +72,7 @@ export class FxDispatch extends AbstractAction {
 
     const properties = this.querySelectorAll('fx-property');
     const details = {};
-    Array.from(properties).forEach(prop => {
+    Array.from(properties).forEach((prop) => {
       // console.log('prop ', prop);
       const name = prop.getAttribute('name');
       const value = prop.getAttribute('value');

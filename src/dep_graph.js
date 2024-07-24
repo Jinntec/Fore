@@ -50,7 +50,7 @@ Object.setPrototypeOf(DepGraphCycleError, Error);
 function createDFS(edges, leavesOnly, result, circular) {
   const visited = {};
   // eslint-disable-next-line func-names
-  return function(start) {
+  return function (start) {
     // console.log('start ', start);
     if (visited[start]) {
       return;
@@ -169,8 +169,8 @@ DepGraph.prototype = {
       delete this.outgoingEdges[node];
       delete this.incomingEdges[node];
       // [this.incomingEdges, this.outgoingEdges].forEach(function (edgeList) {
-      [this.incomingEdges, this.outgoingEdges].forEach(edgeList => {
-        Object.keys(edgeList).forEach(key => {
+      [this.incomingEdges, this.outgoingEdges].forEach((edgeList) => {
+        Object.keys(edgeList).forEach((key) => {
           const idx = edgeList[key].indexOf(node);
           if (idx >= 0) {
             edgeList[key].splice(idx, 1);
@@ -252,7 +252,7 @@ DepGraph.prototype = {
     const source = this;
     const result = new DepGraph();
     const keys = Object.keys(source.nodes);
-    keys.forEach(n => {
+    keys.forEach((n) => {
       result.nodes[n] = source.nodes[n];
       result.outgoingEdges[n] = source.outgoingEdges[n].slice(0);
       result.incomingEdges[n] = source.incomingEdges[n].slice(0);
@@ -349,7 +349,7 @@ DepGraph.prototype = {
       // Look for cycles - we run the DFS starting at all the nodes in case there
       // are several disconnected subgraphs inside this dependency graph.
       const CycleDFS = createDFS(this.outgoingEdges, false, [], this.circular);
-      keys.forEach(n => {
+      keys.forEach((n) => {
         CycleDFS(n);
       });
     }
@@ -359,7 +359,7 @@ DepGraph.prototype = {
     // run a DFS starting at these points to get the order
     keys
       .filter(node => self.incomingEdges[node].length === 0)
-      .forEach(n => {
+      .forEach((n) => {
         DFS(n);
       });
 

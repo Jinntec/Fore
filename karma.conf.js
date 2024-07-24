@@ -5,7 +5,7 @@ const merge = require('deepmerge');
 // Run the tests headless by doing `npm run test --headless`
 const headless = process.env.npm_config_headless;
 
-module.exports = config => {
+module.exports = (config) => {
   config.set(
     merge(createDefaultConfig(config), {
       files: [

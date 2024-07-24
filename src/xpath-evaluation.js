@@ -36,7 +36,7 @@ function setCachedNamespaceResolver(xpath, node, resolver) {
   return createdNamespaceResolversByXPathQueryAndNode.get(xpath).set(node, resolver);
 }
 
-const xhtmlNamespaceResolver = prefix => {
+const xhtmlNamespaceResolver = (prefix) => {
   if (!prefix) {
     return 'http://www.w3.org/1999/xhtml';
   }
@@ -50,8 +50,7 @@ export function isInShadow(node) {
  * Resolve an id in scope. Behaves like the algorithm defined on https://www.w3.org/community/xformsusers/wiki/XForms_2.0#idref-resolve
  */
 export function resolveId(id, sourceObject, nodeName = null) {
-  const query =
-    'outermost(ancestor-or-self::fx-fore[1]/(descendant::fx-fore|descendant::*[@id = $id]))[not(self::fx-fore)]';
+  const query = 'outermost(ancestor-or-self::fx-fore[1]/(descendant::fx-fore|descendant::*[@id = $id]))[not(self::fx-fore)]';
   /*
         if (nodeName === 'fx-instance') {
             // Instance elements can only be in the `model` element
@@ -73,8 +72,7 @@ export function resolveId(id, sourceObject, nodeName = null) {
   if (sourceObject.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
     sourceObject = sourceObject.parentNode.host;
   }
-  const ownerForm =
-    sourceObject.localName === 'fx-fore' ? sourceObject : sourceObject.closest('fx-fore');
+  const ownerForm = sourceObject.localName === 'fx-fore' ? sourceObject : sourceObject.closest('fx-fore');
   const elementsWithId = ownerForm.querySelectorAll(`[id='${id}']`);
   if (elementsWithId.length === 1) {
     // A single one is found. Assume no ID reuse.
@@ -98,8 +96,8 @@ export function resolveId(id, sourceObject, nodeName = null) {
   }
 
   if (
-    allMatchingTargetObjects.length === 1 &&
-    fxEvaluateXPathToBoolean(
+    allMatchingTargetObjects.length === 1
+    && fxEvaluateXPathToBoolean(
       '(ancestor::fx-fore | ancestor::fx-repeat)[last()]/self::fx-fore',
       allMatchingTargetObjects[0],
       null,
@@ -140,9 +138,7 @@ export function resolveId(id, sourceObject, nodeName = null) {
     null,
     { namespaceResolver: xhtmlNamespaceResolver },
   )) {
-    const foundTargetObjects = allMatchingTargetObjects.filter(to =>
-      XPathUtil.contains(ancestorRepeatItem, to),
-    );
+    const foundTargetObjects = allMatchingTargetObjects.filter(to => XPathUtil.contains(ancestorRepeatItem, to));
     switch (foundTargetObjects.length) {
       case 0:
         // Nothing found: ignore
@@ -158,14 +154,12 @@ export function resolveId(id, sourceObject, nodeName = null) {
       default: {
         // Multiple target objects are found: they are in a repeat that is not common with the source object
         // We found a target object in a common repeat! We now need to find the one that is in the repeatitem identified at the current index
-        const targetObject = foundTargetObjects.find(to =>
-          fxEvaluateXPathToNodes(
-            'every $ancestor of ancestor::fx-repeatitem satisfies $ancestor is $ancestor/../child::fx-repeatitem[../@repeat-index]',
-            to,
-            null,
-            {},
-          ),
-        );
+        const targetObject = foundTargetObjects.find(to => fxEvaluateXPathToNodes(
+          'every $ancestor of ancestor::fx-repeatitem satisfies $ancestor is $ancestor/../child::fx-repeatitem[../@repeat-index]',
+          to,
+          null,
+          {},
+        ));
         if (!targetObject) {
           // Nothing valid found for whatever reason. This might be something dynamic?
           return null;
@@ -196,13 +190,12 @@ function findDataReferences(xpathQuery) {
   }
   const xpathAST = parseScript(xpathQuery, {}, xmlDocument);
   const dataReferences = fxEvaluateXPathToStrings(
-    `descendant::xqx:varRef/xqx:name`,
+    'descendant::xqx:varRef/xqx:name',
     xpathAST,
     null,
     {},
     {
-      namespaceResolver: prefix =>
-        prefix === 'xqx' ? 'http://www.w3.org/2005/XQueryX' : undefined,
+      namespaceResolver: prefix => (prefix === 'xqx' ? 'http://www.w3.org/2005/XQueryX' : undefined),
     },
   );
 
@@ -233,10 +226,9 @@ function createNamespaceResolver(xpathQuery, formElement) {
   let dataReferences = findDataReferences(xpathQuery);
   if (dataReferences.length === 0) {
     // No data variable usage. Look up further in the hierarchy to see if we can deduce the intended context from there
-    const ancestorComponent =
-      formElement.parentNode &&
-      formElement.parentNode.nodeType === formElement.ELEMENT &&
-      formElement.parentNode.closest('[ref]');
+    const ancestorComponent = formElement.parentNode
+      && formElement.parentNode.nodeType === formElement.ELEMENT
+      && formElement.parentNode.closest('[ref]');
     if (ancestorComponent) {
       const resolver = createNamespaceResolver(
         ancestorComponent.getAttribute('ref'),
@@ -272,7 +264,7 @@ function createNamespaceResolver(xpathQuery, formElement) {
               `Resolving the xpath ${xpathQuery} with the default namespace set to ${xpathDefaultNamespace}`,
             );
       */
-      const resolveNamespacePrefix = prefix => {
+      const resolveNamespacePrefix = (prefix) => {
         if (!prefix) {
           return xpathDefaultNamespace;
         }
@@ -288,9 +280,8 @@ function createNamespaceResolver(xpathQuery, formElement) {
     );
   }
 
-  const xpathDefaultNamespace =
-    fxEvaluateXPathToString('ancestor-or-self::*/@xpath-default-namespace[last()]', formElement) ||
-    '';
+  const xpathDefaultNamespace = fxEvaluateXPathToString('ancestor-or-self::*/@xpath-default-namespace[last()]', formElement)
+    || '';
 
   const resolveNamespacePrefix = function resolveNamespacePrefix(prefix) {
     if (prefix === '') {
@@ -382,10 +373,9 @@ function functionNameResolver({ prefix, localName }, _arity) {
 function getVariablesInScope(formElement) {
   let closestActualFormElement = formElement;
   while (closestActualFormElement && !('inScopeVariables' in closestActualFormElement)) {
-    closestActualFormElement =
-      closestActualFormElement.nodeType === Node.ATTRIBUTE_NODE
-        ? closestActualFormElement.ownerElement
-        : closestActualFormElement.parentNode;
+    closestActualFormElement = closestActualFormElement.nodeType === Node.ATTRIBUTE_NODE
+      ? closestActualFormElement.ownerElement
+      : closestActualFormElement.parentNode;
   }
 
   if (!closestActualFormElement) {
@@ -906,15 +896,15 @@ function buildTree(tree, data) {
       const summary = document.createElement('summary');
 
       let display = ` <${data.nodeName}`;
-      Array.from(data.attributes).forEach(attr => {
+      Array.from(data.attributes).forEach((attr) => {
         display += ` ${attr.nodeName}="${attr.nodeValue}"`;
       });
 
       let contents;
       if (
-        data.firstChild &&
-        data.firstChild.nodeType === Node.TEXT_NODE &&
-        data.firstChild.data.trim() !== ''
+        data.firstChild
+        && data.firstChild.nodeType === Node.TEXT_NODE
+        && data.firstChild.data.trim() !== ''
       ) {
         // console.log('whoooooooooopp');
         contents = data.firstChild.nodeValue;
@@ -932,7 +922,7 @@ function buildTree(tree, data) {
       }
       tree.appendChild(details);
 
-      Array.from(data.children).forEach(child => {
+      Array.from(data.children).forEach((child) => {
         // if(child.nodeType === Node.ELEMENT_NODE){
         // child.parentNode.appendChild(buildTree(child));
         buildTree(details, child);
@@ -1003,25 +993,24 @@ registerCustomXPathFunction(
   },
 );
 
-const getAttributes = value => {
+const getAttributes = (value) => {
   if (Array.isArray(value)) {
-    return ` type="array"`;
+    return ' type="array"';
   }
   if (typeof value === 'number') {
-    return ` type="number"`;
+    return ' type="number"';
   }
   if (typeof value === 'boolean') {
-    return ` type="boolean"`;
+    return ' type="boolean"';
   }
   return '';
 };
 
 const jsonToXml = (dynamicContext, json) => {
-  const escapeXml = str =>
-    str.replace(
-      /[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD]/g,
-      char => `\\u${char.charCodeAt(0).toString(16).padStart(4, '0')}`,
-    );
+  const escapeXml = str => str.replace(
+    /[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD]/g,
+    char => `\\u${char.charCodeAt(0).toString(16).padStart(4, '0')}`,
+  );
 
   const convert = (obj, parent) => {
     const type = typeof obj;
@@ -1039,7 +1028,7 @@ const jsonToXml = (dynamicContext, json) => {
       parent.textContent = escapeXml(obj);
     } else if (Array.isArray(obj)) {
       parent.setAttribute('type', 'array');
-      obj.forEach(item => {
+      obj.forEach((item) => {
         const node = document.createElement('_');
         convert(item, node);
         node.textContent = item;
@@ -1080,7 +1069,7 @@ const xmlToJson = (dynamicContext, xml) => {
 
   const isTextNode = node => node.nodeType === Node.TEXT_NODE;
 
-  const parseNode = node => {
+  const parseNode = (node) => {
     if (isElementNode(node)) {
       const obj = {};
       if (node.hasAttributes()) {
@@ -1155,9 +1144,9 @@ registerCustomXPathFunction(
       // itself.
       // Check detail for custom events! This is how that is passed along
       if (
-        ancestor.currentEvent.detail &&
-        typeof ancestor.currentEvent.detail === 'object' &&
-        arg in ancestor.currentEvent.detail
+        ancestor.currentEvent.detail
+        && typeof ancestor.currentEvent.detail === 'object'
+        && arg in ancestor.currentEvent.detail
       ) {
         return ancestor.currentEvent.detail[arg];
       }
