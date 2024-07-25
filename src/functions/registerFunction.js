@@ -6,7 +6,7 @@ import { evaluateXPath, globallyDeclaredFunctionLocalNames } from '../xpath-eval
  * @param formElement {HTMLElement} The form element connected to this function. Used to determine inscope context
  * @returns {undefined}
  */
-export default function (functionObject, formElement) {
+export default function registerFunction(functionObject, formElement) {
   if (functionObject.signature === null) {
     console.error('signature is a required attribute');
   }
@@ -16,7 +16,7 @@ export default function (functionObject, formElement) {
   // Parse the signature to something useful
   // Signature is of the form `my:sumproduct($p as xs:decimal*, $q as xs:decimal*) as xs:decimal` or local:something($a as item()*) as item()*
   const signatureParseResult = functionObject.signature.match(
-    /(?:(?<prefix>[^:]*):)?(?<localName>[^(]+)\((?<params>(?:\(\)|[^)])*)\)(?: as (?<returnType>.*))?/,
+    /(?:(?<prefix>[a-zA-Z_\-][a-zA-Z0-9_\-]*):)?(?<localName>[a-zA-Z_\-][a-zA-Z0-9_\-]*\s*)\((?<params>(?:[^()]*|\([^()]*\))*)\)\s*(?:as\s+(?<returnType>.*))?/,
   );
 
   if (!signatureParseResult) {
