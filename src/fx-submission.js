@@ -83,7 +83,7 @@ export class FxSubmission extends ForeElementMixin {
   }
 
   async _submit() {
-    console.log('submitting....', this.getAttribute('id'));
+    // console.log('submitting....', this.getAttribute('id'));
     this.evalInContext();
     const model = this.getModel();
 
@@ -119,7 +119,7 @@ export class FxSubmission extends ForeElementMixin {
   async _serializeAndSend() {
     const url = this._getProperty('url');
     const resolvedUrl = this.evaluateAttributeTemplateExpression(url, this);
-    console.log('resolvedUrl', resolvedUrl);
+    // console.log('resolvedUrl', resolvedUrl);
     const instance = this.getInstance();
     if (!instance) {
       Fore.dispatch(this, 'warn', { message: `instance not found ${instance.getAttribute('id')}` });
@@ -253,7 +253,7 @@ export class FxSubmission extends ForeElementMixin {
       }
 
       // this.dispatch('submit-done', {});
-      console.log(`### <<<<< ${this.id} submit-done >>>>>`);
+      // console.log(`### <<<<< ${this.id} submit-done >>>>>`);
       Fore.dispatch(this, 'submit-done', {});
     } catch (error) {
       Fore.dispatch(this, 'submit-error', { error: error.message });

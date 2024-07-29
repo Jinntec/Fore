@@ -75,7 +75,7 @@ class FxSend extends AbstractAction {
 
       // throw new Error(`submission with id: ${this.submission} not found`);
     }
-    console.log('submission', submission);
+    // console.log('submission', submission);
 
     if (this.url) {
       const resolved = this.evaluateAttributeTemplateExpression(this.url, this);

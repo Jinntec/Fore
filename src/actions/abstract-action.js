@@ -213,7 +213,7 @@ export class AbstractAction extends ForeElementMixin {
    */
   async execute(e) {
     if(!this.getModel().modelConstructed) return;
-    console.log(this, this.event);
+    // console.log(this, this.event);
 
     if (e && e.target.nodeType !== Node.DOCUMENT_NODE && e.target !== window) {
       /*

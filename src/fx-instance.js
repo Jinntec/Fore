@@ -113,7 +113,7 @@ export class FxInstance extends HTMLElement {
   async init() {
     // console.log('fx-instance init');
     await this._initInstance();
-    console.log(`### <<<<< instance ${this.id} loaded >>>>> `);
+    // console.log(`### <<<<< instance ${this.id} loaded >>>>> `);
     this.dispatchEvent(
       new CustomEvent('instance-loaded', {
         composed: true,
