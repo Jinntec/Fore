@@ -271,7 +271,7 @@ export class FxFore extends HTMLElement {
     const slot = this.shadowRoot.querySelector('slot#default');
     slot.addEventListener('slotchange', async (event) => {
       // preliminary addition for auto-conversion of non-prefixed element into prefixed elements. See fore.js
-      console.log(`### <<<<< slotchange on '${this.id}' >>>>>`);
+      // console.log(`### <<<<< slotchange on '${this.id}' >>>>>`);
       if (this.inited) return;
       if (this.hasAttribute('convert')) {
         this.replaceWith(Fore.copyDom(this));
@@ -444,7 +444,7 @@ export class FxFore extends HTMLElement {
     this._scanForNewTemplateExpressionsNextRefresh = false; // reset
     this._processTemplateExpressions();
 
-    console.log(`### <<<<< refresh-done ${this.id} >>>>>`);
+    // console.log(`### <<<<< refresh-done ${this.id} >>>>>`);
 
     Fore.dispatch(this, 'refresh-done', {});
 
@@ -493,7 +493,7 @@ export class FxFore extends HTMLElement {
       return;
     }
     this.isRefreshing = true;
-    console.log(`### <<<<< refresh() on '${this.id}' >>>>>`);
+    // console.log(`### <<<<< refresh() on '${this.id}' >>>>>`);
 
     // refresh () {
     // ### refresh Fore UI elements
