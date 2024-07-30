@@ -36,6 +36,8 @@ export default class AbstractControl extends ForeElementMixin {
     this.widget = null;
     this.visited = false;
     this.force = false;
+
+    this.componentIsInitialized = false;
     // this.attachShadow({ mode: 'open' });
   }
 
@@ -44,10 +46,7 @@ export default class AbstractControl extends ForeElementMixin {
     throw new Error('You have to implement the method getWidget!');
   }
 
-  /**
-   * (re)apply all modelItem state properties to this control. model -> UI
-   */
-  async refresh(force) {
+  async _doRefresh(force) {
     if (force) this.force = true;
     // console.log('### AbstractControl.refresh on : ', this);
 
@@ -59,8 +58,8 @@ export default class AbstractControl extends ForeElementMixin {
 
     // await this.updateComplete;
     // await this.getWidget();
-    this.oldVal = this.nodeset ? this.nodeset : null;
-    // console.log('oldVal',this.oldVal);
+    this.oldNodeValue = this.nodeset ? this.nodeset : null;
+    // console.log('oldVal',this.oldNodeValue);
 
     this.evalInContext();
 
@@ -165,39 +164,46 @@ export default class AbstractControl extends ForeElementMixin {
         // if oldVal is null we haven't received a concrete value yet
 
         if (this.localName !== 'fx-control') return;
-/*
-        const old = this.oldVal ? this.oldVal.nodeValue:'';
+
+        const old = this.oldNodeValue ? this.oldNodeValue.nodeValue : '';
 
         // ### todo - this part dealing with dispatching value-changed event is still hacky and needs review
 
         // if nothing was set and nothing is set we assume no value change and return
-        if(old === '' && this.value.toString() === '') return;
+        if (old === '' && this.value.toString() === '') return;
         if (isDifferent(oldValue, this.value, oldValue)) {
+          console.log('oldval', oldValue);
+          console.log('value', this.value);
 
-          console.log('oldval',oldValue);
-          console.log('value',this.value);
-
-
-          const repeat = this.closest('fx-repeat');
-          if(repeat){
-            const repeatitem = this.closest('fx-repeatitem');
-
-            // ### we should fire value-changes only on the repeatitem having being the current repeat index
-            console.log('repeat index', repeat.index)
-            console.log('repeat itme', repeatitem.index)
-            if(repeatitem.index !== repeat.index) return;
+          const closestRepeatItem = this.closest('fx-repeatitem');
+          if (
+            closestRepeatItem &&
+            !closestRepeatItem.hasAttribute('repeat-index') &&
+            !closestRepeatItem.hasAttribute('old-repeat-index')
+          ) {
+            return;
           }
-*/
-
-        if (isDifferent(this.oldVal, this.value, oldValue)) {
+        }
+        console.log('LANDING HERE');
+        if (isDifferent(this.oldNodeValue, this.value, oldValue) && this.componentIsInitialized) {
           Fore.dispatch(this, 'value-changed', {
             path: this.modelItem.path,
             value: this.modelItem.value,
-            oldvalue: this.oldVal,
+            oldvalue: oldValue,
           });
         }
       }
     }
+  }
+
+  /**
+   * (re)apply all modelItem state properties to this control. model -> UI
+   *
+   * @param {boolean} force
+   */
+  async refresh(force) {
+    await this._doRefresh(force);
+    this.componentIsInitialized = true;
   }
 
   refreshFromModelItem(modelItem) {}
@@ -232,7 +238,6 @@ export default class AbstractControl extends ForeElementMixin {
       Fore.dispatch(this, event, {});
     }
   }
-
   // eslint-disable-next-line class-methods-use-this
   handleRequired() {
     // console.log('mip required', this.modelItem.required);

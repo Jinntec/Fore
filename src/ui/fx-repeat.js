@@ -61,7 +61,7 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
     this.repeatIndex = 1;
     this.nodeset = [];
     this.inited = false;
-    this.index = 1;
+    this.index = 0;
     this.repeatSize = 0;
     this.attachShadow({ mode: 'open', delegatesFocus: true });
   }
@@ -74,13 +74,27 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
     this.size = size;
   }
 
-  setIndex(index) {
+  async setIndex(index) {
+    const oldIndex = this.index;
+    const oldItem = this.children[oldIndex - 1];
+    if (index === this.index) {
+      // No-op: setting the index to the same
+      return;
+    }
     // console.log('new repeat index ', index);
     this.index = index;
     const rItems = this.querySelectorAll(':scope > fx-repeatitem');
     this.applyIndex(rItems[this.index - 1]);
 
-    this.getOwnerForm().refresh(true);
+    // Do a full refresh: this setIndex changes the result of the repeat-index function. As we do
+    // not know where that is used, we need to invalidate everything.
+    if (oldItem) {
+      oldItem.setAttribute('old-repeat-index', '');
+    }
+    await this.getOwnerForm().refresh(true);
+    if (oldItem) {
+      oldItem.removeAttribute('old-repeat-index');
+    }
   }
 
   applyIndex(repeatItem) {
@@ -111,6 +125,9 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
     // console.log('### fx-repeat connected ', this.id);
     this.addEventListener('item-changed', e => {
       const { item } = e.detail;
+      if (item.parentNode !== this) {
+        return;
+      }
       const idx = Array.from(this.children).indexOf(item);
       // Warning: index is one-based
       this.setIndex(idx + 1);
@@ -118,7 +135,7 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
     // todo: review - this is just used by append action - event consolidation ?
     document.addEventListener('index-changed', e => {
       e.stopPropagation();
-      if (!e.target === this) return;
+      if (e.target !== this) return;
       // const { item } = e.detail;
       // const idx = Array.from(this.children).indexOf(item);
       const { index } = e.detail;
@@ -320,7 +337,10 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
     }
     // this.style.display = 'block';
     // this.style.display = this.display;
-    this.setIndex(this.index);
+
+    // Set index to at least 1: the repeat is populated now.
+    const index = Math.max(this.index, 1);
+    this.setIndex(index);
     // console.timeEnd('repeat-refresh');
 
     // this.replaceWith(clone);
