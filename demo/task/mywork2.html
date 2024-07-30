@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, task-scalable=yes" name="viewport"/>
+    <title>My Work</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+    <link href="../../resources/demo.css" rel="stylesheet">
+    <link href="mywork.css" rel="stylesheet">
+</head>
+<body>
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+<fx-fore>
+    <fx-model>
+        <fx-send submission="load" event="model-construct-done"></fx-send>
+
+        <fx-functionlib src="realtime-functions.html"></fx-functionlib>
+        <fx-instance shared="shared">
+            <data>
+                <period name="thisweek">
+                    <category name="Fore"></category>
+                    <category name="Realtime"></category>
+                </period>
+                <period name="nextweek">
+                </period>
+                <period name="thismonth">
+                </period>
+                <period name="nextmonth">
+                </period>
+            </data>
+        </fx-instance>
+<!--
+        <fx-bind ref="instance()/period/category/task">
+            <fx-bind ref="@due" relevant=". != ''"></fx-bind>
+        </fx-bind>
+-->
+        <fx-instance id="vars">
+            <data>
+                <search></search>
+                <owner>me</owner>
+                <more-actions>false</more-actions>
+                <template>
+                    <category name=""></category>
+                    <task done="true" due="" time=""></task>
+                </template>
+            </data>
+        </fx-instance>
+        <fx-var name="vars" value="instance('vars')"></fx-var>
+
+        <!--
+                <fx-function signature="today() as xs:string" type="text/javascript">
+                    return new Date().toISOString().slice(0, 10);
+                </fx-function>
+        -->
+        <fx-function signature="get-month($start as xs:string) as xs:string"
+                     type="text/javascript">
+            const date = new Date($start);
+            return date.getMonth();
+        </fx-function>
+
+        <fx-submission id="save"
+                       url="localStore:mywork"
+                       method="post"
+                       replace="none"
+                       nonrelevant="keep">
+            <fx-message event="submit-done">Changes have been stored</fx-message>
+        </fx-submission>
+        <fx-submission id="load"
+                       url="localStore:mywork"
+                       method="get"
+                       replace="instance">
+            <fx-message event="submit-done">Todos loaded from localStorage</fx-message>
+        </fx-submission>
+
+    </fx-model>
+    <h1>My Work</h1>
+    <div class="subtitle">{getWeekDay()} - {todayShort()}</div>
+    <main>
+        <section>
+            <h2>THIS WEEK
+                <fx-trigger class="iconbtn week" title="add card">
+                    <button>+</button>
+                    <fx-action>
+                        <fx-insert context="period[@name='thisweek']" ref="category"
+                                   origin="instance('vars')/template/category"
+                                   at="1" position="before"></fx-insert>
+                        <fx-setfocus control="category" delay="300"></fx-setfocus>
+                    </fx-action>
+                </fx-trigger>
+            </h2>
+            <div>{dayOfWeek('last','wednesday')} - {dayOfWeek('next','wednesday')}</div>
+            <!--                <fx-group id="period" ref="period[@name='thisweek']">-->
+
+            <fx-repeat id="r-category" ref="period[@name='thisweek']">
+                <template draggable="true" drop-target="r-category">
+                    <fx-group id="period">
+                        <fx-message event="value-changed">Data changed {event('path')} '{event('oldvalue')}' '{event('value')}'</fx-message>
+
+                        <fx-send submission="save" event="value-changed"></fx-send>
+
+
+
+                        <fx-repeat id="r-category" ref="category" tabindex="0">
+                            <template draggable="true" drop-target="r-category">
+
+                                <fx-trigger class="iconbtn" title="add card">
+                                    <button>+</button>
+                                    <fx-action>
+                                        <fx-insert ref="task" origin="instance('vars')/template/task"></fx-insert>
+                                        <!--                        <fx-setfocus control="category" delay="300"></fx-setfocus>-->
+<!--                                        <fx-send submission="save"></fx-send>-->
+
+                                    </fx-action>
+                                </fx-trigger>
+
+                                <fx-control id="category" ref="@name">
+                                    <input placeholder="project or category?">
+                                </fx-control>
+                                <fx-trigger class="deletebtn">
+                                    <a href="#">&#x2715;</a>
+                                    <fx-action>
+                                        <fx-delete ref="."></fx-delete>
+                                        <fx-send submission="save"></fx-send>
+                                    </fx-action>
+                                </fx-trigger>
+
+
+                                <fx-repeat id="r-task" ref="task">
+                                    <template draggable="true" drop-target="r-task">
+                                        <fx-control ref="@done" value-prop="checked" update-event="input">
+                                            <input type="checkbox" name="done">
+                                        </fx-control>
+                                        <fx-control class="task-{@done}" id="task" class="task" ref=".">
+                                            <input placeholder="specify the task">
+
+                                        </fx-control>
+                                        <fx-output ref="@due"></fx-output>
+                                        <fx-output ref="@time"></fx-output>
+
+                                        <details tabindex="0">
+                                            <summary>...</summary>
+                                            <fx-message event="value-changed">open</fx-message>
+                                            <fx-control class="dateCtrl" id="due" ref="@due">
+                                                <input type="date"/>
+                                            </fx-control>
+                                            <fx-control class="dateCtrl" id="due" ref="@time">
+                                                <input type="time"/>
+                                            </fx-control>
+                                            <fx-trigger class="deletebtn">
+                                                <a href="#">&#x2715;</a>
+                                                <fx-delete ref="."></fx-delete>
+                                                <fx-send submission="save"></fx-send>
+                                            </fx-trigger>
+                                        </details>
+
+
+
+                                    </template>
+                                </fx-repeat>
+                            </template>
+                        </fx-repeat>
+                    </fx-group>
+                </template>
+            </fx-repeat>
+            <fx-droptarget></fx-droptarget>
+        </section>
+
+    </main>
+
+
+    <template id="periodtmpl" draggable="true" drop-target="r-category">
+        <fx-group id="period">
+            <fx-send submission="save" event="value-changed"></fx-send>
+
+            <div>{dayOfWeek('last','wednesday')}</div>
+
+            <fx-repeat id="r-category" ref="category" tabindex="0">
+                <template draggable="true" drop-target="r-category">
+
+                    <fx-trigger class="iconbtn" title="add card">
+                        <button>+</button>
+                        <fx-action>
+                            <fx-insert ref="task" origin="instance('vars')/template/task"></fx-insert>
+                            <!--                        <fx-setfocus control="category" delay="300"></fx-setfocus>-->
+                            <fx-send submission="save"></fx-send>
+
+                        </fx-action>
+                    </fx-trigger>
+
+                    <fx-control id="category" ref="@name">
+                        <input placeholder="project or category?">
+
+                    </fx-control>
+
+                    <fx-trigger class="deletebtn">
+                        <a href="#">&#x2715;</a>
+                        <fx-action>
+                            <fx-delete ref="."></fx-delete>
+                            <fx-send submission="save"></fx-send>
+                        </fx-action>
+                    </fx-trigger>
+                    </fx-trigger>
+
+                    <fx-repeat id="r-task" ref="task">
+                        <template draggable="true" drop-target="r-task">
+                            <fx-control ref="./@done" value-prop="checked" update-event="input">
+                                <input type="checkbox">
+                            </fx-control>
+                            <fx-control class="task-{@done}" id="task" class="task" ref=".">
+                                <input placeholder="specify the task">
+                                <fx-trigger class="deletebtn">
+                                    <a href="#">&#x2715;</a>
+                                    <fx-delete ref="."></fx-delete>
+                                </fx-trigger>
+                            </fx-control>
+
+                            <fx-control class="dateCtrl" id="due" ref="@due" update-event="input">
+                                <input type="date"/>
+                                <fx-action event="value-changed">
+                                    <fx-toggle case="c-default"></fx-toggle>
+                                </fx-action>
+                            </fx-control>
+
+                            <!--
+                            todo: not working - why?
+                                                            <fx-trigger ref="not(exists(./@due))">-->
+
+                            <fx-trigger class="dueTrigger {if(@due != '') then 'hidden' else ''}">
+                                <a href="#">due</a>
+                                <fx-action>
+                                    <fx-setattribute ref="." name="due" value="today()"></fx-setattribute>
+                                    <fx-setfocus control="due"></fx-setfocus>
+                                </fx-action>
+                            </fx-trigger>
+
+
+                            <!-- todo: this is where i'd like to have a way to get access to the calling dom element aka 'this' or 'event.target'
+                               In this case i only the want to change the DOM without actually binding that to data.
+                           -->
+
+                            <!--
+                                                    <details class="more-actions">
+
+                                                        <summary>
+                                                            <fx-trigger>
+                                                                <button>...</button>
+                                                                <fx-call function="toggleDetails(event('target'))"></fx-call>
+                                                            </fx-trigger>
+                                                        </summary>
+                                                        <fx-trigger>
+                                                            <a href="#">due</a>
+                                                            <fx-action>
+                                                                <fx-setattribute ref="." name="due" value=""></fx-setattribute>
+                                                                <fx-setfocus control="due"></fx-setfocus>
+                                                            </fx-action>
+                                                        </fx-trigger>
+                                                    </details>
+                            -->
+
+                        </template>
+                    </fx-repeat>
+                </template>
+            </fx-repeat>
+            <div>{dayOfWeek('next','wednesday')}</div>
+        </fx-group>
+    </template>
+
+</fx-fore>
+
+
+<script type="module" src="../demo.js"></script>
+<!--
+<script>
+    document.addEventListener('click', e => {
+        if(!e.target.closest('details')){
+            document.querySelector('details[open]').removeAttribute('open');
+        }
+    });
+</script>
+-->
+</body>
+</html>

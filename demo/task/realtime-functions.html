@@ -75,6 +75,11 @@
         return $input;
     </fx-function>
 
+    <fx-function signature="getWeekDay() as xs:string" type="text/javascript">
+        const days = ['Sunday','Monday', 'Tuesday', 'Wednesday','Thursday', 'Friday','Saturday'];
+        return days[new Date().getDay()];
+    </fx-function>
+
     <fx-function signature="firstDayOfMonth() as xs:string" type="text/javascript">
         const current = new Date();
         const day = current.getDate() - current.getDay() +1;
@@ -180,6 +185,9 @@
 
     <fx-function signature="today() as xs:string" type="text/javascript">
         return new Date().toLocaleString().slice(0, 10);
+    </fx-function>
+    <fx-function signature="todayShort() as xs:string" type="text/javascript">
+        return new Date().toLocaleString().slice(0, 5);
     </fx-function>
 
     <fx-function signature="current-year($date as xs:string) as xs:string" type="text/javascript">

@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, task-scalable=yes" name="viewport"/>
+    <title>My Work</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+    <link href="../../resources/demo.css" rel="stylesheet">
+    <link href="mywork.css" rel="stylesheet">
+</head>
+<body>
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+<fx-fore>
+    <fx-model>
+        <fx-functionlib src="realtime-functions.html"></fx-functionlib>
+        <fx-instance shared="shared">
+            <data>
+                <period name="thisweek">
+                    <category name="Fore"></category>
+                    <category name="Realtime"></category>
+                </period>
+                <period name="nextweek">
+                </period>
+                <period name="thismonth">
+                </period>
+                <period name="nextmonth">
+                </period>
+            </data>
+        </fx-instance>
+        <fx-instance id="vars">
+            <data>
+                <search></search>
+                <owner>me</owner>
+                <more-actions>false</more-actions>
+                <template>
+                    <category name=""></category>
+                    <task done="false" due="" time=""></task>
+                </template>
+            </data>
+        </fx-instance>
+        <fx-var name="vars" value="instance('vars')"></fx-var>
+
+        <fx-function signature="get-month($start as xs:string) as xs:string"
+                     type="text/javascript">
+            const date = new Date($start);
+            return date.getMonth();
+        </fx-function>
+
+
+    </fx-model>
+    <h1>My Work</h1>
+    <div class="subtitle">{getWeekDay()} - {todayShort()}</div>
+    <main>
+        <section>
+            <h2>THIS WEEK
+                <fx-trigger class="iconbtn week" title="add card">
+                    <button>+</button>
+                    <fx-action>
+                        <fx-insert context="period[@name='thisweek']" ref="category"
+                                   origin="instance('vars')/template/category"
+                                   at="1" position="before"></fx-insert>
+                        <fx-setfocus control="category" delay="300"></fx-setfocus>
+                    </fx-action>
+                </fx-trigger>
+            </h2>
+            <div>{dayOfWeek('last','wednesday')} - {dayOfWeek('next','wednesday')}</div>
+
+            <fx-repeat id="r-category" ref="period[@name='thisweek']">
+                <template id="periodtmpl" draggable="true" drop-target="r-category">
+                    <fx-group id="period">
+                        <fx-message event="value-changed"  level="sticky">Data changed {event('path')} '{event('oldvalue')}' '{event('value')}'</fx-message>
+
+                        <fx-repeat id="r-category" ref="category" tabindex="0">
+                            <template draggable="true" drop-target="r-category">
+
+                                <fx-trigger class="iconbtn" title="add card">
+                                    <button>+</button>
+                                    <fx-action>
+                                        <fx-insert ref="task" origin="instance()/template/task"></fx-insert>
+                                    </fx-action>
+                                </fx-trigger>
+
+                                <fx-control id="category" ref="@name" data-cy="category-{count(preceding-sibling::*)}" class="c-{count(preceding-sibling::*)}">
+                                    <input placeholder="project or category?" >
+                                </fx-control>
+                                <fx-trigger class="deletebtn">
+                                    <a href="#">&#x2715;</a>
+                                    <fx-action>
+                                        <fx-delete ref="."></fx-delete>
+                                        <fx-send submission="save"></fx-send>
+                                    </fx-action>
+                                </fx-trigger>
+
+                                <fx-repeat id="r-task" ref="task">
+                                    <template draggable="true" drop-target="r-task">
+                                        <fx-control ref="./@done" value-prop="checked" update-event="input">
+                                            <input type="checkbox" class="widget">
+                                        </fx-control>
+                                        <fx-control class="task-{@done}" id="task" class="task" ref=".">
+                                            <input placeholder="specify the task">
+                                            <fx-trigger class="deletebtn">
+                                                <a href="#">&#x2715;</a>
+                                                <fx-delete ref="."></fx-delete>
+                                            </fx-trigger>
+                                        </fx-control>
+
+                                        <details>
+                                            <summary>...</summary>
+                                            <fx-control class="dateCtrl" id="due" ref="@due" update-event="input" create>
+                                                <input type="date"/>
+                                            </fx-control>
+                                            <fx-control class="dateCtrl" id="due" ref="@time" update-event="input" create>
+                                                <input type="time"/>
+                                            </fx-control>
+                                        </details>
+                                    </template>
+                                </fx-repeat>
+                            </template>
+                        </fx-repeat>
+                    </fx-group>
+                </template>
+            </fx-repeat>
+            <fx-droptarget></fx-droptarget>
+        </section>
+
+    </main>
+
+
+
+</fx-fore>
+
+
+<script type="module" src="../demo.js"></script>
+</body>
+</html>

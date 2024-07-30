@@ -165,6 +165,30 @@ export default class AbstractControl extends ForeElementMixin {
         // if oldVal is null we haven't received a concrete value yet
 
         if (this.localName !== 'fx-control') return;
+/*
+        const old = this.oldVal ? this.oldVal.nodeValue:'';
+
+        // ### todo - this part dealing with dispatching value-changed event is still hacky and needs review
+
+        // if nothing was set and nothing is set we assume no value change and return
+        if(old === '' && this.value.toString() === '') return;
+        if (isDifferent(oldValue, this.value, oldValue)) {
+
+          console.log('oldval',oldValue);
+          console.log('value',this.value);
+
+
+          const repeat = this.closest('fx-repeat');
+          if(repeat){
+            const repeatitem = this.closest('fx-repeatitem');
+
+            // ### we should fire value-changes only on the repeatitem having being the current repeat index
+            console.log('repeat index', repeat.index)
+            console.log('repeat itme', repeatitem.index)
+            if(repeatitem.index !== repeat.index) return;
+          }
+*/
+
         if (isDifferent(this.oldVal, this.value, oldValue)) {
           Fore.dispatch(this, 'value-changed', {
             path: this.modelItem.path,

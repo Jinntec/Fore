@@ -1,4 +1,5 @@
 import { Fore } from '../fore.js';
+import { FxModel } from '../fx-model.js';
 import { AbstractAction } from './abstract-action.js';
 
 /**
@@ -37,6 +38,7 @@ export class FxReset extends AbstractAction {
     );
 
     const model = this.getModel();
+    FxModel.dataChanged = false;
     const data = model.getInstance(this.instance);
     data.reset();
     this.needsUpdate = true;

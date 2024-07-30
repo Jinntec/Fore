@@ -1,0 +1,84 @@
+<fx-repeat id="r-category" ref="category" tabindex="0">
+    <template draggable="true" drop-target="r-category">
+
+        <fx-trigger class="iconbtn" title="add card">
+            <button>+</button>
+            <fx-action>
+                <fx-insert ref="task" origin="instance()/template/task"></fx-insert>
+                <!--                        <fx-setfocus control="category" delay="300"></fx-setfocus>-->
+                <fx-send submission="save"></fx-send>
+
+            </fx-action>
+        </fx-trigger>
+
+        <fx-control id="category" ref="@name">
+            <input placeholder="project or category?">
+
+        </fx-control>
+
+        <fx-trigger class="deletebtn">
+            <a href="#">&#x2715;</a>
+            <fx-delete ref="."></fx-delete>
+        </fx-trigger>
+
+        <fx-repeat id="r-task" ref="task">
+            <template draggable="true" drop-target="r-task">
+                <fx-control ref="./@done" value-prop="checked" update-event="input">
+                    <input type="checkbox">
+                </fx-control>
+                <fx-control class="task-{@done}" id="task" class="task" ref=".">
+                    <input placeholder="specify the task">
+                    <fx-trigger class="deletebtn">
+                        <a href="#">&#x2715;</a>
+                        <fx-delete ref="."></fx-delete>
+                    </fx-trigger>
+                </fx-control>
+
+                <fx-control class="dateCtrl" id="due" ref="@due" update-event="input">
+                    <input type="date"/>
+                    <fx-action event="value-changed">
+                        <fx-toggle case="c-default"></fx-toggle>
+                    </fx-action>
+                </fx-control>
+
+                <!--
+                todo: not working - why?
+                                                <fx-trigger ref="not(exists(./@due))">-->
+
+                <fx-trigger class="dueTrigger {if(@due != '') then 'hidden' else ''}">
+                    <a href="#">due</a>
+                    <fx-action>
+                        <fx-setattribute ref="." name="due" value="today()"></fx-setattribute>
+                        <fx-setfocus control="due"></fx-setfocus>
+                    </fx-action>
+                </fx-trigger>
+
+
+                <!-- todo: this is where i'd like to have a way to get access to the calling dom element aka 'this' or 'event.target'
+                   In this case i only the want to change the DOM without actually binding that to data.
+               -->
+
+                <!--
+                                        <details class="more-actions">
+
+                                            <summary>
+                                                <fx-trigger>
+                                                    <button>...</button>
+                                                    <fx-call function="toggleDetails(event('target'))"></fx-call>
+                                                </fx-trigger>
+                                            </summary>
+                                            <fx-trigger>
+                                                <a href="#">due</a>
+                                                <fx-action>
+                                                    <fx-setattribute ref="." name="due" value=""></fx-setattribute>
+                                                    <fx-setfocus control="due"></fx-setfocus>
+                                                </fx-action>
+                                            </fx-trigger>
+                                        </details>
+                -->
+
+            </template>
+        </fx-repeat>
+    </template>
+</fx-repeat>
+
