@@ -95,7 +95,7 @@ describe('instance Tests', () => {
         expect(XPathUtil.getPath(n, 'default')).to.equal('$default/arm[1]/hand[1]/finger[1]');
     });
 
-    it.only('resolves data with the $default function', async () => {
+    it('resolves data with the $default function', async () => {
         const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model id="model1">

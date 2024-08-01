@@ -3,14 +3,11 @@ import {html, fixtureSync, expect, oneEvent} from '@open-wc/testing';
 import {XPathUtil} from '../src/xpath-util.js';
 
 describe('XPathUtil Tests', () => {
-    it('returns "default" if call without args', async () => {
-        expect(XPathUtil.getInstanceId('instance()')).to.equal('default');
-    });
-    it('returns "default" if arg is "default"', async () => {
-        expect(XPathUtil.getInstanceId("$default")).to.equal('default');
+    it('returns "default" if arg is "$default"', async () => {
+        expect(XPathUtil.getDataId("$default")).to.equal('default');
     });
     it('returns "foo" if arg is "foo"', async () => {
-        expect(XPathUtil.getInstanceId("$foo")).to.equal('foo');
+        expect(XPathUtil.getDataId("$foo")).to.equal('foo');
     });
 
     it('isAbsolutePath returns false when no path is given', async () => {

@@ -85,7 +85,7 @@ export class XPathUtil {
      * path, otherwise <code>false</code>.
      */
     static isAbsolutePath(path) {
-        return path != null && (path.startsWith('/') || path.startsWith('instance('));
+        return path != null && (path.startsWith('/') || path.startsWith('$'));
     }
 
     static isSelfReference(ref) {
@@ -93,26 +93,16 @@ export class XPathUtil {
     }
 
     /**
-     * returns the instance id from a complete XPath using `instance()` function.
+     * returns the pure data id from a data variable.
      *
-     * Will return 'default' in case no ref is given at all or the `instance()` function is called without arg.
-     *
-     * Otherwise instance id is extracted from function and returned. If all fails null is returned.
      * @param ref
-     * @returns {string}
+     * @returns {string} input string without leading '$'
      */
     static getDataId(ref) {
         if (!ref) {
             return 'default';
         }
-        if (ref.startsWith('$')) {
-            return 'default';
-        }
-        if (ref.startsWith('data(')) {
-            const result = ref.substring(ref.indexOf('(') + 1);
-            return result.substring(1, result.indexOf(')') - 1);
-        }
-        return null;
+        return ref.substring(1,ref.length);
     }
 
     static resolveData(boundElement, path) {
