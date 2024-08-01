@@ -31,6 +31,7 @@
             background: orange;
         }
 
+        /*
         #dialog3 {
             position: fixed;
             right: 0;
@@ -39,6 +40,7 @@
             width: 10rem;
             margin: 0;
         }
+        */
 
         fx-control {
             width: 100%;
@@ -81,7 +83,8 @@
 
                 <h2>modal dialog closing with <code>fx-hide</code></h2>
                 <p>Opens a modal dialog but uses a <code>fx-hide</code> action to close it. This will dispatch
-                a <code>dialog-hidden</code> event we can catch and show a message.</p>
+                a <code>dialog-hidden</code> event we can catch and show a message. You can also listen for the <code>close</code>
+                and <code>cancel</code> events.</p>
                 <fx-trigger>
                     <button>open dialog 2</button>
                     <fx-show dialog="dialog2"></fx-show>
@@ -110,8 +113,10 @@
                     </div>
                 </dialog>
 
-                <fx-message event="dialog-hidden">Dialog {event('target.id')} was hidden</fx-message>
                 <dialog id="dialog2">
+                    <fx-message event="cancel">cancel event on {event('target.id')}</fx-message>
+                    <fx-message event="close">close event on {event('target.id')}</fx-message>
+                    <fx-message event="dialog-hidden">dialog-hidden event on {event('target.id')}</fx-message>
                     <div class="dialog-content">
                         <h1>Custom size and background</h1>
                         <p>....some more content....</p>
@@ -126,7 +131,11 @@
                     <div class="dialog-content">
                         <h3>Here's some dialog content</h3>
                         <p>ESC will NOT close dialog.</p>
-                        <p>{foo}</p>
+<!--                        <p>{foo}</p>-->
+                        <fx-control ref="foo" update-event="input">
+                            <label>Test Control</label>
+                        </fx-control>
+
                         <form method="dialog">
                             <button>close</button>
                         </form>
