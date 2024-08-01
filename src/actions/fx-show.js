@@ -18,6 +18,7 @@ export class FxShow extends FxAction {
     if (!this.dialog) {
       Fore.dispatch(this, 'error', { message: 'dialog does not exist' });
     }
+    this.modal = this.hasAttribute('modal') ? this.getAttribute('model'):'true';
   }
 
   async perform() {
@@ -34,7 +35,15 @@ export class FxShow extends FxAction {
     if(!targetDlg){
       console.error('target dialog with given id does not exist',this.dialog);
     }
-    targetDlg.open();
+    if(targetDlg.hasAttribute('open')){
+        return;
+    }
+    if(this.modal !== 'true'){
+        targetDlg.show();
+    }else{
+        targetDlg.showModal();
+    }
+
     Fore.dispatch(targetDlg,'dialog-shown',{});
   }
 }

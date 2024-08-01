@@ -213,7 +213,6 @@ export class Fore {
     return [
       'FX-ALERT',
       'FX-CONTROL',
-      'FX-DIALOG',
       'FX-FILENAME',
       'FX-MEDIATYPE',
       'FX-GROUP',

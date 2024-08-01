@@ -11,7 +11,7 @@ describe('Dialog Tests', () => {
           <button>open dialog 1</button>
           <fx-show dialog="dialog1"></fx-show>
         </fx-trigger>
-        <fx-dialog id="dialog1">
+        <dialog id="dialog1">
           <div class="dialog-content">
             <a class="close-dialog" href="#" autofocus>&times;</a>
             <h3>Here's some dialog content</h3>
@@ -21,7 +21,7 @@ describe('Dialog Tests', () => {
               <fx-hide dialog="dialog1"></fx-hide>
             </fx-trigger>
           </div>
-        </fx-dialog>
+        </dialog>
       </fx-fore>
     `);
 
@@ -40,7 +40,6 @@ describe('Dialog Tests', () => {
 
     // await oneEvent(dialog, 'dialog-shown');
     expect(dialog).to.be.visible;
-    expect(dialog.classList.contains('show')).to.be.true;
     expect(fired).to.be.true;
 
   });
@@ -54,7 +53,7 @@ describe('Dialog Tests', () => {
           <button>open dialog 1</button>
           <fx-hide dialog="dialog1"></fx-hide>
         </fx-trigger>
-        <fx-dialog id="dialog1">
+        <dialog id="dialog1">
           <div class="dialog-content">
             <a class="close-dialog" href="#" autofocus>&times;</a>
             <h3>Here's some dialog content</h3>
@@ -64,7 +63,7 @@ describe('Dialog Tests', () => {
               <fx-hide dialog="dialog1"></fx-hide>
             </fx-trigger>
           </div>
-        </fx-dialog>
+        </dialog>
       </fx-fore>
     `);
 

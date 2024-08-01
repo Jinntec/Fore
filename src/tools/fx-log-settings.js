@@ -149,7 +149,7 @@ export class FxLogSettings extends HTMLElement {
             {name: "click", show: false, description: ''},
             {name: "deleted", show: false, description: 'fires after a delete action has been executed'},
             {name: "deselect", show: false, description: 'fires when fx-case is deselected'},
-            {name: "dialog-hidden", show: false, description: 'fires after fx-dialog has been hidden'},
+            {name: "dialog-hidden", show: false, description: 'fires after dialog has been hidden by fx-hide'},
             {name: "dialog-shown", show: false, description: 'fired when a dialog has been shown'},
             {name: "error", show: false, description: 'fires after an error occurred'},
             {name: "execute-action", show: true, description: 'fires when an action executes'},

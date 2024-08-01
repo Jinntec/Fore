@@ -4615,16 +4615,6 @@
       ]
     },
     {
-      "name": "fx-dialog",
-      "path": "./src/ui/fx-dialog.js",
-      "attributes": [
-        {
-          "name": "id"
-        }
-      ],
-      "properties": []
-    },
-    {
       "name": "fx-group",
       "path": "./src/ui/fx-group.js",
       "description": "`fx-group`\na container allowing to switch between fx-case elements\n\n\n  * todo: implement",

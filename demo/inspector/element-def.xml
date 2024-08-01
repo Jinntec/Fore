@@ -5159,16 +5159,6 @@
     <element>
         <attributes>
             <attribute>
-                <name>id</name>
-            </attribute>
-        </attributes>
-        <name>fx-dialog</name>
-        <path>./src/ui/fx-dialog.js</path>
-        <properties/>
-    </element>
-    <element>
-        <attributes>
-            <attribute>
                 <default></default>
                 <description>XPath binding expression pointing to bound node</description>
                 <name>ref</name>
