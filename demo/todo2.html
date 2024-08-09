@@ -75,7 +75,7 @@
                 {if(count(instance()/task[@complete='false'])=0) then "You're all done!" else ""}
             </div>
 
-            <fx-setfocus target="#document" control="task" event="value-changed"></fx-setfocus>
+            <!-- <fx-setfocus target="#document" control="task" event="value-changed"></fx-setfocus> -->
 
             <fx-control id="switch" ref="show-completed" value-prop="checked" update-event="input">
                 <label for="showcompleted">show completed</label>
@@ -85,7 +85,7 @@
 
             <fx-repeat id="r-task" ref="task">
                 <template>
-                    <div>
+                    <div data-cy="task-{count(preceding-sibling::task)}">
                         <fx-action event="value-changed">
                             <fx-send submission="save"></fx-send>
                         </fx-action>
