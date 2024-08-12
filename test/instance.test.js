@@ -23,9 +23,9 @@ describe('instance Tests', () => {
             </data>
         `);
 
-        const data = new DataElement(el);
+        const data = await new DataElement(el).init();
         expect(data).to.exist;
-        expect(data.getData().nodeType).to.equal(Node.DOCUMENT_NODE);
+        expect(data.getData().nodeType).to.equal(Node.ELEMENT_NODE);
     });
 
     it('evaluates xpath in its default context', async () => {
@@ -75,7 +75,8 @@ describe('instance Tests', () => {
         const doc = data.getData();
         expect(doc).to.exist;
 
-        const root = doc.documentElement;
+        // const root = doc.documentElement;
+        const root = doc;
         expect(root.nodeName).to.equal('data');
         expect(XPathUtil.getPath(root, 'default')).to.equal('$default/data[1]');
 
@@ -118,12 +119,12 @@ describe('instance Tests', () => {
         // const dataElements = el.querySelectorAll('data');
         const modelElem = el.getModel();
         expect(modelElem).to.exist;
-        const dataElements = model.data;
-        expect(dataElements[0].id).to.equal('default');
-        expect(dataElements[1].id).to.equal('second');
+        const dataElements = modelElem.data;
+        expect(dataElements.get('default')).to.exist;
+        expect(dataElements.get('second')).to.exist;
 
-        expect(XPathUtil.getPath(dataElements[0].getDefaultContext(), 'default')).to.equal('$default/data[1]');
-        expect(XPathUtil.getPath(dataElements[1].getDefaultContext(), 'second')).to.equal('$second/data[1]');
+        expect(XPathUtil.getPath(dataElements.get('default').getDefaultContext(), 'default')).to.equal('$default/data[1]');
+        expect(XPathUtil.getPath(dataElements.get('second').getDefaultContext(), 'second')).to.equal('$second/data[1]');
 
         const model = el.querySelector('fx-model');
         const {modelItems} = model;
@@ -155,9 +156,10 @@ describe('instance Tests', () => {
         // await elementUpdated(el);
         await oneEvent(el, 'refresh-done');
 
-        const dataElements = el.querySelectorAll('data');
-        expect(dataElements[0].id).to.equal('default');
-        expect(dataElements[1].id).to.equal('second');
+        const modelElem = el.getModel();
+        const dataElements = modelElem.data;
+        expect(dataElements.get('default').getId()).to.equal('default');
+        expect(dataElements.get('second').getId()).to.equal('second');
 
         const model = el.querySelector('fx-model');
         // await elementUpdated(model);
@@ -167,7 +169,7 @@ describe('instance Tests', () => {
         expect(modelItems[0].required).to.equal(false);
     });
 
-    it('Can run the data function from text nodes', async () => {
+    it('Can access data from text nodes', async () => {
         const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model id="model1">
@@ -193,20 +195,19 @@ describe('instance Tests', () => {
             <fx-fore>
                 <fx-model id="model1">
                     <data data-src="base/test/instance1.xml"></data>
-                    <fx-bind ref="greeting"
-                    </fx-bind>
+                    <fx-bind ref="greeting"></fx-bind>
                 </fx-model>
             </fx-fore>
         `);
 
         await oneEvent(el, 'refresh-done');
 
-        const dataElements = el.querySelectorAll('data');
-        expect(dataElements[0].id).to.equal('default');
+        // const dataElements = el.querySelectorAll('data');
+        const model = el.getModel();
+        const dataElements = model.data;
+        expect(dataElements.get('default').getId()).to.equal('default');
 
-        const model = el.querySelector('fx-model');
         const {modelItems} = model;
-
         expect(modelItems[0].required).to.be.false;
         expect(modelItems[0].value).to.equal('hello from file');
     });
@@ -262,8 +263,11 @@ describe('instance Tests', () => {
 
         await oneEvent(el, 'refresh-done');
 
-        const dataElements = el.querySelectorAll('data');
-        expect(Fore.getContentType(dataElements[0])).to.equal('application/json');
+        const modelElem = el.getModel();
+        const dataElements = modelElem.data;
+
+        // const dataElements = el.querySelectorAll('data');
+        expect(Fore.getContentType(dataElements.get('default'))).to.equal('application/json');
     });
 
     it('loads inline json data', async () => {
@@ -283,11 +287,14 @@ describe('instance Tests', () => {
 
         await oneEvent(el, 'refresh-done');
 
-        const dataElements = el.querySelectorAll('data');
-        expect(dataElements[0].id).to.equal('default');
-        expect(dataElements[0].data).to.exist;
-        expect(dataElements[0].data.automobiles).to.exist;
-        expect(dataElements[0].data.automobiles[0].maker).to.equal('Nissan');
+        // const dataElements = el.querySelectorAll('data');
+        const modelElem = el.getModel();
+        const dataElements = modelElem.data;
+
+        expect(dataElements.get('default').getId()).to.equal('default');
+        expect(dataElements.get('default').data).to.exist;
+        expect(dataElements.get('default').data.automobiles).to.exist;
+        expect(dataElements.get('default').data.automobiles[0].maker).to.equal('Nissan');
     });
 
     it('loads data from external json file via src attr', async () => {
@@ -301,9 +308,10 @@ describe('instance Tests', () => {
 
         await oneEvent(el, 'refresh-done');
 
-        const dataElements = el.querySelectorAll('data');
-        expect(dataElements[0].id).to.equal('default');
-        expect(dataElements[0].data).to.exist;
+        // const dataElements = el.querySelectorAll('data');
+        const dataElements = el.getModel().data;
+        expect(dataElements.get('default').getId()).to.equal('default');
+        expect(dataElements.get('default').data).to.exist;
 
         // const model = el.querySelector('fx-model');
         // const { modelItems } = model;
@@ -326,10 +334,12 @@ describe('instance Tests', () => {
 
         await oneEvent(el, 'refresh-done');
 
-        const dataElements = el.querySelectorAll('data');
-        expect(dataElements[0].id).to.equal('default');
-        expect(dataElements[0].getData()).to.exist;
-        expect(dataElements[0].getDefaultContext()).to.exist;
+        // const dataElements = el.querySelectorAll('data');
+        const dataElements = el.getModel().data;
+
+        expect(dataElements.get('default').getId()).to.equal('default');
+        expect(dataElements.get('default').getData()).to.exist;
+        expect(dataElements.get('default').getDefaultContext()).to.exist;
     });
 
     it('resolves data correctly for nested fore elements', async () => {

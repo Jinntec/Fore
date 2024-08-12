@@ -100,7 +100,17 @@ export class XPathUtil {
      */
     static getDataId(ref) {
         if (!ref) {
-            return 'default';
+            return '$default';
+        }
+
+        if(!ref.startsWith('$')){
+            console.warn('invalid call for getDataId',ref);
+            return null;
+        }
+
+        let id = ref.substring(1,ref.length);
+        if(ref.includes('/')){
+            return ref.split('/')[0];
         }
         return ref.substring(1,ref.length);
     }

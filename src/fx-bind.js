@@ -407,7 +407,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
   _getDataId() {
     const bindExpr = this.getBindingExpr();
     // console.log('_getInstanceId bindExpr ', bindExpr);
-    if (bindExpr.startsWith('instance(')) {
+    if (bindExpr.startsWith('$')) {
       this.dataId = XPathUtil.getDataId(bindExpr);
       return;
     }
@@ -415,7 +415,7 @@ export class FxBind extends foreElementMixin(HTMLElement) {
       let parent = this.parentNode;
       while(parent && !this.dataId){
         const ref = parent.getBindingExpr();
-        if (ref.startsWith('instance(')) {
+        if (ref.startsWith('$')) {
           this.dataId = XPathUtil.getDataId(ref);
           return;
         }

@@ -1,5 +1,5 @@
 import { Fore } from './fore.js';
-import { evaluateXPath } from './xpath-evaluation.js';
+import { evaluateXPath,evaluateXPathToFirstNode } from './xpath-evaluation.js';
 
 /**
  * Decorator for native HTMLDataElement to act as a data container.
@@ -34,7 +34,7 @@ export class DataElement {
     this.type = this.dataElement.hasAttribute('data-type')
       ? this.dataElement.getAttribute('data-type')
       : 'xml';
-    this.credentials = this.dataElement.hasAttribute('credentials')
+    this.credentials = this.dataElement.hasAttribute('data-credentials')
       ? this.dataElement.getAttribute('credentials')
       : 'same-origin';
     if (!['same-origin', 'include', 'omit'].includes(this.credentials)) {
@@ -100,7 +100,7 @@ export class DataElement {
 
   evalXPath(xpath) {
     const formElement = this.dataElement.parentElement.parentElement;
-    const result = evaluateXPath(xpath, this.getDefaultContext(), formElement);
+    const result = evaluateXPathToFirstNode(xpath, this.getDefaultContext(), formElement);
     return result;
   }
 
@@ -167,7 +167,7 @@ export class DataElement {
         },
       });
       const data = await this.handleResponse(response);
-      this._setInitialData(data);
+      this._setInitialData(data.documentElement);
     } catch (error) {
       throw new Error(`failed loading data ${error}`);
     }
@@ -200,6 +200,7 @@ export class DataElement {
       console.log('parsed as xml', data);
 
       this._setInitialData(data.documentElement);
+      // this._setInitialData(data);
     } else if (this.type === 'json') {
       this._setInitialData(JSON.parse(this.dataElement.textContent));
     } else if (this.type === 'html') {

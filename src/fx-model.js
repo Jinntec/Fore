@@ -500,13 +500,14 @@ export class FxModel extends HTMLElement {
   getData(id) {
     let found;
     if (id === 'default') {
-      found = this.data[0];
+      found = this.data.get(id);
     }
+
     // ### lookup in local data first
     if (!found) {
       // const dataArray = Array.from(this.data);
 
-      found = this.data.get(id);
+      found = this.data.get(XPathUtil.getDataId(id));
       const parentFore =
         this.fore.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE
           ? this.fore.parentNode.host.closest('fx-fore')
