@@ -22,4 +22,23 @@ describe('todo2 demo spec', () => {
 
     });
 
+	it('should send out the item-changed events correctly', () => {
+		cy.get('.add').click();
+        cy.get('#task').type('foo')
+
+		cy.get('.add').click();
+        cy.get('#task').type('bar')
+
+
+		cy.get('#r-task').then((taskRepeat) => {
+			taskRepeat[0].addEventListener('item-changed', cy.stub().as('item-changed'))
+		});
+
+		cy.get('[data-cy="task-1"]').click();
+		cy.get('@item-changed').should('have.been.calledOnce', 'First click, first item change');
+
+		cy.get('[data-cy="task-0"]').click();
+		cy.get('@item-changed').should('have.been.calledTwice', 'Second click, second item change');
+
+	});
 });

@@ -70,6 +70,14 @@ export class FxRepeatitem extends withDraggability(ForeElementMixin, true) {
     */
 
   _dispatchIndexChange() {
+    /**
+     * @type {import('./fx-repeat.js').FxRepeat}
+     */
+    const repeat = this.parentNode;
+    if (repeat.index === this.index) {
+      // The index did not really change if it did not change :wink:
+      return;
+    }
     this.dispatchEvent(
       new CustomEvent('item-changed', {
         composed: false,
