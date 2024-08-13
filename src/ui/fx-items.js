@@ -4,7 +4,7 @@ import { Fore } from '../fore.js';
 import { XPathUtil } from '../xpath-util.js';
 
 /**
- * FxItems provices a templated list over its bound nodes. It is not standalone but expects to be used
+ * FxItems provides a templated list over its bound nodes. It is not standalone but expects to be used
  * within an fx-control element.
  *
  *

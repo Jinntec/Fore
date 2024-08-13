@@ -346,6 +346,15 @@ export default class FxControl extends XfAbstractControl {
       return;
     }
 
+    // ### value is bound to radio
+    if(this.widget.type === 'radio'){
+      const matches = this.querySelector(`input[value=${this.value}]`);
+      if(matches){
+        matches.checked = true;
+      }
+      return;
+    }
+
     if (this.valueProp === 'selectedOptions') {
       const valueSet = new Set(this.value.split(' '));
       for (const option of [...this.widget.querySelectorAll('option')]) {
@@ -357,6 +366,7 @@ export default class FxControl extends XfAbstractControl {
       }
       return;
     }
+
 
     if (this.hasAttribute('as')) {
       const as = this.getAttribute('as');

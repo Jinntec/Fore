@@ -433,6 +433,54 @@ describe('control tests', () => {
     expect(item).to.exist;
     expect(item.hasAttribute('attr2')).to.be.true;
     expect(item.hasAttribute('attr3')).to.be.true;
+  })
+
+  it('handles radio buttons with fx-items', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <root>
+              <radio>second</radio>
+            </root>
+          </fx-instance>
+        </fx-model>
+        <fieldset>
+          <legend>Radios</legend>
+          <fx-control ref="radio">
+            <label>Choose a radio</label>
+            <fx-items>
+              <input type="radio" id="first" name="radio-input" value="first" />
+              <label for="first">first radio</label>
+
+              <input type="radio" id="second" name="radio-input" value="second"/>
+              <label for="second">second radio</label>
+
+              <input type="radio" id="third" name="radio-input" value="third" />
+              <label for="third">third radio</label>
+            </fx-items>
+            <fx-message event="value-changed">changed to {.}</fx-message>
+          </fx-control>
+        </fieldset>
+        <span>radio:{radio}</span>
+      </fx-fore>
+    `);
+
+    const { detail } = await oneEvent(el, 'refresh-done');
+
+    const second = el.querySelector('#second');
+    expect(second.checked).to.be.true;
+
+    const span = el.querySelector('span');
+    expect(span.innerHTML).to.equal('radio:second');
+
+    const third = el.querySelector('#third');
+    third.click();
+
+    expect(third.checked).to.be.true;
+    expect(span.innerHTML).to.equal('radio:third');
+
+
   });
 
   /*
