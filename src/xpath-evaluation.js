@@ -1031,7 +1031,6 @@ const instance = (dynamicContext, string) => {
 
   const context = lookup.getDefaultContext();
   if (!context) {
-    debugger;
     return null;
   }
   return context;
