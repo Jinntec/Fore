@@ -48,6 +48,38 @@
             return out.toLocaleString().slice(0, 10);
         }
     </fx-function>
+    <fx-function signature="dayOfWeekISO($method as xs:string,$day as xs:string) as xs:string" type="text/javascript">
+
+
+
+        let dow = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"],
+            v1 = (new Date).getDay(),
+            v2 = Number(Object.keys(dow).find((key => dow[key] === $day))),
+            result = 0;
+
+        const today = new Date();
+        if("next" == $method && dow[v1] === $day){
+<!--            return today.toISOString().slice(0, 10);-->
+            return today.toISOString();
+        }
+
+        if ("last" == $method) result = v2 - v1, result >= 0 && (result = v2 - 7 - v1);
+        else {
+            if ("next" != $method) return !1;
+            0 == v2 && (v2 = 7), result = v2 - v1, result < 1 && (result = v2 + 7 - v1)
+        }
+
+        const out = result < 0 ? (result *= -1, new Date((new Date).setDate((new Date).getDate() - result))) : new Date((new Date).setDate((new Date).getDate() + result));
+        console.log('out',out);
+
+        if(today === out){
+            return today.toISOString().slice(0, 10);
+<!--            return today-->
+        } else{
+            return out.toISOString().slice(0, 10);
+<!--            return out-->
+        }
+    </fx-function>
     <h3>Examples</h3>
     <div><code>daysOfWeek('next','wednesday')</code></div>
     <div><code>daysOfWeek('last','wednesday');</code></div>
