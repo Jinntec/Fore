@@ -1,265 +1,266 @@
 @import 'vars.css';
 @import 'toastify.css';
-/*@import url('dev.css');*/
 
-html {
-    --inspector-bg: var(--paper-grey-300);
-    --inspector-pre-bg: var(--paper-grey-100);
-    --inspector-color: var(--paper-grey-800);
-    --inspector-instance-height: 200px;
-    --inspector-handle-bg: var(--paper-blue-500);
-    --inspector-handle-width: 30px;
-}
+    /*@import url('dev.css');*/
 
-[unresolved] {
-    display: none;
-}
+    html {
+        --inspector-bg: var(--paper-grey-300);
+        --inspector-pre-bg: var(--paper-grey-100);
+        --inspector-color: var(--paper-grey-800);
+        --inspector-instance-height: 200px;
+        --inspector-handle-bg: var(--paper-blue-500);
+        --inspector-handle-width: 30px;
+    }
 
-[disabled] {
-    pointer-events: none;
-    cursor: default;
-}
+    [unresolved] {
+        display: none;
+    }
 
-[refresh-on-view] {
-    /*opacity: 0;*/
-}
+    [disabled] {
+        pointer-events: none;
+        cursor: default;
+    }
 
-/*
-    nonrelevant must always be hidden
-*/
-[nonrelevant] {
-    display: none;
-}
+    [refresh-on-view] {
+        /*opacity: 0;*/
+    }
 
-[relevant] {
-    display: block;
-}
+    /*
+        nonrelevant must always be hidden
+    */
+    [nonrelevant] {
+        display: none;
+    }
 
-fx-control[required] label:after {
-    content: "*";
-    display: inline;
-    color: red;
-}
+    [relevant] {
+        display: block;
+    }
 
-.fore-error {
-    height: 2rem;
-    background: darkred;
-    width: 100%;
-    display: block !important;
-    color: white;
-}
+    fx-control[required] label:after {
+        content: "*";
+        display: inline;
+        color: red;
+    }
 
-.fore-error::before {
-    content: 'right-click to inspect';
-    display: flex;
-    flex-align: center;
-}
+    .fore-error {
+        height: 2rem;
+        background: darkred;
+        width: 100%;
+        display: block !important;
+        color: white;
+    }
 
-fx-alert {
-    color: darkred;
-    font-size: 0.9rem;
-    display: none;
-}
+    .fore-error::before {
+        content: 'right-click to inspect';
+        display: flex;
+        flex-align: center;
+    }
 
-[valid] fx-alert{
-    display: none;
-}
+    fx-alert {
+        color: darkred;
+        font-size: 0.9rem;
+        display: none;
+    }
 
-.visited[invalid] fx-alert {
-    display: block;
-}
+    [valid] fx-alert{
+        display: none;
+    }
 
-/* case not displayed by default - if you want e.g. apply transitions you have to overwrite this rule with display='inline' or similar */
-fx-case {
-    display: none;
-}
+    .visited[invalid] fx-alert {
+        display: block;
+    }
 
-fx-output[readonly] img {
-    background: inherit;
-}
+    /* case not displayed by default - if you want e.g. apply transitions you have to overwrite this rule with display='inline' or similar */
+    fx-case {
+        display: none;
+    }
 
-.error {
-    background: var(--paper-red-500);
-    display: flex;
-}
+    fx-output[readonly] img {
+        background: inherit;
+    }
 
-fx-control, fx-trigger, .fx-checkbox {
-    white-space: nowrap;
-    /* position: relative; */
-}
+    .error {
+        background: var(--paper-red-500);
+        display: flex;
+    }
 
-/* ### FX-DIALOG STYLES ### */
-/* ### FX-DIALOG STYLES ### */
-/* ### FX-DIALOG STYLES ### */
-fx-dialog {
-    display: none;
-    opacity: 0;
-    width: 100vw;
-    height: 100vh;
-    transition: opacity 1s linear;
-    z-index: -1;
-    transition: none;
-}
+    fx-control, fx-trigger, .fx-checkbox {
+        white-space: nowrap;
+        /* position: relative; */
+    }
 
-fx-dialog.show {
-    display: block;
-    min-height: 200px;
-    border-radius: 0.5rem;
-    opacity: 1;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 10;
-    transition: opacity 0.4s linear;
-}
+    /* ### FX-DIALOG STYLES ### */
+    /* ### FX-DIALOG STYLES ### */
+    /* ### FX-DIALOG STYLES ### */
+    fx-dialog {
+        display: none;
+        opacity: 0;
+        width: 100vw;
+        height: 100vh;
+        transition: opacity 1s linear;
+        z-index: -1;
+        transition: none;
+    }
 
-fx-dialog.show .dialog-content {
-    padding: 1rem;
-    width: fit-content;
-    height: fit-content;
-    border: thin solid;
-    border-radius: 0.3rem;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translateX(-50%) translateY(-50%);
-    background: white;
+    fx-dialog.show {
+        display: block;
+        min-height: 200px;
+        border-radius: 0.5rem;
+        opacity: 1;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 10;
+        transition: opacity 0.4s linear;
+    }
 
-}
+    fx-dialog.show .dialog-content {
+        padding: 1rem;
+        width: fit-content;
+        height: fit-content;
+        border: thin solid;
+        border-radius: 0.3rem;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        background: white;
 
-fx-dialog a.close-dialog {
-    position: absolute;
-    right: 0.4rem;
-    top: 0.2rem;
-    color: var(--paper-grey-900);
-    text-decoration: none;
-    font-size: 1.2rem;
-}
+    }
 
-fx-dialog .action {
-    width: 100%;
-    text-align: center;
-    display: block;
-}
+    fx-dialog a.close-dialog {
+        position: absolute;
+        right: 0.4rem;
+        top: 0.2rem;
+        color: var(--paper-grey-900);
+        text-decoration: none;
+        font-size: 1.2rem;
+    }
 
-fx-group, fx-switch, fx-repeat, fx-dialog {
-    display: block;
-}
+    fx-dialog .action {
+        width: 100%;
+        text-align: center;
+        display: block;
+    }
 
-fx-hint {
-    display: none;
-}
+    fx-group, fx-switch, fx-repeat, fx-dialog {
+        display: block;
+    }
 
-fx-model,
-fx-instance,
-fx-action,
-fx-setvalue {
-    display: none;
-}
+    fx-hint {
+        display: none;
+    }
 
-fx-trigger a[disabled] {
-    color: lightgrey;
-}
+    fx-model,
+    fx-instance,
+    fx-action,
+    fx-setvalue {
+        display: none;
+    }
 
-fx-trigger img[disabled] {
-    filter: blur(2px);
-}
+    fx-trigger a[disabled] {
+        color: lightgrey;
+    }
 
-fx-repeatitem {
-    position: relative;
-    opacity: 1;
-}
+    fx-trigger img[disabled] {
+        filter: blur(2px);
+    }
 
-.hidden {
-    visibility: hidden;
-    opacity: 0;
-    transition: visibility 0s 2s, opacity 2s linear;
-}
+    fx-repeatitem {
+        position: relative;
+        opacity: 1;
+    }
 
-.isEmpty.visited .widget {
-    background: lightpink;
-}
+    .hidden {
+        visibility: hidden;
+        opacity: 0;
+        transition: visibility 0s 2s, opacity 2s linear;
+    }
 
-.loaded {
-    animation: fadein 0.3s forwards;
-}
+    .isEmpty.visited .widget {
+        background: lightpink;
+    }
 
-/* avoid flicker from nested lazily loaded elements */
-.loaded .loaded {
-    animation: none;
-    opacity: 1;
-}
+    .loaded {
+        animation: fadein 0.3s forwards;
+    }
 
-.logtree details {
-    padding: 0.1rem 1rem;
-    margin: 0;
-}
-noscript{
-    display: block;
-    width: 100%;
-    padding: 1rem;
-    background: darkorange;
-    color:white;
-    position: absolute;
-    top:0;
-    left:0;
-}
+    /* avoid flicker from nested lazily loaded elements */
+    .loaded .loaded {
+        animation: none;
+        opacity: 1;
+    }
 
-.submit-validation-failed .isEmpty .widget {
-    background: lightpink;
-}
+    .logtree details {
+        padding: 0.1rem 1rem;
+        margin: 0;
+    }
+    noscript{
+        display: block;
+        width: 100%;
+        padding: 1rem;
+        background: darkorange;
+        color:white;
+        position: absolute;
+        top:0;
+        left:0;
+    }
 
-.vertical label {
-    display: block;
-}
+    .submit-validation-failed .isEmpty .widget {
+        background: lightpink;
+    }
 
-/* fx-action-log styles */
+    .vertical label {
+        display: block;
+    }
 
-fx-fore.action-log{
-    /*background: var(--paper-orange-500);*/
-}
-.action-log .action-log-debug {
-    display: block !important;
-    min-height: 3rem;
-    background: var(--paper-orange-500);
-}
-.action-log fx-model{
-    display: block;
-    min-height: 1rem;
-}
-.action-log fx-model::before{
-    content:'model';
-}
+    /* fx-action-log styles */
 
-.action-log fx-instance,
-.action-log fx-bind,
-.action-log fx-submission,
-.action-log fx-function
-{
-    display: block;
-    min-height: 2rem;
-    background: var(--paper-orange-500);
-}
+    fx-fore.action-log{
+        /*background: var(--paper-orange-500);*/
+    }
+    .action-log .action-log-debug {
+        display: block !important;
+        min-height: 3rem;
+        background: var(--paper-orange-500);
+    }
+    .action-log fx-model{
+        display: block;
+        min-height: 1rem;
+    }
+    .action-log fx-model::before{
+        content:'model';
+    }
 
-.action-log fx-bind::before{
-    content:'bind :: ' attr(ref);
-}
-.action-log fx-instance::before{
-    content:'instance :: ' attr(id);
-}
-.action-log fx-submission::before{
-    content:'submission ::' attr(id);
-}
+    .action-log fx-instance,
+    .action-log fx-bind,
+    .action-log fx-submission,
+    .action-log fx-function
+    {
+        display: block;
+        min-height: 2rem;
+        background: var(--paper-orange-500);
+    }
 
-.action-log .action-log-debug::before{
-    content: attr(data-name);
-}
-.action-log .action-log-debug .targetd{
-    cursor: pointer;
-}
+    .action-log fx-bind::before{
+        content:'bind :: ' attr(ref);
+    }
+    .action-log fx-instance::before{
+        content:'instance :: ' attr(id);
+    }
+    .action-log fx-submission::before{
+        content:'submission ::' attr(id);
+    }
+
+    .action-log .action-log-debug::before{
+        content: attr(data-name);
+    }
+    .action-log .action-log-debug .targetd{
+        cursor: pointer;
+    }
 
 
-/* ### toastify customizations #### */
+    /* ### toastify customizations #### */
 
-.toastify.on.warning{
-    background: var(--paper-orange-500);
-}
+    .toastify.on.warning{
+        background: var(--paper-orange-500);
+    }
 
