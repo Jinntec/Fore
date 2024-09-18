@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<root>
+    <id>https://e-editiones.org/app/tei-publisher/base</id>
+    <version>1.0.0</version>
+    <label>TEI Publisher Base App (New)</label>
+    <description>Base profile for a TEI Publisher 10 application. Not usable on its own.</description>
+    <pkg>
+        <abbrev>tei-publisher-base</abbrev>
+        <version>1.0.0</version>
+        <website>http://tei-publisher.com</website>
+        <user>
+            <name>tei</name>
+            <group>tei</group>
+            <password>simple</password>
+        </user>
+        <permissions>rw-r--r--</permissions>
+    </pkg>
+    <templating>
+        <modules>
+            <module url="http://teipublisher.com/ns/templates/page">
+                <prefix>page</prefix>
+                <at>modules/templates/page.xqm</at>
+            </module>
+            <module url="http://teipublisher.com/ns/templates/page">
+                <prefix>browse</prefix>
+                <at>modules/templates/browse.xqm</at>
+            </module>
+        </modules>
+    </templating>
+    <scripts>
+        <script name="webcomponents" version="2.19.2"></script>
+        <script name="fore" version="2.2.0"></script>
+        <script name="cdn">https://cdn.jsdelivr.net/npm/@teipublisher/pb-components</script>
+    </scripts>
+    <styles>
+        <style>https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css</style>
+        <style>resources/css/theme.css</style>
+    </styles>
+    <data>data</data>
+    <defaults>
+        <view>div</view>
+        <search>div</search>
+        <odd>teipublisher.odd</odd>
+        <template></template>
+    </defaults>
+    <themes>
+        <theme>
+            <fonts>
+                <base>'Roboto', 'Noto', sans-serif</base>
+                <content>Junicode, Georgia, 'Times New Roman', serif</content>
+                <heading>Oswald, Verdana, Helvetica, sans-serif</heading>
+            </fonts>
+            <toolbar>true</toolbar>
+        </theme>
+    </themes>
+    <features>
+        <toolbar>true</toolbar>
+        <menubar>true</menubar>
+        <toc>false</toc>
+    </features>
+    <odds>
+        <odd>teipublisher.odd</odd>
+        <odd>docx.odd</odd>
+    </odds>
+    <ignore>repo.xml</ignore>
+    <menu>
+        <item>
+            <label>Start</label>
+            <url>index.html</url>
+        </item>
+        <login>true</login>
+    </menu>
+</root>

@@ -1,5 +1,13 @@
 /* Material Design color palette for Google products */
+:root{
+    --pico-font-weight: 300;
+    --pico-font-size: 1rem;
+    --pico-form-element-spacing-vertical: 0.5rem;
+    --pico-form-element-spacing-horizontal: 0.75rem;
+}
 html {
+
+
     --google-red-100: #f4c7c3;
     --google-red-300: #e67c73;
     --google-red-500: #db4437;

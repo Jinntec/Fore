@@ -1,5 +1,8 @@
 import XfAbstractControl from './abstract-control.js';
 
+/**
+ * @deprecated - can easily be substituted with template expression and usual <span>.
+ */
 export class FxHint extends XfAbstractControl {
   static get styles() {
     return `

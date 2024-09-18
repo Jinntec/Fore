@@ -3,42 +3,81 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
-    <title>multiple select</title>
-    <link href="../resources/fore.css" rel="stylesheet">
+    <title>multiple select with select control</title>
+    <link href="../resources/demo.css" rel="stylesheet">
     <style>
-        fx-control{
+        fx-control {
             display: block;
+            margin-bottom:1rem;
+        }
+
+        select {
+            width: 100%;
+        }
+        label{
+            display:block;
         }
     </style>
 </head>
 <body>
 <fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+<div class="wrapper">
 
-<fx-fore>
-    <fx-model>
-        <fx-instance>
-            <data>
-                <selected></selected>
-                <lang>de</lang>
-            </data>
-        </fx-instance>
-        <fx-instance id="material" src="data/material.xml"></fx-instance>
+    <h1>Select multiple</h1>
+    <p>
+        If binding a control using a multiple select as widget, the bound value is a text value containing a list of values to be matched
+        against the list of option values that the select displays.
+    </p>
+    <p>In this example the select builds a list of options from the items in the 'vars' instance. The control
+        itself bind to the <code>selected</code> node. The value of the control will determine which options become
+        selected.</p>
 
+    <p class="note">
+        Please note the <code>value-prop="selectedOptions"</code> on second control. This setting is required to map the values
+        correctly.
+    </p>
 
-    </fx-model>
-
-    lang {instance()/lang}
-
-    <fx-control ref="selected">
-        <label>Material</label>
-        <select multiple size="10" class="widget" ref="instance('material')/term">
-            <template>
-                <option value="{@ref}">{name[@xml:lang = instance()/lang]}</option>
-            </template>
-        </select>
-    </fx-control>
-</fx-fore>
-
+    <p>As we're using <code>update-event="change"</code> on the control the bound value is updated each time the user
+        clicks one of the items and update the input above.</p>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <selected>1 3</selected>
+                        </data>
+                    </fx-instance>
+                    <fx-instance id="vars">
+                        <data>
+                            <item id="1">value1</item>
+                            <item id="2">value2</item>
+                            <item id="3">value3</item>
+                            <item id="4">value4</item>
+                            <item id="5">value5</item>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+                <!-- both controls are binding the same data -->
+                <fx-control ref="instance()/selected">
+                    <label>selected value
+                        <input placeholder="put your Ids here"/>
+                    </label>
+                </fx-control>
+                <fx-control ref="instance()/selected" class="{$vars/show-multiple}" value-prop="selectedOptions"
+                            update-event="change">
+                    <label for="select1">select multiple</label>
+                    <select id="select1" class="widget" multiple="multiple" ref="instance('vars')/item" size="8">
+                        <template>
+                            <option value="{@id}">{.}</option>
+                        </template>
+                    </select>
+                </fx-control>
+                <!--            <div>{instance()/selected}</div>-->
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
 <script type="module" src="./demo.js"></script>
 </body>
 </html>

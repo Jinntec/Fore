@@ -15,7 +15,7 @@ import { resolveId } from '../xpath-evaluation.js';
 class FxAppend extends AbstractAction {
   static get properties() {
     return {
-	  ...AbstractAction.properties,
+      ...AbstractAction.properties,
       ref: {
         type: String,
       },

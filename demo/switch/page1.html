@@ -1,0 +1,18 @@
+<fx-case>
+    <fx-action event="select">
+        <fx-message>View1 selected</fx-message>
+    </fx-action>
+
+    <h1>VIEW 1</h1>
+
+    <p>I'm coming from page1.html.</p>
+    <p>I'm just a snippet of <a href="page1.html" target="_blank">HTML</a> wrapped into a <code>fx-case</code> element.</p>
+    <fx-control ref="//fx-case[@id='one']" as="node">
+        <jinn-codemirror inert linter="http://localhost:8080/exist/apps/tei-publisher/api/lint" mode="html" valid="true"
+                         class="widget"></jinn-codemirror>
+    </fx-control>
+
+    <p>This is also additionally registering a handler action for the 'select' event to be run whenever
+    the case is selected.</p>
+    </jinn-codemirror>
+</fx-case>
