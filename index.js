@@ -61,6 +61,7 @@ import './src/actions/fx-toggleboolean.js';
 import './src/actions/fx-call.js';
 import './src/actions/fx-setattribute.js';
 import './src/actions/fx-construct-done.js';
+import './src/actions/fx-unmodified.js';
 
 import './src/functions/fx-function.js';
 import './src/functions/fx-functionlib.js';

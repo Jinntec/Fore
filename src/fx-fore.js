@@ -13,6 +13,19 @@ import { XPathUtil } from './xpath-util.js';
 import { FxRepeatAttributes } from './ui/fx-repeat-attributes.js';
 
 /**
+ * Makes the dirty state of the form.
+ *
+ * Clean when there are no changes yet or all is submitted,
+ * Dirty when there are unsaved changes.
+ *
+ * We might need a 'saving' state later
+ */
+const dirtyStates = {
+  CLEAN: 'clean',
+  DIRTY: 'dirty',
+};
+
+/**
  * Main class for Fore.Outermost container element for each Fore application.
  *
  * Root element for Fore. Kicks off initialization and displays messages.
@@ -99,7 +112,7 @@ export class FxFore extends HTMLElement {
     this.addEventListener('error', this._logError);
     this.addEventListener('warn', this._displayWarning);
     // this.addEventListener('log', this._logError);
-    window.addEventListener('compute-exception', (e) => {
+    window.addEventListener('compute-exception', e => {
       console.error('circular dependency: ', e);
     });
 
@@ -111,6 +124,9 @@ export class FxFore extends HTMLElement {
     this.outermostHandler = null;
 
     this.copiedElements = new WeakSet();
+
+    this.dirtyState = dirtyStates.CLEAN;
+    this.showConfirmation = false;
 
     const style = `
             :host {
@@ -269,7 +285,7 @@ export class FxFore extends HTMLElement {
     this._injectDevtools();
 
     const slot = this.shadowRoot.querySelector('slot#default');
-    slot.addEventListener('slotchange', async (event) => {
+    slot.addEventListener('slotchange', async event => {
       // preliminary addition for auto-conversion of non-prefixed element into prefixed elements. See fore.js
       // console.log(`### <<<<< slotchange on '${this.id}' >>>>>`);
       if (this.inited) return;
@@ -309,7 +325,7 @@ export class FxFore extends HTMLElement {
             }
             registerVariables(child);
           }
-        }(this));
+        })(this);
 
         await modelElement.modelConstruct();
         this._handleModelConstructDone();
@@ -325,6 +341,10 @@ export class FxFore extends HTMLElement {
     this.addEventListener('refresh', () => {
       this.refresh(true);
     });
+
+    if (this.getAttribute('show-confirmation')) {
+      this.showConfirmation = true;
+    }
   }
 
   _injectDevtools() {
@@ -363,6 +383,17 @@ export class FxFore extends HTMLElement {
     this._scanForNewTemplateExpressionsNextRefresh = true;
   }
 
+  markAsClean() {
+    this.addEventListener(
+      'value-changed',
+      () => {
+        this.dirtyState = dirtyStates.DIRTY;
+      },
+      { once: true },
+    );
+    this.dirtyState = dirtyStates.CLEAN;
+  }
+
   /**
    * loads a Fore from an URL given by `src`.
    *
@@ -383,7 +414,7 @@ export class FxFore extends HTMLElement {
   handleIntersect(entries, observer) {
     // console.time('refreshLazy');
 
-    entries.forEach((entry) => {
+    entries.forEach(entry => {
       const { target } = entry;
 
       const fore = Fore.getFore(target);
@@ -503,11 +534,11 @@ export class FxFore extends HTMLElement {
       let needsRefresh = false;
 
       // ### after recalculation the changed modelItems are copied to 'toRefresh' array for processing
-      this.toRefresh.forEach((modelItem) => {
+      this.toRefresh.forEach(modelItem => {
         // check if modelItem has boundControls - if so, call refresh() for each of them
         const controlsToRefresh = modelItem.boundControls;
         if (controlsToRefresh) {
-          controlsToRefresh.forEach((ctrl) => {
+          controlsToRefresh.forEach(ctrl => {
             ctrl.refresh(force);
           });
         }
@@ -518,12 +549,12 @@ export class FxFore extends HTMLElement {
           const deps = this.getModel().mainGraph.dependentsOf(modelItem.path, false);
           // ### iterate dependant modelItems and refresh all their boundControls
           if (deps.length !== 0) {
-            deps.forEach((dep) => {
+            deps.forEach(dep => {
               // ### if changed modelItem has a 'facet' path we use the basePath that is the locationPath without facet name
               const basePath = XPathUtil.getBasePath(dep);
               const modelItemOfDep = this.getModel().modelItems.find(mip => mip.path === basePath);
               // ### refresh all boundControls
-              modelItemOfDep.boundControls.forEach((control) => {
+              modelItemOfDep.boundControls.forEach(control => {
                 control.refresh(force);
               });
             });
@@ -604,7 +635,8 @@ export class FxFore extends HTMLElement {
    * @private
    */
   _updateTemplateExpressions() {
-    const search = "(descendant-or-self::*!(text(), @*))[contains(., '{')][substring-after(., '{') => contains('}')][not(ancestor-or-self::fx-model)]";
+    const search =
+      "(descendant-or-self::*!(text(), @*))[contains(., '{')][substring-after(., '{') => contains('}')][not(ancestor-or-self::fx-model)]";
 
     const tmplExpressions = evaluateXPathToNodes(search, this, this);
     // console.log('template expressions found ', tmplExpressions);
@@ -618,7 +650,7 @@ export class FxFore extends HTMLElement {
     /*
             storing expressions and their nodes for re-evaluation
              */
-    Array.from(tmplExpressions).forEach((node) => {
+    Array.from(tmplExpressions).forEach(node => {
       const ele = node.nodeType === Node.ATTRIBUTE_NODE ? node.ownerElement : node.parentNode;
       if (ele.closest('fx-fore') !== this) {
         // We found something in a sub-fore. Act like it's not there
@@ -683,15 +715,16 @@ export class FxFore extends HTMLElement {
     if (node.nodeType === Node.ELEMENT_NODE && node.closest('[nonrelevant]')) return;
 
     // if(node.closest('[nonrelevant]')) return;
-    const replaced = expr.replace(/{[^}]*}/g, (match) => {
+    const replaced = expr.replace(/{[^}]*}/g, match => {
       if (match === '{}') return match;
       const naked = match.substring(1, match.length - 1);
       const inscope = getInScopeContext(node, naked);
       if (!inscope) {
         console.warn('no inscope context for expr', naked);
-        const errNode = node.nodeType === Node.TEXT_NODE || node.nodeType === Node.ATTRIBUTE_NODE
-          ? node.parentNode
-          : node;
+        const errNode =
+          node.nodeType === Node.TEXT_NODE || node.nodeType === Node.ATTRIBUTE_NODE
+            ? node.parentNode
+            : node;
         return match;
       }
       // Templates are special: they use the namespace configuration from the place where they are
@@ -751,40 +784,17 @@ export class FxFore extends HTMLElement {
    * @private
    */
   _handleModelConstructDone() {
-    /*
-        listening on beforeunload after model is constructed - this is to be able to evaluate a condition on the data
-        that specifies whether or not to show confirmation.
-         */
-    if (this.hasAttribute('show-confirmation')) {
-      const condition = this.getAttribute('show-confirmation');
-      if (
-        condition
-        && condition !== 'show-confirmation'
-        && condition !== 'true'
-        && condition !== ''
-      ) {
-        window.addEventListener('beforeunload', (event) => {
-          const mustDisplay = evaluateXPathToBoolean(
-            condition,
-            this.getModel().getDefaultContext(),
-            this,
-          );
-          if (mustDisplay) {
-            return (event.returnValue = 'are you sure');
-          }
-          event.preventDefault();
-        });
-      } else {
-        window.addEventListener('beforeunload', (event) => {
-          // if(AbstractAction.dataChanged){
-          if (FxModel.dataChanged) {
-            return (event.returnValue = 'are you sure');
-          }
-          event.preventDefault();
-        });
-      }
-    }
+    this.markAsClean();
 
+    if (this.showConfirmation) {
+      window.addEventListener('beforeunload', event => {
+        if (this.dirtyState === dirtyStates.DIRTY) {
+          event.preventDefault();
+          return true;
+        }
+        return false;
+      });
+    }
     this._initUI();
   }
 
@@ -799,9 +809,10 @@ export class FxFore extends HTMLElement {
     const model = this.querySelector('fx-model');
 
     // ##### lazy creation should NOT take place if there's a parent Fore using shared instances
-    const parentFore = this.parentNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE
-      ? this.parentNode.closest('fx-fore')
-      : null;
+    const parentFore =
+      this.parentNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE
+        ? this.parentNode.closest('fx-fore')
+        : null;
     if (this.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
       console.log('fragment', this.parentNode);
     }
@@ -847,7 +858,7 @@ export class FxFore extends HTMLElement {
       if (ref.includes('/')) {
         // console.log('complex path to create ', ref);
         const steps = ref.split('/');
-        steps.forEach((step) => {
+        steps.forEach(step => {
           // const generated = document.createElement(ref);
           parent = this._generateNode(parent, step, start);
         });
@@ -961,7 +972,7 @@ export class FxFore extends HTMLElement {
     //	this.addEventListener('dragend', this._handleDragEnd);
     this.handleDrop = event => this._handleDrop(event);
     this.ownerDocument.body.addEventListener('drop', this.handleDrop);
-    this.ownerDocument.body.addEventListener('dragover', (e) => {
+    this.ownerDocument.body.addEventListener('dragover', e => {
       e.preventDefault();
       e.stopPropagation();
       e.dataTransfer.dropEffect = 'move';
@@ -1090,7 +1101,7 @@ export class FxFore extends HTMLElement {
     if (this.repeatsFromAttributesCreated) return;
     const repeats = this.querySelectorAll('[data-ref]');
     if (repeats) {
-      Array.from(repeats).forEach((item) => {
+      Array.from(repeats).forEach(item => {
         if (item.closest('fx-control')) return;
         /*
                 const parentRepeat = item.closest('fx-repeat');
