@@ -342,7 +342,7 @@ export class FxFore extends HTMLElement {
       this.refresh(true);
     });
 
-    if (this.getAttribute('show-confirmation')) {
+    if (this.hasAttribute('show-confirmation')) {
       this.showConfirmation = true;
     }
   }
