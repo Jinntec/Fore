@@ -28,8 +28,12 @@
         label{
             width: 12rem;
             display: inline-block;
-            text-align: right;
         }
+        input[type=number]{
+            width:5rem;
+            text-align:center;
+        }
+
     </style>
 </head>
 <body unresolved="unresolved">
@@ -65,8 +69,8 @@
                     <h2>Calculations</h2>
                     <p class="note">Calculated nodes are always readonly!</p>
                     <fx-control ref="m1" update-event="input">
-                        <label>start:</label>
-                        <input type="text">
+                        <label>start:<input type="number"></label>
+
                     </fx-control>
 
                     <fx-output ref="m2" update-event="input">

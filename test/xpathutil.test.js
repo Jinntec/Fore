@@ -1,4 +1,6 @@
-import { html, fixtureSync, expect, oneEvent } from '@open-wc/testing';
+import {
+  html, fixtureSync, expect, oneEvent,
+} from '@open-wc/testing';
 
 import { XPathUtil } from '../src/xpath-util.js';
 
@@ -55,5 +57,4 @@ describe('XPathUtil Tests', () => {
     const action = el.querySelector('fx-setvalue');
     expect(XPathUtil.getParentBindingElement(action)).to.equal(inner);
   });
-
 });

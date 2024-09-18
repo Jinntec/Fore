@@ -10,14 +10,14 @@ import { resolveId } from '../xpath-evaluation.js';
  * @demo demo/project.html
  */
 export class FxHide extends AbstractAction {
-    static get properties() {
-        return {
-            ...super.properties,
-            dialog: {
-                type: String,
-            },
-        };
-    }
+  static get properties() {
+    return {
+      ...super.properties,
+      dialog: {
+        type: String,
+      },
+    };
+  }
 
   connectedCallback() {
     super.connectedCallback();
@@ -29,17 +29,17 @@ export class FxHide extends AbstractAction {
 
   async perform() {
     this.dispatchEvent(
-        new CustomEvent('execute-action', {
-          composed: true,
-          bubbles: true,
-          cancelable:true,
-          detail: { action: this, event:this.event},
-        }),
+      new CustomEvent('execute-action', {
+        composed: true,
+        bubbles: true,
+        cancelable: true,
+        detail: { action: this, event: this.event },
+      }),
     );
 
     const dialog = resolveId(this.dialog, this);
     dialog.hide();
-    Fore.dispatch(dialog,'dialog-hidden',{})
+    Fore.dispatch(dialog, 'dialog-hidden', {});
   }
 }
 

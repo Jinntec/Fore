@@ -1,5 +1,6 @@
 // core + models classes
 import './src/fx-bind.js';
+import './src/fx-connection.js';
 import './src/fx-fore.js';
 import './src/fx-instance.js';
 import './src/fx-model.js';
@@ -33,7 +34,6 @@ import './src/lab/fore-component.js';
 import './src/tools/fx-json-instance.js';
 // import './src/tools/fx-minimap.js';
 
-
 // import './src/ui/fx-checkbox-group.js';
 
 // action classes
@@ -41,6 +41,7 @@ import './src/actions/fx-append.js';
 import './src/actions/fx-delete.js';
 import './src/actions/fx-setfocus.js';
 import './src/actions/fx-insert.js';
+// import './src/actions/fx-insertchild.js';
 import './src/actions/fx-message.js';
 import './src/actions/fx-setvalue.js';
 import './src/actions/fx-send.js';
@@ -60,7 +61,7 @@ import './src/actions/fx-toggleboolean.js';
 import './src/actions/fx-call.js';
 import './src/actions/fx-setattribute.js';
 import './src/actions/fx-construct-done.js';
+import './src/actions/fx-unmodified.js';
 
 import './src/functions/fx-function.js';
 import './src/functions/fx-functionlib.js';
-

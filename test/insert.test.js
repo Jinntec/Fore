@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-expressions */
-import { html, oneEvent, fixtureSync, expect } from '@open-wc/testing';
+import {
+  html, oneEvent, fixtureSync, expect,
+} from '@open-wc/testing';
 import * as fx from 'fontoxpath';
 
 import '../src/fx-instance.js';
@@ -30,7 +32,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-   await trigger.performActions();
+    await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
@@ -68,7 +70,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-   await trigger.performActions();
+    await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
@@ -122,7 +124,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-   await trigger.performActions();
+    await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
@@ -183,7 +185,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-   await trigger.performActions();
+    await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
@@ -230,7 +232,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-   await trigger.performActions();
+    await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
@@ -281,7 +283,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-   await trigger.performActions();
+    await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
@@ -317,7 +319,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-   await trigger.performActions();
+    await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
@@ -352,7 +354,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-   await trigger.performActions();
+    await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     const tasks = fx.evaluateXPath('//task', inst, null, {});
@@ -387,7 +389,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-   await trigger.performActions();
+    await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
@@ -419,7 +421,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-   await trigger.performActions();
+    await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
@@ -451,7 +453,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-   await trigger.performActions();
+    await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
@@ -549,7 +551,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('#addGrp');
-   await trigger.performActions();
+    await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
@@ -641,7 +643,7 @@ describe('insert Tests', () => {
     `);
     await oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('#addGrp');
-   await trigger.performActions();
+    await trigger.performActions();
 
     const inst = el.getModel().getDefaultContext();
     console.log('instance after insert', inst);
@@ -729,7 +731,7 @@ describe('insert Tests', () => {
     item = fx.evaluateXPathToBoolean('exists(//listBibl/cit)', inst, null, {});
     expect(item).to.be.true;
     const outer = el.querySelector('#r-gramGrp');
-      expect(outer.index).to.equal(1);
+    expect(outer.index).to.equal(1);
   });
 
   it('inserts into inner repeat with "context", "ref" and "origin" attribute', async () => {

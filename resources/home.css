@@ -325,8 +325,8 @@ section {
     background: rgba(255, 255, 255, 0.7);
     border-radius: 0.5rem;
     text-decoration: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.9);
-    border-left: 1px solid rgba(255, 255, 255, 0.9);
+    border-top: 1px solid rgba(205, 205, 205, 0.6);
+    border-left: 1px solid rgba(205, 205, 205, 0.6);
     border-right: 1px solid rgba(0, 0, 0, 0.3);
     border-bottom: 1px solid rgba(0, 0, 0, 0.3);
 }

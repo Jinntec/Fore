@@ -1,0 +1,20 @@
+<data>
+<fx-switch id="switch">
+    <fx-case id="home">
+        <div>
+            <!-- stripped content for display purposes -->
+        </div>
+    </fx-case>
+    <fx-case id="one" src="page1.html">
+        <fx-action event="select">
+            <fx-message>View1 selected</fx-message>
+        </fx-action>
+        <div>only seen if page1.html fails to load.</div>
+    </fx-case>
+    <fx-case id="two" src="page2.html">
+        <h1>I'm inline</h1>
+        <p>page2.html couldn't be loaded (doesn't exist). Falling back to inline content.</p>
+    </fx-case>
+    <fx-case id="three" src="page3.html" selector="#three"></fx-case>
+</fx-switch>
+</data>

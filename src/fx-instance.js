@@ -19,9 +19,7 @@ async function handleResponse(fxInstance, response) {
       new DOMParser().parseFromString(result, 'text/html'),
     );
   }
-  if (
-    responseContentType.startsWith('text/')
-  ) {
+  if (responseContentType.startsWith('text/')) {
     // console.log("********** inside  res plain *********");
     return response.text();
   }
@@ -29,8 +27,10 @@ async function handleResponse(fxInstance, response) {
     // console.log("********** inside res json *********");
     return response.json();
   }
-  if (responseContentType.startsWith('application/xml') ||
-      responseContentType.startsWith('text/xml')) {
+  if (
+    responseContentType.startsWith('application/xml') ||
+    responseContentType.startsWith('text/xml')
+  ) {
     // See https://www.rfc-editor.org/rfc/rfc7303
     const text = await response.text();
     // console.log('xml ********', result);
@@ -68,17 +68,20 @@ export class FxInstance extends HTMLElement {
     }
 
     this.credentials = this.hasAttribute('credentials')
-        ? this.getAttribute('credentials')
-        : 'same-origin';
+      ? this.getAttribute('credentials')
+      : 'same-origin';
     if (!['same-origin', 'include', 'omit'].includes(this.credentials)) {
-      console.error(`fx-submission: the value of credentials is not valid. Expected 'same-origin', 'include' or 'omit' but got '${this.credentials}'`, this);
+      console.error(
+        `fx-submission: the value of credentials is not valid. Expected 'same-origin', 'include' or 'omit' but got '${this.credentials}'`,
+        this,
+      );
     }
 
     if (this.hasAttribute('type')) {
       this.type = this.getAttribute('type');
     } else {
       this.type = 'xml';
-      this.setAttribute('type',this.type);
+      this.setAttribute('type', this.type);
     }
     const style = `
             :host {
@@ -110,7 +113,7 @@ export class FxInstance extends HTMLElement {
   async init() {
     // console.log('fx-instance init');
     await this._initInstance();
-    console.log(`### <<<<< instance ${this.id} loaded >>>>> `);
+    // console.log(`### <<<<< instance ${this.id} loaded >>>>> `);
     this.dispatchEvent(
       new CustomEvent('instance-loaded', {
         composed: true,
@@ -121,7 +124,7 @@ export class FxInstance extends HTMLElement {
     return this;
   }
 
-  reset(){
+  reset() {
     // this._useInlineData();
     this.instanceData = this.originalInstance.cloneNode(true);
   }
@@ -191,12 +194,6 @@ export class FxInstance extends HTMLElement {
         root.appendChild(newNode);
       }
       this._setInitialData(doc);
-/*
-      this.instanceData = doc;
-      this.originalInstance = this.instanceData.cloneNode(true);
-*/
-      // this.instanceData.firstElementChild.setAttribute('id', this.id);
-      // resolve('done');
     } else if (this.src) {
       await this._loadData();
     } else if (this.childNodes.length !== 0) {
@@ -215,7 +212,7 @@ export class FxInstance extends HTMLElement {
       this.instanceData = {};
       this.originalInstance = [...this.instanceData];
     }
-    if(this.type === 'text'){
+    if (this.type === 'text') {
       this.instanceData = '';
       this.originalInstance = '';
     }
@@ -258,9 +255,9 @@ export class FxInstance extends HTMLElement {
           'Content-Type': contentType,
         },
       });
-	  const data = await handleResponse(this, response);
+      const data = await handleResponse(this, response);
       this._setInitialData(data);
-/*
+      /*
       if (data.nodeType) {
         this._setInitialData(data);
         this.instanceData = data;
@@ -276,12 +273,12 @@ export class FxInstance extends HTMLElement {
     }
   }
 
-  _setInitialData(data){
+  _setInitialData(data) {
     this.instanceData = data;
-    if(data.nodeType){
+    if (data.nodeType) {
       this.originalInstance = this.instanceData.cloneNode(true);
     } else {
-      this.originalInstance = {...this.instanceData};
+      this.originalInstance = { ...this.instanceData };
     }
   }
 
@@ -315,11 +312,10 @@ export class FxInstance extends HTMLElement {
       this._setInitialData(JSON.parse(this.textContent));
     } else if (this.type === 'html') {
       // this.instanceData = this.firstElementChild.children;
-      this._setInitialData(this.firstElementChild.children)
-
+      this._setInitialData(this.firstElementChild.children);
     } else if (this.type === 'text') {
       // this.instanceData = this.textContent;
-      this._setInitialData(this.textContent)
+      this._setInitialData(this.textContent);
     } else {
       console.warn('unknow type for data ', this.type);
     }
@@ -333,7 +329,7 @@ export class FxInstance extends HTMLElement {
   //   console.log('data: ', this.instanceData);
   // }
 
-/*
+  /*
   _handleError() {
     const loader = this.shadowRoot.getElementById('loader');
     console.log('_handleResponse ', loader.lastError);

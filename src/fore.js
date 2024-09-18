@@ -1,6 +1,11 @@
-import getInScopeContext from "./getInScopeContext.js";
-import {evaluateXPath, evaluateXPathToFirstNode, evaluateXPathToString, evaluateXPathToNodes} from "./xpath-evaluation.js";
-import { XPathUtil } from "./xpath-util.js";
+import getInScopeContext from './getInScopeContext.js';
+import {
+  evaluateXPath,
+  evaluateXPathToFirstNode,
+  evaluateXPathToString,
+  evaluateXPathToNodes,
+} from './xpath-evaluation.js';
+import { XPathUtil } from './xpath-util.js';
 
 /**
  * Class hosting common utility functions used throughout all fore elements
@@ -18,34 +23,33 @@ export class Fore {
 
   static TYPE_DEFAULT = 'xs:string';
 
- /**
+  /**
    * Loads and return a piece of HTML
-   * @param url - the Url to load from
+   * @param url {String} - the Url to load from
    * @returns {Promise<string>}
    */
-  static async loadHtml(url){
-    try{
-      const response = await fetch(url,  {
+  static async loadHtml(url) {
+    try {
+      const response = await fetch(url, {
         method: 'GET',
         mode: 'cors',
         credentials: 'same-origin',
         headers: {
-          'Content-Type': "text/html",
+          'Content-Type': 'text/html',
         },
       });
       const responseContentType = response.headers.get('content-type').toLowerCase();
       if (responseContentType.startsWith('text/html')) {
         return response.text();
-      } else {
-        Fore.dispatch(this, 'error', {
-          message: `Response has wrong contentType '${responseContentType}'. Should be 'text/html'`,
-          level:'Error'
-        });
       }
-    } catch (e){
+      Fore.dispatch(this, 'error', {
+        message: `Response has wrong contentType '${responseContentType}'. Should be 'text/html'`,
+        level: 'Error',
+      });
+    } catch (error) {
       Fore.dispatch(this, 'error', {
         message: `Html couldn't be loaded from '${url}'`,
-        level:'Error'
+        level: 'Error',
       });
     }
   }
@@ -54,75 +58,80 @@ export class Fore {
    * loads a Fore element from given `src`. Always returns the first occurrence of a `<fx-fore>`. The retured element
    * will replace the `replace` element in the DOM.
    *
-   * @param replace the element with a `src` attribute to resolvé.
-   * @param src the Url to resolve
-   * @param selector a querySelector expression to fetch certain element from loaded document
-   * @returns {Promise<void>}
+   * @param {Element} replace the element with a `src` attribute to resolvé.
+   * @param {string} src the Url to resolve
+   * @param {string} selector a querySelector expression to fetch certain element from loaded document
+   * @returns {Promise<HTMLElement>} The replacement element
    */
-  static async loadForeFromSrc(replace, src, selector){
-    if(!src){
+  static async loadForeFromSrc(replace, src, selector) {
+    if (!src) {
       Fore.dispatch(this, 'error', {
         detail: {
-          message: `No 'src' attribute present`,
+          message: "No 'src' attribute present",
         },
       });
+      return null;
     }
-    await Fore.loadHtml(src)
-        .then(data => {
-          const parsed = new DOMParser().parseFromString(data, 'text/html');
-          // const theFore = parsed.querySelector('fx-fore');
-          const foreElement = parsed.querySelector(selector);
-          // console.log('foreElement', foreElement)
-          if (!foreElement) {
-            Fore.dispatch(this, 'error', {
-              detail: {
-                message: `Fore element not found in '${src}'. Maybe wrapped within 'template' element?`,
-              },
-            });
-          }
-          foreElement.setAttribute('from-src', src);
-          const thisAttrs = replace.attributes;
-          Array.from(thisAttrs).forEach(attr =>{
-            if(attr.name !== 'src'){
-              foreElement.setAttribute(attr.name,attr.value);
-            }
-          });
-          replace.replaceWith(foreElement);
-          return foreElement;
-        });
+    const data = await Fore.loadHtml(src);
+    const parsed = new DOMParser().parseFromString(data, 'text/html');
+    // const theFore = parsed.querySelector('fx-fore');
+    const foreElement = parsed.querySelector(selector);
+    // console.log('foreElement', foreElement)
+    if (!foreElement) {
+      Fore.dispatch(this, 'error', {
+        detail: {
+          message: `Fore element not found in '${src}'. Maybe wrapped within 'template' element?`,
+        },
+      });
+      return;
+    }
+    foreElement.setAttribute('from-src', src);
+    const thisAttrs = replace.attributes;
+    Array.from(thisAttrs).forEach(attr => {
+      if (attr.name !== 'src') {
+        foreElement.setAttribute(attr.name, attr.value);
+      }
+    });
+    replace.replaceWith(foreElement);
+    return foreElement;
   }
-  static buildPredicates(node){
-    let attrPredicate='';
-    Array.from(node.attributes).forEach(attr =>{
+
+  static buildPredicates(node) {
+    let attrPredicate = '';
+    Array.from(node.attributes).forEach(attr => {
       // attrMap.set(attr.nodeName,attr.nodeValue);
       // if(attr.nodeName !== 'xmlns'){
       //   if(attr.nodeValue !== ''){
       //     attrPredicate += `[@${attr.nodeName}='${attr.nodeValue}']`;
       //   }else{
-          attrPredicate += `[@${attr.nodeName}]`;
-        // }
+      attrPredicate += `[@${attr.nodeName}]`;
+      // }
       // }
     });
-    return attrPredicate
+    return attrPredicate;
   }
-
 
   /**
    * returns true if target element is the widget itself or some element within the widget.
-   * @param target an event target
+   * @param {HTMLElement} target an event target
    * @returns {boolean}
    */
   static isWidget(target) {
-    if(target?.classList.contains("widget")) return true;
+    if (target?.classList.contains('widget')) return true;
     let parent = target.parentNode;
-    while(parent && parent.nodeName !== 'FX-CONTROL'){
-      if(parent?.classList?.contains('widget')) return true;
+    while (parent && parent.nodeName !== 'FX-CONTROL') {
+      if (parent?.classList?.contains('widget')) return true;
       parent = parent.parentNode;
     }
     return false;
   }
 
-
+  /**
+   * Get a string that can be used as a path to a node
+   *
+   * @param {Node} node
+   * @returns {string}
+   */
   static getDomNodeIndexString(node) {
     const indexes = [];
     let currentNode = node;
@@ -139,9 +148,14 @@ export class Fore {
     return indexes.join('.');
   }
 
-  static getExpression(input){
-    if(input.startsWith('{') && input.endsWith('}')){
-       return input.substring(1, input.length - 1);
+  /**
+   * Get the expression part of something
+   * @param {string} input
+   * @returns {string}
+   */
+  static getExpression(input) {
+    if (input.startsWith('{') && input.endsWith('}')) {
+      return input.substring(1, input.length - 1);
     }
     return input;
   }
@@ -149,11 +163,13 @@ export class Fore {
   /**
    * returns the next `fx-fore` element upwards in tree
    *
-   * @param start
-   * @returns {*}
+   * @param {HTMLElement|Text} start
+   * @returns {import('./fx-fore.js').FxFore}
    */
   static getFore(start) {
-    return start.nodeType === Node.TEXT_NODE ? start.parentNode.closest('fx-fore'):start.closest('fx-fore');
+    return start.nodeType === Node.TEXT_NODE
+      ? start.parentNode.closest('fx-fore')
+      : start.closest('fx-fore');
   }
 
   static get ACTION_ELEMENTS() {
@@ -205,6 +221,10 @@ export class Fore {
     return 'http://www.w3.org/2002/xforms';
   }
 
+  /**
+   * @param {string} elementName
+   * @returns {boolean}
+   */
   static isActionElement(elementName) {
     return Fore.ACTION_ELEMENTS.includes(elementName);
   }
@@ -235,16 +255,14 @@ export class Fore {
     ];
   }
 
-  static get MODEL_ELEMENTS(){
-    return [
-      'FX-BIND',
-      'FX-FUNCTION',
-      'FX-MODEL',
-      'FX-INSTANCE',
-      'FX-SUBMISSION',
-    ];
+  static get MODEL_ELEMENTS() {
+    return ['FX-BIND', 'FX-FUNCTION', 'FX-MODEL', 'FX-INSTANCE', 'FX-SUBMISSION'];
   }
 
+  /**
+   * @param {string} elementName
+   * @returns {boolean}
+   */
   static isUiElement(elementName) {
     const found = Fore.UI_ELEMENTS.includes(elementName);
     if (found) {
@@ -256,9 +274,9 @@ export class Fore {
   /**
    * recursively refreshes all UI Elements.
    *
-   * @param startElement
-   * @param force
-   * @returns {Promise<unknown>}
+   * @param {HTMLElement} startElement
+   * @param {boolean} force
+   * @returns {Promise<void>}
    */
   static async refreshChildren(startElement, force) {
     const refreshed = new Promise(resolve => {
@@ -300,45 +318,46 @@ export class Fore {
     return refreshed;
   }
 
-  static copyDom(inputElement){
+  static copyDom(inputElement) {
     console.time('convert');
     const target = new DOMParser().parseFromString('<fx-fore></fx-fore>', 'text/html');
-    console.log('copyDom new doc',target);
-    console.log('copyDom new body',target.body);
-    console.log('copyDom new body',target.querySelector('fx-fore'));
+    console.log('copyDom new doc', target);
+    console.log('copyDom new body', target.body);
+    console.log('copyDom new body', target.querySelector('fx-fore'));
     const newFore = target.querySelector('fx-fore');
-    this.convertFromSimple(inputElement,newFore);
+    this.convertFromSimple(inputElement, newFore);
     newFore.removeAttribute('convert');
     console.log('converted', newFore);
     console.timeEnd('convert');
     return newFore;
   }
-  static convertFromSimple(startElement,targetElement){
+
+  static convertFromSimple(startElement, targetElement) {
     const children = startElement.childNodes;
     if (children) {
       Array.from(children).forEach(node => {
         const lookFor = `FX-${node.nodeName.toUpperCase()}`;
-        if (Fore.MODEL_ELEMENTS.includes(lookFor)
-            || Fore.UI_ELEMENTS.includes(lookFor)
-            || Fore.ACTION_ELEMENTS.includes(lookFor)
+        if (
+          Fore.MODEL_ELEMENTS.includes(lookFor) ||
+          Fore.UI_ELEMENTS.includes(lookFor) ||
+          Fore.ACTION_ELEMENTS.includes(lookFor)
         ) {
           const conv = targetElement.ownerDocument.createElement(lookFor);
           console.log('conv', node, conv);
           targetElement.appendChild(conv);
-          Fore.copyAttributes(node,conv);
-          Fore.convertFromSimple(node,conv);
-        } else{
-
-          if(node.nodeType === Node.TEXT_NODE){
+          Fore.copyAttributes(node, conv);
+          Fore.convertFromSimple(node, conv);
+        } else {
+          if (node.nodeType === Node.TEXT_NODE) {
             const copied = targetElement.ownerDocument.createTextNode(node.textContent);
             targetElement.appendChild(copied);
           }
 
-          if(node.nodeType === Node.ELEMENT_NODE){
+          if (node.nodeType === Node.ELEMENT_NODE) {
             const copied = targetElement.ownerDocument.createElement(node.nodeName);
             targetElement.appendChild(copied);
-            Fore.copyAttributes(node,targetElement);
-            Fore.convertFromSimple(node,copied);
+            Fore.copyAttributes(node, targetElement);
+            Fore.convertFromSimple(node, copied);
           }
         }
       });
@@ -347,10 +366,7 @@ export class Fore {
 
   static copyAttributes(source, target) {
     return Array.from(source.attributes).forEach(attribute => {
-      target.setAttribute(
-          attribute.nodeName,
-          attribute.nodeValue,
-      );
+      target.setAttribute(attribute.nodeName, attribute.nodeValue);
     });
   }
 
@@ -389,13 +405,13 @@ export class Fore {
       // return new DOMParser().parseFromString(htmlResponse, 'text/html');
       // return response.text();
       return response.text().then(result =>
-          // console.log('xml ********', result);
-          new DOMParser().parseFromString(result, 'text/html'),
+        // console.log('xml ********', result);
+        new DOMParser().parseFromString(result, 'text/html'),
       );
     }
     if (
-        responseContentType.startsWith('text/plain') ||
-        responseContentType.startsWith('text/markdown')
+      responseContentType.startsWith('text/plain') ||
+      responseContentType.startsWith('text/markdown')
     ) {
       // console.log("********** inside  res plain *********");
       return response.text();
@@ -412,7 +428,7 @@ export class Fore {
     return 'done';
   }
 
-/*
+  /*
   static evaluateAttributeTemplateExpression(expr, node) {
     const matches = expr.match(/{[^}]*}/g);
     if (matches) {
@@ -471,7 +487,7 @@ export class Fore {
   }
 
   static async dispatch(target, eventName, detail) {
-      if (!XPathUtil.contains(target?.ownerDocument, target)) {
+    if (!XPathUtil.contains(target?.ownerDocument, target)) {
       // The target is gone from the document. This happens when we are done with a refresh that removed the component
       return;
     }
@@ -491,17 +507,17 @@ export class Fore {
     // console.log('!!! DISPATCH_DONE', eventName);
   }
 
-  static formatXml (xml) {
-    var reg = /(>)(<)(\/*)/g;
-    var wsexp = / *(.*) +\n/g;
-    var contexp = /(<.+>)(.+\n)/g;
+  static formatXml(xml) {
+    const reg = /(>)(<)(\/*)/g;
+    const wsexp = / *(.*) +\n/g;
+    const contexp = /(<.+>)(.+\n)/g;
     xml = xml.replace(reg, '$1\n$2$3').replace(wsexp, '$1\n').replace(contexp, '$1\n$2');
-    var formatted = '';
-    var lines = xml.split('\n');
-    var indent = 0;
-    var lastType = 'other';
+    let formatted = '';
+    const lines = xml.split('\n');
+    let indent = 0;
+    let lastType = 'other';
     // 4 types of tags - single, closing, opening, other (text, doctype, comment) - 4*4 = 16 transitions
-    var transitions = {
+    const transitions = {
       'single->single': 0,
       'single->closing': -1,
       'single->opening': 0,
@@ -517,32 +533,34 @@ export class Fore {
       'other->single': 0,
       'other->closing': -1,
       'other->opening': 0,
-      'other->other': 0
+      'other->other': 0,
     };
 
-    for (var i = 0; i < lines.length; i++) {
-      var ln = lines[i];
-      var single = Boolean(ln.match(/<.+\/>/)); // is this line a single tag? ex. <br />
-      var closing = Boolean(ln.match(/<\/.+>/)); // is this a closing tag? ex. </a>
-      var opening = Boolean(ln.match(/<[^!].*>/)); // is this even a tag (that's not <!something>)
-      var type = single ? 'single' : closing ? 'closing' : opening ? 'opening' : 'other';
-      var fromTo = lastType + '->' + type;
+    for (let i = 0; i < lines.length; i++) {
+      const ln = lines[i];
+      const single = Boolean(ln.match(/<.+\/>/)); // is this line a single tag? ex. <br />
+      const closing = Boolean(ln.match(/<\/.+>/)); // is this a closing tag? ex. </a>
+      const opening = Boolean(ln.match(/<[^!].*>/)); // is this even a tag (that's not <!something>)
+      const type = single ? 'single' : closing ? 'closing' : opening ? 'opening' : 'other';
+      const fromTo = `${lastType}->${type}`;
       lastType = type;
-      var padding = '';
+      let padding = '';
 
       indent += transitions[fromTo];
-      for (var j = 0; j < indent; j++) {
+      for (let j = 0; j < indent; j++) {
         padding += '    ';
       }
 
-      formatted += padding + ln + '\n';
+      formatted += `${padding + ln}\n`;
     }
   }
 
-  static stringifiedComponent(element){
-    return `<${element.localName} ${Array.from(element.attributes).map(attr=>`${attr.name}="${attr.value}"`).join(' ')}>…</${element.localName}>`;
+  static stringifiedComponent(element) {
+    return `<${element.localName} ${Array.from(element.attributes)
+      .map(attr => `${attr.name}="${attr.value}"`)
+      .join(' ')}>…</${element.localName}>`;
   }
-/*
+  /*
   static async loadForeFromUrl(hostElement, url) {
     // console.log('########## loading Fore from ', this.src, '##########');
     await fetch(url, {

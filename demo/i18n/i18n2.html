@@ -9,6 +9,9 @@
         .current-lang{
             font-size: 2rem;
         }
+        fx-items{
+            display:block;
+        }
     </style>
 </head>
 <body>
@@ -40,7 +43,7 @@
                 instance with a submission.</p>
                 <fx-group>
                     <fx-control ref="instance('vars')/selected">
-                        <label>Selected</label>
+                        <label>Select</label>
                         <fx-items ref="instance('default')?*" class="widget">
                             <template>
                                 <div class="fx-checkbox">

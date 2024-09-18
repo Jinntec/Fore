@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-expressions */
-import { html, oneEvent, fixtureSync, expect } from '@open-wc/testing';
+import {
+  html, oneEvent, fixtureSync, expect,
+} from '@open-wc/testing';
 
 import '../index.js';
 
@@ -36,8 +38,8 @@ describe('template expressions', () => {
     expect(theDiv.textContent).to.equal('Greeting: Hello Universe another Hello Universe');
   });
 
-	it('detects template expressions with multiple lines', async () => {
-		const el = await fixtureSync(html`
+  it('detects template expressions with multiple lines', async () => {
+    const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
           <fx-instance>
@@ -200,8 +202,8 @@ lines
     expect(attr.trim()).to.equal('background:{}');
   });
 
-	it('does not double-parse expressions', async () => {
-		const el = await fixtureSync(html`
+  it('does not double-parse expressions', async () => {
+    const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
           <fx-instance>
@@ -216,15 +218,15 @@ lines
       </fx-fore>
     `);
 
-		await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'refresh-done');
 
-		const theDiv = el.querySelector('.static');
+    const theDiv = el.querySelector('.static');
 
-		expect(theDiv.textContent).to.equal('Braces! I contain {braces}');
-	});
+    expect(theDiv.textContent).to.equal('Braces! I contain {braces}');
+  });
 
-	it('does ignore elements matched by ignore-expression attribute', async () => {
-		const el = await fixtureSync(html`
+  it('does ignore elements matched by ignore-expression attribute', async () => {
+    const el = await fixtureSync(html`
           <fx-fore ignore-expressions=".myElement">
             <fx-model>
               <fx-instance>
@@ -253,23 +255,22 @@ lines
           </fx-fore>    
         `);
 
-		await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'refresh-done');
 
-		const theDiv = el.querySelector('#one');
-		expect(theDiv.textContent).to.equal('Hello');
+    const theDiv = el.querySelector('#one');
+    expect(theDiv.textContent).to.equal('Hello');
 
-        const myElements = Array.from(document.querySelectorAll('.myElement'));
-        expect(myElements.length).to.equal(3);
-        console.log('####',myElements[0].textContent.trim())
+    const myElements = Array.from(document.querySelectorAll('.myElement'));
+    expect(myElements.length).to.equal(3);
+    console.log('####', myElements[0].textContent.trim());
 
-        expect(myElements[0].textContent.trim()).to.equal('{ignored}{{whatever}}')
-        expect(myElements[1].textContent.trim()).to.equal('{}{}{{{}}}')
-        expect(myElements[2].textContent.trim()).to.equal('{}{}{{{}}}')
+    expect(myElements[0].textContent.trim()).to.equal('{ignored}{{whatever}}');
+    expect(myElements[1].textContent.trim()).to.equal('{}{}{{{}}}');
+    expect(myElements[2].textContent.trim()).to.equal('{}{}{{{}}}');
+  });
 
-	});
-
-	it('does ignore attributes on elements matched by ignore-expression attribute', async () => {
-		const el = await fixtureSync(html`
+  it('does ignore attributes on elements matched by ignore-expression attribute', async () => {
+    const el = await fixtureSync(html`
           <fx-fore ignore-expressions="pb-authority">
             <fx-model>
               <fx-instance>
@@ -290,11 +291,9 @@ lines
           </fx-fore>    
         `);
 
-		await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'refresh-done');
 
-
-        const pb = document.querySelector('pb-authority');
-        expect(pb.getAttribute('label')).to.equal('{Name}');
-
-	});
+    const pb = document.querySelector('pb-authority');
+    expect(pb.getAttribute('label')).to.equal('{Name}');
+  });
 });

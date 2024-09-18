@@ -1,0 +1,318 @@
+<html>
+<head>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>Realtime Function library</title>
+    <link href="functionlib.css" rel="stylesheet">
+</head>
+<body>
+<header>
+    <h1>Realtime function library</h1>
+</header>
+<main>
+    <h2>Date and Time</h2>
+
+    <p>Returns the current year</p>
+    <fx-function signature="current-year() as xs:string" type="text/javascript">
+        const current = new Date();
+        const day = current.getDate() - current.getDay() +1;
+        const start = new Date(current.getFullYear(), 0, 2 );
+        return start.toISOString().slice(0, 10);
+    </fx-function>
+
+    <fx-function signature="dayOfWeek($method as xs:string,$day as xs:string) as xs:string" type="text/javascript">
+
+
+
+        let dow = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"],
+            v1 = (new Date).getDay(),
+            v2 = Number(Object.keys(dow).find((key => dow[key] === $day))),
+            result = 0;
+
+        const today = new Date();
+        if("next" == $method && dow[v1] === $day){
+            return today.toISOString().slice(0, 10);
+        }
+
+        if ("last" == $method) result = v2 - v1, result >= 0 && (result = v2 - 7 - v1);
+        else {
+            if ("next" != $method) return !1;
+            0 == v2 && (v2 = 7), result = v2 - v1, result < 1 && (result = v2 + 7 - v1)
+        }
+
+        const out = result < 0 ? (result *= -1, new Date((new Date).setDate((new Date).getDate() - result))) : new Date((new Date).setDate((new Date).getDate() + result));
+        console.log('out',out);
+
+        if(today === out){
+            return today.toLocaleString().slice(0, 10);
+        } else{
+            return out.toLocaleString().slice(0, 10);
+        }
+    </fx-function>
+    <fx-function signature="dayOfWeekISO($method as xs:string,$day as xs:string) as xs:string" type="text/javascript">
+
+
+
+        let dow = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"],
+            v1 = (new Date).getDay(),
+            v2 = Number(Object.keys(dow).find((key => dow[key] === $day))),
+            result = 0;
+
+        const today = new Date();
+        if("next" == $method && dow[v1] === $day){
+<!--            return today.toISOString().slice(0, 10);-->
+            return today.toISOString();
+        }
+
+        if ("last" == $method) result = v2 - v1, result >= 0 && (result = v2 - 7 - v1);
+        else {
+            if ("next" != $method) return !1;
+            0 == v2 && (v2 = 7), result = v2 - v1, result < 1 && (result = v2 + 7 - v1)
+        }
+
+        const out = result < 0 ? (result *= -1, new Date((new Date).setDate((new Date).getDate() - result))) : new Date((new Date).setDate((new Date).getDate() + result));
+        console.log('out',out);
+
+        if(today === out){
+            return today.toISOString().slice(0, 10);
+<!--            return today-->
+        } else{
+            return out.toISOString().slice(0, 10);
+<!--            return out-->
+        }
+    </fx-function>
+    <h3>Examples</h3>
+    <div><code>daysOfWeek('next','wednesday')</code></div>
+    <div><code>daysOfWeek('last','wednesday');</code></div>
+    <hr>
+
+    <fx-function signature="displayDateTime($input as xs:string) as xs:string" type="text/javascript">
+        const displayDate = new Date($input);
+        return `${displayDate.toDateString()} ${displayDate.toTimeString().slice(0,8)}`;
+    </fx-function>
+
+    <fx-function signature="dateFromStarted($input as xs:string) as xs:string" type="text/javascript">
+        return new Date($input).toISOString().slice(0, 10);
+    </fx-function>
+
+    <fx-function signature="get-minutes($input as xs:string) as xs:string" type="text/javascript">
+        if($input.endsWith('m')){
+            return $input.split('m')[0];
+        }
+        if($input.endsWith('h')){
+            return $input.split('h')[0] * 60;
+        }
+        if($input.endsWith('d')){
+            return $input.split('d')[0] * 480;
+        }
+        return $input;
+    </fx-function>
+
+    <fx-function signature="firstDayOfMonth() as xs:string" type="text/javascript">
+        const current = new Date();
+        const day = current.getDate() - current.getDay() +1;
+        const start = new Date(current.getFullYear(), current.getMonth(), 2 );
+        return start.toISOString().slice(0, 10);
+    </fx-function>
+
+    <fx-function signature="firstDayOfWeek() as xs:string" type="text/javascript">
+        const current = new Date();
+        const day = current.getDate() - current.getDay() +1;
+        const start = new Date(current.getFullYear(), current.getMonth(), day );
+        return start.toISOString().slice(0, 10);
+    </fx-function>
+
+    <fx-function signature="FirstDayPreviousMonth() as xs:string" type="text/javascript">
+        const current = new Date();
+        const start = new Date(current.getFullYear(), current.getMonth() -1, 2 );
+        return start.toISOString().slice(0, 10);
+    </fx-function>
+
+    <fx-function signature="formatDiff($duration as xs:double) as xs:string" type="text/javascript">
+        return formatDiff($duration)
+    </fx-function>
+
+    <fx-function signature="in-one-year($start as xs:string) as xs:string" type="text/javascript">
+        const date = new Date($start);
+        return new Date(date.setFullYear(date.getFullYear() + 1)).toISOString().slice(0, 10);
+    </fx-function>
+
+    <fx-function signature="in-one-week($start as xs:string) as xs:string" type="text/javascript">
+        const date = new Date($start)
+        return new Date(date.setDate(date.getDate() + 7)).toISOString().slice(0, 10);
+    </fx-function>
+
+
+    <fx-function signature="in-n-month($start as xs:string, $add as xs:integer) as xs:string"
+                 type="text/javascript">
+        const date = new Date($start);
+        return new Date(date.setMonth(date.getMonth() + $add)).toISOString().slice(0, 10);
+    </fx-function>
+
+    <fx-function signature="this-month() as xs:string" type="text/javascript">
+        var now = new Date();
+        return new Date(now.getFullYear(), now.getMonth(), 1).toLocaleString('default', { month: 'long' });
+    </fx-function>
+    <fx-function signature="next-month() as xs:string" type="text/javascript">
+        var now = new Date();
+        return new Date(now.getFullYear(), now.getMonth()+1, 1).toLocaleString('default', { month: 'long' });
+    </fx-function>
+
+    <fx-function signature="LastDayPreviousMonth() as xs:string" type="text/javascript">
+        const current = new Date();
+        const start = new Date(current.getFullYear(), current.getMonth(), 1 );
+        return start.toISOString().slice(0, 10);
+    </fx-function>
+
+    <fx-function signature="minutesToSummary($total as xs:string) as xs:string" type="text/xquery">
+        if ($total = '' or not(xs:integer($total))) then ''
+        else
+            let $one-day := 480
+            let $total-days := round(xs:integer($total) div $one-day)
+            let $rest-mins := xs:integer($total) mod $one-day
+            let $total-hours := round(xs:integer($rest-mins) div 60)
+            let $total-mins := round(xs:integer($rest-mins) mod 60)
+            let $day-label := if ($total-days gt 1) then ' days ' else ' day '
+            let $days := if($total-days != 0) then $total-days || $day-label else ""
+            let $hour-label := if ($total-hours = 1) then " hour " else " hours "
+
+            let $hours := if ($total-hours != 0) then $total-hours || $hour-label else ""
+            let $mins := if($total-mins != 0) then $total-mins || " minutes" else ""
+            return
+                $days || $hours || $mins
+    </fx-function>
+
+    <fx-function signature="next-day($start as xs:string) as xs:string" type="text/javascript">
+        const date = new Date($start);
+        date.setDate(date.getDate() + 1);
+        return new Date(date).toISOString().slice(0, 10);
+    </fx-function>
+
+
+    <fx-function signature="time() as xs:string" type="text/javascript">
+        return new Date().toTimeString().slice(0,8);
+    </fx-function>
+
+    <fx-function signature="time($dateString as xs:string) as xs:string" type="text/javascript">
+        return $dateString.slice(11, 19);
+    </fx-function>
+
+
+    <fx-function signature="timediff($start as xs:string) as xs:integer" type="text/javascript">
+        const start = new Date($start);
+        const now = new Date();
+        const diff = now - start;
+        return diff;
+    </fx-function>
+
+
+    <fx-function signature="timeStamp() as xs:string" type="text/javascript">
+        return new Date().toISOString();
+    </fx-function>
+
+
+    <fx-function signature="today() as xs:string" type="text/javascript">
+        return new Date().toLocaleString().slice(0, 10);
+    </fx-function>
+
+    <fx-function signature="current-year($date as xs:string) as xs:string" type="text/javascript">
+        return `new Date($date).getFullYear()`;
+    </fx-function>
+
+
+
+
+
+
+    <h2>Other</h2>
+
+    <fx-function signature="applyAnim($input as element()) as xs:boolean" type="text/javascript">
+        const item = $input.closest('fx-repeatitem');
+        const addEntry = document.querySelector('.addEntry');
+        addEntry.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+        addEntry.parentNode.classList.add('pulseStrong');
+        <!--            document.querySelector('#duration').classList.add('highlight');-->
+        return true;
+    </fx-function>
+
+    <fx-function signature="encode($input as xs:string) as xs:string" type="text/javascript">
+        return btoa(encodeURI($input));
+    </fx-function>
+
+    <fx-function signature="format-eur($input as xs:string) as xs:string" type="text/javascript">
+        return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format($input)
+    </fx-function>
+
+
+    <fx-function signature="format-us($input as xs:string) as xs:string" type="text/javascript">
+        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format($input)
+    </fx-function>
+
+
+
+    <fx-function signature="user() as xs:string" type="text/javascript">
+        console.log('user()');
+        const user = document.querySelector("#username");
+        if(user){
+        return user.getAttribute('data-user');
+        } else '';
+    </fx-function>
+
+
+    <fx-function signature="progress-color($percent as xs:string) as xs:string" type="text/javascript">
+        if($percent > 100){ return 'red'; }
+        else if($percent > 75){ return 'orange'; }
+        else { return 'green'; }
+    </fx-function>
+
+
+    <fx-function signature="removePulse() as xs:boolean" type="text/javascript">
+        const addEntry = document.querySelector('.addEntry');
+        addEntry.parentNode.classList.remove('pulseStrong');
+        return true;
+    </fx-function>
+
+    <fx-function signature="resetSubmitError() as xs:boolean" type="text/javascript">
+        const fore = document.querySelector('.submit-validation-failed');
+        if(fore){
+        fore.classList.remove('submit-validation-failed');
+        return true;
+        }else{
+        return false;
+        }
+    </fx-function>
+
+    <fx-function signature="resetVisited() as xs:boolean" type="text/javascript">
+        const visited = document.querySelectorAll('.visited');
+        Array.from(visited).forEach(function(v){
+            v.classList.remove('visited');
+        });
+        return true;
+    </fx-function>
+
+    <fx-function signature="setQueryParam($key as xs:string, $value as xs:string) as xs:string" type="text/javascript">
+        console.log('setQueryParam',$key);
+        const url = new URL(window.location.href);
+        const searchParams = new URLSearchParams(url.search);
+        searchParams.set($key, $value);
+        const query = searchParams.toString();
+        const newRelativePathQuery = window.location.pathname + '?' + query + url.hash;
+        window.history.replaceState({}, '', newRelativePathQuery);
+        return query;
+    </fx-function>
+
+    <fx-function signature="sortProjects($projects as element()*) as element()*" type="text/xquery">
+        for $project in $projects
+        order by lower-case($project)
+        return $project
+    </fx-function>
+
+    <fx-function signature="yearFromDate($date as xs:string) as xs:string" type="text/javascript">
+        return new Date($date).getFullYear().toString();
+    </fx-function>
+
+
+
+
+</main>
+</body>
+</html>

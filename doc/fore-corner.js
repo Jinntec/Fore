@@ -47,8 +47,6 @@ export class ForeCorner extends HTMLElement{
         `;
 
         this.href = this.getAttribute('href');
-        const end = this.href.lastIndexOf('/');
-        const base = this.href.substring(0,end);
         const outputHtml = `
             <a href="${this.href}">
                 <div class="logo-corner">
@@ -64,8 +62,7 @@ export class ForeCorner extends HTMLElement{
             ${outputHtml}
         `;
 
-    }
-
+  }
 }
 if (!customElements.get('fore-corner')) {
     customElements.define('fore-corner', ForeCorner);

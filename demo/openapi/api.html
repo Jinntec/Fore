@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>template</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+</head>
+<body>
+<fx-fore>
+    <fx-model>
+        <fx-instance src="api.json" type="json">
+        </fx-instance>
+    </fx-model>
+
+    <fx-message iterate="instance()?paths">{path}</fx-message>
+
+</fx-fore>
+<script type="module" src="../../index.js"></script>
+</body>
+</html>

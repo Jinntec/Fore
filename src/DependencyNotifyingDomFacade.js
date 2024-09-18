@@ -6,6 +6,7 @@ import { getBucketsForNode } from 'fontoxpath';
  * will be touched in the XPath.
  *
  * Maybe some more granularity is better. Maybe only notify a node's attributes are touched?
+ *
  */
 export class DependencyNotifyingDomFacade {
   /**

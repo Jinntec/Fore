@@ -49,12 +49,15 @@
 
 <fx-fore>
    <fx-model>
-       <fx-instance src="fore-struct.xml"></fx-instance>
+       <fx-instance src="baseprofile.xml"></fx-instance>
        <fx-instance id="vars">
            <data>
                <selected></selected>
            </data>
        </fx-instance>
+       <fx-function signature="createControl($node as element()?) as element()*" type="text/xquery">
+           $node
+       </fx-function>
    </fx-model>
    <main>
        <fx-control ref="instance('vars')/selected">
@@ -66,17 +69,27 @@
                <option value="group">textnode</option>
            </select>
        </fx-control>
+<fx-trigger>
+    <button>generate</button>
+    <fx-action iterate="instance()//*">
+        <fx-message>{local-name(.)}</fx-message>
+    </fx-action>
 
+</fx-trigger>
+<!--       {createControl(.)}-->
+<!--
        <fx-repeat ref="instance()//*">
            <template>
+
                <fx-control ref="@name" class="level-{count(ancestor::*)}">
-                   <label>{local-name(..)}</label>
+                   <label>level-{count(ancestor::*)}-{local-name(.)}</label>
                </fx-control>
                <fx-control ref="@control" class="level-{count(ancestor::*)}">
                    <label>{local-name(..)}</label>
                </fx-control>
            </template>
        </fx-repeat>
+-->
    </main>
 </fx-fore>
 <script type="module" src="../../index.js"></script>

@@ -1,0 +1,64 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Fore and radio buttons</title>
+    <link href="../resources/fore.css" rel="stylesheet"/>
+    <link href="../resources/demo.css" rel="stylesheet"/>
+    <style>
+        label{
+            padding:0.5rem 0;
+        }
+        fx-items{
+            display:flex;
+            align-items:center;
+        }
+        fieldset{
+            border-radius:0.5rem;
+        }
+    </style>
+</head>
+<body>
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+
+<div class="wrapper">
+    <h1>Fore and Radio Buttons</h1>
+
+    <p>To handle radio buttons wrap them into a <code>fx-items</code> element. This will take
+    care that the correct item will be selected.</p>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <root>
+                            <radio>second</radio>
+                        </root>
+                    </fx-instance>
+                </fx-model>
+                <fieldset>
+                    <legend>Radios</legend>
+                    <fx-control ref="radio">
+                        <label>Choose a radio</label>
+                        <fx-items>
+                            <input type="radio" id="first" name="radio-input" value="first" />
+                            <label for="first">first radio</label>
+
+                            <input type="radio" id="second" name="radio-input" value="second"/>
+                            <label for="second">second radio</label>
+
+                            <input type="radio" id="third" name="radio-input" value="third" />
+                            <label for="third">third radio</label>
+                        </fx-items>
+                        <fx-message event="value-changed">changed to {.}</fx-message>
+                    </fx-control>
+                </fieldset>
+                radio:{radio}
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+<script type="module" src="./demo.js"/>
+</body>
+</html>

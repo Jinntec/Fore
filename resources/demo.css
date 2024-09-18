@@ -1,5 +1,24 @@
+/*@import 'pico.min.css';*/
 @import 'vars.css';
 @import 'fore.css';
+
+/* overwrite pico default here */
+[role=group]{
+    display:block;
+    padding:0.5rem 1.5rem;
+}
+
+fx-fore [role=group]>:not(:last-child){
+    border:none;
+}
+
+fx-fore{
+    display:block;
+}
+input.widget{
+    display:block;
+}
+
 @font-face {
     font-family: "Kimberley";
     src: url(../resources/fonts/Montserrat/Montserrat-Light.ttf) format("truetype");
@@ -41,6 +60,13 @@ h3 code,
 h4 code{
     font-weight: inherit;
 }
+.demos{
+
+    .note{
+        margin-top:5rem;
+        margin-bottom:0;
+    }
+}
 .demos .three-col div {
     background: rgba(255,255,255,0.7);
     border-radius: 0.3rem;
@@ -52,7 +78,9 @@ demo-snippet .code-container{
     background: white;
     font-size: 1.2rem;
 }
-
+figcaption{
+    text-align:left;
+}
 h1{
     font-size: 3rem;
 }

@@ -1,5 +1,5 @@
 import '../fx-model.js';
-import {AbstractAction} from './abstract-action.js';
+import { AbstractAction } from './abstract-action.js';
 
 /**
  * `fx-copy`
@@ -7,48 +7,48 @@ import {AbstractAction} from './abstract-action.js';
  * @customElement
  */
 export default class FxCopy extends AbstractAction {
-    static get properties() {
-        return {
-            ...super.properties,
-            ref: {
-                type: String,
-            },
-            to: {
-                type: String,
-            },
-        };
+  static get properties() {
+    return {
+      ...super.properties,
+      ref: {
+        type: String,
+      },
+      to: {
+        type: String,
+      },
+    };
+  }
+
+  constructor() {
+    super();
+    this.ref = '';
+    this.to = '';
+  }
+
+  connectedCallback() {
+    if (super.connectedCallback) {
+      super.connectedCallback();
     }
 
-    constructor() {
-        super();
-        this.ref = '';
-        this.to = '';
+    if (this.hasAttribute('ref')) {
+      this.ref = this.getAttribute('ref');
+    } else {
+      throw new Error('fx-copy must specify a "ref" attribute');
     }
+    this.to = this.getAttribute('to');
+  }
 
-    connectedCallback() {
-        if (super.connectedCallback) {
-            super.connectedCallback();
-        }
+  perform() {
+    super.perform();
 
-        if (this.hasAttribute('ref')) {
-            this.ref = this.getAttribute('ref');
-        } else {
-            throw new Error('fx-copy must specify a "ref" attribute');
-        }
-        this.to = this.getAttribute('to');
+    if (this.nodeset.nodeType === Node.ATTRIBUTE_NODE) {
+      navigator.clipboard.writeText(this.nodeset.nodeValue);
+    } else {
+      navigator.clipboard.writeText(this.nodeset);
     }
+  }
 
-    perform() {
-        super.perform();
-
-        if(this.nodeset.nodeType === Node.ATTRIBUTE_NODE){
-            navigator.clipboard.writeText(this.nodeset.nodeValue);
-        }else{
-            navigator.clipboard.writeText(this.nodeset);
-        }
-    }
-
-/*
+  /*
     setValue(modelItem, newVal) {
         const item = modelItem;
         if (!item) return;
@@ -63,5 +63,5 @@ export default class FxCopy extends AbstractAction {
 }
 
 if (!customElements.get('fx-copy')) {
-    window.customElements.define('fx-copy', FxCopy);
+  window.customElements.define('fx-copy', FxCopy);
 }

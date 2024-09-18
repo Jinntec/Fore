@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>page3</title>
+    <script src=" https://cdn.jsdelivr.net/npm/@jinntec/jinn-codemirror@1.17.1/dist/jinn-codemirror-bundle.min.js "></script>
+
+</head>
+<body unresolved="unresolved">
+
+
+<fx-case id="three">
+    <h1>VIEW 3</h1>
+
+    <p>I'm a full-blown <a href="page3.html" target="_blank">HTML</a> page living in page3.html</p>
+    <p>My case id='three' is selected for display by using an explicit <code>selector</code> attribute.</p>
+    <fx-control ref="//fx-case[@id='three']" as="node">
+        <jinn-codemirror inert linter="http://localhost:8080/exist/apps/tei-publisher/api/lint" mode="html" valid="true"
+                         class="widget"></jinn-codemirror>
+    </fx-control>
+
+<!--
+    <fx-control ref="selected" as="node">
+        <jinn-codemirror linter="http://localhost:8080/exist/apps/tei-publisher/api/lint" mode="html" valid="true"
+                         content="<div>foo</div>" class="widget">
+
+    </fx-control>
+-->
+</fx-case>
+
+
+
+
+
+</body>
+</html>
