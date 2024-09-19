@@ -1,0 +1,1252 @@
+{
+    "x": "3.0.0",
+    "info": {
+        "version": "0.1.0",
+        "title": "real-time API",
+        "description": "This is the place to add your own path endpoints"
+    },
+    "servers": [
+        {
+            "description": "Endpoint for testing on localhost",
+            "url": "/exist/apps/realtime"
+        }
+    ],
+    "tags": [
+        {
+            "name":"clients",
+            "description":"Client API"
+        },
+        {
+            "name":"projects",
+            "description":"Project API"
+        },
+        {
+            "name":"records",
+            "description":"Record API"
+        },
+        {
+            "name":"reports",
+            "description":"Reports API"
+        },
+        {
+            "name":"users",
+            "description":"User API"
+        },
+        {
+            "name": "watches",
+            "description": "Watches API"
+        }
+    ],
+    "components": {
+        "securitySchemes": {
+            "basicAuth": {
+                "type": "http",
+                "scheme": "basic"
+            },
+            "cookieAuth": {
+                "type": "apiKey",
+                "name": "realtime.login",
+                "in": "cookie"
+            }
+        }
+    },
+    "paths": {
+        "/logout": {
+            "get": {
+                "summary": "User Logout",
+                "description": "End session of the current user",
+                "operationId": "auth:logout",
+                "tags": ["auth", "query"],
+                "parameters": [
+                    {
+                        "name": "logout",
+                        "in": "query",
+                        "description": "Set to some value to log out the current user",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": { "type": "boolean" }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "301": {
+                        "description": "Redirect with the logout parameter set.",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "401": { "description": "unauthorized" }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "summary": "User Login",
+                "description": "Start an authenticated session for the given user",
+                "tags": ["auth", "body"],
+                "operationId": "auth:login",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/xml": {
+                            "schema": {
+                                "type": "object"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "required": [ "user" ],
+                                "properties": {
+                                    "user": {
+                                        "description": "Name of the user",
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password"
+                                    }
+                                }
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "type": "object",
+                                "required": [ "user" ],
+                                "properties": {
+                                    "user": {
+                                        "description": "Name of the user",
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "user": { "type": "string" },
+                                        "groups": {
+                                            "type": "array",
+                                            "items": { "type": "string" }
+                                        },
+                                        "dba": { "type": "boolean" },
+                                        "domain": { "type": "string" }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Wrong user or password"
+                    }
+                },
+                "security": [{ "cookieAuth": [] }]
+            }
+        },
+        "/menu": {
+            "get": {
+                "summary": "menu",
+                "description": "return menu links for app with respect to project role",
+                "operationId": "rt:menu",
+                "tags": ["auth"],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "text/html": {
+                            }
+                        }
+                    },
+                    "401": { "description": "unauthorized" }
+                }
+            }
+        },
+        "/client": {
+            "get": {
+                "summary": "get project for id",
+                "operationId": "rtc:client",
+                "tags": ["clients"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "returns the dataset of a client",
+                        "content": {
+                            "application/xml": {
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "create new client",
+                "operationId": "rtc:create-client",
+                "tags": ["clients"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/xml": {
+                            "schema": {
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200":{
+                        "description": "updates the client"
+                    }
+                }
+            },
+            "put": {
+                "summary": "update project for id",
+                "operationId": "rtc:update-client",
+                "tags": ["clients"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/xml": {
+                            "schema": {
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200":{
+                        "description": "updates the client"
+                    }
+                }
+            }
+        },
+        "/clients": {
+            "get": {
+                "summary": "get a short list of clients just with name and active state",
+                "operationId": "rtc:clients",
+                "tags": ["clients"],
+                "parameters": [
+                    {
+                        "name": "all",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "active",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "returns a list of clients",
+                        "content": {
+                            "application/xml": {
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/project": {
+            "get": {
+                "summary": "get a project by id",
+                "operationId": "rtp:project",
+                "tags": ["projects"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "returns project for id",
+                        "content": {
+                            "application/xml": {
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "update or create a project",
+                "operationId": "rtp:update",
+                "tags": ["projects"],
+                "responses": {
+                    "200":{
+                        "description": "returns status of save operation",
+                        "content": {
+                            "application/xml": {
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {},
+                        "application/xml": {}
+                    }
+                }
+            }
+
+        },
+        "/projects": {
+            "get": {
+                "summary": "get a list of projects",
+                "operationId": "rtp:projects",
+                "tags": ["projects"],
+                "parameters": [
+                    {
+                        "name": "all",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "returns a list of projects",
+                        "content": {
+                            "application/xml": {
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/projectsByRole": {
+            "get": {
+                "summary": "get a list of projects by role",
+                "operationId": "rtp:projectByRole",
+                "tags": ["projects"],
+                "parameters": [
+                    {
+                        "name": "all",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "returns a list of projects",
+                        "content": {
+                            "application/xml": {
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/record": {
+            "get":{
+                "summary": "get a record by id",
+                "operationId": "rtr:get-record",
+                "tags": ["records"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "returns a list of projects",
+                        "content": {
+                            "application/xml": {
+                            }
+                        }
+                    }
+                }
+
+            },
+            "post": {
+                "summary": "save a record",
+                "operationId": "rtr:create",
+                "tags": ["records"],
+                "responses": {
+                    "200":{
+                        "description": "returns status of save operation",
+                        "content": {
+                            "application/xml": {
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/xml": {}
+                    }
+                }
+            },
+            "put": {
+                "summary": "update a record",
+                "operationId": "rtr:update",
+                "tags": ["records"],
+                "responses": {
+                    "200":{
+                        "description": "returns status of save operation",
+                        "content": {
+                            "application/xml": {
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/xml": {}
+                    }
+                }
+            },
+            "delete": {
+                "summary": "delete a record",
+                "operationId": "rtr:delete",
+                "tags": ["records"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "returns status of save operation",
+                        "content": {
+                            "application/xml": {
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/trackclients": {
+            "get": {
+                "summary": "gets a list of clients used when tracking",
+                "operationId": "rtr:trackclients",
+                "tags": [
+                    "records"
+                ],
+                "parameters": [
+                    {
+                        "name": "date",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "a list of clients with their projects",
+                        "content": {
+                            "application/xml": {
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/records":{
+            "get":{
+                "summary": "get a list of records optionally filtered by from/to dates",
+                "operationId": "rtr:records",
+                "tags": ["records"],
+                "parameters": [
+                    {
+                        "name": "date",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "start",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "end",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "returns a list of projects",
+                        "content": {
+                            "application/xml": {
+                            }
+                        }
+                    }
+                }
+
+            }
+        },
+        "/records/filter":{
+            "get":{
+                "summary": "returns filter user UI if role is admin",
+                "operationId": "rtr:userfilter",
+                "tags": ["records"],
+                "parameters": [
+                ],
+                "responses": {
+                    "200":{
+                        "description": "returns user filter if role is admin",
+                        "content": {
+                            "text/html": {
+                            }
+                        }
+                    }
+                }
+
+            }
+        },
+        "/report":{
+            "get":{
+                "summary": "get a table of records optionally filtered by from/to dates",
+                "operationId": "rtr:report",
+                "tags": ["records"],
+                "parameters": [
+                    {
+                        "name": "start",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "end",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "client",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "project",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "billable",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "billed",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filteruser",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "internal",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "returns a table of projects for given filters",
+                        "content": {
+                            "text/html": {
+                            }
+                        }
+                    }
+                }
+
+            }
+        },
+        "/report/{year}/userhours/csv": {
+            "get": {
+                "summary": "report hours per user for year",
+                "operationId": "rpts:hoursReportUsersCsv",
+                "tags": ["reports"],
+                "parameters": [
+                    {
+                        "name": "year",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "report hours per user for year",
+                        "content": {
+                            "text/csv": {
+                            }
+                        }
+                    }
+                }
+            }
+
+        },
+        "/report/{year}/monthlyhours/csv": {
+            "get": {
+                "summary": "report monthly hours for year",
+                "operationId": "rpts:hoursReportMonthlyCsv",
+                "tags": ["reports"],
+                "parameters": [
+                    {
+                        "name": "year",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "return monthly hours for year",
+                        "content": {
+                            "text/csv": {
+                            }
+                        }
+                    }
+                }
+            }
+
+        },
+        "/report/{year}/monthlyhours/json": {
+            "get": {
+                "summary": "report monthly hours for year",
+                "operationId": "rpts:hoursReportMonthlyJson",
+                "tags": ["reports"],
+                "parameters": [
+                    {
+                        "name": "year",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "return monthly hours for year",
+                        "content": {
+                            "application/json": {
+                            }
+                        }
+                    }
+                }
+            }
+
+        },
+        "/watches": {
+            "get": {
+                "summary": "get watches for current user",
+                "operationId": "rtw:watches",
+                "tags": ["watches"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "returns watches for user",
+                        "content": {
+                            "application/xml": {
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/report/export/csv":{
+            "get":{
+                "summary": "get a table of records optionally filtered by from/to dates",
+                "operationId": "rtr:exportCsv",
+                "tags": ["records"],
+                "parameters": [
+                    {
+                        "name": "start",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "end",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "client",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "project",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "billable",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "billed",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filteruser",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "internal",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "returns a table of projects for given filters",
+                        "content": {
+                            "text/csv": {
+                            }
+                        }
+                    }
+                }
+
+            }
+        },
+        "/report/export/xml":{
+            "get":{
+                "summary": "get a table of records optionally filtered by from/to dates",
+                "operationId": "rtr:exportXml",
+                "tags": ["records"],
+                "parameters": [
+                    {
+                        "name": "start",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "end",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "client",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "project",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "billable",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "billed",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filteruser",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "returns a table of projects for given filters",
+                        "content": {
+                            "application/xml": {
+                            }
+                        }
+                    }
+                }
+
+            }
+        },
+        "/recordssample": {
+            "post": {
+                "summary": "this is a dummy endpoint to show x-validate usage",
+                "operationId": "rtp:save-record",
+                "x-validate": "index.html",
+                "tags": ["records"],
+                "responses": {
+                    "200":{
+                        "description": "returns status of save operation",
+                        "content": {
+                            "application/json": {
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {},
+                        "application/xml": {}
+                    }
+                }
+            }
+        },
+        "/summary":{
+            "get":{
+                "summary": "project summary report",
+                "operationId": "rpts:project-summary",
+                "tags": ["records"],
+                "parameters": [
+                    {
+                        "name": "start",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "end",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "report grouping and summarizing projects",
+                        "content": {
+                            "text/html": {
+                            }
+                        }
+                    }
+                }
+
+            }
+        },
+        "/user-summary":{
+            "get":{
+                "summary": "user summary report",
+                "operationId": "rpts:user-summary",
+                "tags": ["records"],
+                "parameters": [
+                    {
+                        "name": "start",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "end",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "report grouping and summarizing projects",
+                        "content": {
+                            "text/html": {
+                            }
+                        }
+                    }
+                }
+
+            }
+        },
+        "/projectprogress":{
+            "get":{
+                "summary": "projects by progress",
+                "operationId": "rtp:projectsByProgress",
+                "tags": ["reports"],
+                "parameters": [
+                    {
+                        "name": "start",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "end",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "report grouping by project progress",
+                        "content": {
+                            "text/html": {
+                            }
+                        }
+                    }
+                }
+
+            }
+        },
+        "/reportclients":{
+            "get":{
+                "summary": "gets a list of clients being in time frame",
+                "operationId": "rpts:reportclients",
+                "tags": ["reports"],
+                "parameters": [
+                    {
+                        "name": "start",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "end",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "a list of clients with their projects for duration",
+                        "content": {
+                            "application/xml": {
+                            }
+                        }
+                    }
+                }
+
+            }
+        },
+        "/project/stats":{
+            "get":{
+                "summary": "project summary report",
+                "operationId": "rpts:project-summary-data",
+                "tags": ["records"],
+                "parameters": [
+                    {
+                        "name": "start",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "end",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "report grouping and summarizing projects",
+                        "content": {
+                            "application/xml": {
+                            }
+                        }
+                    }
+                }
+
+            }
+        },
+        "/reportselectors":{
+            "get":{
+                "summary": "get the markup for role-based reports",
+                "operationId": "rpts:reportselectors",
+                "tags": ["reports"],
+                "parameters": [
+                ],
+                "responses": {
+                    "200":{
+                        "description": "returns a table of projects for given filters",
+                        "content": {
+                            "text/html": {
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user":{
+            "get":{
+                "summary": "get a user",
+                "operationId": "rtu:get-user",
+                "tags": ["users"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "returns a user for given id",
+                        "content": {
+                            "application/xml": {
+                            }
+                        }
+                    }
+                }
+
+            },
+            "post":{
+                "summary": "create a user",
+                "operationId": "rtu:create-or-update-user",
+                "tags": ["users"],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/xml": {
+                            "schema": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200":{
+                        "description": "creates a user for given id",
+                        "content": {
+                            "application/xml": {
+                            }
+                        }
+                    }
+                }
+
+            },
+            "put":{
+                "summary": "update a user",
+                "operationId": "rtu:update-user",
+                "tags": ["users"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "updates a user for given id",
+                        "content": {
+                            "application/xml": {
+                            }
+                        }
+                    }
+                }
+
+            }
+
+        },
+        "/users":{
+            "get":{
+                "summary": "get a list of users",
+                "operationId": "rtu:users",
+                "tags": ["users"],
+                "responses": {
+                    "200":{
+                        "description": "returns a list of all users",
+                        "content": {
+                            "application/xml": {
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+    },
+    "security": [
+        {
+            "cookieAuth": []
+        },
+        {
+            "basicAuth": []
+        }
+    ]
+}
