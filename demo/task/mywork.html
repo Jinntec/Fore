@@ -7,9 +7,8 @@
     <link href="../../resources/fore.css" rel="stylesheet">
     <link href="../../resources/demo.css" rel="stylesheet">
 
-    <script type="module" src="../demo.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/litepicker/dist/litepicker.js"></script>
+<!--    <script src="https://cdn.jsdelivr.net/npm/litepicker/dist/litepicker.js"></script>-->
     <style>
 
         body {
@@ -19,24 +18,6 @@
 
         main {
             max-width: 64rem;
-        }
-
-        .litepicker .container__months .month-item:first-child .button-previous-month {
-            visibility: hidden;
-        }
-
-        .litepicker .container__months .month-item:last-child .button-next-month {
-            visibility: hidden;
-        }
-
-        .litepicker .container__days .day-item {
-            color: var(--paper-grey-300);
-        }
-
-        .litepicker .container__days .day-item.is-in-range {
-            background-color: var(--litepicker-is-in-range-color);
-            border-radius: 0;
-            color: var(--paper-grey-900);
         }
 
 
@@ -56,24 +37,12 @@
             }
         }
 
-        .outer-card {
-            display: grid;
-            grid-template-areas:"title title"
-                                "date list";
-            grid-template-columns:18rem auto;
-            position: relative;
-
-        }
-
         .card {
             padding: 1rem;
             margin: 0.75rem 0;
             border-radius: 5px;
             border: thin solid #dddddd;
             background: white;
-            display: grid;
-            grid-template-areas: "task icon"
-                                 "content content";
             position: relative;
         }
 
@@ -82,12 +51,6 @@
         }
 
         details{
-            /*width:10rem;*/
-            /*position:absolute;*/
-            right:0;
-            /*display:none*/
-
-
             .details-content{
                 padding:1rem;
                 border:thin solid;
@@ -108,23 +71,8 @@
             min-width:2rem;
         }
 
-        /*
-        summary::after {
-            margin-left: 1ch
-            display: inline-block;
-            content: '\2630';
-            transition: 0.2s;
-        }
-        */
-
-
-        /*
-        details[open] > summary::after {
-            transform: rotate(90deg);
-        }
-        */
         #category {
-            input {
+            input[type=text] {
                 font-size: 1.4rem;
                 border: none;
                 border-radius: 0;
@@ -181,12 +129,6 @@
 
         [repeat-index] {
             background: rgba(255, 255, 255, 0.5);
-
-            /*
-            &> .more-actions{
-                display:inline-block;
-            }
-            */
         }
 
         .drag-over {
@@ -245,19 +187,6 @@
 
                 }
 
-                /*
-                [repeat-index]{
-                    outline:solid thin #ddd;
-                }
-                */
-
-                /*
-                fx-repeatitem.drag-over {
-                    outline: 0.25rem solid orange;
-                }
-                */
-
-
             }
 
             #r-task {
@@ -271,10 +200,6 @@
                     width: 100%;
                     padding: 0.25rem 0;
                     display: flex;
-
-                    [type=date] {
-                        /*width:5rem;*/
-                    }
 
                     fx-output {
                         white-space: nowrap;
@@ -291,14 +216,6 @@
                 }
             }
 
-
-            /*
-            .ghost{
-                height:3rem;
-                background: #dddddd;
-            }
-            */
-
             input {
                 width: calc(100% - 0.5rem);
                 border: thin solid #dddddd;
@@ -307,20 +224,6 @@
                 font-size: 1rem;
                 border-radius: 0.2rem;
             }
-
-            /* project repeat */
-
-
-            /*
-            .card .iconbtn button:hover {
-                background: darkred;
-            }
-
-            .iconbtn.addperiod:hover {
-                z-index: 20;
-            }
-            */
-
 
             .deleteProject {
                 right: 2rem;
@@ -332,19 +235,12 @@
                 right: 0.5rem;
             }
 
-            /*
-            .iconbtn.addperiod {
-                right: 2.5rem;
-            }
-            */
-
 
             header {
                 padding: 1rem 0;
             }
 
             .header {
-                /* border-bottom: thin solid white; */
                 padding: 1rem;
                 display: flex;
                 align-items: center;
@@ -365,16 +261,6 @@
             .header.done input {
                 background: var(--paper-green-500);
             }
-
-            /*
-            #period > fx-repeatitem {
-                background: var(--paper-grey-100);
-                position: relative;
-                min-width: 300px;
-                padding: 0.5rem 0.25rem;
-                width: 100%;
-            }
-            */
 
             #period > [repeat-index] {
                 border: thin solid var(--paper-grey-500);
@@ -443,20 +329,6 @@
                 background: green;
             }
 
-            /*
-            .iconbtn {
-                width: 1rem;
-                height: 1rem;
-            }
-            */
-
-            /*
-            #r-task .iconbtn button {
-                font-size: 0.75rem;
-                padding: 0.25rem 0.5rem;
-            }
-            */
-
             .wrapper {
                 width: auto;
                 max-width: 100%;
@@ -471,9 +343,6 @@
             }
 
             .more-actions {
-                /*width: 10rem;*/
-                /*display: none;*/
-
                 a, a:link, a:visited {
                     text-decoration: none;
                 }
@@ -507,16 +376,6 @@
             max-width: 59.25rem;
         }
 
-        /*
-        #r-category fx-repeatitem {
-            display:flex;
-            align-items:center;
-            cursor: grabbing;
-            flex-wrap:wrap;
-        }
-        */
-
-
         .match {
             background-color: orange;
             border-color: darkorange;
@@ -526,7 +385,7 @@
     </style>
 </head>
 <body>
-<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+<fore-corner href="../demos.html" title="Back to Demos"></fore-corner>
 <fx-fore>
 <!--
     <fx-action event="keydown" phase="capture" perform="default" target="#window" if="event('code') = 'Backspace'">
@@ -615,11 +474,10 @@
         <section class="outer-card">
             <h2>THIS WEEK</h2>
             <div class="dateDisplay">
-                <input id="startperiod" type="hidden" value="{dayOfWeekISO('last','wednesday')}">
-                <input id="endperiod" type="hidden" value="{dayOfWeekISO('next','wednesday')}">
+                {dayOfWeekISO('last','wednesday')} - {dayOfWeekISO('next','wednesday')}
             </div>
             <fx-group id="period" ref="period[@name='thisweek']">
-                <fx-repeat id="r-category" ref="category" tabindex="0">
+                <fx-repeat id="r-category" ref="category">
                     <template draggable="true" drop-target="r-category">
 
                         <fx-trigger class="deletebtn">
@@ -633,83 +491,15 @@
 
                         <fx-repeat id="r-task" ref="task">
                             <template draggable="true" drop-target="r-task">
-                                <fx-control ref="@done" value-prop="checked" update-event="input">
-                                    <input type="checkbox" class="widget">
-                                </fx-control>
-                                {@done}
+<!--
                                 <fx-control class="task-{@done}" id="task" class="task" ref=".">
                                     <input placeholder="specify the task">
                                 </fx-control>
-<!--
-                                <fx-trigger class="more-actions">
-                                    <a href="#">...</a>
-                                    <fx-toggleboolean ref="instance('vars')/more-actions">true</fx-toggleboolean>
-                                </fx-trigger>
-                                <div class="action-details-{instance('vars')/more-actions}">
-                                    <fx-trigger>
-                                        <a href="#">delete</a>
-                                        <fx-action>
-                                            <fx-delete ref="."></fx-delete>
-                                        </fx-action>
-                                    </fx-trigger>
-                                </div>
 -->
-<!--
-                                <details>
-                                    <summary>...</summary>
-                                    <div class="details-content">
-                                        <fx-control class="dateCtrl" id="due" ref="@due" create update-event="input">
-                                            <label>Due
-                                                <input type="date"/>
-                                            </label>
-                                        </fx-control>
-                                        <fx-trigger>
-                                            <a href="#">delete</a>
-                                            <fx-action>
-                                                <fx-delete ref="."></fx-delete>
-                                            </fx-action>
-                                        </fx-trigger>
-                                    </div>
-                                </details>
--->
-
-                                <!--
-                                                                <fx-control class="dateCtrl" id="due" ref="@due" update-event="input">
-                                                                    <input type="date"/>
-                                                                    <fx-action event="value-changed">
-                                                                        <fx-toggle case="c-default"></fx-toggle>
-                                                                    </fx-action>
-                                                                </fx-control>
-                                -->
-
-                                <!--
-                                todo: not working - why?
-                                                                <fx-trigger ref="not(exists(./@due))">-->
-
-
-
-                                <!-- todo: this is where i'd like to have a way to get access to the calling dom element aka 'this' or 'event.target'
-                                   In this case i only the want to change the DOM without actually binding that to data.
-                               -->
-
-                                <!--
-                                                        <details class="more-actions">
-
-                                                            <summary>
-                                                                <fx-trigger>
-                                                                    <button>...</button>
-                                                                    <fx-call function="toggleDetails(event('target'))"></fx-call>
-                                                                </fx-trigger>
-                                                            </summary>
-                                                            <fx-trigger>
-                                                                <a href="#">due</a>
-                                                                <fx-action>
-                                                                    <fx-setattribute ref="." name="due" value=""></fx-setattribute>
-                                                                    <fx-setfocus control="due"></fx-setfocus>
-                                                                </fx-action>
-                                                            </fx-trigger>
-                                                        </details>
-                                -->
+                                <fx-control ref="@done" value-prop="checked" update-event="input">
+                                    <input type="checkbox" class="widget">
+                                </fx-control>
+                                <input type="checkbox" class="widget">
 
                             </template>
                         </fx-repeat>
@@ -734,7 +524,7 @@
                 </fx-trigger>
 
             </fx-group>
-            <!--            <fx-droptarget></fx-droptarget>-->
+            <fx-droptarget></fx-droptarget>
         </section>
         <!--
                 <section>
@@ -869,7 +659,7 @@
         </section>
     </main>
 </fx-fore>
-<script>
+<!--<script>
     document.addEventListener('ready', e => {
         console.log('ready')
         window.disableLitepickerStyles = true;
@@ -883,7 +673,8 @@
             inlineMode: true,
         });
     });
-</script>
+</script>-->
+<script type="module" src="../demo.js"></script>
 
 </body>
 </html>

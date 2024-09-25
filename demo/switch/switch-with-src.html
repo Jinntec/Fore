@@ -18,14 +18,16 @@
             background: #76ff03;
         }
 
-        main{
-            height:calc(100% - 2rem);
-            background:#dddddd;
+        main {
+            height: calc(100% - 2rem);
+            background: #dddddd;
         }
-        fx-switch, fx-case{
-            width:100vw;
-            height:100vh;
+
+        fx-switch, fx-case {
+            width: 100vw;
+            height: 100vh;
         }
+
         fx-case {
             width: 100vw;
             height: 100%;
@@ -48,10 +50,12 @@
         [unresolved] {
             display: none;
         }
-        #home > div{
-            max-width:64rem;
-            padding:0 2rem;
+
+        #home > div {
+            max-width: 64rem;
+            padding: 0 2rem;
         }
+
         #two {
             background: #ffca28;
         }
@@ -63,27 +67,30 @@
         fx-control {
             display: block;
         }
-        nav{
-            padding:1rem 0;
 
-            fx-trigger{
-                padding:0 1rem;
+        nav {
+            padding: 1rem 0;
+
+            fx-trigger {
+                padding: 0 1rem;
             }
         }
-        #source{
-            position:fixed;
-            top:0;
-            right:0;
-            z-index:5;
-            width:40vw;
-            height:20rem;
-            background:lightblue;
-            border:thin solid;
+
+        #source {
+            position: fixed;
+            top: 0;
+            right: 0;
+            z-index: 5;
+            width: 40vw;
+            height: 20rem;
+            background: lightblue;
+            border: thin solid;
         }
-        #three{
-           fx-control{
-               max-width:64rem;
-           }
+
+        #three {
+            fx-control {
+                max-width: 64rem;
+            }
         }
     </style>
     <script type="module" src="../demo.js"></script>
@@ -93,136 +100,96 @@
 <body unresolved="unresolved">
 <fore-corner href="../../doc/demos.html" title="Back to Demos"></fore-corner>
 
-<!--<div class="wrapper">-->
+<fx-fore>
+    <fx-model>
+        <fx-instance src="src.xml" type="xml"></fx-instance>
+        <fx-bind ref="fx-switch" readonly="true()"></fx-bind>
+    </fx-model>
+    <header>
+        <nav>
+            <fx-trigger class="toggle" label="page 1">
+                <a href="#" role="menuitem">home</a>
+                <fx-toggle case="home"></fx-toggle>
+            </fx-trigger>
+            <fx-trigger class="toggle" label="page 1">
+                <a href="#" role="menuitem">view 1</a>
+                <fx-toggle case="one"></fx-toggle>
+            </fx-trigger>
 
-<!--
-    <h1>Switch/Case with src</h1>
-    <p>
+            <fx-trigger id="page2btn" class="toggle" label="page 2" raised="raised">
+                <a href="#" role="menuitem">view 2</a>
+                <fx-toggle case="two"></fx-toggle>
+            </fx-trigger>
 
-    </p>
--->
+            <fx-trigger id="page3btn" class="toggle" label="page 3" raised="raised">
+                <a href="#" role="menuitem">view 3</a>
+                <fx-toggle case="three"></fx-toggle>
+            </fx-trigger>
+        </nav>
 
+    </header>
+    <main>
+        <fx-switch id="switch">
+            <fx-case id="home">
+                <div>
+                    <h1>Lazy-loading views with the <code>src</code> attribute</h1>
+                    <p class="note">This is the recommended approach if you plan to build more complex UIs with several
+                        interchangeable views.</p>
 
-<!--    <embed type="text/html" src="page1.html" style="width:100;height:40rem;"></embed>-->
+                    <p><code>fx-switch</code> cannot just be used for tabcontainers but can manage
+                        a set of views and lazy-load them as needed.</p>
 
-<!--
-    <demo-snippet>
-        <template>
--->
-            <fx-fore>
-<!--                <fx-replace ref="selected" with="getsource()" event="ready"></fx-replace>-->
-                <fx-model>
-                    <fx-instance src="src.xml" type="xml"></fx-instance>
-                    <fx-bind ref="fx-switch" readonly="true()"></fx-bind>
-<!--
-                    <fx-function signature="getsource() as element()*" type="text/javascript">
-                        console.log('doc', document);
-                        const switch = document.getElementById('switch');
-                        console.log('switch', switch);
-                        return switch;
-                    </fx-function>
--->
-                </fx-model>
+                    <p>Using the <code>src</code> on <code>fx-case</code> has two effects:</p>
+                    <ul>
+                        <li>it loads the activated case only when it becomes activated (lazy-loading)</li>
+                        <li>it loads the content from an external HTML page which may either just be the snippet or
+                            a full standalone page. By default the first <code>fx-case</code> element will be selected
+                            but you can specify a CSS selector to fetch a specific target from that page.
+                        </li>
+                    </ul>
+                    <p>By styling a switch to take the full viewport you can easily build a bare-bone
+                        Single-Page-Application (SPA)
+                        where the host page is only loaded once and views are swapped in and out as needed.</p>
+                    <p>Using this technique also allows to split up big pages into chunks making them
+                        easier to extend and maintain.</p>
 
-<!--
-                <div id="source">
-                    <fx-control ref="selected" as="node">
-                        <jinn-codemirror linter="http://localhost:8080/exist/apps/tei-publisher/api/lint" mode="html" valid="true"
+                    <p>The first case will always be displayed and resolved by default. If you inspect the page right
+                        after
+                        loading you will notice that the cases 'one', 'two', 'three' won't have been loaded yet. </p>
+
+                    <p>Markup of current page:</p>
+                    <fx-control ref="//fx-switch" as="node">
+                        <jinn-codemirror inert linter="http://localhost:8080/exist/apps/tei-publisher/api/lint"
+                                         mode="html" valid="true"
                                          class="widget"></jinn-codemirror>
                     </fx-control>
+
+                    <p>The home view is what you're looking at. See the other pages for details.</p>
+
+
                 </div>
--->
+            </fx-case>
+            <fx-case id="one" src="page1.html">
+                <fx-action event="select">
+                    <fx-message>View1 selected</fx-message>
+                </fx-action>
+                <div>only seen if page1.html fails to load.</div>
+            </fx-case>
+            <fx-case id="two" src="page2.html">
+                <h1>VIEW 2</h1>
+                <h2>Oh - you were not supposed to see me...</h2>
+                <p>
+                    I'm just fallback content when my <code>src</code>
+                    can't be resolved.
+                </p>
+                <p>page2.html doesn't exist.</p>
+            </fx-case>
+            <fx-case id="three" src="page3.html" selector="#three">
+            </fx-case>
+        </fx-switch>
+    </main>
 
-                <header>
-                    <nav>
-                        <fx-trigger class="toggle" label="page 1">
-                            <a href="#" role="menuitem">home</a>
-                            <fx-toggle case="home"></fx-toggle>
-                        </fx-trigger>
-                        <fx-trigger class="toggle" label="page 1">
-                            <a href="#" role="menuitem">view 1</a>
-                            <fx-toggle case="one"></fx-toggle>
-                        </fx-trigger>
-
-                        <fx-trigger id="page2btn" class="toggle" label="page 2" raised="raised">
-                            <a href="#" role="menuitem">view 2</a>
-                            <fx-toggle case="two"></fx-toggle>
-                        </fx-trigger>
-
-                        <fx-trigger id="page3btn" class="toggle" label="page 3" raised="raised">
-                            <a href="#" role="menuitem">view 3</a>
-                            <fx-toggle case="three"></fx-toggle>
-                        </fx-trigger>
-                    </nav>
-
-                </header>
-                <main>
-                    <fx-switch id="switch">
-                        <fx-case id="home">
-                            <div>
-                                <h1>Lazy-loading views with the <code>src</code> attribute</h1>
-                                <p class="note">This is the recommended approach if you plan to build more complex UIs with several
-                                    interchangeable views.</p>
-
-                                <p><code>fx-switch</code> cannot just be used for tabcontainers but can manage
-                                    a set of views and lazy-load them as needed.</p>
-
-                                <p>Using the <code>src</code> on <code>fx-case</code> has two effects:</p>
-                                <ul>
-                                    <li>it loads the activated case only when it becomes activated (lazy-loading)</li>
-                                    <li>it loads the content from an external HTML page which may either just be the snippet or
-                                    a full standalone page. By default the first <code>fx-case</code> element will be selected
-                                    but you can specify a CSS selector to fetch a specific target from that page.</li>
-                                </ul>
-                                <p>By styling a switch to take the full viewport you can easily build a bare-bone Single-Page-Application (SPA)
-                                    where the host page is only loaded once and views are swapped in and out as needed.</p>
-                                <p>Using this technique also allows to split up big pages into chunks making them
-                                easier to extend and maintain.</p>
-
-                                <p>The first case will always be displayed and resolved by default. If you inspect the page right after
-                                loading you will notice that the cases 'one', 'two', 'three' won't have been loaded yet. </p>
-
-                                <p>Markup of current page:</p>
-                                <fx-control ref="//fx-switch" as="node">
-                                    <jinn-codemirror inert linter="http://localhost:8080/exist/apps/tei-publisher/api/lint" mode="html" valid="true"
-                                                     class="widget"></jinn-codemirror>
-                                </fx-control>
-
-                                <p>The home view is what you're looking at. See the other pages for details.</p>
-
-
-
-
-                            </div>
-                        </fx-case>
-                        <fx-case id="one" src="page1.html">
-                            <fx-action event="select">
-                                <fx-message>View1 selected</fx-message>
-                            </fx-action>
-                            <div>only seen if page1.html fails to load.</div>
-                        </fx-case>
-                        <fx-case id="two" src="page2.html">
-                            <h1>VIEW 2</h1>
-                            <h2>Oh - you were not supposed to see me...</h2>
-                                <p>
-                                    I'm just fallback content when my <code>src</code>
-                                    can't be resolved.
-                                </p>
-                            <p>page2.html doesn't exist.</p>
-                        </fx-case>
-                        <fx-case id="three" src="page3.html" selector="#three">
-                        </fx-case>
-                    </fx-switch>
-                </main>
-
-            </fx-fore>
-<!--
-        </template>
-    </demo-snippet>
--->
-
-<!--</div>-->
-
+</fx-fore>
 
 </body>
 </html>

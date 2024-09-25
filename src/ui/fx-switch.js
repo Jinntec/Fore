@@ -28,7 +28,7 @@ class FxSwitch extends FxContainer {
     }
     const style = `
        :host ::slotted(fx-case.selected-case){
-        display: block !important;
+        display: block;
     }
     `;
     const html = `
