@@ -7,6 +7,7 @@ import {
 } from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
 import { Fore } from './fore.js';
+import DependentXPathQueries from './DependentXPathQueries.js';
 
 /**
  * Mixin containing all general functions that are shared by all Fore element classes.
@@ -61,6 +62,9 @@ export default class ForeElementMixin extends HTMLElement {
      * @type {Map<string, import('./fx-var.js').FxVariable>}
      */
     this.inScopeVariables = new Map();
+
+    this._dependencies = new DependentXPathQueries();
+    this._dependencies.setParentDependencies(this.parent?.closest('[ref]')?._dependencies);
   }
 
   /**
@@ -103,6 +107,7 @@ export default class ForeElementMixin extends HTMLElement {
    * evaluation of fx-bind and UiElements differ in details so that each class needs it's own implementation.
    */
   evalInContext() {
+    this._dependencies.resetDependencies();
     // const inscopeContext = this.getInScopeContext();
     const model = this.getModel();
     if (!model) {
@@ -114,6 +119,7 @@ export default class ForeElementMixin extends HTMLElement {
     }
     if (this.hasAttribute('ref')) {
       inscopeContext = getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
+      this._dependencies.addXPath(this.ref);
     }
     if (!inscopeContext && this.getModel().instances.length !== 0) {
       // ### always fall back to default context with there's neither a 'context' or 'ref' present
