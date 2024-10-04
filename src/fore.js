@@ -275,7 +275,8 @@ export class Fore {
    * recursively refreshes all UI Elements.
    *
    * @param {HTMLElement} startElement
-   * @param {boolean} force
+   * @param {(boolean|{reason:'index-function'})} force Whether to do a forced refresh. Forced
+   * refreshes are very bad for performance, try to limit them. If the forced refresh is because index functions may change, it is better to pass the reason
    * @returns {Promise<void>}
    */
   static async refreshChildren(startElement, force) {
@@ -298,19 +299,35 @@ export class Fore {
 */
       const { children } = startElement;
       if (children) {
-        Array.from(children).forEach(element => {
+        for (const element of Array.from(children)) {
           if (element.nodeName.toUpperCase() === 'FX-FORE') {
-            resolve('done');
-            return;
+            break;
           }
-          if (Fore.isUiElement(element.nodeName) && typeof element.refresh === 'function') {
+          if (Fore.isUiElement(element.nodeName)) {
+            /**
+             * @type {import('./ForeElementMixin.js').default}
+             */
+            const foreElement = element;
+
+            if (typeof foreElement.refresh === 'function') {
+              if (
+                force &&
+                typeof force === 'object' &&
+                force.reason === 'index-function' &&
+                foreElement._dependencies.isInvalidatedByIndexFunction()
+              ) {
+                element.refresh(force);
+                continue;
+              } else if (force === true) {
+                element.refresh(force);
+              }
+            }
             // console.log('refreshing', element, element?.ref);
             // console.log('refreshing ',element);
-            element.refresh(force);
           } else if (element.nodeName.toUpperCase() !== 'FX-MODEL') {
             Fore.refreshChildren(element, force);
           }
-        });
+        }
       }
       resolve('done');
     });
