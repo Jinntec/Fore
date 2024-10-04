@@ -1,0 +1,75 @@
+<div>
+<!--
+    <fx-group id="period" ref="period[@name='thisweek']">
+        <h2>THIS WEEK</h2>
+        <div class="dateDisplay">
+            {dayOfWeekISO('last','wednesday')} - {dayOfWeekISO('next','wednesday')}
+        </div>
+-->
+        <fx-repeat id="r-category" ref="category">
+            <template draggable="true" drop-target="r-category">
+                <fx-control id="category" class="category" ref="@name">
+                    <input placeholder="project or category?">
+                    <fx-trigger class="deletebtn">
+                        <a href="#">&#x2715;</a>
+                        <fx-delete ref=".."></fx-delete>
+                    </fx-trigger>
+                </fx-control>
+
+                <fx-repeat id="r-task" ref="task">
+                    <template draggable="true" drop-target="r-task">
+                        <!--
+                                                        <fx-control class="task-{@done}" id="task" class="task" ref=".">
+                                                            <input placeholder="specify the task">
+                                                        </fx-control>
+                        -->
+                        <fx-control ref="@done" value-prop="checked" update-event="input">
+                            <input type="checkbox" class="widget">
+
+<!--
+                            <div class="checkbox-wrapper-15">
+                                <input class="inp-cbx" id="{}"  class="widget" type="checkbox" style="display: none;"/>
+                                <label class="cbx" for="cbx-15">
+                                    <span>
+                                    <svg width="12px" height="9px" viewbox="0 0 12 9">
+                                    <polyline points="1 5 4 8 11 1"></polyline>
+                                    </svg>
+                                    </span>
+                                    <span>To-do</span>
+                                </label>
+                            </div>
+-->
+                        </fx-control>
+                        <fx-control class="task-{@done}" id="task" class="task" ref=".">
+                            <input placeholder="specify the task">
+                            <fx-trigger class="deletebtn">
+                                <a href="#">&#x2715;</a>
+                                <fx-delete ref="."></fx-delete>
+                            </fx-trigger>
+                        </fx-control>
+
+                    </template>
+                </fx-repeat>
+                <fx-trigger class="" title="add card">
+                    <a href="#">add task</a>
+                    <fx-action>
+                        <fx-insert ref="task" origin="instance()/template/task"></fx-insert>
+                        <!--                        <fx-setfocus control="category" delay="300"></fx-setfocus>-->
+                    </fx-action>
+                </fx-trigger>
+
+            </template>
+        </fx-repeat>
+<!--    <fx-droptarget></fx-droptarget>-->
+
+        <fx-trigger class="" title="add card">
+            <a href="#">add category</a>
+            <fx-action>
+                <fx-insert context="period[@name='thisweek']" ref="category"
+                           origin="instance()/template/category"></fx-insert>
+                <fx-setfocus control="category" delay="300"></fx-setfocus>
+            </fx-action>
+        </fx-trigger>
+
+<!--    </fx-group>-->
+</div>

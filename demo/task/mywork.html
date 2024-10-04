@@ -6,420 +6,30 @@
     <title>My Work</title>
     <link href="../../resources/fore.css" rel="stylesheet">
     <link href="../../resources/demo.css" rel="stylesheet">
+    <link href="mywork.css" rel="stylesheet">
 
 
 <!--    <script src="https://cdn.jsdelivr.net/npm/litepicker/dist/litepicker.js"></script>-->
-    <style>
-
-        body {
-            font-family: Montserrat, Verdana, sans-serif;
-            padding: 2rem;
-        }
-
-        main {
-            max-width: 64rem;
-        }
-
-
-        h2 {
-            display: flex;
-            align-items: baseline;
-            font-size: 1.5rem;
-            grid-area: title;
-
-            fx-trigger.iconbtn {
-                margin-left: 0.5rem;
-            }
-
-            span {
-                font-size: 1rem;
-                padding-left: 1rem;
-            }
-        }
-
-        .card {
-            padding: 1rem;
-            margin: 0.75rem 0;
-            border-radius: 5px;
-            border: thin solid #dddddd;
-            background: white;
-            position: relative;
-        }
-
-        fx-trigger {
-            margin-left: 1.5rem;
-        }
-
-        details{
-            .details-content{
-                padding:1rem;
-                border:thin solid;
-                margin-top:1rem;
-                border-radius:0.25rem;
-            }
-            .details-content > *{
-                margin:1rem 0;
-            }
-            fx-trigger{
-                margin:0;
-            }
-        }
-
-        details > summary {
-            list-style-type: none;
-            text-align: right;
-            min-width:2rem;
-        }
-
-        #category {
-            input[type=text] {
-                font-size: 1.4rem;
-                border: none;
-                border-radius: 0;
-                width: calc(100% - 2rem);
-            }
-        }
-
-        fx-trigger.iconbtn {
-            display: inline-flex;
-            align-items: center;
-
-            button {
-                border-radius: 50%;
-                color: black;
-                background: white;
-                border: thin solid #636060;
-                width: 1.5rem;
-                height: 1.5rem;
-                font-size: 1.1rem;
-            }
-
-            button:hover {
-                background: grey;
-                color: white;
-                z-index: 100;
-            }
-
-
-        }
-
-        .card-content {
-            grid-area: content;
-        }
-
-        #period {
-            border: thin solid var(--paper-grey-300);
-            border-radius: 1rem;
-            position: relative;
-            padding: 2rem;
-
-            > div:nth-child(1) {
-                margin-bottom: 1rem;
-            }
-
-            > div:nth-child(2) {
-                margin-top: 1rem;
-            }
-
-        }
-
-        label {
-            display: block;
-        }
-
-        [repeat-index] {
-            background: rgba(255, 255, 255, 0.5);
-        }
-
-        .drag-over {
-            background: #efefef;
-            outline: thin solid blue;
-        }
-
-
-        fx-control {
-            width: 100%;
-            position: relative;
-        }
-
-        .dateCtrl {
-            width: 8rem;
-        }
-
-        fx-fore {
-            height: 100vh;
-        }
-
-        fx-repeat {
-            position: relative;
-            width: calc(100% - 2rem);
-
-            .iconbtn {
-                width: 2rem;
-            }
-
-            fx-control {
-
-                width: calc(100% - 3rem);
-                display: inline-block;
-            }
-
-            fx-repeatitem {
-                max-width: 100%;
-                padding: 1rem;
-
-                .deletebtn {
-                    position: absolute;
-                    left: -2rem;
-                    top: 1.3rem;
-
-                    a, a:link, a:visited {
-                        text-decoration: none;
-                        display: inline-block;
-                        border-radius: 50%;
-                        padding: 0.1rem 0.25rem;
-                    }
-
-                    a:hover {
-                        background: var(--paper-red-700);
-                        color: white;
-                    }
-
-                }
-
-            }
-
-            #r-task {
-                padding: 1rem;
-
-                fx-control:has([type=checkbox]) {
-                    width: 2rem;
-                }
-
-                fx-repeatitem {
-                    width: 100%;
-                    padding: 0.25rem 0;
-                    display: flex;
-
-                    fx-output {
-                        white-space: nowrap;
-                    }
-                }
-
-
-                input {
-                    border: none;
-                }
-
-                .task-true input {
-                    text-decoration: line-through;
-                }
-            }
-
-            input {
-                width: calc(100% - 0.5rem);
-                border: thin solid #dddddd;
-                padding: 4px;
-                background: white;
-                font-size: 1rem;
-                border-radius: 0.2rem;
-            }
-
-            .deleteProject {
-                right: 2rem;
-                position: absolute;
-            }
-
-
-            .addProject {
-                right: 0.5rem;
-            }
-
-
-            header {
-                padding: 1rem 0;
-            }
-
-            .header {
-                padding: 1rem;
-                display: flex;
-                align-items: center;
-            }
-
-            .header input {
-                background: var(--paper-light-blue-500);
-                border-radius: 1rem;
-                width: 80px;
-                color: white;
-                text-align: center;
-            }
-
-            .header.doing input {
-                background: var(--paper-orange-500);
-            }
-
-            .header.done input {
-                background: var(--paper-green-500);
-            }
-
-            #period > [repeat-index] {
-                border: thin solid var(--paper-grey-500);
-            }
-
-            #period .header > fx-control {
-                width: calc(100% - 5rem);
-            }
-
-            .handle {
-                width: 2rem;
-                right: 0.5rem;
-                padding-right: 1rem;
-                cursor: grabbing;
-                height: 2rem;
-            }
-
-            .line {
-                background: black;
-                display: block;
-                height: 1px;
-                width: 100%;
-                margin-bottom: 4px;
-            }
-
-            .subheader {
-                font-size: 0.9rem;
-                font-weight: 700;
-                margin-top: 1rem;
-            }
-
-            .activity {
-                width: 100%;
-                display: block;
-            }
-
-
-            .priority:before {
-                /*color:white;*/
-                width: 16px;
-                height: 16px;
-                padding: 2px;
-                display: inline-block;
-                text-align: center;
-                border-radius: 14px;
-                content: '';
-            }
-
-            .priority.p1:before {
-                /*content:'highest';*/
-                background: red;
-            }
-
-            .priority.p2:before {
-                /*content:'high';*/
-                background: orange;
-            }
-
-            .priority.p3:before {
-                /*content:'medium';*/
-                background: dodgerblue;
-            }
-
-            .priority.p4:before {
-                /*content:'forget it';*/
-                background: green;
-            }
-
-            .wrapper {
-                width: auto;
-                max-width: 100%;
-            }
-
-            .margin-top {
-                padding-top: 2rem;
-            }
-
-            .margin-bottom {
-                padding-bottom: 2rem;
-            }
-
-            .more-actions {
-                a, a:link, a:visited {
-                    text-decoration: none;
-                }
-            }
-
-
-
-            fx-control, input {
-                width: 100%;
-            }
-        }
-
-        .up::before {
-            content: '';
-            height: 3rem;
-            background: #dddddd;
-            border: thin solid #666666;
-            width: 100%;
-        }
-
-        .down::after {
-            content: '';
-            height: 3rem;
-            background: pink;
-            border: thin solid #666666;
-            width: 100%;
-        }
-
-        #searchCtl {
-            padding: 0.5rem;
-            max-width: 59.25rem;
-        }
-
-        .match {
-            background-color: orange;
-            border-color: darkorange;
-            border-width: medium;
-        }
-
-    </style>
 </head>
 <body>
-<fore-corner href="../demos.html" title="Back to Demos"></fore-corner>
 <fx-fore>
 <!--
     <fx-action event="keydown" phase="capture" perform="default" target="#window" if="event('code') = 'Backspace'">
         <fx-message>backspace empty {event('target.value') = ''}</fx-message>
     </fx-action>
 -->
-<fx-action event="click">
-    <fx-call function="close-details()"></fx-call>
-</fx-action>
+
     <fx-model>
+        <fx-send submission="load" event="model-construct-done"></fx-send>
+
         <fx-functionlib src="realtime-functions.html"></fx-functionlib>
-        <fx-instance>
+        <fx-instance id="default" shared>
             <data>
                 <period name="thisweek" start="" end="">
-                    <category name="IB">
-                        <task owner="me" done="true">Open file handles</task>
-                        <task owner="me" done="true">fix util:string-to-binary</task>
-                        <task owner="me" done="false">provide lib version of 6.2.1</task>
-                        <task owner="me" done="true">Tests</task>
-                        <task owner="me" done="false">review IB Budgets</task>
-                    </category>
-                    <category name="BetamasaHeft">
-                        <task owner="me" done="false">Publisher Integration</task>
-                    </category>
                 </period>
                 <period name="nextweek">
-                    <category name="art-decor">
-                        <task owner="me" done="false">fix bug xyz</task>
-                    </category>
                 </period>
                 <period name="thismonth">
-                    <category name="eXist-db">
-                        <task owner="me" done="false">Publisher Integration</task>
-                    </category>
                 </period>
                 <period name="nextmonth">
                 </period>
@@ -439,13 +49,30 @@
                 <more-actions>false</more-actions>
             </data>
         </fx-instance>
+
+        <fx-submission id="save"
+                       url="localStore:mywork"
+                       method="post"
+                       replace="none"
+                       nonrelevant="keep">
+            <fx-message event="submit-done">Changes have been stored</fx-message>
+        </fx-submission>
+        <fx-submission id="load"
+                       url="localStore:mywork"
+                       method="get"
+                       replace="instance">
+            <fx-message event="submit-done">MyWork loaded from localStorage</fx-message>
+        </fx-submission>
+
+        <fx-submission id="clear"
+                       url="localStore:mywork"
+                       method="delete">
+            <fx-message event="submit-done">MyWork deleted from localStorage</fx-message>
+            <fx-reload event="submit-done"></fx-reload>
+        </fx-submission>
+
         <fx-var name="vars" value="instance('vars')"></fx-var>
 
-        <!--
-                <fx-function signature="today() as xs:string" type="text/javascript">
-                    return new Date().toISOString().slice(0, 10);
-                </fx-function>
-        -->
         <fx-function signature="get-month($start as xs:string) as xs:string"
                      type="text/javascript">
             const date = new Date($start);
@@ -461,6 +88,13 @@
         </fx-function>
 
     </fx-model>
+    <fx-action event="ready">
+        <fx-load attach-to="#thisweek" url="week.html"></fx-load>
+        <fx-load attach-to="#nextweek" url="week.html"></fx-load>
+        <fx-load attach-to="#thismonth" url="week.html"></fx-load>
+        <fx-load attach-to="#nextmonth" url="week.html"></fx-load>
+        <fx-refresh force="force"></fx-refresh>
+    </fx-action>
     <h1>My Work {today()}</h1>
     <main>
         <!--
@@ -471,192 +105,30 @@
                     </fx-control>
                 </header>
         -->
-        <section class="outer-card">
-            <h2>THIS WEEK</h2>
-            <div class="dateDisplay">
-                {dayOfWeekISO('last','wednesday')} - {dayOfWeekISO('next','wednesday')}
-            </div>
-            <fx-group id="period" ref="period[@name='thisweek']">
-                <fx-repeat id="r-category" ref="category">
-                    <template draggable="true" drop-target="r-category">
+        <fx-action event="deleted" target="default">
+            <fx-send submission="save"></fx-send>
+        </fx-action>
+        <fx-action event="value-changed">
+            <fx-send submission="save"></fx-send>
+        </fx-action>
 
-                        <fx-trigger class="deletebtn">
-                            <a href="#">&#x2715;</a>
-                            <fx-delete ref="."></fx-delete>
-                        </fx-trigger>
-
-                        <fx-control id="category" ref="@name">
-                            <input placeholder="project or category?">
-                        </fx-control>
-
-                        <fx-repeat id="r-task" ref="task">
-                            <template draggable="true" drop-target="r-task">
-<!--
-                                <fx-control class="task-{@done}" id="task" class="task" ref=".">
-                                    <input placeholder="specify the task">
-                                </fx-control>
--->
-                                <fx-control ref="@done" value-prop="checked" update-event="input">
-                                    <input type="checkbox" class="widget">
-                                </fx-control>
-                                <input type="checkbox" class="widget">
-
-                            </template>
-                        </fx-repeat>
-                        <fx-trigger class="" title="add card">
-                            <a href="#">add task</a>
-                            <fx-action>
-                                <fx-insert ref="task" origin="instance()/template/task"></fx-insert>
-                                <!--                        <fx-setfocus control="category" delay="300"></fx-setfocus>-->
-                            </fx-action>
-                        </fx-trigger>
-
-                    </template>
-                </fx-repeat>
-
-                <fx-trigger class="" title="add card">
-                    <a href="#">add category</a>
-                    <fx-action>
-                        <fx-insert context="period[@name='thisweek']" ref="category"
-                                   origin="instance()/template/category"></fx-insert>
-                        <fx-setfocus control="category" delay="300"></fx-setfocus>
-                    </fx-action>
-                </fx-trigger>
-
-            </fx-group>
-            <fx-droptarget></fx-droptarget>
-        </section>
-        <!--
-                <section>
-                    <h2>next week {next-day(dayOfWeek('next','wednesday'))} -
-                        {in-one-week(next-day(dayOfWeek('next','wednesday')))}
-                        <fx-trigger class="iconbtn" title="add card">
-                            <button>+</button>
-                            <fx-action>
-                                <fx-insert ref="period[@name='nextweek']/category"
-                                           origin="instance()/template/category"></fx-insert>
-                            </fx-action>
-                        </fx-trigger>
-                    </h2>
-                    <fx-group id="period" ref="period[@name='nextweek']">
-                        <fx-repeat id="r-category" ref="category" tabindex="0">
-                            <template draggable="true" drop-target="r-category">
-
-                                <fx-trigger class="iconbtn" title="add card">
-                                    <button>+</button>
-                                    <fx-action>
-                                        <fx-insert ref="task" origin="instance()/template/task"></fx-insert>
-                                        &lt;!&ndash;                        <fx-setfocus control="category" delay="300"></fx-setfocus>&ndash;&gt;
-                                    </fx-action>
-                                </fx-trigger>
-
-                                <fx-control id="category" ref="@name">
-                                    <input placeholder="project or category?">
-                                </fx-control>
-
-                                <fx-repeat id="r-task" ref="task">
-                                    <template draggable="true" drop-target="r-task">
-                                        <fx-control ref="./@done" value-prop="checked" update-event="input">
-                                            <input type="checkbox">
-                                        </fx-control>
-                                        <fx-control id="task" class="task" ref=".">
-                                            <input placeholder="specify the task">
-                                        </fx-control>
-                                    </template>
-                                </fx-repeat>
-                            </template>
-                        </fx-repeat>
-                    </fx-group>
-                </section>
-        -->
-        <!--
-                <section>
-                    <h2>{this-month()}
-                        <fx-trigger class="iconbtn" title="add card">
-                            <button>+</button>
-                            <fx-action>
-                                <fx-insert ref="period[@name='thismonth']/category"
-                                           origin="instance()/template/category"></fx-insert>
-                                <fx-focus control="category"></fx-focus>
-                            </fx-action>
-                        </fx-trigger>
-                    </h2>
-                    <fx-group id="period" ref="period[@name='thismonth']">
-                        <fx-repeat id="r-category" ref="category" tabindex="0">
-                            <template draggable="true" drop-target="r-category">
-
-                                <fx-trigger class="iconbtn" title="add card">
-                                    <button>+</button>
-                                    <fx-action>
-                                        <fx-insert ref="task" origin="instance()/template/task"></fx-insert>
-                                        &lt;!&ndash;                        <fx-setfocus control="category" delay="300"></fx-setfocus>&ndash;&gt;
-                                    </fx-action>
-                                </fx-trigger>
-
-                                <fx-control id="category" ref="@name">
-                                    <input placeholder="project or category?">
-                                </fx-control>
-
-                                <fx-repeat id="r-task" ref="task">
-                                    <template draggable="true" drop-target="r-task">
-                                        <fx-control ref="./@done" value-prop="checked" update-event="input">
-                                            <input type="checkbox">
-                                        </fx-control>
-                                        <fx-control id="task" class="task" ref=".">
-                                            <input placeholder="specify the task">
-                                        </fx-control>
-                                    </template>
-                                </fx-repeat>
-                            </template>
-                        </fx-repeat>
-                    </fx-group>
-                </section>
-        -->
-        <!--
-                <section>
-                    <h2>{next-month()}
-                        <fx-trigger class="iconbtn" title="add card">
-                            <button>+</button>
-                            <fx-action>
-                                <fx-insert context="period[@name='nextmonth']" ref="category"
-                                           origin="instance()/template/category"></fx-insert>
-                            </fx-action>
-                        </fx-trigger>
-                    </h2>
-                    <fx-group id="period" ref="period[@name='nextmonth']">
-                        <fx-repeat id="r-category" ref="category" tabindex="0">
-                            <template draggable="true" drop-target="r-category">
-
-                                <fx-trigger class="iconbtn" title="add card">
-                                    <button>+</button>
-                                    <fx-action>
-                                        <fx-insert ref="task" origin="instance()/template/task"></fx-insert>
-                                        &lt;!&ndash;
-                                        <fx-setfocus control="category" delay="300"></fx-setfocus>&ndash;&gt;
-                                    </fx-action>
-                                </fx-trigger>
-
-                                <fx-control id="category" ref="@name">
-                                    <input placeholder="project or category?">
-                                </fx-control>
-
-                                <fx-repeat id="r-task" ref="task">
-                                    <template draggable="true" drop-target="r-task">
-                                        <fx-control ref="./@done" value-prop="checked" update-event="input">
-                                            <input type="checkbox">
-                                        </fx-control>
-                                        <fx-control id="task" class="task" ref=".">
-                                            <input placeholder="specify the task">
-                                        </fx-control>
-                                    </template>
-                                </fx-repeat>
-                            </template>
-                        </fx-repeat>
-                    </fx-group>
-                </section>
-        -->
-
-        </section>
+        <fx-group class="period" ref="period[@name='thisweek']">
+            <h2>THIS WEEK<span class="dateDisplay">{dayOfWeekISO('last','wednesday')} - {dayOfWeekISO('next','wednesday')}</span></h2>
+            <section id="thisweek" class="outer-card"></section>
+        </fx-group>
+        <fx-group class="period"  ref="period[@name='nextweek']">
+            <h2>NEXT WEEK<span class="dateDisplay">{next-day(dayOfWeekISO('next','wednesday'))} -
+                {in-one-week(next-day(dayOfWeekISO('next','wednesday')))}</span> </h2>
+            <section id="nextweek" class="outer-card"></section>
+        </fx-group>
+        <fx-group  class="period" ref="period[@name='thismonth']">
+            <h2>THIS MONTH<span class="dateDisplay">{this-month()}</span></h2>
+            <section id="thismonth" class="outer-card"></section>
+        </fx-group>
+        <fx-group  class="period" ref="period[@name='nextmonth']">
+            <h2>NEXT MONTH<span class="dateDisplay">{next-month()}</span></h2>
+            <section id="nextmonth" class="outer-card"></section>
+        </fx-group>
     </main>
 </fx-fore>
 <!--<script>
