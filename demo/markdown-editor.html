@@ -105,6 +105,7 @@ this is a paragraph
                             <a href="#">x</a>
                             <fx-setvalue ref="instance('vars')/mode">view</fx-setvalue>
                         </fx-trigger>
+                        <fx-setvalue ref="instance('vars')/mode" event="blur">view</fx-setvalue>
                     </fx-control>
                     <fx-output value="markdown(md-page/text())" mediatype="markdown">
                         <fx-setvalue event="click" ref="instance('vars')/mode">edit</fx-setvalue>
