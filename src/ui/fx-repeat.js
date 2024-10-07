@@ -80,7 +80,7 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
     const rItems = this.querySelectorAll(':scope > fx-repeatitem');
     this.applyIndex(rItems[this.index - 1]);
 
-    this.getOwnerForm().refresh(true);
+    this.getOwnerForm().refresh({ reason: 'index-function' });
   }
 
   applyIndex(repeatItem) {

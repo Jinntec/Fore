@@ -484,6 +484,9 @@ export class FxFore extends HTMLElement {
   }
 
   // async refresh(force, changedPaths) {
+  /**
+   * @param {(boolean|{reason:'index-function'})} [force]fx-fore
+   */
   async refresh(force) {
     /*
 
@@ -578,7 +581,7 @@ export class FxFore extends HTMLElement {
 */
 
       if (this.inited) {
-        Fore.refreshChildren(this, true);
+        Fore.refreshChildren(this, force);
       }
       // console.timeEnd('refreshChildren');
     }
@@ -620,7 +623,7 @@ export class FxFore extends HTMLElement {
     for (const subFore of subFores) {
       // subFore.refresh(false, changedPaths);
       if (subFore.ready) {
-        await subFore.refresh(false);
+        await subFore.refresh(force);
       }
     }
     this.isRefreshing = false;

@@ -91,7 +91,9 @@ class FxGroup extends FxContainer {
 
   async refresh(force) {
     super.refresh(force);
-    Fore.refreshChildren(this, force);
+    // Make the maybe filtered refresh an unconditional forced refresh: This fx-group changes the
+    // context item
+    Fore.refreshChildren(this, !!force);
   }
 }
 

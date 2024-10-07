@@ -1,0 +1,442 @@
+
+body {
+    font-family: Montserrat, Verdana, sans-serif;
+    padding: 2rem;
+    background:aliceblue;
+}
+
+main {
+    max-width: 64rem;
+}
+
+h1{
+    font-size:2rem;
+}
+h2 {
+    display: flex;
+    align-items: baseline;
+    font-size: 1.5rem;
+    grid-area: title;
+    margin:0;
+
+    fx-trigger.iconbtn {
+        margin-left: 0.5rem;
+    }
+
+    span {
+        font-size: 1rem;
+        padding-left: 1rem;
+    }
+}
+input{
+    background:transparent;
+}
+input[type=checkbox]{
+    height:1rem;
+    width:1rem;
+    margin-left:0;
+}
+input[type=checkbox]:focus{
+    outline:none;
+}
+
+.card {
+    padding: 1rem;
+    margin: 0.75rem 0;
+    border-radius: 5px;
+    border: thin solid #dddddd;
+    background: white;
+    position: relative;
+}
+.dateDisplay{
+    font-weight:300;
+    font-size: 1rem;
+}
+fx-trigger {
+    /*margin-left: 1.5rem;*/
+    padding:1rem 0;
+}
+fx-droptarget{
+    width:100%;
+    height:1rem;
+    background:lightblue;
+    display:inline-block;
+}
+
+details{
+    width:20rem;
+
+    .details-content{
+        /*padding:1rem;*/
+        border:thin solid;
+        /*margin-top:1rem;*/
+        border-radius:0.25rem;
+    }
+    .details-content > *{
+        margin:1rem 0;
+        width:100%;
+    }
+    fx-trigger{
+        margin:0;
+    }
+}
+
+details > summary {
+    list-style-type: none;
+    text-align: right;
+    min-width:2rem;
+}
+
+.category:has(input:focus) .deletebtn{
+    display:inline-block;
+}
+
+.category input.widget {
+    font-size: 1rem;
+    border: none;
+    border-radius: 0;
+    width: calc(100% - 2rem);
+    border-bottom:thin solid;
+}
+
+
+
+fx-trigger.iconbtn {
+    display: inline-flex;
+    align-items: center;
+
+    button {
+        border-radius: 50%;
+        color: black;
+        background: white;
+        border: thin solid #636060;
+        width: 1.5rem;
+        height: 1.5rem;
+        font-size: 1.1rem;
+    }
+
+    button:hover {
+        background: grey;
+        color: white;
+        z-index: 100;
+    }
+
+
+}
+
+.card-content {
+    grid-area: content;
+}
+
+.period {
+    border: thin solid var(--paper-grey-300);
+    border-radius: 1rem;
+    position: relative;
+    padding: 2rem;
+    margin-bottom: 0.25rem;
+    background:rgba(255,255,255,0.6);
+
+    > div:nth-child(1) {
+        margin-bottom: 1rem;
+    }
+
+    > div:nth-child(2) {
+        margin-top: 1rem;
+    }
+
+}
+
+label {
+    display: block;
+}
+
+[repeat-index] {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.drag-over {
+    background: lightblue;
+    padding:1rem;
+    border-radius:0.5rem;
+}
+
+
+fx-control {
+    width: 100%;
+    position: relative;
+}
+
+.dateCtrl {
+    width: 8rem;
+}
+
+fx-fore {
+    height: 100vh;
+}
+textarea{
+    width: calc(100% - 5.5rem);
+
+}
+
+fx-repeat {
+    position: relative;
+    width: calc(100% - 2rem);
+    min-height: 1rem;
+
+    .iconbtn {
+        width: 2rem;
+    }
+
+    fx-control {
+
+        width: calc(100% - 3rem);
+        display: inline-block;
+    }
+
+    fx-repeatitem {
+        max-width: 100%;
+        padding: 1rem;
+        border-radius: 0.5rem;
+
+        .deletebtn, .more-actions {
+            position: absolute;
+            right: 1.5rem;
+            top: -0.9rem;
+            display: none;
+            z-index: 10;
+
+            a, a:link, a:visited {
+                text-decoration: none;
+                display: inline-block;
+                border-radius: 50%;
+                padding: 0.1rem 0.25rem;
+            }
+
+            a:hover {
+                color: var(--paper-red-700);
+                /*color: white;*/
+            }
+
+        }
+        .more-actions{
+            right:3rem;
+            top:0;
+        }
+
+
+
+    }
+
+
+    #r-task {
+
+        fx-control:has([type=checkbox]) {
+            width: 2rem;
+        }
+
+        fx-repeatitem {
+            width: 100%;
+            padding: 0.25rem 0;
+            display: flex;
+
+            fx-output {
+                white-space: nowrap;
+            }
+
+
+        }
+        fx-repeatitem:focus-within .deletebtn,
+        fx-repeatitem:focus-within .more-actions{
+            display:inline-block;
+        }
+
+
+        input {
+            border: none;
+        }
+
+        .task-true input {
+            text-decoration: line-through;
+        }
+
+        .output.due{
+            position:absolute;
+            right:5em;
+        }
+    }
+
+    input {
+        width: calc(100% - 0.5rem);
+        border: thin solid #dddddd;
+        padding: 4px;
+        background: white;
+        font-size: 1rem;
+        border-radius: 0.2rem;
+    }
+
+    .deleteProject {
+        right: 2rem;
+        position: absolute;
+    }
+
+
+    .addProject {
+        right: 0.5rem;
+    }
+
+
+    header {
+        padding: 1rem 0;
+    }
+
+    .header {
+        padding: 1rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .header input {
+        background: var(--paper-light-blue-500);
+        border-radius: 1rem;
+        width: 80px;
+        color: white;
+        text-align: center;
+    }
+
+    .header.doing input {
+        background: var(--paper-orange-500);
+    }
+
+    .header.done input {
+        background: var(--paper-green-500);
+    }
+
+    .period > [repeat-index] {
+        border: thin solid var(--paper-grey-500);
+    }
+
+    .period .header > fx-control {
+        width: calc(100% - 5rem);
+    }
+
+    .handle {
+        width: 2rem;
+        right: 0.5rem;
+        padding-right: 1rem;
+        cursor: grabbing;
+        height: 2rem;
+    }
+
+    .line {
+        background: black;
+        display: block;
+        height: 1px;
+        width: 100%;
+        margin-bottom: 4px;
+    }
+
+    .subheader {
+        font-size: 0.9rem;
+        font-weight: 700;
+        margin-top: 1rem;
+    }
+
+    .activity {
+        width: 100%;
+        display: block;
+    }
+
+
+    .priority:before {
+        /*color:white;*/
+        width: 16px;
+        height: 16px;
+        padding: 2px;
+        display: inline-block;
+        text-align: center;
+        border-radius: 14px;
+        content: '';
+    }
+
+    .priority.p1:before {
+        /*content:'highest';*/
+        background: red;
+    }
+
+    .priority.p2:before {
+        /*content:'high';*/
+        background: orange;
+    }
+
+    .priority.p3:before {
+        /*content:'medium';*/
+        background: dodgerblue;
+    }
+
+    .priority.p4:before {
+        /*content:'forget it';*/
+        background: green;
+    }
+
+    .wrapper {
+        width: auto;
+        max-width: 100%;
+    }
+
+    .margin-top {
+        padding-top: 2rem;
+    }
+
+    .margin-bottom {
+        padding-bottom: 2rem;
+    }
+
+    /*
+    .more-actions {
+        a, a:link, a:visited {
+            text-decoration: none;
+        }
+    }
+    */
+
+
+
+    fx-control, input {
+        width: calc(100% - 2rem);
+    }
+}
+
+.up::before {
+    content: '';
+    height: 3rem;
+    background: #dddddd;
+    border: thin solid #666666;
+    width: 100%;
+}
+
+.down::after {
+    content: '';
+    height: 3rem;
+    background: pink;
+    border: thin solid #666666;
+    width: 100%;
+}
+
+#searchCtl {
+    padding: 0.5rem;
+    max-width: 59.25rem;
+}
+
+.match {
+    background-color: orange;
+    border-color: darkorange;
+    border-width: medium;
+}
+@media print {
+    fx-trigger,
+    fx-control:has(input[type=checkbox]){
+        display:none;
+    }
+}
+
+

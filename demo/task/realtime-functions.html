@@ -19,6 +19,12 @@
         return start.toISOString().slice(0, 10);
     </fx-function>
 
+    <fx-function signature="get-month($start as xs:string) as xs:string"
+                 type="text/javascript">
+        const date = new Date($start);
+        return date.getMonth();
+    </fx-function>
+
     <fx-function signature="dayOfWeek($method as xs:string,$day as xs:string) as xs:string" type="text/javascript">
 
 
@@ -308,6 +314,14 @@
 
     <fx-function signature="yearFromDate($date as xs:string) as xs:string" type="text/javascript">
         return new Date($date).getFullYear().toString();
+    </fx-function>
+
+    <fx-function signature="close-details() as xs:boolean" type="text/javascript">
+        const details = document.querySelectorAll('details');
+        Array.from(details).forEach(d => {
+            d.removeAttribute('open');
+        });
+        return true;
     </fx-function>
 
 
