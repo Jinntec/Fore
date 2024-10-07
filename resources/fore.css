@@ -74,6 +74,9 @@
     fx-case {
         display: none;
     }
+    fx-case.selected-case{
+        display:block;
+    }
 
     fx-output[readonly] img {
         background: inherit;
