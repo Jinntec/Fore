@@ -316,7 +316,7 @@
         return new Date($date).getFullYear().toString();
     </fx-function>
 
-    <fx-function signature="close-details() as xs:boolean"
+    <fx-function signature="close-details() as xs:boolean" type="text/javascript">
         const details = document.querySelectorAll('details');
         Array.from(details).forEach(d => {
             d.removeAttribute('open');

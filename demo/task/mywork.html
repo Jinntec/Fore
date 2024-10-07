@@ -26,12 +26,12 @@
                 </period>
                 <template>
                     <category name=""></category>
-                    <task done="false"></task>
+                    <task done="false" due=""></task>
                 </template>
             </data>
         </fx-instance>
         <fx-bind ref="instance()/period/category/task">
-            <fx-bind ref="@due" relevant=". != ''"></fx-bind>
+            <fx-bind ref="@due" relevant="true()"></fx-bind>
         </fx-bind>
         <fx-instance id="vars">
             <data>

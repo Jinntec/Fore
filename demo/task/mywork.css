@@ -64,14 +64,17 @@ fx-droptarget{
 }
 
 details{
+    width:20rem;
+
     .details-content{
-        padding:1rem;
+        /*padding:1rem;*/
         border:thin solid;
-        margin-top:1rem;
+        /*margin-top:1rem;*/
         border-radius:0.25rem;
     }
     .details-content > *{
         margin:1rem 0;
+        width:100%;
     }
     fx-trigger{
         margin:0;
@@ -170,6 +173,10 @@ fx-control {
 fx-fore {
     height: 100vh;
 }
+textarea{
+    width: calc(100% - 5.5rem);
+
+}
 
 fx-repeat {
     position: relative;
@@ -191,11 +198,12 @@ fx-repeat {
         padding: 1rem;
         border-radius: 0.5rem;
 
-        .deletebtn {
+        .deletebtn, .more-actions {
             position: absolute;
             right: 1.5rem;
             top: -0.9rem;
             display: none;
+            z-index: 10;
 
             a, a:link, a:visited {
                 text-decoration: none;
@@ -210,13 +218,15 @@ fx-repeat {
             }
 
         }
-
-        #task:has(input:focus) .deletebtn{
-            display:inline-block;
+        .more-actions{
+            right:3rem;
+            top:0;
         }
 
 
+
     }
+
 
     #r-task {
 
@@ -235,6 +245,10 @@ fx-repeat {
 
 
         }
+        fx-repeatitem:focus-within .deletebtn,
+        fx-repeatitem:focus-within .more-actions{
+            display:inline-block;
+        }
 
 
         input {
@@ -243,6 +257,11 @@ fx-repeat {
 
         .task-true input {
             text-decoration: line-through;
+        }
+
+        .output.due{
+            position:absolute;
+            right:5em;
         }
     }
 
@@ -372,11 +391,13 @@ fx-repeat {
         padding-bottom: 2rem;
     }
 
+    /*
     .more-actions {
         a, a:link, a:visited {
             text-decoration: none;
         }
     }
+    */
 
 
 

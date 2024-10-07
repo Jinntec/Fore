@@ -41,12 +41,43 @@
 -->
                         </fx-control>
                         <fx-control class="task-{@done}" id="task" class="task" ref=".">
-                            <input placeholder="specify the task">
+                            <input placeholder="specify the task" class="widget"></input>
+<!--
+                            <fx-trigger class="more-actions">
+                                <a href="#" tabindex="-1">...</a>
+                            </fx-trigger>
                             <fx-trigger class="deletebtn">
                                 <a href="#">&#x2715;</a>
                                 <fx-delete ref="."></fx-delete>
                             </fx-trigger>
+-->
                         </fx-control>
+                        <!--
+                                                <fx-output class="output due" ref="@due"></fx-output>
+
+                                                <details tabindex="0">
+                                                    <summary class="more-actions">...</summary>
+                                                    <section class="details-content">
+                                                        <fx-control ref="@due" create="create">
+                                                            <label>Due:
+                                                                <input type="date" class="widget">
+                                                            </label>
+                                                        </fx-control>
+                                                    </section>
+                                                    <fx-call function="close-details()" event="blur"></fx-call>
+                                                </details>
+                        -->
+<!--
+                        <fx-trigger class="more-actions">
+                            <a href="#">...</a>
+                        </fx-trigger>
+-->
+                        <fx-trigger class="deletebtn">
+                            <a href="#">&#x2715;</a>
+                            <fx-confirm message="really delete forever?">
+                                <fx-delete ref="."></fx-delete>
+                            </fx-confirm>
+                        </fx-trigger>
 
                     </template>
                 </fx-repeat>
