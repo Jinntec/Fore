@@ -412,7 +412,8 @@ fx-repeat {
     border-width: medium;
 }
 @media print {
-    fx-trigger{
+    fx-trigger,
+    fx-control:has(input[type=checkbox]){
         display:none;
     }
 }
