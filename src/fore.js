@@ -300,33 +300,29 @@ export class Fore {
       const { children } = startElement;
       if (children) {
         for (const element of Array.from(children)) {
-          if (element.nodeName.toUpperCase() === 'FX-FORE') {
-            break;
-          }
-          if (Fore.isUiElement(element.nodeName)) {
-            /**
-             * @type {import('./ForeElementMixin.js').default}
-             */
-            const foreElement = element;
-
-            if (typeof foreElement.refresh === 'function') {
-              if (
-                force &&
-                typeof force === 'object' &&
-                force.reason === 'index-function' &&
-                foreElement._dependencies.isInvalidatedByIndexFunction()
-              ) {
-                element.refresh(force);
-                continue;
-              } else if (force === true) {
-                element.refresh(force);
-              }
+            if (element.nodeName.toUpperCase() === 'FX-FORE') {
+              break;
             }
-            // console.log('refreshing', element, element?.ref);
-            // console.log('refreshing ',element);
-          } else if (element.nodeName.toUpperCase() !== 'FX-MODEL') {
-            Fore.refreshChildren(element, force);
-          }
+            if (Fore.isUiElement(element.nodeName) && typeof element.refresh === 'function') {
+                /**
+                 * @type {import('./ForeElementMixin.js').default}
+                 */
+                if (
+                    force &&
+                    typeof force === 'object' &&
+                    force.reason === 'index-function' &&
+                    element._dependencies.isInvalidatedByIndexFunction()
+                ) {
+                    element.refresh(force);
+                    continue;
+                } else if (force === true) {
+                    element.refresh(force);
+                }
+                // console.log('refreshing', element, element?.ref);
+                // console.log('refreshing ',element);
+            } else if (element.nodeName.toUpperCase() !== 'FX-MODEL') {
+                Fore.refreshChildren(element, force);
+            }
         }
       }
       resolve('done');

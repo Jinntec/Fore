@@ -416,10 +416,12 @@ export class FxModel extends HTMLElement {
             modelItem.required = compute;
             this.formElement.addToRefresh(modelItem); // let fore know that modelItem needs refresh
             if (!modelItem.node.textContent) {
+/*
               console.log(
                 'node is required but has no value ',
                 XPathUtil.getDocPath(modelItem.node),
               );
+*/
               valid = false;
             }
             // if (!compute) valid = false;
@@ -508,7 +510,7 @@ export class FxModel extends HTMLElement {
           ? this.fore.parentNode.host.closest('fx-fore')
           : this.fore.parentNode.closest('fx-fore');
       if (parentFore) {
-        console.log('shared instances from parent', this.parentNode.id);
+        // console.log('shared instances from parent', this.parentNode.id);
         const parentInstances = parentFore.getModel().instances;
         const shared = parentInstances.filter(shared => shared.hasAttribute('shared'));
         found = shared.find(found => found.id === id);
