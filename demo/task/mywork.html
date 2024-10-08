@@ -10,6 +10,7 @@
 </head>
 <body>
 <fx-fore>
+
     <fx-model>
         <fx-send submission="load" event="model-construct-done"></fx-send>
 
@@ -38,6 +39,7 @@
                 <search></search>
                 <owner>me</owner>
                 <more-actions>false</more-actions>
+                <start-of-week>wednesday</start-of-week>
             </data>
         </fx-instance>
 
@@ -62,9 +64,12 @@
             <fx-reload event="submit-done"></fx-reload>
         </fx-submission>
 
-        <fx-var name="vars" value="instance('vars')"></fx-var>
 
     </fx-model>
+    <fx-var name="vars" value="instance('vars')"></fx-var>
+
+
+
     <fx-action event="ready">
         <fx-load attach-to="#thisweek" url="week.html"></fx-load>
         <fx-load attach-to="#nextweek" url="week.html"></fx-load>
@@ -82,12 +87,12 @@
         </fx-action>
 
         <fx-group class="period" ref="period[@name='thisweek']">
-            <h2>THIS WEEK<span class="dateDisplay">{dayOfWeekISO('last','wednesday')} - {dayOfWeekISO('next','wednesday')}</span></h2>
+            <h2>THIS WEEK<span class="dateDisplay">{dayOfWeekISO('last',$vars/start-of-week)} - {dayOfWeekISO('next',$vars/start-of-week)}</span></h2>
             <section id="thisweek" class="outer-card"></section>
         </fx-group>
         <fx-group class="period"  ref="period[@name='nextweek']">
-            <h2>NEXT WEEK<span class="dateDisplay">{next-day(dayOfWeekISO('next','wednesday'))} -
-                {in-one-week(next-day(dayOfWeekISO('next','wednesday')))}</span> </h2>
+            <h2>NEXT WEEK<span class="dateDisplay">{next-day(dayOfWeekISO('next',$vars/start-of-week))} -
+                {in-one-week(next-day(dayOfWeekISO('next',$vars/start-of-week)))}</span> </h2>
             <section id="nextweek" class="outer-card"></section>
         </fx-group>
         <fx-group  class="period" ref="period[@name='thismonth']">
