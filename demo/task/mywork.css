@@ -40,6 +40,7 @@ input[type=checkbox]:focus{
     outline:none;
 }
 
+
 .card {
     padding: 1rem;
     margin: 0.75rem 0;
@@ -149,11 +150,16 @@ fx-trigger.iconbtn {
 label {
     display: block;
 }
-
-[repeat-index] {
-    background: rgba(255, 255, 255, 0.5);
+label input.widget{
+    display:inline;
 }
 
+[repeat-index] {
+    /*background: rgba(255, 255, 255, 0.5);*/
+}
+.completed{
+    padding:1rem;
+}
 .drag-over {
     background: lightblue;
     padding:1rem;
@@ -201,7 +207,7 @@ fx-repeat {
         .deletebtn, .more-actions {
             position: absolute;
             right: 1.5rem;
-            top: -0.9rem;
+            top: -0.75rem;
             display: none;
             z-index: 10;
 
@@ -269,7 +275,7 @@ fx-repeat {
         width: calc(100% - 0.5rem);
         border: thin solid #dddddd;
         padding: 4px;
-        background: white;
+        background: inherit;
         font-size: 1rem;
         border-radius: 0.2rem;
     }

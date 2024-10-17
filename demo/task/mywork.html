@@ -5,11 +5,11 @@
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, task-scalable=yes" name="viewport"/>
     <title>My Work</title>
     <link href="../../resources/fore.css" rel="stylesheet">
-    <link href="../../resources/demo.css" rel="stylesheet">
     <link href="mywork.css" rel="stylesheet">
 </head>
 <body>
 <fx-fore>
+
     <fx-model>
         <fx-send submission="load" event="model-construct-done"></fx-send>
 
@@ -38,6 +38,8 @@
                 <search></search>
                 <owner>me</owner>
                 <more-actions>false</more-actions>
+                <in-flight>false</in-flight>
+                <show-completed>true</show-completed>
             </data>
         </fx-instance>
 
@@ -47,6 +49,11 @@
                        replace="none"
                        nonrelevant="keep">
             <fx-message event="submit-done">Changes have been stored</fx-message>
+            <fx-action event="submit">
+                <fx-setvalue ref="$vars/in-flight">true</fx-setvalue>
+                <fx-refresh force="force"></fx-refresh>
+            </fx-action>
+            <fx-setvalue ref="$vars/in-flight" event="submit-done">false</fx-setvalue>
         </fx-submission>
         <fx-submission id="load"
                        url="localStore:mywork"
@@ -62,8 +69,10 @@
             <fx-reload event="submit-done"></fx-reload>
         </fx-submission>
 
-        <fx-var name="vars" value="instance('vars')"></fx-var>
-
+        <fx-function signature="playAudio()" type="text/javascript">
+            const audio = new Audio('jaszunio15__click_1.wav');
+            audio.play();
+        </fx-function>
     </fx-model>
     <fx-action event="ready">
         <fx-load attach-to="#thisweek" url="week.html"></fx-load>
@@ -75,12 +84,19 @@
     <h1>My Work {today()}</h1>
     <main>
         <fx-action event="deleted" target="default">
-            <fx-send submission="save"></fx-send>
+            <fx-send submission="save" if="$vars/in-flight='false'"></fx-send>
         </fx-action>
         <fx-action event="value-changed">
             <fx-send submission="save"></fx-send>
         </fx-action>
+        <fx-var name="vars" value="instance('vars')"></fx-var>
 
+        <fx-control class="completed" ref="$vars/show-completed" value-prop="checked" update-event="input">
+            <label>
+                <input type="checkbox" class="widget">
+                show completed
+            </label>
+        </fx-control>
         <fx-group class="period" ref="period[@name='thisweek']">
             <h2>THIS WEEK<span class="dateDisplay">{dayOfWeekISO('last','wednesday')} - {dayOfWeekISO('next','wednesday')}</span></h2>
             <section id="thisweek" class="outer-card"></section>
