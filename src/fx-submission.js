@@ -50,8 +50,8 @@ export class FxSubmission extends ForeElementMixin {
       ? this.getAttribute('mediatype')
       : 'application/xml';
 
-    this.responseMediatype = this.hasAttribute('response-mediatype')
-      ? this.getAttribute('response-mediatype')
+    this.responseMediatype = this.hasAttribute('responsemediatype')
+      ? this.getAttribute('responsemediatype')
       : this.mediatype;
     this.url = this.hasAttribute('url') ? this.getAttribute('url') : null;
 
@@ -83,7 +83,12 @@ export class FxSubmission extends ForeElementMixin {
   }
 
   async _submit() {
-    // console.log('submitting....', this.getAttribute('id'));
+    console.log('submitting....', this.getAttribute('id'));
+    console.info(
+        `%csubmitting #${this.id}`,
+        'background:yellow; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+    );
+
     this.evalInContext();
     const model = this.getModel();
 
@@ -232,6 +237,11 @@ export class FxSubmission extends ForeElementMixin {
 
       if (!response.ok || response.status > 400) {
         // this.dispatch('submit-error', { message: `Error while submitting ${this.id}` });
+        console.info(
+            `%csubmit-error #${this.id}`,
+            'background:red; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+        );
+
         Fore.dispatch(this, 'submit-error', { message: `Error while submitting ${this.id}` });
         return;
       }
@@ -255,6 +265,11 @@ export class FxSubmission extends ForeElementMixin {
       // this.dispatch('submit-done', {});
       // console.log(`### <<<<< ${this.id} submit-done >>>>>`);
       Fore.dispatch(this, 'submit-done', {});
+      console.info(
+          `%csubmit-done #${this.id}`,
+          'background:green; color:white; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+      );
+
     } catch (error) {
       Fore.dispatch(this, 'submit-error', { error: error.message });
     } finally {
@@ -354,13 +369,6 @@ export class FxSubmission extends ForeElementMixin {
   _handleResponse(data, resolvedUrl, contentType) {
     // console.log('_handleResponse ', data);
 
-    /*
-        // ### responses need to be handled depending on their type.
-        if(this.type === 'json'){
-
-        }
-    */
-
     const targetInstance = this._getTargetInstance();
 
     /*
@@ -386,16 +394,26 @@ export class FxSubmission extends ForeElementMixin {
     if (this.replace === 'instance') {
       if (targetInstance) {
         if (this.targetref) {
+
           const [theTarget] = evaluateXPath(
-            this.targetref,
-            targetInstance.instanceData.firstElementChild,
-            this,
+              this.targetref,
+              targetInstance.instanceData.firstElementChild,
+              this,
           );
           console.log('theTarget', theTarget);
-          const clone = data.firstElementChild;
-          const parent = theTarget.parentNode;
-          parent.replaceChild(clone, theTarget);
-          console.log('finally ', parent);
+          if(this.responseMediatype === 'application/xml' || this.responseMediatype === 'text/html'){
+            const clone = data.firstElementChild;
+            const parent = theTarget.parentNode;
+            parent.replaceChild(clone, theTarget);
+            console.log('finally ', parent);
+          }
+          if(this.responseMediatype.startsWith('text/')){
+            theTarget.textContent = data;
+          }
+          if(this.responseMediatype === 'application/json'){
+            console.warn('targetref is not supported for application/json responses')
+          }
+
         } else if (this.into) {
           const [theTarget] = evaluateXPath(
             this.into,
