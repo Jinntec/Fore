@@ -354,13 +354,6 @@ export class FxSubmission extends ForeElementMixin {
   _handleResponse(data, resolvedUrl, contentType) {
     // console.log('_handleResponse ', data);
 
-    /*
-        // ### responses need to be handled depending on their type.
-        if(this.type === 'json'){
-
-        }
-    */
-
     const targetInstance = this._getTargetInstance();
 
     /*
@@ -386,16 +379,26 @@ export class FxSubmission extends ForeElementMixin {
     if (this.replace === 'instance') {
       if (targetInstance) {
         if (this.targetref) {
+
           const [theTarget] = evaluateXPath(
-            this.targetref,
-            targetInstance.instanceData.firstElementChild,
-            this,
+              this.targetref,
+              targetInstance.instanceData.firstElementChild,
+              this,
           );
           console.log('theTarget', theTarget);
-          const clone = data.firstElementChild;
-          const parent = theTarget.parentNode;
-          parent.replaceChild(clone, theTarget);
-          console.log('finally ', parent);
+          if(this.responseMediatype === 'application/xml' || this.responseMediatype === 'text/html'){
+            const clone = data.firstElementChild;
+            const parent = theTarget.parentNode;
+            parent.replaceChild(clone, theTarget);
+            console.log('finally ', parent);
+          }
+          if(this.responseMediatype.startsWith('text/')){
+            theTarget.textContent = data;
+          }
+          if(this.responseMediatype === 'application/json'){
+            console.warn('targetref is not supported for application/json responses')
+          }
+
         } else if (this.into) {
           const [theTarget] = evaluateXPath(
             this.into,
