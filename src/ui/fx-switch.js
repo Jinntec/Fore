@@ -20,6 +20,7 @@ class FxSwitch extends FxContainer {
     this.formerCase = {};
     this.selectedCase = null;
     this.cases = null;
+    this.visitedResetted = false;
   }
 
   connectedCallback() {
@@ -74,10 +75,13 @@ class FxSwitch extends FxContainer {
   }
 
   _resetVisited() {
+    if(this.visitedResetted) return;
+
     const visited = this.selectedCase.querySelectorAll('.visited');
     Array.from(visited).forEach(v => {
       v.classList.remove('visited');
     });
+    this.visitedResetted = true;
   }
 
   /**
