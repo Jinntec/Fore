@@ -438,7 +438,7 @@ export class FxModel extends HTMLElement {
         }
       }
     });
-    // console.log('modelItems after revalidate: ', this.modelItems);
+    console.log('modelItems after revalidate: ', this.modelItems);
     return valid;
   }
 

@@ -66,7 +66,7 @@
         const today = new Date();
         if("next" == $method && dow[v1] === $day){
 <!--            return today.toISOString().slice(0, 10);-->
-            return today.toISOString();
+            return today.toISOString().slice(0,10);
         }
 
         if ("last" == $method) result = v2 - v1, result >= 0 && (result = v2 - 7 - v1);
@@ -213,6 +213,9 @@
 
     <fx-function signature="timeStamp() as xs:string" type="text/javascript">
         return new Date().toISOString();
+    </fx-function>
+    <fx-function signature="timeStampLocal() as xs:string" type="text/javascript">
+        return new Date().toLocaleString();
     </fx-function>
 
 

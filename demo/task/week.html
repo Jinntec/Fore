@@ -16,29 +16,35 @@
                     </fx-trigger>
                 </fx-control>
 
-                <fx-repeat id="r-task" ref="task">
+                <fx-repeat id="r-task" ref="task[if(@done != instance('vars')/show-completed and instance('vars')/show-completed = 'false') then false() else true()]">
                     <template draggable="true" drop-target="r-task">
                         <!--
                                                         <fx-control class="task-{@done}" id="task" class="task" ref=".">
                                                             <input placeholder="specify the task">
                                                         </fx-control>
                         -->
-                        <fx-control ref="@done" value-prop="checked" update-event="input">
+                        <fx-control ref="@done" value-prop="checked" update-event="input" title="done at {@archived}">
                             <input type="checkbox" class="widget">
 
-<!--
-                            <div class="checkbox-wrapper-15">
-                                <input class="inp-cbx" id="{}"  class="widget" type="checkbox" style="display: none;"/>
-                                <label class="cbx" for="cbx-15">
-                                    <span>
-                                    <svg width="12px" height="9px" viewbox="0 0 12 9">
-                                    <polyline points="1 5 4 8 11 1"></polyline>
-                                    </svg>
-                                    </span>
-                                    <span>To-do</span>
-                                </label>
-                            </div>
--->
+                            <details tabindex="0">
+                                <summary class="more-actions">...</summary>
+                                <section class="details-content">
+                                    <fx-control ref="@due" create="create">
+                                        <label>Due:
+                                            <input type="date" class="widget">
+                                        </label>
+                                    </fx-control>
+                                </section>
+                                <fx-call function="close-details()" event="blur"></fx-call>
+                            </details>
+
+                            <fx-action event="value-changed">
+                                <fx-call if=".='true'" function="playAudio()"></fx-call>
+                                <fx-message>archived: {. = 'true'}</fx-message>
+                                <fx-setattribute if="string-length(../@archived) = 0 and . = 'true'"
+                                        ref=".." name="archived" value="timeStampLocal()"></fx-setattribute>
+                            </fx-action>
+
                         </fx-control>
                         <fx-control class="task-{@done}" id="task" class="task" ref=".">
                             <input placeholder="specify the task" class="widget"></input>
@@ -54,19 +60,8 @@
                         </fx-control>
                         <!--
                                                 <fx-output class="output due" ref="@due"></fx-output>
-
-                                                <details tabindex="0">
-                                                    <summary class="more-actions">...</summary>
-                                                    <section class="details-content">
-                                                        <fx-control ref="@due" create="create">
-                                                            <label>Due:
-                                                                <input type="date" class="widget">
-                                                            </label>
-                                                        </fx-control>
-                                                    </section>
-                                                    <fx-call function="close-details()" event="blur"></fx-call>
-                                                </details>
                         -->
+
 <!--
                         <fx-trigger class="more-actions">
                             <a href="#">...</a>

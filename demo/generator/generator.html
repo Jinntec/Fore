@@ -6,6 +6,8 @@
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
     <title>Fore Generator</title>
     <link href="../../resources/fore.css" rel="stylesheet">
+    <script type="module" src="../codemirror/jinn-codemirror-bundle.js"></script>
+
     <style>
         [repeat-index] {
             background: var(--paper-blue-500);
@@ -43,20 +45,35 @@
         .level-10{
             padding-left: 10rem;
         }
+        fx-control{
+            display:block;
+        }
     </style>
 </head>
 <body>
 
 <fx-fore>
    <fx-model>
-       <fx-instance src="baseprofile.xml"></fx-instance>
+       <fx-instance id="default" src="baseprofile.xml"></fx-instance>
+       <fx-instance id="generated">
+           <fx-fore>
+               <fx-model>
+                   <fx-instance src="baseprofile.xml"></fx-instance>
+               </fx-model>
+               <fx-group id="editor"></fx-group>
+           </fx-fore>
+       </fx-instance>
        <fx-instance id="vars">
            <data>
                <selected></selected>
            </data>
        </fx-instance>
-       <fx-function signature="createControl($node as element()?) as element()*" type="text/xquery">
-           $node
+       <fx-function signature="generate()" type="text/javascript">
+           console.log('node',$node);
+           const data = document.querySelector('#default').instanceData;
+           console.log('node',$node);
+
+           return true;
        </fx-function>
    </fx-model>
    <main>
@@ -71,12 +88,14 @@
        </fx-control>
 <fx-trigger>
     <button>generate</button>
-    <fx-action iterate="instance()//*">
-        <fx-message>{local-name(.)}</fx-message>
-    </fx-action>
+    <fx-call function="generate()"></fx-call>
 
 </fx-trigger>
-<!--       {createControl(.)}-->
+<fx-control ref="instance('generated')" as="node">
+   <jinn-codemirror mode="xml" class="widget"></jinn-codemirror>
+</fx-control>
+
+       <!--       {createControl(.)}-->
 <!--
        <fx-repeat ref="instance()//*">
            <template>
@@ -93,5 +112,6 @@
    </main>
 </fx-fore>
 <script type="module" src="../../index.js"></script>
+
 </body>
 </html>
