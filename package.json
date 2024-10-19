@@ -62,7 +62,7 @@
     "np": "^8.0.4",
     "replace-in-file": "^8.0.2",
     "rimraf": "^3.0.2",
-    "rollup": "^2.75.4",
+    "rollup": "^3.29.5",
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-minify-html-literals": "^1.2.6",
     "rollup-plugin-version-injector": "^1.3.3",
