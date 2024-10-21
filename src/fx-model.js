@@ -118,7 +118,11 @@ export class FxModel extends HTMLElement {
    *
    */
   async modelConstruct() {
-    console.log(`### <<<<< dispatching model-construct for '${this.fore.id}' >>>>>`);
+    console.info(
+        `%cdispatching model-construct for #${this.parentNode.id}`,
+        'background:lightblue; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+    );
+
     // this.dispatchEvent(new CustomEvent('model-construct', { detail: this }));
     Fore.dispatch(this, 'model-construct', { model: this });
 

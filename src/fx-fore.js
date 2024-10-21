@@ -598,7 +598,11 @@ export class FxFore extends HTMLElement {
     // this.dispatchEvent(new CustomEvent('refresh-done'));
     // this.initialRun = false;
     this.style.visibility = 'visible';
-    console.log(`### <<<<< refresh-done ${this.id} >>>>>`);
+    console.info(
+        `%crefresh-done on #${this.id}`,
+        'background:darkorange; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+    );
+
     Fore.dispatch(this, 'refresh-done', {});
 
     // this.isRefreshing = true;
@@ -941,7 +945,11 @@ export class FxFore extends HTMLElement {
    */
   async _initUI() {
     // console.log('### _initUI()');
-    console.log(`### <<<<< _initUI '${this.id}' >>>>>`);
+      console.info(
+        `%cinitUI #${this.id}`,
+        'background:lightblue; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+    );
+
 
     if (!this.initialRun) return;
     this.classList.add('initialRun');
@@ -964,7 +972,12 @@ export class FxFore extends HTMLElement {
     this.ready = true;
     this.initialRun = false;
     // console.log('### >>>>> dispatching ready >>>>>', this);
-    console.log(`### <<<<< ${this.id} ready >>>>>`);
+    console.info(
+        `%c #${this.id} is ready`,
+        'background:lightblue; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+    );
+
+    // console.log(`### <<<<< ${this.id} ready >>>>>`);
 
     // console.log('### modelItems: ', this.getModel().modelItems);
     Fore.dispatch(this, 'ready', {});
