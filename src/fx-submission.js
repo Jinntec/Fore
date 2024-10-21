@@ -83,7 +83,6 @@ export class FxSubmission extends ForeElementMixin {
   }
 
   async _submit() {
-    console.log('submitting....', this.getAttribute('id'));
     console.info(
         `%csubmitting #${this.id}`,
         'background:yellow; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
@@ -265,10 +264,12 @@ export class FxSubmission extends ForeElementMixin {
       // this.dispatch('submit-done', {});
       // console.log(`### <<<<< ${this.id} submit-done >>>>>`);
       Fore.dispatch(this, 'submit-done', {});
+/*
       console.info(
           `%csubmit-done #${this.id}`,
           'background:green; color:white; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
       );
+*/
 
     } catch (error) {
       Fore.dispatch(this, 'submit-error', { error: error.message });
