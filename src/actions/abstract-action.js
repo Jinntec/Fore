@@ -267,6 +267,12 @@ export class AbstractAction extends ForeElementMixin {
 
     // Outermost handling
     if (FxFore.outermostHandler === null) {
+      console.log(
+          `%coutermost Action on ${this.getOwnerForm().id}`,
+          'background:darkblue; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
+          this,
+      );
+
       FxFore.outermostHandler = this;
       this.dispatchEvent(
         new CustomEvent('outermost-action-start', {
@@ -398,6 +404,12 @@ export class AbstractAction extends ForeElementMixin {
     this.currentEvent = null;
     this.actionPerformed();
     if (FxFore.outermostHandler === this) {
+      console.log(
+          `%cfinalizing outermost Action on ${this.getOwnerForm().id}`,
+          'background:darkblue; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
+          this,
+      );
+
       FxFore.outermostHandler = null;
       /*
                         console.info(
