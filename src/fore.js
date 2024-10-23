@@ -320,7 +320,8 @@ export class Fore {
                 }
                 // console.log('refreshing', element, element?.ref);
                 // console.log('refreshing ',element);
-            } else if (element.nodeName.toUpperCase() !== 'FX-MODEL') {
+            } else if (!(element.inert === true) ) {
+                // testing for inert catches model and action elements and should just leave updateable html elements
                 Fore.refreshChildren(element, force);
             }
         }
