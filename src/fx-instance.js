@@ -213,8 +213,9 @@ export class FxInstance extends HTMLElement {
       this.originalInstance = [...this.instanceData];
     }
     if (this.type === 'text') {
-      this.instanceData = '';
-      this.originalInstance = '';
+      this.instanceData = this.innerText;
+      this.originalInstance = this.innerText;
+      console.log('text data', this.instanceData);
     }
   }
 
