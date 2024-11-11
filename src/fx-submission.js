@@ -466,12 +466,22 @@ export class FxSubmission extends ForeElementMixin {
       }
       // document.getElementsByTagName('html')[0].innerHTML = data;
     }
-    if (this.replace === 'target' && contentType.startsWith('text/html')) {
+    if (this.replace === 'target') {
       // const target = this.getAttribute('target');
       const target = this._getProperty('target');
       const targetNode = document.querySelector(target);
       if (targetNode) {
-        targetNode.innerHTML = data;
+
+        if(contentType.startsWith('text/html')){
+          targetNode.innerHTML = data;
+        }
+        if(this.responseMediatype.startsWith('image/svg')){
+          const parser = new DOMParser();
+          const svgDoc = parser.parseFromString(data, 'image/svg+xml');
+
+          const objectURL = URL.createObjectURL(data);
+          targetNode.src = objectURL;
+        }
       } else {
         Fore.dispatch(this, 'submit-error', {
           message: `targetNode for selector ${target} not found`,
