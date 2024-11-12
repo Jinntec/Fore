@@ -1,16 +1,12 @@
-<data>
-    <chart>
-        @startuml
+@startuml
 
-        [ib1 : load balancer]
-        [ib2 : load balancer]
-        [prod1: Resource Service]
-        [prod1] ..> [ib1]
-        [prod2: Resource Service]
-        [proof: Resource Service]
-        [sync: Sync Service]
+[ib1 : load balancer]
+[ib2 : load balancer]
+[prod1: Resource Service]
+[prod1] ..> [ib1]
+[prod2: Resource Service]
+[proof: Resource Service]
+[sync: Sync Service]
 
-        @enduml
-    </chart>
-</data>
+@enduml
 

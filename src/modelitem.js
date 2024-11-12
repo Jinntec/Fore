@@ -88,6 +88,28 @@ export class ModelItem {
   set value(newVal) {
     // console.log('modelitem.setvalue oldVal', this.value);
     // console.log('modelitem.setvalue newVal', newVal);
+/*
+    switch (this.node.nodeType){
+      case Node.DOCUMENT_NODE:
+        this.node.replaceWith(newVal.firstElementChild);
+        this.node = newVal.firstElementChild;
+        break;
+      case Node.ELEMENT_NODE:
+        this.node.replaceWith(newVal);
+        this.node = newVal;
+        break;
+      case Node.ATTRIBUTE_NODE:
+        this.node.nodeValue = newVal;
+        break;
+      case Node.TEXT_NODE:
+        this.node.textContent = newVal;
+        break;
+      default:
+        this.node = newVal;
+
+
+    }
+*/
 
     if (newVal.nodeType === Node.DOCUMENT_NODE) {
       this.node.replaceWith(newVal.firstElementChild);
@@ -99,6 +121,8 @@ export class ModelItem {
       // this.node.appendChild(newVal);
     } else if (this.node.nodeType === Node.ATTRIBUTE_NODE) {
       this.node.nodeValue = newVal;
+    } else if(this.node.nodeType === undefined){
+      this.node = newVal;
     } else {
       this.node.textContent = newVal;
     }

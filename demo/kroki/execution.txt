@@ -1,0 +1,42 @@
+@startuml
+
+[ib1 : load balancer]
+[ib2 : load balancer]
+
+component sync [
+<executionEnvironment>
+sync: Sync Service
+]
+
+component prod1 [
+<executionEnvironment>
+prod1: Resource Service
+]
+
+
+component prod2 [
+<executionEnvironment>
+prod2: Resource Service
+]
+component proof[
+<executionEnvironment>
+proof: Resource Service
+]
+
+
+
+[prod1] .u.> [ib2 : load balancer]
+[prod1] .u.> [ib1 : load balancer]
+
+[prod2] .u.> [ib1 : load balancer]
+[prod2] .u.> [ib2 : load balancer]
+
+[proof] .u.> [ib1 : load balancer]
+[proof] .u.> [ib2 : load balancer]
+
+[sync] .u.> [prod1]
+[sync] .u.> [prod2]
+[sync] .u.> [proof]
+
+@enduml
+

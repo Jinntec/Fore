@@ -6,6 +6,7 @@
     <title>My Work</title>
     <link href="../../resources/fore.css" rel="stylesheet">
     <link href="mywork.css" rel="stylesheet">
+    <link href="../../resources/icons.css" rel="stylesheet">
 </head>
 <body>
 <fx-fore>
@@ -82,6 +83,7 @@
         <fx-refresh force="force"></fx-refresh>
     </fx-action>
     <h1>My Work {today()}</h1>
+    <div class="icon icon-3d-rotation"></div>
     <main>
         <fx-action event="deleted" target="default">
             <fx-send submission="save" if="$vars/in-flight='false'"></fx-send>

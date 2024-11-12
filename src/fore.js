@@ -401,6 +401,9 @@ export class Fore {
     if (instance.type === 'json') {
       return 'application/json';
     }
+    if(instance.type === 'text'){
+      return 'text/plain';
+    }
     console.warn('content-type unknown ', instance.type);
     return null;
   }

@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>template</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+    <style>
+        main{
+            width:100vw;
+            display:grid;
+            grid-template-columns:50% 50%;
+        }
+        fx-control{
+            width:calc(100% - 1rem);
+        }
+        textarea{
+            width:100%;
+            height:80vh;
+        }
+        section{
+        }
+        img{
+            /*width:50%;*/
+        }
+
+        @media print {
+            fx-trigger, fx-control{
+                display: none;
+            }
+        }
+
+    </style>
+</head>
+<body>
+<fx-fore>
+    <fx-model>
+        <fx-send event="model-construct-done" submission="s-load"></fx-send>
+
+        <fx-instance type="text" src="sequence.txt">
+
+        </fx-instance>
+
+        <fx-instance id="vars">
+            <data>
+                <chart>sequence.txt</chart>
+                <chart>execution.txt</chart>
+                <chart>c4.txt</chart>
+                <selected>c4.txt</selected>
+            </data>
+        </fx-instance>
+
+        <fx-submission id="s-send"
+                       url="http://localhost:8000/plantuml/svg"
+                       method="post"
+                       ref="instance()"
+                       mediatype="text/plain"
+                       replace="target"
+                       responsemediatype="image/svg"
+                       target="#output">
+            <fx-message event="submit-error">failed to process</fx-message>
+        </fx-submission>
+
+        <fx-submission id="s-load"
+                       url="./{instance('vars')/selected}"
+                       replace="instance"
+                       instance="default"
+                        serialization="none">
+            <fx-send submission="s-send" event="submit-done"></fx-send>
+        </fx-submission>
+
+    </fx-model>
+
+    <main>
+        <section>
+            <fx-control ref="instance('vars')/selected" update-event="input">
+                <label>select input file:</label>
+                <select class="widget" ref="instance('vars')/chart">
+                    <template>
+                        <option value="{.}">{.}</option>
+                    </template>
+                </select>
+                <fx-action event="value-changed">
+                    <fx-message>loading</fx-message>
+                    <fx-send submission="s-load"></fx-send>
+                </fx-action>
+            </fx-control>
+            <fx-trigger>
+                <button>render</button>
+                <fx-send submission="s-send"></fx-send>
+            </fx-trigger>
+            <fx-control ref="instance()">
+                <textarea class="widget"></textarea>
+                <fx-action event="value-changed">
+                    <fx-message>updating</fx-message>
+                    <fx-send submission="s-send"></fx-send>
+                </fx-action>
+            </fx-control>
+        </section>
+        <section>
+            <img id="output"></img>
+        </section>
+    </main>
+</fx-fore>
+<script type="module" src="../../index.js"></script>
+</body>
+</html>

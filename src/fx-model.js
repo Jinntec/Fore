@@ -80,17 +80,18 @@ export class FxModel extends HTMLElement {
 
     // const path = fx.evaluateXPath('path()',node);
     let path;
+    const instance = XPathUtil.resolveInstance(model, ref);
     if (node.nodeType) {
-      const instance = XPathUtil.resolveInstance(model, ref);
-
       path = XPathUtil.getPath(node, instance);
     } else {
-      path = null;
+      path = '$' + instance;
       targetNode = node;
     }
     // const path = XPathUtil.getPath(node);
-
     // ### intializing ModelItem with default values (as there is no <fx-bind> matching for given ref)
+
+    const exists = model.modelItems.find(item => item.path === path);
+
     const mi = new ModelItem(
       path,
       ref,

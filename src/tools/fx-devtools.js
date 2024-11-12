@@ -131,7 +131,7 @@ export class FxDevtools extends HTMLElement {
     const panelContent = this._renderInstancePanel(instance);
     // console.log('panelContent', panelContent);
     // instancePanel.innerHTML = panelContent;
-    instancePanel.append(panelContent);
+    instancePanel.append(instance.instanceData);
   }
 
   connectedCallback() {
@@ -308,6 +308,10 @@ export class FxDevtools extends HTMLElement {
             border:0;
             background:transparent;
         }
+        textarea{
+          width:100%;
+          height:100%;
+        }
         .wrapper{
             height:100%;
         }
@@ -435,6 +439,11 @@ export class FxDevtools extends HTMLElement {
                 </fx-json-instance>
             `
 */
+    }
+    if(instance.type === 'text'){
+      const textarea = document.createElement('textarea');
+      textarea.append('foobar')
+      return textarea;
     }
   }
 }
