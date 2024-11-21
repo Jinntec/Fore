@@ -32,6 +32,7 @@ import './src/tools/fx-devtools.js';
 import './src/tools/fx-dom-inspector.js';
 import './src/lab/fore-component.js';
 import './src/tools/fx-json-instance.js';
+import './tools/fx-lens.js';
 // import './src/tools/fx-minimap.js';
 
 // import './src/ui/fx-checkbox-group.js';
