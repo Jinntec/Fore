@@ -306,9 +306,9 @@ export class FxBind extends ForeElementMixin {
 
     // const path = fx.evaluateXPath('path()',node);
     // const path = this.getPath(node);
-    const instance = XPathUtil.resolveInstance(this, this.ref);
+    const instanceId = XPathUtil.resolveInstance(this, this.ref);
 
-    const path = XPathUtil.getPath(node, instance);
+    const path = XPathUtil.getPath(node, instanceId);
     // const shortPath = this.shortenPath(path);
 
     // ### constructing default modelitem - will get evaluated during recalculate()
@@ -325,6 +325,7 @@ export class FxBind extends ForeElementMixin {
       this.type,
       targetNode,
       this,
+      instanceId
     );
 
     const alert = this.getAlert();

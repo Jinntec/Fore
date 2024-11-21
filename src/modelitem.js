@@ -17,8 +17,9 @@ export class ModelItem {
    * @param {string} type - string expression to set a datatype
    * @param {Node} node - the node the 'ref' expression is referring to
    * @param {import('./fx-bind').FxBind} bind - the fx-bind element having created this modelItem
+   * @param {string} instance - the fx-instance id having created this modelItem
    */
-  constructor(path, ref, readonly, relevant, required, constraint, type, node, bind) {
+  constructor(path, ref, readonly, relevant, required, constraint, type, node, bind,instance) {
     /**
      * @type {string}
      */
@@ -65,6 +66,7 @@ export class ModelItem {
      */
     this.boundControls = [];
     // this.value = this._getValue();
+    this.instanceId = instance;
   }
 
   /*

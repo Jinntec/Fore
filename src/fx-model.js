@@ -80,10 +80,9 @@ export class FxModel extends HTMLElement {
 
     // const path = fx.evaluateXPath('path()',node);
     let path;
+    const instanceId = XPathUtil.resolveInstance(model, ref);
     if (node.nodeType) {
-      const instance = XPathUtil.resolveInstance(model, ref);
-
-      path = XPathUtil.getPath(node, instance);
+      path = XPathUtil.getPath(node, instanceId);
     } else {
       path = null;
       targetNode = node;
@@ -101,6 +100,7 @@ export class FxModel extends HTMLElement {
       Fore.TYPE_DEFAULT,
       targetNode,
       this,
+      instanceId
     );
 
     // console.log('new ModelItem is instanceof ModelItem ', mi instanceof ModelItem);
