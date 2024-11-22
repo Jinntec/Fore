@@ -73,14 +73,14 @@ export class FxLens extends HTMLElement {
             opacity:1;
           }
           .handle::before{
-            content: 'Data Inspector';
+            content: 'Data Lens';
             white-space: nowrap;
             transform: rotate(-90deg);
             display: inline-block;
             position: absolute;
             left: -85px;
             width: 200px;
-            top: 40px;
+            top: 0px;
             z-index:801;
           }
           .fore-section summary{
@@ -88,7 +88,7 @@ export class FxLens extends HTMLElement {
             padding:1rem 0.5rem;
             background:papayawhip;
             font-size:1.2rem;
-            
+            transition: background 0.5s ease-in-out;
           }
           header{
             padding:0.5rem;
@@ -100,7 +100,7 @@ export class FxLens extends HTMLElement {
           }
           
           .resizer{
-            width:0.5rem;
+            width:0.25rem;
             background:blue;
             height:100vh;
             background:rgba(215,220,235,0.3);
@@ -142,6 +142,9 @@ export class FxLens extends HTMLElement {
                 fore.addEventListener('value-changed',(ev)=>{
                     // todo: update only the affected instance
                     this.update();
+                    const targetId = `${ev.detail.foreId}#${ev.detail.instanceId}`;
+                    const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`)
+                    this.flashEffect(targetSummary);
                 });
             });
             this.lastWidth = this.offsetWidth;
@@ -149,6 +152,15 @@ export class FxLens extends HTMLElement {
 
         });
 
+    }
+    flashEffect(element) {
+        // Add a glow effect
+        element.style.background = 'rgba(55,55,255,0.1)';
+
+        // Remove the effect after 1 second
+        setTimeout(() => {
+            element.style.background = 'ghostwhite';
+        }, 1000);
     }
 
     update() {
@@ -176,7 +188,7 @@ export class FxLens extends HTMLElement {
               <div>
                 ${instances.map((instance,index) => {
                     const foreId = instance.closest('fx-fore').id;
-                    return `<details  id="d${index}" class="instance"><summary>${foreId}#${instance.id}</summary><jinn-codemirror mode="${instance.type}"></jinn-codemirror></details>`
+                    return `<details  id="d${index}" class="instance"><summary data-id="${foreId}#${instance.id}">${foreId}#${instance.id}</summary><jinn-codemirror mode="${instance.type}"></jinn-codemirror></details>`
                 }).join('')}
               </div>
           </details>
