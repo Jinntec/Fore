@@ -18,7 +18,7 @@ export class FxLens extends HTMLElement {
             top:0;
             right:0;
             bottom:0;
-            height: 100%;
+            height: 100vh;
             background: aliceblue;
             color: white;
             /*max-height: 33%;*/
@@ -43,8 +43,13 @@ export class FxLens extends HTMLElement {
             padding-left:var(--inspector-handle-width);
             color:var(--inspector-color);
             overflow:scroll;
-            height:100%;
+            height:100vh;
             background:ghostwhite);
+            overflow:hidden;
+          }
+          .main > div{
+            overflow:auto;
+            height:100vh;
           }
           pre{
             background:var(--inspector-pre-bg);
@@ -105,6 +110,17 @@ export class FxLens extends HTMLElement {
             left:0;
             z-index:999;
           }
+          .pulseStrong {
+                animation: pulse-strong-animation 2s infinite;
+          }
+          @keyframes pulse-strong-animation {
+              0% {
+                box-shadow: 0 0 0 0px rgba(255, 255, 255, 0.8);
+                }
+                100% {
+                    box-shadow: 0 0 0 0.75rem rgba(0, 0, 0, 0);
+                }
+            }
         `;
 
         this.mode = 'xml';
@@ -157,10 +173,12 @@ export class FxLens extends HTMLElement {
           <details class="main" open>
               <div class="resizer"></div>  
               <summary class="handle"></summary>
+              <div>
                 ${instances.map((instance,index) => {
                     const foreId = instance.closest('fx-fore').id;
                     return `<details  id="d${index}" class="instance"><summary>${foreId}#${instance.id}</summary><jinn-codemirror mode="${instance.type}"></jinn-codemirror></details>`
                 }).join('')}
+              </div>
           </details>
         `;
 
