@@ -359,6 +359,12 @@ export class FxFore extends HTMLElement {
       const devtools = document.createElement('fx-devtools');
       document.body.appendChild(devtools);
     }
+    if (urlParams.has('lens')) {
+      const lens = document.createElement('fx-lens');
+      document.body.appendChild(lens);
+      lens.setAttribute('open','open');
+    }
+
   }
 
   /**

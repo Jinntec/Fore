@@ -12,9 +12,74 @@ export class FxLens extends HTMLElement {
     }
 
     connectedCallback() {
+
+        this.mode = 'xml';
+        this.isResizing = false;
+        this.lastX = 0;
+
+        /**
+         * we need to wait for DOM to be ready before taking action.
+         */
+        document.addEventListener('DOMContentLoaded', () => {
+            this.fores = Array.from(document.querySelectorAll('fx-fore'));
+            this.render();
+
+            document.addEventListener('ready',(ev)=>{
+                const fores = Array.from(document.querySelectorAll('fx-fore'));
+            });
+            this.fores.forEach(fore => {
+
+                fore.addEventListener('ready', () => {
+                    this.render();
+                });
+
+                fore.addEventListener('value-changed',(ev)=>{
+                    this.update();
+                    const targetId = `${ev.detail.foreId}#${ev.detail.instanceId}`;
+                    const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
+                    // console.log('value-changed on ',`${ev.detail.foreId}#${ev.detail.instanceId}`);
+                    this.flashEffect(targetSummary);
+                });
+                fore.addEventListener('deleted',(ev)=>{
+                    this.update();
+                    const targetId = `${ev.detail.foreId}#${ev.detail.instanceId}`;
+                    const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
+                    this.flashEffect(targetSummary);
+                });
+                fore.addEventListener('insert',(ev)=>{
+                    console.log('+++++++++++++++++++++++++++++++insert')
+                    this.update();
+                    const targetId = `${ev.detail.foreId}#${ev.detail.instanceId}`;
+                    const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
+                    this.flashEffect(targetSummary);
+                });
+            });
+            this.lastWidth = this.offsetWidth;
+        });
+
+    }
+    flashEffect(element) {
+        // Add a glow effect
+        element.style.background = 'rgba(55,55,255,0.1)';
+
+        // Remove the effect after 1 second
+        setTimeout(() => {
+            element.style.background = 'ghostwhite';
+        }, 1000);
+    }
+
+    /**
+     * render
+     * @param style
+     * @returns {Promise<void>}
+     */
+    // async render(style) {
+    async render() {
+        // console.log('render')
+        this.shadowRoot.innerHTML = '';
         const style = `
           :host {
-            position:absolute;
+            position:fixed;
             display: block;
             width:var(--inspector-handle-width);
             top:0;
@@ -23,12 +88,15 @@ export class FxLens extends HTMLElement {
             height: 100vh;
             background: aliceblue;
             color: white;
-            /*max-height: 33%;*/
             overflow: scroll;
-            // transition:width 0.3s ease;
             z-index:900;
             max-width:calc(100vw - var(--inspector-handle-width));
             min-width:var(--inspector-handle-width);
+            box-shadow:-2px -2px 8px rgba(0,0,0,0.3);
+          }
+            
+          :host:has(.handle:hover){
+            box-shadow:-2px -2px 8px rgba(0,0,0,0.6);
           }
           jinn-codemirror{
             min-height:5rem;
@@ -48,23 +116,18 @@ export class FxLens extends HTMLElement {
             height:100vh;
             background:ghostwhite);
             overflow:hidden;
+            
           }
           .main > div{
             overflow:auto;
             height:100vh;
           }
-          pre{
-            background:var(--inspector-pre-bg);
-            color:var(--inspector-color);
-            overflow:scroll;
-            padding:0.2rem;
-          }
           .handle{
-            display:block;
+            display:flex;
+            justify-content:center;
             height:100%;
             width:var(--inspector-handle-width);
             background:var(--inspector-handle-bg);
-            opacity:0.7;
             position:absolute;
             left:0;
             color:white;
@@ -85,6 +148,20 @@ export class FxLens extends HTMLElement {
             top: 0px;
             z-index:801;
           }
+          .handle a,
+          .handle a:visited,
+          .handle a:link{
+            text-decoration:none;
+            color:white;
+            width:1.5rem;
+            height:1.5rem;
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            position:absolute;
+            z-index:850;
+            
+           }
           .fore-section summary{
             cursor:pointer;
             padding:1rem 0.5rem;
@@ -100,7 +177,6 @@ export class FxLens extends HTMLElement {
             background:ghostwhite;
             padding:0.5rem;
           }
-          
           .resizer{
             width:0.25rem;
             background:blue;
@@ -112,78 +188,18 @@ export class FxLens extends HTMLElement {
             left:0;
             z-index:999;
           }
-          .pulseStrong {
-                animation: pulse-strong-animation 2s infinite;
-          }
-          @keyframes pulse-strong-animation {
-              0% {
-                box-shadow: 0 0 0 0px rgba(255, 255, 255, 0.8);
-                }
-                100% {
-                    box-shadow: 0 0 0 0.75rem rgba(0, 0, 0, 0);
-                }
-            }
         `;
 
-        this.mode = 'xml';
-        this.isResizing = false;
-        this.lastX = 0;
-
-        /**
-         * we need to wait for DOM to be ready before taking action.
-         */
-        document.addEventListener('DOMContentLoaded', () => {
-            this.fores = Array.from(document.querySelectorAll('fx-fore'));
-            this.render(style);
-
-            document.addEventListener('ready',(ev)=>{
-                const fores = Array.from(document.querySelectorAll('fx-fore'));
-            });
-            this.fores.forEach(fore => {
-                fore.addEventListener('ready', () => {
-                    this.render(style);
-                });
-                fore.addEventListener('value-changed',(ev)=>{
-                    this.update();
-                    const targetId = `${ev.detail.foreId}#${ev.detail.instanceId}`;
-                    const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
-                    console.log('value-changed on ',`${ev.detail.foreId}#${ev.detail.instanceId}`);
-                    this.flashEffect(targetSummary);
-                });
-            });
-            this.lastWidth = this.offsetWidth;
-
-
-        });
-
-    }
-    flashEffect(element) {
-        // Add a glow effect
-        element.style.background = 'rgba(55,55,255,0.1)';
-
-        // Remove the effect after 1 second
-        setTimeout(() => {
-            element.style.background = 'ghostwhite';
-        }, 1000);
-    }
-
-    /**
-     * render
-     * @param style
-     * @returns {Promise<void>}
-     */
-    async render(style) {
         const fores = Array.from(document.querySelectorAll('fx-fore'));
         const instances = Array.from(document.querySelectorAll('fx-instance'));
         const openPanels = JSON.parse(localStorage.getItem('lens-panels') || '[]');
-        this.shadowRoot.innerHTML = '';
         this.shadowRoot.innerHTML = `
         <style>
             ${style}
         </style>
           <details class="main" open>
               <div class="resizer"></div>  
-              <summary class="handle"></summary>
+              <summary class="handle"><a href="#" id="reset" title="reset panel state">&#x2715;</a></summary>
               <div>
                 ${instances.map((instance,index) => {
                     const foreId = instance.closest('fx-fore').id;
@@ -214,7 +230,6 @@ export class FxLens extends HTMLElement {
 
         for (let i = 0; i < instances.length; i++) {
             const editors = Array.from(this.shadowRoot.querySelectorAll('jinn-codemirror'));
-
             editors[i].value = instances[i].instanceData;
         }
 
@@ -230,7 +245,17 @@ export class FxLens extends HTMLElement {
                     this.style.width = `${lensWidth}px`;
                 }
                 localStorage.setItem('lens-open','true');
+                this.render();
             }
+        });
+
+        const reset = this.shadowRoot.querySelector('.handle a');
+        reset.addEventListener('click',(event)=>{
+            event.preventDefault();
+            event.stopPropagation();
+            localStorage.removeItem('lens-width');
+            localStorage.removeItem('lens-open');
+            localStorage.removeItem('lens-panels');
         });
 
         const sections = this.shadowRoot.querySelectorAll('summary');
@@ -273,14 +298,11 @@ export class FxLens extends HTMLElement {
         });
 
         document.addEventListener('mousemove', event => {
-/*
             event.preventDefault();
             event.stopPropagation();
-*/
-
             if (!this.isResizing) return;
             const delta =  event.clientX - this.lastX;
-            console.log('_resizePanel',delta);
+            // console.log('_resizePanel',delta);
             this.style.width = `${this.lastWidth - delta}px`;
 
         });
