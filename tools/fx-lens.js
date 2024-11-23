@@ -2,6 +2,8 @@ import './jinn-codemirror-bundle.js';
 
 /**
  * lists out all live instances in html 'details' and 'summary' elements.
+ *
+ *
  */
 export class FxLens extends HTMLElement {
     constructor() {
@@ -127,7 +129,9 @@ export class FxLens extends HTMLElement {
         this.isResizing = false;
         this.lastX = 0;
 
-        // this.fores = Array.from(document.querySelectorAll('fx-fore'));
+        /**
+         * we need to wait for DOM to be ready before taking action.
+         */
         document.addEventListener('DOMContentLoaded', () => {
             this.fores = Array.from(document.querySelectorAll('fx-fore'));
             this.render(style);
@@ -140,10 +144,10 @@ export class FxLens extends HTMLElement {
                     this.render(style);
                 });
                 fore.addEventListener('value-changed',(ev)=>{
-                    // todo: update only the affected instance
                     this.update();
                     const targetId = `${ev.detail.foreId}#${ev.detail.instanceId}`;
-                    const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`)
+                    const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
+                    console.log('value-changed on ',`${ev.detail.foreId}#${ev.detail.instanceId}`);
                     this.flashEffect(targetSummary);
                 });
             });
@@ -163,16 +167,11 @@ export class FxLens extends HTMLElement {
         }, 1000);
     }
 
-    update() {
-        const instances = Array.from(document.querySelectorAll('fx-instance'));
-        const editors = Array.from(this.shadowRoot.querySelectorAll('jinn-codemirror'));
-
-        for (let i = 0; i < instances.length; i++) {
-            editors[i].value = instances[i].instanceData;
-        }
-        // document.addEventListener('refresh-done',() => this.update());
-    }
-
+    /**
+     * render
+     * @param style
+     * @returns {Promise<void>}
+     */
     async render(style) {
         const fores = Array.from(document.querySelectorAll('fx-fore'));
         const instances = Array.from(document.querySelectorAll('fx-instance'));
@@ -196,9 +195,7 @@ export class FxLens extends HTMLElement {
 
         const lensWidth = localStorage.getItem('lens-width');
         if(lensWidth){
-            this.style.width = lensWidth;
-        }else{
-            localStorage.setItem('lens-width', '40vw');
+            this.style.width = `${lensWidth}px`;
         }
 
         const main = this.shadowRoot.querySelector('.main');
@@ -230,7 +227,7 @@ export class FxLens extends HTMLElement {
             } else {
                 this.setAttribute('open', 'open');
                 if(lensWidth){
-                    this.style.width = lensWidth;
+                    this.style.width = `${lensWidth}px`;
                 }
                 localStorage.setItem('lens-open','true');
             }
@@ -292,11 +289,23 @@ export class FxLens extends HTMLElement {
             event.stopPropagation();
             this.isResizing = false;
             this.lastX = event.clientX;
-            this.lastWidth = this.style.width;
-            localStorage.setItem('lens-width',this.lastWidth);
+            this.lastWidth = this.offsetWidth;
+            if(this.hasAttribute('open')){
+                localStorage.setItem('lens-width',this.lastWidth);
+            }
         });
 
     }
+
+    update() {
+        const instances = Array.from(document.querySelectorAll('fx-instance'));
+        const editors = Array.from(this.shadowRoot.querySelectorAll('jinn-codemirror'));
+
+        for (let i = 0; i < instances.length; i++) {
+            editors[i].value = instances[i].instanceData;
+        }
+    }
+
 
 }
 
