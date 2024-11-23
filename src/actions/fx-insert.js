@@ -251,6 +251,8 @@ export class FxInsert extends AbstractAction {
       'inserted-nodes': originSequenceClone,
       'insert-location-node': insertLocationNode,
       position: this.position,
+      instanceId:instanceId,
+      foreId:this.getOwnerForm().id
     });
 
     // todo: this actually should dispatch to respective instance

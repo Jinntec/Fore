@@ -8,7 +8,7 @@
         --inspector-pre-bg: var(--paper-grey-100);
         --inspector-color: var(--paper-grey-800);
         --inspector-instance-height: 200px;
-        --inspector-handle-bg: var(--paper-blue-500);
+        --inspector-handle-bg: var(--paper-blue-700);
         --inspector-handle-width: 30px;
     }
 
