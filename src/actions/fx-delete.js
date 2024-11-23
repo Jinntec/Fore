@@ -63,8 +63,8 @@ class FxDelete extends AbstractAction {
       parent = nodesToDelete.parentNode;
       this._deleteNode(parent, nodesToDelete);
     }
-
-    await Fore.dispatch(instance, 'deleted', { ref: path, deletedNodes: nodesToDelete });
+    const foreId = this.getOwnerForm().id;
+    await Fore.dispatch(instance, 'deleted', { ref: path, deletedNodes: nodesToDelete , instanceId:instanceId, foreId:foreId});
     this.needsUpdate = true;
   }
 
