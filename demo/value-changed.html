@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>value-changed event</title>
+
+    <link rel="stylesheet" href="../resources/demo.css">
+  </head>
+  <body unresolved="unresolved">
+    <fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+    <fx-fore>
+      <fx-model>
+        <fx-instance>
+          <data>
+			<greetings>
+			  <greeting-a>Hello World!</greeting-a>
+			  <greeting-b>Hello World!</greeting-b>
+			  <greeting-c>Hello World!</greeting-c>
+			  <greeting-d>Hello World!</greeting-d>
+			</greetings>
+		  </data>
+        </fx-instance>
+
+        <fx-instance id="second">
+          <data>
+			<greetings>
+			  <greeting-a>GoodBye</greeting-a>
+			  <greeting-b>GoodBye</greeting-b>
+			</greetings>
+		  </data>
+        </fx-instance>
+      </fx-model>
+
+	  <fx-message event="value-changed">The value of the instance instance('{event('instanceId')}') in {event('path')} changed from {event('oldvalue')} to {event('value')}</fx-message>
+
+	  <fx-var name="default" value="instance('default')"></fx-var>
+	  <fx-var name="second" value="instance('second')"></fx-var>
+
+	  <fx-group>
+
+		<dl>
+		  <dt><code>//greeting-a</code></dt>
+		  <dd><fx-control data-cy="relative-path" ref="//greeting-a" ></fx-control></dd>
+
+		  <dt><code>instance()/greeting-b</code></dt>
+		  <dd><fx-control data-cy="implicit-default-instance" ref="instance()//greeting-b" ></fx-control></dd>
+
+		  <dt><code>instance('default')//greeting-c</code></dt>
+		  <dd><fx-control data-cy="explicit-default-instance" ref="instance('default')//greeting-c" ></fx-control></dd>
+
+		  <dt><code>$default/greetings/greeting-d</code></dt>
+		  <dd><fx-control data-cy="variable-default-instance" ref="$default/greetings/greeting-d" ></fx-control></dd>
+
+		  <dt><code>instance('second')//greeting-a</code></dt>
+		  <dd><fx-control data-cy="explicit-second-instance" ref="instance('second')//greeting-a" ></fx-control></dd>
+
+		  <dt><code>$second//greeting-b</code></dt>
+		  <dd><fx-control data-cy="variable-second-instance" ref="$second//greeting-b" ></fx-control></dd>
+		</dl>
+      </fx-group>
+    </fx-fore>
+    <script type="module" src="./demo.js"></script>
+
+  </body>
+</html>

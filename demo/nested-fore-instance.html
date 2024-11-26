@@ -26,6 +26,10 @@
         div{
             margin: 1rem 0;
         }
+		fx-fore {
+			border: 5px grey dotted;
+			margin: 1rem;
+		}
     </style>
 </head>
 <body>
@@ -48,12 +52,20 @@
                             <value>another outer value</value>
                         </data>
                     </fx-instance>
+					<fx-instance id="outer" shared="shared">
+                        <data>
+                            <value>A value that only exists in the outer</value>
+                        </data>
+                    </fx-instance>
+
+					<fx-message event="value-changed">Value is changed in the outer instance</fx-message>
                 </fx-model>
 
                 <section>
                     <div>value={value}</div>
                     <div>instance()/value={instance()/value}</div>
                     <div>instance('default')/value={instance('default')/value}</div>
+                    <div>instance('outer')/value={instance('outer')/value}</div>
                 </section>
 
                 <section>
@@ -72,12 +84,20 @@
                                 <value>another inner value</value>
                             </data>
                         </fx-instance>
+						<fx-instance id="inner">
+                        <data>
+                            <value>A value that only exists in the inner</value>
+                        </data>
+                    </fx-instance>
+
                     </fx-model>
 
                     <section>
                         <div>value={value}</div>
                         <div>instance()/value={instance()/value}</div>
                         <div>instance('default')/value={instance('default')/value}</div>
+                        <div>instance('outer')/value={instance('outer')/value}</div>
+                        <div>instance('inner')/value={instance('inner')/value}</div>
                     </section>
 
                     <section>

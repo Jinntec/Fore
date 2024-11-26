@@ -13,7 +13,7 @@ function isDifferent(oldNodeValue, oldControlValue, newControlValue) {
   if the oldControlValue is null we know the widget is used for the first time and is not considered
   a value change.
   */
-  if(oldControlValue === null) return false;
+  if (oldControlValue === null) return false;
 
   if (newControlValue && oldControlValue && newControlValue.nodeType && oldControlValue.nodeType) {
     return newControlValue.outerHTML !== oldControlValue.outerHTML;
@@ -170,14 +170,14 @@ export default class AbstractControl extends ForeElementMixin {
         // if oldVal is null we haven't received a concrete value yet
 
         if (this.localName !== 'fx-control') return;
-        if (isDifferent(this.oldVal,  oldValue, this.value)) {
+        if (isDifferent(this.oldVal, oldValue, this.value)) {
           const model = this.getModel();
           Fore.dispatch(this, 'value-changed', {
             path: this.modelItem.path,
             value: this.modelItem.value,
-            oldvalue: this.oldVal,
-            instanceId:this.modelItem.instanceId,
-            foreId:this.getOwnerForm().id
+            oldvalue: oldValue,
+            instanceId: this.modelItem.instanceId,
+            foreId: this.getOwnerForm().id,
           });
         }
       }

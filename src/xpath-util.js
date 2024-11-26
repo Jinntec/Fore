@@ -87,7 +87,9 @@ export class XPathUtil {
    * path, otherwise <code>false</code>.
    */
   static isAbsolutePath(path) {
-    return path != null && (path.startsWith('/') || path.startsWith('instance('));
+    return (
+      path != null && (path.startsWith('/') || path.startsWith('instance(') || path.startsWith('$'))
+    );
   }
 
   /**
@@ -103,10 +105,11 @@ export class XPathUtil {
    * Will return 'default' in case no ref is given at all or the `instance()` function is called without arg.
    *
    * Otherwise instance id is extracted from function and returned. If all fails null is returned.
-   * @param {string} ref
+   * @param {string}       ref
+   * @param {HTMLElement}  boundElement  The element related to this ref. Used to resolve variables
    * @returns {string}
    */
-  static getInstanceId(ref) {
+  static getInstanceId(ref, boundElement) {
     if (!ref) {
       return 'default';
     }
@@ -117,6 +120,24 @@ export class XPathUtil {
       const result = ref.substring(ref.indexOf('(') + 1);
       return result.substring(1, result.indexOf(')') - 1);
     }
+    if (ref.startsWith('$')) {
+      // this variable might actually point to an instance
+      const variableName = ref.match(/\$(?<variableName>[a-zA-Z0-9]+).*/)?.groups?.variableName;
+
+      let closestActualFormElement = boundElement;
+      while (closestActualFormElement && !('inScopeVariables' in closestActualFormElement)) {
+        closestActualFormElement =
+          closestActualFormElement.nodeType === Node.ATTRIBUTE_NODE
+            ? closestActualFormElement.ownerElement
+            : closestActualFormElement.parentNode;
+      }
+
+      const correspondingVariable = closestActualFormElement?.inScopeVariables?.get(variableName);
+      if (!correspondingVariable) {
+        return null;
+      }
+      return this.getInstanceId(correspondingVariable.valueQuery, correspondingVariable);
+    }
     return null;
   }
 
@@ -126,9 +147,9 @@ export class XPathUtil {
    * @returns {string}
    */
   static resolveInstance(boundElement, path) {
-    let instanceId = XPathUtil.getInstanceId(path);
+    let instanceId = XPathUtil.getInstanceId(path, boundElement);
     if (!instanceId) {
-      instanceId = XPathUtil.getInstanceId(boundElement.getAttribute('ref'));
+      instanceId = XPathUtil.getInstanceId(boundElement.getAttribute('ref'), boundElement);
     }
     if (instanceId !== null) {
       return instanceId;

@@ -1,3 +1,4 @@
+import ForeElementMixin from './ForeElementMixin.js';
 import { DepGraph } from './dep_graph.js';
 import { Fore } from './fore.js';
 import './fx-instance.js';
@@ -51,7 +52,7 @@ export class FxModel extends HTMLElement {
             <slot></slot>
         `;
 
-/*
+    /*
       this.addEventListener('model-construct-done', () => {
         // this.modelConstructed = true;
         // console.log('model-construct-done fired ', this.modelConstructed);
@@ -65,7 +66,13 @@ export class FxModel extends HTMLElement {
     this.fore = this.parentNode;
   }
 
-  static lazyCreateModelItem(model, ref, node) {
+  /**
+   * @param {FxModel}           model        The model to create a model item for
+   * @param {string}            ref          The XPath ref that led to this model item
+   * @param {Node}              node         The node the XPath led to
+   * @param {ForeElementMixin}  formElement  The form element making this model. Used to resolve variables against
+   */
+  static lazyCreateModelItem(model, ref, node, formElement) {
     // console.log('lazyCreateModelItem ', node);
 
     let targetNode = {};
@@ -80,7 +87,7 @@ export class FxModel extends HTMLElement {
 
     // const path = fx.evaluateXPath('path()',node);
     let path;
-    const instanceId = XPathUtil.resolveInstance(model, ref);
+    const instanceId = XPathUtil.resolveInstance(formElement, ref);
     if (node.nodeType) {
       path = XPathUtil.getPath(node, instanceId);
     } else {
@@ -100,7 +107,7 @@ export class FxModel extends HTMLElement {
       Fore.TYPE_DEFAULT,
       targetNode,
       this,
-      instanceId
+      instanceId,
     );
 
     // console.log('new ModelItem is instanceof ModelItem ', mi instanceof ModelItem);
@@ -119,8 +126,8 @@ export class FxModel extends HTMLElement {
    */
   async modelConstruct() {
     console.info(
-        `%cdispatching model-construct for #${this.parentNode.id}`,
-        'background:lightblue; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+      `%cdispatching model-construct for #${this.parentNode.id}`,
+      'background:lightblue; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
     );
 
     // this.dispatchEvent(new CustomEvent('model-construct', { detail: this }));
@@ -136,25 +143,25 @@ export class FxModel extends HTMLElement {
 
       // Wait until all the instances are built
       await Promise.all(promises);
-            this.instances = Array.from(instances);
-            // console.log('_modelConstruct this.instances ', this.instances);
-			// Await until the model-construct-done event is handled off
-            this.modelConstructed = true;
-            await Fore.dispatch(this, 'model-construct-done', {model: this});
-            this.inited = true;
-            this.updateModel();
-        } else {
-            // ### if there's no instance one will created
-            console.log(`### <<<<< dispatching model-construct-done for '${this.fore.id}' >>>>>`);
-            this.modelConstructed = true;
-            await this.dispatchEvent(
-                new CustomEvent('model-construct-done', {
-                    composed: false,
-                    bubbles: true,
-                    detail: {model: this},
-                }),
-            );
-        }
+      this.instances = Array.from(instances);
+      // console.log('_modelConstruct this.instances ', this.instances);
+      // Await until the model-construct-done event is handled off
+      this.modelConstructed = true;
+      await Fore.dispatch(this, 'model-construct-done', { model: this });
+      this.inited = true;
+      this.updateModel();
+    } else {
+      // ### if there's no instance one will created
+      console.log(`### <<<<< dispatching model-construct-done for '${this.fore.id}' >>>>>`);
+      this.modelConstructed = true;
+      await this.dispatchEvent(
+        new CustomEvent('model-construct-done', {
+          composed: false,
+          bubbles: true,
+          detail: { model: this },
+        }),
+      );
+    }
 
     const functionlibImports = Array.from(this.querySelectorAll('fx-functionlib'));
     await Promise.all(functionlibImports.map(lib => lib.readyPromise));
@@ -420,7 +427,7 @@ export class FxModel extends HTMLElement {
             modelItem.required = compute;
             this.formElement.addToRefresh(modelItem); // let fore know that modelItem needs refresh
             if (!modelItem.node.textContent) {
-/*
+              /*
               console.log(
                 'node is required but has no value ',
                 XPathUtil.getDocPath(modelItem.node),
@@ -472,17 +479,17 @@ export class FxModel extends HTMLElement {
   /**
    * @returns {import('./fx-instance.js').FxInstance}
    */
-    getDefaultInstance() {
-/*
+  getDefaultInstance() {
+    /*
         if (this.instances.length === 0) {
             throw new Error('No instances defined. Fore cannot work without any <data/> elements.');
         }
 */
-        if (this.instances.length) {
-			return this.instances[0];
-		}
-		return this.getInstance('default');
+    if (this.instances.length) {
+      return this.instances[0];
     }
+    return this.getInstance('default');
+  }
 
   getDefaultInstanceData() {
     return this.instances[0].getInstanceData();

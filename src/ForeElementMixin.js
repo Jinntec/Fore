@@ -238,6 +238,9 @@ export default class ForeElementMixin extends HTMLElement {
       this.modelItem = mi;
     }
 
+    /**
+     * @type {import('./ui/fx-repeatitem.js').FxRepeatitem}
+     */
     const repeated = XPathUtil.getClosest('fx-repeatitem', this);
     let existed;
     if (repeated) {
@@ -252,7 +255,7 @@ export default class ForeElementMixin extends HTMLElement {
     }
 
     if (!existed) {
-      return FxModel.lazyCreateModelItem(this.getModel(), this.ref, this.nodeset);
+      return FxModel.lazyCreateModelItem(this.getModel(), this.ref, this.nodeset, this);
     }
     return existed;
   }
