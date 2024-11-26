@@ -28,6 +28,7 @@
 			<greetings>
 			  <greeting-a>GoodBye</greeting-a>
 			  <greeting-b>GoodBye</greeting-b>
+			  <greeting-c>GoodBye</greeting-c>
 			</greetings>
 		  </data>
         </fx-instance>
@@ -37,6 +38,7 @@
 
 	  <fx-var name="default" value="instance('default')"></fx-var>
 	  <fx-var name="second" value="instance('second')"></fx-var>
+	  <fx-var name="alias-to-second" value="$second"></fx-var>
 
 	  <fx-group>
 
@@ -58,6 +60,9 @@
 
 		  <dt><code>$second//greeting-b</code></dt>
 		  <dd><fx-control data-cy="variable-second-instance" ref="$second//greeting-b" ></fx-control></dd>
+
+		  <dt><code>$alias-to-second//greeting-b</code></dt>
+		  <dd><fx-control data-cy="aliased-variable" ref="$alias-to-second//greeting-c" ></fx-control></dd>
 		</dl>
       </fx-group>
     </fx-fore>

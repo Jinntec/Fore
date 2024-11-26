@@ -36,4 +36,12 @@ describe('value-changed event firing', () => {
       `instance('second') in $second/greetings[1]/greeting-b[1] changed from GoodBye to GoodBye Test2!`,
     );
   });
+
+  it('also allows aliased variables', () => {
+    cy.get('[data-cy=aliased-variable] input').type(' Test!').blur();
+    cy.get('.toastify').should(
+      'contain',
+      `instance('second') in $second/greetings[1]/greeting-c[1] changed from GoodBye to GoodBye Test!`,
+    );
+  });
 });

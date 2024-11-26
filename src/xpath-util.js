@@ -122,8 +122,7 @@ export class XPathUtil {
     }
     if (ref.startsWith('$')) {
       // this variable might actually point to an instance
-      const variableName = ref.match(/\$(?<variableName>[a-zA-Z0-9]+).*/)?.groups?.variableName;
-
+      const variableName = ref.match(/\$(?<variableName>[a-zA-Z0-9\-\_]+).*/)?.groups?.variableName;
       let closestActualFormElement = boundElement;
       while (closestActualFormElement && !('inScopeVariables' in closestActualFormElement)) {
         closestActualFormElement =
