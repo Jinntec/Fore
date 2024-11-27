@@ -88,7 +88,7 @@ export class FxLens extends HTMLElement {
             height: 100vh;
             background: aliceblue;
             color: white;
-            overflow: scroll;
+            overflow: hidden;
             z-index:900;
             max-width:calc(100vw - var(--inspector-handle-width));
             min-width:var(--inspector-handle-width);
@@ -106,7 +106,7 @@ export class FxLens extends HTMLElement {
           }
           details{
             margin:0;
-            width:100%;
+            width:calc(100% - 17px);
             position:relative;
           }
           .main{
