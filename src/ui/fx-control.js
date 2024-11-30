@@ -167,28 +167,7 @@ export default class FxControl extends XfAbstractControl {
     }
 
     this.addEventListener('return', e => {
-      // console.log('catched return action on ', this);
-      // console.log('return detail', e.detail);
-
-      // console.log('return triggered on ', this);
-      // console.log('this.ref', this.ref);
-      // console.log('current outer instance', this.getInstance());
-
-      /*
-                  console.log(
-                    '???? why ???? current nodeset should point to the node of the outer control',
-                    e.currentTarget.nodeset,
-                  );
-                  console.log(
-                    '???? why ???? current nodeset should point to the node of the outer control',
-                    this.nodeset,
-                  );
-            */
       const newNodes = e.detail.nodeset;
-      // console.log('new nodeset', newNodes);
-      // console.log('currentTarget', e.currentTarget);
-      // console.log('target', e.target);
-
       e.stopPropagation();
 
       this._replaceNode(newNodes);
