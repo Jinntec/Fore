@@ -169,7 +169,7 @@ export default class AbstractControl extends ForeElementMixin {
         if (!this.getOwnerForm().ready) return; // state change event do not fire during init phase (initial refresh)
         // if oldVal is null we haven't received a concrete value yet
 
-        if (this.localName !== 'fx-control') return;
+        if (!(this.localName === 'fx-control' || this.localName === 'fx-upload')) return;
         if (isDifferent(this.oldVal,  oldValue, this.value)) {
           const model = this.getModel();
           Fore.dispatch(this, 'value-changed', {
