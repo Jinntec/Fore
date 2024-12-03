@@ -199,7 +199,7 @@ export class FxLens extends HTMLElement {
         </style>
           <details class="main" open>
               <div class="resizer"></div>  
-              <summary class="handle"><a href="#" id="reset" title="reset panel state">&#x2715;</a></summary>
+              <summary class="handle"><a href="#" id="reset" title="reset panel state to defaults">&#x2715;</a></summary>
               <div>
                 ${instances.map((instance,index) => {
                     const foreId = instance.closest('fx-fore').id;
