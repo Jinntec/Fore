@@ -7,32 +7,47 @@
     <title>invoice</title>
 
     <link href="../resources/demo.css" rel="stylesheet">
+    <style>
+        div{
+            padding:1rem;
+        }
+    </style>
 </head>
 <body>
 <fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
 
 <div class="wrapper">
+    <demo-snippet>
+        <template>
+            <fx-fore>
 
-    <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <file name="" mediatype=""></file>
+                        </data>
+                    </fx-instance>
+                </fx-model>
 
-        <fx-model>
-            <fx-instance>
-                <data>
-                    <file name=""></file>
-                </data>
-            </fx-instance>
-        </fx-model>
+                <h1>upload</h1>
 
-        <h1>upload</h1>
+                <p>With <code>fx-upload</code> you can embed uploaded content into an XML file.</p>
+                <p>If looking for a plain upload to server use a standard HTML form upload instead.</p>
+                <p>The additional <code>filename</code> and <code>mediatype</code> attributes are XPath expressions
+                pointing to the node you want the information to go.</p>
+                <p>Try an upload and see these nodes to be updated. The mimetype is returned by the browser and is based
+                    on guessing the mimetype by file extension.
+                </p>
 
-        <fx-control ref="file/@name">
-            <label>Upload</label>
-            <input type="file">
-        </fx-control>
-
-        {file/@name}
-    </fx-fore>
+                <fx-upload ref="file" filename="@name" mimetype="@mediatype">
+                    <label>Upload</label>
+                </fx-upload>
+                <div>{file/@name} - {file/@mediatype}</div>
+            </fx-fore>
+        </template>
+    </demo-snippet>
 </div>
-<script type="module" src="../index.js"></script>
+<fx-lens open></fx-lens>
+<script type="module" src="./demo.js"></script>
 </body>
 </html>
