@@ -360,6 +360,7 @@ export class FxFore extends HTMLElement {
       document.body.appendChild(devtools);
     }
     if (urlParams.has('lens')) {
+      if(document.querySelector('fx-lens')) return;
       const lens = document.createElement('fx-lens');
       document.body.appendChild(lens);
       lens.setAttribute('open','open');
