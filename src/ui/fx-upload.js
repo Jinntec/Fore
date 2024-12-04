@@ -40,6 +40,62 @@ export default class FxUpload extends XfAbstractControl {
       },
     };
   }
+  connectedCallback() {
+
+    this.updateEvent = 'change';
+    this.accept = this.hasAttribute('accept') ? this.getAttribute('accept'):'';
+    this.label = this.hasAttribute('label') ? this.getAttribute('label') : null;
+    const style = `
+            :host{
+                display:inline-block;
+            }
+        `;
+
+    this.shadowRoot.innerHTML = `
+            <style>
+                ${style}
+            </style>
+            ${this.renderHTML(this.ref)}
+        `;
+
+    this.widget = this.getWidget();
+
+    this.addEventListener('mousedown', e => {
+      // ### prevent mousedown events on all control content that is not the widget or within the widget
+      if (!Fore.isWidget(e.target) && !e.target?.classList.contains('fx-hint')) {
+        e.preventDefault();
+        // e.stopImmediatePropagation();
+      }
+      this.widget.focus();
+    });
+
+    // console.log('widget ', this.widget);
+    let listenOn = this.widget; // default: usually listening on widget
+
+    // ### convenience marker event
+    if (this.debounceDelay) {
+      listenOn.addEventListener(
+          this.updateEvent,
+          debounce(
+              this,
+              () => {
+                // console.log('eventlistener ', this.updateEvent);
+                // console.info('handling Event:', event.type, listenOn);
+                this._importUploadedContent();
+              },
+              this.debounceDelay,
+          ),
+      );
+    } else {
+      listenOn.addEventListener(this.updateEvent, async event => {
+        this._importUploadedContent(event);
+      });
+    }
+    this.boundInitialized = false;
+    this.fileNameExpr = this.getAttribute('filename');
+    this.mimetypeExpr = this.getAttribute('mimetype');
+
+  }
 
   async _importUploadedContent(event) {
     console.log('_importUploadedContent',event);
@@ -98,62 +154,6 @@ export default class FxUpload extends XfAbstractControl {
   }
 
 
-  connectedCallback() {
-
-    this.updateEvent = 'change';
-    this.accept = this.hasAttribute('accept') ? this.getAttribute('accept'):'';
-    this.label = this.hasAttribute('label') ? this.getAttribute('label') : null;
-    const style = `
-            :host{
-                display:inline-block;
-            }
-        `;
-
-    this.shadowRoot.innerHTML = `
-            <style>
-                ${style}
-            </style>
-            ${this.renderHTML(this.ref)}
-        `;
-
-    this.widget = this.getWidget();
-
-    this.addEventListener('mousedown', e => {
-      // ### prevent mousedown events on all control content that is not the widget or within the widget
-      if (!Fore.isWidget(e.target) && !e.target?.classList.contains('fx-hint')) {
-        e.preventDefault();
-        // e.stopImmediatePropagation();
-      }
-      this.widget.focus();
-    });
-
-    // console.log('widget ', this.widget);
-    let listenOn = this.widget; // default: usually listening on widget
-
-    // ### convenience marker event
-    if (this.debounceDelay) {
-      listenOn.addEventListener(
-        this.updateEvent,
-        debounce(
-          this,
-          () => {
-            // console.log('eventlistener ', this.updateEvent);
-            // console.info('handling Event:', event.type, listenOn);
-            this._importUploadedContent();
-          },
-          this.debounceDelay,
-        ),
-      );
-    } else {
-      listenOn.addEventListener(this.updateEvent, async event => {
-        this._importUploadedContent(event);
-      });
-    }
-    this.boundInitialized = false;
-    this.fileNameExpr = this.getAttribute('filename');
-    this.mimetypeExpr = this.getAttribute('mimetype');
-
-  }
 
 
   /**
@@ -173,6 +173,14 @@ export default class FxUpload extends XfAbstractControl {
       this.nodeset.append(document.importNode(val,true));
     }else{
       modelitem.value = val;
+      if(this.mimetype.startsWith('text/')){
+        const cdata = this.nodeset.ownerDocument.createCDATASection(val);
+        this.nodeset.textContent = '';
+        this.nodeset.append(cdata);
+      } else {
+        this.nodeset.textContent = '';
+        this.nodeset.append(val);
+      }
     }
 
 
