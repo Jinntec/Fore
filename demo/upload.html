@@ -23,9 +23,9 @@
 
                 <fx-model>
                     <fx-instance>
-                        <data>
-                            <file name="" mediatype=""></file>
-                        </data>
+<data>
+    <file name="" mediatype=""></file>
+</data>
                     </fx-instance>
                 </fx-model>
 
@@ -39,10 +39,17 @@
                     on guessing the mimetype by file extension.
                 </p>
 
+                <h2>Upload without mimetype restrictions</h2>
+
                 <fx-upload ref="file" filename="@name" mimetype="@mediatype">
                     <label>Upload</label>
                 </fx-upload>
                 <div>{file/@name} - {file/@mediatype}</div>
+
+                <h2>With restriction to pdf documents</h2>
+                <fx-upload ref="file" accept="application/pdf">
+                    <label>Upload Pdf</label>
+                </fx-upload>
             </fx-fore>
         </template>
     </demo-snippet>

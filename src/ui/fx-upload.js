@@ -101,6 +101,7 @@ export default class FxUpload extends XfAbstractControl {
   connectedCallback() {
 
     this.updateEvent = 'change';
+    this.accept = this.hasAttribute('accept') ? this.getAttribute('accept'):'';
     this.label = this.hasAttribute('label') ? this.getAttribute('label') : null;
     const style = `
             :host{
@@ -211,7 +212,7 @@ export default class FxUpload extends XfAbstractControl {
     return `
             ${this.label ? `${this.label}` : ''}
             <slot></slot>
-            <input type="file">
+            <input type="file" ${this.accept !== '' ? `accept="${this.accept}"` : ''}>
             <fx-setvalue id="setvalue" ref="${ref}"></fx-setvalue>
         `;
   }
