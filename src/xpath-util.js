@@ -2,6 +2,64 @@ import * as fx from 'fontoxpath';
 
 export class XPathUtil {
   /**
+   * creates DOM Nodes from an XPath locationpath expression. Support namespaced and un-namespaced
+   * nodes.
+   * E.g. 'foo/bar' creates an element 'foo' with an child element 'bar'
+   * 'foo/@bar' creates a 'foo' element with an 'bar' attribute
+   *
+   * supports multiple steps
+   *
+   * @param xpath
+   * @param doc
+   * @param fore
+   * @return {*}
+   */
+  static createElementFromXPath(xpath, doc, fore) {
+    if (!doc) {
+      doc = document.implementation.createDocument(null, null, null); // Create a new XML document if not provided
+    }
+
+    let parts = xpath.split('/');
+    let rootNode = null;
+    let currentNode = null;
+
+    for (let part of parts) {
+      if (!part) continue; // Skip empty parts (e.g., leading slashes)
+
+      // Handle attributes
+      if (part.startsWith('@')) {
+        let attrName = part.slice(1); // Strip '@'
+        if (!currentNode) {
+          throw new Error("Cannot create an attribute without a parent element.");
+        }
+        currentNode.setAttribute(attrName, "");
+      } else {
+        // Handle namespaces if present
+        let [prefix, localName] = part.includes(':') ? part.split(':') : [null, part];
+        let namespace = prefix ? XPathUtil.lookupNamespace(fore, prefix) : null;
+
+        let newElement = namespace
+            ? doc.createElementNS(namespace, part)
+            : doc.createElement(localName);
+
+        if (!rootNode) {
+          rootNode = newElement; // Set as the root node
+        } else {
+          currentNode.appendChild(newElement);
+        }
+
+        currentNode = newElement;
+      }
+    }
+
+    if (!rootNode) {
+      throw new Error("Invalid XPath; no root element could be created.");
+    }
+
+    return rootNode;
+  }
+
+  /**
    * Alternative to `contains` that respects shadowroots
    * @param {Node} ancestor
    * @param {Node} descendant

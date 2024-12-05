@@ -167,6 +167,7 @@ export default class FxControl extends XfAbstractControl {
     }
 
     this.addEventListener('return', e => {
+
       const newNodes = e.detail.nodeset;
       e.stopPropagation();
 

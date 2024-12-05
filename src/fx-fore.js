@@ -11,6 +11,7 @@ import {
 import getInScopeContext from './getInScopeContext.js';
 import { XPathUtil } from './xpath-util.js';
 import { FxRepeatAttributes } from './ui/fx-repeat-attributes.js';
+import { ModelItem } from './modelitem.js';
 
 /**
  * Makes the dirty state of the form.
@@ -49,6 +50,13 @@ export class FxFore extends HTMLElement {
 
   static get properties() {
     return {
+      /**
+       * wether to create nodes that are missing in the loaded data and
+       * auto-create nodes when there's a binding found in the UI.
+       */
+      createNodes:{
+        type:Boolean
+      },
       /**
        * ignore certain nodes for template expression search
        */
@@ -238,6 +246,7 @@ export class FxFore extends HTMLElement {
       : 'update';
     // this.mergePartial = this.hasAttribute('merge-partial')? true:false;
     this.mergePartial = false;
+    this.createNodes = this.hasAttribute('create-nodes') ? true : false;
   }
 
   connectedCallback() {
@@ -360,12 +369,10 @@ export class FxFore extends HTMLElement {
       document.body.appendChild(devtools);
     }
     if (urlParams.has('lens')) {
-      if(document.querySelector('fx-lens')) return;
       const lens = document.createElement('fx-lens');
       document.body.appendChild(lens);
       lens.setAttribute('open','open');
     }
-
   }
 
   /**
@@ -957,7 +964,6 @@ export class FxFore extends HTMLElement {
         'background:lightblue; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
     );
 
-
     if (!this.initialRun) return;
     this.classList.add('initialRun');
     await this._lazyCreateInstance();
@@ -972,6 +978,11 @@ export class FxFore extends HTMLElement {
 
     // First refresh should be forced
     await this.refresh(true);
+    if (this.createNodes && this._initData()) {
+      this.model.updateModel();
+      await this.refresh(true);
+    }
+
     // this.style.display='block'
     this.classList.add('fx-ready');
     document.body.classList.add('fx-ready');
@@ -1001,6 +1012,178 @@ export class FxFore extends HTMLElement {
       e.dataTransfer.dropEffect = 'move';
     });
   }
+
+  /**
+   * @returns {boolean} Do we need another refresh?
+   */
+  _initData() {
+    // console.log('INITDATA');
+    let needsRefresh = false;
+    // todo : behind a flag
+    const boundControls = this.querySelectorAll('[ref]:not(fx-model *)');
+    // console.log('_initData', boundControls);
+    Array.from(boundControls)
+      .filter(control => {
+        if (!control.getModelItem) {
+          console.error('Model item absent for', control);
+          return false;
+        }
+        return true;
+      })
+      .forEach((control, i, allControls) => {
+        /**
+         * @type {ModelItem}
+         */
+        const controlModelItem = control.getModelItem();
+        if (controlModelItem.node !== null) {
+          return;
+        }
+        // We need to create that node!
+
+        // We know we're going to change this model item!
+        controlModelItem.changed = true;
+        this.model.addChanged(controlModelItem);
+
+        // And we will need a refresh now.
+        needsRefresh = true;
+
+        const previousControl = allControls[i - 1];
+
+        // Previous control can either be an ancestor of us, or a previous node, which can be a sibling, or a child of a sibling.
+        // First: parent
+        if (previousControl.contains(control)) {
+          // Parent is here. We can assume the model item is instantiated. Just maybe irrelevant
+          /**
+           * @type {ModelItem}
+           */
+          const parentModelItem = previousControl.getModelItem();
+          console.log('parentModelItem',parentModelItem, parentModelItem.path);
+
+          const parentModelItemNode = parentModelItem.node;
+          const ref = controlModelItem.ref;
+          // const newElement = parentModelItemNode.ownerDocument.createElement(ref);
+          const newElement = this._createNodes(ref, previousControl, parentModelItemNode);
+
+          // Plonk it in at the start!
+          parentModelItemNode.insertBefore(newElement, parentModelItemNode.firstChild);
+          this._assignModelItem(controlModelItem, newElement);
+          // Done!
+          return;
+        }
+        // console.log('previousControl',previousControl);
+        // console.log('control',control);
+        // Is previousControl a sibling or a descendant of a logical sibling? Keep looking backwards until we share parents!
+        const ourParent = XPathUtil.getParentBindingElement(control);
+        console.log('ourParent',ourParent);
+        let siblingControl = null;
+        for (let j = i - 1; j > 0; --j) {
+          const siblingOrDescendant = allControls[j];
+          if (XPathUtil.getParentBindingElement(siblingOrDescendant) === ourParent) {
+            siblingControl = siblingOrDescendant;
+            break;
+          }
+        }
+
+        if (!siblingControl) {
+          throw new Error('Unexpected! there must be a sibling right?');
+        }
+
+        /**
+         * @type {ModelItem}
+         */
+        // console.log('outParent',ourParent);
+        const parentModelItem = ourParent.getModelItem();
+        parentModelItem.relevant = true;
+        const parentModelItemNode = parentModelItem.node;
+        this._assignModelItem(parentModelItem, parentModelItem.node);
+        const ref = controlModelItem.ref;
+        /**
+         * @type {ModelItem}
+         */
+        const referenceModelItem = siblingControl.getModelItem();
+        const referenceNode = referenceModelItem.node;
+        const newElement = this._createNodes(ref, referenceNode, parentModelItemNode);
+
+        // Insert before the next sibling our our logical previous sibling
+        parentModelItemNode.insertBefore(newElement, referenceNode.nextSibling);
+        this._assignModelItem(controlModelItem, newElement);
+      });
+
+    console.log('DATA', this.getModel().getDefaultContext());
+    return needsRefresh;
+  }
+
+  _assignModelItem(controlModelItem, newElement) {
+    controlModelItem.node = newElement;
+    // we need to explicitly make nodes relevant as there might be nothing in the model doing so
+    controlModelItem.relevant = true;
+    controlModelItem.path = XPathUtil.getPath(newElement, controlModelItem.instanceId);
+  }
+
+  _createNodes(ref, referenceNode, parentModelItemNode) {
+    let newElement;
+    if (ref.includes('/')) {
+      // multi-step ref expressions
+      newElement = XPathUtil.createElementFromXPath(ref, referenceNode.ownerDocument, this);
+      // console.log('new subtree', newElement);
+      return newElement;
+    } else {
+      return parentModelItemNode.ownerDocument.createElement(ref);
+    }
+  }
+
+
+/*
+  _handleNodePlacement(boundParent, newNode, control) {
+    // determine if insertion or append
+    const boundChildren = Array.from(XPathUtil.getBoundChildren(boundParent));
+    const childIdx = boundChildren.findIndex(element => element.ref === control.ref);
+    // console.log('thischild index',childIdx);
+
+    if (childIdx === -1) {
+      console.error(`expected to find ${control.ref} in list of children`, boundChildren);
+    }
+    if (childIdx === 0) {
+      //we're first and can append
+      if (newNode.nodeType === Node.ATTRIBUTE_NODE) {
+        boundParent.nodeset.setAttributeNode(newNode);
+      } else if (newNode.nodeType === Node.ELEMENT_NODE) {
+        if (!boundParent.nodeset) {
+          const newParent = XPathUtil.createNodesFromXPath(boundParent, boundParent.ref);
+          console.log('create for parent', newParent);
+          // console.log('context',this.getModel().getDefaultContext());
+          this.getModel().getDefaultContext().appendChild(newParent);
+          newParent.appendChild(newNode);
+          boundParent.nodeset = newParent;
+          return;
+        } else {
+          boundParent.nodeset.append(newNode);
+        }
+      }
+
+      return;
+    }
+    let lastRelevant;
+    for (let i = 0; i < childIdx; i++) {
+      const node = boundChildren[i];
+      if (node.nodeset) {
+        lastRelevant = node;
+      }
+    }
+    if (!lastRelevant) {
+      this.getModel().getDefaultContext().appendChild(newNode);
+      return;
+    }
+    if (!lastRelevant.nodeset) {
+      console.log('inscope', getInScopeContext(lastRelevant, lastRelevant.ref));
+      const inscope = getInScopeContext(lastRelevant, lastRelevant.ref);
+      // inscope.appendChild(newNode);
+    }
+
+    lastRelevant.nodeset.insertAdjacentElement('afterend', newNode);
+    return;
+  }
+*/
 
   _handleDragStart(event) {
     const draggedItem = event.target.closest('[draggable="true"]');

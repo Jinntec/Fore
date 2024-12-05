@@ -67,10 +67,30 @@ export class FxModel extends HTMLElement {
 
   static lazyCreateModelItem(model, ref, node) {
     // console.log('lazyCreateModelItem ', node);
+    const instanceId = XPathUtil.resolveInstance(model, ref);
 
+    if (model.parentNode.createNodes && (node === null || node === undefined)) {
+      // ### intializing ModelItem with default values (as there is no <fx-bind> matching for given ref)
+      const mi = new ModelItem(
+        undefined,
+        ref,
+        Fore.READONLY_DEFAULT,
+        false,
+        Fore.REQUIRED_DEFAULT,
+        Fore.CONSTRAINT_DEFAULT,
+        Fore.TYPE_DEFAULT,
+        null,
+        this,
+        instanceId,
+      );
+
+      // console.log('new ModelItem is instanceof ModelItem ', mi instanceof ModelItem);
+      model.registerModelItem(mi);
+      return mi;
+    }
     let targetNode = {};
     if (node === null || node === undefined) return null;
-    if (node.nodeType === node.TEXT_NODE) {
+    if (node.nodeType === Node.TEXT_NODE) {
       // const parent = node.parentNode;
       // console.log('PARENT ', parent);
       targetNode = node.parentNode;
@@ -80,7 +100,6 @@ export class FxModel extends HTMLElement {
 
     // const path = fx.evaluateXPath('path()',node);
     let path;
-    const instanceId = XPathUtil.resolveInstance(model, ref);
     if (node.nodeType) {
       path = XPathUtil.getPath(node, instanceId);
     } else {
@@ -100,7 +119,7 @@ export class FxModel extends HTMLElement {
       Fore.TYPE_DEFAULT,
       targetNode,
       this,
-      instanceId
+      instanceId,
     );
 
     // console.log('new ModelItem is instanceof ModelItem ', mi instanceof ModelItem);
