@@ -62,7 +62,7 @@ export class ModelItem {
      */
     this.alerts = [];
     /**
-     * @type {import('./ui/fx-control').default[]}
+     * @type {import('./ui/abstract-control').default[]}
      */
     this.boundControls = [];
     // this.value = this._getValue();
