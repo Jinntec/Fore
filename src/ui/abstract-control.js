@@ -64,10 +64,10 @@ export default class AbstractControl extends ForeElementMixin {
 
     // await this.updateComplete;
     // await this.getWidget();
-    this.oldVal = this.nodeset ? this.nodeset : null;
-    // console.log('oldVal',this.oldVal);
 
     this.evalInContext();
+    this.oldVal = this.nodeset ? this.nodeset : null;
+    // console.log('oldVal',this.oldVal);
 
     // todo this if should be removed - see above
     if (this.isBound()) {
@@ -175,7 +175,7 @@ export default class AbstractControl extends ForeElementMixin {
           Fore.dispatch(this, 'value-changed', {
             path: this.modelItem.path,
             value: this.modelItem.value,
-            oldvalue: this.oldVal,
+            oldvalue: oldValue,
             instanceId:this.modelItem.instanceId,
             foreId:this.getOwnerForm().id
           });
