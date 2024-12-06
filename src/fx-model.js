@@ -65,7 +65,13 @@ export class FxModel extends HTMLElement {
     this.fore = this.parentNode;
   }
 
-  static lazyCreateModelItem(model, ref, node) {
+  /**
+   * @param {FxModel}           model        The model to create a model item for
+   * @param {string}            ref          The XPath ref that led to this model item
+   * @param {Node}              node         The node the XPath led to
+   * @param {ForeElementMixin}  formElement  The form element making this model. Used to resolve variables against
+   */
+  static lazyCreateModelItem(model, ref, node, formElement) {
     // console.log('lazyCreateModelItem ', node);
     const instanceId = XPathUtil.resolveInstance(model, ref);
 
