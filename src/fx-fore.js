@@ -1066,7 +1066,7 @@ export class FxFore extends HTMLElement {
                 const siblingOrDescendant = boundControls[j];
                 if (XPathUtil.getParentBindingElement(siblingOrDescendant) === ourParent) {
                     siblingControl = siblingOrDescendant;
-                    break;
+                    continue;
                 }
             }
             if (!siblingControl) {
@@ -1080,9 +1080,11 @@ export class FxFore extends HTMLElement {
 
             // Insert before the next sibling our our logical previous sibling
             parentNodeset.insertBefore(newElement, referenceNodeset.nextSibling);
-            // console.log('control inscope', control.getInScopeContext());
-            // console.log('control ref', control.ref);
-            // console.log('control new element parent', newElement.parentNode.nodeName);
+/*
+            console.log('control inscope', control.getInScopeContext());
+            console.log('control ref', control.ref);
+            console.log('control new element parent', newElement.parentNode.nodeName);
+*/
             control.evalInContext();
             // console.log('new control evaluated to ', control.nodeset);
             console.log('CREATED sibling',newElement);
