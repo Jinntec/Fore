@@ -56,7 +56,7 @@ export default class ForeElementMixin extends HTMLElement {
     super();
     this.context = null;
     this.model = null;
-    this.modelItem = {};
+    this.modelItem = null;
     this.ref = this.hasAttribute('ref') ? this.getAttribute('ref') : '';
     /**
      * @type {Map<string, import('./fx-var.js').FxVariable>}
@@ -230,9 +230,6 @@ export default class ForeElementMixin extends HTMLElement {
    * @returns {import('./modelitem.js').ModelItem}
    */
   getModelItem() {
-    // return this.model.bindingMap.find(m => m.refnode === this.nodeset);
-    // return this.getModel().bindingMap.find(m => m.refnode === this.nodeset);
-
     const mi = this.getModel().getModelItem(this.nodeset);
     if (mi) {
       this.modelItem = mi;
@@ -248,12 +245,21 @@ export default class ForeElementMixin extends HTMLElement {
         existed = this.getModel().getModelItem(this.nodeset);
       }
     } else {
-      existed = this.getModel().getModelItem(this.nodeset);
+      existed = this.nodeset ? this.getModel().getModelItem(this.nodeset) : null;
     }
 
     if (!existed) {
-      return FxModel.lazyCreateModelItem(this.getModel(), this.ref, this.nodeset);
+      const lazyCreatedModelItem = FxModel.lazyCreateModelItem(
+        this.getModel(),
+        this.ref,
+        this.nodeset,
+      );
+      this.modelItem = lazyCreatedModelItem;
+      return lazyCreatedModelItem;
+
     }
+    this.modelItem = existed;
+
     return existed;
   }
 
