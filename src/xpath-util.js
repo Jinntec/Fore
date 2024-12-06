@@ -60,6 +60,23 @@ export class XPathUtil {
   }
 
   /**
+   * looks up namespace on ownerForm. Though not strictly in the sense of resolving namespaces in XML, the
+   * fx-fore element is a convenient place to put namespace declarations for 2 reasons:
+   * - this way namespaces are scoped to a Fore element
+   * - as fx-fore is a web component we can add our xmlns attributes as we got no restrictions to attributes
+   *   though strictly speaking they are no xmlns declarations and just serve the purpose of namespace lookup.
+   *
+   * @param boundElement
+   * @param prefix
+   * @return {string}
+   */
+  static lookupNamespace(ownerForm, prefix){
+    return ownerForm.getAttribute(`xmlns:${prefix}`);
+  }
+
+
+
+  /**
    * Alternative to `contains` that respects shadowroots
    * @param {Node} ancestor
    * @param {Node} descendant
