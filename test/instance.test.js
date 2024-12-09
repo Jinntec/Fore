@@ -407,6 +407,48 @@ describe('instance Tests', () => {
     expect(anotherinner.innerText).to.equal('another inner value');
   });
 
+  it('resolves instance correctly for nested fore elements2', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance id="def">
+            <data>
+              <text>foo</text>
+            </data>
+          </fx-instance>
+        </fx-model>
+
+        <div id="one">{text}
+          {instance()/text}
+          {instance('default')/text}
+          {instance('def')/text}
+        </div>
+        <fx-fore>
+          <fx-model>
+            <fx-instance>
+              <data>
+                <text>bar</text>
+              </data>
+            </fx-instance>
+          </fx-model>
+          <div id="two">
+            {text}
+            {instance()/text}
+            {instance('default')/text}
+          </div>
+        </fx-fore>
+
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const one = el.querySelector('#one');
+    expect(one.innerText).to.equal('foo foo foo foo');
+    const two = el.querySelector('#two');
+    expect(two.innerText).to.equal('bar bar bar');
+  });
+
   /*
           it('does NOT copy a "body" element from inline data', async () => {
               const el =  (
