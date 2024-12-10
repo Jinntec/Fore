@@ -253,10 +253,10 @@ export default class ForeElementMixin extends HTMLElement {
         this.getModel(),
         this.ref,
         this.nodeset,
+        this,
       );
       this.modelItem = lazyCreatedModelItem;
       return lazyCreatedModelItem;
-
     }
     this.modelItem = existed;
 
