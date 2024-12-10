@@ -397,7 +397,10 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
       repeatItem.index = index + 1; // 1-based index
 
       this.appendChild(repeatItem);
-      this.getOwnerForm().initData(repeatItem);
+
+      if (this.getOwnerForm().createNodes) {
+        this.getOwnerForm().initData(repeatItem);
+      }
 
       if (repeatItem.index === 1) {
         this.applyIndex(repeatItem);
