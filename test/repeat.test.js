@@ -1,7 +1,5 @@
-/* eslint-disable no-unused-expressions */
-import {
-  html, oneEvent, fixtureSync, expect, elementUpdated,
-} from '@open-wc/testing';
+1; /* eslint-disable no-unused-expressions */
+import { html, oneEvent, fixtureSync, expect, elementUpdated } from '@open-wc/testing';
 
 import '../index.js';
 import { FxModel } from '../src/fx-model.js';
@@ -115,7 +113,7 @@ describe('repeat Tests', () => {
     const items = repeat.querySelectorAll('fx-repeatitem');
     // const items = document.querySelectorAll('fx-repeatitem');
     // console.log('items', items);
-    expect(items.length).to.equal(2);
+    expect(items.length).to.equal(2, 'There should be two repeat items');
 
     expect(repeat.getModel() instanceof FxModel).to.be.true;
 
@@ -128,7 +126,7 @@ describe('repeat Tests', () => {
     // check if control has correct value
     const inputs = el.querySelectorAll('fx-input');
 
-    expect(inputs.length).to.equal(2);
+    expect(inputs.length).to.equal(2, 'There should be two inputs, one for each item');
 
     m = repeat.getModel().getModelItem(repeatNodes[1]);
     console.log('repeatnode 1 ', m);
@@ -554,9 +552,7 @@ describe('repeat Tests', () => {
           </fx-instance>
         </fx-model>
         <fx-repeat ref="1 to 10">
-          <template>
-            {.}
-          </template>
+          <template> {.} </template>
         </fx-repeat>
       </fx-fore>
     `);
