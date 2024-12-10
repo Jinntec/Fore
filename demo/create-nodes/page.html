@@ -1,0 +1,392 @@
+<!DOCTYPE HTML>
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport">
+      <title></title>
+      <link href="../../resources/fore.css" rel="stylesheet">
+      <link href="../../resources/vars.css" rel="stylesheet">
+      <link href="../../resources/toastify.css" rel="stylesheet">
+      <link href="default.css" rel="stylesheet"><script type="module">
+                    //import '../src/scripts/fore-dev.js';
+                    import '../../index.js';
+                </script>
+      <style>
+         fx-fore > fx-group[relevant]{
+            display:flex;
+            flex-direction:column;
+         }
+         fx-group[relevant] > fx-group[relevant]{
+            display:flex;
+            flex-direction:row;
+
+         }
+         fx-group[relevant] > fx-group[relevant] > fx-control{
+            display:block;
+         }
+      </style>
+   </head>
+   <body>
+      <main>
+         <fx-fore create-nodes xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" id="fx-invoice">
+            <fx-var name="invoice" value="instance('invoice')"></fx-var>
+            <fx-model>
+               <fx-instance id="invoice" src="04.03a-INVOICE_ubl.xml"></fx-instance>
+            </fx-model>
+               <fx-group ref=".">
+                  <fx-group>
+                  <fx-control semantic-type="" ref="cbc:ID"><label for="BT-1">Invoice number</label><input id="BT-1"></fx-control>
+                  <fx-control semantic-type="" ref="cbc:IssueDate"><label for="BT-2">Invoice issue date</label><input id="BT-2"></fx-control>
+                  <fx-control semantic-type="" ref="cbc:InvoiceTypeCode"><label for="BT-3">Invoice type code</label><input id="BT-3"></fx-control>
+                  <fx-control semantic-type="" ref="cbc:DocumentCurrencyCode"><label for="BT-5">Invoice currency code</label><input id="BT-5"></fx-control>
+                  <fx-control semantic-type="" ref="cbc:TaxCurrencyCode"><label for="BT-6">VAT accounting currency code</label><input id="BT-6"></fx-control>
+                  <fx-control semantic-type="" ref="cbc:TaxPointDate"><label for="BT-7">Value added tax point date</label><input id="BT-7"></fx-control>
+                  <fx-control semantic-type="" ref="cac:InvoicePeriod/cbc:DescriptionCode"><label for="BT-8">Value added tax point date code</label><input id="BT-8"></fx-control>
+                  <fx-control semantic-type="" ref="cbc:DueDate"><label for="BT-9">Payment due date</label><input id="BT-9"></fx-control>
+                  <fx-control semantic-type="" ref="cbc:BuyerReference"><label for="BT-10">Buyer reference</label><input id="BT-10"></fx-control>
+                  <fx-control semantic-type="" ref="cac:ProjectReference/cbc:ID"><label for="BT-11">Project reference</label><input id="BT-11"></fx-control>
+                  <fx-control semantic-type="" ref="cac:ContractDocumentReference/cbc:ID"><label for="BT-12">Contract reference</label><input id="BT-12"></fx-control>
+                  <fx-control semantic-type="" ref="cac:OrderReference/cbc:ID"><label for="BT-13">Purchase order reference</label><input id="BT-13"></fx-control>
+                  <fx-control semantic-type="" ref="cac:OrderReference/cbc:SalesOrderID"><label for="BT-14">Sales order reference</label><input id="BT-14"></fx-control>
+                  <fx-control semantic-type="" ref="cac:ReceiptDocumentReference/cbc:ID"><label for="BT-15">Receiving advice reference</label><input id="BT-15"></fx-control>
+                  <fx-control semantic-type="" ref="cac:DespatchDocumentReference/cbc:ID"><label for="BT-16">Despatch advice reference</label><input id="BT-16"></fx-control>
+                  <fx-control semantic-type="" ref="cac:OriginatorDocumentReference/cbc:ID"><label for="BT-17">Tender or lot reference</label><input id="BT-17"></fx-control>
+                  <fx-control semantic-type="" ref="cac:AdditionalDocumentReference/cbc:ID/@schemeID"><label for="BT-18">Invoiced object identifier</label><input id="BT-18"></fx-control>
+                  <fx-control semantic-type="" ref="cbc:AccountingCost"><label for="BT-19">Buyer accounting reference</label><input id="BT-19"></fx-control>
+                  <fx-control semantic-type="" ref="cac:PaymentTerms/cbc:Note"><label for="BT-20">Payment terms</label><input id="BT-20"></fx-control>
+                  </fx-group>
+                  <fx-group>
+                     <header>INVOICE NOTE</header>
+                     <fx-control semantic-type="" ref="cbc:Note"><label for="BT-21">Invoice note subject code</label><input id="BT-21"></fx-control>
+                     <fx-control semantic-type="" ref="cbc:Note"><label for="BT-22">Invoice note</label><input id="BT-22"></fx-control>
+                  </fx-group>
+                  <fx-group>
+                     <header>PROCESS CONTROL</header>
+                     <fx-control semantic-type="" ref="cbc:ProfileID"><label for="BT-23">Business process type</label><input id="BT-23"></fx-control>
+                     <fx-control semantic-type="" ref="cbc:CustomizationID"><label for="BT-24">Specification identifier</label><input id="BT-24"></fx-control>
+                  </fx-group>
+                  <fx-group>
+                     <header>PRECEDING INVOICE REFERENCE</header>
+                     <fx-control semantic-type=""><label for="BT-25">Preceding Invoice reference</label><input id="BT-25"></fx-control>
+                     <fx-control semantic-type="" ref="cbc:IssueDate"><label for="BT-26">Preceding Invoice issue date</label><input id="BT-26"></fx-control>
+                  </fx-group>
+                  <fx-group>
+                     <header>SELLER</header>
+                     <fx-control semantic-type="" ref="cac:Party/cac:PartyLegalEntity/cbc:RegistrationName"><label for="BT-27">Seller name</label><input id="BT-27"></fx-control>
+                     <fx-control semantic-type="" ref="cac:Party/cac:PartyName/cbc:Name"><label for="BT-28">Seller trading name</label><input id="BT-28"></fx-control>
+                     <fx-control semantic-type="" ref="cac:Party/cac:PartyIdentification/cbc:ID/@schemeID"><label for="BT-29">Seller identifier</label><input id="BT-29"></fx-control>
+                     <fx-control semantic-type="" ref="cac:Party/cac:PartyLegalEntity/cbc:CompanyID/@schemeID"><label for="BT-30">Seller legal registration identifier</label><input id="BT-30"></fx-control>
+                     <fx-control semantic-type="" ref="cac:Party/cac:PartyTaxScheme/cbc:CompanyID"><label for="BT-31">Seller VAT identifier</label><input id="BT-31"></fx-control>
+                     <fx-control semantic-type="" ref="cac:Party/cac:PartyTaxScheme/cbc:CompanyID"><label for="BT-32">Seller tax registration identifier</label><input id="BT-32"></fx-control>
+                     <fx-control semantic-type="" ref="cac:Party/cac:PartyLegalEntity/cbc:CompanyLegalForm"><label for="BT-33">Seller additional legal information</label><input id="BT-33"></fx-control>
+                     <fx-control semantic-type="" ref="cac:Party/cbc:EndpointID/@schemeID"><label for="BT-34">Seller electronic address</label><input id="BT-34"></fx-control>
+                     <fx-group ref="cac:AccountingSupplierParty">
+                        <header>SELLER POSTAL ADDRESS</header>
+                        <fx-control semantic-type="" ref="cbc:StreetName"><label for="BT-35">Seller address line 1</label><input id="BT-35"></fx-control>
+                        <fx-control semantic-type="" ref="cbc:AdditionalStreetName"><label for="BT-36">Seller address line 2</label><input id="BT-36"></fx-control>
+                        <fx-control semantic-type="" ref="cac:AddressLine/cbc:Line"><label for="BT-162">Seller address line 3</label><input id="BT-162"></fx-control>
+                        <fx-control semantic-type="" ref="cbc:CityName"><label for="BT-37">Seller city</label><input id="BT-37"></fx-control>
+                        <fx-control semantic-type="" ref="cbc:PostalZone"><label for="BT-38">Seller post code</label><input id="BT-38"></fx-control>
+                        <fx-control semantic-type="" ref="cbc:CountrySubentity"><label for="BT-39">Seller country subdivision</label><input id="BT-39"></fx-control>
+                        <fx-control semantic-type="" ref="cac:Country/cbc:IdentificationCode"><label for="BT-40">Seller country code</label><input id="BT-40"></fx-control>
+                     </fx-group>
+                     <fx-group ref="cac:AccountingSupplierParty">
+                        <header>SELLER CONTACT</header>
+                        <fx-control semantic-type="" ref="cbc:Name"><label for="BT-41">Seller contact point</label><input id="BT-41"></fx-control>
+                        <fx-control semantic-type="" ref="cbc:Telephone"><label for="BT-42">Seller contact telephone number</label><input id="BT-42"></fx-control>
+                        <fx-control semantic-type="" ref="cbc:ElectronicMail"><label for="BT-43">Seller contact email address</label><input id="BT-43"></fx-control>
+                     </fx-group>
+                  </fx-group>
+                  <fx-group>
+                     <header>BUYER</header>
+                     <fx-control semantic-type="" ref="cac:Party/cac:PartyLegalEntity/cbc:RegistrationName"><label for="BT-44">Buyer name</label><input id="BT-44"></fx-control>
+                     <fx-control semantic-type="" ref="cac:Party/cac:PartyName/cbc:Name"><label for="BT-45">Buyer trading name</label><input id="BT-45"></fx-control>
+                     <fx-control semantic-type="" ref="cac:Party/cac:PartyIdentification/cbc:ID/@schemeID"><label for="BT-46">Buyer identifier</label><input id="BT-46"></fx-control>
+                     <fx-control semantic-type="" ref="cac:Party/cac:PartyLegalEntity/cbc:CompanyID/@schemeID"><label for="BT-47">Buyer legal registration identifier</label><input id="BT-47"></fx-control>
+                     <fx-control semantic-type="" ref="cac:Party/cac:PartyTaxScheme/cbc:CompanyID"><label for="BT-48">Buyer VAT identifier</label><input id="BT-48"></fx-control>
+                     <fx-control semantic-type="" ref="cac:Party/cbc:EndpointID/@schemeID"><label for="BT-49">Buyer electronic address</label><input id="BT-49"></fx-control>
+                     <fx-group ref="cac:AccountingCustomerParty">
+                        <header>BUYER POSTAL ADDRESS</header>
+                        <fx-control semantic-type="" ref="cbc:StreetName"><label for="BT-50">Buyer address line 1</label><input id="BT-50"></fx-control>
+                        <fx-control semantic-type="" ref="cbc:AdditionalStreetName"><label for="BT-51">Buyer address line 2</label><input id="BT-51"></fx-control>
+                        <fx-control semantic-type="" ref="cac:AddressLine/cbc:Line"><label for="BT-163">Buyer address line 3</label><input id="BT-163"></fx-control>
+                        <fx-control semantic-type="" ref="cbc:CityName"><label for="BT-52">Buyer city</label><input id="BT-52"></fx-control>
+                        <fx-control semantic-type="" ref="cbc:PostalZone"><label for="BT-53">Buyer post code</label><input id="BT-53"></fx-control>
+                        <fx-control semantic-type="" ref="cbc:CountrySubentity"><label for="BT-54">Buyer country subdivision</label><input id="BT-54"></fx-control>
+                        <fx-control semantic-type="" ref="cac:Country/cbc:IdentificationCode"><label for="BT-55">Buyer country code</label><input id="BT-55"></fx-control>
+                     </fx-group>
+                     <fx-group ref="cac:AccountingCustomerParty">
+                        <header>BUYER CONTACT</header>
+                        <fx-control semantic-type="" ref="cbc:Name"><label for="BT-56">Buyer contact point</label><input id="BT-56"></fx-control>
+                        <fx-control semantic-type="" ref="cbc:Telephone"><label for="BT-57">Buyer contact telephone number</label><input id="BT-57"></fx-control>
+                        <fx-control semantic-type="" ref="cbc:ElectronicMail"><label for="BT-58">Buyer contact email address</label><input id="BT-58"></fx-control>
+                     </fx-group>
+                  </fx-group>
+                  <fx-group>
+                     <header>PAYEE</header>
+                     <fx-control semantic-type="" ref="cac:PartyName/cbc:Name"><label for="BT-59">Payee name</label><input id="BT-59"></fx-control>
+                     <fx-control semantic-type="" ref="cac:PartyIdentification/cbc:ID/@schemeID"><label for="BT-60">Payee identifier</label><input id="BT-60"></fx-control>
+                     <fx-control semantic-type="" ref="cac:PartyLegalEntity/cbc:CompanyID/@schemeID"><label for="BT-61">Payee legal registration identifier</label><input id="BT-61"></fx-control>
+                  </fx-group>
+                  <fx-group>
+                     <header>SELLER TAX REPRESENTATIVE PARTY</header>
+                     <fx-control semantic-type="" ref="cac:PartyName/cbc:Name"><label for="BT-62">Seller tax representative name</label><input id="BT-62"></fx-control>
+                     <fx-control semantic-type="" ref="cac:PartyTaxScheme/cbc:CompanyID"><label for="BT-63">Seller tax representative VAT identifier</label><input id="BT-63"></fx-control>
+                     <fx-group ref="cac:TaxRepresentativeParty">
+                        <header>SELLER TAX REPRESENTATIVE POSTAL ADDRESS</header>
+                        <fx-control semantic-type="" ref="cbc:StreetName"><label for="BT-64">Tax representative address line 1</label><input id="BT-64"></fx-control>
+                        <fx-control semantic-type="" ref="cbc:AdditionalStreetName"><label for="BT-65">Tax representative address line 2</label><input id="BT-65"></fx-control>
+                        <fx-control semantic-type="" ref="cac:AddressLine/cbc:Line"><label for="BT-164">Tax representative address line 3</label><input id="BT-164"></fx-control>
+                        <fx-control semantic-type="" ref="cbc:CityName"><label for="BT-66">Tax representative city</label><input id="BT-66"></fx-control>
+                        <fx-control semantic-type="" ref="cbc:PostalZone"><label for="BT-67">Tax representative post code</label><input id="BT-67"></fx-control>
+                        <fx-control semantic-type="" ref="cbc:CountrySubentity"><label for="BT-68">Tax representative country subdivision</label><input id="BT-68"></fx-control>
+                        <fx-control semantic-type="" ref="cac:Country/cbc:IdentificationCode"><label for="BT-69">Tax representative country code</label><input id="BT-69"></fx-control>
+                     </fx-group>
+                  </fx-group>
+                  <fx-group>
+                     <header>DELIVERY INFORMATION</header>
+                     <fx-control semantic-type="" ref="cac:DeliveryParty/cac:PartyName/cbc:Name"><label for="BT-70">Deliver to party name</label><input id="BT-70"></fx-control>
+                     <fx-control semantic-type="" ref="cac:DeliveryLocation/cbc:ID/@schemeID"><label for="BT-71">Deliver to location identifier</label><input id="BT-71"></fx-control>
+                     <fx-control semantic-type="" ref="cbc:ActualDeliveryDate"><label for="BT-72">Actual delivery date</label><input id="BT-72"></fx-control>
+                     <fx-group ref="cac:Delivery">
+                        <header>INVOICING PERIOD</header>
+                        <fx-control semantic-type="" ref="cbc:StartDate"><label for="BT-73">Invoicing period start date</label><input id="BT-73"></fx-control>
+                        <fx-control semantic-type="" ref="cbc:EndDate"><label for="BT-74">Invoicing period end date</label><input id="BT-74"></fx-control>
+                     </fx-group>
+                     <fx-group ref="cac:Delivery">
+                        <header>DELIVER TO ADDRESS</header>
+                        <fx-control semantic-type="" ref="cbc:StreetName"><label for="BT-75">Deliver to address line 1</label><input id="BT-75"></fx-control>
+                        <fx-control semantic-type="" ref="cbc:AdditionalStreetName"><label for="BT-76">Deliver to address line 2</label><input id="BT-76"></fx-control>
+                        <fx-control semantic-type="" ref="cac:AddressLine/cbc:Line"><label for="BT-165">Deliver to address line 3</label><input id="BT-165"></fx-control>
+                        <fx-control semantic-type="" ref="cbc:CityName"><label for="BT-77">Deliver to city</label><input id="BT-77"></fx-control>
+                        <fx-control semantic-type="" ref="cbc:PostalZone"><label for="BT-78">Deliver to post code</label><input id="BT-78"></fx-control>
+                        <fx-control semantic-type="" ref="cbc:CountrySubentity"><label for="BT-79">Deliver to country subdivision</label><input id="BT-79"></fx-control>
+                        <fx-control semantic-type="" ref="cac:Country/cbc:IdentificationCode"><label for="BT-80">Deliver to country code</label><input id="BT-80"></fx-control>
+                     </fx-group>
+                  </fx-group>
+                  <fx-group>
+                     <header>PAYMENT INSTRUCTIONS</header>
+                     <fx-control semantic-type="" ref="cbc:PaymentMeansCode"><label for="BT-81">Payment means type code</label><input id="BT-81"></fx-control>
+                     <fx-control semantic-type="" ref="cbc:PaymentMeansCode/@Name"><label for="BT-82">Payment means text</label><input id="BT-82"></fx-control>
+                     <fx-control semantic-type="" ref="cbc:PaymentID"><label for="BT-83">Remittance information</label><input id="BT-83"></fx-control>
+                     <fx-group ref="cac:PaymentMeans">
+                        <header>CREDIT TRANSFER</header>
+                        <fx-control semantic-type="" ref="cbc:ID"><label for="BT-84">Payment account identifier</label><input id="BT-84"></fx-control>
+                        <fx-control semantic-type="" ref="cbc:Name"><label for="BT-85">Payment account name</label><input id="BT-85"></fx-control>
+                        <fx-control semantic-type="" ref="cac:FinancialInstitutionBranch/cbc:ID"><label for="BT-86">Payment service provider identifier</label><input id="BT-86"></fx-control>
+                     </fx-group>
+                     <fx-group ref="cac:PaymentMeans">
+                        <header>PAYMENT CARD INFORMATION</header>
+                        <fx-control semantic-type="" ref="cbc:PrimaryAccountNumberID"><label for="BT-87">Payment card primary account number</label><input id="BT-87"></fx-control>
+                        <fx-control semantic-type="" ref="cbc:HolderName"><label for="BT-88">Payment card holder name</label><input id="BT-88"></fx-control>
+                     </fx-group>
+                     <fx-group ref="cac:PaymentMeans">
+                        <header>DIRECT DEBIT</header>
+                        <fx-control semantic-type="" ref="cbc:ID"><label for="BT-89">Mandate reference identifier</label><input id="BT-89"></fx-control>
+                        <fx-control semantic-type=""><label for="BT-90">Bank assigned creditor identifier</label><input id="BT-90"></fx-control>
+                        <fx-control semantic-type="" ref="cac:PayerFinancialAccount/cbc:ID"><label for="BT-91">Debited account identifier</label><input id="BT-91"></fx-control>
+                     </fx-group>
+                  </fx-group>
+                  <fx-group>
+                     <header>DOCUMENT LEVEL ALLOWANCES</header>
+                     <fx-control semantic-type="" ref="cbc:Amount"><label for="BT-92">Document level allowance amount</label><input id="BT-92"></fx-control>
+                     <fx-control semantic-type="" ref="cbc:BaseAmount"><label for="BT-93">Document level allowance base amount</label><input id="BT-93"></fx-control>
+                     <fx-control semantic-type="" ref="cbc:MultiplierFactorNumeric"><label for="BT-94">Document level allowance percentage</label><input id="BT-94"></fx-control>
+                     <fx-control semantic-type="" ref="cac:TaxCategory/cbc:ID"><label for="BT-95">Document level allowance VAT category code</label><input id="BT-95"></fx-control>
+                     <fx-control semantic-type="" ref="cac:TaxCategory/cbc:Percent"><label for="BT-96">Document level allowance VAT rate</label><input id="BT-96"></fx-control>
+                     <fx-control semantic-type="" ref="cbc:AllowanceChargeReason"><label for="BT-97">Document level allowance reason</label><input id="BT-97"></fx-control>
+                     <fx-control semantic-type="" ref="cbc:AllowanceChargeReasonCode"><label for="BT-98">Document level allowance reason code</label><input id="BT-98"></fx-control>
+                  </fx-group>
+                  <fx-group>
+                     <header>DOCUMENT LEVEL CHARGES</header>
+                     <fx-control semantic-type="" ref="cbc:Amount"><label for="BT-99">Document level charge amount</label><input id="BT-99"></fx-control>
+                     <fx-control semantic-type="" ref="cbc:BaseAmount"><label for="BT-100">Document level charge base amount</label><input id="BT-100"></fx-control>
+                     <fx-control semantic-type="" ref="cbc:MultiplierFactorNumeric"><label for="BT-101">Document level charge percentage</label><input id="BT-101"></fx-control>
+                     <fx-control semantic-type="" ref="cac:TaxCategory/cbc:ID"><label for="BT-102">Document level charge VAT category code</label><input id="BT-102"></fx-control>
+                     <fx-control semantic-type="" ref="cac:TaxCategory/cbc:Percent"><label for="BT-103">Document level charge VAT rate</label><input id="BT-103"></fx-control>
+                     <fx-control semantic-type="" ref="cbc:AllowanceChargeReason"><label for="BT-104">Document level charge reason</label><input id="BT-104"></fx-control>
+                     <fx-control semantic-type="" ref="cbc:AllowanceChargeReasonCode"><label for="BT-105">Document level charge reason code</label><input id="BT-105"></fx-control>
+                  </fx-group>
+                  <fx-group>
+                     <header>DOCUMENT TOTALS</header>
+                     <fx-control semantic-type="" ref="cbc:LineExtensionAmount"><label for="BT-106">Sum of Invoice line net amount</label><input id="BT-106"></fx-control>
+                     <fx-control semantic-type="" ref="cbc:AllowanceTotalAmount"><label for="BT-107">Sum of allowances on document level</label><input id="BT-107"></fx-control>
+                     <fx-control semantic-type="" ref="cbc:ChargeTotalAmount"><label for="BT-108">Sum of charges on document level</label><input id="BT-108"></fx-control>
+                     <fx-control semantic-type="" ref="cbc:TaxExclusiveAmount"><label for="BT-109">Invoice total amount without VAT</label><input id="BT-109"></fx-control>
+                     <fx-control semantic-type=""><label for="BT-110">Invoice total VAT amount</label><input id="BT-110"></fx-control>
+                     <fx-control semantic-type=""><label for="BT-111">Invoice total VAT amount in accounting currency</label><input id="BT-111"></fx-control>
+                     <fx-control semantic-type="" ref="cbc:TaxInclusiveAmount"><label for="BT-112">Invoice total amount with VAT</label><input id="BT-112"></fx-control>
+                     <fx-control semantic-type="" ref="cbc:PrepaidAmount"><label for="BT-113">Paid amount</label><input id="BT-113"></fx-control>
+                     <fx-control semantic-type="" ref="cbc:PayableRoundingAmount"><label for="BT-114">Rounding amount</label><input id="BT-114"></fx-control>
+                     <fx-control semantic-type="" ref="cbc:PayableAmount"><label for="BT-115">Amount due for payment</label><input id="BT-115"></fx-control>
+                  </fx-group>
+                  <fx-group>
+                     <header>VAT BREAKDOWN</header>
+                     <fx-control semantic-type="" ref="cbc:TaxableAmount"><label for="BT-116">VAT category taxable amount</label><input id="BT-116"></fx-control>
+                     <fx-control semantic-type="" ref="cbc:TaxAmount"><label for="BT-117">VAT category tax amount</label><input id="BT-117"></fx-control>
+                     <fx-control semantic-type="" ref="cac:TaxCategory/cbc:ID"><label for="BT-118">VAT category code</label><input id="BT-118"></fx-control>
+                     <fx-control semantic-type="" ref="cac:TaxCategory/cbc:Percent"><label for="BT-119">VAT category rate</label><input id="BT-119"></fx-control>
+                     <fx-control semantic-type="" ref="cac:TaxCategory/cbc:TaxExemptionReason"><label for="BT-120">VAT exemption reason text</label><input id="BT-120"></fx-control>
+                     <fx-control semantic-type="" ref="cac:TaxCategory/cbc:TaxExemptionReasonCode"><label for="BT-121">VAT exemption reason code</label><input id="BT-121"></fx-control>
+                  </fx-group>
+                  <fx-group>
+                     <header>ADDITIONAL SUPPORTING DOCUMENTS</header>
+                     <fx-control semantic-type="" ref="cbc:ID"><label for="BT-122">Supporting document reference</label><input id="BT-122"></fx-control>
+                     <fx-control semantic-type="" ref="cbc:DocumentDescription"><label for="BT-123">Supporting document description</label><input id="BT-123"></fx-control>
+                     <fx-control semantic-type="" ref="cac:Attachment/cac:ExternalReference/cbc:URI"><label for="BT-124">External document location</label><input id="BT-124"></fx-control>
+                     <fx-control semantic-type="" ref="cac:Attachment/cbc:EmbeddedDocumentBinaryObject/@mimeCode"><label for="BT-125">Attached document</label><input id="BT-125"></fx-control>
+                  </fx-group>
+                  <fx-group>
+                     <header>INVOICE LINE</header>
+                     <fx-control semantic-type="" ref="cbc:ID"><label for="BT-126">Invoice line identifier</label><input id="BT-126"></fx-control>
+                     <fx-control semantic-type="" ref="cbc:Note"><label for="BT-127">Invoice line note</label><input id="BT-127"></fx-control>
+                     <fx-control semantic-type="" ref="cac:DocumentReference/cbc:ID/@schemeID"><label for="BT-128">Invoice line object identifier</label><input id="BT-128"></fx-control>
+                     <fx-control semantic-type="" ref="cbc:InvoicedQuantity"><label for="BT-129">Invoiced quantity</label><input id="BT-129"></fx-control>
+                     <fx-control semantic-type="" ref="cbc:InvoicedQuantity/@unitCode"><label for="BT-130">Invoiced quantity unit of measure code</label><input id="BT-130"></fx-control>
+                     <fx-control semantic-type="" ref="cbc:LineExtensionAmount"><label for="BT-131">Invoice line net amount</label><input id="BT-131"></fx-control>
+                     <fx-control semantic-type="" ref="cac:OrderLineReference/cbc:LineID"><label for="BT-132">Referenced purchase order line reference</label><input id="BT-132"></fx-control>
+                     <fx-control semantic-type="" ref="cbc:AccountingCost"><label for="BT-133">Invoice line Buyer accounting reference</label><input id="BT-133"></fx-control>
+                     <fx-group ref="cac:InvoiceLine">
+                        <header>INVOICE LINE PERIOD</header>
+                        <fx-control semantic-type="" ref="cbc:StartDate"><label for="BT-134">Invoice line period start date</label><input id="BT-134"></fx-control>
+                        <fx-control semantic-type="" ref="cbc:EndDate"><label for="BT-135">Invoice line period end date</label><input id="BT-135"></fx-control>
+                     </fx-group>
+                     <fx-group ref="cac:InvoiceLine">
+                        <header>INVOICE LINE ALLOWANCES</header>
+                        <fx-control semantic-type="" ref="cbc:Amount"><label for="BT-136">Invoice line allowance amount</label><input id="BT-136"></fx-control>
+                        <fx-control semantic-type="" ref="cbc:BaseAmount"><label for="BT-137">Invoice line allowance base amount</label><input id="BT-137"></fx-control>
+                        <fx-control semantic-type="" ref="cbc:MultiplierFactorNumeric"><label for="BT-138">Invoice line allowance percentage</label><input id="BT-138"></fx-control>
+                        <fx-control semantic-type="" ref="cbc:AllowanceChargeReason"><label for="BT-139">Invoice line allowance reason</label><input id="BT-139"></fx-control>
+                        <fx-control semantic-type="" ref="cbc:AllowanceChargeReasonCode"><label for="BT-140">Invoice line allowance reason code</label><input id="BT-140"></fx-control>
+                     </fx-group>
+                     <fx-group ref="cac:InvoiceLine">
+                        <header>INVOICE LINE CHARGES</header>
+                        <fx-control semantic-type="" ref="cbc:Amount"><label for="BT-141">Invoice line charge amount</label><input id="BT-141"></fx-control>
+                        <fx-control semantic-type="" ref="cbc:BaseAmount"><label for="BT-142">Invoice line charge base amount</label><input id="BT-142"></fx-control>
+                        <fx-control semantic-type="" ref="cbc:MultiplierFactorNumeric"><label for="BT-143">Invoice line charge percentage</label><input id="BT-143"></fx-control>
+                        <fx-control semantic-type="" ref="cbc:AllowanceChargeReason"><label for="BT-144">Invoice line charge reason</label><input id="BT-144"></fx-control>
+                        <fx-control semantic-type="" ref="cbc:AllowanceChargeReasonCode"><label for="BT-145">Invoice line charge reason code</label><input id="BT-145"></fx-control>
+                     </fx-group>
+                     <fx-group ref="cac:InvoiceLine">
+                        <header>PRICE DETAILS</header>
+                        <fx-control semantic-type="" ref="cbc:PriceAmount"><label for="BT-146">Item net price</label><input id="BT-146"></fx-control>
+                        <fx-control semantic-type="" ref="cac:AllowanceCharge/cbc:Amount"><label for="BT-147">Item price discount</label><input id="BT-147"></fx-control>
+                        <fx-control semantic-type="" ref="cac:AllowanceCharge/cbc:BaseAmount"><label for="BT-148">Item gross price</label><input id="BT-148"></fx-control>
+                        <fx-control semantic-type="" ref="cbc:BaseQuantity"><label for="BT-149">Item price base quantity</label><input id="BT-149"></fx-control>
+                        <fx-control semantic-type="" ref="cbc:BaseQuantity/@unitCode"><label for="BT-150">Item price base quantity unit of measure code</label><input id="BT-150"></fx-control>
+                     </fx-group>
+                     <fx-group ref="cac:InvoiceLine">
+                        <header>LINE VAT INFORMATION</header>
+                        <fx-control semantic-type="" ref="cbc:ID"><label for="BT-151">Invoiced item VAT category code</label><input id="BT-151"></fx-control>
+                        <fx-control semantic-type="" ref="cbc:Percent"><label for="BT-152">Invoiced item VAT rate</label><input id="BT-152"></fx-control>
+                     </fx-group>
+                     <fx-group ref="cac:InvoiceLine">
+                        <header>ITEM INFORMATION</header>
+                        <fx-control semantic-type="" ref="cbc:Name"><label for="BT-153">Item name</label><input id="BT-153"></fx-control>
+                        <fx-control semantic-type="" ref="cbc:Description"><label for="BT-154">Item description</label><input id="BT-154"></fx-control>
+                        <fx-control semantic-type="" ref="cac:SellersItemIdentification/cbc:ID"><label for="BT-155">Item Sellers identifier</label><input id="BT-155"></fx-control>
+                        <fx-control semantic-type="" ref="cac:BuyersItemIdentification/cbc:ID"><label for="BT-156">Item Buyers identifier</label><input id="BT-156"></fx-control>
+                        <fx-control semantic-type="" ref="cac:StandardItemIdentification/cbc:ID/@schemeID"><label for="BT-157">Item standard identifier</label><input id="BT-157"></fx-control>
+                        <fx-control semantic-type="" ref="cac:CommodityClassification/cbc:ItemClassificationCode/@listID"><label for="BT-158">Item classification identifier</label><input id="BT-158"></fx-control>
+                        <fx-control semantic-type="" ref="cac:OriginCountry/cbc:IdentificationCode"><label for="BT-159">Item country of origin</label><input id="BT-159"></fx-control>
+                        <fx-group ref="cac:InvoiceLine/cac:Item">
+                           <header>ITEM ATTRIBUTES</header>
+                           <fx-control semantic-type="" ref="cbc:Name"><label for="BT-160">Item attribute name</label><input id="BT-160"></fx-control>
+                           <fx-control semantic-type="" ref="cbc:Value"><label for="BT-161">Item attribute value</label><input id="BT-161"></fx-control>
+                        </fx-group>
+                     </fx-group>
+                     <fx-group ref="cac:InvoiceLine">
+                        <header>SUB INVOICE LINE</header>
+                        <fx-control semantic-type="" ref="cac:InvoiceLine/cbc:ID"><label for="BT-126">Invoice line identifier</label><input id="BT-126"></fx-control>
+                        <fx-control semantic-type="" ref="cac:InvoiceLine/cbc:Note"><label for="BT-127">Invoice line note</label><input id="BT-127"></fx-control>
+                        <fx-control semantic-type="" ref="cac:InvoiceLine/cac:DocumentReference/cbc:ID/@schemeID"><label for="BT-128">Invoice line object identifier</label><input id="BT-128"></fx-control>
+                        <fx-control semantic-type="" ref="cac:InvoiceLine/cbc:InvoicedQuantity"><label for="BT-129">Invoiced quantity</label><input id="BT-129"></fx-control>
+                        <fx-control semantic-type="" ref="cac:InvoiceLine/cbc:InvoicedQuantity/@unitCode"><label for="BT-130">Invoiced quantity unit of measure code</label><input id="BT-130"></fx-control>
+                        <fx-control semantic-type="" ref="cac:InvoiceLine/cbc:LineExtensionAmount"><label for="BT-131">Invoice line net amount</label><input id="BT-131"></fx-control>
+                        <fx-control semantic-type="" ref="cac:InvoiceLine/cac:OrderLineReference/cbc:LineID"><label for="BT-132">Referenced purchase order line reference</label><input id="BT-132"></fx-control>
+                        <fx-control semantic-type="" ref="cac:InvoiceLine/cbc:AccountingCost"><label for="BT-133">Invoice line Buyer accounting reference</label><input id="BT-133"></fx-control>
+                        <fx-group>
+                           <header>SUB INVOICE LINE ITEM INFORMATION</header>
+                           <fx-control semantic-type="" ref="cac:InvoiceLine/cac:Item/cbc:Name"><label for="BT-153">Item name</label><input id="BT-153"></fx-control>
+                           <fx-control semantic-type="" ref="cac:InvoiceLine/cac:Item/cbc:Description"><label for="BT-154">Item description</label><input id="BT-154"></fx-control>
+                           <fx-control semantic-type="" ref="cac:InvoiceLine/cac:Item/cac:SellersItemIdentification/cbc:ID"><label for="BT-155">Item Sellers identifier</label><input id="BT-155"></fx-control>
+                           <fx-control semantic-type="" ref="cac:InvoiceLine/cac:Item/cac:BuyersItemIdentification/cbc:ID"><label for="BT-156">Item Buyers identifier</label><input id="BT-156"></fx-control>
+                           <fx-control semantic-type="" ref="cac:InvoiceLine/cac:Item/cac:StandardItemIdentification/cbc:ID/@schemeID"><label for="BT-157">Item standard identifier</label><input id="BT-157"></fx-control>
+                           <fx-control semantic-type="" ref="cac:InvoiceLine/cac:Item/cac:CommodityClassification/cbc:ItemClassificationCode/@listID"><label for="BT-158">Item classification identifier</label><input id="BT-158"></fx-control>
+                           <fx-control semantic-type="" ref="cac:InvoiceLine/cac:Item/cac:OriginCountry/cbc:IdentificationCode"><label for="BT-159">Item country of origin</label><input id="BT-159"></fx-control>
+                           <fx-group>
+                              <header>SUB INVOICE LINE ITEM ATTRIBUTES</header>
+                              <fx-control semantic-type="" ref="cac:InvoiceLine/cac:Item/cac:AdditionalItemProperty/cbc:Name"><label for="BT-160">Item attribute name</label><input id="BT-160"></fx-control>
+                              <fx-control semantic-type="" ref="cac:InvoiceLine/cac:Item/cac:AdditionalItemProperty/cbc:Value"><label for="BT-161">Item attribute value</label><input id="BT-161"></fx-control>
+                           </fx-group>
+                        </fx-group>
+                        <fx-group>
+                           <header>SUB INVOICE LINE ALLOWANCES</header>
+                           <fx-control semantic-type="" ref="cac:InvoiceLine/cac:AllowanceCharge/cbc:Amount"><label for="BT-136">Invoice line allowance amount</label><input id="BT-136"></fx-control>
+                           <fx-control semantic-type="" ref="cac:InvoiceLine/cac:AllowanceCharge/cbc:BaseAmount"><label for="BT-137">Invoice line allowance base amount</label><input id="BT-137"></fx-control>
+                           <fx-control semantic-type="" ref="cac:InvoiceLine/cac:AllowanceCharge/cbc:MultiplierFactorNumeric"><label for="BT-138">Invoice line allowance percentage</label><input id="BT-138"></fx-control>
+                           <fx-control semantic-type="" ref="cac:InvoiceLine/cac:AllowanceCharge/cbc:AllowanceChargeReason"><label for="BT-139">Invoice line allowance reason</label><input id="BT-139"></fx-control>
+                           <fx-control semantic-type="" ref="cac:InvoiceLine/cac:AllowanceCharge/cbc:AllowanceChargeReasonCode"><label for="BT-140">Invoice line allowance reason code</label><input id="BT-140"></fx-control>
+                        </fx-group>
+                        <fx-group>
+                           <header>SUB INVOICE LINE CHARGES</header>
+                           <fx-control semantic-type="" ref="cac:InvoiceLine/cac:AllowanceCharge/cbc:Amount"><label for="BT-141">Invoice line charge amount</label><input id="BT-141"></fx-control>
+                           <fx-control semantic-type="" ref="cac:InvoiceLine/cac:AllowanceCharge/cbc:BaseAmount"><label for="BT-142">Invoice line charge base amount</label><input id="BT-142"></fx-control>
+                           <fx-control semantic-type="" ref="cac:InvoiceLine/cac:AllowanceCharge/cbc:MultiplierFactorNumeric"><label for="BT-143">Invoice line charge percentage</label><input id="BT-143"></fx-control>
+                           <fx-control semantic-type="" ref="cac:InvoiceLine/cac:AllowanceCharge/cbc:AllowanceChargeReason"><label for="BT-144">Invoice line charge reason</label><input id="BT-144"></fx-control>
+                           <fx-control semantic-type="" ref="cac:InvoiceLine/cac:AllowanceCharge/cbc:AllowanceChargeReasonCode"><label for="BT-145">Invoice line charge reason code</label><input id="BT-145"></fx-control>
+                        </fx-group>
+                        <fx-group>
+                           <header>SUB INVOICE LINE PERIOD</header>
+                           <fx-control semantic-type="" ref="cac:InvoiceLine/cac:InvoicePeriod/cbc:StartDate"><label for="BT-134">Invoice line period start date</label><input id="BT-134"></fx-control>
+                           <fx-control semantic-type="" ref="cac:InvoiceLine/cac:InvoicePeriod/cbc:EndDate"><label for="BT-135">Invoice line period end date</label><input id="BT-135"></fx-control>
+                        </fx-group>
+                        <fx-group>
+                           <header>SUB INVOICE LINE VAT INFORMATION</header>
+                           <fx-control semantic-type="" ref="cac:InvoiceLine/cac:Item/cac:ClassifiedTaxCategory/cbc:ID"><label for="BT-151">Invoiced item VAT category code</label><input id="BT-151"></fx-control>
+                           <fx-control semantic-type="" ref="cac:InvoiceLine/cac:Item/cac:ClassifiedTaxCategory/cbc:Percent"><label for="BT-152">Invoiced item VAT rate</label><input id="BT-152"></fx-control>
+                        </fx-group>
+                        <fx-group>
+                           <header>SUB INVOICE LINE PRICE DETAILS</header>
+                           <fx-control semantic-type="" ref="cac:InvoiceLine/cac:Price/cbc:PriceAmount"><label for="BT-146">Item net price</label><input id="BT-146"></fx-control>
+                           <fx-control semantic-type="" ref="cac:InvoiceLine/cac:Price/cac:AllowanceCharge/cbc:Amount"><label for="BT-147">Item price discount</label><input id="BT-147"></fx-control>
+                           <fx-control semantic-type="" ref="cac:InvoiceLine/cac:Price/cac:AllowanceCharge/cbc:BaseAmount"><label for="BT-148">Item gross price</label><input id="BT-148"></fx-control>
+                           <fx-control semantic-type="" ref="cac:InvoiceLine/cac:Price/cbc:BaseQuantity"><label for="BT-149">Item price base quantity</label><input id="BT-149"></fx-control>
+                           <fx-control semantic-type="" ref="cac:InvoiceLine/cac:Price/cbc:BaseQuantity/@unitCode"><label for="BT-150">Item price base quantity unit of measure code</label><input id="BT-150"></fx-control>
+                        </fx-group>
+                        <fx-group>
+                           <header>SUB INVOICE LINE</header>
+                        </fx-group>
+                     </fx-group>
+                  </fx-group>
+                  <fx-group>
+                     <header>THIRD PARTY PAYMENT</header>
+                     <fx-control semantic-type=""><label for="BT-DEX-001">Third party payment type</label><input id="BT-DEX-001"></fx-control>
+                     <fx-control semantic-type=""><label for="BT-DEX-002">Third party payment amount</label><input id="BT-DEX-002"></fx-control>
+                     <fx-control semantic-type=""><label for="BT-DEX-003">Third party payment description</label><input id="BT-DEX-003"></fx-control>
+                  </fx-group>
+               </fx-group>
+
+<!--
+            <fx-group ref=".">
+			  <fx-group ref="cac:InvoiceLine">
+				<fx-control ref="cbc:ID"></fx-control>
+			  </fx-group>
+              <fx-group ref="cac:TaxRepresentativeParty">
+                  <fx-group ref="cac:Party/cac:PostalAddress">
+                     <header>SELLER POSTAL ADDRESS</header>
+                     <fx-control ref="cbc:StreetName"><label for="BT-35">Seller address line 1</label><input id="BT-35"></fx-control>
+                     <fx-control ref="cbc:AdditionalStreetName"><label for="BT-36">Seller address line 2</label><input id="BT-36"></fx-control>
+                     <fx-control ref="cac:AddressLine/cbc:Line"><label for="BT-162">Seller address line 3</label><input id="BT-162"></fx-control>
+                     <fx-control ref="cbc:CityName"><label for="BT-37">Seller city</label><input id="BT-37"></fx-control>
+                     <fx-control ref="cbc:PostalZone"><label for="BT-38">Seller post code</label><input id="BT-38"></fx-control>
+                     <fx-control ref="cbc:CountrySubentity"><label for="BT-39">Seller country subdivision</label><input id="BT-39"></fx-control>
+                     <fx-control ref="cac:Country/cbc:IdentificationCode"><label for="BT-40">Seller country code</label><input id="BT-40"></fx-control>
+                  </fx-group>
+               </fx-group>
+            </fx-group>
+-->
+         </fx-fore>
+      </main>
+   </body>
+</html>

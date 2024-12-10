@@ -1046,6 +1046,11 @@ export class FxFore extends HTMLElement {
                 // const parentModelItemNode = parentModelItem.node;
                 const ref = control.ref;
                 // const newElement = parentModelItemNode.ownerDocument.createElement(ref);
+                if (parentNodeset.querySelector(`[ref="${ref}"]`)) {
+                    console.log(`Node with ref "${ref}" already exists.`);
+                    continue;
+                }
+
                 const newElement = this._createNodes(ref, parentNodeset);
 
                 // Plonk it in at the start!
@@ -1062,6 +1067,15 @@ export class FxFore extends HTMLElement {
             const ourParent = XPathUtil.getParentBindingElement(control);
             // console.log('ourParent', ourParent);
             let siblingControl = null;
+/*
+            for (let j = i - 1; j >= 0; --j) {
+                const potentialSibling = boundControls[j];
+                if (XPathUtil.getParentBindingElement(potentialSibling) === ourParent) {
+                    siblingControl = potentialSibling;
+                    break; // Exit once the sibling is found
+                }
+            }
+*/
             for (let j = i - 1; j > 0; --j) {
                 const siblingOrDescendant = boundControls[j];
                 if (XPathUtil.getParentBindingElement(siblingOrDescendant) === ourParent) {
@@ -1095,6 +1109,14 @@ export class FxFore extends HTMLElement {
     _createNodes(ref, referenceNode) {
         // console.log('creating', ref)
         // console.log('ownerDoc', referenceNode.ownerDocument);
+/*
+        const existingNode = evaluateXPathToFirstNode(ref, referenceNode, this);
+        if(existingNode){
+            console.log(`Node already exists for ref: ${ref}`);
+            return existingNode;
+        }
+*/
+        console.log(`creating new node for ref: ${ref}`);
         let newElement;
         if (ref.includes('/')) {
             // multi-step ref expressions
