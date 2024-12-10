@@ -298,6 +298,11 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
 
         newItem.nodeset = this.nodeset[position - 1];
         newItem.index = position;
+
+        if (this.getOwnerForm().createNodes) {
+          this.getOwnerForm().initData(newItem);
+        }
+
         // Tell the owner form we might have new template expressions here
         this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh();
       }
@@ -392,6 +397,7 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
       repeatItem.index = index + 1; // 1-based index
 
       this.appendChild(repeatItem);
+      this.getOwnerForm()._initData(repeatItem);
 
       if (repeatItem.index === 1) {
         this.applyIndex(repeatItem);

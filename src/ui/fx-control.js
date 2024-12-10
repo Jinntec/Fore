@@ -37,6 +37,7 @@ export default class FxControl extends XfAbstractControl {
   constructor() {
     super();
     this.inited = false;
+    this.nodeset = null;
     this.attachShadow({ mode: 'open' });
   }
 
@@ -167,7 +168,6 @@ export default class FxControl extends XfAbstractControl {
     }
 
     this.addEventListener('return', e => {
-
       const newNodes = e.detail.nodeset;
       e.stopPropagation();
 
@@ -327,9 +327,9 @@ export default class FxControl extends XfAbstractControl {
     }
 
     // ### value is bound to radio
-    if(this.widget.type === 'radio'){
+    if (this.widget.type === 'radio') {
       const matches = this.querySelector(`input[value=${this.value}]`);
-      if(matches){
+      if (matches) {
         matches.checked = true;
       }
       return;
@@ -346,7 +346,6 @@ export default class FxControl extends XfAbstractControl {
       }
       return;
     }
-
 
     if (this.hasAttribute('as')) {
       const as = this.getAttribute('as');

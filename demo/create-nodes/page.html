@@ -7,7 +7,7 @@
    <link href="../../resources/css/fore.css" rel="stylesheet">
    <link href="../../resources/css/vars.css" rel="stylesheet">
    <link href="../../resources/css/toastify.css" rel="stylesheet">
-   <link href="../../resources/css/default.css" rel="stylesheet"><script type="module">
+   <link href="default.css" rel="stylesheet"><script type="module">
    //import '../src/scripts/fore-dev.js';
    import 'http://localhost:8090/index.js';
 </script></head>
@@ -158,7 +158,8 @@
                <fx-group ref="cac:PaymentMandate">
                   <header>DIRECT DEBIT</header>
                   <fx-control ref="cbc:ID"><label for="BT-89">Mandate reference identifier</label><input id="BT-89"></fx-control>
-                  <fx-control><label for="BT-90">Bank assigned creditor identifier</label><input id="BT-90"></fx-control>
+				  <!-- Why does this not have a ref? -->
+                  <!-- <fx-control><label for="BT-90">Bank assigned creditor identifier</label><input id="BT-90"></fx-control> -->
                   <fx-control ref="cac:PayerFinancialAccount/cbc:ID"><label for="BT-91">Debited account identifier</label><input id="BT-91"></fx-control>
                </fx-group>
             </fx-group>
@@ -184,8 +185,8 @@
                <fx-control ref="cbc:AllowanceTotalAmount"><label for="BT-107">Sum of allowances on document level</label><input id="BT-107"></fx-control>
                <fx-control ref="cbc:ChargeTotalAmount"><label for="BT-108">Sum of charges on document level</label><input id="BT-108"></fx-control>
                <fx-control ref="cbc:TaxExclusiveAmount"><label for="BT-109">Invoice total amount without VAT</label><input id="BT-109"></fx-control>
-               <fx-control><label for="BT-110">Invoice total VAT amount</label><input id="BT-110"></fx-control>
-               <fx-control><label for="BT-111">Invoice total VAT amount in accounting currency</label><input id="BT-111"></fx-control>
+               <!-- <fx-control><label for="BT-110">Invoice total VAT amount</label><input id="BT-110"></fx-control> -->
+               <!-- <fx-control><label for="BT-111">Invoice total VAT amount in accounting currency</label><input id="BT-111"></fx-control> -->
                <fx-control ref="cbc:TaxInclusiveAmount"><label for="BT-112">Invoice total amount with VAT</label><input id="BT-112"></fx-control>
                <fx-control ref="cbc:PrepaidAmount"><label for="BT-113">Paid amount</label><input id="BT-113"></fx-control>
                <fx-control ref="cbc:PayableRoundingAmount"><label for="BT-114">Rounding amount</label><input id="BT-114"></fx-control>

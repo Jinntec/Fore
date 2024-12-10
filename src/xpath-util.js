@@ -19,28 +19,28 @@ export class XPathUtil {
       doc = document.implementation.createDocument(null, null, null); // Create a new XML document if not provided
     }
 
-    let parts = xpath.split('/');
+    const parts = xpath.split('/');
     let rootNode = null;
     let currentNode = null;
 
-    for (let part of parts) {
+    for (const part of parts) {
       if (!part) continue; // Skip empty parts (e.g., leading slashes)
 
       // Handle attributes
       if (part.startsWith('@')) {
-        let attrName = part.slice(1); // Strip '@'
+        const attrName = part.slice(1); // Strip '@'
         if (!currentNode) {
-          throw new Error("Cannot create an attribute without a parent element.");
+          throw new Error('Cannot create an attribute without a parent element.');
         }
-        currentNode.setAttribute(attrName, "");
+        currentNode.setAttribute(attrName, '');
       } else {
         // Handle namespaces if present
-        let [prefix, localName] = part.includes(':') ? part.split(':') : [null, part];
-        let namespace = prefix ? XPathUtil.lookupNamespace(fore, prefix) : null;
+        const [prefix, localName] = part.includes(':') ? part.split(':') : [null, part];
+        const namespace = prefix ? XPathUtil.lookupNamespace(fore, prefix) : null;
 
-        let newElement = namespace
-            ? doc.createElementNS(namespace, part)
-            : doc.createElement(localName);
+        const newElement = namespace
+          ? doc.createElementNS(namespace, part)
+          : doc.createElement(localName);
 
         if (!rootNode) {
           rootNode = newElement; // Set as the root node
@@ -53,7 +53,7 @@ export class XPathUtil {
     }
 
     if (!rootNode) {
-      throw new Error("Invalid XPath; no root element could be created.");
+      throw new Error('Invalid XPath; no root element could be created.');
     }
 
     return rootNode;
@@ -70,11 +70,30 @@ export class XPathUtil {
    * @param prefix
    * @return {string}
    */
-  static lookupNamespace(ownerForm, prefix){
+  static lookupNamespace(ownerForm, prefix) {
     return ownerForm.getAttribute(`xmlns:${prefix}`);
   }
 
+  static querySelectorAll(querySelector, start) {
+    const queue = [start];
+    const found = [];
+    while (queue.length) {
+      const item = queue.shift();
+      for (const child of Array.from(item.children).reverse()) {
+        queue.unshift(child);
+      }
 
+      if (item.matches && item.matches('template')) {
+        queue.unshift(item.content);
+      }
+
+      if (item.matches && item.matches(querySelector)) {
+        found.push(item);
+      }
+    }
+
+    return found;
+  }
 
   /**
    * Alternative to `contains` that respects shadowroots
@@ -149,7 +168,7 @@ export class XPathUtil {
       (start.parentNode.nodeType !== Node.DOCUMENT_NODE ||
         start.parentNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE)
     ) {
-      return start.parentNode.closest('[ref]');
+      return this.getClosest('[ref],fx-repeatitem', start.parentNode);
     }
     return null;
   }
