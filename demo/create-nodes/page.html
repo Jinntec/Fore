@@ -4,16 +4,17 @@
    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport">
    <title></title>
-   <link href="../../resources/css/fore.css" rel="stylesheet">
-   <link href="../../resources/css/vars.css" rel="stylesheet">
-   <link href="../../resources/css/toastify.css" rel="stylesheet">
+   <link href="../../resources/fore.css" rel="stylesheet">
+   <link href="../../resources/vars.css" rel="stylesheet">
+   <link href="../../resources/toastify.css" rel="stylesheet">
    <link href="default.css" rel="stylesheet"><script type="module">
    //import '../src/scripts/fore-dev.js';
    import 'http://localhost:8090/index.js';
 </script></head>
 <body>
 <main>
-   <fx-fore xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" create-nodes="create-nodes" id="fx-invoice">
+   <fx-fore xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+            create-nodes="create-nodes" id="fx-invoice">
       <fx-var name="invoice" value="instance('invoice')"></fx-var>
       <fx-model>
          <fx-instance id="invoice" src="04.03a-INVOICE_ubl.xml"></fx-instance>
