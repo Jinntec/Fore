@@ -41,8 +41,9 @@ export class FxContainer extends ForeElementMixin {
             </style>
             ${html}
     `;
-
-    this.getOwnerForm().registerLazyElement(this);
+    if(this.ref !== ''){
+      this.getOwnerForm().registerLazyElement(this);
+    }
 
     /*
     this.addEventListener('mousedown', e => {

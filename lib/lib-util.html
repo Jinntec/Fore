@@ -1,0 +1,39 @@
+<html>
+<head>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>Fore Util Function library</title>
+    <link href="../../resources/functionlib.css" rel="stylesheet">
+    <style>
+        p{
+            font-size:1.2rem;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Fore Util function library</h1>
+</header>
+<main>
+
+    <p>Returns the answer to the life, the universe and anything</p>
+
+    <p>Writes a string value to localStorage</p>
+    <fx-function
+            signature="set-localstore-value($key as xs:string, $value as xs:string) as xs:string"
+            type="text/javascript">
+        localStorage.setItem($key,$value);
+        return $value;
+    </fx-function>
+
+    <p>Gets a string value from localStorage</p>
+    <fx-function
+            signature="set-localstore-value($key as xs:string) as xs:string"
+            type="text/javascript">
+        const val =  localStorage.getItem($key);
+        return val ? val:'';
+    </fx-function>
+
+
+</main>
+</body>
+</html>

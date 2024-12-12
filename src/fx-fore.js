@@ -11,6 +11,7 @@ import {
 import getInScopeContext from './getInScopeContext.js';
 import { XPathUtil } from './xpath-util.js';
 import { FxRepeatAttributes } from './ui/fx-repeat-attributes.js';
+import { ModelItem } from './modelitem.js';
 
 /**
  * Makes the dirty state of the form.
@@ -49,6 +50,13 @@ export class FxFore extends HTMLElement {
 
   static get properties() {
     return {
+      /**
+       * wether to create nodes that are missing in the loaded data and
+       * auto-create nodes when there's a binding found in the UI.
+       */
+      createNodes: {
+        type: Boolean,
+      },
       /**
        * ignore certain nodes for template expression search
        */
@@ -238,6 +246,7 @@ export class FxFore extends HTMLElement {
       : 'update';
     // this.mergePartial = this.hasAttribute('merge-partial')? true:false;
     this.mergePartial = false;
+    this.createNodes = this.hasAttribute('create-nodes') ? true : false;
   }
 
   connectedCallback() {
@@ -245,23 +254,23 @@ export class FxFore extends HTMLElement {
     console.time('init');
     this.strict = !!this.hasAttribute('strict');
     /*
-        document.addEventListener('ready', (e) =>{
-          if(e.target !== this){
-            // e.preventDefault();
-            console.log('>>> e', e);
-            console.log('event this', this);
-            // console.log('event eventPhase', e.eventPhase);
-            // console.log('event cancelable', e.cancelable);
-            console.log('event target', e.target);
-            console.log('event composed', e.composedPath());
-            console.log('<<< event stopping');
-            e.stopPropagation();
-          }else{
-            console.log('event proceed', this);
-          }
-          // e.stopImmediatePropagation();
-        },true);
-    */
+            document.addEventListener('ready', (e) =>{
+              if(e.target !== this){
+                // e.preventDefault();
+                console.log('>>> e', e);
+                console.log('event this', this);
+                // console.log('event eventPhase', e.eventPhase);
+                // console.log('event cancelable', e.cancelable);
+                console.log('event target', e.target);
+                console.log('event composed', e.composedPath());
+                console.log('<<< event stopping');
+                e.stopPropagation();
+              }else{
+                console.log('event proceed', this);
+              }
+              // e.stopImmediatePropagation();
+            },true);
+        */
     this.ignoreExpressions = this.hasAttribute('ignore-expressions')
       ? this.getAttribute('ignore-expressions')
       : null;
@@ -359,6 +368,11 @@ export class FxFore extends HTMLElement {
       const devtools = document.createElement('fx-devtools');
       document.body.appendChild(devtools);
     }
+    if (urlParams.has('lens')) {
+      const lens = document.createElement('fx-lens');
+      document.body.appendChild(lens);
+      lens.setAttribute('open', 'open');
+    }
   }
 
   /**
@@ -450,12 +464,12 @@ export class FxFore extends HTMLElement {
   disconnectedCallback() {
     this.removeEventListener('dragstart', this.dragstart);
     /*
-        this.removeEventListener('model-construct-done', this._handleModelConstructDone);
-        this.removeEventListener('message', this._displayMessage);
-        this.removeEventListener('error', this._displayError);
-        this.storedTemplateExpressionByNode=null;
-        this.shadowRoot = undefined;
-    */
+            this.removeEventListener('model-construct-done', this._handleModelConstructDone);
+            this.removeEventListener('message', this._displayMessage);
+            this.removeEventListener('error', this._displayError);
+            this.storedTemplateExpressionByNode=null;
+            this.shadowRoot = undefined;
+        */
   }
 
   /**
@@ -490,39 +504,39 @@ export class FxFore extends HTMLElement {
   async refresh(force) {
     /*
 
-                if (!changedPaths) {
-                    changedPaths = this.toRefresh.map(item => item.path);
-                } else {
-                    this.toRefresh.push(
-                        ...changedPaths
-                            .map(
-                                path =>
-                                this.getModel()
-                                    .modelItems
-                                    .find(item => item.path === path)
-                            )
-                            .filter(Boolean)
-                    );
+                    if (!changedPaths) {
+                        changedPaths = this.toRefresh.map(item => item.path);
+                    } else {
+                        this.toRefresh.push(
+                            ...changedPaths
+                                .map(
+                                    path =>
+                                    this.getModel()
+                                        .modelItems
+                                        .find(item => item.path === path)
+                                )
+                                .filter(Boolean)
+                        );
 
-                    for(const changedPath of changedPaths) {
-                        for (const repeat of this.querySelectorAll('fx-repeat')) {
-                            if (repeat.closest('fx-fore') !== this) {
-                                continue;
-                            }
+                        for(const changedPath of changedPaths) {
+                            for (const repeat of this.querySelectorAll('fx-repeat')) {
+                                if (repeat.closest('fx-fore') !== this) {
+                                    continue;
+                                }
 
-                            if (repeat.touchedPaths && repeat.touchedPaths.has(changedPath)) {
-                                // Make a temporary model-item-like structure for this
-                                this.toRefresh.push({
-                                    path: changedPath,
-                                    boundControls: [repeat]
-                                });
+                                if (repeat.touchedPaths && repeat.touchedPaths.has(changedPath)) {
+                                    // Make a temporary model-item-like structure for this
+                                    this.toRefresh.push({
+                                        path: changedPath,
+                                        boundControls: [repeat]
+                                    });
 
-                                console.log('Found a repeat to update!!!', repeat)
+                                    console.log('Found a repeat to update!!!', repeat)
+                                }
                             }
                         }
-                    }
-		}
-        */
+            }
+            */
     if (this.isRefreshing) {
       return;
     }
@@ -567,18 +581,18 @@ export class FxFore extends HTMLElement {
       });
       this.toRefresh = [];
       /*
-            if (!needsRefresh) {
-                console.log('no dependants to refresh');
-            }
-*/
+                  if (!needsRefresh) {
+                      console.log('no dependants to refresh');
+                  }
+      */
     } else {
       // ### resetting visited state for controls to refresh
       /*
-            const visited = this.parentNode.querySelectorAll('.visited');
-            Array.from(visited).forEach(v =>{
-                v.classList.remove('visited');
-            });
-*/
+                  const visited = this.parentNode.querySelectorAll('.visited');
+                  Array.from(visited).forEach(v =>{
+                      v.classList.remove('visited');
+                  });
+      */
 
       if (this.inited) {
         Fore.refreshChildren(this, force);
@@ -598,7 +612,11 @@ export class FxFore extends HTMLElement {
     // this.dispatchEvent(new CustomEvent('refresh-done'));
     // this.initialRun = false;
     this.style.visibility = 'visible';
-    console.log(`### <<<<< refresh-done ${this.id} >>>>>`);
+    console.info(
+      `%crefresh-done on #${this.id}`,
+      'background:darkorange; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+    );
+
     Fore.dispatch(this, 'refresh-done', {});
 
     // this.isRefreshing = true;
@@ -606,20 +624,20 @@ export class FxFore extends HTMLElement {
 
     const subFores = Array.from(this.querySelectorAll('fx-fore'));
     /*
-        calling the parent to refresh causes errors and inconsistent state. Also it is questionable
-        if a child should actually interact with its parent in this way.
+            calling the parent to refresh causes errors and inconsistent state. Also it is questionable
+            if a child should actually interact with its parent in this way.
 
-        This only affects the refreshing NOT the data mutation itself which is happening as expected.
+            This only affects the refreshing NOT the data mutation itself which is happening as expected.
 
-        Current solution is that a child that wants the parent to refresh must do so by adding an additional
-        event handler that dispatches an event upwards and having a handler in the parent to refresh itself.
+            Current solution is that a child that wants the parent to refresh must do so by adding an additional
+            event handler that dispatches an event upwards and having a handler in the parent to refresh itself.
 
-        So refreshed propagate downwards but not upwards which is at least an option to consider.
+            So refreshed propagate downwards but not upwards which is at least an option to consider.
 
-        if(this.parentNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE){
-            // await this.parentNode.closest('fx-fore')?.refresh(false);
-        }
-*/
+            if(this.parentNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE){
+                // await this.parentNode.closest('fx-fore')?.refresh(false);
+            }
+    */
     for (const subFore of subFores) {
       // subFore.refresh(false, changedPaths);
       if (subFore.ready) {
@@ -651,8 +669,8 @@ export class FxFore extends HTMLElement {
     // console.log('######### storedTemplateExpressions', this.storedTemplateExpressions.length);
 
     /*
-            storing expressions and their nodes for re-evaluation
-             */
+                storing expressions and their nodes for re-evaluation
+                 */
     Array.from(tmplExpressions).forEach(node => {
       const ele = node.nodeType === Node.ATTRIBUTE_NODE ? node.ownerElement : node.parentNode;
       if (ele.closest('fx-fore') !== this) {
@@ -891,43 +909,43 @@ export class FxFore extends HTMLElement {
   }
 
   /*
-          _createStep(){
+            _createStep(){
 
-          }
-        */
+            }
+          */
 
   /*
-          _generateInstance(start, parent) {
-            if (start.hasAttribute('ref')) {
-              const ref = start.getAttribute('ref');
+            _generateInstance(start, parent) {
+              if (start.hasAttribute('ref')) {
+                const ref = start.getAttribute('ref');
 
-              if(ref.includes('/')){
-                console.log('complex path to create ', ref);
-                const steps = ref.split('/');
-                steps.forEach(step => {
-                  console.log('step ', step);
+                if(ref.includes('/')){
+                  console.log('complex path to create ', ref);
+                  const steps = ref.split('/');
+                  steps.forEach(step => {
+                    console.log('step ', step);
 
-                });
+                  });
+                }
+
+                // const generated = document.createElement(ref);
+                const generated = parent.ownerDocument.createElement(ref);
+                if (start.children.length === 0) {
+                  generated.textContent = start.textContent;
+                }
+                parent.appendChild(generated);
+                parent = generated;
               }
 
-              // const generated = document.createElement(ref);
-              const generated = parent.ownerDocument.createElement(ref);
-              if (start.children.length === 0) {
-                generated.textContent = start.textContent;
+              if (start.hasChildNodes()) {
+                const list = start.children;
+                for (let i = 0; i < list.length; i += 1) {
+                  this._generateInstance(list[i], parent);
+                }
               }
-              parent.appendChild(generated);
-              parent = generated;
+              return parent;
             }
-
-            if (start.hasChildNodes()) {
-              const list = start.children;
-              for (let i = 0; i < list.length; i += 1) {
-                this._generateInstance(list[i], parent);
-              }
-            }
-            return parent;
-          }
-        */
+          */
 
   /**
    * Start the initialization of the UI by
@@ -941,22 +959,29 @@ export class FxFore extends HTMLElement {
    */
   async _initUI() {
     // console.log('### _initUI()');
-    console.log(`### <<<<< _initUI '${this.id}' >>>>>`);
+    console.info(
+      `%cinitUI #${this.id}`,
+      'background:lightblue; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+    );
 
     if (!this.initialRun) return;
     this.classList.add('initialRun');
     await this._lazyCreateInstance();
 
     /*
-        const options = {
-          root: null,
-          rootMargin: '0px',
-          threshold: 0.3,
-        };
-    */
+            const options = {
+              root: null,
+              rootMargin: '0px',
+              threshold: 0.3,
+            };
+        */
 
     // First refresh should be forced
+    if (this.createNodes) {
+      this.initData();
+    }
     await this.refresh(true);
+
     // this.style.display='block'
     this.classList.add('fx-ready');
     document.body.classList.add('fx-ready');
@@ -964,7 +989,12 @@ export class FxFore extends HTMLElement {
     this.ready = true;
     this.initialRun = false;
     // console.log('### >>>>> dispatching ready >>>>>', this);
-    console.log(`### <<<<< ${this.id} ready >>>>>`);
+    console.info(
+      `%c #${this.id} is ready`,
+      'background:lightblue; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+    );
+
+    // console.log(`### <<<<< ${this.id} ready >>>>>`);
 
     // console.log('### modelItems: ', this.getModel().modelItems);
     Fore.dispatch(this, 'ready', {});
@@ -980,6 +1010,133 @@ export class FxFore extends HTMLElement {
       e.stopPropagation();
       e.dataTransfer.dropEffect = 'move';
     });
+  }
+
+  /**
+   * @param  {HTMLElement}  root The root of the data initialization. fx-repeat overrides this when it makes new repeat items
+   *
+   */
+  initData(root = this) {
+    // const created = new Promise(resolve => {
+    console.log('INIT');
+    const boundControls = Array.from(root.querySelectorAll('[ref]:not(fx-model *),fx-repeatitem'));
+    if (root.matches('fx-repeatitem')) {
+      boundControls.unshift(root);
+    }
+    // console.log('_initD', boundControls);
+    for (let i = 0; i < boundControls.length; i++) {
+      const control = boundControls[i];
+      if (!control.matches('fx-repeatitem')) {
+        // Repeat items are dumb. They do not respond to evalInContext
+        control.evalInContext();
+      }
+      let ownerDoc;
+      if (control.nodeset !== null) {
+        // console.log('Node exists', control.nodeset);
+        continue;
+      }
+      // console.log('Node does not exists', control.ref);
+
+      // We need to create that node!
+      const previousControl = boundControls[i - 1];
+
+      // Previous control can either be an ancestor of us, or a previous node, which can be a sibling, or a child of a sibling.
+      // First: parent
+      if (previousControl.contains(control)) {
+        // Parent is here.
+        // console.log('insert into', control,previousControl);
+        // console.log('insert into nodeset', control.nodeset);
+        const parentNodeset = previousControl.nodeset;
+        // console.log('parentNodeset', parentNodeset);
+
+        // const parentModelItemNode = parentModelItem.node;
+        const ref = control.ref;
+        // const newElement = parentModelItemNode.ownerDocument.createElement(ref);
+        if (parentNodeset.querySelector(`[ref="${ref}"]`)) {
+          console.log(`Node with ref "${ref}" already exists.`);
+          continue;
+        }
+
+        const newElement = this._createNodes(ref, parentNodeset);
+
+        // Plonk it in at the start!
+        parentNodeset.insertBefore(newElement, parentNodeset.firstChild);
+        control.evalInContext();
+        console.log('CREATED child', newElement);
+        // console.log('new control evaluated to ', control.nodeset);
+        // Done!
+        continue;
+      }
+      // console.log('previousControl', previousControl);
+      // console.log('control', control);
+      // Is previousControl a sibling or a descendant of a logical sibling? Keep looking backwards until we share parents!
+      const ourParent = XPathUtil.getParentBindingElement(control);
+      // console.log('ourParent', ourParent);
+      let siblingControl = null;
+      /*
+            for (let j = i - 1; j >= 0; --j) {
+                const potentialSibling = boundControls[j];
+                if (XPathUtil.getParentBindingElement(potentialSibling) === ourParent) {
+                    siblingControl = potentialSibling;
+                    break; // Exit once the sibling is found
+                }
+            }
+*/
+      for (let j = i - 1; j > 0; --j) {
+        const siblingOrDescendant = boundControls[j];
+        if (XPathUtil.getParentBindingElement(siblingOrDescendant) === ourParent) {
+          siblingControl = siblingOrDescendant;
+          break;
+        }
+      }
+      if (!siblingControl) {
+        throw new Error('Unexpected! there must be a sibling right?');
+      }
+      // console.log('sibling', siblingControl);
+      const parentNodeset = ourParent.nodeset;
+      const ref = control.ref;
+      let referenceNodeset = siblingControl.nodeset;
+      const newElement = this._createNodes(ref, parentNodeset);
+
+      // We know which node to insert this new element to, but it might be a descendant of a child of the actual parent. Walk up until we have a reference under our parent
+      while (referenceNodeset?.parentNode && referenceNodeset?.parentNode !== parentNodeset) {
+        referenceNodeset = referenceNodeset.parentNode;
+      }
+
+      // Insert before the next sibling our our logical previous sibling
+      parentNodeset.insertBefore(newElement, referenceNodeset.nextElementSibling);
+      /*
+            console.log('control inscope', control.getInScopeContext());
+            console.log('control ref', control.ref);
+            console.log('control new element parent', newElement.parentNode.nodeName);
+*/
+      control.evalInContext();
+      // console.log('new control evaluated to ', control.nodeset);
+      console.log('CREATED sibling', newElement);
+    }
+    // console.log('DATA', this.getModel().getDefaultContext());
+  }
+
+  _createNodes(ref, referenceNode) {
+    // console.log('creating', ref)
+    // console.log('ownerDoc', referenceNode.ownerDocument);
+    /*
+        const existingNode = evaluateXPathToFirstNode(ref, referenceNode, this);
+        if(existingNode){
+            console.log(`Node already exists for ref: ${ref}`);
+            return existingNode;
+        }
+*/
+    console.log(`creating new node for ref: ${ref}`);
+    let newElement;
+    if (ref.includes('/')) {
+      // multi-step ref expressions
+      newElement = XPathUtil.createElementFromXPath(ref, referenceNode.ownerDocument, this);
+      // console.log('new subtree', newElement);
+      return newElement;
+    } else {
+      return XPathUtil.createElementFromXPath(ref, referenceNode.ownerDocument, this);
+    }
   }
 
   _handleDragStart(event) {
@@ -1107,18 +1264,18 @@ export class FxFore extends HTMLElement {
       Array.from(repeats).forEach(item => {
         if (item.closest('fx-control')) return;
         /*
-                const parentRepeat = item.closest('fx-repeat');
-                if(parentRepeat){
-                    this.dispatchEvent(
-                        new CustomEvent('log', {
-                            composed: false,
-                            bubbles: true,
-                            cancelable:true,
-                            detail: { id:this.id, message: `nesting elements with data-ref attributes within fx-repeat is not supported by now`, level:'Error'},
-                        }),
-                    );
-                }
-*/
+                        const parentRepeat = item.closest('fx-repeat');
+                        if(parentRepeat){
+                            this.dispatchEvent(
+                                new CustomEvent('log', {
+                                    composed: false,
+                                    bubbles: true,
+                                    cancelable:true,
+                                    detail: { id:this.id, message: `nesting elements with data-ref attributes within fx-repeat is not supported by now`, level:'Error'},
+                                }),
+                            );
+                        }
+        */
 
         const table = item.parentNode.closest('table');
         let host;

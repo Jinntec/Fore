@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Fore extension functions</title>
+
+    <link href="../../resources/demo.css" rel="stylesheet">
+    <script type="module" src="../demo.js"></script>
+</head>
+<body unresolved="unresolved">
+<fore-corner href="../../doc/demos.html" title="Back to Demos"></fore-corner>
+
+<div class="wrapper">
+    <h1>Fore Extension functions</h1>
+    <p>
+    </p>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-model id="model1">
+<!--                    <fx-functionlib src="../../lib/lib-util.html"></fx-functionlib>-->
+                    <fx-instance>
+                        <data>
+                            <local-val></local-val>
+                        </data>
+                    </fx-instance>
+                    <fx-function
+                            signature="setLocalstoreValue($key as xs:string, $value as xs:string) as xs:string"
+                            type="text/javascript">
+                        console.log('setLocalstoreValue',$key,$value);
+                        localStorage.setItem($key,$value);
+                        return $value;
+                    </fx-function>
+
+                    <p>Gets a string value from localStorage</p>
+                    <fx-function
+                            signature="getLocalstoreValue($key as xs:string) as xs:string"
+                            type="text/javascript">
+                        console.log('getLocalstoreValue',$key);
+                        const val =  localStorage.getItem($key);
+                        return val ? val:'';
+                    </fx-function>
+
+                </fx-model>
+                <fx-group>
+                    <h2>set-localstore-value</h2>
+
+                    <fx-control ref="local-val"></fx-control>
+                    <fx-trigger>
+                        <button>setLocalstoreValue('foo',local-val)</button>
+<!--                        <fx-call function="setLocalstoreValue('foo',instance()/local-val)"></fx-call>-->
+                        <fx-setvalue ref="local-val" value="setLocalstoreValue('foo',instance()/local-val)"></fx-setvalue>
+                        <fx-refresh force="force"></fx-refresh>
+                    </fx-trigger>
+
+                    <fx-output value="getLocalstoreValue('foo')">
+                        <label slot="label">local value:</label>
+                    </fx-output>
+                </fx-group>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+
+
+<div class="wrapper">
+    <h1>Reusing function libraries</h1>
+    <p>
+        Making an application with multiple pages or nested Fore elements? No worry, you can reuse the same
+        fx-functionlib without overwriting function definitions. If in confict the XPath engine always uses the first
+        matching <code>fx-function</code> element.
+    </p>
+    <p>
+        In the example below 2 function libaries are used and the second also has an answer to everything
+        but it's ignored.
+    </p>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-model id="model1">
+                    <!-- This is the second import of lib.html.
+                     We already had one for the example above. -->
+                    <fx-functionlib src="lib.html"></fx-functionlib>
+                    <fx-functionlib src="lib2.html"></fx-functionlib>
+                </fx-model>
+                <fx-group>
+                    <h2>The answer to everything</h2>
+                    <p>And the answer is {theanswer()}</p>
+                    <h2>XPath function</h2>
+                    <p>{hello('from XPath function')}</p>
+                    <h2>Timestamp function from another lib</h2>
+                    <p>{now()}</p>
+                </fx-group>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+<script type="module" src="../demo.js"></script>
+</body>
+</html>

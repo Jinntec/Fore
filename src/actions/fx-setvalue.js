@@ -92,13 +92,17 @@ export default class FxSetvalue extends AbstractAction {
 
       if (newVal?.nodeType) {
         if (newVal.nodeType === Node.ELEMENT_NODE) {
-          item.value = newVal.textContent;
+          item.value = newVal;
         }
         if (newVal.nodeType === Node.ATTRIBUTE_NODE) {
           item.value = newVal.getValue();
         }
+        if(newVal.nodeType === Node.TEXT_NODE){
+          item.value = newVal.textContent;
+        }
       } else {
         item.value = newVal;
+        item.node.textContent = newVal;
       }
       this.getModel().changed.push(modelItem);
       this.needsUpdate = true;

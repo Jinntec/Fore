@@ -48,7 +48,7 @@ function _getInitialContext(node, ref) {
   }
 
   if (XPathUtil.isAbsolutePath(ref)) {
-    const instanceId = XPathUtil.getInstanceId(ref);
+    const instanceId = XPathUtil.getInstanceId(ref, node);
     if (instanceId) {
       return model.getInstance(instanceId).getDefaultContext();
     }

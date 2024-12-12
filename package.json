@@ -1,6 +1,6 @@
 {
   "name": "@jinntec/fore",
-  "version": "2.4.2",
+  "version": "2.5.0",
   "description": "Fore - declarative user interfaces in plain HTML",
   "module": "./index.js",
   "publishConfig": {
@@ -49,7 +49,7 @@
     "@skypack/package-check": "^0.2.2",
     "@types/cypress": "^1.1.3",
     "@webcomponents/webcomponentsjs": "^2.6.0",
-    "cypress": "^13.3.0",
+    "cypress": "^13.16.0",
     "deepmerge": "^4.2.2",
     "es-dev-server": "^2.1.0",
     "eslint": "^8.16.0",
