@@ -83,7 +83,6 @@ export class FxSubmission extends ForeElementMixin {
   }
 
   async _submit() {
-    console.log('submitting....', this.getAttribute('id'));
     console.info(
         `%csubmitting #${this.id}`,
         'background:yellow; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
@@ -265,10 +264,12 @@ export class FxSubmission extends ForeElementMixin {
       // this.dispatch('submit-done', {});
       // console.log(`### <<<<< ${this.id} submit-done >>>>>`);
       Fore.dispatch(this, 'submit-done', {});
+/*
       console.info(
           `%csubmit-done #${this.id}`,
           'background:green; color:white; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
       );
+*/
 
     } catch (error) {
       Fore.dispatch(this, 'submit-error', { error: error.message });
@@ -465,12 +466,22 @@ export class FxSubmission extends ForeElementMixin {
       }
       // document.getElementsByTagName('html')[0].innerHTML = data;
     }
-    if (this.replace === 'target' && contentType.startsWith('text/html')) {
+    if (this.replace === 'target') {
       // const target = this.getAttribute('target');
       const target = this._getProperty('target');
       const targetNode = document.querySelector(target);
       if (targetNode) {
-        targetNode.innerHTML = data;
+
+        if(contentType.startsWith('text/html')){
+          targetNode.innerHTML = data;
+        }
+        if(this.responseMediatype.startsWith('image/svg')){
+          const parser = new DOMParser();
+          const svgDoc = parser.parseFromString(data, 'image/svg+xml');
+
+          const objectURL = URL.createObjectURL(data);
+          targetNode.src = objectURL;
+        }
       } else {
         Fore.dispatch(this, 'submit-error', {
           message: `targetNode for selector ${target} not found`,

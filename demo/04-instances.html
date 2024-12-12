@@ -28,7 +28,7 @@
 
     <demo-snippet>
         <template>
-            <fx-fore>
+            <fx-fore id="demo1">
                 <fx-model>
                     <fx-instance src="instance1.xml"></fx-instance>
                 </fx-model>
@@ -42,7 +42,7 @@
     <p>Just note the syntax to access JSON values. XPath 3.1 notation is used to query the JSON.</p>
     <demo-snippet>
         <template>
-            <fx-fore>
+            <fx-fore id="demo2">
                 <fx-model>
                     <fx-instance src="automobiles.json" type="json"></fx-instance>
                 </fx-model>
@@ -57,7 +57,7 @@
     <h2>Using the queryString</h2>
     <demo-snippet>
         <template>
-            <fx-fore>
+            <fx-fore id="demo3">
                 <fx-model>
                     <fx-instance src="#querystring"></fx-instance>
                 </fx-model>
@@ -76,7 +76,7 @@
     </p>
 
 </div>
-
+<fx-lens open></fx-lens>
 
 <script type="module" src="./demo.js"></script>
 </body>

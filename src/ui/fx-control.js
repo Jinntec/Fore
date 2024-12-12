@@ -37,6 +37,7 @@ export default class FxControl extends XfAbstractControl {
   constructor() {
     super();
     this.inited = false;
+    this.nodeset = null;
     this.attachShadow({ mode: 'open' });
   }
 
@@ -167,28 +168,7 @@ export default class FxControl extends XfAbstractControl {
     }
 
     this.addEventListener('return', e => {
-      // console.log('catched return action on ', this);
-      // console.log('return detail', e.detail);
-
-      // console.log('return triggered on ', this);
-      // console.log('this.ref', this.ref);
-      // console.log('current outer instance', this.getInstance());
-
-      /*
-                  console.log(
-                    '???? why ???? current nodeset should point to the node of the outer control',
-                    e.currentTarget.nodeset,
-                  );
-                  console.log(
-                    '???? why ???? current nodeset should point to the node of the outer control',
-                    this.nodeset,
-                  );
-            */
       const newNodes = e.detail.nodeset;
-      // console.log('new nodeset', newNodes);
-      // console.log('currentTarget', e.currentTarget);
-      // console.log('target', e.target);
-
       e.stopPropagation();
 
       this._replaceNode(newNodes);
@@ -347,9 +327,9 @@ export default class FxControl extends XfAbstractControl {
     }
 
     // ### value is bound to radio
-    if(this.widget.type === 'radio'){
+    if (this.widget.type === 'radio') {
       const matches = this.querySelector(`input[value=${this.value}]`);
-      if(matches){
+      if (matches) {
         matches.checked = true;
       }
       return;
@@ -366,7 +346,6 @@ export default class FxControl extends XfAbstractControl {
       }
       return;
     }
-
 
     if (this.hasAttribute('as')) {
       const as = this.getAttribute('as');

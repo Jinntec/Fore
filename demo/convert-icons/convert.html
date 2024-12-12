@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, task-scalable=yes" name="viewport"/>
+    <title>My Work</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+    <link href="mywork.css" rel="stylesheet">
+    <link href="../../resources/icons.css" rel="stylesheet">
+    <style>
+        textarea{
+            width:90vw;
+            height:50vh;
+        }
+        .icon{
+            display:inline-block;
+            color:black;
+            stroke:black;
+            fill:black;
+        }
+    </style>
+</head>
+<body>
+<fx-fore>
+
+    <fx-model>
+        <fx-instance id="default" src="icons.xml">
+        </fx-instance>
+        <fx-instance id="result">
+            <data>
+                <css></css>
+            </data>
+        </fx-instance>
+        <fx-function signature="convert($input as element()) as xs:string" type="text/javascript">
+            const serializer = new XMLSerializer();
+            let result = '';
+            const gs = $input.querySelectorAll('g');
+            Array.from(gs).forEach(g => {
+                // Wrap the <g> content in an <svg> element and set attributes
+                const id = g.getAttribute('id');
+
+                const svgElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                svgElement.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+                svgElement.setAttribute("viewBox", "0 0 24 24");
+
+                const gClone = document.importNode(g,true);
+                svgElement.append(gClone);
+
+
+
+                const svgString = serializer.serializeToString(svgElement);
+                console.log('svgString', svgString);
+                // Encode the SVG to make it URL-safe
+                const encodedSvg = svgString;
+            console.log('encodedSvg', encodedSvg);
+
+            // Generate the CSS rule
+                const cssRule = `
+                    .icon-${id} {
+                    width: 24px;
+                    height: 24px;
+                    display:inline-block;
+                    background-image: url('data:image/svg+xml;utf8,${encodedSvg}');
+                    background-size: contain;
+                    background-repeat: no-repeat;
+                }
+                `;
+
+                result += cssRule;
+            });
+            console.log(result);
+            return result;
+        </fx-function>
+        <fx-setvalue ref="instance('result')/css" value="convert(instance('default')//defs)" event="model-construct-done"></fx-setvalue>
+    </fx-model>
+
+    <h1>icon to css converter</h1>
+<!--    <div class="css-result">{instance('result')/css}</div>-->
+    <fx-repeat ref="instance()//g">
+        <template>
+            <span class="icon icon-{@id}"></span>
+        </template>
+    </fx-repeat>
+</fx-fore>
+<script type="module" src="../demo.js"></script>
+
+</body>
+</html>

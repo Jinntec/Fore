@@ -2,6 +2,100 @@ import * as fx from 'fontoxpath';
 
 export class XPathUtil {
   /**
+   * creates DOM Nodes from an XPath locationpath expression. Support namespaced and un-namespaced
+   * nodes.
+   * E.g. 'foo/bar' creates an element 'foo' with an child element 'bar'
+   * 'foo/@bar' creates a 'foo' element with an 'bar' attribute
+   *
+   * supports multiple steps
+   *
+   * @param xpath
+   * @param doc
+   * @param fore
+   * @return {*}
+   */
+  static createElementFromXPath(xpath, doc, fore) {
+    if (!doc) {
+      doc = document.implementation.createDocument(null, null, null); // Create a new XML document if not provided
+    }
+
+    const parts = xpath.split('/');
+    let rootNode = null;
+    let currentNode = null;
+
+    for (const part of parts) {
+      if (!part) continue; // Skip empty parts (e.g., leading slashes)
+
+      // Handle attributes
+      if (part.startsWith('@')) {
+        const attrName = part.slice(1); // Strip '@'
+        if (!currentNode) {
+          throw new Error('Cannot create an attribute without a parent element.');
+        }
+        currentNode.setAttribute(attrName, '');
+      } else {
+        // Handle namespaces if present
+        const [prefix, localName] = part.includes(':') ? part.split(':') : [null, part];
+        const namespace = prefix ? XPathUtil.lookupNamespace(fore, prefix) : null;
+
+        const newElement = namespace
+          ? doc.createElementNS(namespace, part)
+          : doc.createElement(localName);
+
+        if (!rootNode) {
+          rootNode = newElement; // Set as the root node
+        } else {
+          currentNode.appendChild(newElement);
+        }
+
+        currentNode = newElement;
+      }
+    }
+
+    if (!rootNode) {
+      throw new Error('Invalid XPath; no root element could be created.');
+    }
+
+    return rootNode;
+  }
+
+  /**
+   * looks up namespace on ownerForm. Though not strictly in the sense of resolving namespaces in XML, the
+   * fx-fore element is a convenient place to put namespace declarations for 2 reasons:
+   * - this way namespaces are scoped to a Fore element
+   * - as fx-fore is a web component we can add our xmlns attributes as we got no restrictions to attributes
+   *   though strictly speaking they are no xmlns declarations and just serve the purpose of namespace lookup.
+   *
+   * @param boundElement
+   * @param prefix
+   * @return {string}
+   */
+  static lookupNamespace(ownerForm, prefix) {
+    return ownerForm.getAttribute(`xmlns:${prefix}`);
+  }
+
+  static querySelectorAll(querySelector, start) {
+    const queue = [start];
+    const found = [];
+    while (queue.length) {
+      const item = queue.shift();
+      for (const child of Array.from(item.children).reverse()) {
+        queue.unshift(child);
+      }
+
+      if (item.matches && item.matches('template')) {
+        queue.unshift(item.content);
+      }
+
+      if (item.matches && item.matches(querySelector)) {
+        found.push(item);
+      }
+    }
+
+    return found;
+  }
+
+  /**
    * Alternative to `contains` that respects shadowroots
    * @param {Node} ancestor
    * @param {Node} descendant
@@ -74,7 +168,7 @@ export class XPathUtil {
       (start.parentNode.nodeType !== Node.DOCUMENT_NODE ||
         start.parentNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE)
     ) {
-      return start.parentNode.closest('[ref]');
+      return this.getClosest('[ref],fx-repeatitem', start.parentNode);
     }
     return null;
   }
@@ -87,7 +181,9 @@ export class XPathUtil {
    * path, otherwise <code>false</code>.
    */
   static isAbsolutePath(path) {
-    return path != null && (path.startsWith('/') || path.startsWith('instance('));
+    return (
+      path != null && (path.startsWith('/') || path.startsWith('instance(') || path.startsWith('$'))
+    );
   }
 
   /**
@@ -104,9 +200,10 @@ export class XPathUtil {
    *
    * Otherwise instance id is extracted from function and returned. If all fails null is returned.
    * @param {string} ref
+   * @param {HTMLElement}  boundElement  The element related to this ref. Used to resolve variables
    * @returns {string}
    */
-  static getInstanceId(ref) {
+  static getInstanceId(ref, boundElement) {
     if (!ref) {
       return 'default';
     }
@@ -117,6 +214,23 @@ export class XPathUtil {
       const result = ref.substring(ref.indexOf('(') + 1);
       return result.substring(1, result.indexOf(')') - 1);
     }
+    if (ref.startsWith('$')) {
+      // this variable might actually point to an instance
+      const variableName = ref.match(/\$(?<variableName>[a-zA-Z0-9\-\_]+).*/)?.groups?.variableName;
+      let closestActualFormElement = boundElement;
+      while (closestActualFormElement && !('inScopeVariables' in closestActualFormElement)) {
+        closestActualFormElement =
+          closestActualFormElement.nodeType === Node.ATTRIBUTE_NODE
+            ? closestActualFormElement.ownerElement
+            : closestActualFormElement.parentNode;
+      }
+
+      const correspondingVariable = closestActualFormElement?.inScopeVariables?.get(variableName);
+      if (!correspondingVariable) {
+        return null;
+      }
+      return this.getInstanceId(correspondingVariable.valueQuery, correspondingVariable);
+    }
     return null;
   }
 
@@ -126,9 +240,9 @@ export class XPathUtil {
    * @returns {string}
    */
   static resolveInstance(boundElement, path) {
-    let instanceId = XPathUtil.getInstanceId(path);
+    let instanceId = XPathUtil.getInstanceId(path, boundElement);
     if (!instanceId) {
-      instanceId = XPathUtil.getInstanceId(boundElement.getAttribute('ref'));
+      instanceId = XPathUtil.getInstanceId(boundElement.getAttribute('ref'), boundElement);
     }
     if (instanceId !== null) {
       return instanceId;
