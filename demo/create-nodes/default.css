@@ -1,4 +1,4 @@
-input {
+input, select, textarea {
     width: 100%;
 }
 label{
@@ -6,7 +6,7 @@ label{
 }
 
 fx-control{
-    display: inline-block;
+    display: block;
     width: 20rem;
     padding: 0.5rem;
 }
@@ -15,4 +15,26 @@ fx-group{
     padding: 0.5rem;
     margin:0.5rem;
     border:thin solid lightgrey;
+}
+body{
+    width: 74rem;
+    margin:0 auto;
+
+}
+
+fx-fore > fx-group{
+    display: flex;
+    flex-wrap:wrap;
+}
+fx-group[relevant]   fx-group,
+fx-repeatitem[relevant]{
+    display: flex;
+    flex-wrap: wrap;
+}
+fx-group fx-group > fx-contro{
+    width: 30%;
+}
+header{
+    display: block;
+    width: 100%;
 }
