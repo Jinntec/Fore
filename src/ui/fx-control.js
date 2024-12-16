@@ -609,22 +609,27 @@ export default class FxControl extends XfAbstractControl {
   updateEntry(newEntry, node) {
     // ### >>> todo: needs rework this code is heavily assuming a select control with 'value' attribute - not generic at all yet.
 
-    // if (this.widget.nodeName !== 'SELECT') return;
-    const valueAttribute = this._getValueAttribute(newEntry);
+    const valueAttribute = newEntry.getAttribute('value');
     if (!valueAttribute) {
       // Fore.dispatch(this,'warn',{message:'no value attribute specified for template entry.'});
       return;
     }
 
-    const valueExpr = valueAttribute.value;
+    const valueExpr = valueAttribute;
     const cutted = valueExpr.substring(1, valueExpr.length - 1);
     const evaluated = evaluateXPathToString(cutted, node, newEntry);
-    valueAttribute.value = evaluated;
+    newEntry.setAttribute('value',evaluated);
 
     if (this.value === evaluated) {
       newEntry.setAttribute('selected', 'selected');
     }
 
+    if(newEntry.hasAttribute('title')){
+      let titleExpr = newEntry.getAttribute('title');
+      titleExpr = titleExpr.substring(1,titleExpr.length -1);
+      const evaluated = evaluateXPathToString(titleExpr, node, newEntry);
+      newEntry.setAttribute('title', evaluated);
+    }
     // ### set label
     const optionLabel = newEntry.textContent;
     this.evalLabel(optionLabel, node, newEntry);
