@@ -3,6 +3,7 @@ import '../fx-model.js';
 import { AbstractAction } from './abstract-action.js';
 import { evaluateXPath } from '../xpath-evaluation.js';
 import { Fore } from '../fore.js';
+import getInScopeContext from "../getInScopeContext";
 
 /**
  * `fx-setvalue`
@@ -45,7 +46,8 @@ export default class FxSetvalue extends AbstractAction {
     super.perform();
     let { value } = this;
     if (this.valueAttr !== null) {
-      [value] = evaluateXPath(this.valueAttr, this.nodeset, this, this.detail);
+      const inscopeContext = getInScopeContext(this, this.valueAttr);
+      [value] = evaluateXPath(this.valueAttr, inscopeContext, this, this.detail);
     } else if (this.textContent !== '') {
       value = this.textContent;
     } else {
