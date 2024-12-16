@@ -1,0 +1,1664 @@
+<?xml-stylesheet type="text/css" href="style/style.css"?><!--Upgraded with script --><group xmlns:dt="datatype-mapping"
+                                                                                            xmlns:func="generator-functions"
+                                                                                            xmlns:rsm="foo"
+                                                                                            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                                                                            terms="203"
+                                                                                            name="XRechnung">INVOICEsemanticDas semantische Datenmodell beschreibt eine Baumstruktur bestehend aus geschachtelten
+   Informationselementen. Das Wurzelelement dieser Baumstruktur wird im Standard
+   XRechnung als „INVOICE“ bezeichnet. Es stellt selbst kein Informationselement dar, besitzt
+   somit beispielsweise wie sein Pendant aus der EN 16931-1 keine eigene Kennung, wurde
+   jedoch als Hilfsmittel eingeführt, um in seinem Kontext die obersten Informationselemente der
+   Rechnung beschreiben zu können.
+   <control id="BT-1"
+            label="Invoice number"
+            type="text"
+            datatype="identifier"
+            ref="cbc:ID">
+      <div class="description">
+         <p>Eine eindeutige Kennung der Rechnung, die diese im System des Verkäufers
+            identifiziert.</p>
+         <p>Anmerkung: Es ist kein identification scheme zu verwenden.</p>
+      </div>
+   </control>
+   <control id="BT-2"
+            label="Invoice issue date"
+            type="date"
+            datatype="en16931-date"
+            ref="cbc:IssueDate">
+      <div class="description"/>
+   </control>
+   <control id="BT-3"
+            label="Invoice type code"
+            type="select"
+            datatype="code"
+            ref="cbc:InvoiceTypeCode"
+            codelistId="untdid-1001">
+      <div class="description">
+         <p>Ein Code, der den Funktionstyp der Rechnung angibt.</p>
+         <p>Anmerkung: Der Rechnungstyp
+            muss gemäß UNTDID 1001, spezifiziert werden.</p>
+         <p>Folgende Codes aus der Codeliste sollen
+            verwendet werden:</p>
+         <ul>
+            326  (Partial invoice)
+            380 (Commercial invoice)
+            384  (Corrected invoice)
+            389  (Self-billed invoice)
+            381  (Credit note)
+            875  (Partial construction invoice)
+            876  (Partial final construction invoice)
+            877  (Final construction invoice)
+         </ul>
+      </div>
+   </control>
+   <control id="BT-5"
+            label="Invoice currency code"
+            type="select"
+            datatype="code"
+            ref="cbc:DocumentCurrencyCode"
+            codelistId="iso-4217">
+      <div class="description">
+         <p>Die Währung, in der alle Rechnungsbeträge angegeben werden, ausgenommen ist der
+            Umsatzsteuer-Gesamtbetrag, der in der Abrechnungswährung anzugeben ist.</p>
+         <p>Anmerkung: Nur eine
+            Währung ist in der Rechnung zu verwenden, der BT-111 ist in der Abrechnungswährung auszuweisen. Die gültigen Währungen sind
+            bei der ISO 4217 Codes for the representation of currencies and funds registriert. Nur die
+            Alpha-3-Darstellung darf verwendet werden.</p>
+      </div>
+   </control>
+   <control id="BT-6"
+            label="VAT accounting currency code"
+            type="select"
+            datatype="code"
+            ref="cbc:TaxCurrencyCode"
+            codelistId="iso-4217">
+      <div class="description">
+         <p>Die für die Umsatzsteuer-Abrechnungs- und -Meldezwecke verwendete Währung, die
+            im Land des Verkäufers gültig ist oder verlangt wird.</p>
+         <p>Anmerkung: Zu Verwenden in Kombination
+            mit BT-111, wenn die
+            Umsatzsteuerabrechnungswährung von der Rechnungswährung abweicht. Die gültigen Währungen
+            sind bei der ISO 4217 Codes for the representation of currencies and funds registriert.
+            Nur die Alpha-3-Darstellung darf verwendet werden.</p>
+      </div>
+   </control>
+   <control id="BT-7"
+            label="Value added tax point date"
+            type="date"
+            datatype="en16931-date"
+            ref="cbc:TaxPointDate">
+      <div class="description">
+         <p>Das Datum, zu dem die Umsatzsteuer für den Verkäufer und für den Erwerber
+            abrechnungsrelevant wird.</p>
+         <p>Die Anwendung von BT-7 und BT-8 schließen sich gegenseitig aus.</p>
+      </div>
+   </control>
+   <control id="BT-8"
+            label="Value added tax point date code"
+            type="select"
+            datatype="code"
+            ref="cac:InvoicePeriod/cbc:DescriptionCode"
+            codelistId="untdid-2005">
+      <div class="description">
+         <p>Ein Code für den Zeitpunkt, an dem die Umsatzsteuer für den Erwerber und den
+            Verkäufer in der Buchführung nachzuweisen ist.</p>
+         <p>Folgende Codes aus der Codeliste UNTDID 2005
+            werden verwendet:</p>
+         <ul>
+            3  (Invoice document issue date time)
+            35  (Delivery date/time, actual)
+            432  (Paid to date)
+         </ul>
+         <p>Das Informationselement BT-8 wird verwendet, wenn das Informationselement BT-7 zum Zeitpunkt
+            der Rechnungsstellung noch nicht bekannt ist.</p>
+         <p>Die Anwendung von BT-7 und BT-8 schließen sich
+            gegenseitig aus.</p>
+      </div>
+   </control>
+   <control id="BT-9"
+            label="Payment due date"
+            type="date"
+            datatype="en16931-date"
+            ref="cbc:DueDate">
+      <div class="description">
+         <p>Das Fälligkeitsdatum des Rechnungsbetrages.</p>
+         <p>Anmerkung: Das Fälligkeitsdatum stellt das Fälligkeitsdatum der Nettozahlung dar. Für Teilzahlungen ist dies der Zeitpunkt der ersten Zahlung. Die zugehörige Beschreibung von komplexeren Zahlungsbedingungen kann im Element BT-20 übergeben werden.</p>
+      </div>
+   </control>
+   <control id="BT-10"
+            label="Buyer reference"
+            type="textarea"
+            datatype="text"
+            ref="cbc:BuyerReference">
+      <div class="description">
+         <p>Ein vom Erwerber zugewiesener und für interne Lenkungszwecke benutzter
+            Bezeichner.</p>
+         <p>Anmerkung: Im Rahmen des Steuerungsprojekts eRechnung ist mit der so genannten
+            Leitweg-ID eine Zuordnungsmöglichkeit entwickelt worden, deren verbindliche Nutzung von Bund
+            und mehreren Ländern vorgegeben wird. Die Leitweg-ID ist prinzipiell für Bund, Länder und
+            Kommunen einsetzbar (B2G, G2G). Für die Darstellung der Leitweg-ID wird das in XRechnung verpflichtende
+            Feld Buyer Reference benutzt.</p>
+         <p>Länder und Kommunen, die ihren Rechnungsstellern abweichend
+            von der Leitweg-ID eigene Zuordnungsmuster mitteilen, können diese statt der Leitweg-ID im
+            Feld Buyer Reference verwenden. Soll XRechnung in anderen Bereichen als B2G verwendet werden (bspw. B2B), dann können hier ebenfalls eigene Käuferreferenzen verwendet werden. Die Verwendung einer Leitweg-ID ist dazu nicht notwendig.</p>
+         <p>Hinweis: Es existiert eine Handreichung zur Bildung der
+            Leitweg-ID, die über die KoSIT zu erhalten ist (siehe Website XRechnung bzw.
+            FAQ-Liste).</p>
+      </div>
+   </control>
+   <control id="BT-11"
+            label="Project reference"
+            type="text"
+            datatype="docref"
+            ref="cac:ProjectReference/cbc:ID">
+      <div class="description"/>
+   </control>
+   <control id="BT-12"
+            label="Contract reference"
+            type="text"
+            datatype="docref"
+            ref="cac:ContractDocumentReference/cbc:ID">
+      <div class="description"/>
+   </control>
+   <control id="BT-13"
+            label="Purchase order reference"
+            type="text"
+            datatype="docref"
+            ref="cac:OrderReference/cbc:ID">
+      <div class="description"/>
+   </control>
+   <control id="BT-14"
+            label="Sales order reference"
+            type="text"
+            datatype="docref"
+            ref="cac:OrderReference/cbc:SalesOrderID">
+      <div class="description"/>
+   </control>
+   <control id="BT-15"
+            label="Receiving advice reference"
+            type="text"
+            datatype="docref"
+            ref="cac:ReceiptDocumentReference/cbc:ID">
+      <div class="description"/>
+   </control>
+   <control id="BT-16"
+            label="Despatch advice reference"
+            type="text"
+            datatype="docref"
+            ref="cac:DespatchDocumentReference/cbc:ID">
+      <div class="description"/>
+   </control>
+   <control id="BT-17"
+            label="Tender or lot reference"
+            type="text"
+            datatype="docref"
+            ref="cac:OriginatorDocumentReference/cbc:ID">
+      <div class="description"/>
+   </control>
+   <control id="BT-18"
+            label="Invoiced object identifier"
+            type="text"
+            datatype="bt-18-scheme-id"
+            ref="cac:AdditionalDocumentReference/cbc:ID/@schemeID">
+      <div class="description"/>
+   </control>
+   <control id="BT-19"
+            label="Buyer accounting reference"
+            type="textarea"
+            datatype="text"
+            ref="cbc:AccountingCost">
+      <div class="description"/>
+   </control>
+   <control id="BT-20"
+            label="Payment terms"
+            type="textarea"
+            datatype="text"
+            ref="cac:PaymentTerms/cbc:Note">
+      <div class="description">
+         <p>Eine Textbeschreibung der Zahlungsbedingungen, die für den fälligen
+            Zahlungsbetrag gelten (einschließlich Beschreibung möglicher Skontobedingungen). Dieses Informationselement kann mehrere Zeilen und mehrere Angaben zu
+            Zahlungsbedingungen beinhalten und sowohl unstrukturierten als strukturierten Text
+            enthalten. Der unstrukturierte Text darf dabei keine # enthalten.</p>
+         <p>Werden Informationen zur
+            Gewährung von Skonto angegeben, sind sie wie folgt
+            darzustellen: Anzugeben ist im ersten Segment SKONTO, im zweiten TAGE=n,
+            im dritten PROZENT=n. Prozentzahlen sind ohne Vorzeichen sowie mit Punkt getrennt von zwei
+            Nachkommastellen anzugeben. Liegt dem zu berechnenden Betrag nicht BT-115
+            zugrunde, sondern nur ein Teil des fälligen Betrags der Rechnung, ist der Grundwert zur
+            Berechnung von Skonto als viertes Segment BASISBETRAG=n gemäß dem
+            semantischen Datentypen Amount anzugeben.</p>
+         <p>Jeder Eintrag beginnt mit einer #, die Segmente
+            sind mit einer # getrennt und eine Zeile schließt mit einer # ab. Am Ende einer
+            vollständigen Skontoangabe muss ein XML-konformer Zeilenumbruch folgen.</p>
+         <p>Beispiele mit drei Segmenten je Zeile:</p>
+         <p>#SKONTO#TAGE=14#PROZENT=2.25#</p>
+         <p>#SKONTO#TAGE=28#PROZENT=1.00#</p>
+         <p>Beispiele mit vier Segmenten je Zeile (die Gewährung von
+            Skonto bezieht sich nur auf einen Teilbetrag der Rechnung (z. B. Material) und der Grundwert
+            zur Berechnung des Skonto muss mit angegeben werden):</p>
+         <p>#SKONTO#TAGE=14#PROZENT=2.25#BASISBETRAG=357.93#</p>
+         <p>#SKONTO#TAGE=28#PROZENT=1.00#BASISBETRAG=357.93#</p>
+         <p>Alle Angaben zur Gewährung von Skonto müssen in Großbuchstaben gemacht werden. Zusätzliches
+            Whitespace (Leerzeichen, Tabulatoren oder Zeilenumbrüche) ist nicht zulässig. Andere Zeichen
+            oder Texte als in den oberen Beispielen genannt, sind nicht zulässig.</p>
+      </div>
+   </control>
+   <group id="BG-2" ref="" label="PROCESS CONTROL">
+      <control id="BT-23"
+               label="Business process type"
+               type="textarea"
+               datatype="text"
+               ref="bc:ProfileID">
+         <div class="description">
+            <p>Identifiziert den Kontext des Geschäftsprozesses, in dem die Transaktion
+               erfolgt. Er ermöglicht es dem Erwerber, die Rechnung in angemessener Weise zu verarbeiten.</p>
+            <p>
+               Anmerkung: Die mit diesem Informationselement zu übermittelnde Angabe wird vom Erwerber
+               spezifiziert. Innerhalb des Peppol eDelivery Networks ist PEPPOL-EN16931-R007 ("Business process MUST be in the format 'urn:fdc:peppol.eu:2017:poacc:billing:NN:1.0' where NN indicates the process number.") zu beachten. Wurde keine Vorgabe zur Befüllung des zu übermittelnden Feldes gemacht, kann als Default-Wert urn:fdc:peppol.eu:2017:poacc:billing:01:1.0 übermittelt werden.</p>
+         </div>
+      </control>
+      <control id="BT-24"
+               label="Specification identifier"
+               type="text"
+               datatype="identifier"
+               ref="bc:CustomizationID">
+         <div class="description">
+            <p>Eine Kennung der Spezifikation, die das gesamte Regelwerk zum semantischen
+               Inhalt, zu den Kardinalitäten und den Geschäftsregeln enthält, dem die in der Rechnung
+               enthaltenen Daten entsprechen.</p>
+            <p>Anmerkung: Damit wird die Konformität zum jeweiligen Dokument
+               erklärt. Für den Verweis auf die EU-Norm ist urn:cen.eu:en16931:2017 anzugeben. Rechnungen,
+               die zur CIUS XRechnung konform sind, geben hier
+               urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0 an. Rechnungen,
+               die zur Extension XRechnung konform sind, geben hier
+               urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0#conformant#urn:xeinkauf.de:kosit:extension:xrechnung_3.0
+               an. Es ist kein Schema zu verwenden.</p>
+         </div>
+      </control>
+   </group>
+   <repeat id="BG-3"
+           ref="cac:BillingReference/cac:InvoiceDocumentReference"
+           label="PRECEDING INVOICE REFERENCE">
+      <control id="BT-25"
+               label="Preceding Invoice reference"
+               type="text"
+               datatype="docref"
+               ref="cbc:ID">
+         <div class="description"/>
+      </control>
+      <control id="BT-26"
+               label="Preceding Invoice issue date"
+               type="date"
+               datatype="en16931-date"
+               ref="cbc:IssueDate">
+         <div class="description">
+            <p>Das Datum, zu dem die vorausgegangene Rechnung ausgestellt wurde.</p>
+            <p>Anmerkung:
+               Für den Fall, dass die Nummer der vorausgegangenen Rechnung (Preceding invoice identifier)
+               nicht eindeutig ist, soll das Datum der vorausgegangenen Rechnung BT-26 angegeben werden.</p>
+         </div>
+      </control>
+   </repeat>
+   <group id="BG-4" ref="cac:AccountingSupplierParty" label="SELLER">
+      <control id="BT-27"
+               label="Seller name"
+               type="textarea"
+               datatype="text"
+               ref="cac:Party/cac:PartyLegalEntity/cbc:RegistrationName">
+         <div class="description"/>
+      </control>
+      <control id="BT-28"
+               label="Seller trading name"
+               type="textarea"
+               datatype="text"
+               ref="cac:Party/cac:PartyName/cbc:Name">
+         <div class="description"/>
+      </control>
+      <control id="BT-29"
+               label="Seller identifier"
+               type="text"
+               datatype="scheme-id-bt-29"
+               ref="cac:Party/cac:PartyIdentification/cbc:ID/@schemeID">
+         <div class="description"/>
+      </control>
+      <control id="BT-30"
+               label="Seller legal registration identifier"
+               type="text"
+               datatype="scheme-id-bt-30"
+               ref="cac:Party/cac:PartyLegalEntity/cbc:CompanyID/@schemeID">
+         <div class="description"/>
+      </control>
+      <control id="BT-31"
+               label="Seller VAT identifier"
+               type="text"
+               datatype="identifier"
+               ref="cac:Party/cac:PartyTaxScheme/cbc:CompanyID">
+         <div class="description">
+            <p>Die Umsatzsteuer-Identifikationsnummer des Verkäufers. Verfügt der Verkäufer
+               über eine solche, ist sie hier anzugeben, sofern nicht Angaben zum BG-11
+               gemacht werden.</p>
+            <p>Anmerkung: Die Umsatzsteuer-Identifikationsnummer mit vorangestelltem Präfix gem. EN ISO 3166-1 "Codes for the representation of names of countries and their subdivisions"</p>
+         </div>
+      </control>
+      <control id="BT-32"
+               label="Seller tax registration identifier"
+               type="text"
+               datatype="identifier"
+               ref="cac:Party/cac:PartyTaxScheme/cbc:CompanyID">
+         <div class="description">
+            <q>Steuerschuldnerschaft des Leistungsempfängers</q>
+         </div>
+      </control>
+      <control id="BT-33"
+               label="Seller additional legal information"
+               type="textarea"
+               datatype="text"
+               ref="cac:Party/cac:PartyLegalEntity/cbc:CompanyLegalForm">
+         <div class="description"/>
+      </control>
+      <control id="BT-34"
+               label="Seller electronic address"
+               type="text"
+               datatype="scheme-id-bt-34"
+               ref="cac:Party/cbc:EndpointID/@schemeID">
+         <div class="description"/>
+      </control>
+      <group id="BG-5"
+             ref="cac:Party/cac:PostalAddress"
+             label="SELLER POSTAL ADDRESS">
+         <control id="BT-35"
+                  label="Seller address line 1"
+                  type="textarea"
+                  datatype="text"
+                  ref="cbc:StreetName">
+            <div class="description">
+               <q>Postfach</q>
+            </div>
+         </control>
+         <control id="BT-36"
+                  label="Seller address line 2"
+                  type="textarea"
+                  datatype="text"
+                  ref="cbc:AdditionalStreetName">
+            <div class="description"/>
+         </control>
+         <control id="BT-162"
+                  label="Seller address line 3"
+                  type="textarea"
+                  datatype="text"
+                  ref="cac:AddressLine/cbc:Line">
+            <div class="description"/>
+         </control>
+         <control id="BT-37"
+                  label="Seller city"
+                  type="textarea"
+                  datatype="text"
+                  ref="cbc:CityName">
+            <div class="description"/>
+         </control>
+         <control id="BT-38"
+                  label="Seller post code"
+                  type="textarea"
+                  datatype="text"
+                  ref="cbc:PostalZone">
+            <div class="description"/>
+         </control>
+         <control id="BT-39"
+                  label="Seller country subdivision"
+                  type="textarea"
+                  datatype="text"
+                  ref="cbc:CountrySubentity">
+            <div class="description"/>
+         </control>
+         <control id="BT-40"
+                  label="Seller country code"
+                  type="select"
+                  datatype="code"
+                  ref="cac:Country/cbc:IdentificationCode"
+                  codelistId="iso-3166-1">
+            <div class="description">
+               <p>Ein Code, mit dem das Land bezeichnet wird.</p>
+               <p>Anmerkung: Die Liste der zulässigen
+                  Länder ist bei der ISO 3166-1 Codes for the representation of names of countries and their
+                  subdivisions erhältlich. Nur die Alpha-2-Darstellung darf verwendet werden.</p>
+            </div>
+         </control>
+      </group>
+      <group id="BG-6" ref="cac:Party/cac:Contact" label="SELLER CONTACT">
+         <control id="BT-41"
+                  label="Seller contact point"
+                  type="textarea"
+                  datatype="text"
+                  ref="cbc:Name">
+            <div class="description"/>
+         </control>
+         <control id="BT-42"
+                  label="Seller contact telephone number"
+                  type="textarea"
+                  datatype="text"
+                  ref="cbc:Telephone">
+            <div class="description"/>
+         </control>
+         <control id="BT-43"
+                  label="Seller contact email address"
+                  type="textarea"
+                  datatype="text"
+                  ref="cbc:ElectronicMail">
+            <div class="description"/>
+         </control>
+      </group>
+   </group>
+   <group id="BG-7" ref="cac:AccountingCustomerParty" label="BUYER">
+      <control id="BT-44"
+               label="Buyer name"
+               type="textarea"
+               datatype="text"
+               ref="cac:Party/cac:PartyLegalEntity/cbc:RegistrationName">
+         <div class="description"/>
+      </control>
+      <control id="BT-45"
+               label="Buyer trading name"
+               type="textarea"
+               datatype="text"
+               ref="cac:Party/cac:PartyName/cbc:Name">
+         <div class="description"/>
+      </control>
+      <control id="BT-46"
+               label="Buyer identifier"
+               type="text"
+               datatype="scheme-id-bt-46"
+               ref="cac:Party/cac:PartyIdentification/cbc:ID/@schemeID">
+         <div class="description">
+            <p>Eine (i. d. R. vom Verkäufer vergebene) Kennung des Erwerbers, wie z. B. die
+               Debitorennummer für die Buchhaltung oder die Kundennnummer für die Auftragsverwaltung.</p>
+            <p>Anmerkung: Für die Bildung des Buyer Identifier ist kein einheitliches Schema
+               erforderlich.</p>
+         </div>
+      </control>
+      <control id="BT-47"
+               label="Buyer legal registration identifier"
+               type="text"
+               datatype="scheme-id-bt-47"
+               ref="cac:Party/cac:PartyLegalEntity/cbc:CompanyID/@schemeID">
+         <div class="description"/>
+      </control>
+      <control id="BT-48"
+               label="Buyer VAT identifier"
+               type="text"
+               datatype="identifier"
+               ref="cac:Party/cac:PartyTaxScheme/cbc:CompanyID">
+         <div class="description">
+            <p>Die Umsatzsteuer-Identifikationsnummer des Erwerbers.</p>
+            <p>Anmerkung: Die Umsatzsteuer-Identifikationsnummer mit vorangestelltem Präfix gem. EN ISO 3166-1 "Codes for the representation of names of countries and their subdivisions"</p>
+         </div>
+      </control>
+      <control id="BT-49"
+               label="Buyer electronic address"
+               type="text"
+               datatype="scheme-id-bt-49"
+               ref="cac:Party/cbc:EndpointID/@schemeID">
+         <div class="description"/>
+      </control>
+      <group id="BG-8"
+             ref="cac:Party/cac:PostalAddress"
+             label="BUYER POSTAL ADDRESS">
+         <control id="BT-50"
+                  label="Buyer address line 1"
+                  type="textarea"
+                  datatype="text"
+                  ref="cbc:StreetName">
+            <div class="description">
+               <q>Postfach</q>
+            </div>
+         </control>
+         <control id="BT-51"
+                  label="Buyer address line 2"
+                  type="textarea"
+                  datatype="text"
+                  ref="cbc:AdditionalStreetName">
+            <div class="description"/>
+         </control>
+         <control id="BT-163"
+                  label="Buyer address line 3"
+                  type="textarea"
+                  datatype="text"
+                  ref="cac:AddressLine/cbc:Line">
+            <div class="description"/>
+         </control>
+         <control id="BT-52"
+                  label="Buyer city"
+                  type="textarea"
+                  datatype="text"
+                  ref="cbc:CityName">
+            <div class="description"/>
+         </control>
+         <control id="BT-53"
+                  label="Buyer post code"
+                  type="textarea"
+                  datatype="text"
+                  ref="cbc:PostalZone">
+            <div class="description"/>
+         </control>
+         <control id="BT-54"
+                  label="Buyer country subdivision"
+                  type="textarea"
+                  datatype="text"
+                  ref="cbc:CountrySubentity">
+            <div class="description"/>
+         </control>
+         <control id="BT-55"
+                  label="Buyer country code"
+                  type="select"
+                  datatype="code"
+                  ref="cac:Country/cbc:IdentificationCode"
+                  codelistId="iso-3166-1">
+            <div class="description">
+               <p>Ein Code, mit dem das Land bezeichnet wird.</p>
+               <p>Anmerkung: Die Liste der zulässigen
+                  Länder ist bei der ISO 3166-1 Codes for the representation of names of countries and their
+                  subdivisions erhältlich. Nur die Alpha-2-Darstellung darf verwendet werden.</p>
+            </div>
+         </control>
+      </group>
+      <group id="BG-9" ref="cac:Party/cac:Contact" label="BUYER CONTACT">
+         <control id="BT-56"
+                  label="Buyer contact point"
+                  type="textarea"
+                  datatype="text"
+                  ref="cbc:Name">
+            <div class="description"/>
+         </control>
+         <control id="BT-57"
+                  label="Buyer contact telephone number"
+                  type="textarea"
+                  datatype="text"
+                  ref="cbc:Telephone">
+            <div class="description"/>
+         </control>
+         <control id="BT-58"
+                  label="Buyer contact email address"
+                  type="textarea"
+                  datatype="text"
+                  ref="cbc:ElectronicMail">
+            <div class="description"/>
+         </control>
+      </group>
+   </group>
+   <group id="BG-10" ref="cac:PayeeParty" label="PAYEE">
+      <control id="BT-59"
+               label="Payee name"
+               type="textarea"
+               datatype="text"
+               ref="cac:PartyName/cbc:Name">
+         <div class="description">
+            <p>Der Name des Zahlungsempfängers.</p>
+            <p>Anmerkung: Wird verwendet, wenn der
+               Zahlungsempfänger nicht mit dem Verkäufer identisch ist. Gleichwohl kann der Name des
+               Zahlungsempfänger identisch sein mit dem Namen des Verkäufers.</p>
+         </div>
+      </control>
+      <control id="BT-60"
+               label="Payee identifier"
+               type="text"
+               datatype="scheme-id-bt-60"
+               ref="cac:PartyIdentification/cbc:ID/@schemeID">
+         <div class="description">
+            <p>Eine Kennung für den Zahlungsempfänger.</p>
+            <p>Anmerkung: Wenn kein Schema verwendet
+               wird, sollte die Kennung Erwerber und Verkäufer bekannt sein, z. B. eine von Verkäufer oder
+               Erwerber zugewiesene Kennung.</p>
+         </div>
+      </control>
+      <control id="BT-61"
+               label="Payee legal registration identifier"
+               type="text"
+               datatype="scheme-id-bt-61"
+               ref="cac:PartyLegalEntity/cbc:CompanyID/@schemeID">
+         <div class="description"/>
+      </control>
+   </group>
+   <group id="BG-11"
+          ref="cac:TaxRepresentativeParty"
+          label="SELLER TAX REPRESENTATIVE PARTY">
+      <control id="BT-62"
+               label="Seller tax representative name"
+               type="textarea"
+               datatype="text"
+               ref="cac:PartyName/cbc:Name">
+         <div class="description"/>
+      </control>
+      <control id="BT-63"
+               label="Seller tax representative VAT identifier"
+               type="text"
+               datatype="identifier"
+               ref="cac:PartyTaxScheme/cbc:CompanyID">
+         <div class="description">
+            <p>Die Umsatzsteuer-Identifikationsnummer des Steuervertreters des
+               Verkäufers.</p>
+            <p>Anmerkung: Die Umsatzsteuer-Identifikationsnummer mit vorangestelltem Präfix gem. EN ISO 3166-1 "Codes for the representation of names of countries and their subdivisions"</p>
+         </div>
+      </control>
+      <group id="BG-12"
+             ref="cac:PostalAddress"
+             label="SELLER TAX REPRESENTATIVE POSTAL ADDRESS">
+         <control id="BT-64"
+                  label="Tax representative address line 1"
+                  type="textarea"
+                  datatype="text"
+                  ref="cbc:StreetName">
+            <div class="description">
+               <q>Postfach</q>
+            </div>
+         </control>
+         <control id="BT-65"
+                  label="Tax representative address line 2"
+                  type="textarea"
+                  datatype="text"
+                  ref="cbc:AdditionalStreetName">
+            <div class="description"/>
+         </control>
+         <control id="BT-164"
+                  label="Tax representative address line 3"
+                  type="textarea"
+                  datatype="text"
+                  ref="cac:AddressLine/cbc:Line">
+            <div class="description"/>
+         </control>
+         <control id="BT-66"
+                  label="Tax representative city"
+                  type="textarea"
+                  datatype="text"
+                  ref="cbc:CityName">
+            <div class="description"/>
+         </control>
+         <control id="BT-67"
+                  label="Tax representative post code"
+                  type="textarea"
+                  datatype="text"
+                  ref="cbc:PostalZone">
+            <div class="description"/>
+         </control>
+         <control id="BT-68"
+                  label="Tax representative country subdivision"
+                  type="textarea"
+                  datatype="text"
+                  ref="cbc:CountrySubentity">
+            <div class="description"/>
+         </control>
+         <control id="BT-69"
+                  label="Tax representative country code"
+                  type="select"
+                  datatype="code"
+                  ref="cac:Country/cbc:IdentificationCode"
+                  codelistId="iso-3166-1">
+            <div class="description">
+               <p>Ein Code, mit dem das Land bezeichnet wird.</p>
+               <p>Anmerkung: Die Liste der zulässigen
+                  Länder ist bei der ISO 3166-1 Codes for the representation of names of countries and their
+                  subdivisions erhältlich. Nur die Alpha-2-Darstellung darf verwendet werden.</p>
+            </div>
+         </control>
+      </group>
+   </group>
+   <group id="BG-13" ref="cac:Delivery" label="DELIVERY INFORMATION">
+      <control id="BT-70"
+               label="Deliver to party name"
+               type="textarea"
+               datatype="text"
+               ref="cac:DeliveryParty/cac:PartyName/cbc:Name">
+         <div class="description">
+            <p>Der Name des Empfängers, an den die Waren geliefert bzw. für den die
+               Dienstleistungen erbracht werden.</p>
+            <p>Das Informationselement ist zu verwenden, wenn der
+               Empfänger vom Erwerber abweicht.</p>
+         </div>
+      </control>
+      <control id="BT-71"
+               label="Deliver to location identifier"
+               type="text"
+               datatype="scheme-id-bt-71"
+               ref="cac:DeliveryLocation/cbc:ID/@schemeID">
+         <div class="description"/>
+      </control>
+      <control id="BT-72"
+               label="Actual delivery date"
+               type="date"
+               datatype="en16931-date"
+               ref="cbc:ActualDeliveryDate">
+         <div class="description"/>
+      </control>
+      <group id="BG-14" ref="" label="INVOICING PERIOD">
+         <control id="BT-73"
+                  label="Invoicing period start date"
+                  type="date"
+                  datatype="en16931-date"
+                  ref="cbc:StartDate">
+            <div class="description"/>
+         </control>
+         <control id="BT-74"
+                  label="Invoicing period end date"
+                  type="date"
+                  datatype="en16931-date"
+                  ref="cbc:EndDate">
+            <div class="description"/>
+         </control>
+      </group>
+      <group id="BG-15"
+             ref="cac:DeliveryLocation/cac:Address"
+             label="DELIVER TO ADDRESS">
+         <control id="BT-75"
+                  label="Deliver to address line 1"
+                  type="textarea"
+                  datatype="text"
+                  ref="cbc:StreetName">
+            <div class="description">
+               <q>Postfach</q>
+            </div>
+         </control>
+         <control id="BT-76"
+                  label="Deliver to address line 2"
+                  type="textarea"
+                  datatype="text"
+                  ref="cbc:AdditionalStreetName">
+            <div class="description"/>
+         </control>
+         <control id="BT-165"
+                  label="Deliver to address line 3"
+                  type="textarea"
+                  datatype="text"
+                  ref="cac:AddressLine/cbc:Line">
+            <div class="description"/>
+         </control>
+         <control id="BT-77"
+                  label="Deliver to city"
+                  type="textarea"
+                  datatype="text"
+                  ref="cbc:CityName">
+            <div class="description"/>
+         </control>
+         <control id="BT-78"
+                  label="Deliver to post code"
+                  type="textarea"
+                  datatype="text"
+                  ref="cbc:PostalZone">
+            <div class="description"/>
+         </control>
+         <control id="BT-79"
+                  label="Deliver to country subdivision"
+                  type="textarea"
+                  datatype="text"
+                  ref="cbc:CountrySubentity">
+            <div class="description"/>
+         </control>
+         <control id="BT-80"
+                  label="Deliver to country code"
+                  type="select"
+                  datatype="code"
+                  ref="cac:Country/cbc:IdentificationCode"
+                  codelistId="iso-3166-1">
+            <div class="description">
+               <p>Ein Code, mit dem das Land bezeichnet wird.</p>
+               <p>Anmerkung: Die Liste der zulässigen
+                  Länder ist bei der ISO 3166-1 Codes for the representation of names of countries and their
+                  subdivisions erhältlich. Nur die Alpha-2-Darstellung darf verwendet werden.</p>
+            </div>
+         </control>
+      </group>
+   </group>
+   <group id="BG-16" ref="cac:PaymentMeans" label="PAYMENT INSTRUCTIONS">
+      <control id="BT-81"
+               label="Payment means type code"
+               type="select"
+               datatype="code"
+               ref="cbc:PaymentMeansCode"
+               codelistId="untdid-4461">
+         <div class="description">
+            <codelistname>untdid-4461UNTDID 4461</codelistname>
+         </div>
+      </control>
+      <control id="BT-82"
+               label="Payment means text"
+               type="textarea"
+               datatype="text"
+               ref="cbc:PaymentMeansCode/@Name">
+         <div class="description"/>
+      </control>
+      <control id="BT-83"
+               label="Remittance information"
+               type="textarea"
+               datatype="text"
+               ref="cbc:PaymentID">
+         <div class="description">
+            <p>Ein Textwert, der zur Verknüpfung der Zahlung mit der vom Verkäufer
+               ausgestellten Rechnung verwendet wird.</p>
+            <p>Anmerkung: Die Angabe eines Verwendungszwecks hilft
+               dem Verkäufer bei der Zuweisung einer eingehenden Zahlung zum jeweiligen Zahlungsprozess.
+               Wenn Remittance information in der Rechnung übermittelt wurde, sollte diese daher bei der
+               Zahlung genutzt werden.</p>
+         </div>
+      </control>
+      <repeat id="BG-17" ref="cac:PayeeFinancialAccount" label="CREDIT TRANSFER">
+         <control id="BT-84"
+                  label="Payment account identifier"
+                  type="text"
+                  datatype="identifier"
+                  ref="cbc:ID">
+            <div class="description"/>
+         </control>
+         <control id="BT-85"
+                  label="Payment account name"
+                  type="textarea"
+                  datatype="text"
+                  ref="cbc:Name">
+            <div class="description"/>
+         </control>
+         <control id="BT-86"
+                  label="Payment service provider identifier"
+                  type="text"
+                  datatype="identifier"
+                  ref="cac:FinancialInstitutionBranch/cbc:ID">
+            <div class="description">
+               <p>Die Kennung des Konto führenden Zahlungsdienstleisters. Diese Kennung ergibt sich bei Zahlungen im SEPA-Raum im Regelfall aus der IBAN.</p>
+               <p>Für alle Auslandszahlungen,</p>
+               <ul>
+                  außerhalb des SEPA-Raumes wird der Bank Identifier Code (BIC) benötigt. Dies wird durch Code 30  (Credit transfer (non-SEPA) in BT-81 gekennzeichnet.
+                  innerhalb des SEPA-Raumes wird der Bank Identifier Code (BIC) nicht benötigt. Es reicht die Angabe der IBAN.
+                  Dies wird durch Code 58
+                  SCT in BT-81 gekennzeichnet. Ausgenommen sind
+                  Zahlungen an Bankverbindungen z. B. in San Marino, Monaco, Schweiz, Saint Pierre und Miquelon: Hier ist die
+                  Angabe des BIC zwingend erforderlich.
+               </ul>
+            </div>
+         </control>
+      </repeat>
+      <group id="BG-18" ref="cac:CardAccount" label="PAYMENT CARD INFORMATION">
+         <control id="BT-87"
+                  label="Payment card primary account number"
+                  type="textarea"
+                  datatype="text"
+                  ref="cbc:PrimaryAccountNumberID">
+            <div class="description">
+               <p>Die Nummer der Kreditkarte, die für die Zahlung genutzt wurde.</p>
+               <p>Anmerkung: In
+                  Übereinstimmung mit den für Kreditkarten geltenden Sicherheitsstandards darf eine Rechnung
+                  nicht die vollständige Kartennummer enthalten.</p>
+            </div>
+         </control>
+         <control id="BT-88"
+                  label="Payment card holder name"
+                  type="textarea"
+                  datatype="text"
+                  ref="cbc:HolderName">
+            <div class="description"/>
+         </control>
+      </group>
+      <group id="BG-19" ref="cac:PaymentMandate" label="DIRECT DEBIT">
+         <control id="BT-89"
+                  label="Mandate reference identifier"
+                  type="text"
+                  datatype="identifier"
+                  ref="cbc:ID">
+            <div class="description"/>
+         </control>
+         <control id="BT-90"
+                  label="Bank assigned creditor identifier"
+                  type="text"
+                  datatype="identifier"
+                  ref="">
+            <div class="description"/>
+         </control>
+         <control id="BT-91"
+                  label="Debited account identifier"
+                  type="text"
+                  datatype="identifier"
+                  ref="cac:PayerFinancialAccount/cbc:ID">
+            <div class="description"/>
+         </control>
+      </group>
+   </group>
+   <repeat id="BG-20"
+           ref="cac:AllowanceCharge"
+           label="DOCUMENT LEVEL ALLOWANCES">
+      <control id="BT-92"
+               label="Document level allowance amount"
+               type="number"
+               datatype="amount"
+               ref="cbc:Amount">
+         <div class="description"/>
+      </control>
+      <control id="BT-93"
+               label="Document level allowance base amount"
+               type="number"
+               datatype="amount"
+               ref="cbc:BaseAmount">
+         <div class="description">
+            <termname>BT-94</termname>
+            <termname>BT-92</termname>
+         </div>
+      </control>
+      <control id="BT-94"
+               label="Document level allowance percentage"
+               type="number"
+               datatype="percentage"
+               ref="cbc:MultiplierFactorNumeric">
+         <div class="description">
+            <termname>BT-93</termname>
+            <termname>BT-92</termname>
+         </div>
+      </control>
+      <control id="BT-95"
+               label="Document level allowance VAT category code"
+               type="select"
+               datatype="code"
+               ref="cac:TaxCategory/cbc:ID"
+               codelistId="untdid-5305">
+         <div class="description">
+            <p>Ein Code für das Umsatzsteuermerkmal, das auf den BT-92
+               anzuwenden ist.</p>
+            <p>Anmerkung: Folgende Codes aus der Codeliste UNTDID 5305 müssen verwendet
+               werden:</p>
+            <ul>
+               S  (Standard rate)
+               Z  (Zero rated goods)
+               E  (Exempt from tax)
+               AE  (VAT Reverse Charge)
+               K  (VAT exempt for EEA intra-community supply of goods and services)
+               G  (Free export item, tax not charged)
+               O  (Services outside scope of tax)
+               L  (Canary Islands general indirect tax)
+               M  (Tax for production, services and importation in Ceuta and Melilla)
+            </ul>
+         </div>
+      </control>
+      <control id="BT-96"
+               label="Document level allowance VAT rate"
+               type="number"
+               datatype="percentage"
+               ref="cac:TaxCategory/cbc:Percent">
+         <div class="description">
+            <termname>BT-92</termname>
+         </div>
+      </control>
+      <control id="BT-97"
+               label="Document level allowance reason"
+               type="textarea"
+               datatype="text"
+               ref="cbc:AllowanceChargeReason">
+         <div class="description">
+            <termname>BT-92</termname>
+         </div>
+      </control>
+      <control id="BT-98"
+               label="Document level allowance reason code"
+               type="select"
+               datatype="code"
+               ref="cbc:AllowanceChargeReasonCode"
+               codelistId="untdid-5189">
+         <div class="description">
+            <p>Der als Code angegebene Grund für den BT-92.</p>
+            <p>Anmerkung: Hier sind die Codes aus der Codeliste UNTDID 5189 zu verwenden. Dabei müssen
+               Document level allowance reason code und BT-97 den gleichen
+               Grund für den Nachlass angeben.</p>
+         </div>
+      </control>
+   </repeat>
+   <repeat id="BG-21" ref="cac:AllowanceCharge" label="DOCUMENT LEVEL CHARGES">
+      <control id="BT-99"
+               label="Document level charge amount"
+               type="number"
+               datatype="amount"
+               ref="cbc:Amount">
+         <div class="description"/>
+      </control>
+      <control id="BT-100"
+               label="Document level charge base amount"
+               type="number"
+               datatype="amount"
+               ref="cbc:BaseAmount">
+         <div class="description">
+            <termname>BT-101</termname>
+            <termname>BT-99</termname>
+         </div>
+      </control>
+      <control id="BT-101"
+               label="Document level charge percentage"
+               type="number"
+               datatype="percentage"
+               ref="cbc:MultiplierFactorNumeric">
+         <div class="description">
+            <termname>BT-100</termname>
+            <termname>BT-99</termname>
+         </div>
+      </control>
+      <control id="BT-102"
+               label="Document level charge VAT category code"
+               type="select"
+               datatype="code"
+               ref="cac:TaxCategory/cbc:ID"
+               codelistId="untdid-5305">
+         <div class="description">
+            <p>Ein Code für das Umsatzsteuermerkmal dieser Elementgruppe.</p>
+            <p>Anmerkung: Folgende Codes aus der Codeliste UNTDID 5305 müssen verwendet werden:</p>
+            <ul>
+               S (Standard rate)
+               Z (Zero rated goods)
+               E (Exempt from tax)
+               AE (VAT Reverse Charge)
+               K (VAT exempt for EEA intra-community supply of goods and services)
+               G (Free export item, tax not charged)
+               O (Services outside scope of tax)
+               L (Canary Islands general indirect tax)
+               M(Tax for production, services and importation in Ceuta and Melilla)
+            </ul>
+         </div>
+      </control>
+      <control id="BT-103"
+               label="Document level charge VAT rate"
+               type="number"
+               datatype="percentage"
+               ref="cac:TaxCategory/cbc:Percent">
+         <div class="description">
+            <termname>BT-99</termname>
+         </div>
+      </control>
+      <control id="BT-104"
+               label="Document level charge reason"
+               type="textarea"
+               datatype="text"
+               ref="cbc:AllowanceChargeReason">
+         <div class="description"/>
+      </control>
+      <control id="BT-105"
+               label="Document level charge reason code"
+               type="select"
+               datatype="code"
+               ref="cbc:AllowanceChargeReasonCode"
+               codelistId="untdid-7161">
+         <div class="description">
+            <p>Der als Code angegebene Grund für die Abgaben auf der Dokumentenebene.</p>
+            <p>Anmerkung: Hier sind die Codes aus der Codeliste UNTDID 7161 zu verwenden. BT-105 und BT-104 müssen auf den gleichen Grund für die
+               Abgaben auf Dokumentenebene verweisen.</p>
+         </div>
+      </control>
+   </repeat>
+   <group id="BG-22" ref="cac:LegalMonetaryTotal" label="DOCUMENT TOTALS">
+      <control id="BT-106"
+               label="Sum of Invoice line net amount"
+               type="number"
+               datatype="amount"
+               ref="cbc:LineExtensionAmount">
+         <div class="description">
+            <termname>BT-131</termname>
+         </div>
+      </control>
+      <control id="BT-107"
+               label="Sum of allowances on document level"
+               type="number"
+               datatype="amount"
+               ref="cbc:AllowanceTotalAmount">
+         <div class="description">
+            <termname>BT-92</termname>
+         </div>
+      </control>
+      <control id="BT-108"
+               label="Sum of charges on document level"
+               type="number"
+               datatype="amount"
+               ref="cbc:ChargeTotalAmount">
+         <div class="description">
+            <termname>BT-99</termname>
+         </div>
+      </control>
+      <control id="BT-109"
+               label="Invoice total amount without VAT"
+               type="number"
+               datatype="amount"
+               ref="cbc:TaxExclusiveAmount">
+         <div class="description"/>
+      </control>
+      <control id="BT-110"
+               label="Invoice total VAT amount"
+               type="number"
+               datatype="amount"
+               ref="">
+         <div class="description"/>
+      </control>
+      <control id="BT-111"
+               label="Invoice total VAT amount in accounting currency"
+               type="number"
+               datatype="amount"
+               ref="">
+         <div class="description"/>
+      </control>
+      <control id="BT-112"
+               label="Invoice total amount with VAT"
+               type="number"
+               datatype="amount"
+               ref="cbc:TaxInclusiveAmount">
+         <div class="description"/>
+      </control>
+      <control id="BT-113"
+               label="Paid amount"
+               type="number"
+               datatype="amount"
+               ref="cbc:PrepaidAmount">
+         <div class="description"/>
+      </control>
+      <control id="BT-114"
+               label="Rounding amount"
+               type="number"
+               datatype="amount"
+               ref="cbc:PayableRoundingAmount">
+         <div class="description"/>
+      </control>
+      <control id="BT-115"
+               label="Amount due for payment"
+               type="number"
+               datatype="amount"
+               ref="cbc:PayableAmount">
+         <div class="description">
+            <p>Der ausstehende Betrag, der zu zahlen ist.</p>
+            <p>Anmerkung: Dieser Betrag ist der BT-112 abzüglich des BT-113. Im Falle einer
+               vollständig beglichenen Rechnung ist dieser Betrag gleich null. Der Betrag ist negativ,
+               falls der BT-113 größer als der BT-112
+               ist.</p>
+         </div>
+      </control>
+   </group>
+   <repeat id="BG-23" ref="cac:TaxTotal/cac:TaxSubtotal" label="VAT BREAKDOWN">
+      <control id="BT-116"
+               label="VAT category taxable amount"
+               type="number"
+               datatype="amount"
+               ref="cbc:TaxableAmount">
+         <div class="description"/>
+      </control>
+      <control id="BT-117"
+               label="VAT category tax amount"
+               type="number"
+               datatype="amount"
+               ref="cbc:TaxAmount">
+         <div class="description">
+            <p>Der für die betreffende Umsatzsteuerkategorie zu entrichtende Gesamtbetrag.</p>
+            <p>Anmerkung: Die Berechnung erfolgt durch Multiplikation des BT-116 mit
+               der BT-119 der jeweiligen VAT category.</p>
+         </div>
+      </control>
+      <control id="BT-118"
+               label="VAT category code"
+               type="select"
+               datatype="code"
+               ref="cac:TaxCategory/cbc:ID"
+               codelistId="untdid-5305">
+         <div class="description">
+            <p>Codierte Bezeichnung einer Umsatzsteuerkategorie.</p>
+            <p>Anmerkung: Folgende Codes aus
+               der Codeliste UNTDID 5305 müssen verwendet werden:</p>
+            <ul>
+               S (Standard rate)
+               Z (Zero rated goods)
+               E (Exempt from tax)
+               AE (VAT Reverse Charge)
+               K (VAT exempt for EEA intra-community supply of goods and services)
+               G (Free export item, tax not charged)
+               O (Services outside scope of tax)
+               L (Canary Islands general indirect tax)
+               M (Tax for production, services and importation in Ceuta and Melilla)
+            </ul>
+         </div>
+      </control>
+      <control id="BT-119"
+               label="VAT category rate"
+               type="number"
+               datatype="percentage"
+               ref="cac:TaxCategory/cbc:Percent">
+         <div class="description">
+            <p>Der Umsatzsteuersatz, angegeben als für die betreffende Umsatzsteuerkategorie
+               geltender Prozentsatz.</p>
+            <p>Sofern die Rechnung von der Umsatzsteuer ausgenommen ist, ist der
+               Wert 0 zu übermitteln.</p>
+            <p>Anmerkung: BT-118 und BT-119 müssen
+               konsistent sein.</p>
+         </div>
+      </control>
+      <control id="BT-120"
+               label="VAT exemption reason text"
+               type="textarea"
+               datatype="text"
+               ref="cac:TaxCategory/cbc:TaxExemptionReason">
+         <div class="description">
+            <strong>AE</strong>
+            <q>Umkehrung der Steuerschuldnerschaft</q>
+         </div>
+      </control>
+      <control id="BT-121"
+               label="VAT exemption reason code"
+               type="select"
+               datatype="code"
+               ref="cac:TaxCategory/cbc:TaxExemptionReasonCode"
+               codelistId="vatex">
+         <div class="description">
+            <codelistname>vatexVATEX</codelistname>
+            <q>VAT exemption reason code list</q>
+         </div>
+      </control>
+   </repeat>
+   <repeat id="BG-24"
+           ref="cac:AdditionalDocumentReference"
+           label="ADDITIONAL SUPPORTING DOCUMENTS">
+      <control id="BT-122"
+               label="Supporting document reference"
+               type="text"
+               datatype="docref"
+               ref="cbc:ID">
+         <div class="description"/>
+      </control>
+      <control id="BT-123"
+               label="Supporting document description"
+               type="textarea"
+               datatype="text"
+               ref="cbc:DocumentDescription">
+         <div class="description"/>
+      </control>
+      <control id="BT-124"
+               label="External document location"
+               type="textarea"
+               datatype="text"
+               ref="cac:Attachment/cac:ExternalReference/cbc:URI">
+         <div class="description"/>
+      </control>
+      <control id="BT-125"
+               label="Attached document"
+               type="text"
+               datatype="mime-code-bt-125"
+               ref="cac:Attachment/cbc:EmbeddedDocumentBinaryObject/@mimeCode">
+         <div class="description"/>
+      </control>
+   </repeat>
+   <repeat id="BG-25" ref="cac:InvoiceLine" label="INVOICE LINE">
+      <control id="BT-126"
+               label="Invoice line identifier"
+               type="text"
+               datatype="identifier"
+               ref="cbc:ID">
+         <div class="description"/>
+      </control>
+      <control id="BT-127"
+               label="Invoice line note"
+               type="textarea"
+               datatype="text"
+               ref="cbc:Note">
+         <div class="description"/>
+      </control>
+      <control id="BT-128"
+               label="Invoice line object identifier"
+               type="text"
+               datatype="bt-128-scheme-id"
+               ref="cac:DocumentReference/cbc:ID/@schemeID">
+         <div class="description"/>
+      </control>
+      <control id="BT-129"
+               label="Invoiced quantity"
+               type="number"
+               datatype="quantity"
+               ref="cbc:InvoicedQuantity">
+         <div class="description"/>
+      </control>
+      <control id="BT-130"
+               label="Invoiced quantity unit of measure code"
+               type="select"
+               datatype="code"
+               ref="cbc:InvoicedQuantity/@unitCode"
+               codelistId="rec-20 rec-20 rec-21">
+         <div class="description">
+            <p>Die für die BT-129 geltende Maßeinheit. Die Maßeinheit
+               muss unter Anwendung der in UN/ECE Rec No 20 Intro 2.a) beschriebenen Methode aus den Listen
+               UN/ECE Recommendation No. 20 Codes for Units of Measure Used in International Trade und
+               UN/ECE Recommendation No 21 Codes for Passengers, Types of Cargo, Packages and Packaging
+               Materials (with Complementary Codes for Package Names) ausgewählt werden.</p>
+            <p>In den meisten
+               Fällen ist es nicht erforderlich, dass Verkäufer und Erwerber diese Listen vollständig in
+               ihren Anwendungen implementieren. Verkäufer müssen nur die erforderlichen Einheiten für ihre
+               Güter und Dienstleistungen unterstützen. Erwerber überprüfen lediglich, ob die in der
+               Rechnung verwendeten Einheiten mit denen in anderen Dokumenten zum Erwerb (wie z. B.
+               Vertrag, Katalog, Bestellung oder Lieferschein) identisch sind.</p>
+         </div>
+      </control>
+      <control id="BT-131"
+               label="Invoice line net amount"
+               type="number"
+               datatype="amount"
+               ref="cbc:LineExtensionAmount">
+         <div class="description"/>
+      </control>
+      <control id="BT-132"
+               label="Referenced purchase order line reference"
+               type="text"
+               datatype="docref"
+               ref="cac:OrderLineReference/cbc:LineID">
+         <div class="description">
+            <p>Eine vom Erwerber ausgegebene Kennung für eine referenzierte Position einer
+               Bestellung/eines Auftrags.</p>
+            <p>Anmerkung: Auf den Auftrag wird auf Rechnungsebene Bezug
+               genommen.</p>
+         </div>
+      </control>
+      <control id="BT-133"
+               label="Invoice line Buyer accounting reference"
+               type="textarea"
+               datatype="text"
+               ref="cbc:AccountingCost">
+         <div class="description">
+            <p>Ein Textwert, der angibt, an welcher Stelle die betreffenden Daten in den
+               Finanzkonten des Erwerbers zu buchen sind.</p>
+            <p>Anmerkung: Wenn die Angabe genutzt werden soll,
+               muss der Erwerber dem Verkäufer diese Referenz vor der Rechnungserstellung
+               mitteilen.</p>
+         </div>
+      </control>
+      <group id="BG-26" ref="cac:InvoicePeriod" label="INVOICE LINE PERIOD">
+         <control id="BT-134"
+                  label="Invoice line period start date"
+                  type="date"
+                  datatype="en16931-date"
+                  ref="cbc:StartDate">
+            <div class="description"/>
+         </control>
+         <control id="BT-135"
+                  label="Invoice line period end date"
+                  type="date"
+                  datatype="en16931-date"
+                  ref="cbc:EndDate">
+            <div class="description"/>
+         </control>
+      </group>
+      <repeat id="BG-27"
+              ref="cac:AllowanceCharge"
+              label="INVOICE LINE ALLOWANCES">
+         <control id="BT-136"
+                  label="Invoice line allowance amount"
+                  type="number"
+                  datatype="amount"
+                  ref="cbc:Amount">
+            <div class="description"/>
+         </control>
+         <control id="BT-137"
+                  label="Invoice line allowance base amount"
+                  type="number"
+                  datatype="amount"
+                  ref="cbc:BaseAmount">
+            <div class="description">
+               <termname>BT-138</termname>
+               <termname>BT-136</termname>
+            </div>
+         </control>
+         <control id="BT-138"
+                  label="Invoice line allowance percentage"
+                  type="number"
+                  datatype="percentage"
+                  ref="cbc:MultiplierFactorNumeric">
+            <div class="description">
+               <termname>BT-137</termname>
+               <termname>BT-136</termname>
+            </div>
+         </control>
+         <control id="BT-139"
+                  label="Invoice line allowance reason"
+                  type="textarea"
+                  datatype="text"
+                  ref="cbc:AllowanceChargeReason">
+            <div class="description"/>
+         </control>
+         <control id="BT-140"
+                  label="Invoice line allowance reason code"
+                  type="select"
+                  datatype="code"
+                  ref="cbc:AllowanceChargeReasonCode"
+                  codelistId="untdid-5189">
+            <div class="description">
+               <p>Der als Code angegebene Grund für den Rechnungspositionennachlass.</p>
+               <p>Anmerkung:
+                  Hier sind die Codes aus der Codeliste UNTDID 5189 zu verwenden. BT-140 und BT-139 müssen den gleichen Nachlassgrund
+                  angeben.</p>
+            </div>
+         </control>
+      </repeat>
+      <repeat id="BG-28" ref="cac:AllowanceCharge" label="INVOICE LINE CHARGES">
+         <control id="BT-141"
+                  label="Invoice line charge amount"
+                  type="number"
+                  datatype="amount"
+                  ref="cbc:Amount">
+            <div class="description"/>
+         </control>
+         <control id="BT-142"
+                  label="Invoice line charge base amount"
+                  type="number"
+                  datatype="amount"
+                  ref="cbc:BaseAmount">
+            <div class="description">
+               <termname>BT-143</termname>
+               <termname>BT-141</termname>
+            </div>
+         </control>
+         <control id="BT-143"
+                  label="Invoice line charge percentage"
+                  type="number"
+                  datatype="percentage"
+                  ref="cbc:MultiplierFactorNumeric">
+            <div class="description">
+               <termname>BT-142</termname>
+               <termname>BT-141</termname>
+            </div>
+         </control>
+         <control id="BT-144"
+                  label="Invoice line charge reason"
+                  type="textarea"
+                  datatype="text"
+                  ref="cbc:AllowanceChargeReason">
+            <div class="description"/>
+         </control>
+         <control id="BT-145"
+                  label="Invoice line charge reason code"
+                  type="select"
+                  datatype="code"
+                  ref="cbc:AllowanceChargeReasonCode"
+                  codelistId="untdid-7161">
+            <div class="description">
+               <p>Der als Code angegebene Grund für die Rechnungspositionenabgaben.</p>
+               <p>Anmerkung:
+                  Hier sind die Codes aus der Codeliste UNTDID 7161 zu verwenden. BT-145 und BT-144 müssen auf den gleichen Grund für die Abgaben auf die
+                  Rechnungsposition verweisen.</p>
+            </div>
+         </control>
+      </repeat>
+      <group id="BG-29" ref="cac:Price" label="PRICE DETAILS">
+         <control id="BT-146"
+                  label="Item net price"
+                  type="number"
+                  datatype="upa"
+                  ref="cbc:PriceAmount">
+            <div class="description">
+               <p>Der Preis eines Postens, ohne Umsatzsteuer, nach Abzug des für diese
+                  Rechnungsposition geltenden Rabatts.</p>
+               <p>Anmerkung: BT-146 muss gleich BT-148
+                  abzüglich BT-147 sein.</p>
+            </div>
+         </control>
+         <control id="BT-147"
+                  label="Item price discount"
+                  type="number"
+                  datatype="upa"
+                  ref="cac:AllowanceCharge/cbc:Amount">
+            <div class="description">
+               <p>Der gesamte zur Berechnung des Netto-Postenpreises vom Brutto-Postenpreis
+                  subtrahierte Rabatt.</p>
+               <p>Anmerkung: Nur anzugeben, wenn der Nachlass pro Verpackungseinheit
+                  gegeben wird und nicht in den BT-148 inkludiert ist.</p>
+            </div>
+         </control>
+         <control id="BT-148"
+                  label="Item gross price"
+                  type="number"
+                  datatype="upa"
+                  ref="cac:AllowanceCharge/cbc:BaseAmount">
+            <div class="description"/>
+         </control>
+         <control id="BT-149"
+                  label="Item price base quantity"
+                  type="number"
+                  datatype="quantity"
+                  ref="cbc:BaseQuantity">
+            <div class="description"/>
+         </control>
+         <control id="BT-150"
+                  label="Item price base quantity unit of measure code"
+                  type="select"
+                  datatype="code"
+                  ref="cbc:BaseQuantity/@unitCode"
+                  codelistId="rec-20 rec-21">
+            <div class="description">
+               <p>Der Code der zu Grunde gelegten Maßeinheit. Die Maßeinheit
+                  muss unter Anwendung der in UN/ECE Rec No 20 Intro 2.a) beschriebenen Methode aus den Listen
+                  UN/ECE Recommendation No. 20 Codes for Units of Measure Used in International Trade und
+                  UN/ECE Recommendation No 21 Codes for Passengers, Types of Cargo, Packages and Packaging
+                  Materials (with Complementary Codes for Package Names) ausgewählt werden.</p>
+               <p>In den meisten
+                  Fällen ist es nicht erforderlich, dass Verkäufer und Erwerber diese Listen vollständig in
+                  ihren Anwendungen implementieren. Verkäufer müssen nur die erforderlichen Einheiten für ihre
+                  Güter und Dienstleistungen unterstützen. Erwerber überprüfen lediglich, ob die in der
+                  Rechnung verwendeten Einheiten mit denen in anderen Dokumenten zum Erwerb (wie z. B.
+                  Vertrag, Katalog, Bestellung oder Lieferschein) identisch sind.</p>
+               <p>Die Maßeinheit des BT-150 muss gleich der Maßeinheit der in Rechnung gestellten Menge BT-130
+                  sein.</p>
+            </div>
+         </control>
+      </group>
+      <group id="BG-30"
+             ref="cac:Item/cac:ClassifiedTaxCategory"
+             label="LINE VAT INFORMATION">
+         <control id="BT-151"
+                  label="Invoiced item VAT category code"
+                  type="select"
+                  datatype="code"
+                  ref="cbc:ID"
+                  codelistId="untdid-5305">
+            <div class="description">
+               <p>Der Code der für den in Rechnung gestellten Posten geltenden Umsatzsteuerkategorie.</p>
+               <p>Anmerkung: Folgende Codes aus der Codeliste UNTDID 5305 müssen verwendet werden:</p>
+               <ul>
+                  S  (Standard rate)
+                  Z  (Zero rated goods)
+                  E  (Exempt from tax)
+                  AE  (VAT Reverse Charge)
+                  K  (VAT exempt for EEA intra-community supply of goods and services)
+                  G  (Free export item, tax not charged)
+                  O  (Services outside scope of tax)
+                  L  (Canary Islands general indirect tax)
+                  M  (Tax for production, services and importation in Ceuta and Melilla)
+               </ul>
+            </div>
+         </control>
+         <control id="BT-152"
+                  label="Invoiced item VAT rate"
+                  type="number"
+                  datatype="percentage"
+                  ref="cbc:Percent">
+            <div class="description">
+               <p>Der für den in Rechnung gestellten Posten geltende und als Prozentsatz
+                  angegebene Umsatzsteuersatz.</p>
+               <p>Anmerkung: Ein Umsatzsteuersatz von 0 Prozent wird für
+                  Kalkulationszwecke auch dann angewandt, wenn der Posten außerhalb der Reichweite der
+                  Umsatzsteuer ist.</p>
+            </div>
+         </control>
+      </group>
+      <group id="BG-31" ref="cac:Item" label="ITEM INFORMATION">
+         <control id="BT-153"
+                  label="Item name"
+                  type="textarea"
+                  datatype="text"
+                  ref="cbc:Name">
+            <div class="description"/>
+         </control>
+         <control id="BT-154"
+                  label="Item description"
+                  type="textarea"
+                  datatype="text"
+                  ref="cbc:Description">
+            <div class="description">
+               <p>Eine Beschreibung des Postens.</p>
+               <p>Anmerkung: Hier kann der Posten detaillierter
+                  beschrieben werden als im Namen.</p>
+            </div>
+         </control>
+         <control id="BT-155"
+                  label="Item Sellers identifier"
+                  type="text"
+                  datatype="identifier"
+                  ref="cac:SellersItemIdentification/cbc:ID">
+            <div class="description"/>
+         </control>
+         <control id="BT-156"
+                  label="Item Buyers identifier"
+                  type="text"
+                  datatype="identifier"
+                  ref="cac:BuyersItemIdentification/cbc:ID">
+            <div class="description"/>
+         </control>
+         <control id="BT-157"
+                  label="Item standard identifier"
+                  type="text"
+                  datatype="scheme-id-bt-157"
+                  ref="cac:StandardItemIdentification/cbc:ID/@schemeID">
+            <div class="description"/>
+         </control>
+         <control id="BT-158"
+                  label="Item classification identifier"
+                  type="text"
+                  datatype="scheme-id-bt-158"
+                  ref="cac:CommodityClassification/cbc:ItemClassificationCode/@listID">
+            <div class="description">
+               <p>Ein Code für die Klassifizierung des Postens nach Typ bzw. Art oder Wesen bzw.
+                  Beschaffenheit.</p>
+               <p>Anmerkung: Klassifizierungscodes werden verwendet, um die Zusammenfassung
+                  gleichartiger Posten für unterschiedliche Zwecke zu ermöglichen.</p>
+            </div>
+         </control>
+         <control id="BT-159"
+                  label="Item country of origin"
+                  type="select"
+                  datatype="code"
+                  ref="cac:OriginCountry/cbc:IdentificationCode"
+                  codelistId="iso-3166-1">
+            <div class="description">
+               <p>Der Ländercode, der das Land angibt, aus dem die Ware stammt oder in dem die
+                  Dienstleistung erbracht wird.</p>
+               <p>Anmerkung: Die Liste der zulässigen Länder ist bei der ISO
+                  3166-1 Codes for the representation of names of countries and their subdivisions
+                  erhältlich. Nur die Alpha-2-Darstellung darf verwendet werden.</p>
+            </div>
+         </control>
+         <repeat id="BG-32" ref="cac:AdditionalItemProperty" label="ITEM ATTRIBUTES">
+            <control id="BT-160"
+                     label="Item attribute name"
+                     type="textarea"
+                     datatype="text"
+                     ref="cbc:Name">
+               <div class="description">
+                  <q>Farbe</q>
+               </div>
+            </control>
+            <control id="BT-161"
+                     label="Item attribute value"
+                     type="textarea"
+                     datatype="text"
+                     ref="cbc:Value">
+               <div class="description">
+                  <q>rot</q>
+               </div>
+            </control>
+         </repeat>
+      </group>
+   </repeat>
+</group>
