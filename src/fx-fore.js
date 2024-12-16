@@ -1019,19 +1019,24 @@ export class FxFore extends HTMLElement {
   initData(root = this) {
     // const created = new Promise(resolve => {
     console.log('INIT');
-    const boundControls = Array.from(root.querySelectorAll('[ref]:not(fx-model *),fx-repeatitem'));
+    // const boundControls = Array.from(root.querySelectorAll('[ref]:not(fx-model *),fx-repeatitem'));
+    const boundControls = Array.from(root.querySelectorAll('fx-control[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref]'));
     if (root.matches('fx-repeatitem')) {
       boundControls.unshift(root);
     }
     // console.log('_initD', boundControls);
     for (let i = 0; i < boundControls.length; i++) {
-      const control = boundControls[i];
-      if (!control.matches('fx-repeatitem')) {
+      const bound = boundControls[i];
+
+      /*
+      ignore bound elements that are enclosed with a control like <select> or <fx-items> and repeated items
+       */
+      if (!bound.matches('fx-repeatitem') && !bound.parentNode.closest('fx-control')) {
         // Repeat items are dumb. They do not respond to evalInContext
-        control.evalInContext();
+        bound.evalInContext();
       }
       let ownerDoc;
-      if (control.nodeset !== null) {
+      if (bound.nodeset !== null) {
         // console.log('Node exists', control.nodeset);
         continue;
       }
@@ -1042,7 +1047,7 @@ export class FxFore extends HTMLElement {
 
       // Previous control can either be an ancestor of us, or a previous node, which can be a sibling, or a child of a sibling.
       // First: parent
-      if (previousControl.contains(control)) {
+      if (previousControl.contains(bound)) {
         // Parent is here.
         // console.log('insert into', control,previousControl);
         // console.log('insert into nodeset', control.nodeset);
@@ -1050,7 +1055,7 @@ export class FxFore extends HTMLElement {
         // console.log('parentNodeset', parentNodeset);
 
         // const parentModelItemNode = parentModelItem.node;
-        const ref = control.ref;
+        const ref = bound.ref;
         // const newElement = parentModelItemNode.ownerDocument.createElement(ref);
         if (parentNodeset.querySelector(`[ref="${ref}"]`)) {
           console.log(`Node with ref "${ref}" already exists.`);
@@ -1061,7 +1066,7 @@ export class FxFore extends HTMLElement {
 
         // Plonk it in at the start!
         parentNodeset.insertBefore(newElement, parentNodeset.firstChild);
-        control.evalInContext();
+        bound.evalInContext();
         console.log('CREATED child', newElement);
         // console.log('new control evaluated to ', control.nodeset);
         // Done!
@@ -1070,7 +1075,7 @@ export class FxFore extends HTMLElement {
       // console.log('previousControl', previousControl);
       // console.log('control', control);
       // Is previousControl a sibling or a descendant of a logical sibling? Keep looking backwards until we share parents!
-      const ourParent = XPathUtil.getParentBindingElement(control);
+      const ourParent = XPathUtil.getParentBindingElement(bound);
       // console.log('ourParent', ourParent);
       let siblingControl = null;
       /*
@@ -1094,7 +1099,7 @@ export class FxFore extends HTMLElement {
       }
       // console.log('sibling', siblingControl);
       const parentNodeset = ourParent.nodeset;
-      const ref = control.ref;
+      const ref = bound.ref;
       let referenceNodeset = siblingControl.nodeset;
       const newElement = this._createNodes(ref, parentNodeset);
 
@@ -1110,7 +1115,7 @@ export class FxFore extends HTMLElement {
             console.log('control ref', control.ref);
             console.log('control new element parent', newElement.parentNode.nodeName);
 */
-      control.evalInContext();
+      bound.evalInContext();
       // console.log('new control evaluated to ', control.nodeset);
       console.log('CREATED sibling', newElement);
     }
