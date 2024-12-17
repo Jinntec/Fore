@@ -247,6 +247,7 @@ export class FxFore extends HTMLElement {
     // this.mergePartial = this.hasAttribute('merge-partial')? true:false;
     this.mergePartial = false;
     this.createNodes = this.hasAttribute('create-nodes') ? true : false;
+    this._localNamesWithChanges = new Set();
   }
 
   connectedCallback() {
@@ -386,6 +387,16 @@ export class FxFore extends HTMLElement {
     if (!found) {
       this.toRefresh.push(modelItem);
     }
+  }
+
+  /**
+   * Signal something happened with an element with the given local name. This will be used in the
+   * next (non-forceful) refresh to detect whether a component (usually a repeat) should update
+   *
+   * @param {string} localNameOfElement
+   */
+  signalChangeToElement(localNameOfElement) {
+    this._localNamesWithChanges.add(localNameOfElement);
   }
 
   /**
@@ -534,12 +545,21 @@ export class FxFore extends HTMLElement {
                                     console.log('Found a repeat to update!!!', repeat)
                                 }
                             }
-                        }
+                            }
             }
             */
     if (this.isRefreshing) {
       return;
     }
+
+    if (force !== true && this._localNamesWithChanges.size > 0) {
+      force = {
+        ...(force || { reason: undefined }),
+        elementLocalnamesWithChanges: Array.from(this._localNamesWithChanges),
+      };
+      this._localNamesWithChanges.clear();
+    }
+
     this.isRefreshing = true;
     // console.log(`### <<<<< refresh() on '${this.id}' >>>>>`);
 
@@ -641,7 +661,8 @@ export class FxFore extends HTMLElement {
     for (const subFore of subFores) {
       // subFore.refresh(false, changedPaths);
       if (subFore.ready) {
-        await subFore.refresh(force);
+        // Do an unconditional hard refresh: there might be changes that are relevant
+        await subFore.refresh(true);
       }
     }
     this.isRefreshing = false;
@@ -1020,7 +1041,9 @@ export class FxFore extends HTMLElement {
     // const created = new Promise(resolve => {
     console.log('INIT');
     // const boundControls = Array.from(root.querySelectorAll('[ref]:not(fx-model *),fx-repeatitem'));
-    const boundControls = Array.from(root.querySelectorAll('fx-control[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref]'));
+    const boundControls = Array.from(
+      root.querySelectorAll('fx-control[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref]'),
+    );
     if (root.matches('fx-repeatitem')) {
       boundControls.unshift(root);
     }

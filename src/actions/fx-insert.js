@@ -136,13 +136,11 @@ export class FxInsert extends AbstractAction {
     let targetSequence = [];
     const inscopeContext = getInScopeContext(this);
 
+    const fore = this.getOwnerForm();
+
     // ### 'context' attribute takes precedence over 'ref'
     if (this.hasAttribute('context')) {
-      [context] = evaluateXPathToNodes(
-        this.getAttribute('context'),
-        inscopeContext,
-        this.getOwnerForm(),
-      );
+      [context] = evaluateXPathToNodes(this.getAttribute('context'), inscopeContext, fore);
       inscope = inscopeContext;
     }
 
@@ -165,11 +163,15 @@ export class FxInsert extends AbstractAction {
       if (context) {
         insertLocationNode = context;
         context.appendChild(originSequenceClone);
+        fore.signalChangeToElement(insertLocationNode.localName);
+        fore.signalChangeToElement(originSequenceClone.localName);
         index = 1;
       } else {
         // No context. We can insert into the `inscope`.
         insertLocationNode = inscope;
         inscope.appendChild(originSequenceClone);
+        fore.signalChangeToElement(inscope.localName);
+        fore.signalChangeToElement(originSequenceClone.localName);
         index = 1;
       }
     } else {
@@ -205,6 +207,8 @@ export class FxInsert extends AbstractAction {
       if (this.position && this.position === 'before') {
         // this.at -= 1;
         insertLocationNode.parentNode.insertBefore(originSequenceClone, insertLocationNode);
+        fore.signalChangeToElement(insertLocationNode.parentNode);
+        fore.signalChangeToElement(originSequenceClone.localName);
       }
 
       if (this.position && this.position === 'after') {
@@ -217,8 +221,12 @@ export class FxInsert extends AbstractAction {
         } else if (this.hasAttribute('context')) {
           index = 1;
           insertLocationNode.prepend(originSequenceClone);
+          fore.signalChangeToElement(insertLocationNode);
+          fore.signalChangeToElement(originSequenceClone.localName);
         } else {
           insertLocationNode.insertAdjacentElement('afterend', originSequenceClone);
+          fore.signalChangeToElement(insertLocationNode);
+          fore.signalChangeToElement(originSequenceClone.localName);
         }
       }
     }
@@ -251,8 +259,8 @@ export class FxInsert extends AbstractAction {
       'inserted-nodes': originSequenceClone,
       'insert-location-node': insertLocationNode,
       position: this.position,
-      instanceId:instanceId,
-      foreId:this.getOwnerForm().id
+      instanceId,
+      foreId: fore.id,
     });
 
     // todo: this actually should dispatch to respective instance

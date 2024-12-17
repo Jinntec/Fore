@@ -275,7 +275,7 @@ export class Fore {
    * recursively refreshes all UI Elements.
    *
    * @param {HTMLElement} startElement
-   * @param {(boolean|{reason:'index-function'})} force Whether to do a forced refresh. Forced
+   * @param {(boolean|{reason:'index-function', elementLocalnamesWithChanges: string[]})} force Whether to do a forced refresh. Forced
    * refreshes are very bad for performance, try to limit them. If the forced refresh is because index functions may change, it is better to pass the reason
    * @returns {Promise<void>}
    */
@@ -300,30 +300,47 @@ export class Fore {
       const { children } = startElement;
       if (children) {
         for (const element of Array.from(children)) {
-            if (element.nodeName.toUpperCase() === 'FX-FORE') {
-              break;
+          if (element.nodeName.toUpperCase() === 'FX-FORE') {
+            break;
+          }
+          if (Fore.isUiElement(element.nodeName) && typeof element.refresh === 'function') {
+            /**
+             * @type {import('./ForeElementMixin.js').default}
+             */
+            const bound = element;
+            if (!force) {
+              continue;
             }
-            if (Fore.isUiElement(element.nodeName) && typeof element.refresh === 'function') {
-                /**
-                 * @type {import('./ForeElementMixin.js').default}
-                 */
-                if (
-                    force &&
-                    typeof force === 'object' &&
-                    force.reason === 'index-function' &&
-                    element._dependencies.isInvalidatedByIndexFunction()
-                ) {
-                    element.refresh(force);
-                    continue;
-                } else if (force === true) {
-                    element.refresh(force);
-                }
-                // console.log('refreshing', element, element?.ref);
-                // console.log('refreshing ',element);
-            } else if (!(element.inert === true) ) {
-                // testing for inert catches model and action elements and should just leave updateable html elements
-                Fore.refreshChildren(element, force);
+            if (force === true) {
+              // Unconditional force refresh
+              bound.refresh(force);
+              continue;
             }
+            if (typeof force !== 'object') {
+              continue;
+            }
+            if (
+              force.reason === 'index-function' &&
+              bound.dependencies.isInvalidatedByIndexFunction()
+            ) {
+              bound.refresh(force);
+              continue;
+            }
+
+            if (
+              bound.dependencies.isInvalidatedByChildlistChanges(force.elementLocalnamesWithChanges)
+            ) {
+              bound.refresh(force);
+              continue;
+            }
+
+            // console.log('refreshing', element, element?.ref);
+            // console.log('refreshing ',element);
+          }
+          if (!(element.inert === true)) {
+            // testing for inert catches model and action elements and should just leave updateable html elements
+            Fore.refreshChildren(element, force);
+          }
         }
       }
       resolve('done');
