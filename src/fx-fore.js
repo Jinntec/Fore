@@ -247,6 +247,7 @@ export class FxFore extends HTMLElement {
     // this.mergePartial = this.hasAttribute('merge-partial')? true:false;
     this.mergePartial = false;
     this.createNodes = this.hasAttribute('create-nodes') ? true : false;
+    this.setAttribute('role','form'); // set aria role
   }
 
   connectedCallback() {
@@ -1020,7 +1021,7 @@ export class FxFore extends HTMLElement {
     // const created = new Promise(resolve => {
     console.log('INIT');
     // const boundControls = Array.from(root.querySelectorAll('[ref]:not(fx-model *),fx-repeatitem'));
-    const boundControls = Array.from(root.querySelectorAll('fx-control[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref]'));
+    const boundControls = Array.from(root.querySelectorAll('fx-control[ref],fx-upload[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref]'));
     if (root.matches('fx-repeatitem')) {
       boundControls.unshift(root);
     }
