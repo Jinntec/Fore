@@ -53,6 +53,13 @@ export class FxLens extends HTMLElement {
                     const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
                     this.flashEffect(targetSummary);
                 });
+                fore.addEventListener('index-changed',(ev)=>{
+                    console.log('+++++++++++++++++++++++++++++++insert')
+                    this.update();
+                    const targetId = `${ev.detail.foreId}#${ev.detail.instanceId}`;
+                    const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
+                    this.flashEffect(targetSummary);
+                });
             });
             this.lastWidth = this.offsetWidth;
         });
