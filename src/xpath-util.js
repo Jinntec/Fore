@@ -14,7 +14,7 @@ export class XPathUtil {
    * @param fore
    * @return {*}
    */
-  static createElementFromXPath(xpath, doc, fore) {
+  static createNodesFromXPath(xpath, doc, fore) {
     if (!doc) {
       doc = document.implementation.createDocument(null, null, null); // Create a new XML document if not provided
     }
@@ -47,7 +47,6 @@ export class XPathUtil {
         } else {
           currentNode.appendChild(newElement);
         }
-
         currentNode = newElement;
       }
     }

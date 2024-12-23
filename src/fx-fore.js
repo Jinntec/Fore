@@ -1099,6 +1099,7 @@ export class FxFore extends HTMLElement {
         throw new Error('Unexpected! there must be a sibling right?');
       }
       // console.log('sibling', siblingControl);
+      // todo: review: should this not just be inscopeContext?
       const parentNodeset = ourParent.nodeset;
       const ref = bound.ref;
       let referenceNodeset = siblingControl.nodeset;
@@ -1137,11 +1138,11 @@ export class FxFore extends HTMLElement {
     let newElement;
     if (ref.includes('/')) {
       // multi-step ref expressions
-      newElement = XPathUtil.createElementFromXPath(ref, referenceNode.ownerDocument, this);
+      newElement = XPathUtil.createNodesFromXPath(ref, referenceNode.ownerDocument, this);
       // console.log('new subtree', newElement);
       return newElement;
     } else {
-      return XPathUtil.createElementFromXPath(ref, referenceNode.ownerDocument, this);
+      return XPathUtil.createNodesFromXPath(ref, referenceNode.ownerDocument, this);
     }
   }
 
