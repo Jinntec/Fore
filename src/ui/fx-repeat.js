@@ -400,6 +400,12 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
 
       if (this.getOwnerForm().createNodes) {
         this.getOwnerForm().initData(repeatItem);
+        const repeatItemClone = repeatItem.nodeset.cloneNode(true);
+        this.clearTextValues(repeatItemClone);
+
+        // this.createdNodeset = repeatItem.nodeset.cloneNode(true);
+        this.createdNodeset = repeatItemClone;
+        // console.log('createdNodeset', this.createdNodeset)
       }
 
       if (repeatItem.index === 1) {
@@ -409,6 +415,26 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
       Fore.dispatch(this, 'item-created', { nodeset: repeatItem.nodeset, pos: index + 1 });
       this._initVariables(repeatItem);
     });
+  }
+  clearTextValues(node) {
+    if (!node) return;
+
+    // Clear text node content
+    if (node.nodeType === Node.TEXT_NODE) {
+      node.nodeValue = '';
+    }
+
+    // Clear all attribute values
+    if (node.nodeType === Node.ELEMENT_NODE) {
+      for (const attr of Array.from(node.attributes)) {
+        attr.value = ''; // Clear attribute value
+      }
+    }
+
+    // Recursively clear child nodes
+    for (const child of node.childNodes) {
+      this.clearTextValues(child);
+    }
   }
 
   _initVariables(newRepeatItem) {
