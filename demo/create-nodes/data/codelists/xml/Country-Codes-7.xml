@@ -1,0 +1,4379 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gc:CodeList xmlns:gc="http://docs.oasis-open.org/codelist/ns/genericode/1.0/"
+             xmlns:xoev-cl-4="http://xoev.de/schemata/genericode/4"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <Annotation>
+      <Description>
+         <xoev-cl-4:shortName>Country Codes</xoev-cl-4:shortName>
+         <xoev-cl-4:codelistDescription>Die Codeliste basiert auf der Staats- und Gebietssystematik des Statistischen Bundesamtes (DESTATIS) und dem Standard "Country codes" der International Organization for Standardization (ISO). Die vorliegende Liste die"officially assigned codes" (Alpha-2 und Numerisch) der ISO-Liste sowie den "user assigned code" für Kosovo ("XK"). Kurz- und Langnamen der aufgeführten Einträge wurden, sofern vorhanden, der DESTATIS-Liste entnommen. Zu den nicht in der DESTATIS-Liste geführten Codeeinträgen wurden die zugehörigen Namen der Deutschen Fassung der Norm entnommen. Die Codeliste ist konform zur EN16931-1 und dem darauf basierenden Standard XRechnung sowie zum Standard XBestellung und der zugrundeliegenden Peppol "BIS Order only" Spezifikation.</xoev-cl-4:codelistDescription>
+         <xoev-cl-4:agencyShortName>KoSIT</xoev-cl-4:agencyShortName>
+         <xoev-cl-4:versionDescription>Datengrundlage: Staats- und Gebietssystematik des Statistischen Bundesamtes (DESTATIS) vom 01.01.2022 sowie Standard "Country codes" der ISO in der Fassung 3166-1:2013. Deutsche Fassung: EN ISO 3166-1:2014 Die Konformität diese Codeliste zu den Updates des ISO-Standards 3166-1:2013 wurde überprüft: 2014-03-04 (keine Änderungen nötig), 2014-04-15 (keine Änderungen nötig), 2014-12-18 (keine Änderungen nötig), 2015-02-26 (keine Änderungen nötig), 2015-08-04 (keine Änderungen nötig), 2016-03-31 (keine Änderungen nötig), 2016-07-25 (keine Änderungen nötig), 2016-09-28 (keine Änderungen nötig), 2016-11-15 (keine Änderungen nötig), 2017-03-17 (keine Änderungen nötig), 2018-02-05 (keine Änderungen nötig), 2018-03-26 (keine Änderungen nötig), 2018-07-16 (keine Änderungen nötig), 2018-11-06 (keine Änderungen nötig), 2019-02-14 (keine Änderungen nötig), 2019-03-13 (keine Änderungen nötig), 2020-03-02 (keine Änderungen nötig), 2021-01-20 (Der FullName von Neapel (NP) wurde von "die Demokratische Bundesrepublik Nepal" nach "Nepal" geändert).</xoev-cl-4:versionDescription>
+         <xoev-cl-4:validFrom>2022-01-01</xoev-cl-4:validFrom>
+         <xoev-cl-4:versionHandbook>1.2</xoev-cl-4:versionHandbook>
+         <xoev-cl-4:changes>Code "BY": Name von "Weißrussland" gemäß der Staats- und Gebietssystematik vom 01.01.2022 in "Belarus" geändert.</xoev-cl-4:changes>
+      </Description>
+   </Annotation>
+   <Identification>
+      <ShortName>Country-Codes</ShortName>
+      <LongName>Country Codes</LongName>
+      <Version>7</Version>
+      <CanonicalUri>urn:xoev-de:kosit:codeliste:country-codes</CanonicalUri>
+      <CanonicalVersionUri>urn:xoev-de:kosit:codeliste:country-codes_7</CanonicalVersionUri>
+      <AlternateFormatLocationUri>https://www.destatis.de/DE/Methoden/Klassifikationen/Staat-Gebietsystematik/staatsangehoerigkeit-gebietsschluessel.html</AlternateFormatLocationUri>
+      <AlternateFormatLocationUri>https://www.iso.org/obp/ui/#search</AlternateFormatLocationUri>
+      <Agency>
+         <LongName>Koordinierungsstelle für IT-Standards</LongName>
+      </Agency>
+   </Identification>
+   <ColumnSet>
+      <Column Id="ISOAlpha2code" Use="required">
+         <ShortName>ISOAlpha2code</ShortName>
+         <LongName>ISO Alpha-2 code</LongName>
+         <Data Type="string"/>
+      </Column>
+      <Column Id="DESTATIS-Code-Staat" Use="optional">
+         <ShortName>DESTATIS-Code-Staat</ShortName>
+         <LongName>DESTATIS Code Staat</LongName>
+         <Data Type="string"/>
+      </Column>
+      <Column Id="ShortName" Use="optional">
+         <ShortName>ShortName</ShortName>
+         <LongName>Short Name</LongName>
+         <Data Type="string"/>
+      </Column>
+      <Column Id="FullName" Use="optional">
+         <ShortName>FullName</ShortName>
+         <LongName>Full Name</LongName>
+         <Data Type="string"/>
+      </Column>
+      <Column Id="ISONumeric" Use="optional">
+         <ShortName>ISONumeric</ShortName>
+         <LongName>ISO Numeric</LongName>
+         <Data Type="string"/>
+      </Column>
+      <Column Id="Status" Use="optional">
+         <ShortName>Status</ShortName>
+         <LongName>Status</LongName>
+         <Data Type="string"/>
+      </Column>
+      <Key Id="ISOAlpha2codeKey">
+         <Annotation>
+            <AppInfo>
+               <xoev-cl-4:recommendedKeyColumn/>
+            </AppInfo>
+         </Annotation>
+         <ShortName>ISOAlpha2codeKey</ShortName>
+         <ColumnRef Ref="ISOAlpha2code"/>
+      </Key>
+   </ColumnSet>
+   <SimpleCodeList>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>AD</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>123</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Andorra</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>das Fürstentum Andorra</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>020</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>AE</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>469</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Vereinigte Arabische Emirate</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Vereinigten Arabischen Emirate (Abu Dhabi, Adschman, Dubai, Fudschaira, Ras al Chaima, Schardscha, Umm al Kaiwain)</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>784</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>AF</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>423</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Afghanistan</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Islamische Republik Afghanistan</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>004</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>AG</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>320</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Antigua und Barbuda</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>Antigua und Barbuda</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>028</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>AI</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Anguilla</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>660</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>AL</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>121</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Albanien</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Albanien</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>008</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>AM</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>422</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Armenien</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Armenien</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>051</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>AO</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>223</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Angola</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Angola</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>024</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>AQ</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Antarktis</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>010</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>AR</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>323</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Argentinien</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Argentinische Republik</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>032</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>AS</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Amerikanisch-Samoa</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>016</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>AT</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>151</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Österreich</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Österreich</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>040</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>AU</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>523</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Australien</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>Australien</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>036</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>AW</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Aruba</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>533</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>AX</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Ålandinseln</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>248</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>AZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>425</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Aserbaidschan</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Aserbaidschan</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>031</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>BA</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>122</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Bosnien und Herzegowina</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>Bosnien und Herzegowina</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>070</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>BB</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>322</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Barbados</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>Barbados</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>052</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>BD</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>460</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Bangladesch</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Volksrepublik Bangladesch</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>050</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>BE</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>124</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Belgien</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>das Königreich Belgien</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>056</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>BF</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>258</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Burkina Faso</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>Burkina Faso</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>854</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>BG</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>125</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Bulgarien</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Bulgarien</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>100</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>BH</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>424</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Bahrain</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>das Königreich Bahrain</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>048</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>BI</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>291</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Burundi</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Burundi</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>108</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>BJ</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>229</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Benin</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Benin</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>204</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>BL</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>St. Barthélemy</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>652</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>BM</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Bermuda</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>060</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>BN</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>429</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Brunei Darussalam</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>Brunei Darussalam</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>096</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>BO</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>326</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Plurinationaler Staat Bolivien</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>der Plurinationale Staat Bolivien</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>068</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>BQ</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Bonaire, St. Eustatius und Saba</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>535</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>BR</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>327</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Brasilien</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Föderative Republik Brasilien</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>076</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>BS</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>324</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Bahamas</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>das Commonwealth der Bahamas</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>044</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>BT</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>426</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Bhutan</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>das Königreich Bhutan</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>064</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>BV</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Bouvetinsel</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>074</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>BW</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>227</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Botsuana</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Botsuana</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>072</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>BY</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>169</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Belarus</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Belarus</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>112</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>BZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>330</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Belize</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>Belize</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>084</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>CA</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>348</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Kanada</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>Kanada</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>124</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>CC</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Kokosinseln (Keeling)</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>166</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>CD</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>246</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Demokratische Republik Kongo</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Demokratische Republik Kongo</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>180</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>CF</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>289</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Zentralafrikanische Republik</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Zentralafrikanische Republik</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>140</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>CG</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>245</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Kongo</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Kongo</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>178</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>CH</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>158</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Schweiz</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Schweizerische Eidgenossenschaft</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>756</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>CI</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>231</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Côte d’Ivoire</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Côte d’Ivoire</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>384</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>CK</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Cookinseln</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Cookinseln</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>184</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>CL</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>332</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Chile</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Chile</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>152</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>CM</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>262</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Kamerun</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Kamerun</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>120</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>CN</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>479</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>China</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Volksrepublik China</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>156</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>CO</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>349</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Kolumbien</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Kolumbien</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>170</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>CR</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>334</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Costa Rica</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Costa Rica</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>188</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>CU</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>351</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Kuba</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Kuba</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>192</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>CV</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>242</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Cabo Verde</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Cabo Verde</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>132</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>CW</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Curaçao</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>531</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>CX</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Weihnachtsinsel</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>Territorium Weihnachtsinsel</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>162</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>CY</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>181</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Zypern</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Zypern</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>196</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>CZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>164</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Tschechien</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Tschechische Republik</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>203</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>DE</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>000</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Deutschland</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Bundesrepublik Deutschland</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>276</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>DJ</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>230</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Dschibuti</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Dschibuti</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>262</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>DK</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>126</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Dänemark</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>das Königreich Dänemark</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>208</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>DM</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>333</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Dominica</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>das Commonwealth Dominica</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>212</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>DO</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>335</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Dominikanische Republik</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Dominikanische Republik</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>214</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>DZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>221</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Algerien</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Demokratische Volksrepublik Algerien</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>012</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>336</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Ecuador</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Ecuador</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>218</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>EE</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>127</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Estland</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Estland</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>233</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>EG</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>287</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Ägypten</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Arabische Republik Ägypten</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>818</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>EH</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Westsahara</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>732</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>ER</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>224</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Eritrea</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>der Staat Eritrea</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>232</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>ES</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>161</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Spanien</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>das Königreich Spanien</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>724</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>ET</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>225</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Äthiopien</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Demokratische Bundesrepublik Äthiopien</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>231</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>FI</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>128</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Finnland</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Finnland</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>246</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>FJ</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>526</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Fidschi</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Fidschi</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>242</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>FK</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Falklandinseln (Malwinen)</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>238</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>FM</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>545</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Föderierte Staaten von Mikronesien</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Föderierten Staaten von Mikronesien</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>583</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>FO</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Färöer</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>234</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>FR</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>129</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Frankreich</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Französische Republik</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>250</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>GA</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>236</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Gabun</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Gabunische Republik</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>266</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>GB</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>168</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Vereinigtes Königreich</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>das Vereinigte Königreich Großbritannien und Nordirland</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>826</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>GD</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>340</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Grenada</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>Grenada</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>308</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>GE</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>430</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Georgien</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>Georgien</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>268</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>GF</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Französisch-Guayana</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>254</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>GG</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Guernsey</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>831</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>GH</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>238</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Ghana</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Ghana</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>288</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>GI</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Gibraltar</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>292</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>GL</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Grönland</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>304</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>GM</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>237</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Gambia</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Gambia</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>270</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>GN</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>261</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Guinea</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Guinea</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>324</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>GP</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Guadeloupe</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>312</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>GQ</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>274</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Äquatorialguinea</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Äquatorialguinea</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>226</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>GR</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>134</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Griechenland</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Hellenische Republik</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>300</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>GS</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Südgeorgien und die Südlichen Sandwichinseln</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>239</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>GT</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>345</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Guatemala</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Guatemala</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>320</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>GU</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Guam</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>316</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>GW</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>259</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Guinea-Bissau</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Guinea-Bissau</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>624</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>GY</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>328</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Guyana</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Kooperative Republik Guyana</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>328</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>HK</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>411</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Hongkong</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Sonderverwaltungsregion Hongkong</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>344</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>HM</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Heard und die McDonaldinseln</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>Territorium Heard und die McDonaldinseln</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>334</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>HN</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>347</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Honduras</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Honduras</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>340</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>HR</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>130</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Kroatien</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Kroatien</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>191</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>HT</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>346</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Haiti</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Haiti</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>332</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>HU</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>165</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Ungarn</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>Ungarn</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>348</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>ID</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>437</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Indonesien</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Indonesien</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>360</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>IE</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>135</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Irland</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>Irland</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>372</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>IL</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>441</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Israel</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>der Staat Israel</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>376</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>IM</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Insel Man</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>833</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>IN</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>436</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Indien</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Indien</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>356</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>IO</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Britisches Territorium im Indischen Ozean</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>086</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>IQ</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>438</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Irak</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Irak</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>368</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>IR</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>439</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Islamische Republik Iran</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Islamische Republik Iran</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>364</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>IS</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>136</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Island</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Island</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>352</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>IT</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>137</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Italien</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Italienische Republik</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>380</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>JE</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Jersey</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>832</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>JM</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>355</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Jamaika</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>Jamaika</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>388</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>JO</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>445</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Jordanien</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>das Haschemitische Königreich Jordanien</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>400</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>JP</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>442</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Japan</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>Japan</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>392</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>KE</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>243</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Kenia</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Kenia</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>404</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>KG</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>450</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Kirgisistan</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Kirgisische Republik</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>417</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>KH</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>446</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Kambodscha</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>das Königreich Kambodscha</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>116</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>KI</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>530</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Kiribati</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Kiribati</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>296</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>KM</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>244</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Komoren</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Union der Komoren</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>174</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>KN</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>370</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>St. Kitts und Nevis</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Föderation St. Kitts und Nevis</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>659</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>KP</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>434</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Demokratische Volksrepublik Korea</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Demokratische Volksrepublik Korea</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>408</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>KR</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>467</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Republik Korea</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Korea</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>410</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>KW</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>448</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Kuwait</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>der Staat Kuwait</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>414</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>KY</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Kaimaninseln</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>136</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>KZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>444</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Kasachstan</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Kasachstan</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>398</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>LA</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>449</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Demokratische Volksrepublik Laos</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Demokratische Volksrepublik Laos</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>418</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>LB</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>451</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Libanon</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Libanesische Republik</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>422</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>LC</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>366</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>St. Lucia</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>St. Lucia</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>662</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>LI</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>141</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Liechtenstein</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>das Fürstentum Liechtenstein</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>438</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>LK</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>431</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Sri Lanka</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Demokratische Sozialistische Republik Sri Lanka</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>144</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>LR</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>247</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Liberia</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Liberia</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>430</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>LS</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>226</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Lesotho</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>das Königreich Lesotho</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>426</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>LT</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>142</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Litauen</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Litauen</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>440</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>LU</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>143</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Luxemburg</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>das Großherzogtum Luxemburg</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>442</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>LV</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>139</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Lettland</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Lettland</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>428</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>LY</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>248</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Libyen</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>der Staat Libyen</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>434</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>MA</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>252</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Marokko</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>das Königreich Marokko</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>504</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>MC</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>147</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Monaco</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>das Fürstentum Monaco</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>492</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>MD</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>146</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Republik Moldau</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Moldau</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>498</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>ME</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>140</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Montenegro</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>Montenegro</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>499</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>MF</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>St. Martin (französischer Teil)</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>663</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>MG</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>249</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Madagaskar</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Madagaskar</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>450</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>MH</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>544</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Marshallinseln</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Marshallinseln</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>584</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>MK</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>144</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Nordmazedonien</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Nordmazedonien</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>807</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>ML</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>251</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Mali</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Mali</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>466</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>MM</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>427</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Myanmar</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik der Union Myanmar</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>104</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>MN</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>457</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Mongolei</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Mongolei</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>496</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>MO</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>412</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Macau</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Sonderverwaltungsregion Macau</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>446</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>MP</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Marianen, Nördliche</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>Commonwealth der Nördlichen Marianen</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>580</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>MQ</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Martinique</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>474</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>MR</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>239</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Mauretanien</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Islamische Republik Mauretanien</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>478</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>MS</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Montserrat</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>500</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>MT</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>145</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Malta</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Malta</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>470</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>MU</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>253</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Mauritius</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Mauritius</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>480</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>MV</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>454</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Malediven</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Malediven</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>462</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>MW</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>256</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Malawi</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Malawi</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>454</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>MX</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>353</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Mexiko</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Vereinigten Mexikanischen Staaten</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>484</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>MY</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>482</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Malaysia</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>Malaysia</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>458</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>MZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>254</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Mosambik</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Mosambik</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>508</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>NA</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>267</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Namibia</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Namibia</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>516</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>NC</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Neukaledonien</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>540</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>NE</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>255</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Niger</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Niger</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>562</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>NF</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Norfolkinsel</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>574</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>NG</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>232</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Nigeria</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Bundesrepublik Nigeria</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>566</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>NI</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>354</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Nicaragua</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Nicaragua</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>558</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>NL</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>148</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Niederlande</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>das Königreich der Niederlande</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>528</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>NO</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>149</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Norwegen</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>das Königreich Norwegen</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>578</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>NP</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>458</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Nepal</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Demokratische Bundesrepublik Nepal</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>524</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>NR</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>531</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Nauru</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Nauru</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>520</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>NU</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Niue</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>Niue</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>570</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>NZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>536</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Neuseeland</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>Neuseeland</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>554</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>OM</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>456</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Oman</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>das Sultanat Oman</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>512</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>PA</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>357</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Panama</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Panama</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>591</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>PE</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>361</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Peru</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Peru</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>604</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>PF</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Französisch-Polynesien</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>258</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>PG</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>538</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Papua-Neuguinea</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>der Unabhängige Staat Papua-Neuguinea</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>598</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>PH</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>462</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Philippinen</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik der Philippinen</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>608</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>PK</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>461</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Pakistan</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Islamische Republik Pakistan</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>586</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>PL</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>152</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Polen</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Polen</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>616</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>PM</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>St. Pierre und Miquelon</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>666</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>PN</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Pitcairninseln</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>612</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>PR</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Puerto Rico</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>Freistaat Puerto Rico</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>630</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>PS</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Palestine, State of</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>the State of Palestine</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>275</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>PT</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>153</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Portugal</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Portugiesische Republik</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>620</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>PW</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>537</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Palau</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Palau</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>585</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>PY</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>359</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Paraguay</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Paraguay</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>600</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>QA</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>447</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Katar</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>der Staat Katar</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>634</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>RE</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Réunion</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>638</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>RO</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>154</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Rumänien</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>Rumänien</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>642</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>RS</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>170</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Serbien</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Serbien</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>688</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>RU</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>160</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Russische Föderation</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Russische Föderation</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>643</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>RW</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>265</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Ruanda</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Ruanda</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>646</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>SA</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>472</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Saudi-Arabien</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>das Königreich Saudi-Arabien</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>682</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>SB</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>524</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Salomonen</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Salomonen</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>090</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>SC</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>271</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Seychellen</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Seychellen</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>690</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>SD</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>277</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Sudan</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Sudan</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>729</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>SE</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>157</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Schweden</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>das Königreich Schweden</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>752</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>SG</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>474</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Singapur</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Singapur</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>702</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>SH</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>St. Helena, Ascension und Tristan da Cunha</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>654</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>SI</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>131</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Slowenien</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Slowenien</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>705</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>SJ</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Svalbard und Jan Mayen</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>744</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>SK</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>155</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Slowakei</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Slowakische Republik</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>703</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>SL</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>272</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Sierra Leone</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Sierra Leone</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>694</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>SM</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>156</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>San Marino</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik San Marino</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>674</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>SN</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>269</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Senegal</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Senegal</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>686</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>SO</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>273</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Somalia</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Bundesrepublik Somalia</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>706</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>SR</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>364</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Suriname</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Suriname</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>740</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>SS</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>278</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Südsudan</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Südsudan</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>728</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>ST</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>268</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>São Tomé und Príncipe</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Demokratische Republik São Tomé und Príncipe</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>678</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>SV</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>337</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>El Salvador</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik El Salvador</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>222</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>SX</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>St. Martin (Niederländischer Teil)</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>534</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>SY</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>475</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Arabische Republik Syrien</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Arabische Republik Syrien</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>760</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>SZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>281</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Eswatini</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>das Königreich Eswatini</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>748</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>TC</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Turks- und Caicosinseln</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>796</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>TD</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>284</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Tschad</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Tschad</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>148</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>TF</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Französische Süd- und Antarktisgebiete</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>260</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>TG</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>283</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Togo</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Togo</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>768</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>TH</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>476</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Thailand</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>das Königreich Thailand</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>764</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>TJ</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>470</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Tadschikistan</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Tadschikistan</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>762</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>TK</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Tokelau</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>772</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>TL</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>483</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Timor-Leste</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Demokratische Republik Timor-Leste</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>626</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>TM</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>471</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Turkmenistan</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>Turkmenistan</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>795</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>TN</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>285</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Tunesien</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Tunesische Republik</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>788</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>TO</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>541</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Tonga</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>das Königreich Tonga</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>776</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>TR</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>163</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Türkei</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Türkei</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>792</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>TT</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>371</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Trinidad und Tobago</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Trinidad und Tobago</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>780</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>TV</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>540</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Tuvalu</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>Tuvalu</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>798</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>TW</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>465</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Taiwan</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>Taiwan</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>158</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>TZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>282</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Vereinigte Republik Tansania</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Vereinigte Republik Tansania</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>834</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>UA</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>166</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Ukraine</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Ukraine</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>804</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>UG</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>286</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Uganda</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Uganda</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>800</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>UM</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Amerikanische Überseeinseln, Kleinere</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>Kleinere amerikanische Überseeinseln</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>581</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>US</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>368</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Vereinigte Staaten</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Vereinigten Staaten von Amerika</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>840</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>UY</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>365</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Uruguay</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Östlich des Uruguay</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>858</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>UZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>477</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Usbekistan</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Usbekistan</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>860</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>VA</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>167</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Vatikanstadt</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>der Staat Vatikanstadt</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>336</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>VC</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>369</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>St. Vincent und die Grenadinen</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>St. Vincent und die Grenadinen</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>670</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>VE</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>367</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Bolivarische Republik Venezuela</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Bolivarische Republik Venezuela</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>862</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>VG</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Britische Jungferninseln</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>092</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>VI</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Amerikanische Jungferninseln</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>850</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>VN</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>432</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Vietnam</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Sozialistische Republik Vietnam</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>704</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>VU</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>532</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Vanuatu</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Vanuatu</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>548</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>WF</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Wallis und Futuna</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>876</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>WS</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>543</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Samoa</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>der Unabhängige Staat Samoa</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>882</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>XK</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>150</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Kosovo</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Kosovo </SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric"/>
+         <Value ColumnRef="Status">
+            <SimpleValue>user assigned code</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>YE</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>421</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Jemen</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Jemen</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>887</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>YT</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat"/>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Mayotte</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName"/>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>175</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>ZA</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>263</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Südafrika</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Südafrika</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>710</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>ZM</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>257</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Sambia</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Sambia</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>894</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+      <Row>
+         <Value ColumnRef="ISOAlpha2code">
+            <SimpleValue>ZW</SimpleValue>
+         </Value>
+         <Value ColumnRef="DESTATIS-Code-Staat">
+            <SimpleValue>233</SimpleValue>
+         </Value>
+         <Value ColumnRef="ShortName">
+            <SimpleValue>Simbabwe</SimpleValue>
+         </Value>
+         <Value ColumnRef="FullName">
+            <SimpleValue>die Republik Simbabwe</SimpleValue>
+         </Value>
+         <Value ColumnRef="ISONumeric">
+            <SimpleValue>716</SimpleValue>
+         </Value>
+         <Value ColumnRef="Status"/>
+      </Row>
+   </SimpleCodeList>
+</gc:CodeList>

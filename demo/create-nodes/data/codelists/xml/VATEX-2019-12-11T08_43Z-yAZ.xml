@@ -1,0 +1,707 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gc:CodeList xmlns:gc="http://docs.oasis-open.org/codelist/ns/genericode/1.0/"
+   xmlns:xoev-cl-3="http://xoev.de/schemata/genericode/3"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <Annotation>
+      <Description>
+         <xoev-cl-3:nameKurz>VATEX</xoev-cl-3:nameKurz>
+         <xoev-cl-3:beschreibung-codeliste>Die Codeliste basiert auf der Codeliste VATEX (VAT
+            exemption reason code list) der Connecting Europe Facility (CEF). Sie ist konform zur
+            DIN EN16931-1 und zu dem darauf basierenden Standard
+            XRechnung</xoev-cl-3:beschreibung-codeliste>
+         <xoev-cl-3:herausgebernameKurz>KoSIT</xoev-cl-3:herausgebernameKurz>
+         <xoev-cl-3:beschreibung-versionCodeliste>Die vorliegende Version der Codeliste entspricht
+            in Umfang und Inhalt der Einträge (Codes, Namen und Beschreibung) der zugrundeliegenden
+            Codeliste VATEX (VAT exemption reason code list) der Connecting Europe Facility (CEF) in
+            der Version 4. Die Codeliste ist konform zur DIN EN16931-1:2017-12 und zu dem darauf
+            basierenden Standard XRechnung in der Version
+            1.2.</xoev-cl-3:beschreibung-versionCodeliste>
+         <xoev-cl-3:datumGueltigkeitAb>2019-11-15</xoev-cl-3:datumGueltigkeitAb>
+         <xoev-cl-3:versionCodelistenHandbuch>1.0</xoev-cl-3:versionCodelistenHandbuch>
+      </Description>
+   </Annotation>
+   <Identification>
+      <ShortName>VATEX</ShortName>
+      <LongName xml:lang="de-DE">VAT exemption reason code list</LongName>
+      <Version>1</Version>
+      <CanonicalUri>urn:xoev-de:kosit:codeliste:vatex</CanonicalUri>
+      <CanonicalVersionUri>urn:xoev-de:kosit:codeliste:vatex_1</CanonicalVersionUri>
+      <AlternateFormatLocationUri>https://ec.europa.eu/cefdigital/wiki/display/CEFDIGITAL/Code+lists#Codelists-2VATexemptionreasoncodelist(VATEX)</AlternateFormatLocationUri>
+      <Agency>
+         <LongName xml:lang="de-DE">Koordinierungsstelle für IT-Standards (KoSIT)</LongName>
+      </Agency>
+   </Identification>
+   <ColumnSet>
+      <Column Id="Code" Use="required">
+         <ShortName>Code</ShortName>
+         <LongName xml:lang="de-DE">Code</LongName>
+         <Data Type="string"/>
+      </Column>
+      <Column Id="code-name" Use="required">
+         <ShortName>code-name</ShortName>
+         <LongName xml:lang="de-DE">Code Name</LongName>
+         <Data Type="string"/>
+      </Column>
+      <Column Id="beschreibung" Use="required">
+         <ShortName>beschreibung</ShortName>
+         <LongName xml:lang="de-DE">Beschreibung</LongName>
+         <Data Type="string"/>
+      </Column>
+      <Column Id="weitereBeschreibung" Use="optional">
+         <ShortName>weitereBeschreibung</ShortName>
+         <LongName xml:lang="de-DE">Remark</LongName>
+         <Data Type="string"/>
+      </Column>
+      <Key Id="CodeKey">
+         <Annotation>
+            <AppInfo>
+               <xoev-cl-3:empfohleneCodeSpalte/>
+            </AppInfo>
+         </Annotation>
+         <ShortName>CodeKey</ShortName>
+         <ColumnRef Ref="Code"/>
+      </Key>
+   </ColumnSet>
+   <SimpleCodeList>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-132</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 132 of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Exemptions for certain activities in public interest.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-132-1a</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 132, section 1 (a) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>The supply by the public postal services of services other than passenger transport and telecommunications services, and the supply of goods incidental thereto.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-132-1b</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 132, section 1 (b) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Hospital and medical care and closely related activities undertaken by bodies governed by public law or, under social conditions comparable with those applicable to bodies governed by public law, by hospitals, centres for medical treatment or diagnosis and other duly recognised establishments of a similar nature</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-132-1c</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 132, section 1 (c) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>The provision of medical care in the exercise of the medical and paramedical professions as defined by the Member State concerned.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-132-1d</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 132, section 1 (d) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>The supply of human organs, blood and milk.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-132-1e</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 132, section 1 (e) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>The supply of services by dental technicians in their professional capacity and the supply of dental prostheses by dentists and dental technicians.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-132-1f</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 132, section 1 (f) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>The supply of services by independent groups of persons, who are carrying on an activity which is exempt from VAT or in relation to which they are not taxable persons, for the purpose of rendering their members the services directly necessary for the exercise of that activity, where those groups merely claim from their members exact reimbursement of their share of the joint expenses, provided that such exemption is not likely to cause distortion of competition.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-132-1g</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 132, section 1 (g) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>The supply of services and of goods closely linked to welfare and social security work, including those supplied by old people's homes, by bodies governed by public law or by other bodies recognised by the Member State concerned as being devoted to social wellbeing.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-132-1h</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 132, section 1 (h) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>The supply of services and of goods closely linked to the protection of children and young persons by bodies governed by public law or by other organisations recognised by the Member State concerned as being devoted to social wellbeing;</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-132-1i</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 132, section 1 (i) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>The provision of children's or young people's education, school or university education, vocational training or retraining, including the supply of services and of goods closely related thereto, by bodies governed by public law having such as their aim or by other organisations recognised by the Member State concerned as having similar objects.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-132-1j</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 132, section 1 (j) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Tuition given privately by teachers and covering school or university education.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-132-1k</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 132, section 1 (k) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>The supply of staff by religious or philosophical institutions for the purpose of the activities referred to in points (b), (g), (h) and (i) and with a view to spiritual welfare.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-132-1l</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 132, section 1 (l) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>The supply of services, and the supply of goods closely linked thereto, to their members in their common interest in return for a subscription fixed in accordance with their rules by non-profitmaking organisations with aims of a political, trade-union, religious, patriotic, philosophical, philanthropic or civic nature, provided that this exemption is not likely to cause distortion of competition.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-132-1m</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 132, section 1 (m) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>The supply of certain services closely linked to sport or physical education by non-profit-making organisations to persons taking part in sport or physical education.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-132-1n</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 132, section 1 (n) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>The supply of certain cultural services, and the supply of goods closely linked thereto, by bodies governed by public law or by other cultural bodies recognised by the Member State concerned.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-132-1o</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 132, section 1 (o) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>The supply of services and goods, by organisations whose activities are exempt pursuant to points (b), (g), (h), (i), (l), (m) and (n), in connection with fund-raising events organised exclusively for their own benefit, provided that exemption is not likely to cause distortion of competition.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-132-1p</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 132, section 1 (p) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>The supply of transport services for sick or injured persons in vehicles specially designed for the purpose, by duly authorised bodies.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-132-1q</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 132, section 1 (q) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>The activities, other than those of a commercial nature, carried out by public radio and television bodies.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-143</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 143 of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Exemptions on importation.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-143-1a</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 143, section 1 (a) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>The final importation of goods of which the supply by a taxable person would in all circumstances be exempt within their respective territory.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-143-1b</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 143, section 1 (b) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>The final importation of goods governed by Council Directives 69/169/EEC (1), 83/181/EEC (2) and 2006/79/EC (3).</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-143-1c</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 143, section 1 (c) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>The final importation of goods, in free circulation from a third territory forming part of the Community customs territory, which would be entitled to exemption under point (b) if they had been imported within the meaning of the first paragraph of Article 30</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-143-1d</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 143, section 1 (d) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>The importation of goods dispatched or transported from a third territory or a third country into a Member State other than that in which the dispatch or transport of the goods ends, where the supply of such goods by the importer designated or recognised under Article 201 as liable for payment of VAT is exempt under Article 138.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-143-1e</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 143, section 1 (e) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>The reimportation, by the person who exported them, of goods in the state in which they were exported, where those goods are exempt from customs duties.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-143-1f</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 143, section 1 (f) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>The importation, under diplomatic and consular arrangements, of goods which are exempt from customs duties.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-143-1fa</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 143, section 1 (fa) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>The importation of goods by the European Community, the European Atomic Energy Community, the European Central Bank or the European Investment Bank, or by the bodies set up by the Communities to which the Protocol of 8 April 1965 on the privileges and immunities of the European Communities applies, within the limits and under the conditions of that Protocol and the agreements for its implementation or the headquarters agreements, in so far as it does not lead to distortion of competition;</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-143-1g</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 143, section 1 (g) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>The importation of goods by international bodies, other than those referred to in point (fa), recognised as such by the public authorities of the host Member State, or by members of such bodies, within the limits and under the conditions laid down by the international conventions establishing the bodies or by headquarters agreements;</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-143-1h</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 143, section 1 (h) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>The importation of goods, into Member States party to the North Atlantic Treaty, by the armed forces of other States party to that Treaty for the use of those forces or the civilian staff accompanying them or for supplying their messes or canteens where such forces take part in the common defence effort.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-143-1i</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 143, section 1 (i) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>The importation of goods by the armed forces of the United Kingdom stationed in the island of Cyprus pursuant to the Treaty of Establishment concerning the Republic of Cyprus, dated 16 August 1960, which are for the use of those forces or the civilian staff accompanying them or for supplying their messes or canteens.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-143-1j</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 143, section 1 (j) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>The importation into ports, by sea fishing undertakings, of their catches, unprocessed or after undergoing preservation for marketing but before being supplied.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-143-1k</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 143, section 1 (k) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>The importation of gold by central banks.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-143-1l</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 143, section 1 (l) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>The importation of gas through a natural gas system or any network connected to such a system or fed in from a vessel transporting gas into a natural gas system or any upstream pipeline network, of electricity or of heat or cooling energy through heating or cooling networks.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-148</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 148 of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Exemptions related to international transport.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-148-a</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 148, section (a) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Fuel supplies for commercial international transport vessels</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-148-b</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 148, section (b) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Fuel supplies for fighting ships in international transport.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-148-c</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 148, section (c) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Maintenance, modification, chartering and hiring of international transport vessels.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-148-d</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 148, section (d) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Supply to of other services to commercial international transport vessels.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-148-e</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 148, section (e) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Fuel supplies for aircraft on international routes.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-148-f</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 148, section (f) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Maintenance, modification, chartering and hiring of aircraft on international routes.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-148-g</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 148, section (g) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Supply to of other services to aircraft on international routes.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-151</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 151 of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Exemptions relating to certain Transactions treated as exports.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-151-1a</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 151, section 1 (a) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>The supply of goods or services under diplomatic and consular arrangements.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-151-1aa</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 151, section 1 (aa) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>The supply of goods or services to the European Community, the European Atomic Energy Community, the European Central Bank or the European Investment Bank, or to the bodies set up by the Communities to which the Protocol of 8 April 1965 on the privileges and immunities of the European Communities applies, within the limits and under the conditions of that Protocol and the agreements for its implementation or the headquarters agreements, in so far as it does not lead to distortion of competition.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-151-1b</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 151, section 1 (b) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>The supply of goods or services to international bodies, other than those referred to in point (aa), recognised as such by the public authorities of the host Member States, and to members of such bodies, within the limits and under the conditions laid down by the international conventions establishing the bodies or by headquarters agreements.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-151-1c</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 151, section 1 (c) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>The supply of goods or services within a Member State which is a party to the North Atlantic Treaty, intended either for the armed forces of other States party to that Treaty for the use of those forces, or of the civilian staff accompanying them, or for supplying their messes or canteens when such forces take part in the common defence effort.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-151-1d</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 151, section 1 (d) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>The supply of goods or services to another Member State, intended for the armed forces of any State which is a party to the North Atlantic Treaty, other than the Member State of destination itself, for the use of those forces, or of the civilian staff accompanying them, or for supplying their messes or canteens when such forces take part in the common defence effort.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-151-1e</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 151, section 1 (e) of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>The supply of goods or services to the armed forces of the United Kingdom stationed in the island of Cyprus pursuant to the Treaty of Establishment concerning the Republic of Cyprus, dated 16 August 1960, which are for the use of those forces, or of the civilian staff accompanying them, or for supplying their messes or canteens.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-309</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Exempt based on article 309 of Council Directive 2006/112/EC</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Travel agents performed outside of EU.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-ae</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Reverse charge</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Supports EN 16931-1 rule BR-AE-10</SimpleValue>
+         </Value>
+         <Value ColumnRef="weitereBeschreibung">
+            <SimpleValue>Only use with VAT category code AE</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-d</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Intra-Community acquisition from second hand means of transport</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Second-hand means of transport - Indication that VAT has been paid according to the relevant transitional arrangements</SimpleValue>
+         </Value>
+         <Value ColumnRef="weitereBeschreibung">
+            <SimpleValue>Only use with VAT category code E</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-f</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Intra-Community acquisition of second hand goods</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Second-hand goods - Indication that the VAT margin scheme for second-hand goods has been applied.</SimpleValue>
+         </Value>
+         <Value ColumnRef="weitereBeschreibung">
+            <SimpleValue>Only use with VAT category code E</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-g</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Export outside the EU</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Supports EN 16931-1 rule BR-G-10</SimpleValue>
+         </Value>
+         <Value ColumnRef="weitereBeschreibung">
+            <SimpleValue>Only use with VAT category code G</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-i</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Intra-Community acquisition of works of art</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Works of art - Indication that the VAT margin scheme for works of art has been applied.</SimpleValue>
+         </Value>
+         <Value ColumnRef="weitereBeschreibung">
+            <SimpleValue>Only use with VAT category code E</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-ic</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Intra-Community supply</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Supports EN 16931-1 rule BR-IC-10</SimpleValue>
+         </Value>
+         <Value ColumnRef="weitereBeschreibung">
+            <SimpleValue>Only use with VAT category code K</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-j</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Intra-Community acquisition of collectors items and antiques</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Collectors' items and antiques - Indication that the VAT margin scheme for collector’s items and antiques has been applied.</SimpleValue>
+         </Value>
+         <Value ColumnRef="weitereBeschreibung">
+            <SimpleValue>Only use with VAT category code E</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="Code">
+            <SimpleValue>vatex-eu-o</SimpleValue>
+         </Value>
+         <Value ColumnRef="code-name">
+            <SimpleValue>Not subject to VAT</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Supports EN 16931-1 rule BR-O-10</SimpleValue>
+         </Value>
+         <Value ColumnRef="weitereBeschreibung">
+            <SimpleValue>Only use with VAT category code O</SimpleValue>
+         </Value>
+      </Row>
+   </SimpleCodeList>
+</gc:CodeList>
