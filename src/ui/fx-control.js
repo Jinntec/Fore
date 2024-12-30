@@ -631,7 +631,7 @@ export default class FxControl extends XfAbstractControl {
       newEntry.setAttribute('title', evaluated);
     }
     // ### set label
-    const optionLabel = newEntry.textContent;
+    const optionLabel = newEntry.textContent.trim();
     this.evalLabel(optionLabel, node, newEntry);
     //  ### <<< needs rework
   }
