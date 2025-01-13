@@ -248,6 +248,7 @@ export class FxFore extends HTMLElement {
     this.mergePartial = false;
     this.createNodes = this.hasAttribute('create-nodes') ? true : false;
     this._localNamesWithChanges = new Set();
+    this.setAttribute('role','form'); // set aria role
   }
 
   connectedCallback() {
@@ -1041,9 +1042,8 @@ export class FxFore extends HTMLElement {
     // const created = new Promise(resolve => {
     console.log('INIT');
     // const boundControls = Array.from(root.querySelectorAll('[ref]:not(fx-model *),fx-repeatitem'));
-    const boundControls = Array.from(
-      root.querySelectorAll('fx-control[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref]'),
-    );
+
+    const boundControls = Array.from(root.querySelectorAll('fx-control[ref],fx-upload[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref]'));
     if (root.matches('fx-repeatitem')) {
       boundControls.unshift(root);
     }
@@ -1121,6 +1121,7 @@ export class FxFore extends HTMLElement {
         throw new Error('Unexpected! there must be a sibling right?');
       }
       // console.log('sibling', siblingControl);
+      // todo: review: should this not just be inscopeContext?
       const parentNodeset = ourParent.nodeset;
       const ref = bound.ref;
       let referenceNodeset = siblingControl.nodeset;
@@ -1159,11 +1160,11 @@ export class FxFore extends HTMLElement {
     let newElement;
     if (ref.includes('/')) {
       // multi-step ref expressions
-      newElement = XPathUtil.createElementFromXPath(ref, referenceNode.ownerDocument, this);
+      newElement = XPathUtil.createNodesFromXPath(ref, referenceNode.ownerDocument, this);
       // console.log('new subtree', newElement);
       return newElement;
     } else {
-      return XPathUtil.createElementFromXPath(ref, referenceNode.ownerDocument, this);
+      return XPathUtil.createNodesFromXPath(ref, referenceNode.ownerDocument, this);
     }
   }
 

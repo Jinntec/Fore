@@ -1,0 +1,4465 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gc:CodeList xmlns:gc="http://docs.oasis-open.org/codelist/ns/genericode/1.0/"
+             xmlns:xoev-cl-3="http://xoev.de/schemata/genericode/3"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <Annotation>
+      <Description>
+         <xoev-cl-3:nameKurz>UNTDID 4451</xoev-cl-3:nameKurz>
+         <xoev-cl-3:beschreibung-codeliste>Die Codeliste basiert auf der Codeliste 4451 (Text subject code qualifier) des United Trade Data Interchange Directory (UNTDID). Die Codeliste kann im Zusammenhang mit EN16931-1:2017 und der darauf basierenden XRechnung (Standard und Extension) verwendeten werden.</xoev-cl-3:beschreibung-codeliste>
+         <xoev-cl-3:herausgebernameKurz>KoSIT</xoev-cl-3:herausgebernameKurz>
+         <xoev-cl-3:beschreibung-versionCodeliste>Die Konformität zur Datengrundlage in der Version D21a wurde überprüft. </xoev-cl-3:beschreibung-versionCodeliste>
+         <xoev-cl-3:datumGueltigkeitAb>2021-06-18</xoev-cl-3:datumGueltigkeitAb>
+         <xoev-cl-3:versionCodelistenHandbuch>1.1</xoev-cl-3:versionCodelistenHandbuch>
+         <xoev-cl-3:aenderungZurVorversion>Die Konformität zur Datengrundlage in der Version D21a wurde überprüft. Es wurden folgende Codes neu aufgenommen: BAT, BAU, BAV, BAW, BAX, BAY, BAZ, BBA, BBB, BMF, BMG, BMH, CCJ, CCK, CCL, CCM, CCN und CCO.</xoev-cl-3:aenderungZurVorversion>
+      </Description>
+   </Annotation>
+   <Identification>
+      <ShortName>UNTDID.4451</ShortName>
+      <LongName>UNTDID 4451 Text subject code qualifier</LongName>
+      <Version>4</Version>
+      <CanonicalUri>urn:xoev-de:kosit:codeliste:untdid.4451</CanonicalUri>
+      <CanonicalVersionUri>urn:xoev-de:kosit:codeliste:untdid.4451_4</CanonicalVersionUri>
+      <Agency>
+         <LongName>Koordinierungsstelle für IT-Standards</LongName>
+      </Agency>
+   </Identification>
+   <ColumnSet>
+      <Column Id="code" Use="required">
+         <ShortName>code</ShortName>
+         <LongName>Code</LongName>
+         <Data Type="string"/>
+      </Column>
+      <Column Id="name" Use="optional">
+         <ShortName>name</ShortName>
+         <LongName>Name</LongName>
+         <Data Type="string"/>
+      </Column>
+      <Column Id="description" Use="optional">
+         <ShortName>description</ShortName>
+         <LongName>Description</LongName>
+         <Data Type="string"/>
+      </Column>
+      <Key Id="codeKey">
+         <Annotation>
+            <AppInfo>
+               <xoev-cl-3:empfohleneCodeSpalte/>
+            </AppInfo>
+         </Annotation>
+         <ShortName>codeKey</ShortName>
+         <ColumnRef Ref="code"/>
+      </Key>
+   </ColumnSet>
+   <SimpleCodeList>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Goods item description</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>[7002] Plain language description of the nature of a goods item sufficient to identify it for customs, statistical or transport purposes.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Payment term</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>[4276] Free form description of the conditions of payment between the parties to a transaction.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Dangerous goods additional information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>[7488] Additional information concerning dangerous substances and/or article in a consignment.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Dangerous goods technical name</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>[7254] Proper shipping name, supplemented as necessary with the correct technical name, by which a dangerous substance or article may be correctly identified, or which is sufficiently informative to permit identification by reference to generally available literature.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAE</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Acknowledgement description</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The content of an acknowledgement.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Rate additional information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Specific details applying to rates.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Party instructions</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Indicates that the segment contains instructions to be passed on to the identified party.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>General information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The text contains general information.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAJ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Additional conditions of sale/purchase</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Additional conditions specific to this order or project.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAK</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Price conditions</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information on the price conditions that are expected or given.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Goods dimensions in characters</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Expression of a number in characters as length of ten meters.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAM</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Equipment re-usage restrictions</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Technical or commercial reasons why a piece of equipment may not be re-used after the current transport terminates.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Handling restriction</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Restrictions in handling depending on the technical characteristics of the piece of equipment or on the nature of the goods.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAO</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Error description (free text)</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Error described by a free text.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAP</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Response (free text)</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Free text of the response to a communication.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAQ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Package content's description</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A description of the contents of a package.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Terms of delivery</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>(4053) Free text of the non Incoterms terms of delivery. For Incoterms, use: 4053.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAS</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bill of lading remarks</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The remarks printed or to be printed on a bill of lading.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Mode of settlement information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Free text information on an IATA Air Waybill to indicate means by which account is to be settled.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAU</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Consignment invoice information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information pertaining to the invoice covering the consignment.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAV</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Clearance invoice information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information pertaining to the invoice covering clearance of the cargo.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAW</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Letter of credit information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information pertaining to the letter of credit.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAX</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>License information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information pertaining to a license.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAY</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Certification statements</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The text contains certification statements.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Additional export information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The text contains additional export information.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Tariff statements</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of parameters relating to a tariff.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Medical history</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Historical details of a patients medical events.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Conditions of sale or purchase</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>(4490) (4372) Additional information regarding terms and conditions which apply to the transaction.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Contract document type</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>[4422] Textual representation of the type of contract.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABE</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Additional terms and/or conditions (documentary credit)</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>(4260) Additional terms and/or conditions to the documentary credit.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Instructions or information about standby documentary credit</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Instruction or information about a standby documentary credit.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Instructions or information about partial shipment(s)</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Instructions or information about partial shipment(s).</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Instructions or information about transhipment(s)</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Instructions or information about transhipment(s).</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Additional handling instructions documentary credit</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Additional handling instructions for a documentary credit.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABJ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Domestic routing information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information regarding the domestic routing.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABK</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Chargeable category of equipment</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Equipment types are coded by category for financial purposes.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Government information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information pertaining to government.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABM</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Onward routing information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The text contains onward routing information.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Accounting information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>[4410] The text contains information related to accounting.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABO</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Discrepancy information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Free text or coded information to indicate a specific discrepancy.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABP</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Confirmation instructions</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Documentary credit confirmation instructions.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABQ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Method of issuance</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Method of issuance of documentary credit.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Documents delivery instructions</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Delivery instructions for documents required under a documentary credit.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABS</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Additional conditions</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Additional conditions to the issuance of a documentary credit.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Information/instructions about additional amounts covered</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Additional amounts information/instruction.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABU</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Deferred payment termed additional</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Additional terms concerning deferred payment.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABV</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Acceptance terms additional</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Additional terms concerning acceptance.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABW</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Negotiation terms additional</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Additional terms concerning negotiation.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABX</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Document name and documentary requirements</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Document name and documentary requirements.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Instructions/information about revolving documentary credit</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Instructions/information about a revolving documentary credit.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ACA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Documentary requirements</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Specification of the documentary requirements.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ACB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Additional information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>(4270) The text contains additional information.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ACC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Factor assignment clause</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Assignment based on an agreement between seller and factor.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ACD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Reason</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Reason for a request or response.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ACE</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Dispute</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A notice, usually from buyer to seller, that something was found wrong with goods delivered or the services rendered, or with the related invoice.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ACF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Additional attribute information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The text refers to information about an additional attribute not otherwise specified.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ACG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Absence declaration</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A declaration on the reason of the absence.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ACH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Aggregation statement</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A statement on the way a specific variable or set of variables has been aggregated.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ACI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Compilation statement</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A statement on the compilation status of an array or other set of figures or calculations.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ACJ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Definitional exception</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>An exception to the agreed definition of a term, concept, formula or other object.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ACK</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Privacy statement</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A statement on the privacy or confidential nature of an object.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ACL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Quality statement</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A statement on the quality of an object.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ACM</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Statistical description</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The description of a statistical object such as a value list, concept, or structure definition.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ACN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Statistical definition</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The definition of a statistical object such as a value list, concept, or structure definition.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ACO</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Statistical name</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The name of a statistical object such as a value list, concept or structure definition.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ACP</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Statistical title</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The title of a statistical object such as a value list, concept, or structure definition.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ACQ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Off-dimension information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information relating to differences between the actual transport dimensions and the normally applicable dimensions.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ACR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Unexpected stops information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information relating to unexpected stops during a conveyance.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ACS</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Principles</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Text subject is principles section of the UN/EDIFACT rules for presentation of standardized message and directories documentation.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ACT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Terms and definition</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Text subject is terms and definition section of the UN/EDIFACT rules for presentation of standardized message and directories documentation.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ACU</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Segment name</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Text subject is segment name.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ACV</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Simple data element name</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Text subject is name of simple data element.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ACW</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Scope</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Text subject is scope section of the UN/EDIFACT rules for presentation of standardized message and directories documentation.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ACX</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Message type name</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Text subject is name of message type.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ACY</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Introduction</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Text subject is introduction section of the UN/EDIFACT rules for presentation of standardized message and directories documentation.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ACZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Glossary</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Text subject is glossary section of the UN/EDIFACT rules for presentation of standardized message and directories documentation.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Functional definition</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Text subject is functional definition section of the UN/EDIFACT rules for presentation of standardized message and directories documentation.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Examples</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Text subject is examples as given in the example(s) section of the UN/EDIFACT rules for presentation of standardized message and directories documentation.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Cover page</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Text subject is cover page of the UN/EDIFACT rules for presentation of standardized message and directories documentation.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Dependency (syntax) notes</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Denotes that the associated text is a dependency (syntax) note.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADE</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Code value name</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Text subject is name of code value.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Code list name</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Text subject is name of code list.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Clarification of usage</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Text subject is an explanation of the intended usage of a segment or segment group.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Composite data element name</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Text subject is name of composite data element.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Field of application</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Text subject is field of application of the UN/EDIFACT rules for presentation of standardized message and directories documentation.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADJ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Type of assets and liabilities</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information describing the type of assets and liabilities.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADK</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Promotion information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The text contains information about a promotion.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Meter condition</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of the condition of a meter.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADM</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Meter reading information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information related to a particular reading of a meter.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Type of transaction reason</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information describing the type of the reason of transaction.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADO</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Type of survey question</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Type of survey question.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADP</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Carrier's agent counter information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information for use at the counter of the carrier's agent.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADQ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Description of work item on equipment</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description or code for the operation to be executed on the equipment.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Message definition</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Text subject is message definition.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADS</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Booked item information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information pertaining to a booked item.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Source of document</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Text subject is source of document.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADU</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Note</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Text subject is note.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADV</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Fixed part of segment clarification text</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Text subject is fixed part of segment clarification text.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADW</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Characteristics of goods</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of the characteristic of goods in addition to the description of the goods.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADX</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Additional discharge instructions</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Special discharge instructions concerning the goods.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADY</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Container stripping instructions</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Instructions regarding the stripping of container(s).</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>CSC (Container Safety Convention) plate information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information on the CSC (Container Safety Convention) plate that is attached to the container.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Cargo remarks</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Additional remarks concerning the cargo.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Temperature control instructions</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Instruction regarding the temperature control of the cargo.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Text refers to expected data</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Remarks refer to data that was expected.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AED</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Text refers to received data</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Remarks refer to data that was received.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEE</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Section clarification text</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Text subject is section clarification text.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Information to the beneficiary</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information given to the beneficiary.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Information to the applicant</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information given to the applicant.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Instructions to the beneficiary</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Instructions made to the beneficiary.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Instructions to the applicant</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Instructions given to the applicant.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEJ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Controlled atmosphere</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information about the controlled atmosphere.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEK</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Take off annotation</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Additional information in plain text to support a take off annotation. Taking off is the process of assessing the quantity work from extracting the measurement from construction documentation.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Price variation narrative</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Additional information in plain language to support a price variation.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEM</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Documentary credit amendment instructions</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Documentary credit amendment instructions.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Standard method narrative</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Additional information in plain language to support a standard method.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEO</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Project narrative</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Additional information in plain language to support the project.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEP</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Radioactive goods, additional information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Additional information related to radioactive goods.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEQ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bank-to-bank information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information given from one bank to another.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AER</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Reimbursement instructions</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Instructions given for reimbursement purposes.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AES</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Reason for amending a message</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Identification of the reason for amending a message.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AET</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Instructions to the paying and/or accepting and/or negotiating bank</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Instructions to the paying and/or accepting and/or negotiating bank.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEU</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Interest instructions</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Instructions given about the interest.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEV</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Agent commission</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Instructions about agent commission.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEW</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Remitting bank instructions</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Instructions to the remitting bank.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEX</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Instructions to the collecting bank</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Instructions to the bank, other than the remitting bank, involved in processing the collection.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEY</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Collection amount instructions</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Instructions about the collection amount.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Internal auditing information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Text relating to internal auditing information.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AFA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Constraint</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Denotes that the associated text is a constraint.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AFB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Comment</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Denotes that the associated text is a comment.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AFC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Semantic note</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Denotes that the associated text is a semantic note.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AFD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Help text</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Denotes that the associated text is an item of help text.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AFE</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Legend</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Denotes that the associated text is a legend.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AFF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Batch code structure</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A description of the structure of a batch code.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AFG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Product application</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A general description of the application of a product.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AFH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Customer complaint</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Complaint of customer.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AFI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Probable cause of fault</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The probable cause of fault.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AFJ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Defect description</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of the defect.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AFK</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Repair description</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The description of the work performed during the repair.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AFL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Review comments</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Comments relevant to a review.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AFM</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Title</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Denotes that the associated text is a title.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AFN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Description of amount</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>An amount description in clear text.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AFO</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Responsibilities</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information describing the responsibilities.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AFP</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Supplier</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information concerning suppliers.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AFQ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Purchase region</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information concerning the region(s) where purchases are made.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AFR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Affiliation</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information concerning an association of one party with another party(ies).</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AFS</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Borrower</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information concerning the borrower.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AFT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Line of business</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information concerning an entity's line of business.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AFU</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Financial institution</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of financial institution(s) used by an entity.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AFV</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Business founder</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information about the business founder.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AFW</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Business history</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of the business history.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AFX</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Banking arrangements</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information concerning the general banking arrangements.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AFY</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Business origin</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of the business origin.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AFZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Brand names' description</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of the entity's brands.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AGA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Business financing details</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Details about the financing of the business.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AGB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Competition</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information concerning an entity's competition.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AGC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Construction process details</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Details about the construction process.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AGD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Construction specialty</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information concerning the line of business of a construction entity.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AGE</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Contract information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Details about contract(s).</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AGF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Corporate filing</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Details about a corporate filing.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AGG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Customer information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of customers.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AGH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Copyright notice</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information concerning the copyright notice.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AGI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Contingent debt</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Details about the contingent debt.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AGJ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Conviction details</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Details about the law or penal codes that resulted in conviction.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AGK</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Equipment</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of equipment.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AGL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Workforce description</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Comments about the workforce.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AGM</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Exemption</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description about exemptions.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AGN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Future plans</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information on future plans.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AGO</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Interviewee conversation information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information concerning the interviewee conversation.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AGP</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intangible asset</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of intangible asset(s).</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AGQ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Inventory</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of the inventory.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AGR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Investment</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of the investments.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AGS</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intercompany relations information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of the intercompany relations.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AGT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Joint venture</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of the joint venture.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AGU</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Loan</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of a loan.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AGV</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Long term debt</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of the long term debt.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AGW</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Location</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of a location.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AGX</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Current legal structure</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Details on the current legal structure.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AGY</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Marital contract</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Details on a marital contract.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AGZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Marketing activities</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information concerning marketing activities.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AHA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Merger</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of a merger.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AHB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Marketable securities</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of the marketable securities.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AHC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Business debt</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of the business debt(s).</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AHD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Original legal structure</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information concerning the original legal structure.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AHE</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Employee sharing arrangements</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information describing how a company uses employees from another company.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AHF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Organization details</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description about the organization of a company.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AHG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Public record details</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information concerning public records.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AHH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Price range</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information concerning the price range of products made or sold.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AHI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Qualifications</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information on the accomplishments fitting a party for a position.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AHJ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Registered activity</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information concerning the registered activity.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AHK</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Criminal sentence</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of the sentence imposed in a criminal proceeding.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AHL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Sales method</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of the selling means.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AHM</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Educational institution information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Free form description relating to the school(s) attended.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AHN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Status details</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Describes the status details.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AHO</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Sales</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of the sales.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AHP</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Spouse information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information about the spouse.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AHQ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Educational degree information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Details about the educational degree received from a school.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AHR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Shareholding information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>General description of shareholding.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AHS</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Sales territory</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information on the sales territory.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AHT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Accountant's comments</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Comments made by an accountant regarding a financial statement.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AHU</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Exemption law location</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of the exemption provided to a location by a law.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AHV</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Share classifications</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information about the classes or categories of shares.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AHW</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Forecast</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of a prediction.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AHX</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Event location</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of the location of an event.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AHY</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Facility occupancy</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information related to occupancy of a facility.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AHZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Import and export details</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Specific information provided about the importation and exportation of goods.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AIA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Additional facility information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Additional information about a facility.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AIB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Inventory value</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of the value of inventory.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AIC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Education</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of the education of a person.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AID</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Event</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of a thing that happens or takes place.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AIE</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Agent</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information about agents the entity uses.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AIF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Domestically agreed financial statement details</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Details of domestically agreed financial statement.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AIG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Other current asset description</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of other current asset.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AIH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Other current liability description</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of other current liability.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AII</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Former business activity</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of the former line of business.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AIJ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Trade name use</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of how a trading name is used.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AIK</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Signing authority</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of the authorized signatory.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AIL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Guarantee</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>[4376] Description of guarantee.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AIM</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Holding company operation</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of the operation of a holding company.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AIN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Consignment routing</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information on routing of the consignment.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AIO</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Letter of protest</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A letter citing any condition in dispute.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AIP</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Question</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A free text question.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AIQ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Party information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Free text information related to a party.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AIR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Area boundaries description</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of the boundaries of a geographical area.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AIS</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Advertisement information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The free text contains advertisement information.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AIT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Financial statement details</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Details regarding the financial statement in free text.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AIU</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Access instructions</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of how to access an entity.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AIV</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Liquidity</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of an entity's liquidity.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AIW</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Credit line</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of the line of credit available to an entity.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AIX</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Warranty terms</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Text describing the terms of warranty which apply to a product or service.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AIY</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Division description</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Plain language description of a division of an entity.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AIZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Reporting instruction</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Instruction on how to report.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AJA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Examination result</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The result of an examination.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AJB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Laboratory result</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The result of a laboratory investigation.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ALC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Allowance/charge information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information referring to allowance/charge.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ALD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>X-ray result</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The result of an X-ray examination.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ALE</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Pathology result</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The result of a pathology investigation.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ALF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intervention description</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Details of an intervention.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ALG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Summary of admittance</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Summary description of admittance.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ALH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Medical treatment course detail</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Details of a course of medical treatment.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ALI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Prognosis</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Details of a prognosis.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ALJ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Instruction to patient</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Instruction given to a patient.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ALK</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Instruction to physician</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Instruction given to a physician.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ALL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>All documents</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The note implies to all documents.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ALM</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Medicine treatment</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Details of medicine treatment.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ALN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Medicine dosage and administration</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Details of medicine dosage and method of administration.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ALO</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Availability of patient</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Details of when and/or where the patient is available.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ALP</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Reason for service request</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Details of the reason for a requested service.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ALQ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Purpose of service</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Details of the purpose of a service.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ARR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Arrival conditions</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Conditions under which arrival takes place.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ARS</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Service requester's comment</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Comment by the requester of a service.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AUT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Authentication</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>(4130) (4136) (4426) Name, code, password etc. given for authentication purposes.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AUU</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Requested location description</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The description of the location requested.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AUV</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Medicine administration condition</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The event or condition that initiates the administration of a single dose of medicine or a period of treatment.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AUW</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Patient information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information concerning a patient.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AUX</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Precautionary measure</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Action to be taken to avert possible harmful affects.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AUY</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Service characteristic</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Free text description is related to a service characteristic.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AUZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Planned event comment</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Comment about an event that is planned.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AVA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Expected delay comment</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Comment about the expected delay.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AVB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Transport requirements comment</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Comment about the requirements for transport.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AVC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Temporary approval condition</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The condition under which the approval is considered.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AVD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Customs Valuation Information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information provided in this category will be used by the trader to make certain declarations in relation to Customs Valuation.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AVE</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Value Added Tax (VAT) margin scheme</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Description of the VAT margin scheme applied.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AVF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Maritime Declaration of Health</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information about Maritime Declaration of Health.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BAG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Passenger baggage information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information related to baggage tendered by a passenger, such as odd size indication, tag.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BAH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Maritime Declaration of Health</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information about Maritime Declaration of Health.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BAI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Additional product information address</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Address at which additional information on the product can be found.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BAJ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Information to be printed on despatch advice</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Specification of free text information which is to be printed on a despatch advice.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BAK</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Missing goods remarks</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Remarks concerning missing goods.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BAL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Non-acceptance information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information related to the non-acceptance of an order, goods or a consignment.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BAM</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Returns information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information related to the return of items.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BAN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Sub-line item information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Note contains information related to sub-line item data.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BAO</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Test information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information related to a test.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BAP</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>External link</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The external link to a digital document (e.g.: URL).</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BAQ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>VAT exemption reason</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Reason for Value Added Tax (VAT) exemption.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BAR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Processing Instructions</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Instructions for processing.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BAS</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Relay Instructions</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Instructions for relaying.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BAT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>SIMA applicable</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Identifies that Special Import Measures Act applies</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BAU</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Appeals program code</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Identifies information related to an appeals program.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BAV</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>SIMA subject</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Identifies if the goods are subject to a Special Import Measures Act measure.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BAW</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Surtax applicable</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Identifies that surtax applies</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BAX</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>SIMA security bond</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Identifies that there is a security bond in hand that could theoretically be used to cover Special Import Measures Act charges</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BAY</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Surtax subject</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Identifies if the goods are subject to a surtax measure</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BAZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Safeguard applicable</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Identifies safeguard applies</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BBA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Safeguard applicable</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Identifies safeguard applies</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BBB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Safeguard subject</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Identifies if the goods are subject to a safeguard measure</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BLC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Transport contract document clause</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>[4180] Clause on a transport document regarding the cargo being consigned. Synonym: Bill of Lading clause.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BLD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Instruction to prepare the patient</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Instruction with the purpose of preparing the patient.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BLE</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Medicine treatment comment</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Comment about treatment with medicine.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BLF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Examination result comment</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Comment about the result of an examination.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BLG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Service request comment</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Comment about the requested service.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BLH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Prescription reason</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Details of the reason for a prescription.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BLI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Prescription comment</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Comment concerning a specified prescription.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BLJ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Clinical investigation comment</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Comment concerning a clinical investigation.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BLK</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Medicinal specification comment</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Comment concerning the specification of a medicinal product.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BLL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Economic contribution comment</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Comment concerning economic contribution.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BLM</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Status of a plan</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Comment about the status of a plan.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BLN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Random sample test information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information regarding a random sample test.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BLO</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Period of time</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Text subject is a period of time.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BLP</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Legislation</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information about legislation.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BLQ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Security measures requested</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Text describing security measures that are requested to be executed (e.g. access controls, supervision of ship's stores).</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BLR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Transport contract document remark</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>[4244] Remarks concerning the complete consignment to be printed on the transport document. Synonym: Bill of Lading remark.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BLS</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Previous port of call security information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Text describing the security information as applicable at the port facility in the previous port where a ship/port interface was conducted.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BLT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Security information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Text describing security related information (e.g security measures currently in force on a vessel).</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BLU</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Waste information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Text describing waste related information.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BLV</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>B2C marketing information, short description</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Consumer marketing information, short description.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BLW</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>B2B marketing information, long description</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Trading partner marketing information, long description.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BLX</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>B2C marketing information, long description</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Consumer marketing information, long description.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BLY</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Product ingredients</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information on the ingredient make up of the product.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BLZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Location short name</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Short name of a location e.g. for display or printing purposes.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BMA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Packaging material information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The text contains a description of the material used for packaging.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BMB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Filler material information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Text contains information on the material used for stuffing.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BMC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Ship-to-ship activity information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Text contains information on ship-to-ship activities.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BMD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Package material description</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A description of the type of material for packaging beyond the level covered by standards such as UN Recommendation 21.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BME</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Consumer level package marking</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Textual representation of the markings on a consumer level package.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BMF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>SIMA measure in force</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Identifies the specific Special Import Measures Act measure related to the goods</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BMG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Pre-CARM</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Identifiication of how the transmission should be processed regarding submissions transmitted prior to implementation of Canada Border Services Agency’s Assessment and Revenue Management (CARM) project</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>BMH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>SIMA measure type</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Identification of the type of Special Import Measures Act measure</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CCI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Customs clearance instructions</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Any coded or clear instruction agreed by customer and carrier regarding the declaration of the goods.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CCJ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Sub Type Code</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Code which identifies a secondary form type</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CCK</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>SIMA information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Additional information detailing Special Import Measures Act information</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CCL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Time limit end</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The date the goods exited the economy or warehouse</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CCM</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Time limit start</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The date the goods entered the economy or warehouse</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CCN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Warehouse time limit</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The amount of time goods may remain in the warehouse</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CCO</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Value for duty information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Additional information detailing the basis on which the value for duty was determined</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CEX</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Customs clearance instructions export</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Any coded or clear instruction agreed by customer and carrier regarding the export declaration of the goods.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CHG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Change information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Note contains change information.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CIP</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Customs clearance instruction import</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Any coded or clear instruction agreed by customer and carrier regarding the import declaration of the goods.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CLP</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Clearance place requested</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Name of the place where Customs clearance is asked to be executed as requested by the consignee/consignor.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CLR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Loading remarks</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Instructions concerning the loading of the container.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>COI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Order information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Additional information related to an order.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CUR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Customer remarks</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Remarks from or for a supplier of goods or services.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CUS</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Customs declaration information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>(4034) Note contains customs declaration information.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>DAR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Damage remarks</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Remarks concerning damage on the cargo.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>DCL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Document issuer declaration</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>[4020] Text of a declaration made by the issuer of a document.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>DEL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Delivery information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information about delivery.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>DIN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Delivery instructions</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>[4492] Instructions regarding the delivery of the cargo.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>DOC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Documentation instructions</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Instructions pertaining to the documentation.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>DUT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Duty declaration</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The text contains a statement constituting a duty declaration.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>EUR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Effective used routing</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Physical route effectively used for the movement of the means of transport.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>FBC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>First block to be printed on the transport contract</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The first block of text to be printed on the transport contract.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>GBL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Government bill of lading information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Free text information on a transport document to indicate payment information by Government Bill of Lading.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>GEN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Entire transaction set</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Note is general in nature, applies to entire transaction segment.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>GS7</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Further information concerning GGVS par. 7</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Special permission for road transport of certain goods in the German dangerous goods regulation for road transport.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>HAN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Consignment handling instruction</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>[4078] Free form description of a set of handling instructions. For example how specified goods, packages or transport equipment (container) should be handled.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>HAZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Hazard information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information pertaining to a hazard.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ICN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Consignment information for consignee</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>[4070] Any remarks given for the information of the consignee.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>IIN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Insurance instructions</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>(4112) Instructions regarding the cargo insurance.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>IMI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Invoice mailing instructions</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Instructions as to which freight and charges components have to be mailed to whom.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>IND</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Commercial invoice item description</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Free text describing goods on a commercial invoice line.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>INS</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Insurance information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Specific note contains insurance information.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>INV</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Invoice instruction</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Note contains invoice instructions.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>IRP</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Information for railway purpose</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Data entered by railway stations when required, e.g. specified trains, additional sheets for freight calculations, special measures, etc.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ITR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Inland transport details</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information concerning the pre-carriage to the port of discharge if by other means than a vessel.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ITS</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Testing instructions</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Instructions regarding the testing that is required to be carried out on the items in the transaction.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>LAN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Location Alias</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Alternative name for a location.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>LIN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Line item</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Note contains line item information.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>LOI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Loading instruction</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>[4080] Instructions where specified packages or containers are to be loaded on a means of transport.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>MCO</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Miscellaneous charge order</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Free text accounting information on an IATA Air Waybill to indicate payment information by Miscellaneous charge order.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>MDH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Maritime Declaration of Health</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information about Maritime Declaration of Health.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>MKS</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Additional marks/numbers information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Additional information regarding the marks and numbers.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ORI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Order instruction</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Free text contains order instructions.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>OSI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Other service information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>General information created by the sender of general or specific value.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>PAC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Packing/marking information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information regarding the packaging and/or marking of goods.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>PAI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Payment instructions information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The free text contains payment instructions information relevant to the message.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>PAY</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Payables information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Note contains payables information.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>PKG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Packaging information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Note contains packaging information.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>PKT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Packaging terms information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The text contains packaging terms information.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>PMD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Payment detail/remittance information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The free text contains payment details.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>PMT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Payment information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>(4438) Note contains payments information.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>PRD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Product information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The text contains product information.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>PRF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Price calculation formula</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Additional information regarding the price formula used for calculating the item price.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>PRI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Priority information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>(4218) Note contains priority information.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>PUR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Purchasing information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Note contains purchasing information.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>QIN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Quarantine instructions</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Instructions regarding quarantine, i.e. the period during which an arriving vessel, including its equipment, cargo, crew or passengers, suspected to carry or carrying a contagious disease is detained in strict isolation to prevent the spread of such a disease.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>QQD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Quality demands/requirements</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Specification of the quality/performance expectations or standards to which the items must conform.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>QUT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Quotation instruction/information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Note contains quotation information.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>RAH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Risk and handling information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Information concerning risks induced by the goods and/or handling instruction.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>REG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Regulatory information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The free text contains information for regulatory authority.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>RET</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Return to origin information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Free text information on an IATA Air Waybill to indicate consignment returned because of non delivery.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>REV</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Receivables</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The text contains receivables information.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>RQR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Consignment route</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>[3050] Description of a route to be used for the transport of goods.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>SAF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Safety information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The text contains safety information.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>SIC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Consignment documentary instruction</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>[4284] Instructions given and declarations made by the sender to the carrier concerning Customs, insurance, and other formalities.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>SIN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Special instructions</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Special instructions like licence no, high value, handle with care, glass.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>SLR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Ship line requested</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Shipping line requested to be used for traffic between European continent and U.K. for Ireland.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>SPA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Special permission for transport, generally</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Statement that a special permission has been obtained for the transport (and/or routing) in general, and reference to such permission.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>SPG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Special permission concerning the goods to be transported</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Statement that a special permission has been obtained for the transport (and/or routing) of the goods specified, and reference to such permission.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>SPH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Special handling</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Note contains special handling information.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>SPP</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Special permission concerning package</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Statement that a special permission has been obtained for the packaging, and reference to such permission.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>SPT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Special permission concerning transport means</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Statement that a special permission has been obtained for the use of the means transport, and reference to such permission.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>SRN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Subsidiary risk number (IATA/DGR)</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Number(s) of subsidiary risks, induced by the goods, according to the valid classification.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>SSR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Special service request</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Request for a special service concerning the transport of the goods.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>SUR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Supplier remarks</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Remarks from or for a supplier of goods or services.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>TCA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Consignment tariff</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>[5430] Free text specification of tariff applied to a consignment.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>TDT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Consignment transport</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>[8012] Transport information for commercial purposes (generic term).</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>TRA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Transportation information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>General information regarding the transport of the cargo.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>TRR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Requested tariff</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Stipulation of the tariffs to be applied showing, where applicable, special agreement numbers or references.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>TXD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Tax declaration</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The text contains a statement constituting a tax declaration.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>WHI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Warehouse instruction/information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Note contains warehouse information.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ZZZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Mutually defined</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Note contains information mutually defined by trading partners.</SimpleValue>
+         </Value>
+      </Row>
+   </SimpleCodeList>
+</gc:CodeList>

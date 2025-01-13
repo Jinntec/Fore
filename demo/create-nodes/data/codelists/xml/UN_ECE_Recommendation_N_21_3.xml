@@ -1,0 +1,3621 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gc:CodeList xmlns:gc="http://docs.oasis-open.org/codelist/ns/genericode/1.0/"
+             xmlns:xoev-cl-3="http://xoev.de/schemata/genericode/3"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <Annotation>
+      <Description>
+         <xoev-cl-3:nameKurz>UN/ECE Recommendation N°21</xoev-cl-3:nameKurz>
+         <xoev-cl-3:beschreibung-codeliste>Die Codeliste basiert auf UN/ECE Recommendation N°21 (Codes for Passengers, Types of Cargo, Packages and Packaging Materials (with Complementary Codes for Package Names) der UNECE. Als gelöscht markierte Codes werden nicht in die Codeliste übernommen. Die Codeliste kann im Zusammenhang mit EN16931-1:2017 und der darauf basierenden XRechnung (Standard und Extension) verwendet werden. Entsprechend einer UN/ECE Anforderung wird jedem Code ein führendes "X" hinzugefügt, um Verwechslungen mit UN/ECE Recommendation N°20 zu vermeiden. Siehe dazu auch: EN16931-3-2, 3-3, 3-4 Annex A bzw. die XRechnung-Spezifikation. Des Weiteren enthält sie alle Einträge, die für die Nutzung im Kontext des Standards XBestellung benötigt werden.</xoev-cl-3:beschreibung-codeliste>
+         <xoev-cl-3:herausgebernameKurz>KoSIT</xoev-cl-3:herausgebernameKurz>
+         <xoev-cl-3:beschreibung-versionCodeliste>Basiert auf Rec21r12.</xoev-cl-3:beschreibung-versionCodeliste>
+         <xoev-cl-3:datumGueltigkeitAb>2021-06-18</xoev-cl-3:datumGueltigkeitAb>
+         <xoev-cl-3:versionCodelistenHandbuch>1.1</xoev-cl-3:versionCodelistenHandbuch>
+         <xoev-cl-3:aenderungZurVorversion>Änderungen zur Version 2: Die Datengrundlage wurde auf Rec21r12 aktualisiert. Der in der Datengrundlage als gelöscht markierte Code XSX wurde entfernt. Leere Beschreibungen wurden entfernt.</xoev-cl-3:aenderungZurVorversion>
+      </Description>
+   </Annotation>
+   <Identification>
+      <ShortName>rec21</ShortName>
+      <LongName xml:lang="de-DE">Codes for Passengers, Types of Cargo, Packages and Packaging Materials (with Complementary Codes for Package Names) (UN/ECE Recommendation N°21)</LongName>
+      <Version>3</Version>
+      <CanonicalUri>urn:xoev-de:kosit:codeliste:rec21</CanonicalUri>
+      <CanonicalVersionUri>urn:xoev-de:kosit:codeliste:rec21_3</CanonicalVersionUri>
+      <Agency>
+         <LongName xml:lang="de-DE">Koordinierungsstelle für IT-Standards</LongName>
+      </Agency>
+   </Identification>
+   <ColumnSet>
+      <Column Id="code" Use="required">
+         <ShortName>code</ShortName>
+         <LongName xml:lang="de-DE">Code</LongName>
+         <Data Type="string"/>
+      </Column>
+      <Column Id="name" Use="required">
+         <ShortName>name</ShortName>
+         <LongName xml:lang="de-DE">Name</LongName>
+         <Data Type="string"/>
+      </Column>
+      <Column Id="beschreibung" Use="optional">
+         <ShortName>beschreibung</ShortName>
+         <LongName xml:lang="de-DE">Description</LongName>
+         <Data Type="string"/>
+      </Column>
+      <Key Id="codeKey">
+         <Annotation>
+            <AppInfo>
+               <xoev-cl-3:empfohleneCodeSpalte/>
+            </AppInfo>
+         </Annotation>
+         <ShortName>codeKey</ShortName>
+         <ColumnRef Ref="code"/>
+      </Key>
+   </ColumnSet>
+   <SimpleCodeList>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>X1A</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Drum, steel</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>X1B</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Drum, aluminium</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>X1D</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Drum, plywood</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>X1F</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Container, flexible</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A packaging container of flexible construction.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>X1G</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Drum, fibre</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>X1W</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Drum, wooden</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>X2C</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Barrel, wooden</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>X3A</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Jerrican, steel</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>X3H</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Jerrican, plastic</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>X43</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bag, super bulk</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A cloth plastic or paper based bag having the dimensions of the pallet on which it is constructed.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>X44</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bag, polybag</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A type of plastic bag, typically used to wrap promotional pieces, publications, product samples, and/or catalogues.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>X4A</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Box, steel</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>X4B</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Box, aluminium</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>X4C</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Box, natural wood</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>X4D</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Box, plywood</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>X4F</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Box, reconstituted wood</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>X4G</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Box, fibreboard</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>X4H</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Box, plastic</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>X5H</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bag, woven plastic</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>X5L</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bag, textile</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>X5M</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bag, paper</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>X6H</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Composite packaging, plastic receptacle</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>X6P</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Composite packaging, glass receptacle</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>X7A</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Case, car</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A type of portable container designed to store equipment for carriage in an automobile.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>X7B</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Case, wooden</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A case made of wood for retaining substances or articles.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>X8A</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Pallet, wooden</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A platform or open-ended box, made of wood, on which goods are retained for ease of mechanical handling during transport and storage.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>X8B</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Crate, wooden</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A receptacle, made of wood, on which goods are retained for ease of mechanical handling during transport and storage.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>X8C</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bundle, wooden</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Loose or unpacked pieces of wood tied or wrapped together.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XAA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, rigid plastic</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XAB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Receptacle, fibre</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Containment vessel made of fibre used for retaining substances or articles.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XAC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Receptacle, paper</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Containment vessel made of paper for retaining substances or articles.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XAD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Receptacle, wooden</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Containment vessel made of wood for retaining substances or articles.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XAE</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Aerosol</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XAF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Pallet, modular, collars 80cms * 60cms</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Standard sized pallet of dimensions 80 centimeters by 60 centimeters (cms).</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XAG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Pallet, shrinkwrapped</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Pallet load secured with transparent plastic film that has been wrapped around and then shrunk tightly.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XAH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Pallet, 100cms * 110cms</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Standard sized pallet of dimensions 100centimeters by 110 centimeters (cms).</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XAI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Clamshell</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XAJ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Cone</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Container used in the transport of linear material such as yarn.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XAL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Ball</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A spherical containment vessel for retaining substances or articles.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XAM</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Ampoule, non-protected</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XAP</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Ampoule, protected</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XAT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Atomizer</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XAV</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Capsule</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XB4</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Belt</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A band use to retain multiple articles together.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XBA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Barrel</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XBB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bobbin</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XBC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bottlecrate / bottlerack</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XBD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Board</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XBE</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bundle</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XBF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Balloon, non-protected</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XBG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bag</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A receptacle made of flexible material with an open or closed top.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XBH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bunch</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XBI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bin</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XBJ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bucket</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XBK</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Basket</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XBL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bale, compressed</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XBM</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Basin</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XBN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bale, non-compressed</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XBO</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bottle, non-protected, cylindrical</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A narrow-necked cylindrical shaped vessel without external protective packing material.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XBP</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Balloon, protected</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XBQ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bottle, protected cylindrical</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A narrow-necked cylindrical shaped vessel with external protective packing material.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XBR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bar</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XBS</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bottle, non-protected, bulbous</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A narrow-necked bulb shaped vessel without external protective packing material.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XBT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bolt</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XBU</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Butt</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XBV</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bottle, protected bulbous</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A narrow-necked bulb shaped vessel with external protective packing material.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XBW</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Box, for liquids</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XBX</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Box</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XBY</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Board, in bundle/bunch/truss</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XBZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bars, in bundle/bunch/truss</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XCA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Can, rectangular</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XCB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Crate, beer</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XCC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Churn</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XCD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Can, with handle and spout</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XCE</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Creel</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XCF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Coffer</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XCG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Cage</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XCH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Chest</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XCI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Canister</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XCJ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Coffin</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XCK</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Cask</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XCL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Coil</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XCM</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Card</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A flat package usually made of fibreboard from/to which product is often hung or attached.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XCN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Container, not otherwise specified as transport equipment</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XCO</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Carboy, non-protected</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XCP</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Carboy, protected</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XCQ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Cartridge</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Package containing a charge such as propelling explosive for firearms or ink toner for a printer.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XCR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Crate</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XCS</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Case</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XCT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Carton</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XCU</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Cup</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XCV</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Cover</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XCW</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Cage, roll</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XCX</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Can, cylindrical</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XCY</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Cylinder</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XCZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Canvas</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XDA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Crate, multiple layer, plastic</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XDB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Crate, multiple layer, wooden</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XDC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Crate, multiple layer, cardboard</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XDG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Cage, Commonwealth Handling Equipment Pool (CHEP)</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XDH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Box, Commonwealth Handling Equipment Pool (CHEP), Eurobox</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A box mounted on a pallet base under the control of CHEP.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XDI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Drum, iron</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XDJ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Demijohn, non-protected</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XDK</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Crate, bulk, cardboard</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XDL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Crate, bulk, plastic</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XDM</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Crate, bulk, wooden</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XDN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Dispenser</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XDP</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Demijohn, protected</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XDR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Drum</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XDS</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Tray, one layer no cover, plastic</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XDT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Tray, one layer no cover, wooden</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XDU</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Tray, one layer no cover, polystyrene</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XDV</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Tray, one layer no cover, cardboard</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XDW</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Tray, two layers no cover, plastic tray</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XDX</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Tray, two layers no cover, wooden</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XDY</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Tray, two layers no cover, cardboard</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XEC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bag, plastic</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XED</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Case, with pallet base</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XEE</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Case, with pallet base, wooden</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XEF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Case, with pallet base, cardboard</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XEG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Case, with pallet base, plastic</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XEH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Case, with pallet base, metal</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XEI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Case, isothermic</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XEN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Envelope</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XFB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Flexibag</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A flexible containment bag made of plastic, typically for the transportation bulk non-hazardous cargoes using standard size shipping containers.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XFC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Crate, fruit</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XFD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Crate, framed</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XFE</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Flexitank</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A flexible containment tank made of plastic, typically for the transportation bulk non-hazardous cargoes using standard size shipping containers.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XFI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Firkin</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XFL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Flask</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XFO</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Footlocker</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XFP</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Filmpack</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XFR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Frame</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XFT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Foodtainer</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XFW</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Cart, flatbed</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Wheeled flat bedded device on which trays or other regular shaped items are packed for transportation purposes.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XFX</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bag, flexible container</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XGB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bottle, gas</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A narrow-necked metal cylinder for retention of liquefied or compressed gas.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XGI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Girder</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XGL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Container, gallon</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A container with a capacity of one gallon.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XGR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Receptacle, glass</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Containment vessel made of glass for retaining substances or articles.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XGU</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Tray, containing horizontally stacked flat items</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Tray containing flat items stacked on top of one another.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XGY</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bag, gunny</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A sack made of gunny or burlap, used for transporting coarse commodities, such as grains, potatoes, and other agricultural products.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XGZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Girders, in bundle/bunch/truss</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XHA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Basket, with handle, plastic</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XHB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Basket, with handle, wooden</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XHC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Basket, with handle, cardboard</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XHG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Hogshead</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XHN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Hanger</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A purpose shaped device with a hook at the top for hanging items from a rail.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XHR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Hamper</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XIA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Package, display, wooden</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XIB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Package, display, cardboard</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XIC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Package, display, plastic</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XID</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Package, display, metal</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XIE</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Package, show</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XIF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Package, flow</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A flexible tubular package or skin, possibly transparent, often used for containment of foodstuffs (e.g. salami sausage).</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XIG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Package, paper wrapped</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XIH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Drum, plastic</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XIK</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Package, cardboard, with bottle grip-holes</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Packaging material made out of cardboard that facilitates the separation of individual glass or plastic bottles.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XIL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Tray, rigid, lidded stackable (CEN TS 14482:2002)</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Lidded stackable rigid tray compliant with CEN TS 14482:2002.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XIN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Ingot</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XIZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Ingots, in bundle/bunch/truss</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XJB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bag, jumbo</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A flexible containment bag, widely used for storage, transportation and handling of powder, flake or granular materials. Typically constructed from woven polypropylene (PP) fabric in the form of cubic bags.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XJC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Jerrican, rectangular</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XJG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Jug</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XJR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Jar</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XJT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Jutebag</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XJY</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Jerrican, cylindrical</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XKG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Keg</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XKI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Kit</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A set of articles or implements used for a specific purpose.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XLE</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Luggage</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A collection of bags, cases and/or containers which hold personal belongings for a journey.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XLG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Log</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XLT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Lot</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XLU</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Lug</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A wooden box for the transportation and storage of fruit or vegetables.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XLV</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Liftvan</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A wooden or metal container used for packing household goods and personal effects.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XLZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Logs, in bundle/bunch/truss</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XMA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Crate, metal</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Containment box made of metal for retaining substances or articles.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XMB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bag, multiply</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XMC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Crate, milk</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XME</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Container, metal</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A type of containment box made of metal for retaining substances or articles, not otherwise specified as transport equipment.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XMR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Receptacle, metal</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Containment vessel made of metal for retaining substances or articles.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XMS</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Sack, multi-wall</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XMT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Mat</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XMW</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Receptacle, plastic wrapped</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Containment vessel wrapped with plastic for retaining substances or articles.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XMX</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Matchbox</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XNA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Not available</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XNE</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Unpacked or unpackaged</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XNF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Unpacked or unpackaged, single unit</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XNG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Unpacked or unpackaged, multiple units</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XNS</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Nest</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XNT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Net</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XNU</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Net, tube, plastic</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XNV</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Net, tube, textile</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XOA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Pallet, CHEP 40 cm x 60 cm</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Commonwealth Handling Equipment Pool (CHEP) standard pallet of dimensions 40 centimeters x 60 centimeters.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XOB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Pallet, CHEP 80 cm x 120 cm</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Commonwealth Handling Equipment Pool (CHEP) standard pallet of dimensions 80 centimeters x 120 centimeters.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XOC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Pallet, CHEP 100 cm x 120 cm</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Commonwealth Handling Equipment Pool (CHEP) standard pallet of dimensions 100 centimeters x 120 centimeters.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XOD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Pallet, AS 4068-1993</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Australian standard pallet of dimensions 116.5 centimeters x 116.5 centimeters.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XOE</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Pallet, ISO T11</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>ISO standard pallet of dimensions 110 centimeters x 110 centimeters, prevalent in Asia - Pacific region.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XOF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Platform, unspecified weight or dimension</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A pallet equivalent shipping platform of unknown dimensions or unknown weight.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XOK</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Block</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A solid piece of a hard substance, such as granite, having one or more flat sides.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XOT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Octabin</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A standard cardboard container of large dimensions for storing for example vegetables, granules of plastics or other dry products.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XOU</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Container, outer</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A type of containment box that serves as the outer shipping container, not otherwise specified as transport equipment.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XOG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Pallet ISO 0 - 1/2 EURO Pallet</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Standard pallet with dimensions 80 X 60 cm.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XOH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Pallet ISO 1 - 1/1 EURO Pallet</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Standard pallet with dimensions 80 X 120 cm.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XOI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Pallet ISO 2 – 2/1 EURO Pallet</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Standard pallet with dimensions 100 X 120 cm.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XOJ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>1/4 EURO Pallet</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Standard pallet with dimensions 60 X 40 cm.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XOL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>1/8 EURO Pallet</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Standard pallet with dimensions 40 X 30 cm.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XOM</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Synthetic pallet ISO 1</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A standard pallet with standard dimensions 80 x 120cm made of a synthetic material for hygienic reasons.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XON</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Synthetic pallet ISO 2</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A standard pallet with standard dimensions 100 x 120cm made of a synthetic material for hygienic reasons.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XOP</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Wholesaler pallet</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Pallet provided by the wholesaler.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XOQ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Pallet 80 X 100 cm</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Pallet with dimensions 80 X 100 cm.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XOR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Pallet 60 X 100 cm</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Pallet with dimensions 60 X 100 cm.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XOS</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Oneway pallet</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Pallet need not be returned to the point of expedition</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XOV</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Returnable pallet</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Pallet must be returned to the point of expedition.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XOW</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Large bag, pallet sized</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A non-rigid container made of fabric, paper, plastic, etc, with an opening at the top which can be closed and which is suitable for use on pallets</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XOX</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>A wheeled pallet with raised rim (81 x 67 x 135)</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A wheeled pallet with raised rim for the storing and transporting of loads. Dimensions: 81 x 67 x 135 cm (length x width x height).</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XOY</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>A Wheeled pallet with raised rim (81 x 72 x 135)</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A wheeled pallet with raised rim for the storing and transporting of loads. Dimensions: 81 x 72 x 135 cm (length x width x height).</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XOZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Wheeled pallet with raised rim ( 81 x 60 x 16)</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A wheeled pallet with raised rim for the storing and transporting of loads. Dimensions: 81 x 60 x 16 cm (length x width x height).</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XO1</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Two sided cage on wheels with fixing strap</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A two sided cage mounted on wheels with fixing strap. Dimensions: 900 x 770 x 1513 cm (length x width x height).</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XO2</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Trolley</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A low cart for the transportation and storage of groceries, milk, etc.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XO3</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Oneway pallet ISO 0 - 1/2 EURO Pallet</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Oneway pallet with dimensions 80 X 60 cm.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XO4</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Oneway pallet ISO 1 - 1/1 EURO Pallet</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Oneway pallet with dimensions 80 X 120 cm.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XO5</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Oneway pallet ISO 2 - 2/1 EURO Pallet</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Oneway pallet with dimensions 100 X 120 cm.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XO6</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Pallet with exceptional dimensions</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Pallet with non-standard dimensions</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XO7</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Wooden pallet 40 cm x 80 cm</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Wooden pallet with dimensions 40 cm x 80 cm.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XO8</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Plastic pallet SRS 60 cm x 80 cm</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>SRS (Svenska Retursystem) standard synthetic pallet of dimensions 60 cm x 80 cm.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XO9</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Plastic pallet SRS 80 cm x 120 cm</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>SRS (Svenska Retursystem) standard synthetic pallet of dimensions 80 cm x 120 cm.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XP1</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>CHEP pallet 60 cm x 80 cm</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Commonwealth Handling Equipment Pool (CHEP) standard pallet of dimensions 60 centimeters x 80 centimeters.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XP3</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>LPR pallet 60 cm x 80 cm</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>LPR (La Pallet Rouge) standard pallet of dimensions 60 cm x 80 cm.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XP4</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>LPR pallet 80 cm x 120 cm</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>LPR (La Pallet Rouge) standard pallet of dimensions 80 cm x 120 cm.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XP2</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Pan</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A shallow, wide, open container, usually of metal.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XPA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Packet</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Small package.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XPB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Pallet, box Combined open-ended box and pallet</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XPC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Parcel</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XPD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Pallet, modular, collars 80cms * 100cms</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Standard sized pallet of dimensions 80 centimeters by 100 centimeters (cms).</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XPE</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Pallet, modular, collars 80cms * 120cms</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Standard sized pallet of dimensions 80 centimeters by 120 centimeters (cms).</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XPF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Pen</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A small open top enclosure for retaining animals.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XPG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Plate</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XPH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Pitcher</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XPI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Pipe</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XPJ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Punnet</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XPK</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Package</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Standard packaging unit.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XPL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Pail</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XPN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Plank</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XPO</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Pouch</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XPP</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Piece</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A loose or unpacked article.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XPR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Receptacle, plastic</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Containment vessel made of plastic for retaining substances or articles.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XPT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Pot</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XPU</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Tray</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XPV</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Pipes, in bundle/bunch/truss</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XPX</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Pallet</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Platform or open-ended box, usually made of wood, on which goods are retained for ease of mechanical handling during transport and storage.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XPY</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Plates, in bundle/bunch/truss</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XPZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Planks, in bundle/bunch/truss</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XQA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Drum, steel, non-removable head</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XQB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Drum, steel, removable head</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XQC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Drum, aluminium, non-removable head</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XQD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Drum, aluminium, removable head</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XQF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Drum, plastic, non-removable head</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XQG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Drum, plastic, removable head</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XQH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Barrel, wooden, bung type</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XQJ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Barrel, wooden, removable head</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XQK</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Jerrican, steel, non-removable head</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XQL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Jerrican, steel, removable head</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XQM</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Jerrican, plastic, non-removable head</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XQN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Jerrican, plastic, removable head</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XQP</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Box, wooden, natural wood, ordinary</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XQQ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Box, wooden, natural wood, with sift proof walls</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XQR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Box, plastic, expanded</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XQS</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Box, plastic, solid</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XRD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Rod</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XRG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Ring</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XRJ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Rack, clothing hanger</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XRK</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Rack</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XRL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Reel</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Cylindrical rotatory device with a rim at each end on which materials are wound.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XRO</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Roll</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XRT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Rednet</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Containment material made of red mesh netting for retaining articles (e.g. trees).</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XRZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Rods, in bundle/bunch/truss</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XSA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Sack</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XSB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Slab</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XSC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Crate, shallow</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XSD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Spindle</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XSE</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Sea-chest</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XSH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Sachet</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XSI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Skid</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A low movable platform or pallet to facilitate the handling and transport of goods.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XSK</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Case, skeleton</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XSL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Slipsheet</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Hard plastic sheeting primarily used as the base on which to stack goods to optimise the space within a container. May be used as an alternative to a palletized packaging.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XSM</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Sheetmetal</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XSO</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Spool</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A packaging container used in the transport of such items as wire, cable, tape and yarn.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XSP</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Sheet, plastic wrapping</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XSS</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Case, steel</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XST</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Sheet</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XSU</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Suitcase</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XSV</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Envelope, steel</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XSW</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Shrinkwrapped</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Goods retained in a transparent plastic film that has been wrapped around and then shrunk tightly on to the goods.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XSY</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Sleeve</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XSZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Sheets, in bundle/bunch/truss</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XT1</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Tablet</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A loose or unpacked article in the form of a bar, block or piece.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XTB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Tub</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XTC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Tea-chest</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XTD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Tube, collapsible</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XTE</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Tyre</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A ring made of rubber and/or metal surrounding a wheel.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XTG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Tank container, generic</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A specially constructed container for transporting liquids and gases in bulk.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XTI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Tierce</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XTK</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Tank, rectangular</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XTL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Tub, with lid</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XTN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Tin</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XTO</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Tun</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XTR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Trunk</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XTS</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Truss</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XTT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bag, tote</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A capacious bag or basket.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XTU</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Tube</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XTV</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Tube, with nozzle</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A tube made of plastic, metal or cardboard fitted with a nozzle, containing a liquid or semi-liquid product, e.g. silicon.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XTW</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Pallet, triwall</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A lightweight pallet made from heavy duty corrugated board.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XTY</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Tank, cylindrical</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XTZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Tubes, in bundle/bunch/truss</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XUC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Uncaged</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XUN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Unit</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A type of package composed of a single item or object, not otherwise specified as a unit of transport equipment.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XVA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Vat</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XVG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bulk, gas (at 1031 mbar and 15°C)</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XVI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Vial</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XVK</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Vanpack</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A type of wooden crate.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XVL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bulk, liquid</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XVO</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bulk, solid, large particles (“nodules”)</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XVP</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Vacuum-packed</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XVQ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bulk, liquefied gas (at abnormal temperature/pressure)</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XVN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Vehicle</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A self-propelled means of conveyance.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XVR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bulk, solid, granular particles (“grains”)</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XVS</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bulk, scrap metal</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>Loose or unpacked scrap metal transported in bulk form.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XVY</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bulk, solid, fine particles (“powders”)</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XWA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container</SimpleValue>
+         </Value>
+         <Value ColumnRef="beschreibung">
+            <SimpleValue>A reusable container made of metal, plastic, textile, wood or composite materials used to facilitate transportation of bulk solids and liquids in manageable volumes.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XWB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Wickerbottle</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XWC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, steel</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XWD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, aluminium</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XWF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, metal</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XWG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, steel, pressurised &gt; 10 kpa</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XWH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, aluminium, pressurised &gt; 10 kpa</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XWJ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, metal, pressure 10 kpa</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XWK</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, steel, liquid</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XWL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, aluminium, liquid</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XWM</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, metal, liquid</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XWN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, woven plastic, without coat/liner</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XWP</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, woven plastic, coated</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XWQ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, woven plastic, with liner</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XWR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, woven plastic, coated and liner</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XWS</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, plastic film</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XWT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, textile with out coat/liner</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XWU</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, natural wood, with inner liner</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XWV</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, textile, coated</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XWW</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, textile, with liner</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XWX</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, textile, coated and liner</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XWY</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, plywood, with inner liner</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XWZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, reconstituted wood, with inner liner</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XXA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bag, woven plastic, without inner coat/liner</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XXB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bag, woven plastic, sift proof</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XXC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bag, woven plastic, water resistant</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XXD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bag, plastics film</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XXF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bag, textile, without inner coat/liner</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XXG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bag, textile, sift proof</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XXH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bag, textile, water resistant</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XXJ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bag, paper, multi-wall</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XXK</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bag, paper, multi-wall, water resistant</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XYA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Composite packaging, plastic receptacle in steel drum</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XYB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Composite packaging, plastic receptacle in steel crate box</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XYC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Composite packaging, plastic receptacle in aluminium drum</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XYD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Composite packaging, plastic receptacle in aluminium crate</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XYF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Composite packaging, plastic receptacle in wooden box</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XYG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Composite packaging, plastic receptacle in plywood drum</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XYH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Composite packaging, plastic receptacle in plywood box</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XYJ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Composite packaging, plastic receptacle in fibre drum</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XYK</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Composite packaging, plastic receptacle in fibreboard box</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XYL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Composite packaging, plastic receptacle in plastic drum</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XYM</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Composite packaging, plastic receptacle in solid plastic box</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XYN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Composite packaging, glass receptacle in steel drum</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XYP</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Composite packaging, glass receptacle in steel crate box</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XYQ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Composite packaging, glass receptacle in aluminium drum</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XYR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Composite packaging, glass receptacle in aluminium crate</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XYS</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Composite packaging, glass receptacle in wooden box</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XYT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Composite packaging, glass receptacle in plywood drum</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XYV</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Composite packaging, glass receptacle in wickerwork hamper</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XYW</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Composite packaging, glass receptacle in fibre drum</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XYX</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Composite packaging, glass receptacle in fibreboard box</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XYY</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Composite packaging, glass receptacle in expandable plastic pack</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XYZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Composite packaging, glass receptacle in solid plastic pack</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XZA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, paper, multi-wall</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XZB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bag, large</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XZC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, paper, multi-wall, water resistant</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XZD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, rigid plastic, with structural equipment, solids</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XZF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, rigid plastic, freestanding, solids</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XZG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, rigid plastic, with structural equipment, pressurised</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XZH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, rigid plastic, freestanding, pressurised</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XZJ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, rigid plastic, with structural equipment, liquids</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XZK</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, rigid plastic, freestanding, liquids</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XZL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, composite, rigid plastic, solids</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XZM</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, composite, flexible plastic, solids</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XZN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, composite, rigid plastic, pressurised</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XZP</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, composite, flexible plastic, pressurised</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XZQ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, composite, rigid plastic, liquids</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XZR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, composite, flexible plastic, liquids</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XZS</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, composite</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XZT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, fibreboard</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XZU</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, flexible</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XZV</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, metal, other than steel</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XZW</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, natural wood</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XZX</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, plywood</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XZY</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Intermediate bulk container, reconstituted wood</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XZZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Mutually defined</SimpleValue>
+         </Value>
+      </Row>
+   </SimpleCodeList>
+</gc:CodeList>
