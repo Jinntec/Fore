@@ -1,0 +1,99 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+' uncomment the following line and comment the first to use locally
+' !include C4_Container.puml
+
+' LAYOUT_TOP_DOWN()
+' LAYOUT_AS_SKETCH()
+' LAYOUT_WITH_LEGEND()
+
+title IB PRC
+
+Person(user, User, "A user")
+System_Boundary(balancer,"IB Load Balancer"){
+    Container(resources, "resources.ibo.org")
+    Container(staging, "staging-resources.ibo.org")
+}
+
+
+System_Boundary(prc, "PRC Production Environment") {
+
+    together{
+    Container(proxy03, "ibo-proxy-prod-03", "nginx reverse proxy")
+    Container(proxy04, "ibo-proxy-prod-04", "nginx reverse proxy")
+    }
+
+    together{
+    Container(prod16, "ibp-worker-prod-16", "frontend-1", "ib-prc / eXistdb")
+    Container(prod17, "ibp-worker-prod-17", "frontend-2", "ib-prc / eXistdb")
+    Container(proof, "ibp-proof-prod-01", "Staging server", "ib-prc / eXistdb")
+    }
+
+    Container(prod19, "ibp-worker-prod-19", "sync / repo server", "prc-connector &amp; - publisher")
+}
+
+
+together{
+    System_Ext(sso, "sso.ibo.org", "SSO PROD")
+    System_Ext(ci, "ibp-worker-prod-16", "CI / Repo / Monitoring server")
+    System_Ext(uat, "sso-uat.ibo.org", "SSO UAT")
+}
+
+together{
+    System_Ext(xmltwo, "xmltwo.ibo.org", "IB image server")
+    System_Ext(dspace, "dspace-prod", "dspace server")
+    System_Ext(cms, "cms-prod", "CMS server")
+}
+
+System_Boundary(acceptance, "PRC User Acceptance Testing (UAT) Environment") {
+    Container(dummy1,"...","...")
+    Container(dummy2,"...","...")
+    Container(dummy3,"...","...")
+    Container(dummy6,"...","...")
+}
+System_Boundary(integration, "PRC System Integration Testing (SIT) Environment") {
+    Container(dummy4,"...","...")
+    Container(dummy4,"...","...")
+    Container(dummy5,"...","...")
+    Container(dummy7,"...","...")
+}
+
+
+
+Rel(user, resources, "Uses", "HTTPS")
+Rel(user, staging, "Uses", "HTTPS")
+
+Rel(resources, proxy03, "")
+Rel(staging, proxy03, "")
+
+Rel(resources, proxy04, "")
+Rel(staging, proxy04, "")
+
+Rel_D(proxy03,prod16,"")
+Rel_D(proxy03,proof,"")
+
+Rel_D(proxy04,prod17,"")
+Rel_D(proxy04,proof,"")
+
+
+
+
+Rel(prod16,sso,"")
+Rel(prod17,sso,"")
+
+Rel(ci,prc,"")
+Rel(proof,uat,"")
+
+Rel(prod19, prod16, "")
+Rel(prod19, prod17, "")
+Rel(prod19, proof, "")
+Rel(prod19, xmltwo, "")
+Rel(prod19, dspace, "")
+Rel(prod19, cms, "")
+
+
+' prc -[hidden]d- prod19
+uat -[hidden]d- acceptance
+uat -[hidden]d- integration
+@enduml
+
