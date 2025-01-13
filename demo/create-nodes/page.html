@@ -9,12 +9,12 @@
     <link href="../../resources/toastify.css" rel="stylesheet">
     <link href="default.css" rel="stylesheet">
     <script type="module">
-        // import '../src/scripts/fore-dev.js';
+        import '../../dist/fore-dev.js';
         /*
         Alternative to above import:
         to run from local clone of Fore uncomment the next line and run 'npm start' in Fore homedir.
         */
-        import '../../index.js';
+        // import '../../index.js';
     </script>
 </head>
 <body>
@@ -26,8 +26,8 @@
              xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
              create-nodes="create-nodes" id="fx-invoice">
         <fx-var name="invoice" value="instance('default')"></fx-var>
-        <fx-action event="ready">
-            <!--         <fx-delete ref="//cac:BillingReference[1]"></fx-delete>-->
+         <fx-action event="ready" if="string-length(string-join(//cac:BillingReference)) = 0">
+             <fx-delete ref="//cac:BillingReference"></fx-delete>
         </fx-action>
         <fx-model>
             <fx-instance src="test/04.03a-INVOICE_ubl.xml"></fx-instance>
@@ -117,29 +117,28 @@
                 <header>PRECEDING INVOICE REFERENCE
                     <fx-trigger>
                         <button>add</button>
-                        <fx-action>
                             <fx-insert origin="#r-BG-3"></fx-insert>
-                        </fx-action>
                     </fx-trigger>
                 </header>
-                <!--                <fx-var name="localcount" value="count(//cac:BillingReference/cac:InvoiceDocumentReference)"></fx-var>-->
-                <fx-repeat id="r-BG-3" ref="cac:BillingReference" class="entries" optional>
+                <fx-var name="localcount" value="count(//cac:BillingReference/cac:InvoiceDocumentReference)"></fx-var>
+                <fx-repeat id="r-BG-3" ref="cac:BillingReference"
+                           class="entries-{$localcount}">
                     <template>
                         <fx-group ref="cac:InvoiceDocumentReference">
-                            <fx-control id="BT-25" ref="cbc:ID"><label for="BT-25">Preceding Invoice
-                                reference</label><input
+                        <fx-control id="BT-25" ref="cbc:ID"><label for="BT-25">Preceding Invoice reference</label><input
                                     type="text"></fx-control>
                             <fx-control id="BT-26" ref="cbc:IssueDate"><label for="BT-26">Preceding Invoice issue
                                 date</label><input type="date"></fx-control>
+                        </fx-group>
                             <fx-trigger>
                                 <button>delete</button>
                                 <fx-delete ref="."></fx-delete>
                             </fx-trigger>
-                        </fx-group>
+
                     </template>
                 </fx-repeat>
             </section>
-            <!--
+
                            <fx-group id="BG-4" ref="cac:AccountingSupplierParty">
                               <header>SELLER</header>
                               <fx-control id="BT-27" ref="cac:Party/cac:PartyLegalEntity/cbc:RegistrationName"><label for="BT-27">Seller name</label><textarea class="widget"></textarea></fx-control>
@@ -446,8 +445,6 @@
                                     <fx-trigger><button>delete</button><fx-delete ref="."></fx-delete>
                                     </fx-trigger></template></fx-repeat>
                            </section>
-            -->
-
         </fx-group>
     </fx-fore>
 </main>
