@@ -24,6 +24,8 @@ export class FxContainer extends ForeElementMixin {
   }
 
   connectedCallback() {
+    super.connectedCallback();
+
     this.src = this.hasAttribute('src') ? this.getAttribute('src') : null;
     const style = `
         :host {
@@ -41,7 +43,7 @@ export class FxContainer extends ForeElementMixin {
             </style>
             ${html}
     `;
-    if(this.ref !== ''){
+    if (this.ref !== '') {
       this.getOwnerForm().registerLazyElement(this);
     }
 

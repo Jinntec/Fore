@@ -109,6 +109,8 @@ class FxAppend extends AbstractAction {
     const data = this._generateInstance(templ.content, rootNode);
     // console.log('_dataFromTemplate DATA', data);
     inscope.appendChild(data);
+    parentForm.signalChangeToElement(inscope.localName);
+    parentForm.signalChangeToElement(data.localName);
     // console.log('appended new item ', data);
     // return data;
   }

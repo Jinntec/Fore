@@ -80,7 +80,7 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
     const rItems = this.querySelectorAll(':scope > fx-repeatitem');
     this.applyIndex(rItems[this.index - 1]);
 
-    this.getOwnerForm().refresh({ reason: 'index-function' });
+    this.getOwnerForm().refresh({ reason: 'index-function', elementLocalnamesWithChanges: [] });
   }
 
   applyIndex(repeatItem) {
@@ -107,6 +107,7 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
     // console.log('connectedCallback',this);
     // this.display = window.getComputedStyle(this, null).getPropertyValue("display");
     this.ref = this.getAttribute('ref');
+    this.dependencies.addXPath(this.ref);
     // this.ref = this._getRef();
     // console.log('### fx-repeat connected ', this.id);
     this.addEventListener('item-changed', e => {
@@ -321,6 +322,7 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
     // Fore.refreshChildren(clone,true);
     const fore = this.getOwnerForm();
     if (!fore.lazyRefresh || force) {
+      // Turn the possibly conditional force refresh into a forced one: we changed our children
       Fore.refreshChildren(this, force);
     }
     // this.style.display = 'block';

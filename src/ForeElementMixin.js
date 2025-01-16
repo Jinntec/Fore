@@ -63,8 +63,13 @@ export default class ForeElementMixin extends HTMLElement {
      */
     this.inScopeVariables = new Map();
 
-    this._dependencies = new DependentXPathQueries();
-    this._dependencies.setParentDependencies(this.parent?.closest('[ref]')?._dependencies);
+    this.dependencies = new DependentXPathQueries();
+  }
+
+  connectedCallback() {
+    if (this.parentElement) {
+      this.dependencies.setParentDependencies(this.parentElement?.closest('[ref]')?.dependencies);
+    }
   }
 
   /**
@@ -107,7 +112,7 @@ export default class ForeElementMixin extends HTMLElement {
    * evaluation of fx-bind and UiElements differ in details so that each class needs it's own implementation.
    */
   evalInContext() {
-    this._dependencies.resetDependencies();
+    this.dependencies.resetDependencies();
     // const inscopeContext = this.getInScopeContext();
     const model = this.getModel();
     if (!model) {
@@ -119,7 +124,7 @@ export default class ForeElementMixin extends HTMLElement {
     }
     if (this.hasAttribute('ref')) {
       inscopeContext = getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
-      this._dependencies.addXPath(this.ref);
+      this.dependencies.addXPath(this.ref);
     }
     if (!inscopeContext && this.getModel().instances.length !== 0) {
       // ### always fall back to default context with there's neither a 'context' or 'ref' present
@@ -132,16 +137,16 @@ export default class ForeElementMixin extends HTMLElement {
       this.nodeset = inscopeContext;
     } else if (Array.isArray(inscopeContext)) {
       /*
-			inscopeContext.forEach(n => {
-			  if (XPathUtil.isSelfReference(this.ref)) {
-				this.nodeset = inscopeContext;
-			  } else {
-				const localResult = evaluateXPathToFirstNode(this.ref, n, this);
-				// console.log('local result: ', localResult);
-				this.nodeset.push(localResult);
-			  }
-			});
-	*/
+      inscopeContext.forEach(n => {
+        if (XPathUtil.isSelfReference(this.ref)) {
+        this.nodeset = inscopeContext;
+        } else {
+        const localResult = evaluateXPathToFirstNode(this.ref, n, this);
+        // console.log('local result: ', localResult);
+        this.nodeset.push(localResult);
+        }
+      });
+  */
       // this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext[0], this);
       this.nodeset = evaluateXPath(this.ref, inscopeContext[0], this);
     } else {
