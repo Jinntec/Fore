@@ -54,7 +54,7 @@ export default class AbstractControl extends ForeElementMixin {
    */
   async refresh(force) {
     if (force) this.force = true;
-    // console.log('### AbstractControl.refresh on : ', this);
+    console.log('### AbstractControl.refresh on : ', this);
 
     // Save the old value of this control. this may be the stringified version, contrast to the node in `nodeset`
     const oldValue = this.value;
