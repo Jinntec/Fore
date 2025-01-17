@@ -56,7 +56,7 @@ export default class FxControl extends XfAbstractControl {
     };
   }
 
-  _getValueFromHtmlDom() {
+  _getValueOfWidget() {
     if (this.valueProp === 'selectedOptions') {
       // We have multiple! Just return that as space-separated for now
       return [...this.widget.selectedOptions].map(option => option.value).join(' ');
@@ -136,7 +136,7 @@ export default class FxControl extends XfAbstractControl {
           // console.info('handling Event:', event.type, listenOn);
           // Cancel the default action, if needed
           event.preventDefault();
-          this.setValue(this._getValueFromHtmlDom());
+          this.setValue(this._getValueOfWidget());
         }
       });
       this.updateEvent = 'blur'; // needs to be registered too
@@ -149,19 +149,19 @@ export default class FxControl extends XfAbstractControl {
           () => {
             // console.log('eventlistener ', this.updateEvent);
             // console.info('handling Event:', event.type, listenOn);
-            this.setValue(this._getValueFromHtmlDom());
+            this.setValue(this._getValueOfWidget());
           },
           this.debounceDelay,
         ),
       );
     } else {
       listenOn.addEventListener(this.updateEvent, event => {
-        this.setValue(this._getValueFromHtmlDom());
+        this.setValue(this._getValueOfWidget());
       });
       listenOn.addEventListener(
         'blur',
         event => {
-          this.setValue(this._getValueFromHtmlDom());
+          this.setValue(this._getValueOfWidget());
         },
         { once: true },
       );
@@ -239,7 +239,7 @@ export default class FxControl extends XfAbstractControl {
       this.modelItem.boundControls.push(this);
     }
 
-    setval.actionPerformed();
+    setval.actionPerformed(false);
     // this.visited = true;
   }
 
