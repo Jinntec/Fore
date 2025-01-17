@@ -198,7 +198,7 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
 
   init() {
     // ### there must be a single 'template' child
-    console.log('##### repeat init ', this.id);
+    // console.log('##### repeat init ', this.id);
     // if(!this.inited) this.init();
     // does not use this.evalInContext as it is expecting a nodeset instead of single node
     this._evalNodeset();

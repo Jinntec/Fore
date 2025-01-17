@@ -562,7 +562,7 @@ export class FxFore extends HTMLElement {
     }
 
     this.isRefreshing = true;
-    // console.log(`### <<<<< refresh() on '${this.id}' >>>>>`);
+    console.log(`### <<<<< refresh() on '${this.id}' >>>>>`);
 
     // refresh () {
     // ### refresh Fore UI elements
@@ -1040,7 +1040,7 @@ export class FxFore extends HTMLElement {
    */
   initData(root = this) {
     // const created = new Promise(resolve => {
-    console.log('INIT');
+    // console.log('INIT');
     // const boundControls = Array.from(root.querySelectorAll('[ref]:not(fx-model *),fx-repeatitem'));
 
     const boundControls = Array.from(root.querySelectorAll('fx-control[ref],fx-upload[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref]'));
@@ -1090,7 +1090,7 @@ export class FxFore extends HTMLElement {
         // Plonk it in at the start!
         parentNodeset.insertBefore(newElement, parentNodeset.firstChild);
         bound.evalInContext();
-        console.log('CREATED child', newElement);
+        // console.log('CREATED child', newElement);
         // console.log('new control evaluated to ', control.nodeset);
         // Done!
         continue;
@@ -1141,7 +1141,7 @@ export class FxFore extends HTMLElement {
 */
       bound.evalInContext();
       // console.log('new control evaluated to ', control.nodeset);
-      console.log('CREATED sibling', newElement);
+      // console.log('CREATED sibling', newElement);
     }
     // console.log('DATA', this.getModel().getDefaultContext());
   }
@@ -1155,8 +1155,8 @@ export class FxFore extends HTMLElement {
             console.log(`Node already exists for ref: ${ref}`);
             return existingNode;
         }
-*/
     console.log(`creating new node for ref: ${ref}`);
+*/
     let newElement;
     if (ref.includes('/')) {
       // multi-step ref expressions
