@@ -514,41 +514,6 @@ export class FxFore extends HTMLElement {
    * @param {(boolean|{reason:'index-function'})} [force]fx-fore
    */
   async refresh(force) {
-    /*
-
-                    if (!changedPaths) {
-                        changedPaths = this.toRefresh.map(item => item.path);
-                    } else {
-                        this.toRefresh.push(
-                            ...changedPaths
-                                .map(
-                                    path =>
-                                    this.getModel()
-                                        .modelItems
-                                        .find(item => item.path === path)
-                                )
-                                .filter(Boolean)
-                        );
-
-                        for(const changedPath of changedPaths) {
-                            for (const repeat of this.querySelectorAll('fx-repeat')) {
-                                if (repeat.closest('fx-fore') !== this) {
-                                    continue;
-                                }
-
-                                if (repeat.touchedPaths && repeat.touchedPaths.has(changedPath)) {
-                                    // Make a temporary model-item-like structure for this
-                                    this.toRefresh.push({
-                                        path: changedPath,
-                                        boundControls: [repeat]
-                                    });
-
-                                    console.log('Found a repeat to update!!!', repeat)
-                                }
-                            }
-                            }
-            }
-            */
     if (this.isRefreshing) {
       return;
     }
@@ -562,50 +527,13 @@ export class FxFore extends HTMLElement {
     }
 
     this.isRefreshing = true;
-    console.log(`### <<<<< refresh() on '${this.id}' >>>>>`);
 
     // refresh () {
     // ### refresh Fore UI elements
     // if (!this.initialRun && this.toRefresh.length !== 0) {
+    // if (!this.initialRun && this.toRefresh.length !== 0) {
     if (!force && !this.initialRun && this.toRefresh.length !== 0) {
-      // console.log('toRefresh', this.toRefresh);
-      let needsRefresh = false;
-
-      // ### after recalculation the changed modelItems are copied to 'toRefresh' array for processing
-      this.toRefresh.forEach(modelItem => {
-        // check if modelItem has boundControls - if so, call refresh() for each of them
-        const controlsToRefresh = modelItem.boundControls;
-        if (controlsToRefresh) {
-          controlsToRefresh.forEach(ctrl => {
-            ctrl.refresh(force);
-          });
-        }
-
-        // ### check if other controls depend on current modelItem
-        const { mainGraph } = this.getModel();
-        if (mainGraph && mainGraph.hasNode(modelItem.path)) {
-          const deps = this.getModel().mainGraph.dependentsOf(modelItem.path, false);
-          // ### iterate dependant modelItems and refresh all their boundControls
-          if (deps.length !== 0) {
-            deps.forEach(dep => {
-              // ### if changed modelItem has a 'facet' path we use the basePath that is the locationPath without facet name
-              const basePath = XPathUtil.getBasePath(dep);
-              const modelItemOfDep = this.getModel().modelItems.find(mip => mip.path === basePath);
-              // ### refresh all boundControls
-              modelItemOfDep.boundControls.forEach(control => {
-                control.refresh(force);
-              });
-            });
-            needsRefresh = true;
-          }
-        }
-      });
-      this.toRefresh = [];
-      /*
-                  if (!needsRefresh) {
-                      console.log('no dependants to refresh');
-                  }
-      */
+      this.refreshChanged(force);
     } else {
       // ### resetting visited state for controls to refresh
       /*
@@ -616,6 +544,8 @@ export class FxFore extends HTMLElement {
       */
 
       if (this.inited) {
+        console.log(`### <<<<< refresh() on '${this.id}' >>>>>`);
+
         Fore.refreshChildren(this, force);
       }
       // console.timeEnd('refreshChildren');
@@ -667,6 +597,42 @@ export class FxFore extends HTMLElement {
       }
     }
     this.isRefreshing = false;
+  }
+
+  refreshChanged(force) {
+    console.log('toRefresh', this.toRefresh);
+    let needsRefresh = false;
+
+    // ### after recalculation the changed modelItems are copied to 'toRefresh' array for processing
+    this.toRefresh.forEach(modelItem => {
+      // check if modelItem has boundControls - if so, call refresh() for each of them
+      const controlsToRefresh = modelItem.boundControls;
+      if (controlsToRefresh) {
+        controlsToRefresh.forEach(ctrl => {
+          ctrl.refresh(force);
+        });
+      }
+
+      // ### check if other controls depend on current modelItem
+      const {mainGraph} = this.getModel();
+      if (mainGraph && mainGraph.hasNode(modelItem.path)) {
+        const deps = this.getModel().mainGraph.dependentsOf(modelItem.path, false);
+        // ### iterate dependant modelItems and refresh all their boundControls
+        if (deps.length !== 0) {
+          deps.forEach(dep => {
+            // ### if changed modelItem has a 'facet' path we use the basePath that is the locationPath without facet name
+            const basePath = XPathUtil.getBasePath(dep);
+            const modelItemOfDep = this.getModel().modelItems.find(mip => mip.path === basePath);
+            // ### refresh all boundControls
+            modelItemOfDep.boundControls.forEach(control => {
+              control.refresh(force);
+            });
+          });
+          needsRefresh = true;
+        }
+      }
+    });
+    this.toRefresh = [];
   }
 
   /**
