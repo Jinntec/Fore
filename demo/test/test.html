@@ -10,27 +10,8 @@
 <div class="wrapper">
     <fx-fore>
         <fx-model id="model1">
-            <fx-instance>
-                <data>
-                    <item>foobar</item>
-                    <result>foobar</result>
-                </data>
-                <fx-bind ref="item"></fx-bind>
-            </fx-instance>
+            <fx-instance></fx-instance>
         </fx-model>
-        <fx-group>
-            <span id="result">{result}</span>
-            <fx-control id="input1" ref="result">
-                <fx-items ref="instance('default')/item">
-                    <template>
-                        <span id="checkbox">
-                          <label slot="label">{.}</label>
-                          <input type="checkbox" value="{.}" />
-                        </span>
-                    </template>
-                </fx-items>
-            </fx-control>
-        </fx-group>
     </fx-fore>
 </div>
 <script type="module" src="../demo.js"/>

@@ -67,6 +67,10 @@ export class ModelItem {
     this.boundControls = [];
     // this.value = this._getValue();
     this.instanceId = instance;
+
+    if(!this.path){
+      this.path = 'anon';
+    }
   }
 
   /*

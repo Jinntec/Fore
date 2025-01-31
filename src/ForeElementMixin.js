@@ -7,7 +7,7 @@ import {
 } from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
 import { Fore } from './fore.js';
-import DependentXPathQueries from './DependentXPathQueries.js';
+// import DependentXPathQueries from './DependentXPathQueries.js';
 
 /**
  * Mixin containing all general functions that are shared by all Fore element classes.
@@ -63,13 +63,15 @@ export default class ForeElementMixin extends HTMLElement {
      */
     this.inScopeVariables = new Map();
 
-    this.dependencies = new DependentXPathQueries();
+    // this.dependencies = new DependentXPathQueries();
   }
 
   connectedCallback() {
+/*
     if (this.parentElement) {
       this.dependencies.setParentDependencies(this.parentElement?.closest('[ref]')?.dependencies);
     }
+*/
   }
 
   /**

@@ -77,7 +77,9 @@ export default class DependentXPathQueries {
   /**
    * @param {DependentXPathQueries} deps
    */
+/*
   setParentDependencies(deps) {
     this._parentDependencies = deps;
   }
+*/
 }

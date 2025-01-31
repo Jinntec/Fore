@@ -12,6 +12,8 @@ import getInScopeContext from './getInScopeContext.js';
 import { XPathUtil } from './xpath-util.js';
 import { FxRepeatAttributes } from './ui/fx-repeat-attributes.js';
 import { ModelItem } from './modelitem.js';
+import { DependencyTracker } from "./DependencyTracker.js";
+// import {domFacade, evaluateXPath, parseScript} from "fontoxpath";
 
 /**
  * Makes the dirty state of the form.
@@ -255,6 +257,9 @@ export class FxFore extends HTMLElement {
     this.style.visibility = 'hidden';
     console.time('init');
     this.strict = !!this.hasAttribute('strict');
+
+    this.dependencyTracker = new DependencyTracker();
+
     /*
             document.addEventListener('ready', (e) =>{
               if(e.target !== this){
@@ -475,6 +480,7 @@ export class FxFore extends HTMLElement {
 
   disconnectedCallback() {
     this.removeEventListener('dragstart', this.dragstart);
+    this.dependencyTracker = null;
     /*
             this.removeEventListener('model-construct-done', this._handleModelConstructDone);
             this.removeEventListener('message', this._displayMessage);
@@ -518,23 +524,17 @@ export class FxFore extends HTMLElement {
       return;
     }
 
-    if (force !== true && this._localNamesWithChanges.size > 0) {
-      force = {
-        ...(force || { reason: undefined }),
-        elementLocalnamesWithChanges: Array.from(this._localNamesWithChanges),
-      };
-      this._localNamesWithChanges.clear();
-    }
-
     this.isRefreshing = true;
+    console.log(`### <<<<< refresh() on '${this.id}' >>>>>`);
+    console.log(`### <<<<< refresh() force`, force);
 
     // refresh () {
     // ### refresh Fore UI elements
     // if (!this.initialRun && this.toRefresh.length !== 0) {
     // if (!this.initialRun && this.toRefresh.length !== 0) {
-    if (!force && !this.initialRun && this.toRefresh.length !== 0) {
-      this.refreshChanged(force);
-    } else {
+    if (!force && this.dependencyTracker.hasUpdates()) {
+        this.dependencyTracker.processUpdates();
+      } else {
       // ### resetting visited state for controls to refresh
       /*
                   const visited = this.parentNode.querySelectorAll('.visited');
@@ -544,8 +544,7 @@ export class FxFore extends HTMLElement {
       */
 
       if (this.inited) {
-        console.log(`### <<<<< refresh() on '${this.id}' >>>>>`);
-
+        // console.log(`### <<<<< refresh() on '${this.id}' >>>>>`);
         Fore.refreshChildren(this, force);
       }
       // console.timeEnd('refreshChildren');
@@ -563,10 +562,6 @@ export class FxFore extends HTMLElement {
     // this.dispatchEvent(new CustomEvent('refresh-done'));
     // this.initialRun = false;
     this.style.visibility = 'visible';
-    console.info(
-      `%crefresh-done on #${this.id}`,
-      'background:darkorange; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
-    );
 
     Fore.dispatch(this, 'refresh-done', {});
 
@@ -597,7 +592,69 @@ export class FxFore extends HTMLElement {
       }
     }
     this.isRefreshing = false;
+    console.info(
+        `%crefresh-done on #${this.id}`,
+        'background:darkorange; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+    );
+
   }
+/*
+  initUIDeps(root){
+    const boundOnes = Array.from(root.querySelectorAll('fx-control[ref],fx-output[ref], fx-upload[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref], .widget[ref]'));
+    console.log('initUIDeps bound', boundOnes);
+
+    boundOnes.forEach(bound => {
+      const xmlDocument = new DOMParser().parseFromString('<xqx:module xmlns:xqx="http://www.w3.org/2005/XQueryX"/>', 'text/xml');
+      const ref = bound.getAttribute('ref');
+      // console.log(`### detecting deps for ref: ${ref}`);
+      const xpathAST = parseScript(ref, {
+        language: evaluateXPath.XQUERY_3_1_LANGUAGE,
+        namespaceResolver: prefix =>
+            prefix === 'xqx' ? 'http://www.w3.org/2005/XQueryX' : undefined,
+      }, xmlDocument);
+      // console.log('bound',bound);
+      // console.log('AST for ', xpathAST);
+      xmlDocument.firstElementChild.append(xpathAST);
+      // console.log('AST for ', xmlDocument);
+      const hasPredicates =
+          // evaluateXPathToBoolean('count(//xqx:predicates) != 0',xpathAST,bound);
+          evaluateXPath(
+              'count(//xqx:predicates) != 0',
+              xmlDocument,
+              domFacade,
+              {},
+              evaluateXPath.BOOLEAN_TYPE,
+              {
+                "namespaceResolver": prefix =>
+                    prefix === 'xqx' ? 'http://www.w3.org/2005/XQueryX' : undefined,
+              },
+          );
+      if(hasPredicates){
+        console.log(`#### found predicate in binding "${ref}"`)
+        console.log('AST',xmlDocument.firstElementChild);
+        const secOp =           evaluateXPath(
+            '//xqx:secondOperand',
+            xmlDocument,
+            domFacade,
+            {},
+            evaluateXPath.ALL_RESULTS_TYPE,
+            {
+              "namespaceResolver": prefix =>
+                  prefix === 'xqx' ? 'http://www.w3.org/2005/XQueryX' : undefined,
+            },
+        );
+
+        console.log('depends on',secOp);
+      }
+
+      /!*
+            const name = evaluateXPathToNodes(bound.ref, xpathAST, xmlDocument);
+            console.log('AST name ',bound.ref, name);
+      *!/
+    });
+
+  }
+*/
 
   refreshChanged(force) {
     console.log('toRefresh', this.toRefresh);
@@ -968,7 +1025,10 @@ export class FxFore extends HTMLElement {
     if (this.createNodes) {
       this.initData();
     }
+    // this.dependencyTracker = new DependencyTracker();
     await this.refresh(true);
+    // this.initUIDeps(this);
+    // await this.forceRefresh();
 
     // this.style.display='block'
     this.classList.add('fx-ready');

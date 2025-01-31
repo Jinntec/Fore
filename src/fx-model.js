@@ -247,7 +247,7 @@ export class FxModel extends HTMLElement {
       return;
     }
 
-    // console.log(`### <<<<< recalculate() '${this.fore.id}' >>>>>`);
+    console.log(`### <<<<< recalculate() '${this.fore.id}' >>>>>`);
 
     // console.log('changed nodes ', this.changed);
     this.computes = 0;
@@ -288,6 +288,7 @@ export class FxModel extends HTMLElement {
       });
 
       // ### compute the subgraph
+      console.log('subgraph', this.subgraph);
       const ordered = this.subgraph.overallOrder(false);
       ordered.forEach(path => {
         if (this.mainGraph.hasNode(path)) {

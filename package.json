@@ -32,7 +32,8 @@
   "dependencies": {
     "@jinntec/jinn-toast": "^1.0.5",
     "@picocss/pico": "^2.0.6",
-    "fontoxpath": "^3.33.0"
+    "fontoxpath": "^3.33.0",
+    "sinon": "^19.0.2"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.17.12",

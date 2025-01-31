@@ -73,6 +73,8 @@ export default class FxSetvalue extends AbstractAction {
     if (!item) return;
 
     if (item.value !== newVal) {
+      this.getOwnerForm().dependencyTracker.notifyChange(modelItem.path);
+
       // const path = XPathUtil.getPath(modelItem.node);
       const path = Fore.getDomNodeIndexString(modelItem.node);
 
