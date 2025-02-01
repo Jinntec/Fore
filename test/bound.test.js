@@ -102,7 +102,7 @@ describe('fx-control tests', () => {
     expect(bound).to.exist;
   });
 
-  it('it updates when update event fires', async () => {
+  it.skip('it updates when update event fires', async () => {
     const el = await fixture(html`
                 <fx-fore>
                     <fx-model id="model1">

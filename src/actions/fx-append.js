@@ -1,6 +1,7 @@
 import { AbstractAction } from './abstract-action.js';
 import { Fore } from '../fore.js';
 import { resolveId } from '../xpath-evaluation.js';
+import {XPathUtil} from "../xpath-util";
 
 /**
  * `fx-append` appends an entry to a repeat.
@@ -61,6 +62,7 @@ class FxAppend extends AbstractAction {
   async perform() {
     super.perform();
 
+    this.modelItem = this.getModelItem();
     this._dataFromTemplate();
     /*
         const instData = new XMLSerializer().serializeToString(
@@ -109,8 +111,11 @@ class FxAppend extends AbstractAction {
     const data = this._generateInstance(templ.content, rootNode);
     // console.log('_dataFromTemplate DATA', data);
     inscope.appendChild(data);
-    parentForm.signalChangeToElement(inscope.localName);
-    parentForm.signalChangeToElement(data.localName);
+    // parentForm.signalChangeToElement(inscope.localName);
+    this.getOwnerForm().dependencyTracker.notifyChange(this.modelItem.path);
+
+    // parentForm.signalChangeToElement(data.localName);
+    // this.getOwnerForm().dependencyTracker.notifyChange(XPathUtil.getPath(data));
     // console.log('appended new item ', data);
     // return data;
   }

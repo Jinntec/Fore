@@ -9,6 +9,7 @@ import { Fore } from '../fore.js';
 import { ModelItem } from '../modelitem.js';
 import { debounce } from '../events.js';
 import { FxModel } from '../fx-model.js';
+import {XPathUtil} from "../xpath-util";
 
 const WIDGETCLASS = 'widget';
 
@@ -238,6 +239,7 @@ export default class FxControl extends XfAbstractControl {
     if (this.modelItem instanceof ModelItem && !this.modelItem?.boundControls.includes(this)) {
       this.modelItem.boundControls.push(this);
     }
+
 
     setval.actionPerformed(false);
     // this.visited = true;
@@ -537,12 +539,26 @@ export default class FxControl extends XfAbstractControl {
     const ref = widget.hasAttribute('ref')
       ? widget.getAttribute('ref')
       : widget.getAttribute('data-ref');
+
     // if (widget && widget.hasAttribute('ref')) {
     if (widget && ref) {
       // ### eval nodeset for list control
       const inscope = getInScopeContext(this, ref);
       // const nodeset = evaluateXPathToNodes(ref, inscope, this);
       const nodeset = evaluateXPath(ref, inscope, this);
+
+      this.getOwnerForm().dependencyTracker.register(ref);
+      // we have no modelItem for boundWidgets so need to get instanceId from the ref
+/*
+      const instanceId = XPathUtil.getInstanceId(ref,this.nodeset);
+
+      if(nodeset.length > 0){
+        const canonPath = XPathUtil.getCanonicalXPath(nodeset,instanceId);
+        this.getOwnerForm().dependencyTracker.registerDependency(this.modelItem.path,canonPath);
+      }
+*/
+
+      // this.getOwnerForm().dependencyTracker.registerDependency('$default/continent[1]',this.modelItem.path);
 
       // ### clear items
       const { children } = widget;
@@ -595,6 +611,7 @@ export default class FxControl extends XfAbstractControl {
       if (this.valueProp === 'selectedOptions') {
         const valueSet = new Set(this.value.split(' '));
         const options = this.getWidget().querySelectorAll('option');
+        this.getOwnerForm().dependencyTracker.notifyChange(ref);
         for (const option of [...options]) {
           if (valueSet.has(option.value)) {
             option.selected = true;

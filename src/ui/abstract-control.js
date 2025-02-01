@@ -142,7 +142,7 @@ export default class AbstractControl extends ForeElementMixin {
                 if (!this.modelItem.boundControls.includes(this)) {
                     this.modelItem.boundControls.push(this);
                 }
-                console.log('dependencyTracker',this.getOwnerForm().dependencyTracker)
+                // console.log('dependencyTracker',this.getOwnerForm().dependencyTracker)
                 this.getOwnerForm().dependencyTracker.register(this.modelItem.path, this);
 
                 // console.log('>>>>>>>> abstract refresh ', this.control);

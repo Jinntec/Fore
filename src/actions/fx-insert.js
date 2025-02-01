@@ -153,8 +153,12 @@ export class FxInsert extends AbstractAction {
       if (context) {
         insertLocationNode = context;
         context.appendChild(originSequenceClone);
-        fore.signalChangeToElement(insertLocationNode.localName);
-        fore.signalChangeToElement(originSequenceClone.localName);
+        // fore.signalChangeToElement(insertLocationNode.localName);
+        fore.dependencyTracker.notifyChange(XPathUtil.getPath(insertLocationNode,instanceId));
+
+        // fore.signalChangeToElement(originSequenceClone.localName);
+        fore.dependencyTracker.notifyChange(XPathUtil.getPath(originSequenceClone,instanceId));
+
         index = 1;
       } else {
 
@@ -205,8 +209,12 @@ export class FxInsert extends AbstractAction {
       if (this.position && this.position === 'before') {
         // this.at -= 1;
         insertLocationNode.parentNode.insertBefore(originSequenceClone, insertLocationNode);
-        fore.signalChangeToElement(insertLocationNode.parentNode);
-        fore.signalChangeToElement(originSequenceClone.localName);
+        // fore.signalChangeToElement(insertLocationNode.parentNode);
+        fore.dependencyTracker.notifyChange(XPathUtil.getPath(insertLocationNode,instanceId));
+
+        // fore.signalChangeToElement(originSequenceClone.localName);
+        fore.dependencyTracker.notifyChange(XPathUtil.getPath(originSequenceClone,instanceId));
+
       }
 
       if (this.position && this.position === 'after') {
@@ -219,12 +227,17 @@ export class FxInsert extends AbstractAction {
         } else if (this.hasAttribute('context')) {
           index = 1;
           insertLocationNode.prepend(originSequenceClone);
-          fore.signalChangeToElement(insertLocationNode);
-          fore.signalChangeToElement(originSequenceClone.localName);
+          // fore.signalChangeToElement(insertLocationNode);
+          // fore.signalChangeToElement(originSequenceClone.localName);
+          fore.dependencyTracker.notifyChange(XPathUtil.getPath(insertLocationNode,instanceId));
+          fore.dependencyTracker.notifyChange(XPathUtil.getPath(originSequenceClone,instanceId));
+
         } else {
           insertLocationNode.insertAdjacentElement('afterend', originSequenceClone);
-          fore.signalChangeToElement(insertLocationNode);
-          fore.signalChangeToElement(originSequenceClone.localName);
+          // fore.signalChangeToElement(insertLocationNode);
+          // fore.signalChangeToElement(originSequenceClone.localName);
+          fore.dependencyTracker.notifyChange(XPathUtil.getPath(insertLocationNode,instanceId));
+          fore.dependencyTracker.notifyChange(XPathUtil.getPath(originSequenceClone,instanceId));
         }
       }
     }

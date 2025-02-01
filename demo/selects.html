@@ -82,13 +82,9 @@
                             <continent></continent>
                         </data>
                     </fx-instance>
-
                     <fx-instance id="countries" src="countries.xml"></fx-instance>
                 </fx-model>
                 <fx-group>
-
-                    <p></p>
-
                     <div class="grid">
                         <div class="wrapit">
                             <fx-control id="continent" ref="continent" update-event="change">
@@ -109,9 +105,7 @@
                             Selected Continent:
                             <fx-output ref="continent"></fx-output>
                         </div>
-
                         <div class="wrapit">
-
                             <fx-control ref="selected" update-event="change">
                                 <label>Country</label>
                                 <select class="widget"
@@ -129,8 +123,6 @@
                             <fx-output ref="selected"></fx-output>
                         </div>
                     </div>
-
-                    <!--                    <fx-output ref="instance('default')" mediatype="xml"></fx-output>-->
                 </fx-group>
             </fx-fore>
         </template>

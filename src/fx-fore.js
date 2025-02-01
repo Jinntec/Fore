@@ -259,6 +259,7 @@ export class FxFore extends HTMLElement {
     this.strict = !!this.hasAttribute('strict');
 
     this.dependencyTracker = new DependencyTracker();
+    console.log('dependencyTracker',this.dependencyTracker);
 
     /*
             document.addEventListener('ready', (e) =>{
@@ -401,9 +402,11 @@ export class FxFore extends HTMLElement {
    *
    * @param {string} localNameOfElement
    */
+/*
   signalChangeToElement(localNameOfElement) {
     this._localNamesWithChanges.add(localNameOfElement);
   }
+*/
 
   /**
    * Raise a flag that there might be new template expressions under some node. This happens with
@@ -525,14 +528,13 @@ export class FxFore extends HTMLElement {
     }
 
     this.isRefreshing = true;
-    console.log(`### <<<<< refresh() on '${this.id}' >>>>>`);
-    console.log(`### <<<<< refresh() force`, force);
+    console.log(`### <<<<< refresh() on '${this.id}' - force:${force} >>>>>`);
 
     // refresh () {
     // ### refresh Fore UI elements
     // if (!this.initialRun && this.toRefresh.length !== 0) {
     // if (!this.initialRun && this.toRefresh.length !== 0) {
-    if (!force && this.dependencyTracker.hasUpdates()) {
+    if (this.dependencyTracker.hasUpdates()) {
         this.dependencyTracker.processUpdates();
       } else {
       // ### resetting visited state for controls to refresh
@@ -564,6 +566,10 @@ export class FxFore extends HTMLElement {
     this.style.visibility = 'visible';
 
     Fore.dispatch(this, 'refresh-done', {});
+    console.info(
+        `%crefresh-done on #${this.id}`,
+        'background:darkorange; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+    );
 
     // this.isRefreshing = true;
     // this.parentNode.closest('fx-fore')?.refresh(false, changedPaths);
@@ -592,10 +598,6 @@ export class FxFore extends HTMLElement {
       }
     }
     this.isRefreshing = false;
-    console.info(
-        `%crefresh-done on #${this.id}`,
-        'background:darkorange; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
-    );
 
   }
 /*
@@ -1037,6 +1039,7 @@ export class FxFore extends HTMLElement {
     this.ready = true;
     this.initialRun = false;
     // console.log('### >>>>> dispatching ready >>>>>', this);
+    console.log('dependencyTracker', this.dependencyTracker);
     console.info(
       `%c #${this.id} is ready`,
       'background:lightblue; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',

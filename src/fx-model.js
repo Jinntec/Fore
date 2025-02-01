@@ -390,6 +390,7 @@ export class FxModel extends HTMLElement {
         }
       }
       this.computes += 1;
+      this.fore.dependencyTracker.notifyChange(modelItem.path);
     }
   }
 
@@ -428,9 +429,13 @@ export class FxModel extends HTMLElement {
         if (typeof bind.hasAttribute === 'function' && bind.hasAttribute('constraint')) {
           const constraint = bind.getAttribute('constraint');
           if (constraint && modelItem.node) {
+            const oldVal = modelItem.constraint;
             const compute = evaluateXPathToBoolean(constraint, modelItem.node, this);
             // console.log('modelItem validity computed: ', compute);
             modelItem.constraint = compute;
+            if(oldVal !== compute){
+              this.fore.dependencyTracker.notifyChange(modelItem.path)
+            }
             this.formElement.addToRefresh(modelItem); // let fore know that modelItem needs refresh
             if (!compute) {
               console.log('validation failed on modelitem ', modelItem);

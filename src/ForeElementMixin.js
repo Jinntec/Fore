@@ -114,7 +114,6 @@ export default class ForeElementMixin extends HTMLElement {
    * evaluation of fx-bind and UiElements differ in details so that each class needs it's own implementation.
    */
   evalInContext() {
-    this.dependencies.resetDependencies();
     // const inscopeContext = this.getInScopeContext();
     const model = this.getModel();
     if (!model) {
@@ -126,7 +125,6 @@ export default class ForeElementMixin extends HTMLElement {
     }
     if (this.hasAttribute('ref')) {
       inscopeContext = getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
-      this.dependencies.addXPath(this.ref);
     }
     if (!inscopeContext && this.getModel().instances.length !== 0) {
       // ### always fall back to default context with there's neither a 'context' or 'ref' present

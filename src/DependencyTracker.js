@@ -1,4 +1,5 @@
-import { DepGraph } from './dep_graph.js';
+import {DepGraph} from './dep_graph.js';
+// import { XPathDependencyExtractor } from './XPathDependencyExtractor.js';
 
 export class DependencyTracker {
     constructor() {
@@ -10,18 +11,27 @@ export class DependencyTracker {
         this.updateCycle = new Set(); // Tracks updates per cycle to avoid redundant refreshes
         this.repeatIndexMap = new Map(); // Tracks index() function values for repeated controls
         this.hierarchicalDependencies = new Map(); // Tracks complex XPath dependencies
+        // this.xpathExtractor = new XPathDependencyExtractor(); // Extractor for dependencies
     }
 
-    // Register a control binding
+    // Register a control binding and auto-detect dependencies
     register(refXPath, control) {
-        if (!this.controlBindings.has(refXPath)) {
-            this.controlBindings.set(refXPath, new Set());
+        const resolvedXPath = this.resolveInstanceXPath(refXPath);
+        console.log(`Registering XPath: ${refXPath} as ${resolvedXPath}`);
+
+        if (!this.controlBindings.has(resolvedXPath)) {
+            this.controlBindings.set(resolvedXPath, new Set());
         }
-        this.controlBindings.get(refXPath).add(control);
+        this.controlBindings.get(resolvedXPath).add(control);
+
+        // Automatically detect and register dependencies
+        // const dependencies = this.xpathExtractor.extractDependencies(refXPath);
+        // dependencies.forEach(dep => this.registerDependency(dep, resolvedXPath));
     }
 
     // Register a dependency in the graph
     registerDependency(sourceXPath, dependentXPath) {
+        console.log('registerDependency', sourceXPath, dependentXPath);
         if (!this.dependencyGraph.hasNode(sourceXPath)) {
             this.dependencyGraph.addNode(sourceXPath);
         }
@@ -44,10 +54,12 @@ export class DependencyTracker {
 
     // Handle instance() function cases where the absolute path is needed
     resolveInstanceXPath(xpath) {
-        if (xpath.startsWith("instance()")) {
-            return xpath.replace("instance()", ""); // Normalize instance-based paths
-        }
-        return xpath;
+        // console.log(`Resolving XPath: ${xpath}`);
+
+        // Ensure we handle multiple instances in the same XPath
+        return xpath.replace(/instance\(['"]?([^'"\)]*)['"]?\)/g, (_, instanceId) => {
+            return `$${instanceId || 'default'}`;
+        });
     }
 
     // Track index() changes for repeated controls
@@ -62,6 +74,7 @@ export class DependencyTracker {
 
     // Notify changes and propagate through the dependency graph
     notifyChange(changedXPath) {
+        console.log('notifyChange',changedXPath);
         const resolvedXPath = this.resolveInstanceXPath(changedXPath);
         const affectedXPaths = new Set([resolvedXPath]);
 
@@ -136,6 +149,8 @@ export class DependencyTracker {
 
     // Refresh all collected controls in the batch
     processUpdates() {
+        console.log('processUpdates', Array.from(this.pendingUpdates));
+        console.log('processUpdates', this);
         // Ensure reactivated controls are refreshed
         this.reactivatedControls.forEach(control => this.pendingUpdates.add(control));
         this.reactivatedControls.clear();
@@ -147,7 +162,7 @@ export class DependencyTracker {
         for (let control of controlsToRefresh) {
             if (!this.updateCycle.has(control)) { // Prevent multiple refreshes
                 this.updateCycle.add(control);
-                console.log(`Refreshing control: ${control.name}`);
+                console.log(`Refreshing control: ${control.ref}`);
                 control.refresh(); // Assume UI control has a refresh method
             }
         }

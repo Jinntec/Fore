@@ -1186,9 +1186,10 @@ registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'depends' },
   ['node()*'],
   'item()?',
-  (_dynamicContext, nodes) =>
-    // console.log('depends on : ', nodes[0]);
-    nodes[0],
+  (_dynamicContext, nodes) => {
+    console.log('depends on : ', nodes[0]);
+    return  nodes[0];
+  }
 );
 
 registerCustomXPathFunction(

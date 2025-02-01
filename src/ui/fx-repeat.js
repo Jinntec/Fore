@@ -107,7 +107,6 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
     // console.log('connectedCallback',this);
     // this.display = window.getComputedStyle(this, null).getPropertyValue("display");
     this.ref = this.getAttribute('ref');
-    this.dependencies.addXPath(this.ref);
     // this.ref = this._getRef();
     // console.log('### fx-repeat connected ', this.id);
     this.addEventListener('item-changed', e => {
@@ -254,6 +253,8 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
     if (!this.inited) this.init();
     // console.time('repeat-refresh', this);
     this._evalNodeset();
+    const xpath = XPathUtil.getPath(this.nodeset,'default');
+    this.getOwnerForm().dependencyTracker.register(xpath,this);
 
     // ### register ourselves as boundControl
     /*

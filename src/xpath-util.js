@@ -1,6 +1,31 @@
 import * as fx from 'fontoxpath';
 
 export class XPathUtil {
+
+  static getCanonicalXPath(node, instanceId = 'default') {
+    if (!node || node.nodeType !== Node.ELEMENT_NODE) {
+      throw new Error('Invalid node provided');
+    }
+
+    const parts = [];
+    while (node && node.nodeType === Node.ELEMENT_NODE) {
+      let index = 1;
+      let sibling = node.previousElementSibling;
+      while (sibling) {
+        if (sibling.nodeName === node.nodeName) {
+          index++;
+        }
+        sibling = sibling.previousElementSibling;
+      }
+
+      const tagName = node.nodeName.toLowerCase();
+      parts.unshift(`${tagName}[${index}]`);
+      node = node.parentElement;
+    }
+
+    return `$${instanceId}/` + parts.join('/');
+  }
+
   /**
    * creates DOM Nodes from an XPath locationpath expression. Support namespaced and un-namespaced
    * nodes.
@@ -271,10 +296,21 @@ export class XPathUtil {
    * @returns string
    */
   static getPath(node, instanceId) {
-    const path = fx.evaluateXPathToString('path()', node);
+    let path;
+    if(Array.isArray(node) && node.length !== 0){
+
+      path = fx.evaluateXPathToString('path()', node[0]);
+      //cut positional attr
+      path = path.substring(0,path.length - 3);
+    }else{
+      // const path = fx.evaluateXPathToString('path()', node);
+      path = fx.evaluateXPathToString('path()', node);
+    }
     // Path is like `$default/x[1]/y[1]`
     const shortened = XPathUtil.shortenPath(path);
-    return shortened.startsWith('/') ? `$${instanceId}${shortened}` : `$${instanceId}/${shortened}`;
+    const out = shortened.startsWith('/') ? `$${instanceId}${shortened}` : `$${instanceId}/${shortened}`;
+    // console.log('XPathUtil.getPath',out);
+    return out;
   }
 
   /**

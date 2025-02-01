@@ -4,6 +4,7 @@ import { AbstractAction } from './abstract-action.js';
 import { evaluateXPath } from '../xpath-evaluation.js';
 import { Fore } from '../fore.js';
 import getInScopeContext from "../getInScopeContext";
+import {XPathUtil} from "../xpath-util";
 
 /**
  * `fx-setvalue`
@@ -109,6 +110,7 @@ export default class FxSetvalue extends AbstractAction {
         item.node.textContent = newVal;
       }
       this.getModel().changed.push(modelItem);
+
       this.needsUpdate = true;
     }
   }

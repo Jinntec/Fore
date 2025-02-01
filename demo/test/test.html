@@ -9,9 +9,25 @@
 <body>
 <div class="wrapper">
     <fx-fore>
-        <fx-model id="model1">
-            <fx-instance></fx-instance>
+        <fx-model id="model-1">
+            <fx-instance
+                    id="default"
+                    src="ling-checkboxes.xml"
+                    xpath-default-namespace="http://www.tei-c.org/ns/1.0"
+            ></fx-instance>
+
+            <fx-instance id="i-functions" src="functions.xml" ></fx-instance>
         </fx-model>
+        <fx-control ref="//m/@function" update-event="input">
+            <fx-items ref="instance('i-functions')//option" class="widget">
+                <template>
+              <span class="fx-checkbox">
+                <input id="check" name="option" type="checkbox" value="{@xml:id}" />
+                <label>{.}</label>
+              </span>
+                </template>
+            </fx-items>
+        </fx-control>
     </fx-fore>
 </div>
 <script type="module" src="../demo.js"/>

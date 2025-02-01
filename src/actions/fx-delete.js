@@ -58,17 +58,24 @@ class FxDelete extends AbstractAction {
     if (Array.isArray(nodesToDelete)) {
       if (nodesToDelete.length === 0) return;
       parent = nodesToDelete[0].parentNode;
-      fore.signalChangeToElement(parent.localName);
+      // fore.signalChangeToElement(parent.localName);
+
+      fore.dependencyTracker.notifyChange(XPathUtil.getPath(parent, instanceId));
       nodesToDelete.forEach(item => {
         this._deleteNode(parent, item);
-        fore.signalChangeToElement(item.localName);
+        // fore.signalChangeToElement(item.localName);
+        fore.dependencyTracker.notifyChange(XPathUtil.getPath(item,instanceId));
+
       });
     } else {
       parent = nodesToDelete.parentNode;
-      fore.signalChangeToElement(parent.localName);
+      // fore.signalChangeToElement(parent.localName);
+      fore.dependencyTracker.notifyChange(XPathUtil.getPath(parent,instanceId));
 
       this._deleteNode(parent, nodesToDelete);
-      fore.signalChangeToElement(nodesToDelete.localName);
+      // fore.signalChangeToElement(nodesToDelete.localName);
+      fore.dependencyTracker.notifyChange(XPathUtil.getPath(nodesToDelete,instanceId));
+
     }
 
     await Fore.dispatch(instance, 'deleted', {
