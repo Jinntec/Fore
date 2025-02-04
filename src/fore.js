@@ -319,6 +319,7 @@ export class Fore {
             if (typeof force !== 'object') {
               continue;
             }
+/*
             if (
               force.reason === 'index-function' &&
               bound.dependencies.isInvalidatedByIndexFunction()
@@ -326,13 +327,16 @@ export class Fore {
               bound.refresh(force);
               continue;
             }
+*/
 
+/*
             if (
               bound.dependencies.isInvalidatedByChildlistChanges(force.elementLocalnamesWithChanges)
             ) {
               bound.refresh(force);
               continue;
             }
+*/
 
             // console.log('refreshing', element, element?.ref);
             // console.log('refreshing ',element);
