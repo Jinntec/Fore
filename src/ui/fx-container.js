@@ -78,9 +78,13 @@ export class FxContainer extends ForeElementMixin {
     if (this.isBound()) {
       this.evalInContext();
       this.modelItem = this.getModelItem();
+/*
       if (this.modelItem && !this.modelItem.boundControls.includes(this)) {
         this.modelItem.boundControls.push(this);
       }
+*/
+      this.getOwnerForm().dependencyTracker.register(this.modelItem.path, this);
+
       this.handleModelItemProperties();
     }
 

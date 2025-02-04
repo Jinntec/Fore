@@ -139,9 +139,11 @@ export default class AbstractControl extends ForeElementMixin {
                 /*
                 this is another case that highlights the fact that an init() function might make sense in general.
                  */
+/*
                 if (!this.modelItem.boundControls.includes(this)) {
                     this.modelItem.boundControls.push(this);
                 }
+*/
                 // console.log('dependencyTracker',this.getOwnerForm().dependencyTracker)
                 this.getOwnerForm().dependencyTracker.register(this.modelItem.path, this);
 

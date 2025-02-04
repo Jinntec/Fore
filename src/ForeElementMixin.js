@@ -113,6 +113,7 @@ export default class ForeElementMixin extends HTMLElement {
   /**
    * evaluation of fx-bind and UiElements differ in details so that each class needs it's own implementation.
    */
+  // todo: maybe we should wrap nodeset into modelItem right here?!
   evalInContext() {
     // const inscopeContext = this.getInScopeContext();
     const model = this.getModel();
