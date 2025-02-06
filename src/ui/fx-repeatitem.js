@@ -1,6 +1,7 @@
 import { Fore } from '../fore.js';
 import ForeElementMixin from '../ForeElementMixin.js';
 import { withDraggability } from '../withDraggability.js';
+import {DependencyTracker} from "../DependencyTracker";
 
 /**
  * `fx-repeat`
@@ -25,7 +26,7 @@ export class FxRepeatitem extends withDraggability(ForeElementMixin, true) {
     super();
     this.inited = false;
 
-    this.addEventListener('click', this._dispatchIndexChange);
+    this.addEventListener('click', e => this._dispatchIndexChange(e));
     // this.addEventListener('focusin', this._handleFocus);
     this.addEventListener('focusin', this._dispatchIndexChange);
 
@@ -72,15 +73,23 @@ export class FxRepeatitem extends withDraggability(ForeElementMixin, true) {
       }
     */
 
-  _dispatchIndexChange() {
+  _dispatchIndexChange(event) {
+    event.preventDefault();
+    event.stopPropagation();
     /**
      * @type {import('./fx-repeat.js').FxRepeat}
      */
-    const repeat = this.parentNode;
+    // const repeat = this.parentNode;
+    const repeat = event.target.closest('fx-repeat');
     if (repeat.index === this.index) {
       // The index did not really change if it did not change :wink:
       return;
     }
+
+    console.log('_dispatchIndexChange', this, this.index)
+
+    DependencyTracker.getInstance().updateRepeatIndex(this.ref, this.index);
+
     this.dispatchEvent(
       new CustomEvent('item-changed', {
         composed: false,
@@ -93,6 +102,8 @@ export class FxRepeatitem extends withDraggability(ForeElementMixin, true) {
   refresh(force) {
     this.modelItem = this.getModelItem();
     // ### register ourselves as boundControl
+    DependencyTracker.getInstance().register(this.modelItem.path, this);
+
     if (!this.modelItem.boundControls.includes(this)) {
       this.modelItem.boundControls.push(this);
 
