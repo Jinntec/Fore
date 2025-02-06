@@ -4,6 +4,7 @@ import { Fore } from '../fore.js';
 import { evaluateXPathToNodes, evaluateXPathToString } from '../xpath-evaluation.js';
 import { XPathUtil } from '../xpath-util.js';
 import getInScopeContext from '../getInScopeContext.js';
+import {DependencyTracker} from "../DependencyTracker";
 
 /**
  * `fx-delete`
@@ -60,21 +61,21 @@ class FxDelete extends AbstractAction {
       parent = nodesToDelete[0].parentNode;
       // fore.signalChangeToElement(parent.localName);
 
-      fore.dependencyTracker.notifyChange(XPathUtil.getPath(parent, instanceId));
       nodesToDelete.forEach(item => {
         this._deleteNode(parent, item);
         // fore.signalChangeToElement(item.localName);
-        fore.dependencyTracker.notifyChange(XPathUtil.getPath(item,instanceId));
-
+        const modelItem = this.getModel().getModelItem(item);
+        DependencyTracker.getInstance().notifyDelete(modelItem.path);
       });
     } else {
       parent = nodesToDelete.parentNode;
       // fore.signalChangeToElement(parent.localName);
-      fore.dependencyTracker.notifyChange(XPathUtil.getPath(parent,instanceId));
+      // fore.dependencyTracker.notifyChange(XPathUtil.getCanonicalXPath(parent,instanceId));
 
       this._deleteNode(parent, nodesToDelete);
-      // fore.signalChangeToElement(nodesToDelete.localName);
-      fore.dependencyTracker.notifyChange(XPathUtil.getPath(nodesToDelete,instanceId));
+      DependencyTracker.getInstance().notifyDelete(this.ref); //when doing scoped resolution with DT
+      // DependencyTracker.getInstance().notifyDelete(this.modelitem.path); //using modelitem
+
 
     }
 

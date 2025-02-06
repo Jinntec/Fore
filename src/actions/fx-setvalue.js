@@ -5,6 +5,7 @@ import { evaluateXPath } from '../xpath-evaluation.js';
 import { Fore } from '../fore.js';
 import getInScopeContext from "../getInScopeContext";
 import {XPathUtil} from "../xpath-util";
+import {DependencyTracker} from "../DependencyTracker";
 
 /**
  * `fx-setvalue`
@@ -74,7 +75,7 @@ export default class FxSetvalue extends AbstractAction {
     if (!item) return;
 
     if (item.value !== newVal) {
-      this.getOwnerForm().dependencyTracker.notifyChange(modelItem.path);
+      DependencyTracker.getInstance().notifyChange(modelItem.path);
 
       // const path = XPathUtil.getPath(modelItem.node);
       const path = Fore.getDomNodeIndexString(modelItem.node);
