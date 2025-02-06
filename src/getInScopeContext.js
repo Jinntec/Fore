@@ -72,7 +72,9 @@ export default function getInScopeContext(node, ref) {
   //todo: check for multi-step pathes
   const parentElement = _getElement(node);
   // console.log('getInScopeContext parent', parentElement);
-
+  if(!parentElement){
+    return parentElement.closest('fx-fore').getModel().getDefaultInstance().getDefaultContext();
+  }
   if (parentElement.nodeName === 'FX-FORE') {
     const context = parentElement.getModel().getDefaultInstance()?.getDefaultContext();
     if (!context) {

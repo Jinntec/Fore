@@ -10,6 +10,7 @@ import { ModelItem } from '../modelitem.js';
 import { debounce } from '../events.js';
 import { FxModel } from '../fx-model.js';
 import {XPathUtil} from "../xpath-util";
+import {DependencyTracker} from "../DependencyTracker";
 
 const WIDGETCLASS = 'widget';
 
@@ -547,7 +548,7 @@ export default class FxControl extends XfAbstractControl {
       // const nodeset = evaluateXPathToNodes(ref, inscope, this);
       const nodeset = evaluateXPath(ref, inscope, this);
 
-      this.getOwnerForm().dependencyTracker.register(ref);
+      DependencyTracker.getInstance().register(ref);
       // we have no modelItem for boundWidgets so need to get instanceId from the ref
 /*
       const instanceId = XPathUtil.getInstanceId(ref,this.nodeset);

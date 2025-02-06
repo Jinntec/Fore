@@ -13,6 +13,7 @@ import { XPathUtil } from './xpath-util.js';
 import { FxRepeatAttributes } from './ui/fx-repeat-attributes.js';
 import { ModelItem } from './modelitem.js';
 import { DependencyTracker } from "./DependencyTracker.js";
+import {TemplateBinding} from "./ui/TemplateBinding";
 // import {domFacade, evaluateXPath, parseScript} from "fontoxpath";
 
 /**
@@ -258,7 +259,7 @@ export class FxFore extends HTMLElement {
     console.time('init');
     this.strict = !!this.hasAttribute('strict');
 
-    this.dependencyTracker = new DependencyTracker();
+    this.dependencyTracker = DependencyTracker.getInstance();
     console.log('dependencyTracker',this.dependencyTracker);
 
     /*
@@ -506,7 +507,7 @@ export class FxFore extends HTMLElement {
     // console.group('### forced refresh', this);
 
     Fore.refreshChildren(this, true);
-    this._updateTemplateExpressions();
+    // this._updateTemplateExpressions();
     this._scanForNewTemplateExpressionsNextRefresh = false; // reset
     this._processTemplateExpressions();
 
@@ -537,19 +538,10 @@ export class FxFore extends HTMLElement {
     if (this.dependencyTracker.hasUpdates()) {
         this.dependencyTracker.processUpdates();
       } else {
-      // ### resetting visited state for controls to refresh
-      /*
-                  const visited = this.parentNode.querySelectorAll('.visited');
-                  Array.from(visited).forEach(v =>{
-                      v.classList.remove('visited');
-                  });
-      */
-
       if (this.inited) {
         // console.log(`### <<<<< refresh() on '${this.id}' >>>>>`);
         Fore.refreshChildren(this, force);
       }
-      // console.timeEnd('refreshChildren');
     }
 
     // ### refresh template expressions
@@ -600,100 +592,59 @@ export class FxFore extends HTMLElement {
     this.isRefreshing = false;
 
   }
-/*
-  initUIDeps(root){
-    const boundOnes = Array.from(root.querySelectorAll('fx-control[ref],fx-output[ref], fx-upload[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref], .widget[ref]'));
-    console.log('initUIDeps bound', boundOnes);
 
-    boundOnes.forEach(bound => {
-      const xmlDocument = new DOMParser().parseFromString('<xqx:module xmlns:xqx="http://www.w3.org/2005/XQueryX"/>', 'text/xml');
-      const ref = bound.getAttribute('ref');
-      // console.log(`### detecting deps for ref: ${ref}`);
-      const xpathAST = parseScript(ref, {
-        language: evaluateXPath.XQUERY_3_1_LANGUAGE,
-        namespaceResolver: prefix =>
-            prefix === 'xqx' ? 'http://www.w3.org/2005/XQueryX' : undefined,
-      }, xmlDocument);
-      // console.log('bound',bound);
-      // console.log('AST for ', xpathAST);
-      xmlDocument.firstElementChild.append(xpathAST);
-      // console.log('AST for ', xmlDocument);
-      const hasPredicates =
-          // evaluateXPathToBoolean('count(//xqx:predicates) != 0',xpathAST,bound);
-          evaluateXPath(
-              'count(//xqx:predicates) != 0',
-              xmlDocument,
-              domFacade,
-              {},
-              evaluateXPath.BOOLEAN_TYPE,
-              {
-                "namespaceResolver": prefix =>
-                    prefix === 'xqx' ? 'http://www.w3.org/2005/XQueryX' : undefined,
-              },
-          );
-      if(hasPredicates){
-        console.log(`#### found predicate in binding "${ref}"`)
-        console.log('AST',xmlDocument.firstElementChild);
-        const secOp =           evaluateXPath(
-            '//xqx:secondOperand',
-            xmlDocument,
-            domFacade,
-            {},
-            evaluateXPath.ALL_RESULTS_TYPE,
-            {
-              "namespaceResolver": prefix =>
-                  prefix === 'xqx' ? 'http://www.w3.org/2005/XQueryX' : undefined,
-            },
-        );
+  detectTemplateExpressions(root){
+    console.log('detectTemplateExpressions')
+    const search =
+        "(descendant-or-self::*!(text(), @*))[contains(., '{')][substring-after(., '{') => contains('}')][not(ancestor-or-self::fx-model)]";
 
-        console.log('depends on',secOp);
+    const tmplExpressions = evaluateXPathToNodes(search, this, this);
+    Array.from(tmplExpressions).forEach(node => {
+      const ele = node.nodeType === Node.ATTRIBUTE_NODE ? node.ownerElement : node.parentNode;
+      if (ele.closest('fx-fore') !== this) {
+        // We found something in a sub-fore. Act like it's not there
+        return;
       }
+      const expr = this.extractBraces(this._getTemplateExpression(node));
 
-      /!*
-            const name = evaluateXPathToNodes(bound.ref, xpathAST, xmlDocument);
-            console.log('AST name ',bound.ref, name);
-      *!/
-    });
-
-  }
-*/
-
-  refreshChanged(force) {
-    console.log('toRefresh', this.toRefresh);
-    let needsRefresh = false;
-
-    // ### after recalculation the changed modelItems are copied to 'toRefresh' array for processing
-    this.toRefresh.forEach(modelItem => {
-      // check if modelItem has boundControls - if so, call refresh() for each of them
-      const controlsToRefresh = modelItem.boundControls;
-      if (controlsToRefresh) {
-        controlsToRefresh.forEach(ctrl => {
-          ctrl.refresh(force);
+      if (expr.length !== 0) {
+        expr.forEach(xpr => {
+          const binding = new TemplateBinding(xpr,node,)
+          DependencyTracker.getInstance().registerTemplateBinding(xpr,node)
         });
       }
-
-      // ### check if other controls depend on current modelItem
-      const {mainGraph} = this.getModel();
-      if (mainGraph && mainGraph.hasNode(modelItem.path)) {
-        const deps = this.getModel().mainGraph.dependentsOf(modelItem.path, false);
-        // ### iterate dependant modelItems and refresh all their boundControls
-        if (deps.length !== 0) {
-          deps.forEach(dep => {
-            // ### if changed modelItem has a 'facet' path we use the basePath that is the locationPath without facet name
-            const basePath = XPathUtil.getBasePath(dep);
-            const modelItemOfDep = this.getModel().modelItems.find(mip => mip.path === basePath);
-            // ### refresh all boundControls
-            modelItemOfDep.boundControls.forEach(control => {
-              control.refresh(force);
-            });
-          });
-          needsRefresh = true;
-        }
+      if (this.storedTemplateExpressionByNode.has(node)) {
+        // If the node is already known, do not process it twice
+        return;
       }
-    });
-    this.toRefresh = [];
-  }
 
+    });
+
+  }
+  extractBraces(text) {
+    const result = [];
+    let stack = [];
+    let current = "";
+
+    for (let i = 0; i < text.length; i++) {
+      if (text[i] === '{') {
+        if (stack.length > 0) current += text[i];
+        stack.push('{');
+      } else if (text[i] === '}') {
+        stack.pop();
+        if (stack.length === 0) {
+          result.push(current);
+          current = "";
+        } else {
+          current += text[i];
+        }
+      } else if (stack.length > 0) {
+        current += text[i];
+      }
+    }
+
+    return result;
+  }
   /**
    * entry point for processing of template expression enclosed in '{}' brackets.
    *
@@ -733,6 +684,8 @@ export class FxFore extends HTMLElement {
       // console.log('storedTemplateExpressionByNode', this.storedTemplateExpressionByNode);
       if (expr) {
         this.storedTemplateExpressionByNode.set(node, expr);
+        const binding = new TemplateBinding(expr,node,)
+        DependencyTracker.getInstance().registerTemplateBinding(expr,node)
       }
     });
     // console.log('stored template expressions ', this.storedTemplateExpressionByNode);
@@ -1027,7 +980,7 @@ export class FxFore extends HTMLElement {
     if (this.createNodes) {
       this.initData();
     }
-    // this.dependencyTracker = new DependencyTracker();
+    this.detectTemplateExpressions(this);
     await this.refresh(true);
     // this.initUIDeps(this);
     // await this.forceRefresh();
@@ -1039,7 +992,6 @@ export class FxFore extends HTMLElement {
     this.ready = true;
     this.initialRun = false;
     // console.log('### >>>>> dispatching ready >>>>>', this);
-    console.log('dependencyTracker', this.dependencyTracker);
     console.info(
       `%c #${this.id} is ready`,
       'background:lightblue; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',

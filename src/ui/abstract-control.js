@@ -4,6 +4,7 @@ import {ModelItem} from '../modelitem.js';
 import {Fore} from '../fore.js';
 import getInScopeContext from '../getInScopeContext.js';
 import {evaluateXPathToFirstNode} from '../xpath-evaluation.js';
+import {DependencyTracker} from "../DependencyTracker";
 
 function isDifferent(oldNodeValue, oldControlValue, newControlValue) {
     if (oldNodeValue === null) {
@@ -144,8 +145,7 @@ export default class AbstractControl extends ForeElementMixin {
                     this.modelItem.boundControls.push(this);
                 }
 */
-                // console.log('dependencyTracker',this.getOwnerForm().dependencyTracker)
-                this.getOwnerForm().dependencyTracker.register(this.modelItem.path, this);
+                DependencyTracker.getInstance().register(this.ref, this);
 
                 // console.log('>>>>>>>> abstract refresh ', this.control);
                 // this.control[this.valueProp] = this.value;

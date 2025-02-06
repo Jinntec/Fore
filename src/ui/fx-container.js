@@ -1,5 +1,6 @@
 import '../fx-model.js';
 import ForeElementMixin from '../ForeElementMixin.js';
+import {DependencyTracker} from "../DependencyTracker";
 
 /**
  * `fx-container` -
@@ -83,7 +84,7 @@ export class FxContainer extends ForeElementMixin {
         this.modelItem.boundControls.push(this);
       }
 */
-      this.getOwnerForm().dependencyTracker.register(this.modelItem.path, this);
+      DependencyTracker.getInstance().register(this.ref, this);
 
       this.handleModelItemProperties();
     }
