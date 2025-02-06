@@ -2,28 +2,26 @@ import * as fx from 'fontoxpath';
 
 export class XPathUtil {
 
-  static getCanonicalXPath(node, instanceId = 'default') {
-    if (!node || node.nodeType !== Node.ELEMENT_NODE) {
-      throw new Error('Invalid node provided');
+  static getCanonicalXPath(node) {
+    const instanceId = 'default';
+    let path;
+    if(Array.isArray(node) && node.length !== 0){
+      path = fx.evaluateXPathToString('path()', node[0]);
+      //cut positional attr
+      path = path.substring(0,path.length - 3);
+    }else{
+      // const path = fx.evaluateXPathToString('path()', node);
+      path = fx.evaluateXPathToString('path()', node);
     }
-
-    const parts = [];
-    while (node && node.nodeType === Node.ELEMENT_NODE) {
-      let index = 1;
-      let sibling = node.previousElementSibling;
-      while (sibling) {
-        if (sibling.nodeName === node.nodeName) {
-          index++;
-        }
-        sibling = sibling.previousElementSibling;
-      }
-
-      const tagName = node.nodeName.toLowerCase();
-      parts.unshift(`${tagName}[${index}]`);
-      node = node.parentElement;
+    if(node?.parentNode && node.parentNode.nodeType === Node.DOCUMENT_NODE){
+      return `$${instanceId}`;
     }
+    const shortened = XPathUtil.shortenPath(path);
+    const out = shortened.startsWith('/') ? `$${instanceId}${shortened}` : `$${instanceId}/${shortened}`;
+    // console.log('XPathUtil.getPath',out);
+    return out;
 
-    return `$${instanceId}/` + parts.join('/');
+    return path;
   }
 
   /**
