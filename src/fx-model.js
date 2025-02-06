@@ -78,7 +78,7 @@ export class FxModel extends HTMLElement {
     if (model.parentNode.createNodes && (node === null || node === undefined)) {
       // ### intializing ModelItem with default values (as there is no <fx-bind> matching for given ref)
       const mi = new ModelItem(
-        undefined,
+        XPathUtil.getPath(node,instanceId),
         ref,
         Fore.READONLY_DEFAULT,
         false,
