@@ -4,8 +4,19 @@ import {
 } from '@open-wc/testing';
 
 import '../index.js';
+import {DependencyTracker} from "../src/DependencyTracker";
 
 describe('bind Tests', () => {
+
+  let tracker;
+
+  beforeEach(() => {
+    tracker = DependencyTracker.getInstance();
+    tracker.controlBindings.clear();
+    tracker.pendingUpdates.clear();
+    tracker.nonRelevantControls.clear();
+  });
+
   it('is initialized', async () => {
     const el = await fixtureSync(html`
       <fx-fore>

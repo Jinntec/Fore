@@ -4,9 +4,19 @@ import {
 } from '@open-wc/testing';
 
 import '../index.js';
+import {DependencyTracker} from "../src/DependencyTracker";
 
 describe('fx-control tests', () => {
-  it('is creates a native input when no control is provided', async () => {
+  let tracker;
+
+  beforeEach(() => {
+    tracker = DependencyTracker.getInstance();
+    tracker.controlBindings.clear();
+    tracker.pendingUpdates.clear();
+    tracker.nonRelevantControls.clear();
+  });
+
+  it.only('is creates a native input when no control is provided', async () => {
     const el = await fixture(html`
       <fx-fore>
         <fx-model id="model1">

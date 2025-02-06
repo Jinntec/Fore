@@ -5,8 +5,18 @@ import {
 
 import '../index.js';
 import * as fx from 'fontoxpath';
+import {DependencyTracker} from "../src/DependencyTracker";
 
 describe('control tests', () => {
+  let tracker;
+
+  beforeEach(() => {
+    tracker = DependencyTracker.getInstance();
+    tracker.controlBindings.clear();
+    tracker.pendingUpdates.clear();
+    tracker.nonRelevantControls.clear();
+  });
+
   it('shows control alert defined on control', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
@@ -102,6 +112,7 @@ describe('control tests', () => {
     // widget.blur();
     model.modelItems[0].value = 'Aaa';
     model.updateModel();
+    el.refresh();
 
     console.log('items ', model.modelItems);
     expect(model.modelItems[0].value).to.equal('Aaa');
