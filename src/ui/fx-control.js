@@ -548,18 +548,7 @@ export default class FxControl extends XfAbstractControl {
       // const nodeset = evaluateXPathToNodes(ref, inscope, this);
       const nodeset = evaluateXPath(ref, inscope, this);
 
-      DependencyTracker.getInstance().register(ref);
-      // we have no modelItem for boundWidgets so need to get instanceId from the ref
-/*
-      const instanceId = XPathUtil.getInstanceId(ref,this.nodeset);
-
-      if(nodeset.length > 0){
-        const canonPath = XPathUtil.getCanonicalXPath(nodeset,instanceId);
-        this.getOwnerForm().dependencyTracker.registerDependency(this.modelItem.path,canonPath);
-      }
-*/
-
-      // this.getOwnerForm().dependencyTracker.registerDependency('$default/continent[1]',this.modelItem.path);
+      DependencyTracker.getInstance().register(ref,this);
 
       // ### clear items
       const { children } = widget;
