@@ -14,7 +14,7 @@ class MockControl {
     }
 }
 
-describe.only('DependencyTracker XPath Handling', () => {
+describe('DependencyTracker XPath Handling', () => {
     let tracker;
 
     beforeEach(() => {

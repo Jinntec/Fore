@@ -266,7 +266,7 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
 
         const deletedIndexes = DependencyTracker.getInstance().getDeletedIndexes(xpath);
         console.log('deletedIndexes', deletedIndexes);
-        const insertedIndexes = this.getOwnerForm().dependencyTracker.getInsertedIndexes(this.ref);
+        const insertedIndexes = DependencyTracker.getInstance().getInsertedIndexes(this.ref);
 
         const repeatItems = this.querySelectorAll(':scope > fx-repeatitem');
         let diff = insertedIndexes.length - deletedIndexes.length;
