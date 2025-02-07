@@ -1,0 +1,35 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Epidoc</title>
+    <link href="../../resources/fore.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="wrapper">
+
+    <fx-fore>
+        <fx-dispatch targetid="t" name="click" event="model-construct-done"></fx-dispatch>
+        <fx-model>
+            <fx-instance>
+                <data>
+                    <value></value>
+                </data>
+            </fx-instance>
+        </fx-model>
+        <fx-group>
+            <fx-setvalue ref="value" event="click">group</fx-setvalue>
+            <div>
+                <fx-setvalue ref="value" event="click">div</fx-setvalue>
+                <fx-trigger id="t">
+                    <button>dispatch click</button>
+                </fx-trigger>
+            </div>
+            <div id="result">{value}</div>
+        </fx-group>
+    </fx-fore>
+</div>
+<script type="module" src="../demo.js"/>
+</body>
+</html>
