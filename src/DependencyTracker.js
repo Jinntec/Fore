@@ -23,12 +23,24 @@ class Binding {
  * This is a singleton class meaning there's only one instance of it in a page no matter how many fx-fore
  * might exist.
  *
- * DependencyTracker uses 2 main structures:
- * - nodeBindings which is a WeakMap for holding pure node:control bindings
- * - controlBindings holding all bound controls after initialization using a canonical xpath as key
+ * Design decisions:
+ * using WeakMaps for GC'd global handling of bindings has been evaluated. However this disallows further static
+ * analysis of the XPathes which is a severe limitation. Using WeakMaps just for the template expressions has been
+ * evaluated but is problematic as WeakMaps are not iteratable. Maintaining two structures side-by-side
+ * added unnecessary complexity.
  *
- * This is a hybrid approach to on the one hand allow to use auto GC'd node references but further allow XPath
- * analysis for optimizing statements.
+ * Current approach is to keep ControlBindings in a Map of [XPath, Control] and to scope template expressions to
+ * the next available container. If there's no UI container the template expression are scoped to fx-fore element.
+ *
+ * The use of XPathes also provides much better debuggability and allows us further inspection on XPathes to make
+ * use of axes and other dependencies which can be investigated during a notifyChange.
+ *
+ * Scoping of template expression poses a problem with template expressions not being enclosed by some bound control.
+ * These non-scoped expressions will be registered with the fx-fore element itself as control and '$default' as path.
+ *
+ * To make sure all template expressions will run once at init time fx-fore listens for its own 'ready' event and call
+ * evaluateAllTemplateBindings once.
+ *
  *
  *
  */
@@ -40,16 +52,6 @@ export class DependencyTracker {
         }
         _instance = this;
 
-        /**
-         * Originally, the idea behind nodeBindings (a WeakMap) was to:
-         *
-         * - Automatically track bindings to DOM nodes, allowing GC cleanup.
-         * - Allow quick lookups by node reference, rather than always using XPath.
-         * - Help in resolving template expressions, especially when those are stored on text nodes or attributes.
-         *
-         * @type {WeakMap<WeakKey, any>}
-         */
-        this.nodeBindings = new WeakMap(); // A WeakMap from Node -> Binding so GC can clean up
         this.controlBindings = new Map(); // Maps XPath expressions to bound UI controls
         this.dependencyGraph = new DepGraph(); // Directed graph for dependencies
         this.pendingUpdates = new Set(); // Collects controls that need refreshing
@@ -85,7 +87,7 @@ export class DependencyTracker {
         let resolvedXPath;
 
         if (XPathUtil.isAbsolutePath(refXPath)) {
-            resolvedXPath = refXPath;
+            resolvedXPath = this.resolveInstanceXPath(refXPath);
         } else {
             const inscope = getInScopeContext(control.parentNode, refXPath);
             const scopeXPath = XPathUtil.getCanonicalXPath(inscope);
@@ -93,10 +95,6 @@ export class DependencyTracker {
         }
 
         console.log('Registering XPath', resolvedXPath, control);
-
-        // Store in WeakMap (automatic cleanup when node is removed)
-        const bindingInfo = new Binding(resolvedXPath, control);
-        this.nodeBindings.set(control, bindingInfo);
 
         // Store in path-based controlBindings for dependency analysis
         if (!this.controlBindings.has(resolvedXPath)) {
@@ -108,8 +106,10 @@ export class DependencyTracker {
         if (this.queuedChanges.has(resolvedXPath)) {
             console.log(`Processing queued change for: ${resolvedXPath}`);
             this.queuedChanges.delete(resolvedXPath);
-            this.notifyChange(resolvedXPath); // 🔄 Call notifyChange now that control is ready
+            this.notifyChange(resolvedXPath); // Call notifyChange now that control is ready
         }
+        this.detectTemplateExpressions(control);
+        console.log('template bindings for control', control.templateBindings);
     }
 
     /**
@@ -120,26 +120,39 @@ export class DependencyTracker {
     registerTemplateBinding(expression, node) {
         console.log(`Registering Template Expression: ${expression}`, node);
 
-        // 1️⃣ Extract all variable dependencies from the expression
-        const dependencies = this.extractDependencies(expression);
+        const parent = node.nodeType === Node.ATTRIBUTE_NODE ? node.ownerElement : node.parentNode;
+        // 1️⃣ Find the nearest fx-group, fx-repeat, or control as scope
+        // let scope = parent.closest('fx-group, fx-repeat, fx-control');
+        if(parent.closest('fx-model')) return;
+        let scope = parent.closest('[ref], fx-fore');
+        if (!scope) {
+            console.warn(`No valid scope found for template expression: ${expression}`);
+            return;
+        }
 
-        // 2️⃣ Store the binding using the node itself as a reference (no absolute XPath needed)
+        // 2️⃣ Store the binding inside the scoped component
+        if (!scope.templateBindings) {
+            scope.templateBindings = new Set(); // Initialize templateBindings on component
+        }
+
         const bindingInfo = new TemplateBinding(expression, node);
-        this.nodeBindings.set(node, bindingInfo);
+        scope.templateBindings.add(bindingInfo); // Attach to its scope
 
-        // 3️⃣ Register each dependency in controlBindings to track changes
+        console.log(`Stored in scope`, scope);
+
+        // 3️⃣ Register dependencies
+        const dependencies = this.extractDependencies(expression);
         dependencies.forEach(dep => {
-            console.log(`Template depends on: ${dep}`);
+            console.log(`🔗 Template depends on: ${dep}`);
 
             if (!this.controlBindings.has(dep)) {
                 this.controlBindings.set(dep, new Set());
             }
             this.controlBindings.get(dep).add(bindingInfo);
         });
-    }
+        // **Evaluate the template immediately**
+        bindingInfo.refresh();
 
-    getBindingInfo(node) {
-        return this.nodeBindings.get(node) || null;
     }
 
     // Register a dependency in the graph
@@ -239,17 +252,25 @@ export class DependencyTracker {
         for (let affectedXPath of affectedXPaths) {
             if (this.controlBindings.has(affectedXPath)) {
                 for (let binding of this.controlBindings.get(affectedXPath)) {
-                    if (binding instanceof TemplateBinding) {
-                        console.log(`🔄 Updating template expression: ${binding.expression}`);
-                        this.pendingUpdates.add(binding.node);
-                    } else {
-                        if (!this.nonRelevantControls.has(binding)) {
-                            this.pendingUpdates.add(binding);
-                        }
+                    if (!this.nonRelevantControls.has(binding)) {
+                        this.pendingUpdates.add(binding);
                     }
                 }
             }
         }
+
+        //Instead of iterating globally, refresh the closest scoped container
+        for (let control of this.pendingUpdates) {
+            if (control.templateBindings) {
+                for (let binding of control.templateBindings) {
+                    console.log(`Updating template expression within scope: ${binding.expression}`);
+                    binding.refresh();
+                }
+            }
+        }
+
+        console.log('after notifyChange', this.pendingUpdates);
+
     }
 
     notifyDelete(xpath) {
@@ -372,6 +393,21 @@ export class DependencyTracker {
         }
     }
 
+    evaluateAllTemplateBindings() {
+        console.log("Evaluating all registered template bindings...");
+
+        for (const [xpath, bindings] of this.controlBindings) {
+            for (const binding of bindings) {
+                if(binding.templateBindings){
+                    const templateExpressions = binding.templateBindings;
+                    for( const templateExpr of templateExpressions){
+                        templateExpr.refresh();
+                    }
+                }
+            }
+        }
+    }
+
     // Refresh all collected controls in the batch
     processUpdates() {
         console.log('processUpdates pendingUpdates', Array.from(this.pendingUpdates));
@@ -392,22 +428,21 @@ export class DependencyTracker {
             // Filter out non-relevant controls
             const controlsToRefresh = [...this.pendingUpdates].filter(control => !this.nonRelevantControls.has(control));
             this.pendingUpdates.clear();
-
             this.updateCycle.clear();
             for (let control of controlsToRefresh) {
                 if (!this.updateCycle.has(control)) {
                     this.updateCycle.add(control);
-                    console.log(`Refreshing control or template expression: ${control}`);
+                    console.log(`Refreshing: ${control}`);
 
-                    // If it's a regular UI control, call refresh()
                     if (typeof control.refresh === 'function') {
                         control.refresh();
-                    } else {
-                        // Otherwise, it's a template expression, update it
-                        const bindingInfo = this.nodeBindings.get(control);
-                        if (bindingInfo && bindingInfo instanceof TemplateBinding) {
-                            console.log(`Updating template expression for node:`, control);
-                            bindingInfo.refresh();
+                    }
+
+                    // If control has templateBindings, refresh them
+                    if (control.templateBindings) {
+                        for (let binding of control.templateBindings) {
+                            console.log(`🔄 Refreshing template expression: ${binding.expression}`);
+                            binding.refresh();
                         }
                     }
                 }
@@ -417,6 +452,7 @@ export class DependencyTracker {
         if (passCount >= maxPasses) {
             console.warn('Max pass limit reached — possible infinite update loop!');
         }
+
         this.deletedIndexes.clear();
         this.insertedIndexes.clear();
     }
@@ -441,22 +477,35 @@ export class DependencyTracker {
         return dependencies;
     }
 
-    detectTemplateExpressions(root) {
-        const templateNodes = root.querySelectorAll('*');
+    /**
+     * Detects template expressions within a control and registers them.
+     */
+    detectTemplateExpressions(control) {
+        if(!control?.nodeType) return;
+        const templateNodes = control.querySelectorAll('*');
 
         templateNodes.forEach(node => {
-            if (node.childNodes.length) {
-                node.childNodes.forEach(child => {
-                    if (child.nodeType === Node.TEXT_NODE && /\{([^}]+)\}/.test(child.textContent)) {
-                        const matches = child.textContent.match(/\{([^}]+)\}/g);
-                        matches.forEach(match => {
-                            const expression = match.replace(/\{|\}/g, '').trim();
-                            console.log(`Registering template expression: ${expression} for node`, child);
-                            this.registerTemplateBinding(expression, child);
-                        });
-                    }
-                });
-            }
+            // Process TEXT NODES inside elements
+            node.childNodes.forEach(child => {
+                if (child.nodeType === Node.TEXT_NODE && /\{([^}]+)\}/.test(child.textContent)) {
+                    const matches = child.textContent.match(/\{([^}]+)\}/g);
+                    matches.forEach(match => {
+                        const expression = match.replace(/\{|\}/g, '').trim();
+                        console.log(`📌 Found text template: ${expression} in`, child);
+                        this.registerTemplateBinding(expression, child);
+                    });
+                }
+            });
+
+            // Process ATTRIBUTES that contain template expressions
+            Array.from(node.attributes).forEach(attr => {
+                if (/\{([^}]+)\}/.test(attr.value)) {
+                    console.log(`Found attribute template: ${attr.name} -> ${attr.value}`);
+                    this.registerTemplateBinding(attr.value, attr);
+                }
+            });
         });
     }
+
+
 }

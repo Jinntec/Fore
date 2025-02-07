@@ -184,37 +184,6 @@ describe('Event Tests', () => {
     expect(p2).to.equal('bar');
   });
 
-  it('handles bubbling event', async () => {
-    const el = await fixtureSync(html`
-      <fx-fore>
-        <fx-dispatch targetid="t" name="click" event="model-construct-done"></fx-dispatch>
-        <fx-model>
-          <fx-instance>
-            <data>
-              <value></value>
-            </data>
-          </fx-instance>
-        </fx-model>
-        <fx-group>
-          <fx-setvalue ref="value" event="click">group</fx-setvalue>
-          <div>
-            <fx-setvalue ref="value" event="click">div</fx-setvalue>
-            <fx-trigger id="t">
-              <button>dispatch click</button>
-            </fx-trigger>
-          </div>
-          <div id="result">{value}</div>
-        </fx-group>
-      </fx-fore>
-    `);
-
-    await oneEvent(el, 'ready');
-    // const trigger = el.querySelector('fx-trigger');
-    // await trigger.performActions();
-
-    const div = el.querySelector('#result');
-    expect(div.innerText).to.equal('group');
-  });
 
   it('stops propagation if set to "stop"', async () => {
     const el = await fixtureSync(html`

@@ -348,7 +348,7 @@ export class FxFore extends HTMLElement {
       this.showConfirmation = true;
     }
     // making sure all non-scoped template expressions will be evaluated
-    this.addEventListener('ready',() =>{
+    this.addEventListener('init-done',() =>{
       DependencyTracker.getInstance().evaluateAllTemplateBindings();
     });
   }
@@ -509,6 +509,7 @@ export class FxFore extends HTMLElement {
     // this.initialRun = false;
     this.style.visibility = 'visible';
 
+    Fore.dispatch(this, 'init-done', {});
     Fore.dispatch(this, 'refresh-done', {});
     console.info(
         `%crefresh-done on #${this.id}`,
