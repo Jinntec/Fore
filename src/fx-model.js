@@ -4,6 +4,7 @@ import './fx-instance.js';
 import { ModelItem } from './modelitem.js';
 import { evaluateXPath, evaluateXPathToBoolean } from './xpath-evaluation.js';
 import { XPathUtil } from './xpath-util.js';
+import {DependencyTracker} from "./DependencyTracker.js";
 
 /**
  * The model of this Fore scope. It holds all the intances, binding, submissions and custom functions that
@@ -390,7 +391,7 @@ export class FxModel extends HTMLElement {
         }
       }
       this.computes += 1;
-      this.fore.dependencyTracker.notifyChange(modelItem.path);
+      DependencyTracker.getInstance().notifyChange(modelItem.path);
     }
   }
 
@@ -434,9 +435,8 @@ export class FxModel extends HTMLElement {
             // console.log('modelItem validity computed: ', compute);
             modelItem.constraint = compute;
             if(oldVal !== compute){
-              this.fore.dependencyTracker.notifyChange(modelItem.path)
+              DependencyTracker.getInstance().notifyChange(modelItem.path)
             }
-            this.formElement.addToRefresh(modelItem); // let fore know that modelItem needs refresh
             if (!compute) {
               console.log('validation failed on modelitem ', modelItem);
               valid = false;
@@ -446,10 +446,13 @@ export class FxModel extends HTMLElement {
         if (typeof bind.hasAttribute === 'function' && bind.hasAttribute('required')) {
           const required = bind.getAttribute('required');
           if (required) {
+            const oldVal = modelItem.required;
             const compute = evaluateXPathToBoolean(required, modelItem.node, this);
             // console.log('modelItem required computed: ', compute);
             modelItem.required = compute;
-            this.formElement.addToRefresh(modelItem); // let fore know that modelItem needs refresh
+            if(oldVal !== compute){
+              DependencyTracker.getInstance().notifyChange(modelItem.path)
+            }
             if (!modelItem.node.textContent) {
               /*
               console.log(
@@ -555,7 +558,7 @@ export class FxModel extends HTMLElement {
       return found;
     }
     if (id === 'default') {
-      return this.getDefaultInstance(); // if id is not found always defaults to first in doc order
+      return this.querySelector('fx-instance');
     }
     if (!found && this.fore.strict) {
       // return this.getDefaultInstance(); // if id is not found always defaults to first in doc order
