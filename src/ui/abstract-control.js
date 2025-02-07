@@ -130,22 +130,8 @@ export default class AbstractControl extends ForeElementMixin {
                 }
                 // console.log('newVal',this.value);
 
-                // console.log('value of widget',this.value);
-
-                /*
-                 * todo: find out on which foreign modelitems we might be dependant on when no binds are used.
-                 *
-                 */
-
-                /*
-                this is another case that highlights the fact that an init() function might make sense in general.
-                 */
-/*
-                if (!this.modelItem.boundControls.includes(this)) {
-                    this.modelItem.boundControls.push(this);
-                }
-*/
-                DependencyTracker.getInstance().register(this.ref, this);
+                DependencyTracker.getInstance().register(this.modelItem.path, this);
+                // DependencyTracker.getInstance().register(this.ref, this);
 
                 // console.log('>>>>>>>> abstract refresh ', this.control);
                 // this.control[this.valueProp] = this.value;
