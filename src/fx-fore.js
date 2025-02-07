@@ -259,27 +259,11 @@ export class FxFore extends HTMLElement {
     console.time('init');
     this.strict = !!this.hasAttribute('strict');
 
-    this.dependencyTracker = DependencyTracker.getInstance();
-    console.log('dependencyTracker',this.dependencyTracker);
+    // register fore element as outer scope for non-enclosed template expressions
+    DependencyTracker.getInstance().register('$default',this);
 
-    /*
-            document.addEventListener('ready', (e) =>{
-              if(e.target !== this){
-                // e.preventDefault();
-                console.log('>>> e', e);
-                console.log('event this', this);
-                // console.log('event eventPhase', e.eventPhase);
-                // console.log('event cancelable', e.cancelable);
-                console.log('event target', e.target);
-                console.log('event composed', e.composedPath());
-                console.log('<<< event stopping');
-                e.stopPropagation();
-              }else{
-                console.log('event proceed', this);
-              }
-              // e.stopImmediatePropagation();
-            },true);
-        */
+    console.log('dependencyTracker',DependencyTracker.getInstance());
+
     this.ignoreExpressions = this.hasAttribute('ignore-expressions')
       ? this.getAttribute('ignore-expressions')
       : null;
@@ -363,6 +347,10 @@ export class FxFore extends HTMLElement {
     if (this.hasAttribute('show-confirmation')) {
       this.showConfirmation = true;
     }
+    // making sure all non-scoped template expressions will be evaluated
+    this.addEventListener('ready',() =>{
+      DependencyTracker.getInstance().evaluateAllTemplateBindings();
+    });
   }
 
   _injectDevtools() {
@@ -383,31 +371,6 @@ export class FxFore extends HTMLElement {
       lens.setAttribute('open', 'open');
     }
   }
-
-  /**
-   * Add a model item to the refresh list
-   *
-   * @param {import('./modelitem.js').ModelItem} modelItem
-   * @returns {void}
-   */
-  addToRefresh(modelItem) {
-    const found = this.toRefresh.find(mi => mi.path === modelItem.path);
-    if (!found) {
-      this.toRefresh.push(modelItem);
-    }
-  }
-
-  /**
-   * Signal something happened with an element with the given local name. This will be used in the
-   * next (non-forceful) refresh to detect whether a component (usually a repeat) should update
-   *
-   * @param {string} localNameOfElement
-   */
-/*
-  signalChangeToElement(localNameOfElement) {
-    this._localNamesWithChanges.add(localNameOfElement);
-  }
-*/
 
   /**
    * Raise a flag that there might be new template expressions under some node. This happens with
@@ -507,9 +470,6 @@ export class FxFore extends HTMLElement {
     // console.group('### forced refresh', this);
 
     Fore.refreshChildren(this, true);
-    // this._updateTemplateExpressions();
-    this._scanForNewTemplateExpressionsNextRefresh = false; // reset
-    this._processTemplateExpressions();
 
     // console.log(`### <<<<< refresh-done ${this.id} >>>>>`);
 
@@ -535,22 +495,14 @@ export class FxFore extends HTMLElement {
     // ### refresh Fore UI elements
     // if (!this.initialRun && this.toRefresh.length !== 0) {
     // if (!this.initialRun && this.toRefresh.length !== 0) {
-    if (this.dependencyTracker.hasUpdates()) {
-        this.dependencyTracker.processUpdates();
-      } else {
+    if (DependencyTracker.getInstance().hasUpdates()) {
+        DependencyTracker.getInstance().processUpdates();
+    } else {
       if (this.inited) {
         // console.log(`### <<<<< refresh() on '${this.id}' >>>>>`);
         Fore.refreshChildren(this, force);
       }
     }
-
-    // ### refresh template expressions
-    if (this.initialRun || this._scanForNewTemplateExpressionsNextRefresh) {
-      this._updateTemplateExpressions();
-      this._scanForNewTemplateExpressionsNextRefresh = false; // reset
-    }
-
-    this._processTemplateExpressions();
 
     // console.log('### <<<<< dispatching refresh-done - end of UI update cycle >>>>>');
     // this.dispatchEvent(new CustomEvent('refresh-done'));
@@ -593,58 +545,6 @@ export class FxFore extends HTMLElement {
 
   }
 
-  detectTemplateExpressions(root){
-    console.log('detectTemplateExpressions')
-    const search =
-        "(descendant-or-self::*!(text(), @*))[contains(., '{')][substring-after(., '{') => contains('}')][not(ancestor-or-self::fx-model)]";
-
-    const tmplExpressions = evaluateXPathToNodes(search, this, this);
-    Array.from(tmplExpressions).forEach(node => {
-      const ele = node.nodeType === Node.ATTRIBUTE_NODE ? node.ownerElement : node.parentNode;
-      if (ele.closest('fx-fore') !== this) {
-        // We found something in a sub-fore. Act like it's not there
-        return;
-      }
-      const expr = this.extractBraces(this._getTemplateExpression(node));
-
-      if (expr.length !== 0) {
-        expr.forEach(xpr => {
-          const binding = new TemplateBinding(xpr,node,)
-          DependencyTracker.getInstance().registerTemplateBinding(xpr,node)
-        });
-      }
-      if (this.storedTemplateExpressionByNode.has(node)) {
-        // If the node is already known, do not process it twice
-        return;
-      }
-
-    });
-
-  }
-  extractBraces(text) {
-    const result = [];
-    let stack = [];
-    let current = "";
-
-    for (let i = 0; i < text.length; i++) {
-      if (text[i] === '{') {
-        if (stack.length > 0) current += text[i];
-        stack.push('{');
-      } else if (text[i] === '}') {
-        stack.pop();
-        if (stack.length === 0) {
-          result.push(current);
-          current = "";
-        } else {
-          current += text[i];
-        }
-      } else if (stack.length > 0) {
-        current += text[i];
-      }
-    }
-
-    return result;
-  }
   /**
    * entry point for processing of template expression enclosed in '{}' brackets.
    *
@@ -653,151 +553,7 @@ export class FxFore extends HTMLElement {
    *
    * @private
    */
-  _updateTemplateExpressions() {
-    const search =
-      "(descendant-or-self::*!(text(), @*))[contains(., '{')][substring-after(., '{') => contains('}')][not(ancestor-or-self::fx-model)]";
-
-    const tmplExpressions = evaluateXPathToNodes(search, this, this);
-    // console.log('template expressions found ', tmplExpressions);
-
-    if (!this.storedTemplateExpressions) {
-      this.storedTemplateExpressions = [];
-    }
-
-    // console.log('######### storedTemplateExpressions', this.storedTemplateExpressions.length);
-
-    /*
-                storing expressions and their nodes for re-evaluation
-                 */
-    Array.from(tmplExpressions).forEach(node => {
-      const ele = node.nodeType === Node.ATTRIBUTE_NODE ? node.ownerElement : node.parentNode;
-      if (ele.closest('fx-fore') !== this) {
-        // We found something in a sub-fore. Act like it's not there
-        return;
-      }
-      if (this.storedTemplateExpressionByNode.has(node)) {
-        // If the node is already known, do not process it twice
-        return;
-      }
-      const expr = this._getTemplateExpression(node);
-
-      // console.log('storedTemplateExpressionByNode', this.storedTemplateExpressionByNode);
-      if (expr) {
-        this.storedTemplateExpressionByNode.set(node, expr);
-        const binding = new TemplateBinding(expr,node,)
-        DependencyTracker.getInstance().registerTemplateBinding(expr,node)
-      }
-    });
-    // console.log('stored template expressions ', this.storedTemplateExpressionByNode);
-
-    // TODO: Should we clean up nodes that existed but are now gone?
-    this._processTemplateExpressions();
-  }
-
-  _processTemplateExpressions() {
-    for (const node of Array.from(this.storedTemplateExpressionByNode.keys())) {
-      if (node.nodeType === Node.ATTRIBUTE_NODE) {
-        // Attribute nodes are not contained by the document, but their owner elements are!
-        if (!XPathUtil.contains(this, node.ownerElement)) {
-          this.storedTemplateExpressionByNode.delete(node);
-          continue;
-        }
-      } else if (!XPathUtil.contains(this, node)) {
-        // For all other nodes, if this `fore` element does not contain them, they are dead
-        this.storedTemplateExpressionByNode.delete(node);
-        continue;
-      }
-      this._processTemplateExpression({
-        node,
-        expr: this.storedTemplateExpressionByNode.get(node),
-      });
-    }
-  }
-
   // eslint-disable-next-line class-methods-use-this
-  _processTemplateExpression(exprObj) {
-    // console.log('processing template expression ', exprObj);
-
-    const { expr } = exprObj;
-    const { node } = exprObj;
-    // console.log('expr ', expr);
-    this.evaluateTemplateExpression(expr, node);
-  }
-
-  /**
-   * evaluate a template expression on a node either text- or attribute node.
-   * @param {string} expr The string to parse for expressions
-   * @param {Node} node the node which will get updated with evaluation result
-   */
-  evaluateTemplateExpression(expr, node) {
-    // ### do not evaluate template expressions with nonrelevant sections
-    if (node.nodeType === Node.ATTRIBUTE_NODE && node.ownerElement.closest('[nonrelevant]')) return;
-    if (node.nodeType === Node.TEXT_NODE && node.parentNode.closest('[nonrelevant]')) return;
-    if (node.nodeType === Node.ELEMENT_NODE && node.closest('[nonrelevant]')) return;
-
-    // if(node.closest('[nonrelevant]')) return;
-    const replaced = expr.replace(/{[^}]*}/g, match => {
-      if (match === '{}') return match;
-      const naked = match.substring(1, match.length - 1);
-      const inscope = getInScopeContext(node, naked);
-      if (!inscope) {
-        console.warn('no inscope context for expr', naked);
-        const errNode =
-          node.nodeType === Node.TEXT_NODE || node.nodeType === Node.ATTRIBUTE_NODE
-            ? node.parentNode
-            : node;
-        return match;
-      }
-      // Templates are special: they use the namespace configuration from the place where they are
-      // being defined
-      const instanceId = XPathUtil.getInstanceId(naked);
-
-      // If there is an instance referred
-      const inst = instanceId
-        ? this.getModel().getInstance(instanceId)
-        : this.getModel().getDefaultInstance();
-
-      try {
-        return evaluateXPathToString(naked, inscope, node, null, inst);
-      } catch (error) {
-        console.warn('ignoring unparseable expr', error);
-
-        return match;
-      }
-    });
-
-    // Update to the new value. Don't do it though if nothing changed to prevent iframes or
-    // images from reloading for example
-    if (node.nodeType === Node.ATTRIBUTE_NODE) {
-      const parent = node.ownerElement;
-      if (parent.getAttribute(node.nodeName) !== replaced) {
-        parent.setAttribute(node.nodeName, replaced);
-      }
-    } else if (node.nodeType === Node.TEXT_NODE) {
-      if (node.textContent !== replaced) {
-        node.textContent = replaced;
-      }
-    }
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  _getTemplateExpression(node) {
-    if (this.ignoredNodes) {
-      if (node.nodeType === Node.ATTRIBUTE_NODE) {
-        node = node.ownerElement;
-      }
-      const found = this.ignoredNodes.find(n => n.contains(node));
-      if (found) return null;
-    }
-    if (node.nodeType === Node.ATTRIBUTE_NODE) {
-      return node.value;
-    }
-    if (node.nodeType === Node.TEXT_NODE) {
-      return node.textContent.trim();
-    }
-    return null;
-  }
-
   /**
    * called when `model-construct-done` event is received to
    * start initing the UI.
@@ -908,45 +664,6 @@ export class FxFore extends HTMLElement {
     return parent;
   }
 
-  /*
-            _createStep(){
-
-            }
-          */
-
-  /*
-            _generateInstance(start, parent) {
-              if (start.hasAttribute('ref')) {
-                const ref = start.getAttribute('ref');
-
-                if(ref.includes('/')){
-                  console.log('complex path to create ', ref);
-                  const steps = ref.split('/');
-                  steps.forEach(step => {
-                    console.log('step ', step);
-
-                  });
-                }
-
-                // const generated = document.createElement(ref);
-                const generated = parent.ownerDocument.createElement(ref);
-                if (start.children.length === 0) {
-                  generated.textContent = start.textContent;
-                }
-                parent.appendChild(generated);
-                parent = generated;
-              }
-
-              if (start.hasChildNodes()) {
-                const list = start.children;
-                for (let i = 0; i < list.length; i += 1) {
-                  this._generateInstance(list[i], parent);
-                }
-              }
-              return parent;
-            }
-          */
-
   /**
    * Start the initialization of the UI by
    *
@@ -980,10 +697,7 @@ export class FxFore extends HTMLElement {
     if (this.createNodes) {
       this.initData();
     }
-    this.detectTemplateExpressions(this);
     await this.refresh(true);
-    // this.initUIDeps(this);
-    // await this.forceRefresh();
 
     // this.style.display='block'
     this.classList.add('fx-ready');
@@ -998,7 +712,6 @@ export class FxFore extends HTMLElement {
     );
 
     // console.log(`### <<<<< ${this.id} ready >>>>>`);
-
     // console.log('### modelItems: ', this.getModel().modelItems);
     Fore.dispatch(this, 'ready', {});
     // console.log('dataChanged', FxModel.dataChanged);
