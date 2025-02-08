@@ -259,11 +259,6 @@ export class FxFore extends HTMLElement {
     console.time('init');
     this.strict = !!this.hasAttribute('strict');
 
-    // register fore element as outer scope for non-enclosed template expressions
-    DependencyTracker.getInstance().register('$default',this);
-
-    console.log('dependencyTracker',DependencyTracker.getInstance());
-
     this.ignoreExpressions = this.hasAttribute('ignore-expressions')
       ? this.getAttribute('ignore-expressions')
       : null;
@@ -314,10 +309,12 @@ export class FxFore extends HTMLElement {
         return;
       }
       if (!modelElement.inited) {
+/*
         console.info(
           `%cFore is processing fx-fore#${this.id}`,
           'background:#64b5f6; color:white; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
         );
+*/
 
         const variables = new Map();
         (function registerVariables(node) {
@@ -347,6 +344,13 @@ export class FxFore extends HTMLElement {
     if (this.hasAttribute('show-confirmation')) {
       this.showConfirmation = true;
     }
+    console.info(
+        `%cFore is processing fx-fore#${this.id}`,
+        'background:#64b5f6; color:white; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+    );
+
+    // register fore element as outer scope for non-enclosed template expressions
+    console.log('dependencyTracker',DependencyTracker.getInstance());
     // making sure all non-scoped template expressions will be evaluated
     this.addEventListener('init-done',() =>{
       DependencyTracker.getInstance().evaluateAllTemplateBindings();
@@ -698,6 +702,8 @@ export class FxFore extends HTMLElement {
     if (this.createNodes) {
       this.initData();
     }
+    DependencyTracker.getInstance().register('$default',this);
+
     await this.refresh(true);
 
     // this.style.display='block'
