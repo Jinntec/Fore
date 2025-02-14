@@ -5,6 +5,7 @@ import {Fore} from '../fore.js';
 import getInScopeContext from '../getInScopeContext.js';
 import {evaluateXPathToFirstNode} from '../xpath-evaluation.js';
 import {DependencyTracker} from "../DependencyTracker";
+import {ControlBinding} from "../binding/ControlBinding";
 
 function isDifferent(oldNodeValue, oldControlValue, newControlValue) {
     if (oldNodeValue === null) {
@@ -35,6 +36,7 @@ function isDifferent(oldNodeValue, oldControlValue, newControlValue) {
 export default class AbstractControl extends ForeElementMixin {
     constructor() {
         super();
+        this.binding = null;
         this.value = null;
         this.display = this.style.display;
         this.required = false;
@@ -129,8 +131,11 @@ export default class AbstractControl extends ForeElementMixin {
                     this.value = this.modelItem.value;
                 }
                 // console.log('newVal',this.value);
-
-                DependencyTracker.getInstance().register(this.modelItem.path, this);
+                if(!this.binding){
+                    this.binding = new ControlBinding(this);
+                    DependencyTracker.getInstance().registerBinding(this.modelItem.path,this.binding);
+                }
+                // DependencyTracker.getInstance().register(this.modelItem.path, this);
                 // DependencyTracker.getInstance().register(this.ref, this);
 
                 // console.log('>>>>>>>> abstract refresh ', this.control);
@@ -336,11 +341,13 @@ export default class AbstractControl extends ForeElementMixin {
         }
         if (this.isEnabled() !== this.modelItem.relevant) {
             if (this.modelItem.relevant) {
+                DependencyTracker.getInstance().markRelevant(this);
                 this._dispatchEvent('relevant');
                 // this._fadeIn(this, this.display);
                 this.setAttribute('relevant', '');
                 // this.style.display = this.display;
             } else {
+                DependencyTracker.getInstance().markNonRelevant(this);
                 this._dispatchEvent('nonrelevant');
                 // this._fadeOut(this);
                 this.setAttribute('nonrelevant', '');

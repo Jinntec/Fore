@@ -13,7 +13,7 @@ import { XPathUtil } from './xpath-util.js';
 import { FxRepeatAttributes } from './ui/fx-repeat-attributes.js';
 import { ModelItem } from './modelitem.js';
 import { DependencyTracker } from "./DependencyTracker.js";
-import {TemplateBinding} from "./ui/TemplateBinding";
+// import {TemplateBinding} from "./ui/TemplateBinding";
 // import {domFacade, evaluateXPath, parseScript} from "fontoxpath";
 
 /**

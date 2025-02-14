@@ -225,7 +225,8 @@ export class XPathUtil {
    * @param {HTMLElement}  boundElement  The element related to this ref. Used to resolve variables
    * @returns {string}
    */
-  static getInstanceId(ref, boundElement) {
+  static getInstanceId(xpath, boundElement) {
+    const ref = xpath.startsWith('{') ? xpath.substring(1, xpath.length - 1): xpath;
     if (!ref) {
       return 'default';
     }
@@ -253,7 +254,7 @@ export class XPathUtil {
       }
       return this.getInstanceId(correspondingVariable.valueQuery, correspondingVariable);
     }
-    return null;
+    return 'default';
   }
 
   /**
@@ -262,6 +263,7 @@ export class XPathUtil {
    * @returns {string}
    */
   static resolveInstance(boundElement, path) {
+    if(path.startsWith('$default')) return 'default';
     let instanceId = XPathUtil.getInstanceId(path, boundElement);
     if (!instanceId) {
       instanceId = XPathUtil.getInstanceId(boundElement.getAttribute('ref'), boundElement);

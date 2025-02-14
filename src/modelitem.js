@@ -1,7 +1,6 @@
 /**
- * Class for holding ModelItem facets.
- *
- * A ModelItem annotates nodes that are referred by a fx-bind element with facets for calculation and validation.
+ * ModelItem is a state objects that wraps a Node and holds the current state of facets like 'readonly', 'required', 'relevant', 'constraint'
+ * and 'calculate' as well as the canonical XPath.
  *
  * Each bound node in an instance has exactly one ModelItem associated with it.
  */

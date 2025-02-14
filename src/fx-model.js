@@ -5,6 +5,8 @@ import { ModelItem } from './modelitem.js';
 import { evaluateXPath, evaluateXPathToBoolean } from './xpath-evaluation.js';
 import { XPathUtil } from './xpath-util.js';
 import {DependencyTracker} from "./DependencyTracker.js";
+import {FacetBinding} from "./binding/FacetBinding";
+import {NodeBinding} from "./binding/NodeBinding";
 
 /**
  * The model of this Fore scope. It holds all the intances, binding, submissions and custom functions that
@@ -39,6 +41,8 @@ export class FxModel extends HTMLElement {
     this.attachShadow({ mode: 'open' });
     this.computes = 0;
     this.fore = {};
+    this.initialRecalcDone = false;
+
   }
 
   get formElement() {
@@ -213,9 +217,9 @@ export class FxModel extends HTMLElement {
   }
 
   rebuild() {
-    // console.log(`### <<<<< rebuild() '${this.fore.id}' >>>>>`);
+    console.log(`### <<<<< rebuild() '${this.fore.id}' >>>>>`);
 
-    this.mainGraph = new DepGraph(false); // do: should be moved down below binds.length check but causes errors in tests.
+    // this.mainGraph = new DepGraph(false); // do: should be moved down below binds.length check but causes errors in tests.
     this.modelItems = [];
 
     // trigger recursive initialization of the fx-bind elements
@@ -230,19 +234,53 @@ export class FxModel extends HTMLElement {
       bind.init(this);
     });
 
-    console.log('mainGraph', this.mainGraph);
-    console.log('rebuild mainGraph calc order', this.mainGraph.overallOrder());
+    console.log('dependencyGraph', DependencyTracker.getInstance().dependencyGraph);
+    console.log('rebuild mainGraph calc order', DependencyTracker.getInstance().dependencyGraph.overallOrder());
 
     // this.dispatchEvent(new CustomEvent('rebuild-done', {detail: {maingraph: this.mainGraph}}));
-    Fore.dispatch(this, 'rebuild-done', { maingraph: this.mainGraph });
-    console.log('mainGraph', this.mainGraph);
+    Fore.dispatch(this, 'rebuild-done', { maingraph: DependencyTracker.getInstance().dependencyGraph });
+    console.log('mainGraph', DependencyTracker.getInstance().dependencyGraph);
+    console.log('mainGraph order', DependencyTracker.getInstance().dependencyGraph.overallOrder(false));
   }
 
-  /**
-   * recalculation of all modelItems. Uses dependency graph to determine order of computation.
-   *
-   * todo: use 'changed' flag on modelItems to determine subgraph for recalculation. Flag already exists but is not used.
-   */
+  recalculate() {
+    console.log(`### <<<<< recalculate() '${this.fore.id}' >>>>>`);
+
+    if (DependencyTracker.getInstance().hasUpdates()) {
+      // Let DependencyTracker figure out which keys are pending.
+      const orderedKeys = DependencyTracker.getInstance().buildSubgraphForPendingChanges();
+
+      // Now iterate through the ordered keys and refresh all associated bindings.
+      orderedKeys.forEach(key => {
+        if (DependencyTracker.getInstance().bindingRegistry.has(key)) {
+          DependencyTracker.getInstance().bindingRegistry.get(key).forEach(binding => {
+            if(binding instanceof NodeBinding || binding instanceof FacetBinding){
+                console.log('update binding for key:', key, binding);
+                binding.update();
+            }
+          });
+        }
+      });
+
+      // Clear the changed array.
+      // this.changed = [];
+      Fore.dispatch(this, 'recalculate-done', { orderedKeys, computes: this.computes });
+    } else {
+      // If there are no changed keys, process the entire main graph.
+      const orderedKeys = DependencyTracker.getInstance().dependencyGraph.overallOrder(false);
+      orderedKeys.forEach(key => {
+        if (DependencyTracker.getInstance().bindingRegistry.has(key)) {
+          DependencyTracker.getInstance().bindingRegistry.get(key).forEach(binding => {
+            binding.update();
+          });
+        }
+      });
+      Fore.dispatch(this, 'recalculate-done', { graph: this.mainGraph, computes: this.computes });
+    }
+
+  }
+
+/*
   recalculate() {
     if (!this.mainGraph) {
       return;
@@ -252,6 +290,26 @@ export class FxModel extends HTMLElement {
 
     // console.log('changed nodes ', this.changed);
     this.computes = 0;
+
+    if(!this.initialRecalcDone){
+      //full recalc
+      console.log("Performing full initial recalculation.");
+      // Process the entire dependency graph in order.
+      const orderedKeys = DependencyTracker.getInstance().dependencyGraph.overallOrder(false);
+      orderedKeys.forEach(key => {
+        if (DependencyTracker.getInstance().bindingRegistry.has(key)) {
+          DependencyTracker.getInstance().bindingRegistry.get(key).forEach(binding => {
+            // For NodeBindings and FacetBindings we assume a refresh() or compute() method exists.
+            if (typeof binding.refresh === 'function') {
+              binding.refresh();
+            }
+          });
+        }
+      });
+    }else{
+
+    }
+
 
     this.subgraph = new DepGraph(false);
     // ### create the subgraph for all changed modelItems
@@ -268,6 +326,7 @@ export class FxModel extends HTMLElement {
           const dependents = all.reverse();
           if (dependents.length !== 0) {
             dependents.forEach(dep => {
+              console.log('dependent',dep);
               // const subdep = this.mainGraph.dependentsOf(dep,false);
               // subgraph.addDependency(dep, modelItem.path);
               const val = this.mainGraph.getNodeData(dep);
@@ -293,12 +352,13 @@ export class FxModel extends HTMLElement {
       const ordered = this.subgraph.overallOrder(false);
       ordered.forEach(path => {
         if (this.mainGraph.hasNode(path)) {
+          console.log('ordered subgraph node', path)
           const node = this.mainGraph.getNodeData(path);
           this.compute(node, path);
         }
       });
-      const toRefresh = [...this.changed];
-      this.formElement.toRefresh = toRefresh;
+      // const toRefresh = [...this.changed];
+      // this.formElement.toRefresh = toRefresh;
       this.changed = [];
       Fore.dispatch(this, 'recalculate-done', { graph: this.subgraph, computes: this.computes });
     } else {
@@ -311,6 +371,7 @@ export class FxModel extends HTMLElement {
     }
     console.log(`${this.parentElement.id} recalculate finished with modelItems `, this.modelItems);
   }
+*/
 
   /*
       _addSubgraphDependencies(path){
@@ -391,6 +452,7 @@ export class FxModel extends HTMLElement {
         }
       }
       this.computes += 1;
+
       DependencyTracker.getInstance().notifyChange(modelItem.path);
     }
   }
