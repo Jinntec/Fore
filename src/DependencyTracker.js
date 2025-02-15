@@ -39,6 +39,24 @@ export class DependencyTracker {
         // this.xpathExtractor = new XPathDependencyExtractor(); // Extractor for dependencies
     }
 
+    reset() {
+        this.bindingRegistry.clear();
+        this.bindingsByType.node.clear();
+        this.bindingsByType.facet.clear();
+        this.bindingsByType.template.clear();
+        this.bindingsByType.control.clear();
+        this.dependencyGraph = new DepGraph();
+        this.pendingUpdates.clear();
+        this.nonRelevantControls.clear();
+        this.reactivatedControls.clear();
+        this.repeatIndexMap.clear();
+        this.deletedIndexes.clear();
+        this.insertedIndexes.clear();
+        this.queuedChanges.clear();
+        this.storedTemplateExpressions = null;
+    }
+
+
     static getInstance() {
         if (!_instance) {
             _instance = new DependencyTracker();
