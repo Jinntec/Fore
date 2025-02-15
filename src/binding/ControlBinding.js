@@ -13,7 +13,7 @@ export class ControlBinding extends Binding{
     }
 
     refresh(){
-        console.log('control refreshing')
+        // console.log('control refreshing')
         this.control.refresh();
     }
 }

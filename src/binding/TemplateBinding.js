@@ -28,7 +28,7 @@ export class TemplateBinding extends Binding {
 
     update() {
         super.update();
-        console.log('TemplateBinding update', this);
+        console.log('🔄 TemplateBinding update', this);
         const ownerElement = this.node.parentNode ? this.node.parentNode : this.node.ownerElement;
         if (!ownerElement.closest('fx-fore').inited) return;
 

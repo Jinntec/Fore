@@ -11,7 +11,7 @@ export class Binding {
     }
 
     update(){
-        // console.log('updating key',this.xpath);
+        console.log(`updating Binding ${this.xpath}`, this);
         DependencyTracker.getInstance().pendingUpdates.delete(this);
         // console.log('pendingUpdates after deletion', Array.from(DependencyTracker.getInstance().pendingUpdates));
     }

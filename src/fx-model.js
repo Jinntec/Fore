@@ -223,7 +223,7 @@ export class FxModel extends HTMLElement {
   }
 
   rebuild() {
-    console.log(`### <<<<< rebuild() '${this.fore.id}' >>>>>`);
+    console.log(`🔷 ### <<<<< rebuild() '${this.fore.id}' >>>>>`);
 
     // this.mainGraph = new DepGraph(false); // do: should be moved down below binds.length check but causes errors in tests.
     this.modelItems = [];
@@ -240,19 +240,17 @@ export class FxModel extends HTMLElement {
       bind.init(this);
     });
 
-    console.log('dependencyGraph', DependencyTracker.getInstance().dependencyGraph);
-    console.log('rebuild mainGraph calc order', DependencyTracker.getInstance().dependencyGraph.overallOrder());
+    console.log('ℹ️ dependencyGraph', DependencyTracker.getInstance().dependencyGraph);
+    console.log('ℹ️ rebuild mainGraph calc order', DependencyTracker.getInstance().dependencyGraph.overallOrder());
 
     // this.dispatchEvent(new CustomEvent('rebuild-done', {detail: {maingraph: this.mainGraph}}));
     Fore.dispatch(this, 'rebuild-done', { maingraph: DependencyTracker.getInstance().dependencyGraph });
-    console.log('mainGraph', DependencyTracker.getInstance().dependencyGraph);
-    console.log('mainGraph order', DependencyTracker.getInstance().dependencyGraph.overallOrder(false));
   }
 
   recalculate() {
-    console.log(`### <<<<< recalculate() '${this.fore.id}' >>>>>`);
 
     if (DependencyTracker.getInstance().hasUpdates()) {
+      console.log(`🔷 ### <<<<< partial recalculate() '${this.fore.id}' >>>>>`);
       // Let DependencyTracker figure out which keys are pending.
       const orderedKeys = DependencyTracker.getInstance().buildSubgraphForPendingChanges();
 
@@ -272,6 +270,7 @@ export class FxModel extends HTMLElement {
       // this.changed = [];
       Fore.dispatch(this, 'recalculate-done', { orderedKeys, computes: this.computes });
     } else {
+      console.log(`🔷 ### <<<<< full recalculate() '${this.fore.id}' >>>>>`);
       // If there are no changed keys, process the entire main graph.
       const orderedKeys = DependencyTracker.getInstance().dependencyGraph.overallOrder(false);
       orderedKeys.forEach(key => {
@@ -482,7 +481,7 @@ export class FxModel extends HTMLElement {
   revalidate() {
     if (this.modelItems.length === 0) return true;
 
-    // console.log(`### <<<<< revalidate() '${this.fore.id}' >>>>>`);
+    console.log(`🔷 ### <<<<< revalidate() '${this.fore.id}' >>>>>`);
 
     // reset submission validation
     // this.parentNode.classList.remove('submit-validation-failed')
@@ -544,7 +543,7 @@ export class FxModel extends HTMLElement {
         }
       }
     });
-    console.log('modelItems after revalidate: ', this.modelItems);
+    console.log('ℹ️ modelItems after revalidate: ', [...this.modelItems]);
     return valid;
   }
 

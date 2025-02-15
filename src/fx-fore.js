@@ -506,12 +506,12 @@ export class FxFore extends HTMLElement {
     // if (!this.initialRun && this.toRefresh.length !== 0) {
     // if (!this.initialRun && this.toRefresh.length !== 0) {
     if (DependencyTracker.getInstance().hasUpdates()) {
-        console.log(`### <<<<< partial refresh() on '${this.id}' >>>>>`);
+        console.log(`🟢 ### <<<<< partial refresh() on '${this.id}' >>>>>`);
         DependencyTracker.getInstance().processUpdates();
     } else {
       if (this.inited) {
-        console.log(`### <<<<< full refresh() on '${this.id}' >>>>>`);
-        console.log('+++++pending',Array.from(DependencyTracker.getInstance().pendingUpdates));
+        console.log(`🔴 ### <<<<< full refresh() on '${this.id}' >>>>>`);
+        // console.log('+++++pending',Array.from(DependencyTracker.getInstance().pendingUpdates));
         // console.log(`### <<<<< refresh() on '${this.id}' >>>>>`);
         Fore.refreshChildren(this, force);
       }
@@ -525,7 +525,7 @@ export class FxFore extends HTMLElement {
     Fore.dispatch(this, 'init-done', {});
     Fore.dispatch(this, 'refresh-done', {});
     console.info(
-        `%crefresh-done on #${this.id}`,
+        `%c✅ refresh-done on #${this.id}`,
         'background:darkorange; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
     );
 
@@ -723,7 +723,7 @@ export class FxFore extends HTMLElement {
     this.initialRun = false;
     // console.log('### >>>>> dispatching ready >>>>>', this);
     console.info(
-      `%c #${this.id} is ready`,
+      `%c✅ #${this.id} is ready`,
       'background:lightblue; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
     );
 
