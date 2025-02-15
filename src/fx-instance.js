@@ -106,6 +106,13 @@ export class FxInstance extends HTMLElement {
     this.partialInstance = {};
   }
 
+  disconnectedCallback(){
+    this.model=null;
+    this.instanceData = null;
+    this.originalInstance = null;
+    this.partialInstance = null;
+  }
+
   /**
    * Is called by fx-model during initialization phase (model-construct)
    * @returns {Promise<void>}

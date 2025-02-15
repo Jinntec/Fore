@@ -70,6 +70,12 @@ export class FxModel extends HTMLElement {
     this.fore = this.parentNode;
   }
 
+  disconnectedCallback(){
+    this.instances = null;
+    this.modelItems = null;
+    this.fore = null;
+  }
+
   /**
    * @param {FxModel}           model        The model to create a model item for
    * @param {string}            ref          The XPath ref that led to this model item
