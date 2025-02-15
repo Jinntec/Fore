@@ -211,7 +211,7 @@ export default class FxControl extends XfAbstractControl {
    */
   setValue(val) {
     const modelitem = this.getModelItem();
-
+    if(val === modelitem.value) return;
     if (this.getAttribute('class')) {
       this.classList.add('visited');
     } else {
@@ -240,7 +240,7 @@ export default class FxControl extends XfAbstractControl {
     if (this.modelItem instanceof ModelItem && !this.modelItem?.boundControls.includes(this)) {
       this.modelItem.boundControls.push(this);
     }
-
+    DependencyTracker.getInstance().notifyChange(this.modelItem.path);
 
     setval.actionPerformed(false);
     // this.visited = true;
