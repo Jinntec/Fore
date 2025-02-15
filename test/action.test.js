@@ -5,9 +5,17 @@ import {
 import '../src/fx-instance.js';
 import '../src/ui/fx-container.js';
 import '../src/fx-bind.js';
+import {DependencyTracker} from "../src/DependencyTracker";
 
 describe('action Tests', () => {
+
+  beforeEach(() => {
+    DependencyTracker._instance = null;
+    DependencyTracker.getInstance().reset();
+  });
+
   it('setvalue action of control works and triggers update', async () => {
+
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
@@ -55,7 +63,7 @@ describe('action Tests', () => {
       </fx-fore>
     `);
 
-    await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'ready');
 
     const control = el.querySelector('fx-control');
     expect(control.value).to.equal('A');
@@ -242,7 +250,7 @@ describe('action Tests', () => {
       </fx-fore>
     `);
 
-    await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'init-done');
 
     const [firstDiv, secondDiv] = el.querySelectorAll('div');
     const firstControl = firstDiv.querySelector('fx-control');
