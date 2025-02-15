@@ -28,7 +28,7 @@ export class NodeBinding extends Binding{
         this.fore = fore;
 
         // Register the base NodeBinding with the DependencyTracker.
-        // DependencyTracker.getInstance().registerBinding(this.xpath, this);
+        DependencyTracker.getInstance().registerBinding(this.xpath, this);
 
         // todo registerDependencies from ref predicates
 
@@ -37,6 +37,7 @@ export class NodeBinding extends Binding{
     }
 
     update(){
+        super.update();
     }
 
     registerFacets() {

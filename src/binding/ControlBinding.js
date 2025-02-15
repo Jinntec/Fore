@@ -8,6 +8,7 @@ export class ControlBinding extends Binding{
     }
 
     update(){
+        super.update();
         this.refresh();
     }
 
