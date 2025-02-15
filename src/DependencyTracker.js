@@ -87,7 +87,6 @@ export class DependencyTracker {
                         subgraph.addDependency(key, dep);
                     });
                 }
-                this.pendingUpdates.delete(binding);
             }
         });
 
@@ -167,7 +166,7 @@ export class DependencyTracker {
         if (!scope.templateBindings) {
             scope.templateBindings = new Set();
         }
-        const templateBinding = new TemplateBinding(expression, node);
+        const templateBinding = new TemplateBinding(expression, node, scope);
         this.registerBinding(expression, this);
         scope.templateBindings.add(templateBinding);
 
@@ -196,6 +195,7 @@ export class DependencyTracker {
         if (!this.dependencyGraph.hasNode(to)) {
             this.dependencyGraph.addNode(to);
         }
+        // this.dependencyGraph.addDependency(from,to);
         this.dependencyGraph.addDependency(from,to);
 
         // Handle complex axes relationships.
@@ -295,7 +295,7 @@ export class DependencyTracker {
             }
         }
 
-        console.log('after notifyChange', this.pendingUpdates);
+        // console.log('after notifyChange', this.pendingUpdates);
     }
 
     notifyDelete(xpath) {
@@ -454,7 +454,10 @@ export class DependencyTracker {
     }
 
     hasUpdates() {
-        return this.pendingUpdates.size > 0 || this.reactivatedControls.size > 0;
+        // return this.pendingUpdates.size > 0 || this.reactivatedControls.size > 0;
+        return Array.from(this.pendingUpdates).some(
+            binding => binding.bindingType === 'control' || binding.bindingType === 'template'
+        );
     }
 
     extractDependencies(expression) {
