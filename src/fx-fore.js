@@ -240,7 +240,7 @@ export class FxFore extends HTMLElement {
             ${html}
         `;
 
-    this.toRefresh = [];
+    // this.toRefresh = [];
     this.initialRun = true;
     this._scanForNewTemplateExpressionsNextRefresh = false;
     this.repeatsFromAttributesCreated = false;
@@ -256,6 +256,8 @@ export class FxFore extends HTMLElement {
 
   connectedCallback() {
     this.style.visibility = 'hidden';
+    DependencyTracker._instance = null;
+
     console.time('init');
     this.strict = !!this.hasAttribute('strict');
 
@@ -351,6 +353,7 @@ export class FxFore extends HTMLElement {
 
     // register fore element as outer scope for non-enclosed template expressions
     console.log('dependencyTracker',DependencyTracker.getInstance());
+
     // making sure all non-scoped template expressions will be evaluated
     this.addEventListener('init-done',() =>{
       DependencyTracker.getInstance().evaluateAllTemplateBindings();
@@ -451,8 +454,11 @@ export class FxFore extends HTMLElement {
 
   disconnectedCallback() {
     this.removeEventListener('dragstart', this.dragstart);
-    this.dependencyTracker = null;
+    // this.dependencyTracker = null;
+    DependencyTracker.getInstance().reset();
     DependencyTracker._instance = null;
+    this.intersectionObserver = null;
+    this.model = null;
     /*
             this.removeEventListener('model-construct-done', this._handleModelConstructDone);
             this.removeEventListener('message', this._displayMessage);
