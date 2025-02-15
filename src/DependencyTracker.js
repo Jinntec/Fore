@@ -3,6 +3,7 @@ import getInScopeContext from "./getInScopeContext";
 import {XPathUtil} from "./xpath-util";
 import {TemplateBinding} from "./binding/TemplateBinding.js";
 import {evaluateXPathToNodes} from "./xpath-evaluation";
+import {debounce} from "./events";
 // import { XPathDependencyExtractor } from './XPathDependencyExtractor.js';
 let _instance = null;
 
@@ -37,6 +38,9 @@ export class DependencyTracker {
         this.storedTemplateExpressions = [];
         this.queuedChanges = new Set();
         // this.xpathExtractor = new XPathDependencyExtractor(); // Extractor for dependencies
+
+        // Create the debounced version of our internal notifyChange method.
+        this.debouncedNotifyChange = debounce(this, this._notifyChange, 100);
     }
 
     reset() {
@@ -118,7 +122,7 @@ export class DependencyTracker {
      * @param {Object} binding - The binding object to register.
      */
     registerBinding(key, binding) {
-        console.log('registerBinding', key, binding);
+        console.log('🔗 registerBinding', key, binding);
         if (!this.bindingRegistry.has(key)) {
             this.bindingRegistry.set(key, new Set());
             // Also add the key as a node in the dependency graph if needed.
@@ -149,7 +153,7 @@ export class DependencyTracker {
             resolvedXPath = scopeXPath ? `${scopeXPath}/${refXPath}` : this.resolveInstanceXPath(refXPath);
         }
 
-        console.log('Registering XPath', resolvedXPath, control);
+        console.log('🔗 Registering XPath', resolvedXPath, control);
 
         // Instead of adding to controlBindings, use our unified registry.
         this.registerBinding(resolvedXPath, control);
@@ -170,7 +174,7 @@ export class DependencyTracker {
      * @param {Node} node - The DOM Node that holds the template expression.
      */
     registerTemplateBinding(expression, node) {
-        console.log(`Registering Template Expression: ${expression}`, node);
+        console.log(`🔗 Registering Template Expression: ${expression}`, node);
 
         const parent = node.nodeType === Node.ATTRIBUTE_NODE ? node.ownerElement : node.parentNode;
         if (parent.closest('fx-model')) return;
@@ -206,7 +210,7 @@ export class DependencyTracker {
     // Register a dependency edge in the dependency graph.
     registerDependency(from, to) {
 
-        console.log('registerDependency', from, to);
+        console.log('🔗🔗 registerDependency', from, to);
         if (!this.dependencyGraph.hasNode(from)) {
             this.dependencyGraph.addNode(from);
         }
@@ -245,8 +249,24 @@ export class DependencyTracker {
         }
     }
 
+    /**
+     *
+     *
+     * @param changedXPath
+     * @private
+     */
     notifyChange(changedXPath) {
-        console.log('notifyChange', changedXPath);
+        console.log('throttling notifyChange', changedXPath);
+        this._notifyChange(changedXPath);
+    }
+
+    /**
+     * debounced version of notifyChange - should only be called from notifyChange.
+     *
+     * @param changedXPath
+     * @private
+     */
+    _notifyChange(changedXPath) {
         const resolvedXPath = this.resolveInstanceXPath(changedXPath);
         const affectedXPaths = new Set([resolvedXPath]);
 
@@ -513,7 +533,7 @@ export class DependencyTracker {
     }
 
     detectTemplateExpressions(root) {
-        console.log('detectTemplateExpressions for', root);
+        console.log('🔍 detectTemplateExpressions for', root);
         const search =
             "(descendant-or-self::*!(text(), @*))[contains(., '{')][substring-after(., '{') => contains('}')][not(ancestor-or-self::fx-model)]";
         const tmplExpressions = evaluateXPathToNodes(search, root, this);
