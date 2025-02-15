@@ -452,6 +452,7 @@ export class FxFore extends HTMLElement {
   disconnectedCallback() {
     this.removeEventListener('dragstart', this.dragstart);
     this.dependencyTracker = null;
+    DependencyTracker._instance = null;
     /*
             this.removeEventListener('model-construct-done', this._handleModelConstructDone);
             this.removeEventListener('message', this._displayMessage);
@@ -493,16 +494,18 @@ export class FxFore extends HTMLElement {
     }
 
     this.isRefreshing = true;
-    console.log(`### <<<<< refresh() on '${this.id}' - force:${force} >>>>>`);
 
     // refresh () {
     // ### refresh Fore UI elements
     // if (!this.initialRun && this.toRefresh.length !== 0) {
     // if (!this.initialRun && this.toRefresh.length !== 0) {
     if (DependencyTracker.getInstance().hasUpdates()) {
+        console.log(`### <<<<< partial refresh() on '${this.id}' >>>>>`);
         DependencyTracker.getInstance().processUpdates();
     } else {
       if (this.inited) {
+        console.log(`### <<<<< full refresh() on '${this.id}' >>>>>`);
+        console.log('+++++pending',Array.from(DependencyTracker.getInstance().pendingUpdates));
         // console.log(`### <<<<< refresh() on '${this.id}' >>>>>`);
         Fore.refreshChildren(this, force);
       }
