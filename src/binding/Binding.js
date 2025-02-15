@@ -8,10 +8,11 @@ export class Binding {
     constructor(key, type) {
         this.xpath = key;
         this.bindingType = type;
-        // DependencyTracker.getInstance().registerBinding(this.xpath, this);
     }
 
     update(){
-        console.log('updating key',this.xpath);
+        // console.log('updating key',this.xpath);
+        DependencyTracker.getInstance().pendingUpdates.delete(this);
+        // console.log('pendingUpdates after deletion', Array.from(DependencyTracker.getInstance().pendingUpdates));
     }
 }
