@@ -11,10 +11,8 @@ describe('bind Tests', () => {
   let tracker;
 
   beforeEach(() => {
-    tracker = DependencyTracker.getInstance();
-    tracker.controlBindings.clear();
-    tracker.pendingUpdates.clear();
-    tracker.nonRelevantControls.clear();
+    DependencyTracker._instance = null;
+    DependencyTracker.getInstance().reset();
   });
 
   it('is initialized', async () => {
