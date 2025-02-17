@@ -249,7 +249,7 @@ export class FxModel extends HTMLElement {
 
   recalculate() {
 
-    if (DependencyTracker.getInstance().hasUpdates()) {
+    if (DependencyTracker.getInstance().hasModelUpdates()) {
       console.log(`🔷 ### <<<<< partial recalculate() '${this.fore.id}' >>>>>`);
       // Let DependencyTracker figure out which keys are pending.
       const orderedKeys = DependencyTracker.getInstance().buildSubgraphForPendingChanges();

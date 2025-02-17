@@ -491,6 +491,11 @@ export class DependencyTracker {
         this.insertedIndexes.clear();
     }
 
+    hasModelUpdates() {
+        return Array.from(this.pendingUpdates).some(
+            binding => binding.bindingType === 'node' || binding.bindingType === 'facet'
+        );
+    }
     hasUpdates() {
         // return this.pendingUpdates.size > 0 || this.reactivatedControls.size > 0;
         return Array.from(this.pendingUpdates).some(
