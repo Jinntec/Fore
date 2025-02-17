@@ -1,4 +1,4 @@
-describe.only('binding.html', () => {
+describe('binding.html', () => {
 	beforeEach(() => {
 		cy.visit('test/events.html');
 	});
