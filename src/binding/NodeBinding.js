@@ -31,6 +31,7 @@ export class NodeBinding extends Binding{
         DependencyTracker.getInstance().registerBinding(this.xpath, this);
 
         // todo registerDependencies from ref predicates
+        this._registerDependencies();
 
         // Now let this NodeBinding register all its facet dependencies.
         this.registerFacets();
@@ -155,4 +156,7 @@ export class NodeBinding extends Binding{
         return Array.from(touchedNodes.values());
     }
 
+    _registerDependencies() {
+        // todo: examine predicates and register deps
+    }
 }
