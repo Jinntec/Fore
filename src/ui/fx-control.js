@@ -9,8 +9,9 @@ import { Fore } from '../fore.js';
 import { ModelItem } from '../modelitem.js';
 import { debounce } from '../events.js';
 import { FxModel } from '../fx-model.js';
-import {XPathUtil} from "../xpath-util";
-import {DependencyTracker} from "../DependencyTracker";
+import { XPathUtil } from '../xpath-util';
+import { DependencyTracker } from '../DependencyTracker';
+import { ControlBinding } from '../binding/ControlBinding.js';
 
 const WIDGETCLASS = 'widget';
 
@@ -211,7 +212,7 @@ export default class FxControl extends XfAbstractControl {
    */
   setValue(val) {
     const modelitem = this.getModelItem();
-    if(val === modelitem.value) return;
+    if (val === modelitem.value) return;
     if (this.getAttribute('class')) {
       this.classList.add('visited');
     } else {
@@ -509,7 +510,7 @@ export default class FxControl extends XfAbstractControl {
     const widget = this.getWidget();
     this._handleBoundWidget(widget);
     this._handleDataAttributeBinding();
-    Fore.refreshChildren(this, force);
+    //    Fore.refreshChildren(this, force);
   }
 
   /**
@@ -548,7 +549,10 @@ export default class FxControl extends XfAbstractControl {
       // const nodeset = evaluateXPathToNodes(ref, inscope, this);
       const nodeset = evaluateXPath(ref, inscope, this);
 
-      DependencyTracker.getInstance().registerControl(ref,this);
+      DependencyTracker.getInstance().registerControl(
+        this.modelItem.path,
+        new ControlBinding(this),
+      );
 
       // ### clear items
       const { children } = widget;
@@ -625,15 +629,15 @@ export default class FxControl extends XfAbstractControl {
     const valueExpr = valueAttribute;
     const cutted = valueExpr.substring(1, valueExpr.length - 1);
     const evaluated = evaluateXPathToString(cutted, node, newEntry);
-    newEntry.setAttribute('value',evaluated);
+    newEntry.setAttribute('value', evaluated);
 
     if (this.value === evaluated) {
       newEntry.setAttribute('selected', 'selected');
     }
 
-    if(newEntry.hasAttribute('title')){
+    if (newEntry.hasAttribute('title')) {
       let titleExpr = newEntry.getAttribute('title');
-      titleExpr = titleExpr.substring(1,titleExpr.length -1);
+      titleExpr = titleExpr.substring(1, titleExpr.length - 1);
       const evaluated = evaluateXPathToString(titleExpr, node, newEntry);
       newEntry.setAttribute('title', evaluated);
     }

@@ -18,10 +18,8 @@
     <demo-snippet>
         <template>
             <fx-fore>
-                <fx-action event="ready" while="true()" delay="10000">
+                <fx-action event="ready" while="true()" delay="1000">
                     <fx-setvalue ref="time" value="now()"></fx-setvalue>
-                    <fx-update></fx-update>
-                    <fx-refresh></fx-refresh>
                 </fx-action>
 
                 <fx-model>
@@ -38,9 +36,9 @@
                     </fx-instance>
 
                     <fx-bind ref="hour" calculate="hours-from-time(xs:time(../time))"></fx-bind>
-                    <!--          <fx-bind ref="h-deg" calculate="../hour * 30"></fx-bind>-->
+                             <fx-bind ref="h-deg" calculate="../hour * 30"></fx-bind>
 
-<!--
+
                     <fx-bind ref="minute" calculate="minutes-from-time(xs:time(../time))"></fx-bind>
                     <fx-bind ref="h-deg" calculate="(../hour + ../minute div 60) * 30"></fx-bind>
 
@@ -48,7 +46,6 @@
 
                     <fx-bind ref="second" calculate="seconds-from-time(xs:time(../time))"></fx-bind>
                     <fx-bind ref="s-deg" calculate="../second * 6"></fx-bind>
--->
 
 
                     <fx-function signature="now() as xs:string" type="text/javascript">

@@ -12,7 +12,10 @@ import getInScopeContext from './getInScopeContext.js';
 import { XPathUtil } from './xpath-util.js';
 import { FxRepeatAttributes } from './ui/fx-repeat-attributes.js';
 import { ModelItem } from './modelitem.js';
-import { DependencyTracker } from "./DependencyTracker.js";
+import { DependencyTracker } from './DependencyTracker.js';
+import { ControlBinding } from './binding/ControlBinding.js';
+import { Binding } from './binding/Binding.js';
+import { detectTemplateExpressions } from './binding/detectTemplateStrings.js';
 // import {TemplateBinding} from "./ui/TemplateBinding";
 // import {domFacade, evaluateXPath, parseScript} from "fontoxpath";
 
@@ -251,7 +254,7 @@ export class FxFore extends HTMLElement {
     this.mergePartial = false;
     this.createNodes = this.hasAttribute('create-nodes') ? true : false;
     this._localNamesWithChanges = new Set();
-    this.setAttribute('role','form'); // set aria role
+    this.setAttribute('role', 'form'); // set aria role
   }
 
   connectedCallback() {
@@ -311,7 +314,7 @@ export class FxFore extends HTMLElement {
         return;
       }
       if (!modelElement.inited) {
-/*
+        /*
         console.info(
           `%cFore is processing fx-fore#${this.id}`,
           'background:#64b5f6; color:white; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
@@ -347,15 +350,15 @@ export class FxFore extends HTMLElement {
       this.showConfirmation = true;
     }
     console.info(
-        `%cFore is processing fx-fore#${this.id}`,
-        'background:#64b5f6; color:white; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+      `%cFore is processing fx-fore#${this.id}`,
+      'background:#64b5f6; color:white; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
     );
 
     // register fore element as outer scope for non-enclosed template expressions
-    console.log('dependencyTracker',DependencyTracker.getInstance());
+    console.log('dependencyTracker', DependencyTracker.getInstance());
 
     // making sure all non-scoped template expressions will be evaluated
-    this.addEventListener('init-done',() =>{
+    this.addEventListener('init-done', () => {
       DependencyTracker.getInstance().evaluateAllTemplateBindings();
     });
   }
@@ -506,8 +509,8 @@ export class FxFore extends HTMLElement {
     // if (!this.initialRun && this.toRefresh.length !== 0) {
     // if (!this.initialRun && this.toRefresh.length !== 0) {
     if (DependencyTracker.getInstance().hasUpdates()) {
-        console.log(`🟢 ### <<<<< partial refresh() on '${this.id}' >>>>>`);
-        DependencyTracker.getInstance().processUpdates();
+      console.log(`🟢 ### <<<<< partial refresh() on '${this.id}' >>>>>`);
+      DependencyTracker.getInstance().processUpdates();
     } else {
       if (this.inited) {
         console.log(`🔴 ### <<<<< full refresh() on '${this.id}' >>>>>`);
@@ -525,8 +528,8 @@ export class FxFore extends HTMLElement {
     Fore.dispatch(this, 'init-done', {});
     Fore.dispatch(this, 'refresh-done', {});
     console.info(
-        `%c✅ refresh-done on #${this.id}`,
-        'background:darkorange; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+      `%c✅ refresh-done on #${this.id}`,
+      'background:darkorange; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
     );
 
     // this.isRefreshing = true;
@@ -556,7 +559,6 @@ export class FxFore extends HTMLElement {
       }
     }
     this.isRefreshing = false;
-
   }
 
   /**
@@ -711,9 +713,13 @@ export class FxFore extends HTMLElement {
     if (this.createNodes) {
       this.initData();
     }
-    DependencyTracker.getInstance().registerControl('$default',this);
 
     await this.refresh(true);
+
+    const binding = new Binding('$default', this);
+
+    DependencyTracker.getInstance().registerControl('$default', binding);
+    detectTemplateExpressions(this);
 
     // this.style.display='block'
     this.classList.add('fx-ready');
@@ -753,7 +759,11 @@ export class FxFore extends HTMLElement {
     // console.log('INIT');
     // const boundControls = Array.from(root.querySelectorAll('[ref]:not(fx-model *),fx-repeatitem'));
 
-    const boundControls = Array.from(root.querySelectorAll('fx-control[ref],fx-upload[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref]'));
+    const boundControls = Array.from(
+      root.querySelectorAll(
+        'fx-control[ref],fx-upload[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref]',
+      ),
+    );
     if (root.matches('fx-repeatitem')) {
       boundControls.unshift(root);
     }
