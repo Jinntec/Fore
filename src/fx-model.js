@@ -41,7 +41,7 @@ export class FxModel extends HTMLElement {
     this.attachShadow({ mode: 'open' });
     this.computes = 0;
     this.fore = {};
-    this.initialRecalcDone = false;
+    this.needsFullRecalc = true;
 
   }
 
@@ -240,6 +240,8 @@ export class FxModel extends HTMLElement {
       bind.init(this);
     });
 
+    this.needsFullRecalc = true;
+
     console.log('ℹ️ dependencyGraph', DependencyTracker.getInstance().dependencyGraph);
     console.log('ℹ️ rebuild mainGraph calc order', DependencyTracker.getInstance().dependencyGraph.overallOrder());
 
@@ -248,9 +250,10 @@ export class FxModel extends HTMLElement {
   }
 
   recalculate() {
+    console.log(`🔷 ### <<<<< recalculate() '${this.fore.id}' >>>>>`);
 
     if (DependencyTracker.getInstance().hasModelUpdates()) {
-      console.log(`🔷 ### <<<<< partial recalculate() '${this.fore.id}' >>>>>`);
+      console.log(`🔷🔷 ### <<<<< partial recalculate() '${this.fore.id}' >>>>>`);
       // Let DependencyTracker figure out which keys are pending.
       const orderedKeys = DependencyTracker.getInstance().buildSubgraphForPendingChanges();
 
@@ -266,11 +269,10 @@ export class FxModel extends HTMLElement {
         }
       });
 
-      // Clear the changed array.
-      // this.changed = [];
-      Fore.dispatch(this, 'recalculate-done', { orderedKeys, computes: this.computes });
-    } else {
-      console.log(`🔷 ### <<<<< full recalculate() '${this.fore.id}' >>>>>`);
+    }
+
+    if(this.needsFullRecalc){
+      console.log(`🔷🔷 ### <<<<< full recalculate() '${this.fore.id}' >>>>>`);
       // If there are no changed keys, process the entire main graph.
       const orderedKeys = DependencyTracker.getInstance().dependencyGraph.overallOrder(false);
       orderedKeys.forEach(key => {
@@ -280,186 +282,13 @@ export class FxModel extends HTMLElement {
           });
         }
       });
-      Fore.dispatch(this, 'recalculate-done', { graph: this.mainGraph, computes: this.computes });
-    }
-
-  }
-
-/*
-  recalculate() {
-    if (!this.mainGraph) {
-      return;
-    }
-
-    console.log(`### <<<<< recalculate() '${this.fore.id}' >>>>>`);
-
-    // console.log('changed nodes ', this.changed);
-    this.computes = 0;
-
-    if(!this.initialRecalcDone){
-      //full recalc
-      console.log("Performing full initial recalculation.");
-      // Process the entire dependency graph in order.
-      const orderedKeys = DependencyTracker.getInstance().dependencyGraph.overallOrder(false);
-      orderedKeys.forEach(key => {
-        if (DependencyTracker.getInstance().bindingRegistry.has(key)) {
-          DependencyTracker.getInstance().bindingRegistry.get(key).forEach(binding => {
-            // For NodeBindings and FacetBindings we assume a refresh() or compute() method exists.
-            if (typeof binding.refresh === 'function') {
-              binding.refresh();
-            }
-          });
-        }
-      });
-    }else{
-
+      this.needsFullRecalc = false;
+      // Fore.dispatch(this, 'recalculate-done', { graph: DependencyTracker.getInstance().dependencyGraph, computes: this.computes });
     }
 
 
-    this.subgraph = new DepGraph(false);
-    // ### create the subgraph for all changed modelItems
-    if (this.changed.length !== 0) {
-      // ### build the subgraph
-      this.changed.forEach(modelItem => {
-        this.subgraph.addNode(modelItem.path, modelItem.node);
-        // const dependents = this.mainGraph.dependantsOf(modelItem.path, false);
-        // this._addSubgraphDependencies(modelItem.path);
-        if (this.mainGraph.hasNode(modelItem.path)) {
-          // const dependents = this.mainGraph.directDependantsOf(modelItem.path)
+    Fore.dispatch(this, 'recalculate-done', { graph: DependencyTracker.getInstance().dependencyGraph, computes: this.computes });
 
-          const all = this.mainGraph.dependantsOf(modelItem.path, false);
-          const dependents = all.reverse();
-          if (dependents.length !== 0) {
-            dependents.forEach(dep => {
-              console.log('dependent',dep);
-              // const subdep = this.mainGraph.dependentsOf(dep,false);
-              // subgraph.addDependency(dep, modelItem.path);
-              const val = this.mainGraph.getNodeData(dep);
-              this.subgraph.addNode(dep, val);
-              if (dep.includes(':')) {
-                const path = dep.substring(0, dep.indexOf(':'));
-                this.subgraph.addNode(path, val);
-
-                const deps = this.mainGraph.dependentsOf(modelItem.path, false);
-                // if we find the dep to be first in list of dependents we are dependent on ourselves not adding edge to modelItem.path
-                if (deps.indexOf(dep) !== 0) {
-                  this.subgraph.addDependency(dep, modelItem.path);
-                }
-              }
-              // subgraph.addDependency(dep,modelItem.path);
-            });
-          }
-        }
-      });
-
-      // ### compute the subgraph
-      console.log('subgraph', this.subgraph);
-      const ordered = this.subgraph.overallOrder(false);
-      ordered.forEach(path => {
-        if (this.mainGraph.hasNode(path)) {
-          console.log('ordered subgraph node', path)
-          const node = this.mainGraph.getNodeData(path);
-          this.compute(node, path);
-        }
-      });
-      // const toRefresh = [...this.changed];
-      // this.formElement.toRefresh = toRefresh;
-      this.changed = [];
-      Fore.dispatch(this, 'recalculate-done', { graph: this.subgraph, computes: this.computes });
-    } else {
-      const v = this.mainGraph.overallOrder(false);
-      v.forEach(path => {
-        const node = this.mainGraph.getNodeData(path);
-        this.compute(node, path);
-      });
-      Fore.dispatch(this, 'recalculate-done', { graph: this.mainGraph, computes: this.computes });
-    }
-    console.log(`${this.parentElement.id} recalculate finished with modelItems `, this.modelItems);
-  }
-*/
-
-  /*
-      _addSubgraphDependencies(path){
-          const dependents = this.mainGraph.directDependantsOf(path)
-
-          const alreadyInGraph = this.subgraph.incomingEdges[path];
-          // const alreadyInGraph = path in this.subgraph;
-          if(dependents.length !== 0 && alreadyInGraph.length === 0){
-
-              dependents.forEach(dep => {
-                  // const val= this.mainGraph.getNodeData(dep);
-                  // this.subgraph.addNode(dep,val);
-                  if(dep.includes(':')){
-                      const subpath = dep.substring(0, dep.indexOf(':'));
-                      // this.subgraph.addNode(subpath,val);
-                      this.subgraph.addDependency(subpath,dep);
-                      this.subgraph.addDependency(dep,path);
-                      /!*
-                                          const subdeps = this.mainGraph.directDependantsOf(path);
-                                          console.log('subdeps',path, subdeps);
-                                          subdeps.forEach(sdep => {
-                                              const sval= this.mainGraph.getNodeData(sdep);
-                                              this.subgraph.addNode(sdep,sval);
-                                              console.log('subdep',sdep);
-                                          });
-                      *!/
-                      if(this.subgraph.incomingEdges[dep] === 0){
-                          this._addSubgraphDependencies(subpath)
-                      }
-
-                  }
-              });
-
-          }
-
-      }
-  */
-
-  /**
-   * (re-) computes a modelItem.
-   * @param {Node} node - the node the modelItem is attached to
-   * @param {string} path - the canonical XPath of the node
-   */
-  compute(node, path) {
-    const modelItem = this.getModelItem(node);
-    if (modelItem && path.includes(':')) {
-      const property = path.split(':')[1];
-      if (property) {
-        /*
-                        if (property === 'readonly') {
-                            // make sure that calculated items are always readonly
-                            if(modelItem.bind['calculate']){
-                                modelItem.readonly =  true;
-                            }else {
-                                const expr = modelItem.bind[property];
-                                const compute = evaluateXPathToBoolean(expr, modelItem.node, this);
-                                modelItem.readonly = compute;
-                            }
-                        }
-        */
-        const expr = modelItem.bind[property];
-        if (property === 'calculate') {
-          const compute = evaluateXPath(expr, modelItem.node, this);
-          modelItem.value = compute;
-          modelItem.readonly = true; // calculated nodes are always readonly
-        } else if (property !== 'constraint' && property !== 'type') {
-          // ### re-compute the Boolean value of all facets expect 'constraint' and 'type' which are handled in revalidate()
-          if (expr) {
-            const compute = evaluateXPathToBoolean(expr, modelItem.node, this);
-            modelItem[property] = compute;
-            /*
-                                    console.log(
-                                      `recalculating path ${path} - Expr:'${expr}' computed`,
-                                      modelItem[property],
-                                    );
-                        */
-          }
-        }
-      }
-      this.computes += 1;
-
-      DependencyTracker.getInstance().notifyChange(modelItem.path);
-    }
   }
 
   /**
