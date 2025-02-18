@@ -48,12 +48,16 @@
                             <a>A</a>
                             <b>B</b>
                             <c>C</c>
+                            <one>1</one>
+                            <two>2</two>
+                            <three>3</three>
                         </data>
                     </fx-instance>
                     <fx-bind ref="a" readonly="string-length(../b) > 1"
                              required="../b = 'B'"></fx-bind>
                     <fx-bind ref="b" required="../c = 'C'"></fx-bind>
                     <fx-bind ref="c" relevant="../b = 'B'"></fx-bind>
+
                 </fx-model>
                 <fx-group collapse="true">
                     <h1>
