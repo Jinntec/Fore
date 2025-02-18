@@ -133,7 +133,7 @@ export default class AbstractControl extends ForeElementMixin {
                 // console.log('newVal',this.value);
                 if(!this.binding){
                     this.binding = new ControlBinding(this);
-                    DependencyTracker.getInstance().registerBinding(this.modelItem.path,this.binding);
+                    DependencyTracker.getInstance().registerControl(this.modelItem.path,this.binding);
                 }
                 // DependencyTracker.getInstance().register(this.modelItem.path, this);
                 // DependencyTracker.getInstance().register(this.ref, this);

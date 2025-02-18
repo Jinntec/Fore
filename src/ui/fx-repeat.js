@@ -261,7 +261,7 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
 
         // const xpath = XPathUtil.getCanonicalXPath(this.nodeset)
         console.log('xpath',xpath)
-        DependencyTracker.getInstance().register(this.ref,this);
+        DependencyTracker.getInstance().registerControl(this.ref,this);
         // this.getOwnerForm().dependencyTracker.register(this.ref, this);
 
         const deletedIndexes = DependencyTracker.getInstance().getDeletedIndexes(xpath);

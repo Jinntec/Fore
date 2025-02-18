@@ -711,7 +711,7 @@ export class FxFore extends HTMLElement {
     if (this.createNodes) {
       this.initData();
     }
-    DependencyTracker.getInstance().register('$default',this);
+    DependencyTracker.getInstance().registerControl('$default',this);
 
     await this.refresh(true);
 

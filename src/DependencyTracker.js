@@ -143,7 +143,7 @@ export class DependencyTracker {
      * @param {string} refXPath - The XPath string (relative or absolute)
      * @param {HTMLElement} control - The control element.
      */
-    register(refXPath, control) {
+    registerControl(refXPath, control) {
         let resolvedXPath;
         if (XPathUtil.isAbsolutePath(refXPath)) {
             resolvedXPath = this.resolveInstanceXPath(refXPath);
