@@ -19,6 +19,13 @@ export class ControlBinding extends Binding {
 
     // TODO: only for non-default directly
     detectTemplateExpressions(this.control);
+
+    // The control depends on some facets of the bound node / model item
+    DependencyTracker.getInstance().registerBinding(this.modelItem.path, this);
+    DependencyTracker.getInstance().registerBinding(`${this.modelItem.path}:readonly`, this);
+    DependencyTracker.getInstance().registerBinding(`${this.modelItem.path}:relevant`, this);
+    DependencyTracker.getInstance().registerBinding(`${this.modelItem.path}:required`, this);
+    DependencyTracker.getInstance().registerBinding(`${this.modelItem.path}:constraint`, this);
   }
 
   update() {

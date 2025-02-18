@@ -56,7 +56,7 @@
                     <fx-bind ref="a" readonly="string-length(../b) > 1"
                              required="../b = 'B'"></fx-bind>
                     <fx-bind ref="b" required="../c = 'C'"></fx-bind>
-                    <fx-bind ref="c" relevant="../b = 'B'"></fx-bind>
+                    <fx-bind ref="c" constraint="string-length(.) = number(../a)" relevant="../b = 'B'"></fx-bind>
 
                 </fx-model>
                 <fx-group collapse="true">
@@ -93,6 +93,7 @@
                     </fx-control>
                     <fx-control ref="c" update-event="input">
                         <label>C</label>
+                            <fx-alert>must be as long as the value for a</fx-alert>
                     </fx-control>
 
 
