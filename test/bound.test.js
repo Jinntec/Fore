@@ -1,19 +1,15 @@
 /* eslint-disable no-unused-expressions */
-import {
-  html, fixture, expect, elementUpdated, oneEvent, fixtureSync,
-} from '@open-wc/testing';
+import { html, fixture, expect, elementUpdated, oneEvent, fixtureSync } from '@open-wc/testing';
 
 import '../index.js';
-import {DependencyTracker} from "../src/DependencyTracker";
+import { DependencyTracker } from '../src/DependencyTracker';
 
 describe('fx-control tests', () => {
   let tracker;
 
   beforeEach(() => {
     tracker = DependencyTracker.getInstance();
-    tracker.controlBindings.clear();
-    tracker.pendingUpdates.clear();
-    tracker.nonRelevantControls.clear();
+    tracker.reset();
   });
 
   it('is creates a native input when no control is provided', async () => {

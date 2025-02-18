@@ -1,19 +1,16 @@
 /* eslint-disable no-unused-expressions */
-import {
-  html, fixture, fixtureSync, expect, elementUpdated, oneEvent,
-} from '@open-wc/testing';
+import { html, fixture, fixtureSync, expect, elementUpdated, oneEvent } from '@open-wc/testing';
 
 import '../index.js';
-import {DependencyTracker} from "../src/DependencyTracker";
+import { DependencyTracker } from '../src/DependencyTracker';
+
+beforeEach(() => {
+  DependencyTracker._instance = null;
+  DependencyTracker.getInstance().reset();
+});
 
 describe('bind Tests', () => {
-
   let tracker;
-
-  beforeEach(() => {
-    DependencyTracker._instance = null;
-    DependencyTracker.getInstance().reset();
-  });
 
   it('is initialized', async () => {
     const el = await fixtureSync(html`
@@ -30,7 +27,7 @@ describe('bind Tests', () => {
     `);
 
     //      await elementUpdated(el);
-	  await oneEvent(el, 'ready');
+    await oneEvent(el, 'ready');
     const bind = document.getElementById('b-greeting');
     expect(bind).to.exist;
     expect(bind.instanceId).to.equal('default');
@@ -512,7 +509,6 @@ describe('bind Tests', () => {
               <fx-bind id="nested" ref="part" constraint="false()"></fx-bind>
             </fx-bind>
           </fx-bind>
-
         </fx-model>
         <fx-repeat ref="instance('second')//item">
           <template>

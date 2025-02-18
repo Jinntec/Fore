@@ -458,8 +458,8 @@ export class FxFore extends HTMLElement {
   disconnectedCallback() {
     this.removeEventListener('dragstart', this.dragstart);
     // this.dependencyTracker = null;
-    DependencyTracker.getInstance().reset();
-    DependencyTracker._instance = null;
+    //    DependencyTracker.getInstance().reset();
+    //    DependencyTracker._instance = null;
     this.intersectionObserver = null;
     this.model = null;
     /*

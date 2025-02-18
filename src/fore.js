@@ -314,12 +314,14 @@ export class Fore {
             if (force === true) {
               // Unconditional force refresh
               bound.refresh(force);
+              this.refreshChildren(bound, force);
               continue;
             }
             if (typeof force !== 'object') {
+              this.refreshChildren(bound, force);
               continue;
             }
-/*
+            /*
             if (
               force.reason === 'index-function' &&
               bound.dependencies.isInvalidatedByIndexFunction()
@@ -329,7 +331,7 @@ export class Fore {
             }
 */
 
-/*
+            /*
             if (
               bound.dependencies.isInvalidatedByChildlistChanges(force.elementLocalnamesWithChanges)
             ) {

@@ -2,6 +2,7 @@ import { AbstractAction } from './abstract-action.js';
 import { evaluateXPathToString } from '../xpath-evaluation.js';
 import { Fore } from '../fore.js';
 import getInScopeContext from '../getInScopeContext.js';
+import { detectTemplateExpressions } from '../binding/detectTemplateStrings.js';
 
 /**
  * `fx-message`
@@ -68,7 +69,8 @@ class FxMessage extends AbstractAction {
     if (this.hasAttribute('value')) {
       this.message = this._getValue();
     } else {
-      this.getOwnerForm().evaluateTemplateExpression(this.messageTextContent, this.firstChild);
+      detectTemplateExpressions(this);
+      //      this.getOwnerForm().evaluateTemplateExpression(this.messageTextContent, this.firstChild);
       this.message = this.textContent;
     }
 

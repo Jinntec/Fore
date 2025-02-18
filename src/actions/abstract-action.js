@@ -457,7 +457,7 @@ export class AbstractAction extends ForeElementMixin {
   /**
    * calls the update cycle if action signalled that update is needed.
    */
-  actionPerformed(force=false) {
+  actionPerformed(force = false) {
     const model = this.getModel();
     if (!model) {
       return;
@@ -476,12 +476,12 @@ export class AbstractAction extends ForeElementMixin {
     }
     // console.log('actionPerformed action parentNode ', this.parentNode);
     if (FxFore.outermostHandler === this || !FxFore.outermostHandler) {
-      if(this.needsUpdate){
+      if (this.needsUpdate) {
         // console.log('running update cycle for outermostHandler', this);
         model.recalculate();
         model.revalidate();
+        this.getOwnerForm().refresh(force);
       }
-      this.getOwnerForm().refresh(force);
       this.dispatchActionPerformed();
     } else if (this.needsUpdate) {
       // console.log('Update delayed!');
@@ -492,8 +492,6 @@ export class AbstractAction extends ForeElementMixin {
 
     // console.log('running actionperformed on', this, ' outermostHandler', FxFore.outermostHandler);
   }
-
-
 
   /**
    * dispatches action-performed event
