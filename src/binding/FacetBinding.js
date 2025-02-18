@@ -6,6 +6,11 @@ import {evaluateXPath, evaluateXPathToBoolean, evaluateXPathToString} from "../x
 import getInScopeContext from "../getInScopeContext";
 import {Binding} from "./Binding.js";
 
+/**
+ * represents a single facet of a NodeBinding.
+ *
+ * Gets ModelItem passed from it's parent NodeBinding and updates the state of the respective facet during compute.
+ */
 export class FacetBinding extends Binding {
     /**
      * Constructs a FacetBinding.

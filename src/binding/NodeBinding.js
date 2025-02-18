@@ -13,7 +13,7 @@ export class NodeBinding extends Binding{
      *
      * A NodeBinding represents the association of an XPath with a Node in the data.
      *
-     * @param {ModelItem} ModelItem Node wrapper
+     * @param {ModelItem} ModelItem state object wrapping data node
      */
     constructor(modelItem, fore) {
         super(modelItem.path,'node');
