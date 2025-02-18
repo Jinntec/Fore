@@ -189,7 +189,7 @@ export class DependencyTracker {
             scope.templateBindings = new Set();
         }
         const templateBinding = new TemplateBinding(expression, node, scope);
-        this.registerBinding(expression, this);
+        this.registerBinding(expression, templateBinding);
         scope.templateBindings.add(templateBinding);
 
         console.log(`Stored in scope`, scope);
@@ -201,7 +201,7 @@ export class DependencyTracker {
             this.registerBinding(dep, templateBinding);
         });
         // Also register under a default key.
-        this.registerBinding('$default', templateBinding);
+        // this.registerBinding('$default', templateBinding);
 
         // Evaluate the template immediately.
         templateBinding.update();
