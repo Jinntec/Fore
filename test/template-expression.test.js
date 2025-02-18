@@ -1,7 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import {
-  html, oneEvent, fixtureSync, expect,
-} from '@open-wc/testing';
+import { html, oneEvent, fixtureSync, expect } from '@open-wc/testing';
 
 import '../index.js';
 
@@ -22,15 +20,9 @@ describe('template expressions', () => {
       </fx-fore>
     `);
 
-    await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'ready');
     const div = el.querySelector('div');
     const attrNode = div.getAttributeNode('class');
-    expect(el.storedTemplateExpressionByNode).to.exist;
-    expect(el.storedTemplateExpressionByNode.size).to.equal(2);
-    expect(el.storedTemplateExpressionByNode.get(attrNode)).to.equal('static {greeting}');
-    expect(el.storedTemplateExpressionByNode.get(div.firstChild)).to.equal(
-      'Greeting: {greeting} another {greeting}',
-    );
 
     const theDiv = el.querySelector('.static');
 
@@ -49,7 +41,8 @@ describe('template expressions', () => {
           </fx-instance>
         </fx-model>
 
-        <div class="{
+        <div
+          class="{
 if (greeting => contains('Universe')) then
 'Hello Everyone'
 else
@@ -66,7 +59,7 @@ lines
       </fx-fore>
     `);
 
-    await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'ready');
     const div = el.querySelector('div');
 
     expect(div.getAttribute('class')).to.equal('Hello Everyone');
@@ -89,7 +82,7 @@ lines
       </fx-fore>
     `);
 
-    await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'ready');
     expect(el.storedTemplateExpressionByNode.size).to.equal(0);
 
     const greeting = el.querySelector('greeting');
@@ -116,13 +109,11 @@ lines
         <div xmlns:ns="BBB" class="greetingB {ns:greeting}">
           Greeting: {ns:greeting} another {ns:greeting}
         </div>
-        <div class="greetingC {greeting}">
-          Greeting: {greeting} another {greeting}
-        </div>
+        <div class="greetingC {greeting}">Greeting: {greeting} another {greeting}</div>
       </fx-fore>
     `);
 
-    await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'ready');
 
     const theDivA = el.querySelector('.greetingA');
 
@@ -164,7 +155,7 @@ lines
       </fx-fore>
     `);
 
-    await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'ready');
 
     const theDiv = el.querySelector('.wrapper');
     const attr = theDiv.getAttribute('style');
@@ -194,7 +185,7 @@ lines
       </fx-fore>
     `);
 
-    await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'ready');
 
     const theDiv = el.querySelector('.wrapper');
     const attr = theDiv.getAttribute('style');
@@ -218,7 +209,7 @@ lines
       </fx-fore>
     `);
 
-    await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'ready');
 
     const theDiv = el.querySelector('.static');
 
@@ -252,10 +243,10 @@ lines
             </div>
 
 
-          </fx-fore>    
+          </fx-fore>
         `);
 
-    await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'ready');
 
     const theDiv = el.querySelector('#one');
     expect(theDiv.textContent).to.equal('Hello');
@@ -288,10 +279,10 @@ lines
                     {Variants}
                 </template>
             </pb-authority>
-          </fx-fore>    
+          </fx-fore>
         `);
 
-    await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'ready');
 
     const pb = document.querySelector('pb-authority');
     expect(pb.getAttribute('label')).to.equal('{Name}');

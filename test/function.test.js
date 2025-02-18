@@ -22,7 +22,7 @@ describe('functions', () => {
         </fx-fore>
       `);
 
-      await oneEvent(el, 'refresh-done');
+      await oneEvent(el, 'ready');
 
       const label = el.querySelector('label');
       expect(label.innerText).to.equal('42');
@@ -44,7 +44,7 @@ describe('functions', () => {
         </fx-fore>
       `);
 
-      await oneEvent(el, 'refresh-done');
+      await oneEvent(el, 'ready');
 
       const label = el.querySelector('label');
       expect(label.innerText).to.equal('100');
@@ -68,7 +68,7 @@ describe('functions', () => {
         </fx-fore>
       `);
 
-      await oneEvent(el, 'refresh-done');
+      await oneEvent(el, 'ready');
 
       const label = el.querySelector('label');
       expect(label.innerText).to.equal('Hello World');
@@ -86,7 +86,7 @@ describe('functions', () => {
         </fx-fore>
       `);
 
-      await oneEvent(el, 'refresh-done');
+      await oneEvent(el, 'ready');
 
       const label = el.querySelector('label');
       expect(label.innerText).to.equal('Hello World');
@@ -108,7 +108,7 @@ describe('functions', () => {
         </fx-fore>
       `);
 
-      await oneEvent(el, 'refresh-done');
+      await oneEvent(el, 'ready');
 
       const label = el.querySelector('label');
       expect(label.innerText).to.equal('Hello World');
@@ -132,7 +132,7 @@ describe('functions', () => {
       </fx-fore>
     `);
 
-    await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'ready');
     const model = el.querySelector('fx-model');
     console.log('modelitems ', model.modelItems);
     expect(model.modelItems.length).to.equal(1);
@@ -163,7 +163,7 @@ describe('functions', () => {
       </fx-fore>
     `);
 
-    await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'ready');
     const model = el.querySelector('fx-model');
     console.log('modelitems ', model.modelItems);
     expect(model.modelItems.length).to.equal(1);
@@ -193,7 +193,7 @@ describe('functions', () => {
       </fx-fore>
     `);
 
-    await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'ready');
 
     const indexVal = document.getElementById('index').innerText;
 
@@ -224,7 +224,7 @@ describe('functions', () => {
       </fx-fore>
     `);
 
-    await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'ready');
     const trigger = el.querySelector('fx-trigger');
     await trigger.performActions();
 
@@ -260,7 +260,7 @@ describe('functions', () => {
       </fx-fore>
     `);
 
-    await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'ready');
     el.style.display = 'block';
     // Second row, second item
     const span = el.querySelectorAll('input')[3 + 1];
@@ -347,7 +347,7 @@ describe('functions', () => {
       </fx-fore>`,
     );
 
-    await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'ready');
     const contextItemSpans = el.querySelectorAll('#context-item-span');
     const contextFunctionSpans = el.querySelectorAll('#context-function-span');
 
@@ -399,7 +399,7 @@ describe('functions', () => {
         </fx-fore>
       `);
 
-      await oneEvent(doc, 'refresh-done');
+      await oneEvent(doc, 'ready');
       el = doc.querySelector('span');
     });
     it('should parse simple function with prefix', () => {
@@ -548,7 +548,7 @@ describe('functions', () => {
         </fx-group>
       </fx-fore>
     `);
-    await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'ready');
 
     const control = el.querySelector('fx-control');
     control.setValue("fooo");
