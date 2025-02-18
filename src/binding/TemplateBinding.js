@@ -11,8 +11,9 @@ export class TemplateBinding extends Binding {
         const container = node.nodeType === Node.ATTRIBUTE_NODE ? node.ownerElement : node.parentNode;
         // Assume we have a function to get the container's canonical XPath.
         const containerPath = container ? XPathUtil.getCanonicalXPath(container) : "$default";
-        const compositeKey = `${containerPath}:template:${expression}`;
-        super(compositeKey, "template");
+        // const compositeKey = `${containerPath}:template:${expression}`;
+
+        super(`${containerPath}:template`, "template");
 
         this.node = node;
         this.expression = expression;
