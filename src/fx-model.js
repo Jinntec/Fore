@@ -137,7 +137,7 @@ export class FxModel extends HTMLElement {
             Fore.CONSTRAINT_DEFAULT,
             Fore.TYPE_DEFAULT,
             targetNode,
-            this,
+            null,
             instanceId,
         );
 
