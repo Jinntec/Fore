@@ -25,22 +25,30 @@ export class ControlBinding extends Binding {
             this.modelItem.path,
             this,
         );
-        DependencyTracker.getInstance().registerBinding(
-            `${this.modelItem.path}:readonly`,
-            this,
-        );
-        DependencyTracker.getInstance().registerBinding(
-            `${this.modelItem.path}:relevant`,
-            this,
-        );
-        DependencyTracker.getInstance().registerBinding(
-            `${this.modelItem.path}:required`,
-            this,
-        );
-        DependencyTracker.getInstance().registerBinding(
-            `${this.modelItem.path}:constraint`,
-            this,
-        );
+        if(this.modelItem.bind.getAttribute('readonly')){
+            DependencyTracker.getInstance().registerBinding(
+                `${this.modelItem.path}:readonly`,
+                this,
+            );
+        }
+        if(this.modelItem.bind.getAttribute('relevant')) {
+            DependencyTracker.getInstance().registerBinding(
+                `${this.modelItem.path}:relevant`,
+                this,
+            );
+        }
+        if(this.modelItem.bind.getAttribute('required')) {
+            DependencyTracker.getInstance().registerBinding(
+                `${this.modelItem.path}:required`,
+                this,
+            );
+        }
+        if(this.modelItem.bind.getAttribute('constraint')) {
+            DependencyTracker.getInstance().registerBinding(
+                `${this.modelItem.path}:constraint`,
+                this,
+            );
+        }
     }
 
     update() {
