@@ -112,6 +112,11 @@
   "engines": {
     "node": ">= 16.19.1"
   },
-  "prettier": "@open-wc/prettier-config",
+	"prettier": {
+		"extends": "@open-wc/prettier-config",
+		"tabWidth": 4,
+		"singleQuote": true
+
+	},
   "main": "index.js"
 }
