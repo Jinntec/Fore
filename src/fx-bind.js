@@ -2,14 +2,14 @@ import { DependencyNotifyingDomFacade } from './DependencyNotifyingDomFacade.js'
 import ForeElementMixin from './ForeElementMixin.js';
 import { ModelItem } from './modelitem.js';
 import {
-  evaluateXPathToBoolean,
-  evaluateXPathToNodes,
-  evaluateXPathToString,
+    evaluateXPathToBoolean,
+    evaluateXPathToNodes,
+    evaluateXPathToString,
 } from './xpath-evaluation.js';
 import { XPathUtil } from './xpath-util.js';
 import getInScopeContext from './getInScopeContext.js';
-import {DependencyTracker} from "./DependencyTracker";
-import {NodeBinding} from "./binding/NodeBinding.js";
+import { DependencyTracker } from './DependencyTracker';
+import { NodeBinding } from './binding/NodeBinding.js';
 // import {FacetBinding} from "./binding/FacetBinding";
 
 /**
@@ -26,76 +26,92 @@ import {NodeBinding} from "./binding/NodeBinding.js";
  * @customElements
  */
 export class FxBind extends ForeElementMixin {
-  static READONLY_DEFAULT = false;
+    static READONLY_DEFAULT = false;
 
-  static REQUIRED_DEFAULT = false;
+    static REQUIRED_DEFAULT = false;
 
-  static RELEVANT_DEFAULT = true;
+    static RELEVANT_DEFAULT = true;
 
-  static CONSTRAINT_DEFAULT = true;
+    static CONSTRAINT_DEFAULT = true;
 
-  static TYPE_DEFAULT = 'xs:string';
+    static TYPE_DEFAULT = 'xs:string';
 
-  constructor() {
-    super();
-    this.nodeset = [];
-    this.model = {};
-    this.contextNode = {};
-    this.inited = false;
-  }
-
-  connectedCallback() {
-    // console.log('connectedCallback ', this);
-    // this.id = this.hasAttribute('id')?this.getAttribute('id'):;
-    this.constraint = this.getAttribute('constraint');
-    this.ref = this.getAttribute('ref');
-    this.readonly = this.getAttribute('readonly');
-    this.required = this.getAttribute('required');
-    this.relevant = this.getAttribute('relevant');
-    this.type = this.hasAttribute('type') ? this.getAttribute('type') : FxBind.TYPE_DEFAULT;
-    this.calculate = this.getAttribute('calculate');
-  }
-
-  /**
-   * initializes the bind element by evaluating the binding expression.
-   *
-   * For each node referred to by the binding expr a ModelItem object is created.
-   *
-   * @param model
-   */
-  init(model) {
-    this.model = model;
-    console.log('init binding ', this);
-    this._getInstanceId();
-    this.bindType = this.getModel().getInstance(this.instanceId).type;
-    // console.log('binding type ', this.bindType);
-
-    if (this.bindType === 'xml') {
-      this._evalInContext();
-      this.buildBindings();
+    constructor() {
+        super();
+        this.nodeset = [];
+        this.model = {};
+        this.contextNode = {};
+        this.inited = false;
     }
 
-    // ### process child bindings
-    this._processChildren(model);
-  }
-
-  /**
-   * create ModelItem state object and setup a NodeBinding for each node in the nodeset.
-   */
-  buildBindings() {
-    if (this.bindType === 'xml') {
-      this.nodeset.forEach((node) => {
-        // create ModelItem to wrap the node
-        const modelItem = this._createModelItem(node);
-
-        // create a NodeBinding and let it take care of facet registration.
-        const nodeBinding = new NodeBinding(modelItem,this.getOwnerForm());
-        DependencyTracker.getInstance().registerBinding(modelItem.path, nodeBinding);
-      });
+    connectedCallback() {
+        // console.log('connectedCallback ', this);
+        // this.id = this.hasAttribute('id')?this.getAttribute('id'):;
+        this.constraint = this.getAttribute('constraint');
+        this.ref = this.getAttribute('ref');
+        this.readonly = this.getAttribute('readonly');
+        this.required = this.getAttribute('required');
+        this.relevant = this.getAttribute('relevant');
+        this.type = this.hasAttribute('type')
+            ? this.getAttribute('type')
+            : FxBind.TYPE_DEFAULT;
+        this.calculate = this.getAttribute('calculate');
     }
-  }
 
-/*
+    /**
+     * initializes the bind element by evaluating the binding expression.
+     *
+     * For each node referred to by the binding expr a ModelItem object is created.
+     *
+     * @param model
+     */
+    init(model) {
+        this.model = model;
+        console.log('init binding ', this);
+        this._getInstanceId();
+        this.bindType = this.getModel().getInstance(this.instanceId).type;
+        // console.log('binding type ', this.bindType);
+
+        if (this.bindType === 'xml') {
+            this._evalInContext();
+            this.buildBindings();
+        }
+
+        // ### process child bindings
+        this._processChildren(model);
+    }
+
+    /**
+     * create ModelItem state object and setup a NodeBinding for each node in the nodeset.
+     */
+    buildBindings() {
+        if (this.bindType === 'xml') {
+            this.nodeset.forEach((node) => {
+                // create ModelItem to wrap the node
+                const modelItem = this._createModelItem(node);
+
+                // create a NodeBinding and let it take care of facet registration.
+                const nodeBinding = new NodeBinding(
+                    modelItem,
+                    this.getOwnerForm(),
+                );
+                DependencyTracker.getInstance().registerBinding(
+                    modelItem.path,
+                    nodeBinding,
+                );
+
+                if (this.calculate) {
+                    // Calculated values are a dependency of the model item.
+                    DependencyTracker.getInstance().dependencyGraph.addDependency(
+                        modelItem.path,
+                        `${modelItem.path}:calculate`,
+                    );
+                }
+            });
+        }
+    }
+
+    /*
   _buildBindGraph() {
     if (this.bindType === 'xml') {
       this.nodeset.forEach((node) => {
@@ -169,16 +185,16 @@ export class FxBind extends ForeElementMixin {
   }
 */
 
-  /**
-   * Add the dependencies of this bind
-   *
-   * @param  {Node[]}  refs The nodes that are referenced by this bind. these need to be resolved before
-   * this bind can be resolved.
-   * @param  {Node}    node The start of the reference
-   * @param  {string}  path The path to the start of the reference
-   * @param  {string}  property The property with this dependency
-   */
-/*
+    /**
+     * Add the dependencies of this bind
+     *
+     * @param  {Node[]}  refs The nodes that are referenced by this bind. these need to be resolved before
+     * this bind can be resolved.
+     * @param  {Node}    node The start of the reference
+     * @param  {string}  path The path to the start of the reference
+     * @param  {string}  property The property with this dependency
+     */
+    /*
   _addDependencies(refs, node, path, property) {
     // console.log('_addDependencies',path);
     const nodeHash = `${path}:${property}`;
@@ -206,130 +222,142 @@ export class FxBind extends ForeElementMixin {
   }
 */
 
-  _processChildren(model) {
-    const childbinds = this.querySelectorAll(':scope > fx-bind');
-    Array.from(childbinds).forEach((bind) => {
-      // console.log('init child bind ', bind);
-      bind.init(model);
-    });
-  }
-
-  getAlert() {
-    if (this.hasAttribute('alert')) {
-      return this.getAttribute('alert');
+    _processChildren(model) {
+        const childbinds = this.querySelectorAll(':scope > fx-bind');
+        Array.from(childbinds).forEach((bind) => {
+            // console.log('init child bind ', bind);
+            bind.init(model);
+        });
     }
-    const alertChild = this.querySelector('fx-alert');
-    if (alertChild) {
-      return alertChild.innerHTML;
+
+    getAlert() {
+        if (this.hasAttribute('alert')) {
+            return this.getAttribute('alert');
+        }
+        const alertChild = this.querySelector('fx-alert');
+        if (alertChild) {
+            return alertChild.innerHTML;
+        }
+        return null;
     }
-    return null;
-  }
 
-  /**
-   * overwrites
-   */
-  _evalInContext() {
-    const inscopeContext = getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
+    /**
+     * overwrites
+     */
+    _evalInContext() {
+        const inscopeContext = getInScopeContext(
+            this.getAttributeNode('ref') || this,
+            this.ref,
+        );
 
-    // reset nodeset
-    this.nodeset = [];
+        // reset nodeset
+        this.nodeset = [];
 
-    if (this.ref === '' || this.ref === null) {
-      this.nodeset = inscopeContext;
-    } else if (Array.isArray(inscopeContext)) {
-      inscopeContext.forEach((n) => {
-        if (XPathUtil.isSelfReference(this.ref)) {
-          this.nodeset = inscopeContext;
-        } else {
-          // eslint-disable-next-line no-lonely-if
-          if (this.ref) {
-            const localResult = evaluateXPathToNodes(this.ref, n, this);
-            localResult.forEach((item) => {
-              this.nodeset.push(item);
-            });
-            /*
+        if (this.ref === '' || this.ref === null) {
+            this.nodeset = inscopeContext;
+        } else if (Array.isArray(inscopeContext)) {
+            inscopeContext.forEach((n) => {
+                if (XPathUtil.isSelfReference(this.ref)) {
+                    this.nodeset = inscopeContext;
+                } else {
+                    // eslint-disable-next-line no-lonely-if
+                    if (this.ref) {
+                        const localResult = evaluateXPathToNodes(
+                            this.ref,
+                            n,
+                            this,
+                        );
+                        localResult.forEach((item) => {
+                            this.nodeset.push(item);
+                        });
+                        /*
                                                 const localResult = fx.evaluateXPathToFirstNode(this.ref, n, null, {namespaceResolver:  this.namespaceResolver});
                                                 this.nodeset.push(localResult);
                         */
-          }
-          // console.log('local result: ', localResult);
-          // this.nodeset.push(localResult);
+                    }
+                    // console.log('local result: ', localResult);
+                    // this.nodeset.push(localResult);
+                }
+            });
+        } else {
+            const inst = this.getModel().getInstance(this.instanceId);
+            if (inst.type === 'xml') {
+                this.nodeset = evaluateXPathToNodes(
+                    this.ref,
+                    inscopeContext,
+                    this,
+                );
+            } else {
+                this.nodeset = this.ref;
+            }
         }
-      });
-    } else {
-      const inst = this.getModel().getInstance(this.instanceId);
-      if (inst.type === 'xml') {
-        this.nodeset = evaluateXPathToNodes(this.ref, inscopeContext, this);
-      } else {
-        this.nodeset = this.ref;
-      }
     }
-  }
 
-  /**
-   * creates a ModelItem for given instance node.
-   *
-   * Please note that for textnode no ModelItem is created but instead the one of its parent is used which either
-   * must exist and be initialized already when we hit the textnode.
-   * @param node
-   * @private
-   */
-  // _createModelItem(node, index) {
-  _createModelItem(node) {
-    /*
+    /**
+     * creates a ModelItem for given instance node.
+     *
+     * Please note that for textnode no ModelItem is created but instead the one of its parent is used which either
+     * must exist and be initialized already when we hit the textnode.
+     * @param node
+     * @private
+     */
+    // _createModelItem(node, index) {
+    _createModelItem(node) {
+        /*
     if bind is the dot expression we use the modelitem of the parent
      */
-    if (XPathUtil.isSelfReference(this.ref)) {
-      const parentBoundElement = XPathUtil.getClosest('fx-bind[ref]', this.parentElement);
-      // console.log('parent bound element ', parentBoundElement);
+        if (XPathUtil.isSelfReference(this.ref)) {
+            const parentBoundElement = XPathUtil.getClosest(
+                'fx-bind[ref]',
+                this.parentElement,
+            );
+            // console.log('parent bound element ', parentBoundElement);
 
-      if (parentBoundElement) {
-        // todo: Could be fancier by combining them
-        parentBoundElement.required = this.required; // overwrite parent property!
-      } else {
-        console.error('no parent bound element');
-      }
+            if (parentBoundElement) {
+                // todo: Could be fancier by combining them
+                parentBoundElement.required = this.required; // overwrite parent property!
+            } else {
+                console.error('no parent bound element');
+            }
+        }
 
-      return;
+        const targetNode = node;
+        const instanceId = XPathUtil.resolveInstance(this, this.ref);
+        const path = XPathUtil.getPath(node, instanceId);
+
+        // ### constructing default modelitem - will get evaluated during recalculate()
+        const newItem = new ModelItem(
+            path,
+            this.getBindingExpr(),
+            FxBind.READONLY_DEFAULT,
+            FxBind.RELEVANT_DEFAULT,
+            FxBind.REQUIRED_DEFAULT,
+            FxBind.CONSTRAINT_DEFAULT,
+            this.type,
+            targetNode,
+            this,
+            instanceId,
+        );
+
+        const alert = this.getAlert();
+        if (alert) {
+            newItem.addAlert(alert);
+        }
+
+        this.getModel().registerModelItem(newItem);
+        return newItem;
     }
 
-    const targetNode = node;
-    const instanceId = XPathUtil.resolveInstance(this, this.ref);
-    const path = XPathUtil.getPath(node, instanceId);
-
-    // ### constructing default modelitem - will get evaluated during recalculate()
-    const newItem = new ModelItem(
-      path,
-      this.getBindingExpr(),
-      FxBind.READONLY_DEFAULT,
-      FxBind.RELEVANT_DEFAULT,
-      FxBind.REQUIRED_DEFAULT,
-      FxBind.CONSTRAINT_DEFAULT,
-      this.type,
-      targetNode,
-      this,
-      instanceId
-    );
-
-    const alert = this.getAlert();
-    if (alert) {
-      newItem.addAlert(alert);
-    }
-
-    this.getModel().registerModelItem(newItem);
-    return newItem;
-  }
-
-  /**
-   * Get the nodes that are referred by the given XPath expression
-   *
-   * @param  {string}  propertyExpr  The XPath to get the referenced nodes from
-   *
-   * @return {Node[]}  The nodes that are referenced by the XPath
-   *
-   * todo: DependencyNotifyingDomFacade reports back too much in some cases like 'a[1]' and 'a[1]/text[1]'
-   */
-/*
+    /**
+     * Get the nodes that are referred by the given XPath expression
+     *
+     * @param  {string}  propertyExpr  The XPath to get the referenced nodes from
+     *
+     * @return {Node[]}  The nodes that are referenced by the XPath
+     *
+     * todo: DependencyNotifyingDomFacade reports back too much in some cases like 'a[1]' and 'a[1]/text[1]'
+     */
+    /*
   _getReferencesForProperty(propertyExpr) {
     if (propertyExpr) {
       return this.getReferences(propertyExpr);
@@ -338,7 +366,7 @@ export class FxBind extends ForeElementMixin {
   }
 */
 
-/*
+    /*
   getReferences(propertyExpr) {
     const touchedNodes = new Set();
     const domFacade = new DependencyNotifyingDomFacade(otherNode => touchedNodes.add(otherNode));
@@ -349,7 +377,7 @@ export class FxBind extends ForeElementMixin {
   }
 */
 
-  /*
+    /*
     static getReferencesForRef(ref,nodeset){
       if (ref && nodeset) {
         const touchedNodes = new Set();
@@ -364,60 +392,60 @@ export class FxBind extends ForeElementMixin {
   }
   */
 
-  _initBooleanModelItemProperty(property, node) {
-    // evaluate expression to boolean
-    const propertyExpr = this[property];
-    // console.log('####### ', propertyExpr);
-    const result = evaluateXPathToBoolean(propertyExpr, node, this);
-    return result;
-  }
+    _initBooleanModelItemProperty(property, node) {
+        // evaluate expression to boolean
+        const propertyExpr = this[property];
+        // console.log('####### ', propertyExpr);
+        const result = evaluateXPathToBoolean(propertyExpr, node, this);
+        return result;
+    }
 
-  static shortenPath(path) {
-    const steps = path.split('/');
-    let result = '';
-    for (let i = 2; i < steps.length; i += 1) {
-      const step = steps[i];
-      if (step.indexOf('{}') !== -1) {
-        const q = step.split('{}');
-        result += `/${q[1]}`;
-      } else {
-        result += `/${step}`;
-      }
+    static shortenPath(path) {
+        const steps = path.split('/');
+        let result = '';
+        for (let i = 2; i < steps.length; i += 1) {
+            const step = steps[i];
+            if (step.indexOf('{}') !== -1) {
+                const q = step.split('{}');
+                result += `/${q[1]}`;
+            } else {
+                result += `/${step}`;
+            }
+        }
+        return result;
     }
-    return result;
-  }
 
-  /**
-   * return the instance id this bind is associated with. Resolves upwards in binds to either find an expr containing
-   * and instance() function or if not found return 'default'.
-   * @private
-   */
-  _getInstanceId() {
-    const bindExpr = this.getBindingExpr();
-    // console.log('_getInstanceId bindExpr ', bindExpr);
-    if (bindExpr.startsWith('instance(')) {
-      this.instanceId = XPathUtil.getInstanceId(bindExpr);
-      return;
-    }
-    if (!this.instanceId && this.parentNode.nodeName === 'FX-BIND') {
-      let parent = this.parentNode;
-      while (parent && !this.instanceId) {
-        const ref = parent.getBindingExpr();
-        if (ref.startsWith('instance(')) {
-          this.instanceId = XPathUtil.getInstanceId(ref);
-          return;
+    /**
+     * return the instance id this bind is associated with. Resolves upwards in binds to either find an expr containing
+     * and instance() function or if not found return 'default'.
+     * @private
+     */
+    _getInstanceId() {
+        const bindExpr = this.getBindingExpr();
+        // console.log('_getInstanceId bindExpr ', bindExpr);
+        if (bindExpr.startsWith('instance(')) {
+            this.instanceId = XPathUtil.getInstanceId(bindExpr);
+            return;
         }
-        if (parent.parentNode.nodeName !== 'FX-BIND') {
-          this.instanceId = 'default';
-          break;
+        if (!this.instanceId && this.parentNode.nodeName === 'FX-BIND') {
+            let parent = this.parentNode;
+            while (parent && !this.instanceId) {
+                const ref = parent.getBindingExpr();
+                if (ref.startsWith('instance(')) {
+                    this.instanceId = XPathUtil.getInstanceId(ref);
+                    return;
+                }
+                if (parent.parentNode.nodeName !== 'FX-BIND') {
+                    this.instanceId = 'default';
+                    break;
+                }
+                parent = parent.parentNode;
+            }
         }
-        parent = parent.parentNode;
-      }
+        this.instanceId = 'default';
     }
-    this.instanceId = 'default';
-  }
 }
 
 if (!customElements.get('fx-bind')) {
-  customElements.define('fx-bind', FxBind);
+    customElements.define('fx-bind', FxBind);
 }
