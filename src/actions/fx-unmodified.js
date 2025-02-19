@@ -13,15 +13,15 @@ import { AbstractAction } from './abstract-action.js';
  * @customElement
  */
 export default class FxUnmodified extends AbstractAction {
-  constructor() {
-    super();
-  }
+    constructor() {
+        super();
+    }
 
-  async perform() {
-    this.getOwnerForm().markAsClean();
-  }
+    async perform() {
+        this.getOwnerForm().markAsClean();
+    }
 }
 
 if (!customElements.get('fx-unmodified')) {
-  window.customElements.define('fx-unmodified', FxUnmodified);
+    window.customElements.define('fx-unmodified', FxUnmodified);
 }

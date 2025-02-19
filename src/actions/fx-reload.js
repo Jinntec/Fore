@@ -10,33 +10,33 @@ import { Fore } from '../fore.js';
  * @demo demo/project.html
  */
 export class FxReload extends AbstractAction {
-  connectedCallback() {
-    if (super.connectedCallback) {
-      super.connectedCallback();
+    connectedCallback() {
+        if (super.connectedCallback) {
+            super.connectedCallback();
+        }
+        this.addEventListener(
+            'reload',
+            () => {
+                window.location.reload();
+            },
+            { once: true },
+        );
     }
-    this.addEventListener(
-      'reload',
-      () => {
-        window.location.reload();
-      },
-      { once: true },
-    );
-  }
 
-  async perform() {
-    this.dispatchEvent(
-      new CustomEvent('execute-action', {
-        composed: true,
-        bubbles: true,
-        cancelable: true,
-        detail: { action: this, event: this.event },
-      }),
-    );
+    async perform() {
+        this.dispatchEvent(
+            new CustomEvent('execute-action', {
+                composed: true,
+                bubbles: true,
+                cancelable: true,
+                detail: { action: this, event: this.event },
+            }),
+        );
 
-    Fore.dispatch(this, 'reload', {});
-  }
+        Fore.dispatch(this, 'reload', {});
+    }
 }
 
 if (!customElements.get('fx-reload')) {
-  window.customElements.define('fx-reload', FxReload);
+    window.customElements.define('fx-reload', FxReload);
 }

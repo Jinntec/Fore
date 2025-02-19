@@ -4,9 +4,9 @@ import './fx-instance.js';
 import { ModelItem } from './modelitem.js';
 import { evaluateXPath, evaluateXPathToBoolean } from './xpath-evaluation.js';
 import { XPathUtil } from './xpath-util.js';
-import {DependencyTracker} from "./DependencyTracker.js";
-import {FacetBinding} from "./binding/FacetBinding";
-import {NodeBinding} from "./binding/NodeBinding";
+import { DependencyTracker } from './DependencyTracker.js';
+import { FacetBinding } from './binding/FacetBinding';
+import { NodeBinding } from './binding/NodeBinding';
 
 /**
  * The model of this Fore scope. It holds all the intances, binding, submissions and custom functions that
@@ -18,45 +18,44 @@ import {NodeBinding} from "./binding/NodeBinding";
  *
  */
 export class FxModel extends HTMLElement {
-  static dataChanged = false;
+    static dataChanged = false;
 
-  constructor() {
-    super();
-    // this.id = '';
+    constructor() {
+        super();
+        // this.id = '';
 
-    /**
-     * @type {import('./fx-instance.js').FxInstance[]}
-     */
-    this.instances = [];
-    /**
-     * @type {import('./modelitem.js').ModelItem[]}
-     */
-    this.modelItems = [];
-    this.defaultContext = {};
-    this.changed = [];
+        /**
+         * @type {import('./fx-instance.js').FxInstance[]}
+         */
+        this.instances = [];
+        /**
+         * @type {import('./modelitem.js').ModelItem[]}
+         */
+        this.modelItems = [];
+        this.defaultContext = {};
+        this.changed = [];
 
-    // this.mainGraph = new DepGraph(false);
-    this.inited = false;
-    this.modelConstructed = false;
-    this.attachShadow({ mode: 'open' });
-    this.computes = 0;
-    this.fore = {};
-    this.needsFullRecalc = true;
+        // this.mainGraph = new DepGraph(false);
+        this.inited = false;
+        this.modelConstructed = false;
+        this.attachShadow({ mode: 'open' });
+        this.computes = 0;
+        this.fore = {};
+        this.needsFullRecalc = true;
+    }
 
-  }
+    get formElement() {
+        return this.parentElement;
+    }
 
-  get formElement() {
-    return this.parentElement;
-  }
-
-  connectedCallback() {
-    // console.log('connectedCallback ', this);
-    this.setAttribute('inert', 'true');
-    this.shadowRoot.innerHTML = `
+    connectedCallback() {
+        // console.log('connectedCallback ', this);
+        this.setAttribute('inert', 'true');
+        this.shadowRoot.innerHTML = `
             <slot></slot>
         `;
 
-    /*
+        /*
       this.addEventListener('model-construct-done', () => {
         // this.modelConstructed = true;
         // console.log('model-construct-done fired ', this.modelConstructed);
@@ -66,300 +65,355 @@ export class FxModel extends HTMLElement {
     );
 */
 
-    this.skipUpdate = false;
-    this.fore = this.parentNode;
-  }
-
-  disconnectedCallback(){
-    this.instances = null;
-    this.modelItems = null;
-    this.fore = null;
-  }
-
-  /**
-   * @param {FxModel}           model        The model to create a model item for
-   * @param {string}            ref          The XPath ref that led to this model item
-   * @param {Node}              node         The node the XPath led to
-   * @param {ForeElementMixin}  formElement  The form element making this model. Used to resolve variables against
-   */
-  static lazyCreateModelItem(model, ref, node, formElement) {
-    // console.log('lazyCreateModelItem ', node);
-    const instanceId = XPathUtil.resolveInstance(formElement, ref);
-
-    if (model.parentNode.createNodes && (node === null || node === undefined)) {
-      // ### intializing ModelItem with default values (as there is no <fx-bind> matching for given ref)
-      const mi = new ModelItem(
-        XPathUtil.getPath(node,instanceId),
-        ref,
-        Fore.READONLY_DEFAULT,
-        false,
-        Fore.REQUIRED_DEFAULT,
-        Fore.CONSTRAINT_DEFAULT,
-        Fore.TYPE_DEFAULT,
-        null,
-        this,
-        instanceId,
-      );
-
-      // console.log('new ModelItem is instanceof ModelItem ', mi instanceof ModelItem);
-      model.registerModelItem(mi);
-      return mi;
-    }
-    let targetNode = {};
-    if (node === null || node === undefined) return null;
-    if (node.nodeType === Node.TEXT_NODE) {
-      // const parent = node.parentNode;
-      // console.log('PARENT ', parent);
-      targetNode = node.parentNode;
-    } else {
-      targetNode = node;
+        this.skipUpdate = false;
+        this.fore = this.parentNode;
     }
 
-    // const path = fx.evaluateXPath('path()',node);
-    let path;
-    if (node.nodeType) {
-      path = XPathUtil.getPath(node, instanceId);
-    } else {
-      path = null;
-      targetNode = node;
-    }
-    // const path = XPathUtil.getPath(node);
-
-    // ### intializing ModelItem with default values (as there is no <fx-bind> matching for given ref)
-    const mi = new ModelItem(
-      path,
-      ref,
-      Fore.READONLY_DEFAULT,
-      Fore.RELEVANT_DEFAULT,
-      Fore.REQUIRED_DEFAULT,
-      Fore.CONSTRAINT_DEFAULT,
-      Fore.TYPE_DEFAULT,
-      targetNode,
-      this,
-      instanceId,
-    );
-
-    // console.log('new ModelItem is instanceof ModelItem ', mi instanceof ModelItem);
-    model.registerModelItem(mi);
-    return mi;
-  }
-
-  /**
-   * modelConstruct starts actual processing of the model by
-   *
-   * 1. loading instances if present or constructing one
-   * 2. calling updateModel to run the model update cycle of rebuild, recalculate and revalidate
-   *
-   * @event model-construct-done is fired once all instances have be loaded or after generating instance
-   *
-   */
-  async modelConstruct() {
-    console.info(
-      `%cdispatching model-construct for #${this.parentNode.id}`,
-      'background:lightblue; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
-    );
-
-    // this.dispatchEvent(new CustomEvent('model-construct', { detail: this }));
-    Fore.dispatch(this, 'model-construct', { model: this });
-
-    // console.time('instance-loading');
-    const instances = this.querySelectorAll('fx-instance');
-    if (instances.length > 0) {
-      const promises = [];
-      instances.forEach(instance => {
-        promises.push(instance.init());
-      });
-
-      // Wait until all the instances are built
-      await Promise.all(promises);
-      this.instances = Array.from(instances);
-      // console.log('_modelConstruct this.instances ', this.instances);
-      // Await until the model-construct-done event is handled off
-      this.modelConstructed = true;
-      await Fore.dispatch(this, 'model-construct-done', { model: this });
-      this.inited = true;
-      this.updateModel();
-    } else {
-      // ### if there's no instance one will created
-      console.log(`### <<<<< dispatching model-construct-done for '${this.fore.id}' >>>>>`);
-      this.modelConstructed = true;
-      await this.dispatchEvent(
-        new CustomEvent('model-construct-done', {
-          composed: false,
-          bubbles: true,
-          detail: { model: this },
-        }),
-      );
+    disconnectedCallback() {
+        this.instances = null;
+        this.modelItems = null;
+        this.fore = null;
     }
 
-    const functionlibImports = Array.from(this.querySelectorAll('fx-functionlib'));
-    await Promise.all(functionlibImports.map(lib => lib.readyPromise));
-    // console.timeEnd('instance-loading');
-    this.inited = true;
-  }
+    /**
+     * @param {FxModel}           model        The model to create a model item for
+     * @param {string}            ref          The XPath ref that led to this model item
+     * @param {Node}              node         The node the XPath led to
+     * @param {ForeElementMixin}  formElement  The form element making this model. Used to resolve variables against
+     */
+    static lazyCreateModelItem(model, ref, node, formElement) {
+        // console.log('lazyCreateModelItem ', node);
+        const instanceId = XPathUtil.resolveInstance(formElement, ref);
 
-  registerModelItem(modelItem) {
-    // console.log('ModelItem registered ', modelItem);
-    this.modelItems.push(modelItem);
-  }
+        if (
+            model.parentNode.createNodes &&
+            (node === null || node === undefined)
+        ) {
+            // ### intializing ModelItem with default values (as there is no <fx-bind> matching for given ref)
+            const mi = new ModelItem(
+                XPathUtil.getPath(node, instanceId),
+                ref,
+                Fore.READONLY_DEFAULT,
+                false,
+                Fore.REQUIRED_DEFAULT,
+                Fore.CONSTRAINT_DEFAULT,
+                Fore.TYPE_DEFAULT,
+                null,
+                this,
+                instanceId,
+            );
 
-  /**
-   * update action triggering the update cycle
-   */
-  updateModel() {
-    // console.time('updateModel');
-    this.rebuild();
-    /*
+            // console.log('new ModelItem is instanceof ModelItem ', mi instanceof ModelItem);
+            model.registerModelItem(mi);
+            return mi;
+        }
+        let targetNode = {};
+        if (node === null || node === undefined) return null;
+        if (node.nodeType === Node.TEXT_NODE) {
+            // const parent = node.parentNode;
+            // console.log('PARENT ', parent);
+            targetNode = node.parentNode;
+        } else {
+            targetNode = node;
+        }
+
+        // const path = fx.evaluateXPath('path()',node);
+        let path;
+        if (node.nodeType) {
+            path = XPathUtil.getPath(node, instanceId);
+        } else {
+            path = null;
+            targetNode = node;
+        }
+        // const path = XPathUtil.getPath(node);
+
+        // ### intializing ModelItem with default values (as there is no <fx-bind> matching for given ref)
+        const mi = new ModelItem(
+            path,
+            ref,
+            Fore.READONLY_DEFAULT,
+            Fore.RELEVANT_DEFAULT,
+            Fore.REQUIRED_DEFAULT,
+            Fore.CONSTRAINT_DEFAULT,
+            Fore.TYPE_DEFAULT,
+            targetNode,
+            this,
+            instanceId,
+        );
+
+        // console.log('new ModelItem is instanceof ModelItem ', mi instanceof ModelItem);
+        model.registerModelItem(mi);
+        return mi;
+    }
+
+    /**
+     * modelConstruct starts actual processing of the model by
+     *
+     * 1. loading instances if present or constructing one
+     * 2. calling updateModel to run the model update cycle of rebuild, recalculate and revalidate
+     *
+     * @event model-construct-done is fired once all instances have be loaded or after generating instance
+     *
+     */
+    async modelConstruct() {
+        console.info(
+            `%cdispatching model-construct for #${this.parentNode.id}`,
+            'background:lightblue; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+        );
+
+        // this.dispatchEvent(new CustomEvent('model-construct', { detail: this }));
+        Fore.dispatch(this, 'model-construct', { model: this });
+
+        // console.time('instance-loading');
+        const instances = this.querySelectorAll('fx-instance');
+        if (instances.length > 0) {
+            const promises = [];
+            instances.forEach((instance) => {
+                promises.push(instance.init());
+            });
+
+            // Wait until all the instances are built
+            await Promise.all(promises);
+            this.instances = Array.from(instances);
+            // console.log('_modelConstruct this.instances ', this.instances);
+            // Await until the model-construct-done event is handled off
+            this.modelConstructed = true;
+            await Fore.dispatch(this, 'model-construct-done', { model: this });
+            this.inited = true;
+            this.updateModel();
+        } else {
+            // ### if there's no instance one will created
+            console.log(
+                `### <<<<< dispatching model-construct-done for '${this.fore.id}' >>>>>`,
+            );
+            this.modelConstructed = true;
+            await this.dispatchEvent(
+                new CustomEvent('model-construct-done', {
+                    composed: false,
+                    bubbles: true,
+                    detail: { model: this },
+                }),
+            );
+        }
+
+        const functionlibImports = Array.from(
+            this.querySelectorAll('fx-functionlib'),
+        );
+        await Promise.all(functionlibImports.map((lib) => lib.readyPromise));
+        // console.timeEnd('instance-loading');
+        this.inited = true;
+    }
+
+    registerModelItem(modelItem) {
+        // console.log('ModelItem registered ', modelItem);
+        this.modelItems.push(modelItem);
+    }
+
+    /**
+     * update action triggering the update cycle
+     */
+    updateModel() {
+        // console.time('updateModel');
+        this.rebuild();
+        /*
         if (this.skipUpdate){
             console.info('%crecalculate/revalidate skipped - no bindings', 'font-style: italic; background: #90a4ae; color:lightgrey; padding:0.3rem 5rem 0.3rem 0.3rem;display:block;width:100%;');
             return;
         }
 */
-    this.recalculate();
-    this.revalidate();
-    // console.log('updateModel finished with modelItems ', this.modelItems);
+        this.recalculate();
+        this.revalidate();
+        // console.log('updateModel finished with modelItems ', this.modelItems);
 
-    // console.timeEnd('updateModel');
-  }
-
-  rebuild() {
-    console.log(`🔷 ### <<<<< rebuild() '${this.fore.id}' >>>>>`);
-
-    // this.mainGraph = new DepGraph(false); // do: should be moved down below binds.length check but causes errors in tests.
-    this.modelItems = [];
-
-    // trigger recursive initialization of the fx-bind elements
-    const binds = this.querySelectorAll('fx-model > fx-bind');
-    if (binds.length === 0) {
-      // console.log('skipped model update');
-      this.skipUpdate = true;
-      return;
+        // console.timeEnd('updateModel');
     }
 
-    binds.forEach(bind => {
-      bind.init(this);
-    });
+    rebuild() {
+        console.log(`🔷 ### <<<<< rebuild() '${this.fore.id}' >>>>>`);
 
-    this.needsFullRecalc = true;
+        // this.mainGraph = new DepGraph(false); // do: should be moved down below binds.length check but causes errors in tests.
+        this.modelItems = [];
 
-    console.log('ℹ️ dependencyGraph', DependencyTracker.getInstance().dependencyGraph);
-    console.log('ℹ️ rebuild mainGraph calc order', DependencyTracker.getInstance().dependencyGraph.overallOrder());
-
-    // this.dispatchEvent(new CustomEvent('rebuild-done', {detail: {maingraph: this.mainGraph}}));
-    Fore.dispatch(this, 'rebuild-done', { maingraph: DependencyTracker.getInstance().dependencyGraph });
-  }
-
-  recalculate() {
-    console.log(`🔷 ### <<<<< recalculate() '${this.fore.id}' >>>>>`);
-
-    if (DependencyTracker.getInstance().hasModelUpdates()) {
-      console.log(`🔷🔷 ### <<<<< partial recalculate() '${this.fore.id}' >>>>>`);
-      // Let DependencyTracker figure out which keys are pending.
-      const orderedKeys = DependencyTracker.getInstance().buildSubgraphForPendingChanges();
-
-      // Now iterate through the ordered keys and refresh all associated bindings.
-      orderedKeys.forEach(key => {
-        if (DependencyTracker.getInstance().bindingRegistry.has(key)) {
-          DependencyTracker.getInstance().bindingRegistry.get(key).forEach(binding => {
-            if(binding instanceof NodeBinding || binding instanceof FacetBinding){
-                console.log('update binding for key:', key, binding);
-                binding.update();
-            }
-          });
+        // trigger recursive initialization of the fx-bind elements
+        const binds = this.querySelectorAll('fx-model > fx-bind');
+        if (binds.length === 0) {
+            // console.log('skipped model update');
+            this.skipUpdate = true;
+            return;
         }
-      });
 
+        binds.forEach((bind) => {
+            bind.init(this);
+        });
+
+        this.needsFullRecalc = true;
+
+        console.log(
+            'ℹ️ dependencyGraph',
+            DependencyTracker.getInstance().dependencyGraph,
+        );
+        console.log(
+            'ℹ️ rebuild mainGraph calc order',
+            DependencyTracker.getInstance().dependencyGraph.overallOrder(),
+        );
+
+        // this.dispatchEvent(new CustomEvent('rebuild-done', {detail: {maingraph: this.mainGraph}}));
+        Fore.dispatch(this, 'rebuild-done', {
+            maingraph: DependencyTracker.getInstance().dependencyGraph,
+        });
     }
 
-    if(this.needsFullRecalc){
-      console.log(`🔷🔷 ### <<<<< full recalculate() '${this.fore.id}' >>>>>`);
-      // If there are no changed keys, process the entire main graph.
-      const orderedKeys = DependencyTracker.getInstance().dependencyGraph.overallOrder(false);
-      orderedKeys.forEach(key => {
-        if (DependencyTracker.getInstance().bindingRegistry.has(key)) {
-          DependencyTracker.getInstance().bindingRegistry.get(key).forEach(binding => {
-            binding.update();
-          });
+    recalculate() {
+        console.log(`🔷 ### <<<<< recalculate() '${this.fore.id}' >>>>>`);
+
+        if (DependencyTracker.getInstance().hasModelUpdates()) {
+            console.log(
+                `🔷🔷 ### <<<<< partial recalculate() '${this.fore.id}' >>>>>`,
+            );
+            // Let DependencyTracker figure out which keys are pending.
+            const orderedKeys =
+                DependencyTracker.getInstance().buildSubgraphForPendingChanges();
+
+            // Now iterate through the ordered keys and refresh all associated bindings.
+            orderedKeys.forEach((key) => {
+                if (DependencyTracker.getInstance().bindingRegistry.has(key)) {
+                    DependencyTracker.getInstance()
+                        .bindingRegistry.get(key)
+                        .forEach((binding) => {
+                            if (
+                                binding instanceof NodeBinding ||
+                                binding instanceof FacetBinding
+                            ) {
+                                console.log(
+                                    'update binding for key:',
+                                    key,
+                                    binding,
+                                );
+                                binding.update();
+                            }
+                        });
+                }
+            });
         }
-      });
-      this.needsFullRecalc = false;
-      // Fore.dispatch(this, 'recalculate-done', { graph: DependencyTracker.getInstance().dependencyGraph, computes: this.computes });
+
+        if (this.needsFullRecalc) {
+            console.log(
+                `🔷🔷 ### <<<<< full recalculate() '${this.fore.id}' >>>>>`,
+            );
+            // If there are no changed keys, process the entire main graph.
+            const orderedKeys =
+                DependencyTracker.getInstance().dependencyGraph.overallOrder(
+                    false,
+                );
+            orderedKeys.forEach((key) => {
+                if (DependencyTracker.getInstance().bindingRegistry.has(key)) {
+                    DependencyTracker.getInstance()
+                        .bindingRegistry.get(key)
+                        .forEach((binding) => {
+                            binding.update();
+                        });
+                }
+            });
+            this.needsFullRecalc = false;
+            // Fore.dispatch(this, 'recalculate-done', { graph: DependencyTracker.getInstance().dependencyGraph, computes: this.computes });
+        }
+
+        Fore.dispatch(this, 'recalculate-done', {
+            graph: DependencyTracker.getInstance().dependencyGraph,
+            computes: this.computes,
+        });
     }
 
+    /**
+     * Iterates all modelItems to calculate the validation status.
+     *
+     * Model alerts are given on 'fx-bind' elements as either attribute `alert` or as `fx-alert` child elements.
+     *
+     * During model-construct all model alerts are added to the modelItem if any
+     *
+     * to revalidate:
+     * Gets the `constraint` attribute declaration from modelItem.bind
+     * Computes the XPath to a Boolean
+     * Updates the modelItem.constraint property
+     *
+     * todo: type checking
+     * todo: run browser validation API
+     *
+     */
+    revalidate() {
+        if (this.modelItems.length === 0) return true;
 
-    Fore.dispatch(this, 'recalculate-done', { graph: DependencyTracker.getInstance().dependencyGraph, computes: this.computes });
+        console.log(`🔷 ### <<<<< revalidate() '${this.fore.id}' >>>>>`);
 
-  }
-
-  /**
-   * Iterates all modelItems to calculate the validation status.
-   *
-   * Model alerts are given on 'fx-bind' elements as either attribute `alert` or as `fx-alert` child elements.
-   *
-   * During model-construct all model alerts are added to the modelItem if any
-   *
-   * to revalidate:
-   * Gets the `constraint` attribute declaration from modelItem.bind
-   * Computes the XPath to a Boolean
-   * Updates the modelItem.constraint property
-   *
-   * todo: type checking
-   * todo: run browser validation API
-   *
-   */
-  revalidate() {
-    if (this.modelItems.length === 0) return true;
-
-    console.log(`🔷 ### <<<<< revalidate() '${this.fore.id}' >>>>>`);
-
-    // reset submission validation
-    // this.parentNode.classList.remove('submit-validation-failed')
-    let valid = true;
-    this.modelItems.forEach(modelItem => {
-      // console.log('validating node ', modelItem.node);
-      const { bind } = modelItem;
-      if (bind) {
-        /*
+        // reset submission validation
+        // this.parentNode.classList.remove('submit-validation-failed')
+        let valid = true;
+        this.modelItems.forEach((modelItem) => {
+            // console.log('validating node ', modelItem.node);
+            const { bind } = modelItem;
+            if (bind) {
+                /*
                         todo: investigate why bind is an element when created in fx-bind.init() and an fx-bind object when
                           created lazily.
                         */
-        if (typeof bind.hasAttribute === 'function' && bind.hasAttribute('constraint')) {
-          const constraint = bind.getAttribute('constraint');
-          if (constraint && modelItem.node) {
-            const oldVal = modelItem.constraint;
-            const compute = evaluateXPathToBoolean(constraint, modelItem.node, this);
-            // console.log('modelItem validity computed: ', compute);
-            modelItem.constraint = compute;
-            if(oldVal !== compute){
-              DependencyTracker.getInstance().notifyChange(modelItem.path)
-            }
-            if (!compute) {
-              console.log('validation failed on modelitem ', modelItem);
-              valid = false;
-            }
-          }
-        }
-        if (typeof bind.hasAttribute === 'function' && bind.hasAttribute('required')) {
-          const required = bind.getAttribute('required');
-          if (required) {
-            const oldVal = modelItem.required;
-            const compute = evaluateXPathToBoolean(required, modelItem.node, this);
-            // console.log('modelItem required computed: ', compute);
-            modelItem.required = compute;
-            if(oldVal !== compute){
-              DependencyTracker.getInstance().notifyChange(modelItem.path)
-            }
-            if (!modelItem.node.textContent) {
-              /*
+                if (
+                    typeof bind.hasAttribute === 'function' &&
+                    bind.hasAttribute('constraint')
+                ) {
+                    const constraint = bind.getAttribute('constraint');
+                    if (constraint && modelItem.node) {
+                        const oldVal = modelItem.constraint;
+                        const compute = evaluateXPathToBoolean(
+                            constraint,
+                            modelItem.node,
+                            this,
+                        );
+                        // console.log('modelItem validity computed: ', compute);
+                        modelItem.constraint = compute;
+                        if (oldVal !== compute) {
+                            DependencyTracker.getInstance().notifyChange(
+                                modelItem.path,
+                            );
+                        }
+                        if (!compute) {
+                            console.log(
+                                'validation failed on modelitem ',
+                                modelItem,
+                            );
+                            valid = false;
+                        }
+                    }
+                }
+                if (
+                    typeof bind.hasAttribute === 'function' &&
+                    bind.hasAttribute('required')
+                ) {
+                    const required = bind.getAttribute('required');
+                    if (required) {
+                        const oldVal = modelItem.required;
+                        const compute = evaluateXPathToBoolean(
+                            required,
+                            modelItem.node,
+                            this,
+                        );
+                        // console.log('modelItem required computed: ', compute);
+                        modelItem.required = compute;
+                        if (oldVal !== compute) {
+                            DependencyTracker.getInstance().notifyChange(
+                                modelItem.path,
+                            );
+                        }
+                        if (!modelItem.node.textContent) {
+                            /*
               console.log(
                 'node is required but has no value ',
                 XPathUtil.getDocPath(modelItem.node),
               );
 */
-              valid = false;
-            }
-            // if (!compute) valid = false;
-            /*
+                            valid = false;
+                        }
+                        // if (!compute) valid = false;
+                        /*
                                     if (!this.modelConstructed) {
                                       // todo: get alert from attribute or child element
                                       const alert = bind.getAlert();
@@ -368,113 +422,115 @@ export class FxModel extends HTMLElement {
                                       }
                                     }
                         */
-          }
-        }
-      }
-    });
-    console.log('ℹ️ modelItems after revalidate: ', [...this.modelItems]);
-    return valid;
-  }
-
-  addChanged(modelItem) {
-    if (this.inited) {
-      this.changed.push(modelItem);
+                    }
+                }
+            }
+        });
+        console.log('ℹ️ modelItems after revalidate: ', [...this.modelItems]);
+        return valid;
     }
-  }
 
-  /**
-   *
-   * @param {Node} node
-   * @returns {ModelItem}
-   */
-  getModelItem(node) {
-    return this.modelItems.find(m => m.node === node);
-  }
+    addChanged(modelItem) {
+        if (this.inited) {
+            this.changed.push(modelItem);
+        }
+    }
 
-  /**
-   * get the default evaluation context for this model.
-   * @returns {Element}
-   */
-  getDefaultContext() {
-    return this.instances[0].getDefaultContext();
-  }
+    /**
+     *
+     * @param {Node} node
+     * @returns {ModelItem}
+     */
+    getModelItem(node) {
+        return this.modelItems.find((m) => m.node === node);
+    }
 
-  /**
-   * @returns {import('./fx-instance.js').FxInstance}
-   */
-  getDefaultInstance() {
-    /*
+    /**
+     * get the default evaluation context for this model.
+     * @returns {Element}
+     */
+    getDefaultContext() {
+        return this.instances[0].getDefaultContext();
+    }
+
+    /**
+     * @returns {import('./fx-instance.js').FxInstance}
+     */
+    getDefaultInstance() {
+        /*
         if (this.instances.length === 0) {
             throw new Error('No instances defined. Fore cannot work without any <data/> elements.');
         }
 */
-    if (this.instances.length) {
-      return this.instances[0];
+        if (this.instances.length) {
+            return this.instances[0];
+        }
+        return this.getInstance('default');
     }
-    return this.getInstance('default');
-  }
 
-  getDefaultInstanceData() {
-    return this.instances[0].getInstanceData();
-  }
+    getDefaultInstanceData() {
+        return this.instances[0].getInstanceData();
+    }
 
-  getInstance(id) {
-    // console.log('getInstance ', id);
-    // console.log('instances ', this.instances);
-    // console.log('instances array ',Array.from(this.instances));
+    getInstance(id) {
+        // console.log('getInstance ', id);
+        // console.log('instances ', this.instances);
+        // console.log('instances array ',Array.from(this.instances));
 
-    let found;
-    if (id === 'default') {
-      found = this.instances[0];
+        let found;
+        if (id === 'default') {
+            found = this.instances[0];
+        }
+        // ### lookup in local instances first
+        if (!found) {
+            const instArray = Array.from(this.instances);
+            found = instArray.find((inst) => inst.id === id);
+            const parentFore =
+                this.fore.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE
+                    ? this.fore.parentNode.host.closest('fx-fore')
+                    : this.fore.parentNode.closest('fx-fore');
+        }
+        // ### lookup in parent Fore if present
+        if (!found) {
+            // const parentFore = this.fore.parentNode.closest('fx-fore');
+            const parentFore =
+                this.fore.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE
+                    ? this.fore.parentNode.host.closest('fx-fore')
+                    : this.fore.parentNode.closest('fx-fore');
+            if (parentFore) {
+                // console.log('shared instances from parent', this.parentNode.id);
+                const parentInstances = parentFore.getModel().instances;
+                const shared = parentInstances.filter((shared) =>
+                    shared.hasAttribute('shared'),
+                );
+                found = shared.find((found) => found.id === id);
+            }
+        }
+        if (found) {
+            return found;
+        }
+        if (id === 'default') {
+            return this.querySelector('fx-instance');
+        }
+        if (!found && this.fore.strict) {
+            // return this.getDefaultInstance(); // if id is not found always defaults to first in doc order
+            Fore.dispatch(this, 'error', {
+                origin: this,
+                message: `Instance '${id}' does not exist`,
+                level: 'Error',
+            });
+        }
+        return null;
     }
-    // ### lookup in local instances first
-    if (!found) {
-      const instArray = Array.from(this.instances);
-      found = instArray.find(inst => inst.id === id);
-      const parentFore =
-        this.fore.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE
-          ? this.fore.parentNode.host.closest('fx-fore')
-          : this.fore.parentNode.closest('fx-fore');
-    }
-    // ### lookup in parent Fore if present
-    if (!found) {
-      // const parentFore = this.fore.parentNode.closest('fx-fore');
-      const parentFore =
-        this.fore.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE
-          ? this.fore.parentNode.host.closest('fx-fore')
-          : this.fore.parentNode.closest('fx-fore');
-      if (parentFore) {
-        // console.log('shared instances from parent', this.parentNode.id);
-        const parentInstances = parentFore.getModel().instances;
-        const shared = parentInstances.filter(shared => shared.hasAttribute('shared'));
-        found = shared.find(found => found.id === id);
-      }
-    }
-    if (found) {
-      return found;
-    }
-    if (id === 'default') {
-      return this.querySelector('fx-instance');
-    }
-    if (!found && this.fore.strict) {
-      // return this.getDefaultInstance(); // if id is not found always defaults to first in doc order
-      Fore.dispatch(this, 'error', {
-        origin: this,
-        message: `Instance '${id}' does not exist`,
-        level: 'Error',
-      });
-    }
-    return null;
-  }
 
-  evalBinding(bindingExpr) {
-    // console.log('MODEL.evalBinding ', bindingExpr);
-    // default context of evaluation is always the default instance
-    const result = this.instances[0].evalXPath(bindingExpr);
-    return result;
-  }
+    evalBinding(bindingExpr) {
+        // console.log('MODEL.evalBinding ', bindingExpr);
+        // default context of evaluation is always the default instance
+        const result = this.instances[0].evalXPath(bindingExpr);
+        return result;
+    }
 }
 
 if (!customElements.get('fx-model')) {
-  customElements.define('fx-model', FxModel);
+    customElements.define('fx-model', FxModel);
 }

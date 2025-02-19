@@ -1,16 +1,16 @@
 export class FxLogItem extends HTMLElement {
-  constructor() {
-    super();
-    this.attachShadow({ mode: 'open' });
-    this.eventName = '';
-    this.shortName = '';
-    this.shortInfo = '';
-    this.shortPath = '';
-    this.xpath = '';
-  }
+    constructor() {
+        super();
+        this.attachShadow({ mode: 'open' });
+        this.eventName = '';
+        this.shortName = '';
+        this.shortInfo = '';
+        this.shortPath = '';
+        this.xpath = '';
+    }
 
-  connectedCallback() {
-    const style = `
+    connectedCallback() {
+        const style = `
       :host {
         height: auto;
         font-size: 0.8em;
@@ -95,16 +95,21 @@ export class FxLogItem extends HTMLElement {
       }
     `;
 
-    this.eventName = this.getAttribute('event-name');
-    this.shortName = this.getAttribute('short-name');
-    this.shortInfo = this.hasAttribute('short-info') ? this.getAttribute('short-info') : '';
-    this.xpath = this.getAttribute('xpath');
+        this.eventName = this.getAttribute('event-name');
+        this.shortName = this.getAttribute('short-name');
+        this.shortInfo = this.hasAttribute('short-info')
+            ? this.getAttribute('short-info')
+            : '';
+        this.xpath = this.getAttribute('xpath');
 
-    const cut = this.xpath.substring(this.xpath.indexOf('/fx-fore'), this.xpath.length);
-    const xpathCut = `/${cut}`;
-    const shortPath = xpathCut.replaceAll('fx-', '');
+        const cut = this.xpath.substring(
+            this.xpath.indexOf('/fx-fore'),
+            this.xpath.length,
+        );
+        const xpathCut = `/${cut}`;
+        const shortPath = xpathCut.replaceAll('fx-', '');
 
-    const html = `
+        const html = `
        <details class="info send">
               <summary>
                 <span class="log-name"><a href="#" title="${shortPath}" data-path="${this.xpath}">${this.shortName}</a></span>
@@ -115,14 +120,14 @@ export class FxLogItem extends HTMLElement {
         </details>
     `;
 
-    this.shadowRoot.innerHTML = `
+        this.shadowRoot.innerHTML = `
         <style>
             ${style}
         </style>
         ${html}
     `;
-  }
+    }
 }
 if (!customElements.get('fx-log-item')) {
-  customElements.define('fx-log-item', FxLogItem);
+    customElements.define('fx-log-item', FxLogItem);
 }

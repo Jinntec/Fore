@@ -14,7 +14,7 @@ export class XPathDependencyExtractor {
             astElement = parseScript(
                 ref,
                 { language: evaluateXPath.XPATH_3_1_LANGUAGE },
-                parseContext
+                parseContext,
             );
         } catch (err) {
             console.warn(`parseScript() error for "${ref}":`, err);
@@ -36,21 +36,25 @@ export class XPathDependencyExtractor {
         // Look for <xqx:equalOp> as that's how your predicate is represented
         const equalOps = evaluateXPathToNodes(
             '//*[local-name()="equalOp"]',
-            astDoc
+            astDoc,
         );
         if (!equalOps.length) {
-            console.log('No <xqx:equalOp> found, so no predicate-based dependencies.');
+            console.log(
+                'No <xqx:equalOp> found, so no predicate-based dependencies.',
+            );
             return [];
         }
 
         // Extract from <firstOperand> and <secondOperand>
         const dependencyNodes = evaluateXPathToNodes(
             '//*[local-name()="equalOp"]/*[local-name()="firstOperand"] | ' +
-            '//*[local-name()="equalOp"]/*[local-name()="secondOperand"]',
-            astDoc
+                '//*[local-name()="equalOp"]/*[local-name()="secondOperand"]',
+            astDoc,
         );
 
-        const dependencies = dependencyNodes.map((node) => node.textContent.trim());
+        const dependencies = dependencyNodes.map((node) =>
+            node.textContent.trim(),
+        );
         console.log(`Extracted dependencies for "${ref}":`, dependencies);
 
         return dependencies;

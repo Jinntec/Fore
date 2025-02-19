@@ -8,152 +8,152 @@ import { FxContainer } from './fx-container.js';
  * @customElement
  */
 class FxSwitch extends FxContainer {
-  /*
+    /*
       constructor() {
         super();
         // this.attachShadow({ mode: 'open' });
       }
     */
 
-  constructor() {
-    super();
-    this.formerCase = {};
-    this.selectedCase = null;
-    this.cases = null;
-    this.visitedResetted = false;
-  }
-
-  connectedCallback() {
-    if (super.connectedCallback) {
-      super.connectedCallback();
+    constructor() {
+        super();
+        this.formerCase = {};
+        this.selectedCase = null;
+        this.cases = null;
+        this.visitedResetted = false;
     }
-    const style = `
+
+    connectedCallback() {
+        if (super.connectedCallback) {
+            super.connectedCallback();
+        }
+        const style = `
        :host ::slotted(fx-case.selected-case){
         display: block;
     }
     `;
-    const html = `
+        const html = `
        <slot></slot>
     `;
-    this.shadowRoot.innerHTML = `
+        this.shadowRoot.innerHTML = `
         <style>
             ${style}
         </style>
         ${html}
     `;
-    this.cases = [];
-    this.formerCase = null;
-    this.selectedCase = null;
-  }
-
-  async refresh(force) {
-    super.refresh(force);
-    // console.log('refresh on switch ');
-    if (this.cases.length === 0) {
-      this.cases = Array.from(this.querySelectorAll(':scope > fx-case'));
+        this.cases = [];
+        this.formerCase = null;
+        this.selectedCase = null;
     }
 
-    if (this.isBound()) {
-      this._handleBoundSwitch();
+    async refresh(force) {
+        super.refresh(force);
+        // console.log('refresh on switch ');
+        if (this.cases.length === 0) {
+            this.cases = Array.from(this.querySelectorAll(':scope > fx-case'));
+        }
+
+        if (this.isBound()) {
+            this._handleBoundSwitch();
+        }
+        if (!this.selectedCase) {
+            this.selectedCase = this.cases[0]; // first is always default
+            this.toggle(this.selectedCase);
+        }
+
+        Fore.refreshChildren(this.selectedCase, force);
     }
-    if (!this.selectedCase) {
-      this.selectedCase = this.cases[0]; // first is always default
-      this.toggle(this.selectedCase);
+
+    _dispatchEvents() {
+        if (this.selectedCase === this.formerCase) return;
+        if (this.formerCase && this.formerCase !== this.selectedCase) {
+            Fore.dispatch(this.formerCase, 'deselect', {});
+        }
+        if (this.selectedCase.classList.contains('selected-case')) {
+            Fore.dispatch(this.selectedCase, 'select', {});
+        }
     }
 
-    Fore.refreshChildren(this.selectedCase, force);
-  }
+    _resetVisited() {
+        if (this.visitedResetted) return;
 
-  _dispatchEvents() {
-    if(this.selectedCase === this.formerCase) return;
-    if (this.formerCase && this.formerCase !== this.selectedCase) {
-      Fore.dispatch(this.formerCase, 'deselect', {});
+        const visited = this.selectedCase.querySelectorAll('.visited');
+        Array.from(visited).forEach((v) => {
+            v.classList.remove('visited');
+        });
+        this.visitedResetted = true;
     }
-    if (this.selectedCase.classList.contains('selected-case')) {
-      Fore.dispatch(this.selectedCase, 'select', {});
+
+    /**
+     * handles switches being bound. If modelItem value matches the 'name' attribute that case will be toggled.
+     * @private
+     */
+    _handleBoundSwitch() {
+        Array.from(this.cases).forEach((caseElem) => {
+            const name = caseElem.getAttribute('name');
+            if (name === this.modelItem?.value) {
+                this.toggle(caseElem);
+            }
+        });
     }
-  }
 
-  _resetVisited() {
-    if(this.visitedResetted) return;
+    /**
+     * Replace an old case with a new case element.
+     *
+     * @param {import('./fx-case.js').FxCase} oldCase
+     * @param {import('./fx-case.js').FxCase} newCase
+     */
+    async replaceCase(oldCase, newCase) {
+        this.cases.splice(this.cases.indexOf(oldCase), 1, newCase);
 
-    const visited = this.selectedCase.querySelectorAll('.visited');
-    Array.from(visited).forEach(v => {
-      v.classList.remove('visited');
-    });
-    this.visitedResetted = true;
-  }
-
-  /**
-   * handles switches being bound. If modelItem value matches the 'name' attribute that case will be toggled.
-   * @private
-   */
-  _handleBoundSwitch() {
-    Array.from(this.cases).forEach(caseElem => {
-      const name = caseElem.getAttribute('name');
-      if (name === this.modelItem?.value) {
-        this.toggle(caseElem);
-      }
-    });
-  }
-
-  /**
-   * Replace an old case with a new case element.
-   *
-   * @param {import('./fx-case.js').FxCase} oldCase
-   * @param {import('./fx-case.js').FxCase} newCase
-   */
-  async replaceCase(oldCase, newCase) {
-    this.cases.splice(this.cases.indexOf(oldCase), 1, newCase);
-
-    if (oldCase === this.selectedCase) {
-      this.selectedCase = newCase;
-      this.formerCase = newCase;
-      newCase.classList.add('selected-case');
-      newCase.classList.remove('deselected-case');
-      newCase.inert = false;
-      // Tell the owner form we might have new template expressions here
-      this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh();
-    } else {
-      newCase.classList.add('deselected-case');
-      newCase.classList.remove('selected-case');
-      newCase.inert = true;
+        if (oldCase === this.selectedCase) {
+            this.selectedCase = newCase;
+            this.formerCase = newCase;
+            newCase.classList.add('selected-case');
+            newCase.classList.remove('deselected-case');
+            newCase.inert = false;
+            // Tell the owner form we might have new template expressions here
+            this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh();
+        } else {
+            newCase.classList.add('deselected-case');
+            newCase.classList.remove('selected-case');
+            newCase.inert = true;
+        }
     }
-  }
 
-  /**
-   * Activates a fx-case element by switching CSS classes.
-   * Dispatches 'select' and 'deselect' events as appropriate.
-   *
-   * @param {import('./fx-case.js').FxCase} caseElement the fx-case element to activate
-   */
-  toggle(caseElement) {
-    this.selectedCase = caseElement;
-    Array.from(this.cases).forEach(c => {
-      if (c === this.selectedCase) {
-        c.classList.remove('deselected-case');
-        c.classList.add('selected-case');
-        c.inert = false;
-      } else {
-        c.classList.remove('selected-case');
-        c.classList.add('deselected-case');
-        c.inert = true;
-        this._resetVisited();
-      }
-    });
+    /**
+     * Activates a fx-case element by switching CSS classes.
+     * Dispatches 'select' and 'deselect' events as appropriate.
+     *
+     * @param {import('./fx-case.js').FxCase} caseElement the fx-case element to activate
+     */
+    toggle(caseElement) {
+        this.selectedCase = caseElement;
+        Array.from(this.cases).forEach((c) => {
+            if (c === this.selectedCase) {
+                c.classList.remove('deselected-case');
+                c.classList.add('selected-case');
+                c.inert = false;
+            } else {
+                c.classList.remove('selected-case');
+                c.classList.add('deselected-case');
+                c.inert = true;
+                this._resetVisited();
+            }
+        });
 
-    if (this.selectedCase !== caseElement) {
-      this.selectedCase = caseElement;
+        if (this.selectedCase !== caseElement) {
+            this.selectedCase = caseElement;
+        }
+        this._dispatchEvents();
+        this.formerCase = this.selectedCase;
+
+        // Tell the owner form we might have new template expressions here
+        this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh();
+        this.getOwnerForm().getModel().updateModel();
     }
-    this._dispatchEvents();
-    this.formerCase = this.selectedCase;
-
-    // Tell the owner form we might have new template expressions here
-    this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh();
-    this.getOwnerForm().getModel().updateModel();
-  }
 }
 
 if (!customElements.get('fx-switch')) {
-  window.customElements.define('fx-switch', FxSwitch);
+    window.customElements.define('fx-switch', FxSwitch);
 }

@@ -9,40 +9,42 @@ import { AbstractAction } from './abstract-action.js';
  * @demo demo/project.html
  */
 export class FxReset extends AbstractAction {
-  static get properties() {
-    return {
-      ...super.properties,
-      instance: {
-        type: String,
-      },
-    };
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-    this.instance = this.getAttribute('instance');
-    if (!this.instance) {
-      Fore.dispatch(this, 'error', { message: 'instance does not exist' });
+    static get properties() {
+        return {
+            ...super.properties,
+            instance: {
+                type: String,
+            },
+        };
     }
-  }
 
-  async perform() {
-    this.dispatchEvent(
-      new CustomEvent('execute-action', {
-        composed: true,
-        bubbles: true,
-        cancelable: true,
-        detail: { action: this, event: this.event },
-      }),
-    );
+    connectedCallback() {
+        super.connectedCallback();
+        this.instance = this.getAttribute('instance');
+        if (!this.instance) {
+            Fore.dispatch(this, 'error', {
+                message: 'instance does not exist',
+            });
+        }
+    }
 
-    const model = this.getModel();
-    const data = model.getInstance(this.instance);
-    data.reset();
-    this.needsUpdate = true;
-  }
+    async perform() {
+        this.dispatchEvent(
+            new CustomEvent('execute-action', {
+                composed: true,
+                bubbles: true,
+                cancelable: true,
+                detail: { action: this, event: this.event },
+            }),
+        );
+
+        const model = this.getModel();
+        const data = model.getInstance(this.instance);
+        data.reset();
+        this.needsUpdate = true;
+    }
 }
 
 if (!customElements.get('fx-reset')) {
-  window.customElements.define('fx-reset', FxReset);
+    window.customElements.define('fx-reset', FxReset);
 }

@@ -73,11 +73,13 @@ export class DataObserver {
         if (rootNode instanceof Node) {
             // Handle XML Node
             this.observeXML(rootNode, callback);
-        } else if (typeof rootNode === "object" && rootNode !== null) {
+        } else if (typeof rootNode === 'object' && rootNode !== null) {
             // Handle JSON Object
             this.observeJSON(rootNode, callback);
         } else {
-            throw new Error("Invalid rootNode. Must be a DOM Node or a JSON object.");
+            throw new Error(
+                'Invalid rootNode. Must be a DOM Node or a JSON object.',
+            );
         }
     }
 
@@ -117,7 +119,12 @@ export class DataObserver {
     observeJSON(jsonObject, callback) {
         const handler = {
             set: (target, key, value) => {
-                this.mutationsQueue.push({ type: "update", target, key, value });
+                this.mutationsQueue.push({
+                    type: 'update',
+                    target,
+                    key,
+                    value,
+                });
 
                 if (this.debounceTime > 0) {
                     clearTimeout(this.debounceTimer); // Clear previous timer
@@ -134,7 +141,7 @@ export class DataObserver {
             },
 
             deleteProperty: (target, key) => {
-                this.mutationsQueue.push({ type: "delete", target, key });
+                this.mutationsQueue.push({ type: 'delete', target, key });
 
                 if (this.debounceTime > 0) {
                     clearTimeout(this.debounceTimer); // Clear previous timer

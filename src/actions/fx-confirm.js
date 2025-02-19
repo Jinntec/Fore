@@ -8,29 +8,31 @@ import { FxAction } from './fx-action.js';
  * @demo demo/project.html
  */
 export class FxConfirm extends FxAction {
-  static get properties() {
-    return {
-      ...FxAction.properties,
-      message: {
-        type: String,
-      },
-    };
-  }
-
-  connectedCallback() {
-    if (super.connectedCallback) {
-      super.connectedCallback();
+    static get properties() {
+        return {
+            ...FxAction.properties,
+            message: {
+                type: String,
+            },
+        };
     }
-    this.message = this.hasAttribute('message') ? this.getAttribute('message') : null;
-  }
 
-  async perform() {
-    if (window.confirm(this.message)) {
-      await super.perform();
+    connectedCallback() {
+        if (super.connectedCallback) {
+            super.connectedCallback();
+        }
+        this.message = this.hasAttribute('message')
+            ? this.getAttribute('message')
+            : null;
     }
-  }
+
+    async perform() {
+        if (window.confirm(this.message)) {
+            await super.perform();
+        }
+    }
 }
 
 if (!customElements.get('fx-confirm')) {
-  window.customElements.define('fx-confirm', FxConfirm);
+    window.customElements.define('fx-confirm', FxConfirm);
 }

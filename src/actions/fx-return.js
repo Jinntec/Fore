@@ -13,29 +13,29 @@ import { AbstractAction } from './abstract-action.js';
  * @customElement
  */
 export class FxReturn extends AbstractAction {
-  connectedCallback() {
-    if (super.connectedCallback) {
-      super.connectedCallback();
+    connectedCallback() {
+        if (super.connectedCallback) {
+            super.connectedCallback();
+        }
+        // const nonrelevant = this.hasAttribute('nonrelevant') ? this.getAttribute('nonrelevant') : null;
     }
-    // const nonrelevant = this.hasAttribute('nonrelevant') ? this.getAttribute('nonrelevant') : null;
-  }
 
-  async perform() {
-    super.perform();
+    async perform() {
+        super.perform();
 
-    /*
+        /*
     ### note that this event does not use Fore.dispatch as the event uses 'composed:true' to let the event travel
     up through the shadowRoot and being catched in outer form.
     */
-    const event = new CustomEvent('return', {
-      composed: true,
-      bubbles: true,
-      detail: { nodeset: this.nodeset },
-    });
-    this.getOwnerForm().dispatchEvent(event);
-  }
+        const event = new CustomEvent('return', {
+            composed: true,
+            bubbles: true,
+            detail: { nodeset: this.nodeset },
+        });
+        this.getOwnerForm().dispatchEvent(event);
+    }
 }
 
 if (!customElements.get('fx-return')) {
-  window.customElements.define('fx-return', FxReturn);
+    window.customElements.define('fx-return', FxReturn);
 }

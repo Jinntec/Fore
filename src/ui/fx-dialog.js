@@ -1,19 +1,19 @@
 import { Fore } from '../fore.js';
 
 export class FxDialog extends HTMLElement {
-  static get properties() {
-    return {
-      id: String,
-    };
-  }
+    static get properties() {
+        return {
+            id: String,
+        };
+    }
 
-  constructor() {
-    super();
-    this.attachShadow({ mode: 'open' });
-  }
+    constructor() {
+        super();
+        this.attachShadow({ mode: 'open' });
+    }
 
-  connectedCallback() {
-    const style = `
+    connectedCallback() {
+        const style = `
           :host {
             display:none;
             height: 100vh;
@@ -28,59 +28,59 @@ export class FxDialog extends HTMLElement {
 
         `;
 
-    this.shadowRoot.innerHTML = this.render(style);
-    this.id = this.getAttribute('id');
+        this.shadowRoot.innerHTML = this.render(style);
+        this.id = this.getAttribute('id');
 
-    // const dialog = document.getElementById(this.id);
+        // const dialog = document.getElementById(this.id);
 
-    const closeBtn = this.querySelector('.close-dialog');
-    if (closeBtn) {
-      closeBtn.addEventListener('click', () => {
-        this.classList.remove('show');
-      });
-    }
-    this.setAttribute('role', 'dialog');
-    this.setAttribute('aria-modal', 'false');
+        const closeBtn = this.querySelector('.close-dialog');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                this.classList.remove('show');
+            });
+        }
+        this.setAttribute('role', 'dialog');
+        this.setAttribute('aria-modal', 'false');
 
-    /*
+        /*
     this.addEventListener('transitionend', () => {
       console.log('transitionend');
       // this.style.display = 'none';
     });
 */
 
-    this.focus();
-  }
+        this.focus();
+    }
 
-  render(styles) {
-    return `
+    render(styles) {
+        return `
       <style>
           ${styles}
       </style>
       <slot></slot>
     `;
-  }
+    }
 
-  open() {
-    window.addEventListener(
-      'keyup',
-      e => {
-        if (e.key === 'Escape') {
-          this.hide();
-        }
-      },
-      { once: true },
-    );
+    open() {
+        window.addEventListener(
+            'keyup',
+            (e) => {
+                if (e.key === 'Escape') {
+                    this.hide();
+                }
+            },
+            { once: true },
+        );
 
-    this.classList.add('show');
-  }
+        this.classList.add('show');
+    }
 
-  async hide() {
-    await Fore.fadeOutElement(this, 400);
-    this.classList.remove('show');
-  }
+    async hide() {
+        await Fore.fadeOutElement(this, 400);
+        this.classList.remove('show');
+    }
 }
 
 if (!customElements.get('fx-dialog')) {
-  customElements.define('fx-dialog', FxDialog);
+    customElements.define('fx-dialog', FxDialog);
 }

@@ -11,74 +11,76 @@ import { XPathUtil } from '../xpath-util.js';
  * @customElement
  */
 export default class FxCall extends AbstractAction {
-  static get properties() {
-    return {
-      ...super.properties,
-      action: {
-        type: String,
-      },
-      fn: {
-        type: String,
-      },
-    };
-  }
-
-  constructor() {
-    super();
-    this.action = '';
-    this.fn = '';
-  }
-
-  connectedCallback() {
-    if (super.connectedCallback) {
-      super.connectedCallback();
+    static get properties() {
+        return {
+            ...super.properties,
+            action: {
+                type: String,
+            },
+            fn: {
+                type: String,
+            },
+        };
     }
-    if (this.hasAttribute('action')) {
-      this.action = this.getAttribute('action');
-    } else if (this.hasAttribute('function')) {
-      this.fn = this.getAttribute('function');
-    } else {
-      throw new Error('fx-call must specify an "action" or "function" attribute');
-    }
-  }
 
-  async perform() {
-    super.perform();
-    if (this.action) {
-      await this._callAction();
+    constructor() {
+        super();
+        this.action = '';
+        this.fn = '';
     }
-    // execute function
-    if (this.fn) {
-      this._callFunction();
-    }
-  }
 
-  /**
-   * find action and execute it
-   */
-  async _callAction() {
+    connectedCallback() {
+        if (super.connectedCallback) {
+            super.connectedCallback();
+        }
+        if (this.hasAttribute('action')) {
+            this.action = this.getAttribute('action');
+        } else if (this.hasAttribute('function')) {
+            this.fn = this.getAttribute('function');
+        } else {
+            throw new Error(
+                'fx-call must specify an "action" or "function" attribute',
+            );
+        }
+    }
+
+    async perform() {
+        super.perform();
+        if (this.action) {
+            await this._callAction();
+        }
+        // execute function
+        if (this.fn) {
+            this._callFunction();
+        }
+    }
+
     /**
-     * @type {import('./fx-action.js').FxAction}
+     * find action and execute it
      */
-    const action = document.querySelector(`#${this.action}`);
-    if (action) {
-      await action.perform();
-    } else {
-      Fore.dispatch(this, 'error', {
-        origin: this,
-        message: `Action '${this.action}' not found`,
-        expr: XPathUtil.getDocPath(this),
-        level: 'Error',
-      });
+    async _callAction() {
+        /**
+         * @type {import('./fx-action.js').FxAction}
+         */
+        const action = document.querySelector(`#${this.action}`);
+        if (action) {
+            await action.perform();
+        } else {
+            Fore.dispatch(this, 'error', {
+                origin: this,
+                message: `Action '${this.action}' not found`,
+                expr: XPathUtil.getDocPath(this),
+                level: 'Error',
+            });
+        }
     }
-  }
 
-  _callFunction() {
-    const inscope = getInScopeContext(this, 'instance()', this);
-    evaluateXPath(this.fn, inscope, this);
-  }
+    _callFunction() {
+        const inscope = getInScopeContext(this, 'instance()', this);
+        evaluateXPath(this.fn, inscope, this);
+    }
 }
 
 if (!customElements.get('fx-call')) {
-  window.customElements.define('fx-call', FxCall);
+    window.customElements.define('fx-call', FxCall);
 }

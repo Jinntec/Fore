@@ -1,11 +1,11 @@
 import '../fx-model.js';
 import ForeElementMixin from '../ForeElementMixin.js';
-import {ModelItem} from '../modelitem.js';
-import {Fore} from '../fore.js';
+import { ModelItem } from '../modelitem.js';
+import { Fore } from '../fore.js';
 import getInScopeContext from '../getInScopeContext.js';
-import {evaluateXPathToFirstNode} from '../xpath-evaluation.js';
-import {DependencyTracker} from "../DependencyTracker";
-import {ControlBinding} from "../binding/ControlBinding";
+import { evaluateXPathToFirstNode } from '../xpath-evaluation.js';
+import { DependencyTracker } from '../DependencyTracker';
+import { ControlBinding } from '../binding/ControlBinding';
 
 function isDifferent(oldNodeValue, oldControlValue, newControlValue) {
     if (oldNodeValue === null) {
@@ -17,7 +17,12 @@ function isDifferent(oldNodeValue, oldControlValue, newControlValue) {
     */
     if (oldControlValue === null) return false;
 
-    if (newControlValue && oldControlValue && newControlValue.nodeType && oldControlValue.nodeType) {
+    if (
+        newControlValue &&
+        oldControlValue &&
+        newControlValue.nodeType &&
+        oldControlValue.nodeType
+    ) {
         return newControlValue.outerHTML !== oldControlValue.outerHTML;
     }
 
@@ -82,17 +87,33 @@ export default class AbstractControl extends ForeElementMixin {
                     let parentNode;
 
                     if (this.ref.includes('/')) {
-                        parentPath = this.ref.substring(0, this.ref.indexOf('/'));
-                        const inscope = getInScopeContext(this.parentNode, this.ref);
-                        parentNode = evaluateXPathToFirstNode(parentPath, inscope, this);
+                        parentPath = this.ref.substring(
+                            0,
+                            this.ref.indexOf('/'),
+                        );
+                        const inscope = getInScopeContext(
+                            this.parentNode,
+                            this.ref,
+                        );
+                        parentNode = evaluateXPathToFirstNode(
+                            parentPath,
+                            inscope,
+                            this,
+                        );
 
-                        if (parentNode && parentNode.nodeType === Node.ELEMENT_NODE) {
+                        if (
+                            parentNode &&
+                            parentNode.nodeType === Node.ELEMENT_NODE
+                        ) {
                             if (this.ref.includes('@')) {
-                                attrName = this.ref.substring(this.ref.indexOf('/') + 2);
+                                attrName = this.ref.substring(
+                                    this.ref.indexOf('/') + 2,
+                                );
                                 parentNode.setAttribute(attrName, '');
                             } else {
                                 Fore.dispatch(this, 'warn', {
-                                    message: '"create" is not implemented for elements',
+                                    message:
+                                        '"create" is not implemented for elements',
                                 });
                             }
                         }
@@ -100,10 +121,15 @@ export default class AbstractControl extends ForeElementMixin {
                         const inscope = getInScopeContext(this, this.ref);
 
                         if (this.ref.includes('@')) {
-                            attrName = this.ref.substring(this.ref.indexOf('@') + 1);
+                            attrName = this.ref.substring(
+                                this.ref.indexOf('@') + 1,
+                            );
                             inscope.setAttribute(attrName, '');
                         } else {
-                            Fore.dispatch(this, 'warn', {message: '"create" is not implemented for elements'});
+                            Fore.dispatch(this, 'warn', {
+                                message:
+                                    '"create" is not implemented for elements',
+                            });
                             // inscope = getInScopeContext(this.parentNode, this.ref);
                         }
                     }
@@ -122,7 +148,10 @@ export default class AbstractControl extends ForeElementMixin {
             if (this.modelItem instanceof ModelItem) {
                 // console.log('### XfAbstractControl.refresh modelItem : ', this.modelItem);
 
-                if (this.hasAttribute('as') && this.getAttribute('as') === 'node') {
+                if (
+                    this.hasAttribute('as') &&
+                    this.getAttribute('as') === 'node'
+                ) {
                     // console.log('as', this.nodeset);
                     // this.modelItem.value = this.nodeset;
                     this.modelItem.node = this.nodeset;
@@ -131,9 +160,12 @@ export default class AbstractControl extends ForeElementMixin {
                     this.value = this.modelItem.value;
                 }
                 // console.log('newVal',this.value);
-                if(!this.binding){
+                if (!this.binding) {
                     this.binding = new ControlBinding(this);
-                    DependencyTracker.getInstance().registerControl(this.modelItem.path,this.binding);
+                    DependencyTracker.getInstance().registerControl(
+                        this.modelItem.path,
+                        this.binding,
+                    );
                 }
                 // DependencyTracker.getInstance().register(this.modelItem.path, this);
                 // DependencyTracker.getInstance().register(this.ref, this);
@@ -150,7 +182,13 @@ export default class AbstractControl extends ForeElementMixin {
                 if (!this.getOwnerForm().ready) return; // state change event do not fire during init phase (initial refresh)
                 // if oldVal is null we haven't received a concrete value yet
 
-                if (!(this.localName === 'fx-control' || this.localName === 'fx-upload')) return;
+                if (
+                    !(
+                        this.localName === 'fx-control' ||
+                        this.localName === 'fx-upload'
+                    )
+                )
+                    return;
                 if (isDifferent(this.oldVal, oldValue, this.value)) {
                     const model = this.getModel();
                     Fore.dispatch(this, 'value-changed', {
@@ -158,15 +196,14 @@ export default class AbstractControl extends ForeElementMixin {
                         value: this.modelItem.value,
                         oldvalue: oldValue,
                         instanceId: this.modelItem.instanceId,
-                        foreId: this.getOwnerForm().id
+                        foreId: this.getOwnerForm().id,
                     });
                 }
             }
         }
     }
 
-    refreshFromModelItem(modelItem) {
-    }
+    refreshFromModelItem(modelItem) {}
 
     /**
      *
@@ -310,9 +347,9 @@ export default class AbstractControl extends ForeElementMixin {
                 if (this.modelItem.alerts.length !== 0) {
                     const controlAlert = this.querySelector('fx-alert');
                     if (!controlAlert) {
-                        const {alerts} = this.modelItem;
+                        const { alerts } = this.modelItem;
                         // console.log('alerts from bind: ', alerts);
-                        alerts.forEach(modelAlert => {
+                        alerts.forEach((modelAlert) => {
                             const newAlert = document.createElement('fx-alert');
                             // const newAlert = document.createElement('span');
                             newAlert.innerHTML = modelAlert;

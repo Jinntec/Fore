@@ -10,19 +10,19 @@ import { Fore } from '../fore.js';
  * @demo demo/index.html
  */
 export class FxConstructDone extends FxAction {
-  connectedCallback() {
-    // eslint-disable-next-line wc/guard-super-call
-    super.connectedCallback();
-    console.log('parentNode', this.parentNode);
-    if (this.parentNode.nodeName !== 'FX-MODEL') {
-      Fore.dispatch(this, 'error', { message: 'parent is not a model' });
-      return;
+    connectedCallback() {
+        // eslint-disable-next-line wc/guard-super-call
+        super.connectedCallback();
+        console.log('parentNode', this.parentNode);
+        if (this.parentNode.nodeName !== 'FX-MODEL') {
+            Fore.dispatch(this, 'error', { message: 'parent is not a model' });
+            return;
+        }
+        this.parentNode.addEventListener('model-construct-done', (e) => {
+            super.perform();
+        });
     }
-    this.parentNode.addEventListener('model-construct-done', e => {
-      super.perform();
-    });
-  }
 }
 if (!customElements.get('fx-construct-done')) {
-  window.customElements.define('fx-construct-done', FxConstructDone);
+    window.customElements.define('fx-construct-done', FxConstructDone);
 }

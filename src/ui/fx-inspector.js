@@ -4,13 +4,13 @@ import { prettifyXml } from '../functions/common-function.js';
  * lists out all live instances in html 'details' and 'summary' elements.
  */
 export class FxInspector extends HTMLElement {
-  constructor() {
-    super();
-    this.attachShadow({ mode: 'open' });
-  }
+    constructor() {
+        super();
+        this.attachShadow({ mode: 'open' });
+    }
 
-  connectedCallback() {
-    const style = `
+    connectedCallback() {
+        const style = `
           :host {
             position:absolute;
             display: block;
@@ -74,41 +74,47 @@ export class FxInspector extends HTMLElement {
           }
         `;
 
-    const fore = this.closest('fx-fore');
+        const fore = this.closest('fx-fore');
 
-    // fore.addEventListener('ready', (e) => {
-    this.render(style);
-    // });
-    fore.addEventListener('refresh-done', () => {
-      this.update();
-    });
-  }
-
-  update() {
-    // console.log('update');
-    try {
-      const pre = this.shadowRoot.querySelectorAll('pre');
-      // console.log('pre', pre);
-      const fore = this.closest('fx-fore');
-
-      Array.from(pre).forEach(element => {
-        const inst = fore.getModel().getInstance(element.getAttribute('id'));
-        if (inst.getAttribute('type') === 'xml') {
-          element.innerText = this.serializeDOM(inst.instanceData);
-        }
-        if (inst.getAttribute('type') === 'json') {
-          element.innerText = JSON.stringify(inst.instanceData, undefined, 2);
-        }
-      });
-    } catch (e) {
-      console.warn('caught problem in inspector', e.message);
+        // fore.addEventListener('ready', (e) => {
+        this.render(style);
+        // });
+        fore.addEventListener('refresh-done', () => {
+            this.update();
+        });
     }
-  }
 
-  render(style) {
-    const fore = this.closest('fx-fore');
-    const instances = Array.from(fore.querySelectorAll('fx-instance'));
-    this.shadowRoot.innerHTML = `
+    update() {
+        // console.log('update');
+        try {
+            const pre = this.shadowRoot.querySelectorAll('pre');
+            // console.log('pre', pre);
+            const fore = this.closest('fx-fore');
+
+            Array.from(pre).forEach((element) => {
+                const inst = fore
+                    .getModel()
+                    .getInstance(element.getAttribute('id'));
+                if (inst.getAttribute('type') === 'xml') {
+                    element.innerText = this.serializeDOM(inst.instanceData);
+                }
+                if (inst.getAttribute('type') === 'json') {
+                    element.innerText = JSON.stringify(
+                        inst.instanceData,
+                        undefined,
+                        2,
+                    );
+                }
+            });
+        } catch (e) {
+            console.warn('caught problem in inspector', e.message);
+        }
+    }
+
+    render(style) {
+        const fore = this.closest('fx-fore');
+        const instances = Array.from(fore.querySelectorAll('fx-instance'));
+        this.shadowRoot.innerHTML = `
             <style>
                 ${style}
             </style>
@@ -116,7 +122,7 @@ export class FxInspector extends HTMLElement {
             <slot></slot>
             <span class="handle"></span>
                 ${instances.map(
-                  instance => `
+                    (instance) => `
                   <details>
                       <summary>${instance.id}</summary>
                       <pre id="${instance.id}"></pre>
@@ -126,28 +132,28 @@ export class FxInspector extends HTMLElement {
             </div>
         `;
 
-    const handle = this.shadowRoot.querySelector('.handle');
-    handle.addEventListener('click', e => {
-      // console.log('toggling');
-      if (this.hasAttribute('open')) {
-        this.removeAttribute('open');
-      } else {
-        this.setAttribute('open', 'open');
-      }
-    });
-  }
-
-  serializeDOM(data) {
-    if (!data) {
-      console.warn('no data to serialize');
-      return;
+        const handle = this.shadowRoot.querySelector('.handle');
+        handle.addEventListener('click', (e) => {
+            // console.log('toggling');
+            if (this.hasAttribute('open')) {
+                this.removeAttribute('open');
+            } else {
+                this.setAttribute('open', 'open');
+            }
+        });
     }
-    // console.log('serializeDOM', data);
-    const ser = new XMLSerializer().serializeToString(data);
-    return prettifyXml(ser);
-  }
+
+    serializeDOM(data) {
+        if (!data) {
+            console.warn('no data to serialize');
+            return;
+        }
+        // console.log('serializeDOM', data);
+        const ser = new XMLSerializer().serializeToString(data);
+        return prettifyXml(ser);
+    }
 }
 
 if (!customElements.get('fx-inspector')) {
-  customElements.define('fx-inspector', FxInspector);
+    customElements.define('fx-inspector', FxInspector);
 }
