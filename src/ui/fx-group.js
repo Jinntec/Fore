@@ -11,16 +11,16 @@ import { FxContainer } from './fx-container.js';
  * @customElement
  */
 class FxGroup extends FxContainer {
-  static get properties() {
-    return {
-      ...super.properties,
-      collapse: {
-        type: Boolean,
-        reflect: true,
-      },
-    };
-  }
-  /*
+    static get properties() {
+        return {
+            ...super.properties,
+            collapse: {
+                type: Boolean,
+                reflect: true,
+            },
+        };
+    }
+    /*
             init(model){
                 super.init(model);
                 console.log(this, this.modelItem);
@@ -29,48 +29,48 @@ class FxGroup extends FxContainer {
             }
         */
 
-  constructor() {
-    super();
-    this.collapse = false;
-  }
+    constructor() {
+        super();
+        this.collapse = false;
+    }
 
-  connectedCallback() {
-    super.connectedCallback();
-    this.setAttribute('role', 'group');
-  }
+    connectedCallback() {
+        super.connectedCallback();
+        this.setAttribute('role', 'group');
+    }
 
-  render() {
-    return `
+    render() {
+        return `
       <slot></slot>
     `;
-  }
+    }
 
-  /**
-   * overwrites Abstract Control.
-   *
-   * Groups only reacts to 'relevant' property.
-   */
-  handleModelItemProperties() {
-    this.handleRelevant();
-  }
+    /**
+     * overwrites Abstract Control.
+     *
+     * Groups only reacts to 'relevant' property.
+     */
+    handleModelItemProperties() {
+        this.handleRelevant();
+    }
 
-  initializeChildren(node) {
-    const children = Array.from(node.children);
-    // console.log('_initializeChildren ', children);
+    initializeChildren(node) {
+        const children = Array.from(node.children);
+        // console.log('_initializeChildren ', children);
 
-    children.forEach(child => {
-      // console.log('child ', child);
+        children.forEach((child) => {
+            // console.log('child ', child);
 
-      if (Fore.isUiElement(child.nodeName)) {
-        child.init(this.model);
-      } else if (child.children.length !== 0) {
-        const grantChildren = Array.from(child.children);
-        grantChildren.forEach(grantChild => {
-          this.initializeChildren(grantChild);
+            if (Fore.isUiElement(child.nodeName)) {
+                child.init(this.model);
+            } else if (child.children.length !== 0) {
+                const grantChildren = Array.from(child.children);
+                grantChildren.forEach((grantChild) => {
+                    this.initializeChildren(grantChild);
+                });
+            }
         });
-      }
-    });
-    /*
+        /*
                 if(Fore.isUiElement(node.nodeName)){
                     const childElements = children.filter( action => Fore.isUiElement(action.nodeName));
                     console.log('children ', childElements);
@@ -86,16 +86,16 @@ class FxGroup extends FxContainer {
                 }
         */
 
-    console.groupEnd();
-  }
+        console.groupEnd();
+    }
 
-  async refresh(force) {
-    super.refresh(force);
-    // Make the maybe filtered refresh an unconditional forced refresh: This fx-group changes the
-    // context item
-  }
+    async refresh(force) {
+        super.refresh(force);
+        // Make the maybe filtered refresh an unconditional forced refresh: This fx-group changes the
+        // context item
+    }
 }
 
 if (!customElements.get('fx-group')) {
-  window.customElements.define('fx-group', FxGroup);
+    window.customElements.define('fx-group', FxGroup);
 }

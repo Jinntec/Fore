@@ -9,47 +9,47 @@ import { ControlBinding } from '../binding/ControlBinding.js';
  *
  */
 export class FxContainer extends ForeElementMixin {
-  static get properties() {
-    return {
-      ...super.properties,
-      /*
+    static get properties() {
+        return {
+            ...super.properties,
+            /*
       src: {
         type: String,
       },
 */
-    };
-  }
+        };
+    }
 
-  constructor() {
-    super();
-    this.attachShadow({ mode: 'open' });
-  }
+    constructor() {
+        super();
+        this.attachShadow({ mode: 'open' });
+    }
 
-  connectedCallback() {
-    super.connectedCallback();
+    connectedCallback() {
+        super.connectedCallback();
 
-    this.src = this.hasAttribute('src') ? this.getAttribute('src') : null;
-    const style = `
+        this.src = this.hasAttribute('src') ? this.getAttribute('src') : null;
+        const style = `
         :host {
             display: block;
         }
     `;
 
-    const html = `
+        const html = `
       <slot></slot>
     `;
 
-    this.shadowRoot.innerHTML = `
+        this.shadowRoot.innerHTML = `
             <style>
                 ${style}
             </style>
             ${html}
     `;
-    if (this.ref !== '') {
-      this.getOwnerForm().registerLazyElement(this);
-    }
+        if (this.ref !== '') {
+            this.getOwnerForm().registerLazyElement(this);
+        }
 
-    /*
+        /*
     this.addEventListener('mousedown', e => {
 
       if(e.target === this){
@@ -58,17 +58,17 @@ export class FxContainer extends ForeElementMixin {
       }
     } );
 */
-  }
+    }
 
-  /**
-   * (re)apply all state properties to this control.
-   */
-  async refresh(force) {
-    if (!force && this.hasAttribute('refresh-on-view')) return;
-    // console.log('### FxContainer.refresh on : ', this);
+    /**
+     * (re)apply all state properties to this control.
+     */
+    async refresh(force) {
+        if (!force && this.hasAttribute('refresh-on-view')) return;
+        // console.log('### FxContainer.refresh on : ', this);
 
-    // if loading from 'src' needs to be done do it now
-    /*
+        // if loading from 'src' needs to be done do it now
+        /*
     if(this.src){
       await Fore.loadForeFromSrc(this,this.src,'fx-group')
           .then(foreElement =>{
@@ -77,79 +77,80 @@ export class FxContainer extends ForeElementMixin {
           })
     }
 */
-    if (this.isBound()) {
-      this.evalInContext();
-      this.modelItem = this.getModelItem();
-      /*
+        if (this.isBound()) {
+            this.evalInContext();
+            this.modelItem = this.getModelItem();
+            /*
       if (this.modelItem && !this.modelItem.boundControls.includes(this)) {
         this.modelItem.boundControls.push(this);
       }
-*/
-      DependencyTracker.getInstance().registerControl(
-        this.modelItem.path,
-        new ControlBinding(this),
-      );
+            */
+            if (this.modelItem) {
+                DependencyTracker.getInstance().registerControl(
+                    this.modelItem.path,
+                    new ControlBinding(this),
+                );
+            }
+            this.handleModelItemProperties();
+        }
 
-      this.handleModelItemProperties();
+        // state change event do not fire during init phase (initial refresh)
+        // if (this._getForm().ready) {
+        //   this.handleModelItemProperties();
+        // }
+        // Fore.refreshChildren(this, force);
     }
 
-    // state change event do not fire during init phase (initial refresh)
-    // if (this._getForm().ready) {
-    //   this.handleModelItemProperties();
-    // }
-    // Fore.refreshChildren(this, force);
-  }
-
-  /**
-   * relevance is processed for container controls only
-   */
-  handleModelItemProperties() {
-    this.handleRelevant();
-  }
-
-  _getForm() {
-    return this.getModel().parentNode;
-  }
-
-  handleRelevant() {
-    // console.log('mip valid', this.modelItem.enabled);
-    if (!this.modelItem) {
-      // console.log('container is not relevant');
-      this.removeAttribute('relevant', '');
-      this.setAttribute('nonrelevant', '');
-      this.dispatchEvent(new CustomEvent('disabled', {}));
-      return;
+    /**
+     * relevance is processed for container controls only
+     */
+    handleModelItemProperties() {
+        this.handleRelevant();
     }
 
-    if (this.isEnabled() !== this.modelItem.enabled) {
-      if (this.modelItem.relevant) {
-        // this.style.display = 'block';
-        this.removeAttribute('nonrelevant', '');
-        this.setAttribute('relevant', '');
-        this.dispatchEvent(new CustomEvent('enabled', {}));
-      } else {
-        this.removeAttribute('relevant', '');
-        this.setAttribute('nonrelevant', '');
-        this.dispatchEvent(new CustomEvent('disabled', {}));
-      }
+    _getForm() {
+        return this.getModel().parentNode;
     }
-  }
 
-  isReadonly() {
-    if (this.hasAttribute('readonly')) {
-      return true;
-    }
-    return false;
-  }
+    handleRelevant() {
+        // console.log('mip valid', this.modelItem.enabled);
+        if (!this.modelItem) {
+            // console.log('container is not relevant');
+            this.removeAttribute('relevant', '');
+            this.setAttribute('nonrelevant', '');
+            this.dispatchEvent(new CustomEvent('disabled', {}));
+            return;
+        }
 
-  isEnabled() {
-    if (this.style.display === 'none') {
-      return false;
+        if (this.isEnabled() !== this.modelItem.enabled) {
+            if (this.modelItem.relevant) {
+                // this.style.display = 'block';
+                this.removeAttribute('nonrelevant', '');
+                this.setAttribute('relevant', '');
+                this.dispatchEvent(new CustomEvent('enabled', {}));
+            } else {
+                this.removeAttribute('relevant', '');
+                this.setAttribute('nonrelevant', '');
+                this.dispatchEvent(new CustomEvent('disabled', {}));
+            }
+        }
     }
-    return true;
-  }
+
+    isReadonly() {
+        if (this.hasAttribute('readonly')) {
+            return true;
+        }
+        return false;
+    }
+
+    isEnabled() {
+        if (this.style.display === 'none') {
+            return false;
+        }
+        return true;
+    }
 }
 
 if (!customElements.get('fx-container')) {
-  window.customElements.define('fx-container', FxContainer);
+    window.customElements.define('fx-container', FxContainer);
 }
