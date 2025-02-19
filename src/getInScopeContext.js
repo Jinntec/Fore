@@ -69,7 +69,7 @@ function _getInitialContext(node, ref) {
 export default function getInScopeContext(node, ref) {
     // console.log('getInScopeContext', ref, node);
 
-    //todo: check for multi-step pathes
+    // todo: check for multi-step pathes
     const parentElement = _getElement(node);
     // console.log('getInScopeContext parent', parentElement);
     if (!parentElement) {

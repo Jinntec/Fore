@@ -39,6 +39,7 @@ export default class FxUpload extends XfAbstractControl {
             },
         };
     }
+
     connectedCallback() {
         this.updateEvent = 'change';
         this.accept = this.hasAttribute('accept')
@@ -75,7 +76,7 @@ export default class FxUpload extends XfAbstractControl {
         });
 
         // console.log('widget ', this.widget);
-        let listenOn = this.widget; // default: usually listening on widget
+        const listenOn = this.widget; // default: usually listening on widget
 
         // ### convenience marker event
         if (this.debounceDelay) {
@@ -151,7 +152,7 @@ export default class FxUpload extends XfAbstractControl {
             const readMethod = isTextFile ? 'readAsText' : 'readAsDataURL';
 
             reader.onload = () => {
-                const result = reader.result;
+                const { result } = reader;
                 // If it's a binary file, return only the Base64 content without the MIME prefix
                 if (!isTextFile) {
                     const base64Content = result.split(',')[1]; // Remove MIME prefix

@@ -79,7 +79,7 @@ class FxDelete extends AbstractAction {
             // fore.dependencyTracker.notifyChange(XPathUtil.getCanonicalXPath(parent,instanceId));
 
             this._deleteNode(parent, nodesToDelete);
-            DependencyTracker.getInstance().notifyDelete(this.ref); //when doing scoped resolution with DT
+            DependencyTracker.getInstance().notifyDelete(this.ref); // when doing scoped resolution with DT
             // DependencyTracker.getInstance().notifyDelete(this.modelitem.path); //using modelitem
         }
 

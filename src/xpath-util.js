@@ -6,7 +6,7 @@ export class XPathUtil {
         let path;
         if (Array.isArray(node) && node.length !== 0) {
             path = fx.evaluateXPathToString('path()', node[0]);
-            //cut positional attr
+            // cut positional attr
             path = path.substring(0, path.length - 3);
         } else {
             // const path = fx.evaluateXPathToString('path()', node);
@@ -332,7 +332,7 @@ export class XPathUtil {
         let path;
         if (Array.isArray(node) && node.length !== 0) {
             path = fx.evaluateXPathToString('path()', node[0]);
-            //cut positional attr
+            // cut positional attr
             path = path.substring(0, path.length - 3);
         } else {
             // const path = fx.evaluateXPathToString('path()', node);
