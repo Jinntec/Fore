@@ -1,10 +1,14 @@
 // FacetBinding.js
-import {DependencyTracker} from "../DependencyTracker";
-import {DependencyNotifyingDomFacade} from "../DependencyNotifyingDomFacade";
-import {XPathUtil} from "../xpath-util";
-import {evaluateXPath, evaluateXPathToBoolean, evaluateXPathToString} from "../xpath-evaluation";
-import getInScopeContext from "../getInScopeContext";
-import {Binding} from "./Binding.js";
+import { DependencyTracker } from '../DependencyTracker';
+import { DependencyNotifyingDomFacade } from '../DependencyNotifyingDomFacade';
+import { XPathUtil } from '../xpath-util';
+import {
+    evaluateXPath,
+    evaluateXPathToBoolean,
+    evaluateXPathToString,
+} from '../xpath-evaluation';
+import getInScopeContext from '../getInScopeContext';
+import { Binding } from './Binding.js';
 
 /**
  * represents a single facet of a NodeBinding.
@@ -63,8 +67,8 @@ export class FacetBinding extends Binding {
     }
 
     compute() {
-        const modelItem = this.modelItem;
-        const facetName = this.facetName;
+        const { modelItem } = this;
+        const { facetName } = this;
         const expr = modelItem.bind[facetName];
         const fore = modelItem.bind.getOwnerForm();
 
@@ -75,7 +79,11 @@ export class FacetBinding extends Binding {
         } else if (facetName !== 'constraint' && facetName !== 'type') {
             // ### re-compute the Boolean value of all facets expect 'constraint' and 'type' which are handled in revalidate()
             if (this.expression) {
-                const compute = evaluateXPathToBoolean(expr, modelItem.node, fore);
+                const compute = evaluateXPathToBoolean(
+                    expr,
+                    modelItem.node,
+                    fore,
+                );
                 modelItem[facetName] = compute;
                 console.log(
                     `recalculating path ${this.xpath} - Expr:'${this.expression}' computed`,
@@ -84,5 +92,4 @@ export class FacetBinding extends Binding {
             }
         }
     }
-
 }

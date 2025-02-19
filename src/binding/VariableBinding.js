@@ -1,9 +1,8 @@
-import {Binding} from "./Binding";
+import { Binding } from './Binding';
 
-export class VariableBinding extends Binding{
-
+export class VariableBinding extends Binding {
     constructor(xpath) {
-        super(xpath,'variable');
+        super(xpath, 'variable');
     }
 
     update() {
