@@ -303,49 +303,41 @@ export class FxBind extends ForeElementMixin {
      */
     // _createModelItem(node, index) {
     _createModelItem(node) {
-        /*
-    if bind is the dot expression we use the modelitem of the parent
-     */
-        if (XPathUtil.isSelfReference(this.ref)) {
-            const parentBoundElement = XPathUtil.getClosest(
-                'fx-bind[ref]',
-                this.parentElement,
+        let modelItem = this.getModel().getModelItem(node);
+        if (!modelItem) {
+            const targetNode = node;
+            const instanceId = XPathUtil.resolveInstance(this, this.ref);
+            const path = XPathUtil.getPath(node, instanceId);
+
+            // ### constructing default modelitem - will get evaluated during recalculate()
+            modelItem = new ModelItem(
+                path,
+                this.getBindingExpr(),
+                FxBind.READONLY_DEFAULT,
+                FxBind.RELEVANT_DEFAULT,
+                FxBind.REQUIRED_DEFAULT,
+                FxBind.CONSTRAINT_DEFAULT,
+                this.type,
+                targetNode,
+                this,
+                instanceId,
             );
-            // console.log('parent bound element ', parentBoundElement);
-
-            if (parentBoundElement) {
-                // todo: Could be fancier by combining them
-                parentBoundElement.required = this.required; // overwrite parent property!
-            } else {
-                console.error('no parent bound element');
-            }
+            this.getModel().registerModelItem(modelItem);
+        } else {
+            // For overlapping binds, the last one wins
+            modelItem.bind.calculate ||= this.calculate;
+            modelItem.bind.readonly ||= this.readonly;
+            modelItem.bind.required ||= this.required;
+            modelItem.bind.relevant ||= this.relevant;
+            modelItem.bind.constraint ||= this.constraint;
         }
-
-        const targetNode = node;
-        const instanceId = XPathUtil.resolveInstance(this, this.ref);
-        const path = XPathUtil.getPath(node, instanceId);
-
-        // ### constructing default modelitem - will get evaluated during recalculate()
-        const newItem = new ModelItem(
-            path,
-            this.getBindingExpr(),
-            FxBind.READONLY_DEFAULT,
-            FxBind.RELEVANT_DEFAULT,
-            FxBind.REQUIRED_DEFAULT,
-            FxBind.CONSTRAINT_DEFAULT,
-            this.type,
-            targetNode,
-            this,
-            instanceId,
-        );
 
         const alert = this.getAlert();
         if (alert) {
-            newItem.addAlert(alert);
+            modelItem.addAlert(alert);
         }
 
-        this.getModel().registerModelItem(newItem);
-        return newItem;
+        return modelItem;
     }
 
     /**
