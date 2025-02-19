@@ -1,250 +1,275 @@
 import { html, oneEvent, fixtureSync, expect } from '@open-wc/testing';
 
 import '../index.js';
-import { evaluateXPathToNodes, evaluateXPath } from 'fontoxpath';
 import registerFunction from '../src/functions/registerFunction.js';
+import { DependencyTracker } from '../src/DependencyTracker.js';
+
+/**
+ * FontoXPath uses one global registry for functions. Which is annoying with tests.
+ * These function names must be inserted with this snippet:
+ * ${`{${functionName}()}`}, otherwise lit-html adds its own comments
+ */
+let i = 0;
+const generateFunctionNamePostfix = () => {
+    return ++i;
+};
 
 describe('functions', () => {
-  describe('Functions in JavaScript', () => {
+    describe('Functions in JavaScript', () => {
+        it('can define a simple function', async () => {
+            const functionName = `local:theAnswer${generateFunctionNamePostfix()}`;
+            const el = await fixtureSync(html`
+                <fx-fore>
+                    <fx-model>
+                        <fx-function
+                            signature="${functionName}() as xs:decimal"
+                            override="no"
+                            type="text/javascript"
+                        >
+                            return 21*2;
+                        </fx-function>
+                    </fx-model>
+                    <label>${`{${functionName}()}`}</label>
+                </fx-fore>
+            `);
+
+            await oneEvent(el, 'ready');
+
+            const label = el.querySelector('label');
+            expect(label.innerText).to.equal('42');
+            DependencyTracker.getInstance().reset();
+        });
+
+        it('can define a simple function with an argument', async () => {
+            const el = await fixtureSync(html`
+                <fx-fore>
+                    <fx-model>
+                        <fx-function
+                            signature="local:pow2($arg as xs:decimal) as xs:decimal"
+                            override="no"
+                            type="text/javascript"
+                        >
+                            return $arg * $arg;
+                        </fx-function>
+                    </fx-model>
+                    <label>{local:pow2(10)}</label>
+                </fx-fore>
+            `);
+
+            await oneEvent(el, 'ready');
+
+            const label = el.querySelector('label');
+            expect(label.innerText).to.equal('100');
+        });
+    });
+
+    describe('functions in XPath', () => {
+        it('can define a simple function', async () => {
+            const functionName = `local:hello-world${generateFunctionNamePostfix()}`;
+
+            const el = await fixtureSync(html`
+                <fx-fore>
+                    <fx-model>
+                        <fx-function
+                            signature="${functionName}() as xs:string"
+                            override="no"
+                            type="text/xpath"
+                        >
+                            ("Hello", "World") =&gt; string-join(" ")
+                        </fx-function>
+                    </fx-model>
+                    <label>${`{${functionName}()}`}</label>
+                </fx-fore>
+            `);
+
+            await oneEvent(el, 'ready');
+
+            const label = el.querySelector('label');
+            expect(label.innerText).to.equal('Hello World');
+        });
+
+        it('can define a simple function without any prefix', async () => {
+            const functionName = `local:hello-world${generateFunctionNamePostfix()}`;
+            const el = await fixtureSync(html`
+                <fx-fore>
+                    <fx-model>
+                        <fx-function
+                            signature="${functionName}() as xs:string"
+                            override="no"
+                            type="text/xpath"
+                        >
+                            ("Hello", "World") =&gt; string-join(" ")
+                        </fx-function>
+                    </fx-model>
+                    <label>${`{${functionName}()}`}</label>
+                </fx-fore>
+            `);
+
+            await oneEvent(el, 'ready');
+
+            const label = el.querySelector('label');
+            expect(label.innerText).to.equal('Hello World');
+        });
+
+        it('can define a simple function with an argument', async () => {
+            const el = await fixtureSync(html`
+                <fx-fore>
+                    <fx-model>
+                        <fx-function
+                            signature="local:hello($who as xs:string) as xs:string"
+                            override="no"
+                            type="text/xpath"
+                        >
+                            "Hello " || $who
+                        </fx-function>
+                    </fx-model>
+                    <label>{local:hello("World")}</label>
+                </fx-fore>
+            `);
+
+            await oneEvent(el, 'ready');
+
+            const label = el.querySelector('label');
+            expect(label.innerText).to.equal('Hello World');
+        });
+    });
+
     it('can define a simple function', async () => {
-      const el = await fixtureSync(html`
-        <fx-fore>
-          <fx-model>
-            <fx-function
-              signature="local:theanswer() as xs:decimal"
-              override="no"
-              type="text/javascript"
-            >
-              return 21*2;
-            </fx-function>
-          </fx-model>
-          <label>{local:theanswer()}</label>
-        </fx-fore>
-      `);
+        const functionName = `local:theAnswer${generateFunctionNamePostfix()}`;
+        const el = await fixtureSync(html`
+            <fx-fore>
+                <fx-model>
+                    <fx-function
+                        signature="${functionName}() as xs:decimal"
+                        override="no"
+                        type="text/javascript"
+                    >
+                        return 21*2;
+                    </fx-function>
+                </fx-model>
+                <fx-output ref="theanswer">${`{${functionName}()}`}</fx-output>
+            </fx-fore>
+        `);
 
-      await oneEvent(el, 'ready');
+        await oneEvent(el, 'ready');
+        const model = el.querySelector('fx-model');
+        console.log('modelitems ', model.modelItems);
+        expect(model.modelItems.length).to.equal(1);
 
-      const label = el.querySelector('label');
-      expect(label.innerText).to.equal('42');
+        const output = el.querySelector('fx-output');
+        expect(output.textContent).to.equal('42');
     });
 
-    it('can define a simple function with an argument', async () => {
-      const el = await fixtureSync(html`
-        <fx-fore>
-          <fx-model>
-            <fx-function
-              signature="local:pow2($arg as xs:decimal) as xs:decimal"
-              override="no"
-              type="text/javascript"
-            >
-              return $arg * $arg;
-            </fx-function>
-          </fx-model>
-          <label>{local:pow2(10)}</label>
-        </fx-fore>
-      `);
+    it('can define a simple function using explicit models', async () => {
+        const functionName = `local:theAnswer${generateFunctionNamePostfix()}`;
 
-      await oneEvent(el, 'ready');
+        const el = await fixtureSync(html`
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <theanswer></theanswer>
+                        </data>
+                    </fx-instance>
+                    <fx-bind
+                        ref="theanswer"
+                        required="true()"
+                        calculate="local:theans"
+                    ></fx-bind>
+                    <fx-function
+                        signature="${functionName}() as xs:decimal"
+                        override="no"
+                        type="text/javascript"
+                    >
+                        return 21*2;
+                    </fx-function>
+                </fx-model>
+                <div id="output">${`{${functionName}()}`}</div>
+            </fx-fore>
+        `);
 
-      const label = el.querySelector('label');
-      expect(label.innerText).to.equal('100');
-    });
-  });
+        await oneEvent(el, 'ready');
+        const model = el.querySelector('fx-model');
+        console.log('modelitems ', model.modelItems);
+        expect(model.modelItems.length).to.equal(1);
 
-  describe('functions in XPath', () => {
-    it('can define a simple function', async () => {
-      const el = await fixtureSync(html`
-        <fx-fore>
-          <fx-model>
-            <fx-function
-              signature="local:hello-world() as xs:string"
-              override="no"
-              type="text/xpath"
-            >
-              ("Hello", "World") =&gt; string-join(" ")
-            </fx-function>
-          </fx-model>
-          <label>{local:hello-world()}</label>
-        </fx-fore>
-      `);
-
-      await oneEvent(el, 'ready');
-
-      const label = el.querySelector('label');
-      expect(label.innerText).to.equal('Hello World');
+        // following assumptions were wrong - output is never setting the value
+        const output = el.querySelector('#output');
+        expect(output.textContent).to.equal('42');
     });
 
-    it('can define a simple function without any prefix', async () => {
-      const el = await fixtureSync(html`
-        <fx-fore>
-          <fx-model>
-            <fx-function signature="hello-world() as xs:string" override="no" type="text/xpath">
-              ("Hello", "World") =&gt; string-join(" ")
-            </fx-function>
-          </fx-model>
-          <label>{hello-world()}</label>
-        </fx-fore>
-      `);
+    it('returns 1 for repeat index() by default', async () => {
+        const el = await fixtureSync(html`
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <theanswer></theanswer>
+                            <theanswer></theanswer>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+                <fx-repeat id="repeat" ref="*">
+                    <template>
+                        <fx-output ref="theanswer"></fx-output>
+                    </template>
+                </fx-repeat>
+                <span id="index">{index('repeat')}</span>
+            </fx-fore>
+        `);
 
-      await oneEvent(el, 'ready');
+        await oneEvent(el, 'ready');
 
-      const label = el.querySelector('label');
-      expect(label.innerText).to.equal('Hello World');
+        const indexVal = document.getElementById('index').innerText;
+
+        expect(Number(indexVal)).to.equal(1);
     });
 
-    it('can define a simple function with an argument', async () => {
-      const el = await fixtureSync(html`
-        <fx-fore>
-          <fx-model>
-            <fx-function
-              signature="local:hello($who as xs:string) as xs:string"
-              override="no"
-              type="text/xpath"
-            >
-              "Hello " || $who
-            </fx-function>
-          </fx-model>
-          <label>{local:hello("World")}</label>
-        </fx-fore>
-      `);
+    it('returns correct index after insert for repeat index()', async () => {
+        const el = await fixtureSync(html`
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <theanswer></theanswer>
+                            <theanswer></theanswer>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+                <fx-repeat id="repeat" ref="*">
+                    <template>
+                        <fx-output ref="theanswer"></fx-output>
+                    </template>
+                </fx-repeat>
+                <span id="index">{index('repeat')}</span>
+                <fx-trigger>
+                    <button>insert at end</button>
+                    <fx-insert ref="theanswer"></fx-insert>
+                </fx-trigger>
+            </fx-fore>
+        `);
 
-      await oneEvent(el, 'ready');
+        await oneEvent(el, 'ready');
+        const trigger = el.querySelector('fx-trigger');
+        await trigger.performActions();
 
-      const label = el.querySelector('label');
-      expect(label.innerText).to.equal('Hello World');
+        const indexVal = document.getElementById('index').innerText;
+        expect(Number(indexVal)).to.equal(3);
     });
-  });
 
-  // The following two tests are failing.
-  it('can define a simple function', async () => {
-    const el = await fixtureSync(html`
-      <fx-fore>
-        <fx-model>
-          <fx-function
-            signature="local:theanswer() as xs:decimal"
-            override="no"
-            type="text/javascript"
-          >
-            return 21*2;
-          </fx-function>
-        </fx-model>
-        <fx-output ref="theanswer">{local:theanswer()}</fx-output>
-      </fx-fore>
-    `);
-
-    await oneEvent(el, 'ready');
-    const model = el.querySelector('fx-model');
-    console.log('modelitems ', model.modelItems);
-    expect(model.modelItems.length).to.equal(1);
-
-    const output = el.querySelector('fx-output');
-    expect(output.textContent).to.equal('42');
-  });
-
-  it('can define a simple function using explicit models', async () => {
-    const el = await fixtureSync(html`
-      <fx-fore>
-        <fx-model>
-          <fx-instance>
-            <data>
-              <theanswer></theanswer>
-            </data>
-          </fx-instance>
-          <fx-bind ref="theanswer" required="true()" calculate="local:theans"></fx-bind>
-          <fx-function
-            signature="local:theanswer() as xs:decimal"
-            override="no"
-            type="text/javascript"
-          >
-            return 21*2;
-          </fx-function>
-        </fx-model>
-        <div id="output">{local:theanswer()}</div>
-      </fx-fore>
-    `);
-
-    await oneEvent(el, 'ready');
-    const model = el.querySelector('fx-model');
-    console.log('modelitems ', model.modelItems);
-    expect(model.modelItems.length).to.equal(1);
-
-    // following assumptions were wrong - output is never setting the value
-    const output = el.querySelector('#output');
-    expect(output.textContent).to.equal('42');
-  });
-
-  it('returns 1 for repeat index() by default', async () => {
-    const el = await fixtureSync(html`
-      <fx-fore>
-        <fx-model>
-          <fx-instance>
-            <data>
-              <theanswer></theanswer>
-              <theanswer></theanswer>
-            </data>
-          </fx-instance>
-        </fx-model>
-        <fx-repeat id="repeat">
-          <template>
-            <fx-output ref="theanswer"></fx-output>
-          </template>
-        </fx-repeat>
-        <span id="index">{index('repeat')}</span>
-      </fx-fore>
-    `);
-
-    await oneEvent(el, 'ready');
-
-    const indexVal = document.getElementById('index').innerText;
-
-    expect(Number(indexVal)).to.equal(1);
-  });
-
-  it('returns correct index after insert for repeat index()', async () => {
-    const el = await fixtureSync(html`
-      <fx-fore>
-        <fx-model>
-          <fx-instance>
-            <data>
-              <theanswer></theanswer>
-              <theanswer></theanswer>
-            </data>
-          </fx-instance>
-        </fx-model>
-        <fx-repeat id="repeat">
-          <template>
-            <fx-output ref="theanswer"></fx-output>
-          </template>
-        </fx-repeat>
-        <span id="index">{index('repeat')}</span>
-        <fx-trigger>
-          <button>insert at end</button>
-          <fx-insert ref="theanswer"></fx-insert>
-        </fx-trigger>
-      </fx-fore>
-    `);
-
-    await oneEvent(el, 'ready');
-    const trigger = el.querySelector('fx-trigger');
-    await trigger.performActions();
-
-    const indexVal = document.getElementById('index').innerText;
-    expect(Number(indexVal)).to.equal(3);
-  });
-
-  it.skip('returns correct index after insert for nested repeat index()', async () => {
-    const el = await fixtureSync(html`
-      <fx-fore>
-        <fx-model>
-          <fx-instance>
-            <data>
-              <item>1</item>
-              <item>2</item>
-              <item>3</item>
-            </data>
-          </fx-instance>
-        </fx-model>
-        <pre id="indices">
+    it.skip('returns correct index after insert for nested repeat index()', async () => {
+        const el = await fixtureSync(html`
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <item>1</item>
+                            <item>2</item>
+                            <item>3</item>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+                <pre id="indices">
         <fx-repeat id="repeat" ref="/data/item">
           <template>
             <fx-repeat id="nested-repeat" ref="/data/item">
@@ -257,274 +282,304 @@ describe('functions', () => {
           </template>
         </fx-repeat>
 </pre>
-      </fx-fore>
-    `);
+            </fx-fore>
+        `);
 
-    await oneEvent(el, 'ready');
-    el.style.display = 'block';
-    // Second row, second item
-    const span = el.querySelectorAll('input')[3 + 1];
-    span.focus();
-    el.refresh();
+        await oneEvent(el, 'ready');
+        el.style.display = 'block';
+        // Second row, second item
+        const span = el.querySelectorAll('input')[3 + 1];
+        span.focus();
+        el.refresh();
 
-    const indices = document.getElementById('indices');
-    expect(indices.innerText.replace(/\s/g, '')).to.equal(
-      '(2;1)(2;1)(2;1)(2;2)(2;2)(2;2)(2;1)(2;1)(2;1)',
-      'The outer repeat is indexed at 2, the first and last inner ones at 1, the middle inner one at 2!',
-    );
-  });
-
-  it('context() in repeats returns the correct item', async () => {
-    const el = await fixtureSync(
-      html` <fx-fore>
-        <fx-model>
-          <fx-instance id="mapping">
-            <data>
-              <df tag="245" scope="bf:Instance" scope-rel="bf:title" domain="bf:Title">
-                <sf code="a">bf:mainTitle</sf>
-                <sf code="b">bf:subtitle</sf>
-                <sf code="c">bf:responsibilityStatement</sf>
-              </df>
-            </data>
-          </fx-instance>
-          <fx-instance id="desc">
-            <data>
-              <df>
-                <tag>245</tag>
-                <ind1></ind1>
-                <ind2></ind2>
-                <sfs>
-                  <sf>
-                    <code>a</code>
-                    <value>value-of-a</value>
-                  </sf>
-                  <sf>
-                    <code>b</code>
-                    <value>value-of-b</value>
-                  </sf>
-                </sfs>
-              </df>
-            </data>
-          </fx-instance>
-        </fx-model>
-
-        <fx-repeat ref="instance('desc')/df">
-          <template>
-            <fx-control ref="tag" update-event="input">
-              <label>Datafield</label>
-            </fx-control>
-            <fx-control ref="sfs/sf/code" update-event="input">
-              <label>Subfield</label>
-            </fx-control>
-            <fx-control ref="sfs/sf/value" update-event="input">
-              <label>Content</label>
-            </fx-control>
-          </template>
-        </fx-repeat>
-
-        <fx-repeat ref="instance('mapping')/df[@tag = instance('desc')/df/tag]" id="outer-repeat">
-          <template>
-            <h2>{@scope || " ➙ " || @scope-rel || " ➙ " || @domain}</h2>
-            <fx-repeat ref="sf[@code = instance('desc')/df/sfs/sf/code]" id="inner-repeat">
-              <template>
-                <fx-var name="current" value="."></fx-var>
-                <h3 style="display: inline;">{.}</h3>
-
-                <!-- context() does not work here, but $current does -->
-                <span id="context-item-span">{@code}</span>
-                <span id="context-function-span">{context()/@code}</span>
-                <span id="current-span">{$current/@code}</span>
-                <p id="result-p-with-context" style="display: inline;">
-                  {instance('desc')/df/sfs/sf[code = context()/@code]/value}
-                </p>
-                <p id="result-p-with-current" style="display: inline;">
-                  {instance('desc')/df/sfs/sf[code = $current/@code]/value}
-                </p>
-              </template>
-            </fx-repeat>
-          </template>
-        </fx-repeat>
-      </fx-fore>`,
-    );
-
-    await oneEvent(el, 'ready');
-    const contextItemSpans = el.querySelectorAll('#context-item-span');
-    const contextFunctionSpans = el.querySelectorAll('#context-function-span');
-
-    const firstContextItemSpan = contextItemSpans[0];
-    expect(firstContextItemSpan.innerText).to.equal(
-      'a',
-      'firstContextItemSpan.innerText should be OK',
-    );
-    const firstContextFunctionSpan = contextFunctionSpans[0];
-    expect(firstContextFunctionSpan.innerText).to.equal(
-      'a',
-      'firstContextFunctionSpan.innerText should be OK',
-    );
-
-    const secondContextItemSpan = contextItemSpans[1];
-    expect(secondContextItemSpan.innerText).to.equal(
-      'b',
-      'secondContextItemSpan.innerText should be OK',
-    );
-    const secondContextFunctionSpan = contextFunctionSpans[1];
-    expect(secondContextFunctionSpan.innerText).to.equal(
-      'b',
-      'secondContextFunctionSpan.innerText should be OK',
-    );
-
-    const contextPs = el.querySelectorAll('#result-p-with-context');
-    const currentPs = el.querySelectorAll('#result-p-with-current');
-
-    expect(contextPs[0].innerText).to.equal(
-      currentPs[0].innerText,
-      'The second result in the P should be correct',
-    );
-    expect(contextPs[1].innerText).to.equal(
-      currentPs[1].innerText,
-      'The second result in the P should be correct',
-    );
-  });
-
-  describe('Edge cases', () => {
-    /**
-     * @type {HTMLElement}
-     */
-    let el;
-    beforeEach(async () => {
-      const doc = await fixtureSync(html`
-        <fx-fore>
-          <fx-model> </fx-model>
-          <span>Hello World!</span>
-        </fx-fore>
-      `);
-
-      await oneEvent(doc, 'ready');
-      el = doc.querySelector('span');
-    });
-    it('should parse simple function with prefix', () => {
-      expect(() =>
-        registerFunction({
-          signature: 'fn:concat($arg1 as xs:string, $arg2 as xs:string) as xs:string',
-          type: null,
-          functionBody: '()',
-        }),
-      ).to.not.throw();
+        const indices = document.getElementById('indices');
+        expect(indices.innerText.replace(/\s/g, '')).to.equal(
+            '(2;1)(2;1)(2;1)(2;2)(2;2)(2;2)(2;1)(2;1)(2;1)',
+            'The outer repeat is indexed at 2, the first and last inner ones at 1, the middle inner one at 2!',
+        );
     });
 
-    it('should parse local function with multiple parameters', () => {
-      expect(() =>
-        registerFunction({
-          signature:
-            'local:my-function($param1 as xs:integer, $param2 as element()*) as element()*',
-          type: null,
-          functionBody: '()',
-        }),
-      ).to.not.throw();
+    it('context() in repeats returns the correct item', async () => {
+        const el = await fixtureSync(
+            html` <fx-fore>
+                <fx-model>
+                    <fx-instance id="mapping">
+                        <data>
+                            <df
+                                tag="245"
+                                scope="bf:Instance"
+                                scope-rel="bf:title"
+                                domain="bf:Title"
+                            >
+                                <sf code="a">bf:mainTitle</sf>
+                                <sf code="b">bf:subtitle</sf>
+                                <sf code="c">bf:responsibilityStatement</sf>
+                            </df>
+                        </data>
+                    </fx-instance>
+                    <fx-instance id="desc">
+                        <data>
+                            <df>
+                                <tag>245</tag>
+                                <ind1></ind1>
+                                <ind2></ind2>
+                                <sfs>
+                                    <sf>
+                                        <code>a</code>
+                                        <value>value-of-a</value>
+                                    </sf>
+                                    <sf>
+                                        <code>b</code>
+                                        <value>value-of-b</value>
+                                    </sf>
+                                </sfs>
+                            </df>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+
+                <fx-repeat ref="instance('desc')/df">
+                    <template>
+                        <fx-control ref="tag" update-event="input">
+                            <label>Datafield</label>
+                        </fx-control>
+                        <fx-control ref="sfs/sf/code" update-event="input">
+                            <label>Subfield</label>
+                        </fx-control>
+                        <fx-control ref="sfs/sf/value" update-event="input">
+                            <label>Content</label>
+                        </fx-control>
+                    </template>
+                </fx-repeat>
+
+                <fx-repeat
+                    ref="instance('mapping')/df[@tag = instance('desc')/df/tag]"
+                    id="outer-repeat"
+                >
+                    <template>
+                        <h2>
+                            {@scope || " ➙ " || @scope-rel || " ➙ " || @domain}
+                        </h2>
+                        <fx-repeat
+                            ref="sf[@code = instance('desc')/df/sfs/sf/code]"
+                            id="inner-repeat"
+                        >
+                            <template>
+                                <fx-var name="current" value="."></fx-var>
+                                <h3 style="display: inline;">{.}</h3>
+
+                                <!-- context() does not work here, but $current does -->
+                                <span id="context-item-span">{@code}</span>
+                                <span id="context-function-span"
+                                    >{context()/@code}</span
+                                >
+                                <span id="current-span">{$current/@code}</span>
+                                <p
+                                    id="result-p-with-context"
+                                    style="display: inline;"
+                                >
+                                    {instance('desc')/df/sfs/sf[code =
+                                    context()/@code]/value}
+                                </p>
+                                <p
+                                    id="result-p-with-current"
+                                    style="display: inline;"
+                                >
+                                    {instance('desc')/df/sfs/sf[code =
+                                    $current/@code]/value}
+                                </p>
+                            </template>
+                        </fx-repeat>
+                    </template>
+                </fx-repeat>
+            </fx-fore>`,
+        );
+
+        await oneEvent(el, 'ready');
+        const contextItemSpans = el.querySelectorAll('#context-item-span');
+        const contextFunctionSpans = el.querySelectorAll(
+            '#context-function-span',
+        );
+
+        const firstContextItemSpan = contextItemSpans[0];
+        expect(firstContextItemSpan.innerText).to.equal(
+            'a',
+            'firstContextItemSpan.innerText should be OK',
+        );
+        const firstContextFunctionSpan = contextFunctionSpans[0];
+        expect(firstContextFunctionSpan.innerText).to.equal(
+            'a',
+            'firstContextFunctionSpan.innerText should be OK',
+        );
+
+        const secondContextItemSpan = contextItemSpans[1];
+        expect(secondContextItemSpan.innerText).to.equal(
+            'b',
+            'secondContextItemSpan.innerText should be OK',
+        );
+        const secondContextFunctionSpan = contextFunctionSpans[1];
+        expect(secondContextFunctionSpan.innerText).to.equal(
+            'b',
+            'secondContextFunctionSpan.innerText should be OK',
+        );
+
+        const contextPs = el.querySelectorAll('#result-p-with-context');
+        const currentPs = el.querySelectorAll('#result-p-with-current');
+
+        expect(contextPs[0].innerText).to.equal(
+            currentPs[0].innerText,
+            'The second result in the P should be correct',
+        );
+        expect(contextPs[1].innerText).to.equal(
+            currentPs[1].innerText,
+            'The second result in the P should be correct',
+        );
     });
 
-    it('should parse local function with multiple element parameters', () => {
-      expect(() =>
-        registerFunction({
-          signature:
-            'local:my-function($param1 as element()?, $param2 as element()*) as element()*',
-          type: null,
-          functionBody: '()',
-        }),
-      ).to.not.throw();
-    });
+    describe('Edge cases', () => {
+        /**
+         * @type {HTMLElement}
+         */
+        let el;
+        beforeEach(async () => {
+            const doc = await fixtureSync(html`
+                <fx-fore>
+                    <fx-model> </fx-model>
+                    <span>Hello World!</span>
+                </fx-fore>
+            `);
 
-    it('should parse function with no parameters', () => {
-      expect(() =>
-        registerFunction({
-          signature: 'myFunction() as xs:boolean',
-          type: null,
-          functionBody: '()',
-        }),
-      ).to.not.throw();
-    });
+            await oneEvent(doc, 'ready');
+            el = doc.querySelector('span');
+        });
+        it('should parse simple function with prefix', () => {
+            expect(() =>
+                registerFunction({
+                    signature:
+                        'fn:concat($arg1 as xs:string, $arg2 as xs:string) as xs:string',
+                    type: null,
+                    functionBody: '()',
+                }),
+            ).to.not.throw();
+        });
 
-    it('should parse function with no return type', () => {
-      expect(() =>
-        registerFunction({
-          signature: 'fn:sum($seq as xs:integer*)',
-          type: null,
-          functionBody: '()',
-        }),
-      ).to.not.throw();
-    });
+        it('should parse local function with multiple parameters', () => {
+            expect(() =>
+                registerFunction({
+                    signature:
+                        'local:my-function($param1 as xs:integer, $param2 as element()*) as element()*',
+                    type: null,
+                    functionBody: '()',
+                }),
+            ).to.not.throw();
+        });
 
-    it('should parse function with item parameter', () => {
-      expect(() =>
-        registerFunction({
-          signature: 'prefix:function($param as item())',
-          type: null,
-          functionBody: '()',
-        }),
-      ).to.not.throw();
-    });
+        it('should parse local function with multiple element parameters', () => {
+            expect(() =>
+                registerFunction({
+                    signature:
+                        'local:my-function($param1 as element()?, $param2 as element()*) as element()*',
+                    type: null,
+                    functionBody: '()',
+                }),
+            ).to.not.throw();
+        });
 
-    it('should parse function with double return type', () => {
-      expect(() =>
-        registerFunction({
-          signature: 'compute-average($values as xs:double*) as xs:double',
-          type: null,
-          functionBody: '()',
-        }),
-      ).to.not.throw();
-    });
+        it('should parse function with no parameters', () => {
+            expect(() =>
+                registerFunction({
+                    signature: 'myFunction() as xs:boolean',
+                    type: null,
+                    functionBody: '()',
+                }),
+            ).to.not.throw();
+        });
 
-    it('should parse function with element parameter', () => {
-      expect(() =>
-        registerFunction({
-          signature: 'generate-id($element as element()) as xs:string',
-          type: null,
-          functionBody: '()',
-        }),
-      ).to.not.throw();
-    });
+        it('should parse function with no return type', () => {
+            expect(() =>
+                registerFunction({
+                    signature: 'fn:sum($seq as xs:integer*)',
+                    type: null,
+                    functionBody: '()',
+                }),
+            ).to.not.throw();
+        });
 
-    it('should parse function with multiple xs:integer parameters', () => {
-      expect(() =>
-        registerFunction({
-          signature: 'calculate($a as xs:integer, $b as xs:integer) as xs:integer',
-          type: null,
-          functionBody: '()',
-        }),
-      ).to.not.throw();
-    });
+        it('should parse function with item parameter', () => {
+            expect(() =>
+                registerFunction({
+                    signature: 'prefix:function($param as item())',
+                    type: null,
+                    functionBody: '()',
+                }),
+            ).to.not.throw();
+        });
 
-    it('should parse function with multiple xs:string parameters', () => {
-      expect(() =>
-        registerFunction({
-          signature:
-            'translate($text as xs:string, $fromLang as xs:string, $toLang as xs:string) as xs:string',
-          type: null,
-          functionBody: '()',
-        }),
-      ).to.not.throw();
-    });
+        it('should parse function with double return type', () => {
+            expect(() =>
+                registerFunction({
+                    signature:
+                        'compute-average($values as xs:double*) as xs:double',
+                    type: null,
+                    functionBody: '()',
+                }),
+            ).to.not.throw();
+        });
 
-    it('should parse function with no return type and multiple parameters', () => {
-      expect(() =>
-        registerFunction({
-          signature: 'prefix:noReturnType($param1 as xs:string, $param2 as xs:integer)',
-          type: null,
-          functionBody: '()',
-        }),
-      ).to.not.throw();
-    });
+        it('should parse function with element parameter', () => {
+            expect(() =>
+                registerFunction({
+                    signature:
+                        'generate-id($element as element()) as xs:string',
+                    type: null,
+                    functionBody: '()',
+                }),
+            ).to.not.throw();
+        });
 
-    it('should parse function with single xs:string parameter', () => {
-      expect(() =>
-        registerFunction({
-          signature: 'xml:parse($xmlString as xs:string)',
-          type: null,
-          functionBody: '()',
-        }),
-      ).to.not.throw();
+        it('should parse function with multiple xs:integer parameters', () => {
+            expect(() =>
+                registerFunction({
+                    signature:
+                        'calculate($a as xs:integer, $b as xs:integer) as xs:integer',
+                    type: null,
+                    functionBody: '()',
+                }),
+            ).to.not.throw();
+        });
+
+        it('should parse function with multiple xs:string parameters', () => {
+            expect(() =>
+                registerFunction({
+                    signature:
+                        'translate($text as xs:string, $fromLang as xs:string, $toLang as xs:string) as xs:string',
+                    type: null,
+                    functionBody: '()',
+                }),
+            ).to.not.throw();
+        });
+
+        it('should parse function with no return type and multiple parameters', () => {
+            expect(() =>
+                registerFunction({
+                    signature:
+                        'prefix:noReturnType($param1 as xs:string, $param2 as xs:integer)',
+                    type: null,
+                    functionBody: '()',
+                }),
+            ).to.not.throw();
+        });
+
+        it('should parse function with single xs:string parameter', () => {
+            expect(() =>
+                registerFunction({
+                    signature: 'xml:parse($xmlString as xs:string)',
+                    type: null,
+                    functionBody: '()',
+                }),
+            ).to.not.throw();
+        });
     });
-  });
 });
 /*
   it.only('context() function returns correct nodesets', async () => {

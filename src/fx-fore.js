@@ -3,10 +3,10 @@ import './fx-instance.js';
 import { FxModel } from './fx-model.js';
 import '@jinntec/jinn-toast';
 import {
-  evaluateXPathToBoolean,
-  evaluateXPathToNodes,
-  evaluateXPathToFirstNode,
-  evaluateXPathToString,
+    evaluateXPathToBoolean,
+    evaluateXPathToNodes,
+    evaluateXPathToFirstNode,
+    evaluateXPathToString,
 } from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
 import { XPathUtil } from './xpath-util.js';
@@ -28,8 +28,8 @@ import { detectTemplateExpressions } from './binding/detectTemplateStrings.js';
  * We might need a 'saving' state later
  */
 const dirtyStates = {
-  CLEAN: 'clean',
-  DIRTY: 'dirty',
+    CLEAN: 'clean',
+    DIRTY: 'dirty',
 };
 
 /**
@@ -50,99 +50,99 @@ const dirtyStates = {
  * @ts-check
  */
 export class FxFore extends HTMLElement {
-  static outermostHandler = null;
+    static outermostHandler = null;
 
-  static draggedItem = null;
+    static draggedItem = null;
 
-  static get properties() {
-    return {
-      /**
-       * wether to create nodes that are missing in the loaded data and
-       * auto-create nodes when there's a binding found in the UI.
-       */
-      createNodes: {
-        type: Boolean,
-      },
-      /**
-       * ignore certain nodes for template expression search
-       */
-      ignoreExpressions: {
-        type: String,
-      },
-      /**
-       * merge-partial
-       */
-      mergePartial: {
-        type: Boolean,
-      },
-      /**
-       * Setting this marker attribute will refresh the UI in a lazy fashion just updating elements being
-       * in viewport.
-       *
-       * this feature is still experimental and should be used with caution and extra testing
-       */
-      lazyRefresh: {
-        type: Boolean,
-      },
-      model: {
-        type: Object,
-      },
-      ready: {
-        type: Boolean,
-      },
-      strict: {
-        type: Boolean,
-      },
-      /**
-       *
-       */
-      validateOn: {
-        type: String,
-      },
-      version: {
-        type: String,
-      },
-    };
-  }
+    static get properties() {
+        return {
+            /**
+             * wether to create nodes that are missing in the loaded data and
+             * auto-create nodes when there's a binding found in the UI.
+             */
+            createNodes: {
+                type: Boolean,
+            },
+            /**
+             * ignore certain nodes for template expression search
+             */
+            ignoreExpressions: {
+                type: String,
+            },
+            /**
+             * merge-partial
+             */
+            mergePartial: {
+                type: Boolean,
+            },
+            /**
+             * Setting this marker attribute will refresh the UI in a lazy fashion just updating elements being
+             * in viewport.
+             *
+             * this feature is still experimental and should be used with caution and extra testing
+             */
+            lazyRefresh: {
+                type: Boolean,
+            },
+            model: {
+                type: Object,
+            },
+            ready: {
+                type: Boolean,
+            },
+            strict: {
+                type: Boolean,
+            },
+            /**
+             *
+             */
+            validateOn: {
+                type: String,
+            },
+            version: {
+                type: String,
+            },
+        };
+    }
 
-  /**
-   * attaches handlers for
-   *
-   * - `model-construct-done` to trigger the processing of the UI
-   * - `message` - to display a message triggered by an fx-message action
-   * - `error` - to display an error message
-   * - 'compute-exception`  - warn about circular dependencies in graph
-   */
-  constructor() {
-    super();
-    this.version = '[VI]Version: {version} - built on {date}[/VI]';
+    /**
+     * attaches handlers for
+     *
+     * - `model-construct-done` to trigger the processing of the UI
+     * - `message` - to display a message triggered by an fx-message action
+     * - `error` - to display an error message
+     * - 'compute-exception`  - warn about circular dependencies in graph
+     */
+    constructor() {
+        super();
+        this.version = '[VI]Version: {version} - built on {date}[/VI]';
 
-    this.model = {};
-    this.inited = false;
-    // this.addEventListener('model-construct-done', this._handleModelConstructDone);
-    // todo: refactoring - these should rather go into connectedcallback
-    this.addEventListener('message', this._displayMessage);
-    // this.addEventListener('error', this._displayError);
-    this.addEventListener('error', this._logError);
-    this.addEventListener('warn', this._displayWarning);
-    // this.addEventListener('log', this._logError);
-    window.addEventListener('compute-exception', e => {
-      console.error('circular dependency: ', e);
-    });
+        this.model = {};
+        this.inited = false;
+        // this.addEventListener('model-construct-done', this._handleModelConstructDone);
+        // todo: refactoring - these should rather go into connectedcallback
+        this.addEventListener('message', this._displayMessage);
+        // this.addEventListener('error', this._displayError);
+        this.addEventListener('error', this._logError);
+        this.addEventListener('warn', this._displayWarning);
+        // this.addEventListener('log', this._logError);
+        window.addEventListener('compute-exception', (e) => {
+            console.error('circular dependency: ', e);
+        });
 
-    this.ready = false;
-    this.storedTemplateExpressionByNode = new Map();
+        this.ready = false;
+        this.storedTemplateExpressionByNode = new Map();
 
-    // Stores the outer most action handler. If an action handler is already running, all
-    // updates are included in that one
-    this.outermostHandler = null;
+        // Stores the outer most action handler. If an action handler is already running, all
+        // updates are included in that one
+        this.outermostHandler = null;
 
-    this.copiedElements = new WeakSet();
+        this.copiedElements = new WeakSet();
 
-    this.dirtyState = dirtyStates.CLEAN;
-    this.showConfirmation = false;
+        this.dirtyState = dirtyStates.CLEAN;
+        this.showConfirmation = false;
 
-    const style = `
+        const style = `
             :host {
                 display: block;
             }
@@ -217,7 +217,7 @@ export class FxFore extends HTMLElement {
             }
         `;
 
-    const html = `
+        const html = `
 <!--           <slot name="errors"></slot> -->
            <jinn-toast id="message" gravity="bottom" position="left"></jinn-toast>
            <jinn-toast id="sticky" gravity="bottom" position="left" duration="-1" close="true" data-class="sticky-message"></jinn-toast>
@@ -235,308 +235,318 @@ export class FxFore extends HTMLElement {
            <slot name="event"></slot>
         `;
 
-    this.attachShadow({ mode: 'open' });
-    this.shadowRoot.innerHTML = `
+        this.attachShadow({ mode: 'open' });
+        this.shadowRoot.innerHTML = `
             <style>
                 ${style}
             </style>
             ${html}
         `;
 
-    // this.toRefresh = [];
-    this.initialRun = true;
-    this._scanForNewTemplateExpressionsNextRefresh = false;
-    this.repeatsFromAttributesCreated = false;
-    this.validateOn = this.hasAttribute('validate-on')
-      ? this.getAttribute('validate-on')
-      : 'update';
-    // this.mergePartial = this.hasAttribute('merge-partial')? true:false;
-    this.mergePartial = false;
-    this.createNodes = this.hasAttribute('create-nodes') ? true : false;
-    this._localNamesWithChanges = new Set();
-    this.setAttribute('role', 'form'); // set aria role
-  }
-
-  connectedCallback() {
-    this.style.visibility = 'hidden';
-    DependencyTracker._instance = null;
-
-    console.time('init');
-    this.strict = !!this.hasAttribute('strict');
-
-    this.ignoreExpressions = this.hasAttribute('ignore-expressions')
-      ? this.getAttribute('ignore-expressions')
-      : null;
-
-    this.lazyRefresh = this.hasAttribute('refresh-on-view');
-    if (this.lazyRefresh) {
-      const options = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.3,
-      };
-      this.intersectionObserver = new IntersectionObserver(this.handleIntersect, options);
+        // this.toRefresh = [];
+        this.initialRun = true;
+        this._scanForNewTemplateExpressionsNextRefresh = false;
+        this.repeatsFromAttributesCreated = false;
+        this.validateOn = this.hasAttribute('validate-on')
+            ? this.getAttribute('validate-on')
+            : 'update';
+        // this.mergePartial = this.hasAttribute('merge-partial')? true:false;
+        this.mergePartial = false;
+        this.createNodes = this.hasAttribute('create-nodes') ? true : false;
+        this._localNamesWithChanges = new Set();
+        this.setAttribute('role', 'form'); // set aria role
     }
 
-    this.src = this.hasAttribute('src') ? this.getAttribute('src') : null;
-    if (this.src) {
-      this._loadFromSrc();
-      return;
-    }
+    connectedCallback() {
+        this.style.visibility = 'hidden';
+        DependencyTracker._instance = null;
 
-    this._injectDevtools();
+        console.time('init');
+        this.strict = !!this.hasAttribute('strict');
 
-    const slot = this.shadowRoot.querySelector('slot#default');
-    slot.addEventListener('slotchange', async event => {
-      // preliminary addition for auto-conversion of non-prefixed element into prefixed elements. See fore.js
-      // console.log(`### <<<<< slotchange on '${this.id}' >>>>>`);
-      if (this.inited) return;
-      if (this.hasAttribute('convert')) {
-        this.replaceWith(Fore.copyDom(this));
-        // Fore.copyDom(this);
-        return;
-      }
+        this.ignoreExpressions = this.hasAttribute('ignore-expressions')
+            ? this.getAttribute('ignore-expressions')
+            : null;
 
-      if (this.ignoreExpressions) {
-        this.ignoredNodes = Array.from(this.querySelectorAll(this.ignoreExpressions));
-      }
+        this.lazyRefresh = this.hasAttribute('refresh-on-view');
+        if (this.lazyRefresh) {
+            const options = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.3,
+            };
+            this.intersectionObserver = new IntersectionObserver(
+                this.handleIntersect,
+                options,
+            );
+        }
 
-      const children = event.target.assignedElements();
-      let modelElement = children.find(
-        modelElem => modelElem.nodeName.toUpperCase() === 'FX-MODEL',
-      );
-      if (!modelElement) {
-        const generatedModel = document.createElement('fx-model');
-        this.appendChild(generatedModel);
-        modelElement = generatedModel;
-        // We are going to get a new slotchange event immediately, because we changed a slot.
-        // so cancel this one.
-        return;
-      }
-      if (!modelElement.inited) {
-        /*
+        this.src = this.hasAttribute('src') ? this.getAttribute('src') : null;
+        if (this.src) {
+            this._loadFromSrc();
+            return;
+        }
+
+        this._injectDevtools();
+
+        const slot = this.shadowRoot.querySelector('slot#default');
+        slot.addEventListener('slotchange', async (event) => {
+            // preliminary addition for auto-conversion of non-prefixed element into prefixed elements. See fore.js
+            // console.log(`### <<<<< slotchange on '${this.id}' >>>>>`);
+            if (this.inited) return;
+            if (this.hasAttribute('convert')) {
+                this.replaceWith(Fore.copyDom(this));
+                // Fore.copyDom(this);
+                return;
+            }
+
+            if (this.ignoreExpressions) {
+                this.ignoredNodes = Array.from(
+                    this.querySelectorAll(this.ignoreExpressions),
+                );
+            }
+
+            const children = event.target.assignedElements();
+            let modelElement = children.find(
+                (modelElem) => modelElem.nodeName.toUpperCase() === 'FX-MODEL',
+            );
+            if (!modelElement) {
+                const generatedModel = document.createElement('fx-model');
+                this.appendChild(generatedModel);
+                modelElement = generatedModel;
+                // We are going to get a new slotchange event immediately, because we changed a slot.
+                // so cancel this one.
+                return;
+            }
+            if (!modelElement.inited) {
+                /*
         console.info(
           `%cFore is processing fx-fore#${this.id}`,
           'background:#64b5f6; color:white; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
         );
 */
 
-        const variables = new Map();
-        (function registerVariables(node) {
-          for (const child of node.children) {
-            if ('setInScopeVariables' in child) {
-              child.setInScopeVariables(variables);
+                const variables = new Map();
+                (function registerVariables(node) {
+                    for (const child of node.children) {
+                        if ('setInScopeVariables' in child) {
+                            child.setInScopeVariables(variables);
+                        }
+                        registerVariables(child);
+                    }
+                })(this);
+
+                await modelElement.modelConstruct();
+                this._handleModelConstructDone();
             }
-            registerVariables(child);
-          }
-        })(this);
+            this.model = modelElement;
 
-        await modelElement.modelConstruct();
-        this._handleModelConstructDone();
-      }
-      this.model = modelElement;
+            this._createRepeatsFromAttributes();
+            this.inited = true;
+        });
+        this.addEventListener('path-mutated', () => {
+            this.someInstanceDataStructureChanged = true;
+        });
+        this.addEventListener('refresh', () => {
+            this.refresh(true);
+        });
 
-      this._createRepeatsFromAttributes();
-      this.inited = true;
-    });
-    this.addEventListener('path-mutated', () => {
-      this.someInstanceDataStructureChanged = true;
-    });
-    this.addEventListener('refresh', () => {
-      this.refresh(true);
-    });
-
-    if (this.hasAttribute('show-confirmation')) {
-      this.showConfirmation = true;
-    }
-    console.info(
-      `%cFore is processing fx-fore#${this.id}`,
-      'background:#64b5f6; color:white; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
-    );
-
-    // register fore element as outer scope for non-enclosed template expressions
-    console.log('dependencyTracker', DependencyTracker.getInstance());
-
-    // making sure all non-scoped template expressions will be evaluated
-    this.addEventListener('init-done', () => {
-      DependencyTracker.getInstance().evaluateAllTemplateBindings();
-    });
-  }
-
-  _injectDevtools() {
-    if (this.ownerDocument.querySelector('fx-devtools')) {
-      // There's already a devtools, so we can ignore this one.
-      // One devtools can focus multiple fore elements
-      return;
-    }
-    const { search } = window.location;
-    const urlParams = new URLSearchParams(search);
-    if (urlParams.has('inspect')) {
-      const devtools = document.createElement('fx-devtools');
-      document.body.appendChild(devtools);
-    }
-    if (urlParams.has('lens')) {
-      const lens = document.createElement('fx-lens');
-      document.body.appendChild(lens);
-      lens.setAttribute('open', 'open');
-    }
-  }
-
-  /**
-   * Raise a flag that there might be new template expressions under some node. This happens with
-   * repeats updating (new repeat items can have new template expressions) or switches changing their case (new case = new raw HTML)
-   */
-  scanForNewTemplateExpressionsNextRefresh() {
-    // TODO: also ask for the root of any new HTML: this can prevent some very deep queries.
-    this._scanForNewTemplateExpressionsNextRefresh = true;
-  }
-
-  markAsClean() {
-    this.addEventListener(
-      'value-changed',
-      () => {
-        this.dirtyState = dirtyStates.DIRTY;
-      },
-      { once: true },
-    );
-    this.dirtyState = dirtyStates.CLEAN;
-  }
-
-  /**
-   * loads a Fore from an URL given by `src`.
-   *
-   * Will extract the `fx-fore` element from that target file and use and replace current `fx-fore` element with the loaded one.
-   * @private
-   */
-  async _loadFromSrc() {
-    // console.log('########## loading Fore from ', this.src, '##########');
-    await Fore.loadForeFromSrc(this, this.src, 'fx-fore');
-  }
-
-  /**
-   * refreshes the UI by using IntersectionObserver API. This is the handler being called
-   * by the observer whenever elements come into / move out of viewport.
-   * @param entries
-   * @param observer
-   */
-  handleIntersect(entries, observer) {
-    // console.time('refreshLazy');
-
-    entries.forEach(entry => {
-      const { target } = entry;
-
-      const fore = Fore.getFore(target);
-      if (fore.initialRun) return;
-
-      if (entry.isIntersecting) {
-        // console.log('in view', entry);
-        // console.log('repeat in view entry', entry.target);
-        // const target = entry.target;
-        // if(target.hasAttribute('refresh-on-view')){
-        target.classList.add('loaded');
-        // }
-
-        // todo: too restrictive here? what if target is a usual html element? shouldn't it refresh downwards?
-        if (typeof target.refresh === 'function') {
-          // console.log('refreshing target', target);
-          target.refresh(target, true);
-        } else {
-          // console.log('refreshing children', target);
-          Fore.refreshChildren(target, true);
+        if (this.hasAttribute('show-confirmation')) {
+            this.showConfirmation = true;
         }
-      }
-    });
-    entries[0].target.getOwnerForm().dispatchEvent(new CustomEvent('refresh-done'));
+        console.info(
+            `%cFore is processing fx-fore#${this.id}`,
+            'background:#64b5f6; color:white; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+        );
 
-    // console.timeEnd('refreshLazy');
-  }
+        // register fore element as outer scope for non-enclosed template expressions
+        console.log('dependencyTracker', DependencyTracker.getInstance());
 
-  evaluateToNodes(xpath, context) {
-    return evaluateXPathToNodes(xpath, context, this);
-  }
+        // making sure all non-scoped template expressions will be evaluated
+        this.addEventListener('init-done', () => {
+            DependencyTracker.getInstance().evaluateAllTemplateBindings();
+        });
+    }
 
-  disconnectedCallback() {
-    this.removeEventListener('dragstart', this.dragstart);
-    // this.dependencyTracker = null;
-    //    DependencyTracker.getInstance().reset();
-    //    DependencyTracker._instance = null;
-    this.intersectionObserver = null;
-    this.model = null;
-    /*
+    _injectDevtools() {
+        if (this.ownerDocument.querySelector('fx-devtools')) {
+            // There's already a devtools, so we can ignore this one.
+            // One devtools can focus multiple fore elements
+            return;
+        }
+        const { search } = window.location;
+        const urlParams = new URLSearchParams(search);
+        if (urlParams.has('inspect')) {
+            const devtools = document.createElement('fx-devtools');
+            document.body.appendChild(devtools);
+        }
+        if (urlParams.has('lens')) {
+            const lens = document.createElement('fx-lens');
+            document.body.appendChild(lens);
+            lens.setAttribute('open', 'open');
+        }
+    }
+
+    /**
+     * Raise a flag that there might be new template expressions under some node. This happens with
+     * repeats updating (new repeat items can have new template expressions) or switches changing their case (new case = new raw HTML)
+     */
+    scanForNewTemplateExpressionsNextRefresh() {
+        // TODO: also ask for the root of any new HTML: this can prevent some very deep queries.
+        this._scanForNewTemplateExpressionsNextRefresh = true;
+    }
+
+    markAsClean() {
+        this.addEventListener(
+            'value-changed',
+            () => {
+                this.dirtyState = dirtyStates.DIRTY;
+            },
+            { once: true },
+        );
+        this.dirtyState = dirtyStates.CLEAN;
+    }
+
+    /**
+     * loads a Fore from an URL given by `src`.
+     *
+     * Will extract the `fx-fore` element from that target file and use and replace current `fx-fore` element with the loaded one.
+     * @private
+     */
+    async _loadFromSrc() {
+        // console.log('########## loading Fore from ', this.src, '##########');
+        await Fore.loadForeFromSrc(this, this.src, 'fx-fore');
+    }
+
+    /**
+     * refreshes the UI by using IntersectionObserver API. This is the handler being called
+     * by the observer whenever elements come into / move out of viewport.
+     * @param entries
+     * @param observer
+     */
+    handleIntersect(entries, observer) {
+        // console.time('refreshLazy');
+
+        entries.forEach((entry) => {
+            const { target } = entry;
+
+            const fore = Fore.getFore(target);
+            if (fore.initialRun) return;
+
+            if (entry.isIntersecting) {
+                // console.log('in view', entry);
+                // console.log('repeat in view entry', entry.target);
+                // const target = entry.target;
+                // if(target.hasAttribute('refresh-on-view')){
+                target.classList.add('loaded');
+                // }
+
+                // todo: too restrictive here? what if target is a usual html element? shouldn't it refresh downwards?
+                if (typeof target.refresh === 'function') {
+                    // console.log('refreshing target', target);
+                    target.refresh(target, true);
+                } else {
+                    // console.log('refreshing children', target);
+                    Fore.refreshChildren(target, true);
+                }
+            }
+        });
+        entries[0].target
+            .getOwnerForm()
+            .dispatchEvent(new CustomEvent('refresh-done'));
+
+        // console.timeEnd('refreshLazy');
+    }
+
+    evaluateToNodes(xpath, context) {
+        return evaluateXPathToNodes(xpath, context, this);
+    }
+
+    disconnectedCallback() {
+        this.removeEventListener('dragstart', this.dragstart);
+        // this.dependencyTracker = null;
+        //    DependencyTracker.getInstance().reset();
+        //    DependencyTracker._instance = null;
+
+        this.intersectionObserver = null;
+        this.model = null;
+        /*
             this.removeEventListener('model-construct-done', this._handleModelConstructDone);
             this.removeEventListener('message', this._displayMessage);
             this.removeEventListener('error', this._displayError);
             this.storedTemplateExpressionByNode=null;
             this.shadowRoot = undefined;
         */
-  }
-
-  /**
-   * refreshes the whole UI by visiting each bound element (having a 'ref' attribute) and applying the state of
-   * the bound modelItem to the bound element.
-   *
-   *
-   * force - boolean - if true will refresh all children disregarding toRefresh array
-   *
-   */
-  async forceRefresh() {
-    // console.time('refresh');
-    // console.group('### forced refresh', this);
-
-    Fore.refreshChildren(this, true);
-
-    // console.log(`### <<<<< refresh-done ${this.id} >>>>>`);
-
-    Fore.dispatch(this, 'refresh-done', {});
-
-    // console.groupEnd();
-    // console.timeEnd('refresh');
-  }
-
-  // async refresh(force, changedPaths) {
-  /**
-   * @param {(boolean|{reason:'index-function'})} [force]fx-fore
-   */
-  async refresh(force) {
-    if (this.isRefreshing) {
-      return;
     }
 
-    this.isRefreshing = true;
+    /**
+     * refreshes the whole UI by visiting each bound element (having a 'ref' attribute) and applying the state of
+     * the bound modelItem to the bound element.
+     *
+     *
+     * force - boolean - if true will refresh all children disregarding toRefresh array
+     *
+     */
+    async forceRefresh() {
+        // console.time('refresh');
+        // console.group('### forced refresh', this);
 
-    // refresh () {
-    // ### refresh Fore UI elements
-    // if (!this.initialRun && this.toRefresh.length !== 0) {
-    // if (!this.initialRun && this.toRefresh.length !== 0) {
-    if (DependencyTracker.getInstance().hasUpdates()) {
-      console.log(`🟢 ### <<<<< partial refresh() on '${this.id}' >>>>>`);
-      DependencyTracker.getInstance().processUpdates();
-    } else {
-      if (this.inited) {
-        console.log(`🔴 ### <<<<< full refresh() on '${this.id}' >>>>>`);
-        // console.log('+++++pending',Array.from(DependencyTracker.getInstance().pendingUpdates));
-        // console.log(`### <<<<< refresh() on '${this.id}' >>>>>`);
-        Fore.refreshChildren(this, force);
-      }
+        Fore.refreshChildren(this, true);
+
+        // console.log(`### <<<<< refresh-done ${this.id} >>>>>`);
+
+        Fore.dispatch(this, 'refresh-done', {});
+
+        // console.groupEnd();
+        // console.timeEnd('refresh');
     }
 
-    // console.log('### <<<<< dispatching refresh-done - end of UI update cycle >>>>>');
-    // this.dispatchEvent(new CustomEvent('refresh-done'));
-    // this.initialRun = false;
-    this.style.visibility = 'visible';
+    // async refresh(force, changedPaths) {
+    /**
+     * @param {(boolean|{reason:'index-function'})} [force]fx-fore
+     */
+    async refresh(force) {
+        if (this.isRefreshing) {
+            return;
+        }
 
-    Fore.dispatch(this, 'init-done', {});
-    Fore.dispatch(this, 'refresh-done', {});
-    console.info(
-      `%c✅ refresh-done on #${this.id}`,
-      'background:darkorange; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
-    );
+        this.isRefreshing = true;
 
-    // this.isRefreshing = true;
-    // this.parentNode.closest('fx-fore')?.refresh(false, changedPaths);
+        // refresh () {
+        // ### refresh Fore UI elements
+        // if (!this.initialRun && this.toRefresh.length !== 0) {
+        // if (!this.initialRun && this.toRefresh.length !== 0) {
+        if (DependencyTracker.getInstance().hasUpdates()) {
+            console.log(`🟢 ### <<<<< partial refresh() on '${this.id}' >>>>>`);
+            DependencyTracker.getInstance().processUpdates();
+        } else {
+            if (this.inited) {
+                console.log(
+                    `🔴 ### <<<<< full refresh() on '${this.id}' >>>>>`,
+                );
+                // console.log('+++++pending',Array.from(DependencyTracker.getInstance().pendingUpdates));
+                // console.log(`### <<<<< refresh() on '${this.id}' >>>>>`);
+                Fore.refreshChildren(this, force);
+            }
+        }
 
-    const subFores = Array.from(this.querySelectorAll('fx-fore'));
-    /*
+        // console.log('### <<<<< dispatching refresh-done - end of UI update cycle >>>>>');
+        // this.dispatchEvent(new CustomEvent('refresh-done'));
+        // this.initialRun = false;
+        this.style.visibility = 'visible';
+
+        Fore.dispatch(this, 'init-done', {});
+        Fore.dispatch(this, 'refresh-done', {});
+        console.info(
+            `%c✅ refresh-done on #${this.id}`,
+            'background:darkorange; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+        );
+
+        // this.isRefreshing = true;
+        // this.parentNode.closest('fx-fore')?.refresh(false, changedPaths);
+
+        const subFores = Array.from(this.querySelectorAll('fx-fore'));
+        /*
             calling the parent to refresh causes errors and inconsistent state. Also it is questionable
             if a child should actually interact with its parent in this way.
 
@@ -551,157 +561,164 @@ export class FxFore extends HTMLElement {
                 // await this.parentNode.closest('fx-fore')?.refresh(false);
             }
     */
-    for (const subFore of subFores) {
-      // subFore.refresh(false, changedPaths);
-      if (subFore.ready) {
-        // Do an unconditional hard refresh: there might be changes that are relevant
-        await subFore.refresh(true);
-      }
-    }
-    this.isRefreshing = false;
-  }
-
-  /**
-   * entry point for processing of template expression enclosed in '{}' brackets.
-   *
-   * Expressions are found with an XPath search. For each node an entry is added to the storedTemplateExpressionByNode map.
-   *
-   *
-   * @private
-   */
-  // eslint-disable-next-line class-methods-use-this
-  /**
-   * called when `model-construct-done` event is received to
-   * start initing the UI.
-   *
-   * @private
-   */
-  _handleModelConstructDone() {
-    this.markAsClean();
-
-    if (this.showConfirmation) {
-      window.addEventListener('beforeunload', event => {
-        if (this.dirtyState === dirtyStates.DIRTY) {
-          event.preventDefault();
-          return true;
+        for (const subFore of subFores) {
+            // subFore.refresh(false, changedPaths);
+            if (subFore.ready) {
+                // Do an unconditional hard refresh: there might be changes that are relevant
+                await subFore.refresh(true);
+            }
         }
-        return false;
-      });
-    }
-    this._initUI();
-  }
-
-  /**
-   * If there's no instance element found in a fx-model during init it will construct
-   * an instance from UI bindings.
-   *
-   * @returns {Promise<void>}
-   * @private
-   */
-  async _lazyCreateInstance() {
-    const model = this.querySelector('fx-model');
-
-    // ##### lazy creation should NOT take place if there's a parent Fore using shared instances
-    const parentFore =
-      this.parentNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE
-        ? this.parentNode.closest('fx-fore')
-        : null;
-    if (this.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
-      console.log('fragment', this.parentNode);
+        this.isRefreshing = false;
     }
 
-    if (parentFore) {
-      const shared = parentFore
-        .getModel()
-        .instances.filter(shared => shared.hasAttribute('shared'));
-      if (shared.length !== 0) return;
+    /**
+     * entry point for processing of template expression enclosed in '{}' brackets.
+     *
+     * Expressions are found with an XPath search. For each node an entry is added to the storedTemplateExpressionByNode map.
+     *
+     *
+     * @private
+     */
+    // eslint-disable-next-line class-methods-use-this
+    /**
+     * called when `model-construct-done` event is received to
+     * start initing the UI.
+     *
+     * @private
+     */
+    _handleModelConstructDone() {
+        this.markAsClean();
+
+        if (this.showConfirmation) {
+            window.addEventListener('beforeunload', (event) => {
+                if (this.dirtyState === dirtyStates.DIRTY) {
+                    event.preventDefault();
+                    return true;
+                }
+                return false;
+            });
+        }
+        this._initUI();
     }
 
-    // still need to catch just in case...
-    try {
-      if (model.instances.length === 0) {
-        // console.log('### lazy creation of instance');
-        const generatedInstance = document.createElement('fx-instance');
-        model.appendChild(generatedInstance);
+    /**
+     * If there's no instance element found in a fx-model during init it will construct
+     * an instance from UI bindings.
+     *
+     * @returns {Promise<void>}
+     * @private
+     */
+    async _lazyCreateInstance() {
+        const model = this.querySelector('fx-model');
 
-        const generated = document.implementation.createDocument(null, 'data', null);
-        // const newData = this._generateInstance(this, generated.firstElementChild);
-        this._generateInstance(this, generated.firstElementChild);
-        generatedInstance.instanceData = generated;
-        model.instances.push(generatedInstance);
-        // console.log('generatedInstance ', this.getModel().getDefaultInstanceData());
-        Fore.dispatch(this, 'instance-loaded', { instance: this });
-      }
-    } catch (e) {
-      console.warn(
-        'lazyCreateInstance created an error attempting to create a document',
-        e.message,
-      );
+        // ##### lazy creation should NOT take place if there's a parent Fore using shared instances
+        const parentFore =
+            this.parentNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE
+                ? this.parentNode.closest('fx-fore')
+                : null;
+        if (this.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+            console.log('fragment', this.parentNode);
+        }
+
+        if (parentFore) {
+            const shared = parentFore
+                .getModel()
+                .instances.filter((shared) => shared.hasAttribute('shared'));
+            if (shared.length !== 0) return;
+        }
+
+        // still need to catch just in case...
+        try {
+            if (model.instances.length === 0) {
+                // console.log('### lazy creation of instance');
+                const generatedInstance = document.createElement('fx-instance');
+                model.appendChild(generatedInstance);
+
+                const generated = document.implementation.createDocument(
+                    null,
+                    'data',
+                    null,
+                );
+                // const newData = this._generateInstance(this, generated.firstElementChild);
+                this._generateInstance(this, generated.firstElementChild);
+                generatedInstance.instanceData = generated;
+                model.instances.push(generatedInstance);
+                // console.log('generatedInstance ', this.getModel().getDefaultInstanceData());
+                Fore.dispatch(this, 'instance-loaded', { instance: this });
+            }
+        } catch (e) {
+            console.warn(
+                'lazyCreateInstance created an error attempting to create a document',
+                e.message,
+            );
+        }
     }
-  }
 
-  /**
-   * @param {Element} start
-   * @param {Element} parent
-   */
-  _generateInstance(start, parent) {
-    if (start.hasAttribute('ref') && !Fore.isActionElement(start.nodeName)) {
-      const ref = start.getAttribute('ref');
+    /**
+     * @param {Element} start
+     * @param {Element} parent
+     */
+    _generateInstance(start, parent) {
+        if (
+            start.hasAttribute('ref') &&
+            !Fore.isActionElement(start.nodeName)
+        ) {
+            const ref = start.getAttribute('ref');
 
-      if (ref.includes('/')) {
-        // console.log('complex path to create ', ref);
-        const steps = ref.split('/');
-        steps.forEach(step => {
-          // const generated = document.createElement(ref);
-          parent = this._generateNode(parent, step, start);
-        });
-      } else {
-        parent = this._generateNode(parent, ref, start);
-      }
+            if (ref.includes('/')) {
+                // console.log('complex path to create ', ref);
+                const steps = ref.split('/');
+                steps.forEach((step) => {
+                    // const generated = document.createElement(ref);
+                    parent = this._generateNode(parent, step, start);
+                });
+            } else {
+                parent = this._generateNode(parent, ref, start);
+            }
+        }
+
+        if (start.hasChildNodes()) {
+            const list = start.children;
+            for (let i = 0; i < list.length; i += 1) {
+                this._generateInstance(list[i], parent);
+            }
+        }
+        return parent;
     }
 
-    if (start.hasChildNodes()) {
-      const list = start.children;
-      for (let i = 0; i < list.length; i += 1) {
-        this._generateInstance(list[i], parent);
-      }
+    // eslint-disable-next-line class-methods-use-this
+    _generateNode(parent, step, start) {
+        const generated = parent.ownerDocument.createElement(step);
+        if (start.children.length === 0) {
+            generated.textContent = start.textContent;
+        }
+        parent.appendChild(generated);
+        parent = generated;
+        return parent;
     }
-    return parent;
-  }
 
-  // eslint-disable-next-line class-methods-use-this
-  _generateNode(parent, step, start) {
-    const generated = parent.ownerDocument.createElement(step);
-    if (start.children.length === 0) {
-      generated.textContent = start.textContent;
-    }
-    parent.appendChild(generated);
-    parent = generated;
-    return parent;
-  }
+    /**
+     * Start the initialization of the UI by
+     *
+     * 1. checking if a instance needs to be generated
+     * 2. attaching lazy loading intersection observers if `refresh-on-view` attributes are found
+     * 3. doing a full refresh of the UI
+     *
+     * @returns {Promise<void>}
+     * @private
+     */
+    async _initUI() {
+        // console.log('### _initUI()');
+        console.info(
+            `%cinitUI #${this.id}`,
+            'background:lightblue; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+        );
 
-  /**
-   * Start the initialization of the UI by
-   *
-   * 1. checking if a instance needs to be generated
-   * 2. attaching lazy loading intersection observers if `refresh-on-view` attributes are found
-   * 3. doing a full refresh of the UI
-   *
-   * @returns {Promise<void>}
-   * @private
-   */
-  async _initUI() {
-    // console.log('### _initUI()');
-    console.info(
-      `%cinitUI #${this.id}`,
-      'background:lightblue; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
-    );
+        if (!this.initialRun) return;
+        this.classList.add('initialRun');
+        await this._lazyCreateInstance();
 
-    if (!this.initialRun) return;
-    this.classList.add('initialRun');
-    await this._lazyCreateInstance();
-
-    /*
+        /*
             const options = {
               root: null,
               rootMargin: '0px',
@@ -709,119 +726,125 @@ export class FxFore extends HTMLElement {
             };
         */
 
-    // First refresh should be forced
-    if (this.createNodes) {
-      this.initData();
-    }
-
-    await this.refresh(true);
-
-    const binding = new Binding('$default', this);
-
-    DependencyTracker.getInstance().registerControl('$default', binding);
-    detectTemplateExpressions(this);
-
-    // this.style.display='block'
-    this.classList.add('fx-ready');
-    document.body.classList.add('fx-ready');
-
-    this.ready = true;
-    this.initialRun = false;
-    // console.log('### >>>>> dispatching ready >>>>>', this);
-    console.info(
-      `%c✅ #${this.id} is ready`,
-      'background:lightblue; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
-    );
-
-    // console.log(`### <<<<< ${this.id} ready >>>>>`);
-    // console.log('### modelItems: ', this.getModel().modelItems);
-    Fore.dispatch(this, 'ready', {});
-    // console.log('dataChanged', FxModel.dataChanged);
-    console.timeEnd('init');
-
-    this.addEventListener('dragstart', this._handleDragStart);
-    //	this.addEventListener('dragend', this._handleDragEnd);
-    this.handleDrop = event => this._handleDrop(event);
-    this.ownerDocument.body.addEventListener('drop', this.handleDrop);
-    this.ownerDocument.body.addEventListener('dragover', e => {
-      e.preventDefault();
-      e.stopPropagation();
-      e.dataTransfer.dropEffect = 'move';
-    });
-  }
-
-  /**
-   * @param  {HTMLElement}  root The root of the data initialization. fx-repeat overrides this when it makes new repeat items
-   *
-   */
-  initData(root = this) {
-    // const created = new Promise(resolve => {
-    // console.log('INIT');
-    // const boundControls = Array.from(root.querySelectorAll('[ref]:not(fx-model *),fx-repeatitem'));
-
-    const boundControls = Array.from(
-      root.querySelectorAll(
-        'fx-control[ref],fx-upload[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref]',
-      ),
-    );
-    if (root.matches('fx-repeatitem')) {
-      boundControls.unshift(root);
-    }
-    // console.log('_initD', boundControls);
-    for (let i = 0; i < boundControls.length; i++) {
-      const bound = boundControls[i];
-
-      /*
-      ignore bound elements that are enclosed with a control like <select> or <fx-items> and repeated items
-       */
-      if (!bound.matches('fx-repeatitem') && !bound.parentNode.closest('fx-control')) {
-        // Repeat items are dumb. They do not respond to evalInContext
-        bound.evalInContext();
-      }
-      let ownerDoc;
-      if (bound.nodeset !== null) {
-        // console.log('Node exists', control.nodeset);
-        continue;
-      }
-      // console.log('Node does not exists', control.ref);
-
-      // We need to create that node!
-      const previousControl = boundControls[i - 1];
-
-      // Previous control can either be an ancestor of us, or a previous node, which can be a sibling, or a child of a sibling.
-      // First: parent
-      if (previousControl.contains(bound)) {
-        // Parent is here.
-        // console.log('insert into', control,previousControl);
-        // console.log('insert into nodeset', control.nodeset);
-        const parentNodeset = previousControl.nodeset;
-        // console.log('parentNodeset', parentNodeset);
-
-        // const parentModelItemNode = parentModelItem.node;
-        const ref = bound.ref;
-        // const newElement = parentModelItemNode.ownerDocument.createElement(ref);
-        if (parentNodeset.querySelector(`[ref="${ref}"]`)) {
-          console.log(`Node with ref "${ref}" already exists.`);
-          continue;
+        // First refresh should be forced
+        if (this.createNodes) {
+            this.initData();
         }
 
-        const newElement = this._createNodes(ref, parentNodeset);
+        await this.refresh(true);
 
-        // Plonk it in at the start!
-        parentNodeset.insertBefore(newElement, parentNodeset.firstChild);
-        bound.evalInContext();
-        // console.log('CREATED child', newElement);
-        // console.log('new control evaluated to ', control.nodeset);
-        // Done!
-        continue;
-      }
-      // console.log('previousControl', previousControl);
-      // console.log('control', control);
-      // Is previousControl a sibling or a descendant of a logical sibling? Keep looking backwards until we share parents!
-      const ourParent = XPathUtil.getParentBindingElement(bound);
-      // console.log('ourParent', ourParent);
-      let siblingControl = null;
-      /*
+        const binding = new Binding('$default', this);
+
+        DependencyTracker.getInstance().registerControl('$default', binding);
+        detectTemplateExpressions(this);
+
+        // this.style.display='block'
+        this.classList.add('fx-ready');
+        document.body.classList.add('fx-ready');
+
+        this.ready = true;
+        this.initialRun = false;
+        // console.log('### >>>>> dispatching ready >>>>>', this);
+        console.info(
+            `%c✅ #${this.id} is ready`,
+            'background:lightblue; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+        );
+
+        // console.log(`### <<<<< ${this.id} ready >>>>>`);
+        // console.log('### modelItems: ', this.getModel().modelItems);
+        Fore.dispatch(this, 'ready', {});
+        // console.log('dataChanged', FxModel.dataChanged);
+        console.timeEnd('init');
+
+        this.addEventListener('dragstart', this._handleDragStart);
+        //	this.addEventListener('dragend', this._handleDragEnd);
+        this.handleDrop = (event) => this._handleDrop(event);
+        this.ownerDocument.body.addEventListener('drop', this.handleDrop);
+        this.ownerDocument.body.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            e.dataTransfer.dropEffect = 'move';
+        });
+    }
+
+    /**
+     * @param  {HTMLElement}  root The root of the data initialization. fx-repeat overrides this when it makes new repeat items
+     *
+     */
+    initData(root = this) {
+        // const created = new Promise(resolve => {
+        // console.log('INIT');
+        // const boundControls = Array.from(root.querySelectorAll('[ref]:not(fx-model *),fx-repeatitem'));
+
+        const boundControls = Array.from(
+            root.querySelectorAll(
+                'fx-control[ref],fx-upload[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref]',
+            ),
+        );
+        if (root.matches('fx-repeatitem')) {
+            boundControls.unshift(root);
+        }
+        // console.log('_initD', boundControls);
+        for (let i = 0; i < boundControls.length; i++) {
+            const bound = boundControls[i];
+
+            /*
+      ignore bound elements that are enclosed with a control like <select> or <fx-items> and repeated items
+       */
+            if (
+                !bound.matches('fx-repeatitem') &&
+                !bound.parentNode.closest('fx-control')
+            ) {
+                // Repeat items are dumb. They do not respond to evalInContext
+                bound.evalInContext();
+            }
+            let ownerDoc;
+            if (bound.nodeset !== null) {
+                // console.log('Node exists', control.nodeset);
+                continue;
+            }
+            // console.log('Node does not exists', control.ref);
+
+            // We need to create that node!
+            const previousControl = boundControls[i - 1];
+
+            // Previous control can either be an ancestor of us, or a previous node, which can be a sibling, or a child of a sibling.
+            // First: parent
+            if (previousControl.contains(bound)) {
+                // Parent is here.
+                // console.log('insert into', control,previousControl);
+                // console.log('insert into nodeset', control.nodeset);
+                const parentNodeset = previousControl.nodeset;
+                // console.log('parentNodeset', parentNodeset);
+
+                // const parentModelItemNode = parentModelItem.node;
+                const ref = bound.ref;
+                // const newElement = parentModelItemNode.ownerDocument.createElement(ref);
+                if (parentNodeset.querySelector(`[ref="${ref}"]`)) {
+                    console.log(`Node with ref "${ref}" already exists.`);
+                    continue;
+                }
+
+                const newElement = this._createNodes(ref, parentNodeset);
+
+                // Plonk it in at the start!
+                parentNodeset.insertBefore(
+                    newElement,
+                    parentNodeset.firstChild,
+                );
+                bound.evalInContext();
+                // console.log('CREATED child', newElement);
+                // console.log('new control evaluated to ', control.nodeset);
+                // Done!
+                continue;
+            }
+            // console.log('previousControl', previousControl);
+            // console.log('control', control);
+            // Is previousControl a sibling or a descendant of a logical sibling? Keep looking backwards until we share parents!
+            const ourParent = XPathUtil.getParentBindingElement(bound);
+            // console.log('ourParent', ourParent);
+            let siblingControl = null;
+            /*
             for (let j = i - 1; j >= 0; --j) {
                 const potentialSibling = boundControls[j];
                 if (XPathUtil.getParentBindingElement(potentialSibling) === ourParent) {
@@ -830,46 +853,55 @@ export class FxFore extends HTMLElement {
                 }
             }
 */
-      for (let j = i - 1; j > 0; --j) {
-        const siblingOrDescendant = boundControls[j];
-        if (XPathUtil.getParentBindingElement(siblingOrDescendant) === ourParent) {
-          siblingControl = siblingOrDescendant;
-          break;
-        }
-      }
-      if (!siblingControl) {
-        throw new Error('Unexpected! there must be a sibling right?');
-      }
-      // console.log('sibling', siblingControl);
-      // todo: review: should this not just be inscopeContext?
-      const parentNodeset = ourParent.nodeset;
-      const ref = bound.ref;
-      let referenceNodeset = siblingControl.nodeset;
-      const newElement = this._createNodes(ref, parentNodeset);
+            for (let j = i - 1; j > 0; --j) {
+                const siblingOrDescendant = boundControls[j];
+                if (
+                    XPathUtil.getParentBindingElement(siblingOrDescendant) ===
+                    ourParent
+                ) {
+                    siblingControl = siblingOrDescendant;
+                    break;
+                }
+            }
+            if (!siblingControl) {
+                throw new Error('Unexpected! there must be a sibling right?');
+            }
+            // console.log('sibling', siblingControl);
+            // todo: review: should this not just be inscopeContext?
+            const parentNodeset = ourParent.nodeset;
+            const ref = bound.ref;
+            let referenceNodeset = siblingControl.nodeset;
+            const newElement = this._createNodes(ref, parentNodeset);
 
-      // We know which node to insert this new element to, but it might be a descendant of a child of the actual parent. Walk up until we have a reference under our parent
-      while (referenceNodeset?.parentNode && referenceNodeset?.parentNode !== parentNodeset) {
-        referenceNodeset = referenceNodeset.parentNode;
-      }
+            // We know which node to insert this new element to, but it might be a descendant of a child of the actual parent. Walk up until we have a reference under our parent
+            while (
+                referenceNodeset?.parentNode &&
+                referenceNodeset?.parentNode !== parentNodeset
+            ) {
+                referenceNodeset = referenceNodeset.parentNode;
+            }
 
-      // Insert before the next sibling our our logical previous sibling
-      parentNodeset.insertBefore(newElement, referenceNodeset.nextElementSibling);
-      /*
+            // Insert before the next sibling our our logical previous sibling
+            parentNodeset.insertBefore(
+                newElement,
+                referenceNodeset.nextElementSibling,
+            );
+            /*
             console.log('control inscope', control.getInScopeContext());
             console.log('control ref', control.ref);
             console.log('control new element parent', newElement.parentNode.nodeName);
 */
-      bound.evalInContext();
-      // console.log('new control evaluated to ', control.nodeset);
-      // console.log('CREATED sibling', newElement);
+            bound.evalInContext();
+            // console.log('new control evaluated to ', control.nodeset);
+            // console.log('CREATED sibling', newElement);
+        }
+        // console.log('DATA', this.getModel().getDefaultContext());
     }
-    // console.log('DATA', this.getModel().getDefaultContext());
-  }
 
-  _createNodes(ref, referenceNode) {
-    // console.log('creating', ref)
-    // console.log('ownerDoc', referenceNode.ownerDocument);
-    /*
+    _createNodes(ref, referenceNode) {
+        // console.log('creating', ref)
+        // console.log('ownerDoc', referenceNode.ownerDocument);
+        /*
         const existingNode = evaluateXPathToFirstNode(ref, referenceNode, this);
         if(existingNode){
             console.log(`Node already exists for ref: ${ref}`);
@@ -877,142 +909,158 @@ export class FxFore extends HTMLElement {
         }
     console.log(`creating new node for ref: ${ref}`);
 */
-    let newElement;
-    if (ref.includes('/')) {
-      // multi-step ref expressions
-      newElement = XPathUtil.createNodesFromXPath(ref, referenceNode.ownerDocument, this);
-      // console.log('new subtree', newElement);
-      return newElement;
-    } else {
-      return XPathUtil.createNodesFromXPath(ref, referenceNode.ownerDocument, this);
+        let newElement;
+        if (ref.includes('/')) {
+            // multi-step ref expressions
+            newElement = XPathUtil.createNodesFromXPath(
+                ref,
+                referenceNode.ownerDocument,
+                this,
+            );
+            // console.log('new subtree', newElement);
+            return newElement;
+        } else {
+            return XPathUtil.createNodesFromXPath(
+                ref,
+                referenceNode.ownerDocument,
+                this,
+            );
+        }
     }
-  }
 
-  _handleDragStart(event) {
-    const draggedItem = event.target.closest('[draggable="true"]');
-    this.originalDraggedItem = draggedItem;
-    console.log('DRAG START', this);
-    if (draggedItem.getAttribute('drop-action') === 'copy') {
-      event.dataTransfer.dropEffect = 'copy';
-      event.dataTransfer.effectAllowed = 'copy';
-      this.draggedItem = draggedItem.cloneNode(true);
-      this.draggedItem.setAttribute('drop-action', 'move');
-      this.copiedElements.add(this.draggedItem);
-    } else {
-      event.dataTransfer.dropEffect = 'move';
-      event.dataTransfer.effectAllowed = 'move';
-      this.draggedItem = draggedItem;
+    _handleDragStart(event) {
+        const draggedItem = event.target.closest('[draggable="true"]');
+        this.originalDraggedItem = draggedItem;
+        console.log('DRAG START', this);
+        if (draggedItem.getAttribute('drop-action') === 'copy') {
+            event.dataTransfer.dropEffect = 'copy';
+            event.dataTransfer.effectAllowed = 'copy';
+            this.draggedItem = draggedItem.cloneNode(true);
+            this.draggedItem.setAttribute('drop-action', 'move');
+            this.copiedElements.add(this.draggedItem);
+        } else {
+            event.dataTransfer.dropEffect = 'move';
+            event.dataTransfer.effectAllowed = 'move';
+            this.draggedItem = draggedItem;
+        }
     }
-  }
 
-  _handleDrop(event) {
-    console.log('DROP ON BODY', this);
-    if (!this.draggedItem) {
-      return;
+    _handleDrop(event) {
+        console.log('DROP ON BODY', this);
+        if (!this.draggedItem) {
+            return;
+        }
+        // A drop on 'body' should be a removal.
+        if (event.dataTransfer.dropEffect === 'none') {
+            if (this.copiedElements.has(this.originalDraggedItem)) {
+                this.originalDraggedItem.remove();
+            }
+        }
+        this.originalDraggedItem = null;
+        this.draggedItem = null;
+        event.stopPropagation();
     }
-    // A drop on 'body' should be a removal.
-    if (event.dataTransfer.dropEffect === 'none') {
-      if (this.copiedElements.has(this.originalDraggedItem)) {
-        this.originalDraggedItem.remove();
-      }
+
+    registerLazyElement(element) {
+        if (this.intersectionObserver) {
+            // console.log('registerLazyElement',element);
+            this.intersectionObserver.observe(element);
+        }
     }
-    this.originalDraggedItem = null;
-    this.draggedItem = null;
-    event.stopPropagation();
-  }
 
-  registerLazyElement(element) {
-    if (this.intersectionObserver) {
-      // console.log('registerLazyElement',element);
-      this.intersectionObserver.observe(element);
+    unRegisterLazyElement(element) {
+        if (this.intersectionObserver) {
+            this.intersectionObserver.unobserve(element);
+        }
     }
-  }
 
-  unRegisterLazyElement(element) {
-    if (this.intersectionObserver) {
-      this.intersectionObserver.unobserve(element);
+    /**
+     *
+     * @returns {FxModel}
+     */
+    getModel() {
+        return this.querySelector('fx-model');
     }
-  }
 
-  /**
-   *
-   * @returns {FxModel}
-   */
-  getModel() {
-    return this.querySelector('fx-model');
-  }
-
-  _displayMessage(e) {
-    // console.log('_displayMessage',e);
-    const { level } = e.detail;
-    const msg = e.detail.message;
-    this._showMessage(level, msg);
-    e.stopPropagation();
-  }
-
-  _displayError(e) {
-    // const { error } = e.detail;
-    const msg = e.detail.message;
-    // this._showMessage('modal', msg);
-    const toast = this.shadowRoot.querySelector('#error');
-    toast.showToast(msg);
-  }
-
-  _displayWarning(e) {
-    const msg = e.detail.message;
-    // this._showMessage('modal', msg);
-    const path = XPathUtil.shortenPath(evaluateXPathToString('path()', e.target, this));
-    const toast = this.shadowRoot.querySelector('#warn');
-    toast.showToast(`WARN: ${path}:${msg}`);
-  }
-
-  _logError(e) {
-    e.stopPropagation();
-    e.preventDefault();
-
-    console.error('ERROR', e.detail.message);
-    console.error(e.detail.origin);
-    if (e.detail.expr) {
-      console.error('Failing expression', e.detail.expr);
+    _displayMessage(e) {
+        // console.log('_displayMessage',e);
+        const { level } = e.detail;
+        const msg = e.detail.message;
+        this._showMessage(level, msg);
+        e.stopPropagation();
     }
-    if (this.strict) {
-      this._displayError(e);
+
+    _displayError(e) {
+        // const { error } = e.detail;
+        const msg = e.detail.message;
+        // this._showMessage('modal', msg);
+        const toast = this.shadowRoot.querySelector('#error');
+        toast.showToast(msg);
     }
-  }
 
-  _copyToClipboard(target) {
-    console.log('copyToClipboard', target.value);
-    navigator.clipboard.writeText(target.value);
-  }
-
-  _showMessage(level, msg) {
-    if (level === 'modal') {
-      // this.$.messageContent.innerText = msg;
-      // this.$.modalMessage.open();
-
-      this.shadowRoot.getElementById('messageContent').innerText = msg;
-      // this.shadowRoot.getElementById('modalMessage').open();
-      this.shadowRoot.getElementById('modalMessage').classList.add('show');
-    } else if (level === 'sticky' || level === 'error' || level === 'warn') {
-      // const notification = this.$.modeless;
-      this.shadowRoot.querySelector(`#${level}`).showToast(msg);
-    } else {
-      const toast = this.shadowRoot.querySelector('#message');
-      toast.showToast(msg);
+    _displayWarning(e) {
+        const msg = e.detail.message;
+        // this._showMessage('modal', msg);
+        const path = XPathUtil.shortenPath(
+            evaluateXPathToString('path()', e.target, this),
+        );
+        const toast = this.shadowRoot.querySelector('#warn');
+        toast.showToast(`WARN: ${path}:${msg}`);
     }
-  }
 
-  /**
-   * wraps the element having a 'data-ref' attribute with an fx-repeat-attributes element.
-   * @private
-   */
-  _createRepeatsFromAttributes() {
-    if (this.repeatsFromAttributesCreated) return;
-    const repeats = this.querySelectorAll('[data-ref]');
-    if (repeats) {
-      Array.from(repeats).forEach(item => {
-        if (item.closest('fx-control')) return;
-        /*
+    _logError(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        console.error('ERROR', e.detail.message);
+        console.error(e.detail.origin);
+        if (e.detail.expr) {
+            console.error('Failing expression', e.detail.expr);
+        }
+        if (this.strict) {
+            this._displayError(e);
+        }
+    }
+
+    _copyToClipboard(target) {
+        console.log('copyToClipboard', target.value);
+        navigator.clipboard.writeText(target.value);
+    }
+
+    _showMessage(level, msg) {
+        if (level === 'modal') {
+            // this.$.messageContent.innerText = msg;
+            // this.$.modalMessage.open();
+
+            this.shadowRoot.getElementById('messageContent').innerText = msg;
+            // this.shadowRoot.getElementById('modalMessage').open();
+            this.shadowRoot
+                .getElementById('modalMessage')
+                .classList.add('show');
+        } else if (
+            level === 'sticky' ||
+            level === 'error' ||
+            level === 'warn'
+        ) {
+            // const notification = this.$.modeless;
+            this.shadowRoot.querySelector(`#${level}`).showToast(msg);
+        } else {
+            const toast = this.shadowRoot.querySelector('#message');
+            toast.showToast(msg);
+        }
+    }
+
+    /**
+     * wraps the element having a 'data-ref' attribute with an fx-repeat-attributes element.
+     * @private
+     */
+    _createRepeatsFromAttributes() {
+        if (this.repeatsFromAttributesCreated) return;
+        const repeats = this.querySelectorAll('[data-ref]');
+        if (repeats) {
+            Array.from(repeats).forEach((item) => {
+                if (item.closest('fx-control')) return;
+                /*
                         const parentRepeat = item.closest('fx-repeat');
                         if(parentRepeat){
                             this.dispatchEvent(
@@ -1026,46 +1074,49 @@ export class FxFore extends HTMLElement {
                         }
         */
 
-        const table = item.parentNode.closest('table');
-        let host;
-        if (table) {
-          host = table.cloneNode(true);
-        } else {
-          host = item.cloneNode(true);
+                const table = item.parentNode.closest('table');
+                let host;
+                if (table) {
+                    host = table.cloneNode(true);
+                } else {
+                    host = item.cloneNode(true);
+                }
+                // ### clone original item to move it into fx-repeat-attributes
+                // const host = item.cloneNode(true);
+
+                // ### create wrapper element
+                const repeatFromAttr = new FxRepeatAttributes();
+                // const repeatFromAttr = document.createElement('fx-repeat-attributes');
+
+                // ### copy the value of 'data-ref' to 'ref' on fx-repeat-attributes
+                repeatFromAttr.setAttribute(
+                    'ref',
+                    item.getAttribute('data-ref'),
+                );
+                // item.removeAttribute('data-ref');
+
+                // ### append the cloned original element to fx-repeat-attributes
+                repeatFromAttr.appendChild(host);
+
+                // ### insert fx-repeat-attributes element before element with the 'data-ref'
+                // repeats[0].parentNode.insertBefore(repeatFromAttr,repeats[0]);
+
+                if (table) {
+                    table.parentNode.insertBefore(repeatFromAttr, table);
+                    table.parentNode.removeChild(table);
+                } else {
+                    item.parentNode.insertBefore(repeatFromAttr, item);
+                    item.parentNode.removeChild(item);
+                }
+
+                // ### remove original item from DOM
+                item.setAttribute('insertPoint', '');
+            });
         }
-        // ### clone original item to move it into fx-repeat-attributes
-        // const host = item.cloneNode(true);
-
-        // ### create wrapper element
-        const repeatFromAttr = new FxRepeatAttributes();
-        // const repeatFromAttr = document.createElement('fx-repeat-attributes');
-
-        // ### copy the value of 'data-ref' to 'ref' on fx-repeat-attributes
-        repeatFromAttr.setAttribute('ref', item.getAttribute('data-ref'));
-        // item.removeAttribute('data-ref');
-
-        // ### append the cloned original element to fx-repeat-attributes
-        repeatFromAttr.appendChild(host);
-
-        // ### insert fx-repeat-attributes element before element with the 'data-ref'
-        // repeats[0].parentNode.insertBefore(repeatFromAttr,repeats[0]);
-
-        if (table) {
-          table.parentNode.insertBefore(repeatFromAttr, table);
-          table.parentNode.removeChild(table);
-        } else {
-          item.parentNode.insertBefore(repeatFromAttr, item);
-          item.parentNode.removeChild(item);
-        }
-
-        // ### remove original item from DOM
-        item.setAttribute('insertPoint', '');
-      });
+        this.repeatsFromAttributesCreated = true;
     }
-    this.repeatsFromAttributesCreated = true;
-  }
 }
 
 if (!customElements.get('fx-fore')) {
-  customElements.define('fx-fore', FxFore);
+    customElements.define('fx-fore', FxFore);
 }

@@ -52,7 +52,7 @@ export class TemplateBinding extends Binding {
         const replaced = this.evaluateTemplateExpression(
             this.expression,
             this.node,
-        );
+        ).trim();
 
         // Update the node only if its content has changed.
         if (this.node.nodeType === Node.ATTRIBUTE_NODE) {
