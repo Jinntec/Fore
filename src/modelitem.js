@@ -1,3 +1,5 @@
+import {XPathUtil} from "./xpath-util";
+
 /**
  * ModelItem is a state objects that wraps a Node and holds the current state of facets like 'readonly', 'required', 'relevant', 'constraint'
  * and 'calculate' as well as the canonical XPath.
@@ -75,7 +77,8 @@ export class ModelItem {
         this.instanceId = instance;
 
         if (!this.path) {
-            this.path = 'anon';
+            // this.path = 'anon';
+            this.path = XPathUtil.getCanonicalXPath(this.node);
         }
     }
 
