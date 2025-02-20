@@ -271,8 +271,9 @@ export class FxModel extends HTMLElement {
                 `🔷🔷 ### <<<<< partial recalculate() '${this.fore.id}' >>>>>`,
             );
             // Let DependencyTracker figure out which keys are pending.
-            const orderedKeys =
-                DependencyTracker.getInstance().buildSubgraphForPendingChanges();
+            const subGraph = DependencyTracker.getInstance().buildSubgraphForPendingChanges();
+            const orderedKeys = subGraph.overallOrder(false);
+
             console.log('ℹ️ ordered subgraph keys', orderedKeys);
 
             // Now iterate through the ordered keys and refresh all associated bindings.
@@ -295,6 +296,11 @@ export class FxModel extends HTMLElement {
                         });
                 }
             });
+            Fore.dispatch(this, 'recalculate-done', {
+                graph: subGraph,
+                computes: this.computes,
+            });
+
         }
 
         if (this.needsFullRecalc) {
@@ -316,13 +322,14 @@ export class FxModel extends HTMLElement {
                 }
             });
             this.needsFullRecalc = false;
+            Fore.dispatch(this, 'recalculate-done', {
+                graph: DependencyTracker.getInstance().dependencyGraph,
+                computes: this.computes,
+            });
+
             // Fore.dispatch(this, 'recalculate-done', { graph: DependencyTracker.getInstance().dependencyGraph, computes: this.computes });
         }
 
-        Fore.dispatch(this, 'recalculate-done', {
-            graph: DependencyTracker.getInstance().dependencyGraph,
-            computes: this.computes,
-        });
     }
 
     /**
