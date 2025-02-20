@@ -132,8 +132,8 @@ export class DependencyTracker {
      * @param {import('./binding/Binding.js').Binding} binding - The binding object to register.
      */
     registerBinding(key, binding) {
-        console.log('🔗 registerBinding', key, binding);
         if (!this.bindingRegistry.has(key)) {
+            console.log('🔗 registerBinding', key, binding);
             this.bindingRegistry.set(key, new Set());
             // Also add the key as a node in the dependency graph if needed.
             if (!this.dependencyGraph.hasNode(key)) {
@@ -165,7 +165,7 @@ export class DependencyTracker {
                 : this.resolveInstanceXPath(refXPath);
         }
 
-        console.log('🔗 Registering XPath', resolvedXPath, control);
+        // console.log('🔗 Registering XPath', resolvedXPath, control);
 
         // Instead of adding to controlBindings, use our unified registry.
         this.registerBinding(resolvedXPath, control);
@@ -528,8 +528,8 @@ export class DependencyTracker {
                 'Max pass limit reached — possible infinite update loop!',
             );
         }
-        this.deletedIndexes.clear();
-        this.insertedIndexes.clear();
+        // this.deletedIndexes.clear();
+        // this.insertedIndexes.clear();
     }
 
     hasModelUpdates() {
