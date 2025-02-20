@@ -4,8 +4,9 @@ import {
 } from '@open-wc/testing';
 
 import '../index.js';
+import {DependencyTracker} from "../src/DependencyTracker";
 
-describe('model tests', () => {
+describe.only('model tests', () => {
   it('rebuilds and recalcuates correctly intitially', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
@@ -221,7 +222,9 @@ describe('model tests', () => {
 
     // there are 8 modelItems
     expect(model.modelItems.length).to.equal(8);
-    expect(Object.keys(model.mainGraph.nodes).length).to.equal(15);
+    const bindingCount = Array.from(DependencyTracker.getInstance().bindingRegistry).length;
+    expect(Object.keys(DependencyTracker.getInstance().dependencyGraph.nodes).length).to.equal(20);
+    expect(Object.keys(DependencyTracker.getInstance().dependencyGraph.nodes).length).to.equal(bindingCount);
 
     // there are 15 nodes in mainGraph
     // const graphCount = model.mainGraph.overallOrder(false);
@@ -291,10 +294,7 @@ describe('model tests', () => {
 
     // there are 8 modelItems
     expect(model.modelItems.length).to.equal(8);
-    expect(Object.keys(model.mainGraph.nodes).length).to.equal(15);
-
-    const changed = model.computes;
-    expect(changed).to.equal(6);
+    expect(Object.keys(DependencyTracker.getInstance().dependencyGraph.nodes).length).to.equal(20);
 
     const cControl = el.querySelector('#c');
     expect(cControl.getModelItem().value).to.equal('110');

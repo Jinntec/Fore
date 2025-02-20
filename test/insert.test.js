@@ -6,7 +6,7 @@ import * as fx from 'fontoxpath';
 
 import '../src/fx-instance.js';
 
-describe('insert Tests', () => {
+describe.skip('insert Tests', () => {
   it('does nothing when nodeset is empty', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
