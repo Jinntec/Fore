@@ -211,12 +211,6 @@ export default class FxUpload extends XfAbstractControl {
         // const setval = this.shadowRoot.getElementById('setvalue');
         // setval.setValue(modelitem, val);
 
-        if (
-            this.modelItem instanceof ModelItem &&
-            !this.modelItem?.boundControls.includes(this)
-        ) {
-            this.modelItem.boundControls.push(this);
-        }
         const model = this.getModel();
         Fore.dispatch(this, 'value-changed', {
             path: this.modelItem.path,

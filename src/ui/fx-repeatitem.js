@@ -107,16 +107,12 @@ export class FxRepeatitem extends withDraggability(ForeElementMixin, true) {
             this,
         );
 
-        if (!this.modelItem.boundControls.includes(this)) {
-            this.modelItem.boundControls.push(this);
-
-            if (this.modelItem && !this.modelItem.relevant) {
-                this.removeAttribute('relevant');
-                this.setAttribute('nonrelevant', '');
-            } else {
-                this.removeAttribute('nonrelevant');
-                this.setAttribute('relevant', '');
-            }
+        if (this.modelItem && !this.modelItem.relevant) {
+            this.removeAttribute('relevant');
+            this.setAttribute('nonrelevant', '');
+        } else {
+            this.removeAttribute('nonrelevant');
+            this.setAttribute('relevant', '');
         }
         // Always recurse for these refreshes, especially when forced
         Fore.refreshChildren(this, force);
