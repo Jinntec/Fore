@@ -71,10 +71,6 @@ export class ModelItem {
          * @type {import('./ui/fx-alert').FxAlert[]}
          */
         this.alerts = [];
-        /**
-         * @type {import('./ui/abstract-control').default[]}
-         */
-        this.boundControls = [];
         // this.value = this._getValue();
         this.instanceId = instance;
 
