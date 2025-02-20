@@ -268,12 +268,16 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
         const xpath = XPathUtil.getPath(this.nodeset, instanceId);
 
         // const xpath = XPathUtil.getCanonicalXPath(this.nodeset)
-        console.log('xpath', xpath);
-        // @TODO: Repeats have no model item!!!
-        DependencyTracker.getInstance().registerControl(
-            this.ref,
-            new ControlBinding(this),
-        );
+
+        if(this.nodeset.length !== 0){
+            console.log('xpath', xpath);
+            // @TODO: Repeats have no model item!!!
+            DependencyTracker.getInstance().registerControl(
+                this.ref,
+                new ControlBinding(this),
+            );
+        }
+
         // this.getOwnerForm().dependencyTracker.register(this.ref, this);
 
         const deletedIndexes =
@@ -318,7 +322,7 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
         const fore = this.getOwnerForm();
         if (!fore.lazyRefresh || force) {
             // Turn the possibly conditional force refresh into a forced one: we changed our children
-            Fore.refreshChildren(this, force);
+            // Fore.refreshChildren(this, force);
         }
     }
 
