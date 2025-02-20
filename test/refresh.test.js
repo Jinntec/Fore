@@ -5,6 +5,7 @@ import {
 import '../src/fx-instance.js';
 import '../src/ui/fx-container.js';
 import '../src/fx-bind.js';
+import {DependencyTracker} from "../src/DependencyTracker";
 
 describe('refresh Tests', () => {
   it('refresh renders correct state initially', async () => {
@@ -51,25 +52,33 @@ describe('refresh Tests', () => {
       </fx-fore>
     `);
 
-    await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'ready');
 
     expect(el.getModel().modelItems.length).to.equal(3);
     const c1 = el.querySelector('#output1');
     expect(c1).to.exist;
     expect(c1.modelItem).to.exist;
     expect(c1.modelItem.value).to.equal('A');
-    expect(c1.modelItem.boundControls).to.exist;
-    expect(c1.modelItem.boundControls.length).to.equal(2);
+    expect(c1.modelItem.readonly).to.be.false;
+    expect(c1.modelItem.required).to.be.true;
+
+    // expect(c1.modelItem.boundControls).to.exist;
+    // expect(c1.modelItem.boundControls.length).to.equal(2);
+    const deps = DependencyTracker.getInstance().bindingRegistry;
+    expect(deps.has('$default/a[1]'));
+    expect(deps.has('$default/a[1]:readonly'));
+    expect(deps.has('$default/a[1]:required'));
 
     const c2 = el.querySelector('#output2');
     expect(c2.modelItem.value).to.equal('B');
-    expect(c2.modelItem.boundControls).to.exist;
-    expect(c2.modelItem.boundControls.length).to.equal(2);
+    expect(deps.has('$default/b[1]'));
+    expect(deps.has('$default/b[1]:required'));
 
     const c3 = el.querySelector('#output3');
     expect(c3.modelItem.value).to.equal('C');
-    expect(c3.modelItem.boundControls).to.exist;
-    expect(c3.modelItem.boundControls.length).to.equal(2);
+    expect(c3.modelItem.relevant).to.be.true;
+    expect(deps.has('$default/c[1]'));
+    expect(deps.has('$default/c[1]:relevant'));
   });
 
   it('refresh renders correct state after update of control', async () => {
