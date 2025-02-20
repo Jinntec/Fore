@@ -745,6 +745,7 @@ export class FxFore extends HTMLElement {
         this.ready = true;
         this.initialRun = false;
         // console.log('### >>>>> dispatching ready >>>>>', this);
+        console.info(`%cℹ️ #${this.id} modelItems`, this.getModel().modelItems);
         console.info(
             `%c✅ #${this.id} is ready`,
             'background:lightblue; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
