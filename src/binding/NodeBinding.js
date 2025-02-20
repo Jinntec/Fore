@@ -152,6 +152,14 @@ export class NodeBinding extends Binding {
             // Skip duplicates, e.g. text()[1] if needed.
             if (!refPath.endsWith('text()[1]')) {
                 if (!this.mainGraph.hasNode(refPath)) {
+                    /*
+                    todo: we get bare nodes here not Bindings - need to check if we got them already otherwise create
+                    */
+                    const xpath = XPathUtil.getCanonicalXPath(ref)
+                    // console.log('####xpath',xpath);
+                    // const hasNode = DependencyTracker.getInstance().bindingRegistry.has(xpath);
+                    // console.log('####registry hasNode',hasNode);
+
                     this.mainGraph.addNode(refPath, ref);
                 }
                 // Register the dependency: the facet depends on this reference.
