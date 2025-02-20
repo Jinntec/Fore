@@ -2,6 +2,7 @@ import { Fore } from '../fore.js';
 import ForeElementMixin from '../ForeElementMixin.js';
 import { withDraggability } from '../withDraggability.js';
 import { DependencyTracker } from '../DependencyTracker';
+import {ControlBinding} from "../binding/ControlBinding";
 
 /**
  * `fx-repeat`
@@ -25,6 +26,7 @@ export class FxRepeatitem extends withDraggability(ForeElementMixin, true) {
     constructor() {
         super();
         this.inited = false;
+        this.binding = null;
 
         this.addEventListener('click', (e) => this._dispatchIndexChange(e));
         // this.addEventListener('focusin', this._handleFocus);
@@ -100,12 +102,23 @@ export class FxRepeatitem extends withDraggability(ForeElementMixin, true) {
     }
 
     refresh(force) {
+        console.log('repeatitem refresh');
         this.modelItem = this.getModelItem();
         // ### register ourselves as boundControl
+/*
         DependencyTracker.getInstance().registerControl(
             this.modelItem.path,
             this,
         );
+*/
+        if (!this.binding) {
+            this.binding = new ControlBinding(this);
+            DependencyTracker.getInstance().registerControl(
+                this.modelItem.path,
+                this.binding,
+            );
+        }
+
 
         if (this.modelItem && !this.modelItem.relevant) {
             this.removeAttribute('relevant');
@@ -115,7 +128,7 @@ export class FxRepeatitem extends withDraggability(ForeElementMixin, true) {
             this.setAttribute('relevant', '');
         }
         // Always recurse for these refreshes, especially when forced
-        Fore.refreshChildren(this, force);
+        // Fore.refreshChildren(this, force);
     }
 }
 
