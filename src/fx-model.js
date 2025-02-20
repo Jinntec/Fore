@@ -273,6 +273,7 @@ export class FxModel extends HTMLElement {
             // Let DependencyTracker figure out which keys are pending.
             const orderedKeys =
                 DependencyTracker.getInstance().buildSubgraphForPendingChanges();
+            console.log('ℹ️ ordered subgraph keys', orderedKeys);
 
             // Now iterate through the ordered keys and refresh all associated bindings.
             orderedKeys.forEach((key) => {
@@ -339,6 +340,7 @@ export class FxModel extends HTMLElement {
      * todo: type checking
      * todo: run browser validation API
      *
+     * todo: adapt to DependencyTracker and use graph also
      */
     revalidate() {
         if (this.modelItems.length === 0) return true;
@@ -370,11 +372,13 @@ export class FxModel extends HTMLElement {
                         );
                         // console.log('modelItem validity computed: ', compute);
                         modelItem.constraint = compute;
+/*
                         if (oldVal !== compute) {
                             DependencyTracker.getInstance().notifyChange(
                                 modelItem.path,
                             );
                         }
+*/
                         if (!compute) {
                             console.log(
                                 'validation failed on modelitem ',
