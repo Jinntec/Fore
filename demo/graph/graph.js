@@ -49,15 +49,18 @@ function renderGraph(graph, targetElement) {
   const nodesData = [];
   const edgeData = [];
   const dataSet = new vis.DataSet([]);
-  console.log('graph', graph.entryNodes());
+  // console.log('graph', graph.entryNodes());
   const entryNodes = graph.nodes;
 
   // build the nodes data
   Object.keys(entryNodes).filter(node => {
-    console.log('node', node);
+    // console.log('node', node);
     if (!node.includes(':')) {
       // nodesData.push({id: node, label: node, shape:'circle',size:250,group:node});
-      const realNode = graph.getNodeData(node);
+      let realNode = graph.getNodeData(node);
+      if(realNode.node){
+        realNode = realNode.node;
+      }
       nodesData.push({
         id: node,
         label: realNode.textContent + '\n' + node,
