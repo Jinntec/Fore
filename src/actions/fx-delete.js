@@ -108,7 +108,7 @@ class FxDelete extends AbstractAction {
      * overwriting as we need to perform additional rebuild()
      */
     actionPerformed() {
-        this.getModel().rebuild();
+        // this.getModel().rebuild();
         super.actionPerformed();
     }
 }
