@@ -123,7 +123,7 @@ export class DependencyTracker {
         });
 
         // Return the overall ordered keys (topologically sorted).
-        return subgraph.overallOrder(false);
+        return subgraph;
     }
 
     /**
