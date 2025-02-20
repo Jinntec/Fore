@@ -82,7 +82,7 @@ export class FxModel extends HTMLElement {
      * @param {ForeElementMixin}  formElement  The form element making this model. Used to resolve variables against
      */
     static lazyCreateModelItem(model, ref, node, formElement) {
-        // console.log('lazyCreateModelItem ', node);
+        console.log('lazyCreateModelItem ', node);
         const instanceId = XPathUtil.resolveInstance(formElement, ref);
 
         if (
@@ -254,7 +254,7 @@ export class FxModel extends HTMLElement {
         );
         console.log(
             'ℹ️ rebuild mainGraph calc order',
-            DependencyTracker.getInstance().dependencyGraph.overallOrder(),
+            DependencyTracker.getInstance().dependencyGraph.overallOrder(false),
         );
 
         // this.dispatchEvent(new CustomEvent('rebuild-done', {detail: {maingraph: this.mainGraph}}));
@@ -310,8 +310,15 @@ export class FxModel extends HTMLElement {
             // If there are no changed keys, process the entire main graph.
             const orderedKeys =
                 DependencyTracker.getInstance().dependencyGraph.overallOrder(
-                    false,
+                    true,
                 );
+
+            if(orderedKeys.length === 0){
+                console.log(
+                    `🔷🔷 ### <<<<< full recalculate() '${this.fore.id}' - nothing to do >>>>>`,
+                );
+            }
+
             orderedKeys.forEach((key) => {
                 if (DependencyTracker.getInstance().bindingRegistry.has(key)) {
                     DependencyTracker.getInstance()
@@ -350,9 +357,12 @@ export class FxModel extends HTMLElement {
      * todo: adapt to DependencyTracker and use graph also
      */
     revalidate() {
-        if (this.modelItems.length === 0) return true;
-
         console.log(`🔷 ### <<<<< revalidate() '${this.fore.id}' >>>>>`);
+        if (this.modelItems.length === 0){
+            console.log(`🔷🔷 ### <<<<< revalidate() '${this.fore.id}' - nothing to do >>>>>`);
+            return true;
+        }
+
 
         // reset submission validation
         // this.parentNode.classList.remove('submit-validation-failed')
