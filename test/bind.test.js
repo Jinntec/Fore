@@ -384,7 +384,8 @@ describe('bind Tests', () => {
             </fx-fore>
         `);
 
-        await elementUpdated(el);
+        await oneEvent(el, 'ready');
+
 
         const output = el.querySelector('#output');
         expect(output.value).to.equal('11');
@@ -437,7 +438,8 @@ describe('bind Tests', () => {
             </fx-fore>
         `);
 
-        await elementUpdated(el);
+        await oneEvent(el, 'ready');
+
 
         const output = el.querySelector('#output');
         expect(output.value).to.equal('11');
@@ -483,7 +485,7 @@ describe('bind Tests', () => {
             </fx-fore>
         `);
 
-        await oneEvent(el, 'refresh-done');
+        await oneEvent(el, 'ready');
         const model = el.querySelector('fx-model');
         console.log('modelitems ', model.modelItems);
         expect(model.modelItems.length).to.equal(1);
@@ -544,7 +546,7 @@ describe('bind Tests', () => {
             </fx-fore>
         `);
 
-        await oneEvent(el, 'refresh-done');
+        await oneEvent(el, 'ready');
         const nestedBind = el.querySelector('#nested');
         expect(nestedBind.instanceId).to.equal('second');
     });
