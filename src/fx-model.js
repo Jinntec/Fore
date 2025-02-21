@@ -265,7 +265,7 @@ export class FxModel extends HTMLElement {
 
     recalculate() {
         console.log(`🔷 ### <<<<< recalculate() '${this.fore.id}' >>>>>`);
-
+        this.computes = 0;
         if (DependencyTracker.getInstance().hasModelUpdates()) {
             console.log(
                 `🔷🔷 ### <<<<< partial recalculate() '${this.fore.id}' >>>>>`,
