@@ -6,7 +6,7 @@ import {
 import '../index.js';
 import {DependencyTracker} from "../src/DependencyTracker";
 
-describe.only('model tests', () => {
+describe('model tests', () => {
   it('rebuilds and recalcuates correctly intitially', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
