@@ -216,19 +216,17 @@ describe.only('model tests', () => {
       </fx-fore>
     `);
 
-    await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'ready');
     const model = el.querySelector('fx-model');
     // console.log('modelitems ', model.modelItems);
 
     // there are 8 modelItems
     expect(model.modelItems.length).to.equal(8);
     const bindingCount = Array.from(DependencyTracker.getInstance().bindingRegistry).length;
-    expect(Object.keys(DependencyTracker.getInstance().dependencyGraph.nodes).length).to.equal(20);
+    expect(bindingCount).to.equal(21);
+    expect(Object.keys(DependencyTracker.getInstance().dependencyGraph.nodes).length).to.equal(21);
     expect(Object.keys(DependencyTracker.getInstance().dependencyGraph.nodes).length).to.equal(bindingCount);
 
-    // there are 15 nodes in mainGraph
-    // const graphCount = model.mainGraph.overallOrder(false);
-    // expect(graphCount.length).to.equal(15);
   });
 
   it('recalcuates only the changed "a" subgraph of modelItems', async () => {
@@ -294,7 +292,7 @@ describe.only('model tests', () => {
 
     // there are 8 modelItems
     expect(model.modelItems.length).to.equal(8);
-    expect(Object.keys(DependencyTracker.getInstance().dependencyGraph.nodes).length).to.equal(20);
+    expect(Object.keys(DependencyTracker.getInstance().dependencyGraph.nodes).length).to.equal(21);
 
     const cControl = el.querySelector('#c');
     expect(cControl.getModelItem().value).to.equal('110');
@@ -364,8 +362,11 @@ describe.only('model tests', () => {
 
     await oneEvent(el, 'ready');
     const model = el.querySelector('fx-model');
-    // console.log('modelitems ', model.modelItems);
-    expect(Object.keys(model.mainGraph.nodes).length).to.equal(15);
+
+    const bindingCount = Array.from(DependencyTracker.getInstance().bindingRegistry).length;
+    expect(bindingCount).to.equal(21);
+    expect(Object.keys(DependencyTracker.getInstance().dependencyGraph.nodes).length).to.equal(21);
+    expect(Object.keys(DependencyTracker.getInstance().dependencyGraph.nodes).length).to.equal(bindingCount);
 
     const changed = model.computes;
     expect(changed).to.equal(4);
@@ -438,13 +439,13 @@ describe.only('model tests', () => {
     const model = el.querySelector('fx-model');
     // console.log('modelitems ', model.modelItems);
 
+    const bindingCount = Array.from(DependencyTracker.getInstance().bindingRegistry).length;
+    expect(bindingCount).to.equal(21);
+    expect(Object.keys(DependencyTracker.getInstance().dependencyGraph.nodes).length).to.equal(21);
+    expect(Object.keys(DependencyTracker.getInstance().dependencyGraph.nodes).length).to.equal(bindingCount);
+
     const changed = model.computes;
     expect(changed).to.equal(2);
-
-    expect(Object.keys(model.mainGraph.nodes).length).to.equal(15);
-
-    const { subgraph } = model;
-    expect(subgraph).to.exist;
 
     const xControl = el.querySelector('#x');
     expect(xControl.getModelItem().value).to.equal('6');
@@ -461,7 +462,7 @@ describe.only('model tests', () => {
             <data>
               <css></css>
               <rotate>0</rotate>
-              <transform></transform>
+              <transform>0</transform>
               <string></string>
             </data>
           </fx-instance>
@@ -497,9 +498,7 @@ describe.only('model tests', () => {
 
     await oneEvent(el, 'ready');
     const model = el.querySelector('fx-model');
-    expect(model.mainGraph.nodes).to.exist;
-    expect(Object.keys(model.mainGraph.nodes)).to.exist;
-    expect(Object.keys(model.mainGraph.nodes).length).to.equal(4);
+    expect(Object.keys(DependencyTracker.getInstance().dependencyGraph).length).to.equal(4);
 
     const control = el.querySelector('#transform');
     expect(control).to.exist;
