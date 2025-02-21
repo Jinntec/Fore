@@ -249,13 +249,23 @@ export class DependencyTracker {
 */
 
     resolveInstanceXPath(xpath) {
-        return xpath.replace(
+        // Replace instance() calls
+        xpath = xpath.replace(
             /instance\(['"]?([^'"\)]*)['"]?\)/g,
-            (_, instanceId) => {
-                return `$${instanceId || 'default'}`;
-            },
+            (_, instanceId) => `$${instanceId || 'default'}/`
         );
+
+        // Ensure absolute and relative paths without instance() get prefixed with $default
+        if (!xpath.startsWith("$") && !xpath.startsWith(".")) {
+            xpath = `$default/${xpath}`;
+        }
+
+        // Normalize multiple consecutive slashes (e.g., "///" -> "/")
+        xpath = xpath.replace(/\/+/g, "/");
+
+        return xpath;
     }
+
 
     updateRepeatIndex(xpath, newIndex) {
         console.log('updateRepeatIndex', xpath, newIndex);
