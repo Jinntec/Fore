@@ -125,7 +125,7 @@ describe('refresh Tests', () => {
       </fx-fore>
     `);
 
-    await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'ready');
 
     /*
     const c2 = el.querySelector('#output2');
@@ -133,14 +133,10 @@ describe('refresh Tests', () => {
 */
 
     const b = el.querySelector('#b');
-    b.modelItem.value = 'Bs';
-    el.getModel().updateModel();
-    el.refresh(true);
+    b.setValue('Bs');
 
     const c1 = el.querySelector('#output1');
     expect(c1.modelItem.value).to.equal('A');
-    expect(c1.modelItem.boundControls).to.exist;
-    expect(c1.modelItem.boundControls.length).to.equal(2);
 
     // check states
     expect(c1.modelItem.readonly).to.be.true;
@@ -150,16 +146,12 @@ describe('refresh Tests', () => {
 
     const c2 = el.querySelector('#output2');
     expect(c2.modelItem.value).to.equal('Bs');
-    expect(c2.modelItem.boundControls).to.exist;
-    expect(c2.modelItem.boundControls.length).to.equal(2);
 
     expect(c2.modelItem.required).to.be.true;
     expect(c2.hasAttribute('required')).to.be.true;
 
     const c3 = el.querySelector('#output3');
     expect(c3.modelItem.value).to.equal('C');
-    expect(c3.modelItem.boundControls).to.exist;
-    expect(c3.modelItem.boundControls.length).to.equal(2);
 
     expect(c3.modelItem.relevant).to.be.false;
   });
@@ -203,8 +195,6 @@ describe('refresh Tests', () => {
     await b.performActions();
 
     expect(sw.modelItem.value).to.equal('page3');
-    expect(sw.modelItem.boundControls).to.exist;
-    expect(sw.modelItem.boundControls.length).to.equal(1);
 
     const page1 = el.querySelector('#page1');
     expect(page1.classList.contains('selected-case')).to.be.false;

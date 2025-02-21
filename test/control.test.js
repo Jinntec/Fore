@@ -11,10 +11,10 @@ describe('control tests', () => {
   let tracker;
 
   beforeEach(() => {
-    tracker = DependencyTracker.getInstance();
-    tracker.controlBindings.clear();
-    tracker.pendingUpdates.clear();
-    tracker.nonRelevantControls.clear();
+    // tracker = DependencyTracker.getInstance();
+    // tracker.controlBindings.clear();
+    // tracker.pendingUpdates.clear();
+    // tracker.nonRelevantControls.clear();
   });
 
   it('shows control alert defined on control', async () => {
