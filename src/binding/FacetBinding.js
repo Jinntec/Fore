@@ -91,5 +91,7 @@ export class FacetBinding extends Binding {
                 );
             }
         }
+        // update computes
+        fore.getModel().computes += 1;
     }
 }
