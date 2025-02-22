@@ -3,7 +3,7 @@ import getInScopeContext from './getInScopeContext';
 import { XPathUtil } from './xpath-util';
 import { TemplateBinding } from './binding/TemplateBinding.js';
 import { evaluateXPathToNodes } from './xpath-evaluation';
-import { debounce } from './events';
+import {debounce, leadingDebounce} from './events';
 // import { XPathDependencyExtractor } from './XPathDependencyExtractor.js';
 let _instance = null;
 
@@ -140,7 +140,13 @@ export class DependencyTracker {
                 this.dependencyGraph.addNode(key, binding);
             }
         }
-        this.bindingRegistry.get(key).add(binding);
+        const bindingSet = this.bindingRegistry.get(key);
+        if(bindingSet.has(binding)){
+            console.warn(`⚠️ Warning: Attempting to register duplicate binding for key '${key}'.`, binding);
+        }else{
+            bindingSet.add(binding);
+        }
+        // this.bindingRegistry.get(key).add(binding);
         // Also index by type if available
         if (binding.bindingType && this.bindingsByType[binding.bindingType]) {
             this.bindingsByType[binding.bindingType].add(binding);
@@ -185,7 +191,7 @@ export class DependencyTracker {
      * @param {Node} node - The DOM Node that holds the template expression.
      */
     registerTemplateBinding(expression, node) {
-        console.log(`🔗 Registering Template Expression: ${expression}`, node);
+        console.log(`🔗 Registering Template Expression: {${expression}}`, node);
 
         const parent =
             node.nodeType === Node.ATTRIBUTE_NODE
@@ -286,6 +292,7 @@ export class DependencyTracker {
     notifyChange(changedXPath) {
         console.log('throttling notifyChange', changedXPath);
         this._notifyChange(changedXPath);
+        // this.debouncedNotifyChange(changedXPath);
     }
 
     /**
@@ -295,6 +302,8 @@ export class DependencyTracker {
      * @private
      */
     _notifyChange(changedXPath) {
+        console.log('_notifyChange', changedXPath);
+
         const resolvedXPath = this.resolveInstanceXPath(changedXPath);
         const affectedXPaths = new Set([resolvedXPath]);
 
@@ -390,7 +399,9 @@ export class DependencyTracker {
         if (this.bindingRegistry.has(resolvedXPath)) {
             this.bindingRegistry.get(resolvedXPath).forEach((binding) => {
                 this.nonRelevantControls.add(binding);
-                this.pendingUpdates.add(binding);
+                if(!this.pendingUpdates.has(binding)){
+                    this.pendingUpdates.add(binding);
+                }
             });
         }
         if (this.dependencyGraph.hasNode(resolvedXPath)) {
@@ -469,6 +480,7 @@ export class DependencyTracker {
         console.log('Evaluating all registered template bindings...');
         // Iterate through bindings of type 'template'
         if (this.bindingsByType.template) {
+            if(this.bindingsByType.template.size === 0) return; // nothing to do
             this.bindingsByType.template.forEach((binding) => binding.update());
         }
     }
