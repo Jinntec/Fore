@@ -21,10 +21,13 @@ export class ControlBinding extends Binding {
         detectTemplateExpressions(this.control);
 
         // The control depends on some facets of the bound node / model item
+/*
+        to NOT register ourselves - we've been registered already
         DependencyTracker.getInstance().registerBinding(
             this.modelItem.path,
             this,
         );
+*/
         if (this.modelItem.bind?.getAttribute('readonly')) {
             DependencyTracker.getInstance().registerBinding(
                 `${this.modelItem.path}:readonly`,
