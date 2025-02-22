@@ -273,7 +273,7 @@ export default class FxUpload extends XfAbstractControl {
         // console.log('fx-control refresh', this);
         super.refresh(force);
         // ### if we find a ref on control we have a 'select' control of some kind
-        Fore.refreshChildren(this, force);
+        // Fore.refreshChildren(this, force);
     }
 
     evalLabel(optionLabel, node, newEntry) {
