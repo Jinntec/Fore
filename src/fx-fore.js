@@ -364,6 +364,7 @@ export class FxFore extends HTMLElement {
 
         // making sure all non-scoped template expressions will be evaluated
         this.addEventListener('init-done', () => {
+            console.log('✅ init-done - running template expressions');
             DependencyTracker.getInstance().evaluateAllTemplateBindings();
         });
     }
@@ -745,6 +746,8 @@ export class FxFore extends HTMLElement {
         this.ready = true;
         this.initialRun = false;
         // console.log('### >>>>> dispatching ready >>>>>', this);
+
+        // console.clear();
         console.info(`%cℹ️ #${this.id} modelItems`, this.getModel().modelItems);
         console.info(
             `%c✅ #${this.id} is ready`,
