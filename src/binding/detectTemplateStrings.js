@@ -55,7 +55,7 @@ function _getTemplateExpression(node) {
  */
 export function detectTemplateExpressions(root) {
     // Will also be called on the $default scope
-    console.log('🔍 detectTemplateExpressions for', root);
+    // console.log('🔍 detectTemplateExpressions for', root);
     const tmplExpressions = [];
 
     /**
@@ -95,6 +95,7 @@ export function detectTemplateExpressions(root) {
         }
     }
 
+    if(tmplExpressions.length === 0) return;
     Array.from(tmplExpressions).forEach((node) => {
         const ele =
             node.nodeType === Node.ATTRIBUTE_NODE
