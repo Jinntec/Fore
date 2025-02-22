@@ -6,8 +6,8 @@ import { Binding } from './Binding.js';
 import { detectTemplateExpressions } from './detectTemplateStrings.js';
 
 export class ControlBinding extends Binding {
-    constructor(control) {
-        super(control.getModelItem().path, 'control');
+    constructor(xpath, control) {
+        super(xpath, 'control');
         /**
          * @type {ModelItem}
          */

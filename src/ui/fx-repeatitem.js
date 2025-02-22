@@ -112,7 +112,7 @@ export class FxRepeatitem extends withDraggability(ForeElementMixin, true) {
         );
 */
         if (!this.binding) {
-            this.binding = new ControlBinding(this);
+            this.binding = new ControlBinding(this.modelItem.path, this);
             DependencyTracker.getInstance().registerControl(
                 this.modelItem.path,
                 this.binding,

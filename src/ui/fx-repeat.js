@@ -274,7 +274,7 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
             // @TODO: Repeats have no model item!!!
             DependencyTracker.getInstance().registerControl(
                 this.ref,
-                new ControlBinding(this),
+                new ControlBinding(this.ref, this),
             );
         }
 

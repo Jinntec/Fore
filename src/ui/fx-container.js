@@ -88,7 +88,7 @@ export class FxContainer extends ForeElementMixin {
             if (this.modelItem) {
                 DependencyTracker.getInstance().registerControl(
                     this.modelItem.path,
-                    new ControlBinding(this),
+                    new ControlBinding(this.modelItem.path, this),
                 );
             }
             this.handleModelItemProperties();
