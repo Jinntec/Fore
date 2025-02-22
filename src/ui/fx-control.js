@@ -12,6 +12,7 @@ import { FxModel } from '../fx-model.js';
 import { XPathUtil } from '../xpath-util';
 import { DependencyTracker } from '../DependencyTracker';
 import { ControlBinding } from '../binding/ControlBinding.js';
+import {Binding} from "../binding/Binding";
 
 const WIDGETCLASS = 'widget';
 
@@ -249,10 +250,8 @@ export default class FxControl extends XfAbstractControl {
             return;
         }
         const setval = this.shadowRoot.getElementById('setvalue');
+        // do not notify here as setValue is doing it
         setval.setValue(modelitem, val);
-
-        DependencyTracker.getInstance().notifyChange(this.modelItem.path);
-
         setval.actionPerformed(false);
         // this.visited = true;
     }
@@ -305,6 +304,10 @@ export default class FxControl extends XfAbstractControl {
             if (widget && !widget.classList.contains('widget')) {
                 widget.classList.add('widget');
             }
+        }
+        if (!widget) {
+            widget = this.querySelector('fx-items');
+            if (widget) return widget;
         }
         if (!widget) {
             const input = document.createElement('input');
@@ -579,7 +582,7 @@ export default class FxControl extends XfAbstractControl {
 
             DependencyTracker.getInstance().registerControl(
                 this.modelItem.path,
-                new ControlBinding(this),
+                new ControlBinding(this.modelItem.path,this),
             );
 
             // ### clear items
@@ -633,7 +636,7 @@ export default class FxControl extends XfAbstractControl {
             if (this.valueProp === 'selectedOptions') {
                 const valueSet = new Set(this.value.split(' '));
                 const options = this.getWidget().querySelectorAll('option');
-                this.getOwnerForm().dependencyTracker.notifyChange(ref);
+                // this.getOwnerForm().dependencyTracker.notifyChange(ref);
                 for (const option of [...options]) {
                     if (valueSet.has(option.value)) {
                         option.selected = true;
