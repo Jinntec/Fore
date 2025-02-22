@@ -10,6 +10,7 @@ import { XPathUtil } from './xpath-util.js';
 import getInScopeContext from './getInScopeContext.js';
 import { DependencyTracker } from './DependencyTracker';
 import { NodeBinding } from './binding/NodeBinding.js';
+
 // import {FacetBinding} from "./binding/FacetBinding";
 
 /**
@@ -95,6 +96,7 @@ export class FxBind extends ForeElementMixin {
                     modelItem,
                     this.getOwnerForm(),
                 );
+                // register the Binding
                 DependencyTracker.getInstance().registerBinding(
                     modelItem.path,
                     nodeBinding,
@@ -194,6 +196,7 @@ export class FxBind extends ForeElementMixin {
      * @param  {string}  path The path to the start of the reference
      * @param  {string}  property The property with this dependency
      */
+
     /*
   _addDependencies(refs, node, path, property) {
     // console.log('_addDependencies',path);
