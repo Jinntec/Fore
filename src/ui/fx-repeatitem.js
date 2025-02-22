@@ -90,7 +90,8 @@ export class FxRepeatitem extends withDraggability(ForeElementMixin, true) {
 
         console.log('_dispatchIndexChange', this, this.index);
 
-        DependencyTracker.getInstance().updateRepeatIndex(this.ref, this.index);
+        // const path = t
+        DependencyTracker.getInstance().updateRepeatIndex(this.modelItem.path, this.index);
 
         this.dispatchEvent(
             new CustomEvent('item-changed', {
@@ -102,7 +103,8 @@ export class FxRepeatitem extends withDraggability(ForeElementMixin, true) {
     }
 
     refresh(force) {
-        console.log('repeatitem refresh');
+        // if(!typeof this.refresh === 'function') return;
+        console.log('repeatitem refresh',this);
         this.modelItem = this.getModelItem();
         // ### register ourselves as boundControl
 /*
