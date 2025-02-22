@@ -64,7 +64,6 @@ export default class FxSetvalue extends AbstractAction {
             value = value.nodeValue;
         }
         const mi = this.getModelItem();
-        DependencyTracker.getInstance().notifyChange(mi.path);
         this.setValue(mi, value);
         // todo: check this again - logically needsUpate should be set but makes tests fail
         //  this.needsUpdate = true;
