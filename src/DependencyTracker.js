@@ -276,6 +276,13 @@ export class DependencyTracker {
         return xpath;
     }
 
+    getBaseXPath(xpath) {
+        const lastPredicateIndex = xpath.lastIndexOf('[');
+        if (lastPredicateIndex !== -1 && xpath.endsWith(']')) {
+            return xpath.substring(0, lastPredicateIndex);
+        }
+        return xpath;
+    }
 
     updateRepeatIndex(xpath, newIndex) {
         console.log('updateRepeatIndex', xpath, newIndex);
@@ -283,7 +290,9 @@ export class DependencyTracker {
         const oldIndex = this.repeatIndexMap.get(resolvedXPath);
         if (oldIndex !== newIndex) {
             this.repeatIndexMap.set(resolvedXPath, newIndex);
-            this.notifyIndexChange(resolvedXPath, oldIndex, newIndex);
+            // repeats listen on the basePath so cut off the resolvedPath
+            const basePath = this.getBaseXPath(resolvedXPath);
+            this.notifyIndexChange(basePath, oldIndex, newIndex);
         }
     }
 
@@ -306,7 +315,16 @@ export class DependencyTracker {
      * @private
      */
     _notifyChange(changedXPath) {
-        console.log('_notifyChange', changedXPath);
+        if (!this.bindingRegistry.has(changedXPath)) {
+            console.warn(`⚠️ Warning: Attempting to notify change for unregistered key '${changedXPath}'.`);
+            return;
+        }
+        console.log('✨ _notifyChange', changedXPath);
+        const bindingsSet = this.bindingRegistry.get(changedXPath);
+        if (!bindingsSet || bindingsSet.size === 0) {
+            console.warn(`⚠️ Warning: No bindings found for key '${changedXPath}' to notify.`);
+            return;
+        }
 
         const resolvedXPath = this.resolveInstanceXPath(changedXPath);
         const affectedXPaths = new Set([resolvedXPath]);
@@ -382,7 +400,7 @@ export class DependencyTracker {
     }
 
     notifyDelete(xpath) {
-        console.log('notifyDelete', xpath);
+        console.log('❌ notifyDelete', xpath);
         const resolvedXPath = this.resolveInstanceXPath(xpath);
         const matches = [...resolvedXPath.matchAll(/\[(\d+)\]/g)];
         if (matches.length > 0) {
@@ -402,7 +420,7 @@ export class DependencyTracker {
         }
         if (this.bindingRegistry.has(resolvedXPath)) {
             this.bindingRegistry.get(resolvedXPath).forEach((binding) => {
-                this.nonRelevantControls.add(binding);
+                // this.nonRelevantControls.add(binding);
                 if(!this.pendingUpdates.has(binding)){
                     this.pendingUpdates.add(binding);
                 }
@@ -457,6 +475,20 @@ export class DependencyTracker {
 
     notifyIndexChange(xpath, oldIndex, newIndex) {
         console.log('notifyIndexChange', xpath, newIndex);
+/*
+        console.log(
+            'notifyIndexChange nonRelevantControls',
+            Array.from(this.nonRelevantControls),
+        );
+
+*/
+/*
+        console.log(
+            'notifyIndexChange this',
+            this,
+        );
+*/
+
         if (this.bindingRegistry.has(xpath)) {
             for (const binding of this.bindingRegistry.get(xpath)) {
                 if (!this.nonRelevantControls.has(binding)) {
@@ -464,6 +496,14 @@ export class DependencyTracker {
                 }
             }
         }
+
+/*
+        console.log(
+            'notifyIndexChange pendingUpdates',
+            Array.from(this.pendingUpdates),
+        );
+*/
+
     }
 
     markNonRelevant(binding) {
@@ -490,48 +530,35 @@ export class DependencyTracker {
     }
 
     processUpdates() {
-        console.log(
-            'processUpdates pendingUpdates',
-            Array.from(this.pendingUpdates),
-        );
-        console.log(
-            'processUpdates deletedIndexes',
-            Array.from(this.deletedIndexes),
-        );
-        console.log(
-            'processUpdates insertedIndexes',
-            Array.from(this.insertedIndexes),
-        );
+        console.log('processUpdates pendingUpdates', Array.from(this.pendingUpdates));
+        console.log('processUpdates deletedIndexes', Array.from(this.deletedIndexes));
+        console.log('processUpdates insertedIndexes', Array.from(this.insertedIndexes));
 
-        // update any template bindings registered under '$default'
+        // Update any template bindings registered under '$default'
         if (this.bindingRegistry.has('$default')) {
             for (const binding of this.bindingRegistry.get('$default')) {
                 if (typeof binding.update === 'function') {
-                    console.log(
-                        `🔄 Updating template expression for outer scope: ${binding.expression}`,
-                    );
+                    console.log(`🔄 Updating template expression for outer scope: ${binding.expression}`);
                     binding.update();
                 }
             }
         }
 
         let passCount = 0;
-        const maxPasses = 10; // guard to prevent infinite loops
+        const maxPasses = 10; // Guard to prevent infinite loops
 
         while (this.hasUpdates() && passCount < maxPasses) {
             passCount++;
-            this.reactivatedControls.forEach((item) =>
-                this.pendingUpdates.add(item),
-            );
+            this.reactivatedControls.forEach(item => this.pendingUpdates.add(item));
             this.reactivatedControls.clear();
 
-            const itemToUpdate = [...this.pendingUpdates].filter(
-                (item) => !this.nonRelevantControls.has(item),
-            );
-            this.pendingUpdates.clear();
+            // Filter out items that are in deletedIndexes
+            const itemsToUpdate = [...this.pendingUpdates]
+                .filter(item => !this.nonRelevantControls.has(item) && !this.deletedIndexes.has(item));
+
             this.updateCycle.clear();
 
-            for (const item of itemToUpdate) {
+            for (const item of itemsToUpdate) {
                 if (!this.updateCycle.has(item)) {
                     this.updateCycle.add(item);
                     console.log('Updating item:', item);
@@ -539,9 +566,7 @@ export class DependencyTracker {
                         item.update();
                     } else if (item.templateBindings) {
                         for (const tb of item.templateBindings) {
-                            console.log(
-                                `🔄 Updating template expression: ${tb.expression}`,
-                            );
+                            console.log(`🔄 Updating template expression: ${tb.expression}`);
                             tb.update();
                         }
                     }
@@ -550,12 +575,8 @@ export class DependencyTracker {
         }
 
         if (passCount >= maxPasses) {
-            console.warn(
-                'Max pass limit reached — possible infinite update loop!',
-            );
+            console.warn('⚠️ Max pass limit reached — possible infinite update loop!');
         }
-        // this.deletedIndexes.clear();
-        // this.insertedIndexes.clear();
     }
 
     hasModelUpdates() {
