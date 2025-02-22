@@ -64,6 +64,8 @@ export class FxContainer extends ForeElementMixin {
      * (re)apply all state properties to this control.
      */
     async refresh(force) {
+        console.log('🔄 ### FxContainer.refresh on : ', this);
+
         if (!force && this.hasAttribute('refresh-on-view')) return;
         // console.log('### FxContainer.refresh on : ', this);
 
@@ -85,7 +87,7 @@ export class FxContainer extends ForeElementMixin {
         this.modelItem.boundControls.push(this);
       }
             */
-            if (this.modelItem) {
+            if (this.modelItem && this.ref !== '.') {
                 DependencyTracker.getInstance().registerControl(
                     this.modelItem.path,
                     new ControlBinding(this.modelItem.path, this),
