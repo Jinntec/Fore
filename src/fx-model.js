@@ -82,7 +82,7 @@ export class FxModel extends HTMLElement {
      * @param {ForeElementMixin}  formElement  The form element making this model. Used to resolve variables against
      */
     static lazyCreateModelItem(model, ref, node, formElement) {
-        console.log('lazyCreateModelItem ', node);
+        // console.log('lazyCreateModelItem ', node);
         const instanceId = XPathUtil.resolveInstance(formElement, ref);
 
         if (
