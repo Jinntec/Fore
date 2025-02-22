@@ -32,21 +32,23 @@ export class TemplateBinding extends Binding {
         // todo: registration is handled by DependencyTracker itself - other
         // DependencyTracker.getInstance().registerBinding(this.key, this);
         // console.log(`TemplateBinding created for key ${this.key} with expression: ${this.expression}`);
-        this.update();
+        // this.update();
     }
 
     update() {
         super.update();
-        console.log('🔄 TemplateBinding update', this);
+        // console.log('🔄 TemplateBinding update', this);
         const ownerElement = this.node.parentNode
             ? this.node.parentNode
             : this.node.ownerElement;
         if (!ownerElement.closest('fx-fore').inited) return;
 
+/*
         console.log(
-            `Refreshing template expression: ${this.expression} for`,
+            `Refreshing template expression: {${this.expression}} for`,
             this.node,
         );
+*/
 
         // Evaluate expression and get result
         const replaced = this.evaluateTemplateExpression(
@@ -98,7 +100,7 @@ export class TemplateBinding extends Binding {
              */
             let inscope = this.scope.nodeset;
             if (!inscope) {
-                const fore = ownerElement.closest('fx-fore');
+                const fore = this.scope.closest('fx-fore');
                 inscope = fore.getModel().getDefaultContext();
             }
             if (!inscope) {
@@ -108,11 +110,11 @@ export class TemplateBinding extends Binding {
             // Templates are special: they use the namespace configuration from where they are defined
             const instanceId = XPathUtil.getInstanceId(naked);
             const inst = instanceId
-                ? ownerElement
+                ? this.scope
                       .closest('fx-fore')
                       .getModel()
                       .getInstance(instanceId)
-                : ownerElement
+                : this.scope
                       .closest('fx-fore')
                       .getModel()
                       .getDefaultInstance();
