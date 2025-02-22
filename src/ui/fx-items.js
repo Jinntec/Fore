@@ -6,6 +6,7 @@ import {
 import FxControl from './fx-control.js';
 import { Fore } from '../fore.js';
 import { XPathUtil } from '../xpath-util.js';
+import {DependencyTracker} from "../DependencyTracker";
 
 /**
  * FxItems provides a templated list over its bound nodes. It is not standalone but expects to be used
@@ -46,7 +47,10 @@ export class FxItems extends FxControl {
             }
 
             if (e.target.nodeName === 'LABEL') {
-                const target = resolveId(e.target.getAttribute('for'), this);
+                let target = resolveId(e.target.getAttribute('for'), this);
+                if(!target){
+                    target = e.target;
+                }
                 target.focus();
             }
         });
@@ -65,6 +69,8 @@ export class FxItems extends FxControl {
         this.addEventListener('click', (e) => {
             e.preventDefault;
             e.stopPropagation();
+
+
             const items = this.querySelectorAll('[value]');
             let target;
             if (e.target.nodeName === 'LABEL') {
@@ -84,6 +90,8 @@ export class FxItems extends FxControl {
             const parentBind = XPathUtil.getClosest('[ref]', this.parentNode);
             if (!parentBind) return;
             const modelitem = parentBind.getModelItem();
+            DependencyTracker.getInstance().notifyChange(modelitem.path);
+
             const setval = this.shadowRoot.getElementById('setvalue');
             setval.setValue(modelitem, val.trim());
             setval.actionPerformed();
@@ -92,6 +100,11 @@ export class FxItems extends FxControl {
 
     getWidget() {
         return this;
+    }
+
+    async refresh(force) {
+        super.refresh(force);
+        console.log('fx-items refresh')
     }
 
     async updateWidgetValue() {
