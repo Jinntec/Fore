@@ -580,11 +580,6 @@ export default class FxControl extends XfAbstractControl {
             // const nodeset = evaluateXPathToNodes(ref, inscope, this);
             const nodeset = evaluateXPath(ref, inscope, this);
 
-            DependencyTracker.getInstance().registerControl(
-                this.modelItem.path,
-                new ControlBinding(this.modelItem.path,this),
-            );
-
             // ### clear items
             const { children } = widget;
             Array.from(children).forEach((child) => {
