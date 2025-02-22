@@ -49,6 +49,9 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
             nodeset: {
                 type: Array,
             },
+            xpath: {
+                type: String,
+            },
         };
     }
 
@@ -66,6 +69,8 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
         this.index = 1;
         this.repeatSize = 0;
         this.attachShadow({ mode: 'open', delegatesFocus: true });
+
+        this.xpath = null;
     }
 
     get repeatSize() {
@@ -265,24 +270,29 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
         this._evalNodeset();
 
         const instanceId = XPathUtil.resolveInstance(this, this.ref);
-        const xpath = XPathUtil.getPath(this.nodeset, instanceId);
+        this.xpath = XPathUtil.getPath(this.nodeset, instanceId);
 
         // const xpath = XPathUtil.getCanonicalXPath(this.nodeset)
 
-        if(this.nodeset.length !== 0){
-            console.log('xpath', xpath);
+        if (this.nodeset.length !== 0) {
+            console.log('xpath', this.xpath);
             // @TODO: Repeats have no model item!!!
             DependencyTracker.getInstance().registerControl(
-                this.ref,
-                new ControlBinding(this.ref, this),
+                this.xpath,
+                new ControlBinding(this.xpath, this),
             );
         }
 
         // this.getOwnerForm().dependencyTracker.register(this.ref, this);
-
+        // console.log('depTracker', DependencyTracker.getInstance())
         const deletedIndexes =
-            DependencyTracker.getInstance().getDeletedIndexes(xpath);
+            DependencyTracker.getInstance().getDeletedIndexes(this.xpath);
         console.log('deletedIndexes', deletedIndexes);
+
+        if (deletedIndexes.length !== 0) {
+            this.index = deletedIndexes[deletedIndexes.length - 1];
+        }
+
         const insertedIndexes =
             DependencyTracker.getInstance().getInsertedIndexes(this.ref);
 
@@ -324,6 +334,9 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
             // Turn the possibly conditional force refresh into a forced one: we changed our children
             // Fore.refreshChildren(this, force);
         }
+        // DependencyTracker.getInstance().pendingUpdates.clear();
+        DependencyTracker.getInstance().deletedIndexes.clear();
+        DependencyTracker.getInstance().repeatIndexMap.clear();
     }
 
     _insertRepeatItem(index) {
