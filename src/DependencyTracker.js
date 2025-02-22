@@ -170,11 +170,14 @@ export class DependencyTracker {
                 ? `${scopeXPath}/${refXPath}`
                 : this.resolveInstanceXPath(refXPath);
         }
+        if(this.bindingRegistry.has(resolvedXPath)){
+            console.warn(`⚠️ Warning: Attempting to register duplicate binding for key '${resolvedXPath}'.`, control);
+        }else{
+            // console.log('🔗 Registering Control', resolvedXPath, control);
+            // Instead of adding to controlBindings, use our unified registry.
+            this.registerBinding(resolvedXPath, control);
+        }
 
-        // console.log('🔗 Registering XPath', resolvedXPath, control);
-
-        // Instead of adding to controlBindings, use our unified registry.
-        this.registerBinding(resolvedXPath, control);
 
         // If a change was queued for this XPath, process it now.
         if (this.queuedChanges.has(resolvedXPath)) {
@@ -191,7 +194,7 @@ export class DependencyTracker {
      * @param {Node} node - The DOM Node that holds the template expression.
      */
     registerTemplateBinding(expression, node) {
-        console.log(`🔗 Registering Template Expression: {${expression}}`, node);
+        // console.log(`🔗 Registering Template Expression: {${expression}}`, node);
 
         const parent =
             node.nodeType === Node.ATTRIBUTE_NODE
@@ -214,19 +217,19 @@ export class DependencyTracker {
         this.registerBinding(expression, templateBinding);
         scope.templateBindings.add(templateBinding);
 
-        console.log(`Stored in scope`, scope);
+        // console.log(`Stored in scope`, scope);
 
         // Register dependencies for the template binding.
         const dependencies = this.extractDependencies(expression);
         dependencies.forEach((dep) => {
-            console.log(`🔗 Template depends on: ${dep}`);
+            // console.log(`🔗 Template depends on: ${dep}`);
             this.registerBinding(dep, templateBinding);
         });
         // Also register under a default key.
         // this.registerBinding('$default', templateBinding);
 
         // Evaluate the template immediately.
-        templateBinding.update();
+        // templateBinding.update();
     }
 
     // Register a dependency edge in the dependency graph.
@@ -256,6 +259,7 @@ export class DependencyTracker {
 
     resolveInstanceXPath(xpath) {
         // Replace instance() calls
+        console.log('resolveInstanceXPath',xpath);
         xpath = xpath.replace(
             /instance\(['"]?([^'"\)]*)['"]?\)/g,
             (_, instanceId) => `$${instanceId || 'default'}/`
