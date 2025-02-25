@@ -393,7 +393,6 @@ export class DependencyTracker {
         }
         if (this.bindingRegistry.has(resolvedXPath)) {
             this.bindingRegistry.get(resolvedXPath).forEach((binding) => {
-                this.nonRelevantControls.add(binding);
                 this.pendingUpdates.add(binding);
             });
         }
