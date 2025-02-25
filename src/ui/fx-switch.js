@@ -1,5 +1,6 @@
 import { Fore } from '../fore.js';
 import { FxContainer } from './fx-container.js';
+import {DependencyTracker} from "../DependencyTracker";
 
 /**
  * `fx-switch`
@@ -148,9 +149,10 @@ class FxSwitch extends FxContainer {
         this._dispatchEvents();
         this.formerCase = this.selectedCase;
 
+        DependencyTracker.getInstance().registerControl(this.modelItem.path,this);
         // Tell the owner form we might have new template expressions here
-        this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh();
-        this.getOwnerForm().getModel().updateModel();
+        // this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh();
+        // this.getOwnerForm().getModel().updateModel();
     }
 }
 

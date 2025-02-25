@@ -49,9 +49,6 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
             nodeset: {
                 type: Array,
             },
-            xpath: {
-                type: String,
-            },
         };
     }
 
@@ -69,8 +66,6 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
         this.index = 1;
         this.repeatSize = 0;
         this.attachShadow({ mode: 'open', delegatesFocus: true });
-
-        this.xpath = null;
     }
 
     get repeatSize() {
@@ -271,16 +266,16 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
         this._evalNodeset();
 
         const instanceId = XPathUtil.resolveInstance(this, this.ref);
-        this.xpath = XPathUtil.getPath(this.nodeset, instanceId);
 
         // const xpath = XPathUtil.getCanonicalXPath(this.nodeset)
 
         if (this.nodeset.length !== 0) {
-            console.log('xpath', this.xpath);
+            const xpath = XPathUtil.getPath(this.nodeset, instanceId);
+            console.log('xpath', xpath);
             // @TODO: Repeats have no model item!!!
             DependencyTracker.getInstance().registerControl(
-                this.xpath,
-                new ControlBinding(this.xpath, this),
+                this.ref,
+                new ControlBinding(this),
             );
         }
 
@@ -355,8 +350,8 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
             // Fore.refreshChildren(this, force);
         }
         // DependencyTracker.getInstance().pendingUpdates.clear();
-        DependencyTracker.getInstance().deletedIndexes.clear();
-        DependencyTracker.getInstance().repeatIndexMap.clear();
+        // DependencyTracker.getInstance().deletedIndexes.clear();
+        // DependencyTracker.getInstance().repeatIndexMap.clear();
     }
 
     _insertRepeatItem(index) {
