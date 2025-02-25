@@ -179,14 +179,8 @@ export class DependencyTracker {
                 ? `${scopeXPath}/${refXPath}`
                 : this.resolveInstanceXPath(refXPath);
         }
-        if(this.bindingRegistry.has(resolvedXPath)){
-            console.warn(`⚠️ Warning: Attempting to register duplicate binding for key '${resolvedXPath}'.`, control);
-        }else{
-            // console.log('🔗 Registering Control', resolvedXPath, control);
-            // Instead of adding to controlBindings, use our unified registry.
-            this.registerBinding(resolvedXPath, control);
-        }
 
+        this.registerBinding(resolvedXPath, control);
 
         // If a change was queued for this XPath, process it now.
         if (this.queuedChanges.has(resolvedXPath)) {
@@ -203,7 +197,7 @@ export class DependencyTracker {
      * @param {Node} node - The DOM Node that holds the template expression.
      */
     registerTemplateBinding(expression, node) {
-        // console.log(`🔗 Registering Template Expression: {${expression}}`, node);
+        console.log(`🔗 Registering Template Expression: {${expression}}`, node);
 
         const parent =
             node.nodeType === Node.ATTRIBUTE_NODE
