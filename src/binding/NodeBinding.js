@@ -47,6 +47,7 @@ export class NodeBinding extends Binding {
             DependencyTracker.getInstance().registerBinding(
                 `${this.xpath}:calculate`,
                 calcFacet,
+                true,
             );
 
             // Register the dependency from the NodeBinding to the calculate facet.
@@ -152,7 +153,7 @@ export class NodeBinding extends Binding {
                     /*
                     todo: we get bare nodes here not Bindings - need to check if we got them already otherwise create
                     */
-                    const xpath = XPathUtil.getCanonicalXPath(ref)
+                    const xpath = XPathUtil.getCanonicalXPath(ref);
                     // console.log('####xpath',xpath);
                     // const hasNode = DependencyTracker.getInstance().bindingRegistry.has(xpath);
                     // console.log('####registry hasNode',hasNode);

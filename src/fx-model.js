@@ -271,8 +271,9 @@ export class FxModel extends HTMLElement {
                 `🔷🔷 ### <<<<< partial recalculate() '${this.fore.id}' >>>>>`,
             );
             // Let DependencyTracker figure out which keys are pending.
-            const subGraph = DependencyTracker.getInstance().buildSubgraphForPendingChanges();
-            const orderedKeys = subGraph.overallOrder(false);
+            const subGraph =
+                DependencyTracker.getInstance().buildSubgraphForPendingChanges();
+            const orderedKeys = subGraph.overallOrder(false).reverse();
 
             console.log('ℹ️ ordered subgraph keys', orderedKeys);
 
@@ -300,7 +301,6 @@ export class FxModel extends HTMLElement {
                 graph: subGraph,
                 computes: this.computes,
             });
-
         }
 
         if (this.needsFullRecalc) {
@@ -313,7 +313,7 @@ export class FxModel extends HTMLElement {
                     true,
                 );
 
-            if(orderedKeys.length === 0){
+            if (orderedKeys.length === 0) {
                 console.log(
                     `🔷🔷 ### <<<<< full recalculate() '${this.fore.id}' - nothing to do >>>>>`,
                 );
@@ -336,7 +336,6 @@ export class FxModel extends HTMLElement {
 
             // Fore.dispatch(this, 'recalculate-done', { graph: DependencyTracker.getInstance().dependencyGraph, computes: this.computes });
         }
-
     }
 
     /**
@@ -358,11 +357,12 @@ export class FxModel extends HTMLElement {
      */
     revalidate() {
         console.log(`🔷 ### <<<<< revalidate() '${this.fore.id}' >>>>>`);
-        if (this.modelItems.length === 0){
-            console.log(`🔷🔷 ### <<<<< revalidate() '${this.fore.id}' - nothing to do >>>>>`);
+        if (this.modelItems.length === 0) {
+            console.log(
+                `🔷🔷 ### <<<<< revalidate() '${this.fore.id}' - nothing to do >>>>>`,
+            );
             return true;
         }
-
 
         // reset submission validation
         // this.parentNode.classList.remove('submit-validation-failed')
@@ -389,7 +389,7 @@ export class FxModel extends HTMLElement {
                         );
                         // console.log('modelItem validity computed: ', compute);
                         modelItem.constraint = compute;
-/*
+                        /*
                         if (oldVal !== compute) {
                             DependencyTracker.getInstance().notifyChange(
                                 modelItem.path,

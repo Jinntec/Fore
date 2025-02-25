@@ -3,7 +3,7 @@ import getInScopeContext from './getInScopeContext';
 import { XPathUtil } from './xpath-util';
 import { TemplateBinding } from './binding/TemplateBinding.js';
 import { evaluateXPathToNodes } from './xpath-evaluation';
-import {debounce, leadingDebounce} from './events';
+import { debounce } from './events';
 // import { XPathDependencyExtractor } from './XPathDependencyExtractor.js';
 let _instance = null;
 
@@ -84,7 +84,7 @@ export class DependencyTracker {
      * This method builds a subgraph from those keys and any dependents from the main dependency graph,
      * then returns a topologically sorted list of keys.
      *
-     * @returns {string[]} - Ordered list of affected keys.
+     * @returns {DepGraph} - The sub graph that should be updated to reach a new state
      */
     buildSubgraphForPendingChanges() {
         const subgraph = new DepGraph(false);
@@ -130,8 +130,10 @@ export class DependencyTracker {
      * Unified registration for any binding.
      * @param {string} key - The composite key for the binding (for example, "foo:readonly" or "$default")
      * @param {import('./binding/Binding.js').Binding} binding - The binding object to register.
+     * @param {boolean} shouldInvalidateImmediately - Whether the binding should be updated
+     * immediately. Facets (like calculate) should be invalidated and recomputed right away
      */
-    registerBinding(key, binding) {
+    registerBinding(key, binding, shouldInvalidateImmediately = false) {
         if (!this.bindingRegistry.has(key)) {
             console.log('🔗 registerBinding', key, binding);
             this.bindingRegistry.set(key, new Set());
@@ -150,6 +152,13 @@ export class DependencyTracker {
         // Also index by type if available
         if (binding.bindingType && this.bindingsByType[binding.bindingType]) {
             this.bindingsByType[binding.bindingType].add(binding);
+        }
+
+        if (shouldInvalidateImmediately) {
+            // Also, invalidate bindings immediately. Do not compute them right away since the
+            // calculation order may depend on intricate dependencies (a->c->b). The Graph will figure
+            // that order of calculation out later
+            this.pendingUpdates.add(binding);
         }
     }
 
@@ -217,19 +226,19 @@ export class DependencyTracker {
         this.registerBinding(expression, templateBinding);
         scope.templateBindings.add(templateBinding);
 
-        // console.log(`Stored in scope`, scope);
+        console.log(`Stored in scope`, scope);
 
         // Register dependencies for the template binding.
         const dependencies = this.extractDependencies(expression);
         dependencies.forEach((dep) => {
-            // console.log(`🔗 Template depends on: ${dep}`);
+            console.log(`🔗 Template depends on: ${dep}`);
             this.registerBinding(dep, templateBinding);
         });
         // Also register under a default key.
         // this.registerBinding('$default', templateBinding);
 
         // Evaluate the template immediately.
-        // templateBinding.update();
+        templateBinding.update();
     }
 
     // Register a dependency edge in the dependency graph.
@@ -262,16 +271,16 @@ export class DependencyTracker {
         console.log('resolveInstanceXPath',xpath);
         xpath = xpath.replace(
             /instance\(['"]?([^'"\)]*)['"]?\)/g,
-            (_, instanceId) => `$${instanceId || 'default'}/`
+            (_, instanceId) => `$${instanceId || 'default'}/`,
         );
 
         // Ensure absolute and relative paths without instance() get prefixed with $default
-        if (!xpath.startsWith("$") && !xpath.startsWith(".")) {
+        if (!xpath.startsWith('$') && !xpath.startsWith('.')) {
             xpath = `$default/${xpath}`;
         }
 
         // Normalize multiple consecutive slashes (e.g., "///" -> "/")
-        xpath = xpath.replace(/\/+/g, "/");
+        xpath = xpath.replace(/\/+/g, '/');
 
         return xpath;
     }
@@ -290,9 +299,11 @@ export class DependencyTracker {
         const oldIndex = this.repeatIndexMap.get(resolvedXPath);
         if (oldIndex !== newIndex) {
             this.repeatIndexMap.set(resolvedXPath, newIndex);
+            this.notifyIndexChange(resolvedXPath, oldIndex, newIndex);
             // repeats listen on the basePath so cut off the resolvedPath
-            const basePath = this.getBaseXPath(resolvedXPath);
-            this.notifyIndexChange(basePath, oldIndex, newIndex);
+            // const basePath = this.getBaseXPath(resolvedXPath);
+            // this.notifyIndexChange(basePath, oldIndex, newIndex);
+
         }
     }
 
@@ -305,7 +316,6 @@ export class DependencyTracker {
     notifyChange(changedXPath) {
         console.log('throttling notifyChange', changedXPath);
         this._notifyChange(changedXPath);
-        // this.debouncedNotifyChange(changedXPath);
     }
 
     /**
@@ -420,10 +430,7 @@ export class DependencyTracker {
         }
         if (this.bindingRegistry.has(resolvedXPath)) {
             this.bindingRegistry.get(resolvedXPath).forEach((binding) => {
-                // this.nonRelevantControls.add(binding);
-                if(!this.pendingUpdates.has(binding)){
-                    this.pendingUpdates.add(binding);
-                }
+                this.pendingUpdates.add(binding);
             });
         }
         if (this.dependencyGraph.hasNode(resolvedXPath)) {
@@ -475,20 +482,6 @@ export class DependencyTracker {
 
     notifyIndexChange(xpath, oldIndex, newIndex) {
         console.log('notifyIndexChange', xpath, newIndex);
-/*
-        console.log(
-            'notifyIndexChange nonRelevantControls',
-            Array.from(this.nonRelevantControls),
-        );
-
-*/
-/*
-        console.log(
-            'notifyIndexChange this',
-            this,
-        );
-*/
-
         if (this.bindingRegistry.has(xpath)) {
             for (const binding of this.bindingRegistry.get(xpath)) {
                 if (!this.nonRelevantControls.has(binding)) {
@@ -530,35 +523,48 @@ export class DependencyTracker {
     }
 
     processUpdates() {
-        console.log('processUpdates pendingUpdates', Array.from(this.pendingUpdates));
-        console.log('processUpdates deletedIndexes', Array.from(this.deletedIndexes));
-        console.log('processUpdates insertedIndexes', Array.from(this.insertedIndexes));
+        console.log(
+            'processUpdates pendingUpdates',
+            Array.from(this.pendingUpdates),
+        );
+        console.log(
+            'processUpdates deletedIndexes',
+            Array.from(this.deletedIndexes),
+        );
+        console.log(
+            'processUpdates insertedIndexes',
+            Array.from(this.insertedIndexes),
+        );
 
-        // Update any template bindings registered under '$default'
+        // update any template bindings registered under '$default'
         if (this.bindingRegistry.has('$default')) {
             for (const binding of this.bindingRegistry.get('$default')) {
                 if (typeof binding.update === 'function') {
-                    console.log(`🔄 Updating template expression for outer scope: ${binding.expression}`);
+                    console.log(
+                        `🔄 Updating template expression for outer scope: ${binding.expression}`,
+                    );
                     binding.update();
                 }
             }
         }
 
         let passCount = 0;
-        const maxPasses = 10; // Guard to prevent infinite loops
+        const maxPasses = 10; // guard to prevent infinite loops
 
         while (this.hasUpdates() && passCount < maxPasses) {
             passCount++;
-            this.reactivatedControls.forEach(item => this.pendingUpdates.add(item));
+            this.reactivatedControls.forEach((item) =>
+                this.pendingUpdates.add(item),
+            );
             this.reactivatedControls.clear();
 
-            // Filter out items that are in deletedIndexes
-            const itemsToUpdate = [...this.pendingUpdates]
-                .filter(item => !this.nonRelevantControls.has(item) && !this.deletedIndexes.has(item));
-
+            const itemToUpdate = [...this.pendingUpdates].filter(
+                (item) => !this.nonRelevantControls.has(item),
+            );
+            this.pendingUpdates.clear();
             this.updateCycle.clear();
 
-            for (const item of itemsToUpdate) {
+            for (const item of itemToUpdate) {
                 if (!this.updateCycle.has(item)) {
                     this.updateCycle.add(item);
                     console.log('Updating item:', item);
@@ -566,7 +572,9 @@ export class DependencyTracker {
                         item.update();
                     } else if (item.templateBindings) {
                         for (const tb of item.templateBindings) {
-                            console.log(`🔄 Updating template expression: ${tb.expression}`);
+                            console.log(
+                                `🔄 Updating template expression: ${tb.expression}`,
+                            );
                             tb.update();
                         }
                     }
@@ -575,8 +583,12 @@ export class DependencyTracker {
         }
 
         if (passCount >= maxPasses) {
-            console.warn('⚠️ Max pass limit reached — possible infinite update loop!');
+            console.warn(
+                '⚠️ Max pass limit reached — possible infinite update loop!',
+            );
         }
+        // this.deletedIndexes.clear();
+        // this.insertedIndexes.clear();
     }
 
     hasModelUpdates() {
@@ -592,7 +604,8 @@ export class DependencyTracker {
         return Array.from(this.pendingUpdates).some(
             (binding) =>
                 binding.bindingType === 'control' ||
-                binding.bindingType === 'template',
+                binding.bindingType === 'template' ||
+                binding.bindingType === 'facet',
         );
     }
 
