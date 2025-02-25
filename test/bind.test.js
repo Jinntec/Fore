@@ -376,7 +376,9 @@ describe('bind Tests', () => {
                         </data>
                     </fx-instance>
                     <fx-bind ref="add" calculate="../m2 + 5"></fx-bind>
+                    <!-- STEP 2: 6 + 5 = 11 -->
                     <fx-bind ref="m2" calculate="../m1 * 2"></fx-bind>
+                    <!-- STEP 1: m1 * 2 = 6 -->
                 </fx-model>
                 <fx-group>
                     <fx-output id="output" ref="add"></fx-output>
@@ -384,8 +386,9 @@ describe('bind Tests', () => {
             </fx-fore>
         `);
 
-        await oneEvent(el, 'ready');
-
+        if (!el.ready) {
+            await oneEvent(el, 'ready');
+        }
 
         const output = el.querySelector('#output');
         expect(output.value).to.equal('11');
@@ -438,8 +441,9 @@ describe('bind Tests', () => {
             </fx-fore>
         `);
 
-        await oneEvent(el, 'ready');
-
+        if (!el.ready) {
+            await oneEvent(el, 'ready');
+        }
 
         const output = el.querySelector('#output');
         expect(output.value).to.equal('11');

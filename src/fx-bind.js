@@ -101,10 +101,11 @@ export class FxBind extends ForeElementMixin {
                 );
 
                 if (this.calculate) {
+                    const calculateKey = `${modelItem.path}:calculate`;
                     // Calculated values are a dependency of the model item.
                     DependencyTracker.getInstance().dependencyGraph.addDependency(
                         modelItem.path,
-                        `${modelItem.path}:calculate`,
+                        calculateKey,
                     );
                 }
             });

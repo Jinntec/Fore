@@ -84,7 +84,7 @@ export class DependencyTracker {
      * This method builds a subgraph from those keys and any dependents from the main dependency graph,
      * then returns a topologically sorted list of keys.
      *
-     * @returns {string[]} - Ordered list of affected keys.
+     * @returns {DepGraph} - The sub graph that should be updated to reach a new state
      */
     buildSubgraphForPendingChanges() {
         const subgraph = new DepGraph(false);
@@ -145,6 +145,11 @@ export class DependencyTracker {
         if (binding.bindingType && this.bindingsByType[binding.bindingType]) {
             this.bindingsByType[binding.bindingType].add(binding);
         }
+
+        // Also, invalidate bindings immediately. Do not compute them right away since the
+        // calculation order may depend on intricate dependencies (a->c->b). The Graph will figure
+        // that order of calculation out later
+        this.pendingUpdates.add(binding);
     }
 
     /**
@@ -252,20 +257,19 @@ export class DependencyTracker {
         // Replace instance() calls
         xpath = xpath.replace(
             /instance\(['"]?([^'"\)]*)['"]?\)/g,
-            (_, instanceId) => `$${instanceId || 'default'}/`
+            (_, instanceId) => `$${instanceId || 'default'}/`,
         );
 
         // Ensure absolute and relative paths without instance() get prefixed with $default
-        if (!xpath.startsWith("$") && !xpath.startsWith(".")) {
+        if (!xpath.startsWith('$') && !xpath.startsWith('.')) {
             xpath = `$default/${xpath}`;
         }
 
         // Normalize multiple consecutive slashes (e.g., "///" -> "/")
-        xpath = xpath.replace(/\/+/g, "/");
+        xpath = xpath.replace(/\/+/g, '/');
 
         return xpath;
     }
-
 
     updateRepeatIndex(xpath, newIndex) {
         console.log('updateRepeatIndex', xpath, newIndex);
@@ -555,7 +559,8 @@ export class DependencyTracker {
         return Array.from(this.pendingUpdates).some(
             (binding) =>
                 binding.bindingType === 'control' ||
-                binding.bindingType === 'template',
+                binding.bindingType === 'template' ||
+                binding.bindingType === 'facet',
         );
     }
 
