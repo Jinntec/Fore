@@ -362,11 +362,6 @@ export class FxFore extends HTMLElement {
         // register fore element as outer scope for non-enclosed template expressions
         console.log('dependencyTracker', DependencyTracker.getInstance());
 
-        // making sure all non-scoped template expressions will be evaluated
-        this.addEventListener('init-done', () => {
-            console.log('✅ init-done - running template expressions');
-            DependencyTracker.getInstance().evaluateAllTemplateBindings();
-        });
     }
 
     _injectDevtools() {
@@ -757,6 +752,10 @@ export class FxFore extends HTMLElement {
         // console.log(`### <<<<< ${this.id} ready >>>>>`);
         // console.log('### modelItems: ', this.getModel().modelItems);
         Fore.dispatch(this, 'ready', {});
+
+        // making sure all non-scoped template expressions will be evaluated
+        DependencyTracker.getInstance().evaluateAllTemplateBindings();
+
         // console.log('dataChanged', FxModel.dataChanged);
         console.timeEnd('init');
 
