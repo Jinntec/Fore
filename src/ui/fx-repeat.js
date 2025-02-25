@@ -297,9 +297,11 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
 
             if (!oldNode) {
                 insertedIndexes.push(i + 1);
+                continue;
             }
             if (!newNode) {
                 deletedIndexes.push(i + 1);
+                continue;
             }
             if (oldNode !== newNode) {
                 insertedIndexes.push(i + 1);
