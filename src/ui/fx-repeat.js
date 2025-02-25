@@ -261,15 +261,16 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
 
         if (!this.inited) this.init();
         // console.time('repeat-refresh', this);
-        console.log('nodeset before eval', this.nodeset);
+        const oldNodeset = this.nodeset;
+        console.log('nodeset before eval', oldNodeset);
         this._evalNodeset();
 
         const instanceId = XPathUtil.resolveInstance(this, this.ref);
-        const xpath = XPathUtil.getPath(this.nodeset, instanceId);
 
         // const xpath = XPathUtil.getCanonicalXPath(this.nodeset)
 
-        if(this.nodeset.length !== 0){
+        if (this.nodeset.length !== 0) {
+            const xpath = XPathUtil.getPath(this.nodeset, instanceId);
             console.log('xpath', xpath);
             // @TODO: Repeats have no model item!!!
             DependencyTracker.getInstance().registerControl(
@@ -280,11 +281,33 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
 
         // this.getOwnerForm().dependencyTracker.register(this.ref, this);
 
-        const deletedIndexes =
-            DependencyTracker.getInstance().getDeletedIndexes(xpath);
+        const deletedIndexes = [];
+        //            DependencyTracker.getInstance().getDeletedIndexes(xpath);
         console.log('deletedIndexes', deletedIndexes);
-        const insertedIndexes =
-            DependencyTracker.getInstance().getInsertedIndexes(this.ref);
+        const insertedIndexes = [];
+        //            DependencyTracker.getInstance().getInsertedIndexes(this.ref);
+
+        for (
+            let i = 0;
+            i < Math.max(this.nodeset.length, oldNodeset.length);
+            ++i
+        ) {
+            const oldNode = oldNodeset[i];
+            const newNode = this.nodeset[i];
+
+            if (!oldNode) {
+                insertedIndexes.push(i + 1);
+            }
+            if (!newNode) {
+                deletedIndexes.push(i + 1);
+            }
+            if (oldNode !== newNode) {
+                insertedIndexes.push(i + 1);
+                deletedIndexes.push(i + 1);
+            }
+
+            // TODO: Optimize swaps?
+        }
 
         const repeatItems = this.querySelectorAll(':scope > fx-repeatitem');
         const diff = insertedIndexes.length - deletedIndexes.length;
