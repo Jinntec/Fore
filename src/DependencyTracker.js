@@ -130,8 +130,10 @@ export class DependencyTracker {
      * Unified registration for any binding.
      * @param {string} key - The composite key for the binding (for example, "foo:readonly" or "$default")
      * @param {import('./binding/Binding.js').Binding} binding - The binding object to register.
+     * @param {boolean} shouldInvalidateImmediately - Whether the binding should be updated
+     * immediately. Facets (like calculate) should be invalidated and recomputed right away
      */
-    registerBinding(key, binding) {
+    registerBinding(key, binding, shouldInvalidateImmediately = false) {
         if (!this.bindingRegistry.has(key)) {
             console.log('🔗 registerBinding', key, binding);
             this.bindingRegistry.set(key, new Set());
@@ -146,10 +148,12 @@ export class DependencyTracker {
             this.bindingsByType[binding.bindingType].add(binding);
         }
 
-        // Also, invalidate bindings immediately. Do not compute them right away since the
-        // calculation order may depend on intricate dependencies (a->c->b). The Graph will figure
-        // that order of calculation out later
-        this.pendingUpdates.add(binding);
+        if (shouldInvalidateImmediately) {
+            // Also, invalidate bindings immediately. Do not compute them right away since the
+            // calculation order may depend on intricate dependencies (a->c->b). The Graph will figure
+            // that order of calculation out later
+            this.pendingUpdates.add(binding);
+        }
     }
 
     /**

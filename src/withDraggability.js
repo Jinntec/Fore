@@ -31,6 +31,7 @@ export const withDraggability = (superclass, isAlsoDraggable) =>
         }
 
         disconnectedCallback() {
+            super.disconnectedCallback();
             this.removeEventListener('drop', this.drop);
             this.removeEventListener('dragover', this.dragOver);
             this.removeEventListener('dragleave', this.dragLeave);

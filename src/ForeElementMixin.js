@@ -63,6 +63,11 @@ export default class ForeElementMixin extends HTMLElement {
          */
         this.inScopeVariables = new Map();
 
+        /**
+         * Is set to true when this element is destroyed and should no longer be used
+         */
+        this.isDestroyed = false;
+
         // this.dependencies = new DependentXPathQueries();
     }
 
@@ -72,6 +77,10 @@ export default class ForeElementMixin extends HTMLElement {
       this.dependencies.setParentDependencies(this.parentElement?.closest('[ref]')?.dependencies);
     }
 */
+    }
+
+    disconnectedCallback() {
+        this.isDestroyed = true;
     }
 
     /**

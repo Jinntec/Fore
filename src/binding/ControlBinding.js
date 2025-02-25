@@ -1,7 +1,6 @@
 import { DependencyTracker } from '../DependencyTracker.js';
 import ForeElementMixin from '../ForeElementMixin.js';
 import { ModelItem } from '../modelitem.js';
-import { evaluateXPathToNodes } from '../xpath-evaluation.js';
 import { Binding } from './Binding.js';
 import { detectTemplateExpressions } from './detectTemplateStrings.js';
 
@@ -58,6 +57,12 @@ export class ControlBinding extends Binding {
 
     refresh() {
         // console.log('control refreshing')
+        if (this.control.isDestroyed) {
+            console.log(
+                `Cancelling update for control for ${this.xpath} that is already destroyed`,
+            );
+            return;
+        }
         this.control.refresh();
     }
 }
