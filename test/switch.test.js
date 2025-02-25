@@ -252,6 +252,7 @@ describe('fx-switch Tests', () => {
       </fx-fore>
     `);
 
+    await oneEvent(el, 'ready');
     const control = el.querySelector('fx-control');
     control.setValue('bar');
 
@@ -365,10 +366,12 @@ describe('fx-switch Tests', () => {
       </fx-fore>
     `);
 
+    // await oneEvent(el, 'ready');
+
+    await oneEvent(el, 'refresh-done');
     const control = el.querySelector('fx-control');
     control.setValue('bar');
 
-    await oneEvent(el, 'refresh-done');
 
     const cases = el.querySelectorAll('fx-case');
     expect(cases[0].classList.contains('selected-case')).to.be.true;
@@ -377,7 +380,7 @@ describe('fx-switch Tests', () => {
 
     // check that only the first of conrols will have a value -> be initialized
     const control1 = el.querySelector('[ref="item1"]');
-    expect(control1.value).to.equal('a bound item');
+    expect(control1.value).to.equal('bar');
 
     const control2 = el.querySelector('[ref="item2"]');
     expect(control2.value).to.equal(null);

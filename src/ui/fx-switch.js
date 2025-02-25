@@ -90,6 +90,8 @@ class FxSwitch extends FxContainer {
      * @private
      */
     _handleBoundSwitch() {
+        DependencyTracker.getInstance().registerControl(this.modelItem.path,this);
+
         Array.from(this.cases).forEach((caseElem) => {
             const name = caseElem.getAttribute('name');
             if (name === this.modelItem?.value) {
@@ -149,7 +151,6 @@ class FxSwitch extends FxContainer {
         this._dispatchEvents();
         this.formerCase = this.selectedCase;
 
-        DependencyTracker.getInstance().registerControl(this.modelItem.path,this);
         // Tell the owner form we might have new template expressions here
         // this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh();
         // this.getOwnerForm().getModel().updateModel();
