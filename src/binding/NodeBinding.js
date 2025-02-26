@@ -194,6 +194,6 @@ export class NodeBinding extends Binding {
     }
 
     _registerDependencies() {
-        // todo: examine predicates and register deps
+        // todo: examine predicates and register deps - https://github.com/Jinntec/Fore/issues/125
     }
 }
