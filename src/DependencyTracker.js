@@ -516,6 +516,18 @@ export class DependencyTracker {
         }
     }
 
+    evaluateTemplateExpressions(key){
+        if (this.bindingRegistry.has(key)) {
+            const templatebindings = this.bindingRegistry.get(key).templateBindings;
+            Array.from(templatebindings).forEach(tb =>{
+                console.log(
+                    `Updating template expression within scope: ${tb.expression}`,
+                );
+                tb.update();
+            });
+        }
+    }
+
     processUpdates() {
         console.log(
             'processUpdates pendingUpdates',

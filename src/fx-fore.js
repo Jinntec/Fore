@@ -525,6 +525,8 @@ export class FxFore extends HTMLElement {
                 Fore.refreshChildren(this, force);
             }
         }
+        // DependencyTracker.getInstance().evaluateAllTemplateBindings();
+
 
         // console.log('### <<<<< dispatching refresh-done - end of UI update cycle >>>>>');
         // this.dispatchEvent(new CustomEvent('refresh-done'));
