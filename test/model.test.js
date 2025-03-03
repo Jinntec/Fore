@@ -223,8 +223,8 @@ describe('model tests', () => {
     // there are 8 modelItems
     expect(model.modelItems.length).to.equal(8);
     const bindingCount = Array.from(DependencyTracker.getInstance().bindingRegistry).length;
-    expect(bindingCount).to.equal(21);
-    expect(Object.keys(DependencyTracker.getInstance().dependencyGraph.nodes).length).to.equal(21);
+    expect(bindingCount).to.equal(20);
+    expect(Object.keys(DependencyTracker.getInstance().dependencyGraph.nodes).length).to.equal(20);
     expect(Object.keys(DependencyTracker.getInstance().dependencyGraph.nodes).length).to.equal(bindingCount);
 
   });
@@ -292,7 +292,7 @@ describe('model tests', () => {
 
     // there are 8 modelItems
     expect(model.modelItems.length).to.equal(8);
-    expect(Object.keys(DependencyTracker.getInstance().dependencyGraph.nodes).length).to.equal(21);
+    expect(Object.keys(DependencyTracker.getInstance().dependencyGraph.nodes).length).to.equal(20);
 
     const cControl = el.querySelector('#c');
     expect(cControl.getModelItem().value).to.equal('110');
@@ -364,8 +364,8 @@ describe('model tests', () => {
     const model = el.querySelector('fx-model');
 
     const bindingCount = Array.from(DependencyTracker.getInstance().bindingRegistry).length;
-    expect(bindingCount).to.equal(21);
-    expect(Object.keys(DependencyTracker.getInstance().dependencyGraph.nodes).length).to.equal(21);
+    expect(bindingCount).to.equal(20);
+    expect(Object.keys(DependencyTracker.getInstance().dependencyGraph.nodes).length).to.equal(20);
     expect(Object.keys(DependencyTracker.getInstance().dependencyGraph.nodes).length).to.equal(bindingCount);
 
     const changed = model.computes;
@@ -440,8 +440,8 @@ describe('model tests', () => {
     // console.log('modelitems ', model.modelItems);
 
     const bindingCount = Array.from(DependencyTracker.getInstance().bindingRegistry).length;
-    expect(bindingCount).to.equal(21);
-    expect(Object.keys(DependencyTracker.getInstance().dependencyGraph.nodes).length).to.equal(21);
+    expect(bindingCount).to.equal(20);
+    expect(Object.keys(DependencyTracker.getInstance().dependencyGraph.nodes).length).to.equal(20);
     expect(Object.keys(DependencyTracker.getInstance().dependencyGraph.nodes).length).to.equal(bindingCount);
 
     const changed = model.computes;

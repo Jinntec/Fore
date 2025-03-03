@@ -204,31 +204,16 @@ export class DependencyTracker {
                 ? node.ownerElement
                 : node.parentNode;
         if (parent.closest('fx-model')) return;
-        const scope = parent.closest('[ref], fx-fore, fx-repeatitem');
-        if (!scope) {
-            console.warn(
-                `No valid scope found for template expression: ${expression}`,
-            );
-            return;
-        }
-
-        // Store the binding in the scoped component.
-        if (!scope.templateBindings) {
-            scope.templateBindings = new Set();
-        }
-        const templateBinding = new TemplateBinding(expression, node, scope);
-        this.registerBinding(expression, templateBinding);
-        scope.templateBindings.add(templateBinding);
-
-        console.log(`Stored in scope`, scope);
+        const templateBinding = new TemplateBinding(expression, node);
+        this.registerBinding(templateBinding.xpath, templateBinding);
 
         // Register dependencies for the template binding.
-        const dependencies = this.extractDependencies(expression);
+ /*       const dependencies = this.extractDependencies(expression);
         dependencies.forEach((dep) => {
             console.log(`🔗 Template depends on: ${dep}`);
             this.registerBinding(dep, templateBinding);
         });
-        // Also register under a default key.
+ */       // Also register under a default key.
         // this.registerBinding('$default', templateBinding);
 
         // Evaluate the template immediately.
@@ -342,18 +327,15 @@ export class DependencyTracker {
             //      return;
         }
 
-        // Handle wildcard dependencies.
         this.bindingRegistry.forEach((bindings, key) => {
+            // Handle wildcard dependencies.
             if (key.endsWith('/*')) {
                 const parentPath = key.slice(0, -2);
                 if (resolvedXPath.startsWith(parentPath)) {
                     affectedXPaths.add(key);
                 }
             }
-        });
-
-        // Handle parent (`..`) dependencies.
-        this.bindingRegistry.forEach((bindings, key) => {
+            // Handle parent (`..`) dependencies.
             if (key.includes('..')) {
                 const parentPath = key.replace('..', '');
                 if (resolvedXPath.startsWith(parentPath)) {
@@ -361,6 +343,18 @@ export class DependencyTracker {
                 }
             }
         });
+
+/*
+        this.bindingRegistry.forEach((bindings, key) => {
+            // Handle parent (`..`) dependencies.
+            if (key.includes('..')) {
+                const parentPath = key.replace('..', '');
+                if (resolvedXPath.startsWith(parentPath)) {
+                    affectedXPaths.add(key);
+                }
+            }
+        });
+*/
 
         // Standard dependency resolution from the dependencyGraph.
         if (this.dependencyGraph.hasNode(resolvedXPath)) {
@@ -389,6 +383,7 @@ export class DependencyTracker {
         }
 
         // Optionally, update template bindings in the scope of pending items.
+/*
         for (const binding of this.pendingUpdates) {
             if (binding.templateBindings) {
                 for (const tb of binding.templateBindings) {
@@ -399,6 +394,7 @@ export class DependencyTracker {
                 }
             }
         }
+*/
 
         // console.log('after notifyChange', this.pendingUpdates);
     }
@@ -528,6 +524,20 @@ export class DependencyTracker {
         }
     }
 
+    updateUnboundTemplates(){
+        // update any template bindings registered as 'unbound:template'
+        if (this.bindingRegistry.has('unbound:template')) {
+            for (const binding of this.bindingRegistry.get('unbound:template')) {
+                if (typeof binding.update === 'function') {
+                    console.log(
+                        `🔄 Updating template expression in unbound scope: ${binding.expression}`,
+                    );
+                    binding.update();
+                }
+            }
+        }
+    }
+
     processUpdates() {
         console.log(
             'processUpdates pendingUpdates',
@@ -542,17 +552,7 @@ export class DependencyTracker {
             Array.from(this.insertedIndexes),
         );
 
-        // update any template bindings registered under '$default'
-        if (this.bindingRegistry.has('$default')) {
-            for (const binding of this.bindingRegistry.get('$default')) {
-                if (typeof binding.update === 'function') {
-                    console.log(
-                        `🔄 Updating template expression for outer scope: ${binding.expression}`,
-                    );
-                    binding.update();
-                }
-            }
-        }
+        this.updateUnboundTemplates();
 
         let passCount = 0;
         const maxPasses = 10; // guard to prevent infinite loops

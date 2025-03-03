@@ -2,7 +2,7 @@ import { DependencyTracker } from '../DependencyTracker.js';
 import ForeElementMixin from '../ForeElementMixin.js';
 import { ModelItem } from '../modelitem.js';
 import { Binding } from './Binding.js';
-import { detectTemplateExpressions } from './detectTemplateStrings.js';
+// import { detectTemplateExpressions } from './detectTemplateStrings.js';
 
 export class ControlBinding extends Binding {
     constructor(xpath, control) {
@@ -15,9 +15,6 @@ export class ControlBinding extends Binding {
          * @type {ForeElementMixin}
          */
         this.control = control;
-
-        // TODO: only for non-default directly
-        detectTemplateExpressions(this.control);
 
         // The control depends on some facets of the bound node / model item
 /*

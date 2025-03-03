@@ -523,6 +523,7 @@ export class FxFore extends HTMLElement {
                 // console.log('+++++pending',Array.from(DependencyTracker.getInstance().pendingUpdates));
                 // console.log(`### <<<<< refresh() on '${this.id}' >>>>>`);
                 Fore.refreshChildren(this, force);
+                DependencyTracker.getInstance().updateUnboundTemplates();
             }
         }
         // DependencyTracker.getInstance().evaluateAllTemplateBindings();
@@ -730,10 +731,6 @@ export class FxFore extends HTMLElement {
         }
 
         await this.refresh(true);
-
-        const binding = new Binding('$default', this);
-
-        DependencyTracker.getInstance().registerControl('$default', binding);
         detectTemplateExpressions(this);
 
         // this.style.display='block'
