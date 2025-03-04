@@ -164,6 +164,17 @@ export class FxModel extends HTMLElement {
         // this.dispatchEvent(new CustomEvent('model-construct', { detail: this }));
         Fore.dispatch(this, 'model-construct', { model: this });
 
+        // Wait until all function libs are resolved and registered
+        /**
+         * @type {import('./functions/fx-functionlib.js').FxFunctionlib[]}
+         */
+        const functionlibImports = Array.from(
+            this.querySelectorAll('fx-functionlib'),
+        );
+        await Promise.all(
+            functionlibImports.map((lib) => lib.constructedPromise),
+        );
+
         // console.time('instance-loading');
         const instances = this.querySelectorAll('fx-instance');
         if (instances.length > 0) {
@@ -196,10 +207,6 @@ export class FxModel extends HTMLElement {
             );
         }
 
-        const functionlibImports = Array.from(
-            this.querySelectorAll('fx-functionlib'),
-        );
-        await Promise.all(functionlibImports.map((lib) => lib.readyPromise));
         // console.timeEnd('instance-loading');
         this.inited = true;
     }

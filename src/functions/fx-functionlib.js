@@ -17,7 +17,7 @@ export class FxFunctionlib extends ForeElementMixin {
         /**
          * @type {Promise<undefined>}
          */
-        this.readyPromise = new Promise(
+        this.constructedPromise = new Promise(
             (resolve) => (this._resolveLoading = resolve),
         );
     }
