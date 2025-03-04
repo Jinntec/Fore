@@ -317,7 +317,7 @@ export class FxModel extends HTMLElement {
             // If there are no changed keys, process the entire main graph.
             const orderedKeys =
                 DependencyTracker.getInstance().dependencyGraph.overallOrder(
-                    true,
+                    false,
                 );
 
             if (orderedKeys.length === 0) {
