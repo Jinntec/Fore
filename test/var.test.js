@@ -54,7 +54,7 @@ describe('var Tests', () => {
             </fx-fore>
         `);
 
-        await oneEvent(el, 'refresh-done');
+        await oneEvent(el, 'ready');
 
         const control1 = el.querySelector('span[index="1"]');
         expect(control1).to.be.ok;
