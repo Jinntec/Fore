@@ -12,7 +12,7 @@ import { FxModel } from '../fx-model.js';
 import { XPathUtil } from '../xpath-util';
 import { DependencyTracker } from '../DependencyTracker';
 import { ControlBinding } from '../binding/ControlBinding.js';
-import {Binding} from "../binding/Binding";
+import { Binding } from '../binding/Binding';
 
 const WIDGETCLASS = 'widget';
 
