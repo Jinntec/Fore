@@ -523,6 +523,7 @@ export function evaluateXPath(
     formElement,
     variables = {},
     options = {},
+    domFacade = null,
 ) {
     try {
         const namespaceResolver = createNamespaceResolverForNode(
@@ -535,7 +536,7 @@ export function evaluateXPath(
         const result = fxEvaluateXPath(
             xpath,
             contextNode,
-            null,
+            domFacade,
             { ...variablesInScope, ...variables },
             fxEvaluateXPath.ALL_RESULTS_TYPE,
             {
