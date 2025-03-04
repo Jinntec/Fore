@@ -2,6 +2,7 @@ import { AbstractAction } from './abstract-action.js';
 import { Fore } from '../fore.js';
 import { resolveId } from '../xpath-evaluation.js';
 import { XPathUtil } from '../xpath-util';
+import { DependencyTracker } from '../DependencyTracker.js';
 
 /**
  * `fx-append` appends an entry to a repeat.
@@ -112,7 +113,7 @@ class FxAppend extends AbstractAction {
         // console.log('_dataFromTemplate DATA', data);
         inscope.appendChild(data);
         // parentForm.signalChangeToElement(inscope.localName);
-        this.getOwnerForm().dependencyTracker.notifyChange(this.modelItem.path);
+        DependencyTracker.getInstance().notifyInsert(this.modelItem.path);
 
         // parentForm.signalChangeToElement(data.localName);
         // this.getOwnerForm().dependencyTracker.notifyChange(XPathUtil.getPath(data));

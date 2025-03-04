@@ -403,9 +403,9 @@ export class DependencyTracker {
         console.log('❌ notifyDelete', xpath);
         const resolvedXPath = this.resolveInstanceXPath(xpath);
         const matches = [...resolvedXPath.matchAll(/\[(\d+)\]/g)];
+        const baseXPath = resolvedXPath.replace(/\[\d+\]$/, '');
         if (matches.length > 0) {
             const index = parseInt(matches[matches.length - 1][1], 10);
-            const baseXPath = resolvedXPath.replace(/\[\d+\]$/, '');
             if (!this.deletedIndexes.has(baseXPath)) {
                 this.deletedIndexes.set(baseXPath, []);
             }
@@ -427,15 +427,19 @@ export class DependencyTracker {
             const dependents = this.dependencyGraph.dependantsOf(resolvedXPath);
             dependents.forEach((dep) => this.notifyChange(dep));
         }
+        if (this.dependencyGraph.hasNode(baseXPath)) {
+            const dependents = this.dependencyGraph.dependantsOf(baseXPath);
+            dependents.forEach((dep) => this.notifyChange(dep));
+        }
     }
 
     notifyInsert(xpath) {
         console.log('notifyInsert', xpath);
         const resolvedXPath = this.resolveInstanceXPath(xpath);
         const matches = [...resolvedXPath.matchAll(/\[(\d+)\]/g)];
+        const baseXPath = resolvedXPath.replace(/\[\d+\]$/, '');
         if (matches.length > 0) {
             const index = parseInt(matches[matches.length - 1][1], 10);
-            const baseXPath = resolvedXPath.replace(/\[\d+\]$/, '');
             if (!this.insertedIndexes.has(baseXPath)) {
                 this.insertedIndexes.set(baseXPath, []);
             }
@@ -458,6 +462,10 @@ export class DependencyTracker {
         // Process dependencies from the graph.
         if (this.dependencyGraph.hasNode(resolvedXPath)) {
             const dependents = this.dependencyGraph.dependantsOf(resolvedXPath);
+            dependents.forEach((dep) => this.notifyChange(dep));
+        }
+        if (this.dependencyGraph.hasNode(baseXPath)) {
+            const dependents = this.dependencyGraph.dependantsOf(baseXPath);
             dependents.forEach((dep) => this.notifyChange(dep));
         }
     }

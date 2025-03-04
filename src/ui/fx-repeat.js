@@ -7,7 +7,8 @@ import getInScopeContext from '../getInScopeContext.js';
 import { XPathUtil } from '../xpath-util.js';
 import { withDraggability } from '../withDraggability.js';
 import { DependencyTracker } from '../DependencyTracker';
-import { ControlBinding } from '../binding/ControlBinding.js';
+import { RepeatBinding } from '../binding/RepeatBinding.js';
+import { DependencyNotifyingDomFacade } from '../DependencyNotifyingDomFacade.js';
 
 // import {DependencyNotifyingDomFacade} from '../DependencyNotifyingDomFacade';
 
@@ -237,17 +238,27 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
             });
         }
 
-        /*
-                  this.touchedPaths = new Set();
-                  const instance = XPathUtil.resolveInstance(this, this.ref);
-                  const depTrackDomfacade = new DependencyNotifyingDomFacade((node) => {
-                      this.touchedPaths.add(XPathUtil.getPath(node, instance));
-                  });
-                  const rawNodeset = evaluateXPath(this.ref, inscope, this, {}, {}, depTrackDomfacade );
-            */
-        const rawNodeset = evaluateXPath(this.ref, inscope, this);
+        const touchedPaths = new Set();
+        const instance = XPathUtil.resolveInstance(this, this.ref);
+        const depTrackDomfacade = new DependencyNotifyingDomFacade((node) => {
+            const path = XPathUtil.getPath(node, instance);
+            const basePath = DependencyTracker.getInstance().getBaseXPath(path);
+            touchedPaths.add(basePath);
+        });
+        const rawNodeset = evaluateXPath(
+            this.ref,
+            inscope,
+            this,
+            {},
+            {},
+            depTrackDomfacade,
+        );
 
-        // console.log('Touched!', this.ref, [...this.touchedPaths].join(', '));
+        console.log('Touched!', this.ref, [...touchedPaths].join(', '));
+        for (const path of touchedPaths) {
+            DependencyTracker.getInstance().registerDependency(this.ref, path);
+        }
+
         if (rawNodeset.length === 1 && Array.isArray(rawNodeset[0])) {
             // This XPath likely returned an XPath array. Just collapse to that array
             this.nodeset = rawNodeset[0];
@@ -273,9 +284,9 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
             const xpath = XPathUtil.getPath(this.nodeset, instanceId);
             console.log('xpath', xpath);
             // @TODO: Repeats have no model item!!!
-            DependencyTracker.getInstance().registerControl(
+            DependencyTracker.getInstance().registerBinding(
                 this.ref,
-                new ControlBinding(this),
+                new RepeatBinding(this.ref, this),
             );
         }
 
