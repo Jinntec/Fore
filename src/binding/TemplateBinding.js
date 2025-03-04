@@ -1,13 +1,13 @@
 import getInScopeContext from '../getInScopeContext.js';
 import { XPathUtil } from '../xpath-util.js';
-import { evaluateXPathToString } from '../xpath-evaluation.js';
+import {evaluateXPath, evaluateXPathToString} from '../xpath-evaluation.js';
 import { Binding } from './Binding.js';
 
 /**
  * Handles template-bound expressions (e.g., {value} in text nodes or attributes)
  */
 export class TemplateBinding extends Binding {
-    constructor(expression, node, scope) {
+    constructor(expression, node) {
         const container =
             node.nodeType === Node.ATTRIBUTE_NODE
                 ? node.ownerElement
@@ -18,21 +18,28 @@ export class TemplateBinding extends Binding {
             : '$default';
         // const compositeKey = `${containerPath}:template:${expression}`;
 
-        super(`${containerPath}:template`, 'template');
+        const fore = container.closest('fx-fore');
+        const inscope = getInScopeContext(node, expression);
+        const targetNode = evaluateXPath(expression, inscope, node, fore);
+        // try to get path() for targetNode - may fail in case of function calls or non-node returns
+        try{
+            const path = XPathUtil.getCanonicalXPath(targetNode);
+            super(`${path}`, 'template');
+        }catch (e){
+            super('unbound:template', 'template');
+            // super(`${containerPath}`, 'template');
+        }
 
         this.node = node;
         this.expression = expression;
-        this.scope = scope;
+        // this.scope = scope;
         // Store the original template so that refresh always starts from the unmodified text.
         this.template =
             node.nodeType === Node.ATTRIBUTE_NODE
                 ? node.value
                 : node.textContent;
 
-        // todo: registration is handled by DependencyTracker itself - other
-        // DependencyTracker.getInstance().registerBinding(this.key, this);
         // console.log(`TemplateBinding created for key ${this.key} with expression: ${this.expression}`);
-        // this.update();
     }
 
     update() {
@@ -41,7 +48,8 @@ export class TemplateBinding extends Binding {
         const ownerElement = this.node.parentNode
             ? this.node.parentNode
             : this.node.ownerElement;
-        if (!ownerElement.closest('fx-fore').inited) return;
+        const fore = ownerElement.closest('fx-fore');
+        if (!fore.inited) return;
 
 /*
         console.log(
@@ -98,9 +106,10 @@ export class TemplateBinding extends Binding {
                 template expressions are scoped to their respective container or fallback to containing fx-fore
                 element and the default context.
              */
-            let inscope = this.scope.nodeset;
+            // let inscope = this.scope.nodeset;
+            let inscope = getInScopeContext(this.node,naked);
             if (!inscope) {
-                const fore = this.scope.closest('fx-fore');
+                const fore = this.node.closest('fx-fore');
                 inscope = fore.getModel().getDefaultContext();
             }
             if (!inscope) {
@@ -110,12 +119,10 @@ export class TemplateBinding extends Binding {
             // Templates are special: they use the namespace configuration from where they are defined
             const instanceId = XPathUtil.getInstanceId(naked);
             const inst = instanceId
-                ? this.scope
-                      .closest('fx-fore')
+                ? ownerElement.closest('fx-fore')
                       .getModel()
                       .getInstance(instanceId)
-                : this.scope
-                      .closest('fx-fore')
+                : ownerElement.closest('fx-fore')
                       .getModel()
                       .getDefaultInstance();
             try {
