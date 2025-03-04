@@ -328,11 +328,14 @@ export class FxModel extends HTMLElement {
 
             orderedKeys.forEach((key) => {
                 if (DependencyTracker.getInstance().bindingRegistry.has(key)) {
-                    DependencyTracker.getInstance()
-                        .bindingRegistry.get(key)
-                        .forEach((binding) => {
-                            binding.update();
-                        });
+                    const bindings = [
+                        ...DependencyTracker.getInstance().bindingRegistry.get(
+                            key,
+                        ),
+                    ];
+                    bindings.forEach((binding) => {
+                        binding.update();
+                    });
                 }
             });
             this.needsFullRecalc = false;
