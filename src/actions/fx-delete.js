@@ -99,7 +99,8 @@ class FxDelete extends AbstractAction {
         if (node.parentNode === null) return;
 
         const mi = this.getModel().getModelItem(node);
-        if (mi.readonly) return;
+        // If there is no model item, there is no bind, it can also not be readonly
+        if (mi && mi.readonly) return;
 
         parent.removeChild(node);
     }
