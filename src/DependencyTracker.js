@@ -193,7 +193,6 @@ export class DependencyTracker {
             this.queuedChanges.delete(resolvedXPath);
             this.notifyChange(resolvedXPath); // Call notifyChange now that control is ready.
         }
-        console.log('Template bindings for control', control.templateBindings);
     }
 
     /**
