@@ -6,7 +6,8 @@ import {
 import FxControl from './fx-control.js';
 import { Fore } from '../fore.js';
 import { XPathUtil } from '../xpath-util.js';
-import {DependencyTracker} from "../DependencyTracker";
+import { DependencyTracker } from '../DependencyTracker';
+import { RepeatBinding } from '../binding/RepeatBinding.js';
 
 /**
  * FxItems provides a templated list over its bound nodes. It is not standalone but expects to be used
@@ -48,7 +49,7 @@ export class FxItems extends FxControl {
 
             if (e.target.nodeName === 'LABEL') {
                 let target = resolveId(e.target.getAttribute('for'), this);
-                if(!target){
+                if (!target) {
                     target = e.target;
                 }
                 target.focus();
@@ -69,7 +70,6 @@ export class FxItems extends FxControl {
         this.addEventListener('click', (e) => {
             e.preventDefault;
             e.stopPropagation();
-
 
             const items = this.querySelectorAll('[value]');
             let target;
@@ -104,7 +104,23 @@ export class FxItems extends FxControl {
 
     async refresh(force) {
         super.refresh(force);
-        console.log('fx-items refresh')
+        console.log('fx-items refresh');
+
+        /**
+         * @type {import('./fx-control').default}
+         */
+        const parentBind = XPathUtil.getClosest('[ref]', this.parentNode);
+        const parentBindRef = parentBind.ref;
+        const parentModelItem = parentBind.modelItem;
+        const repeatBinding = new RepeatBinding(`fx-item_${this.id}`, this);
+        DependencyTracker.getInstance().registerBinding(
+            `fx-item_${this.id}`,
+            repeatBinding,
+        );
+        DependencyTracker.getInstance().registerDependency(
+            `fx-item_${this.id}`,
+            parentModelItem.path,
+        );
     }
 
     async updateWidgetValue() {

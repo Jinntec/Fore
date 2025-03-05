@@ -143,9 +143,12 @@ export class DependencyTracker {
             }
         }
         const bindingSet = this.bindingRegistry.get(key);
-        if(bindingSet.has(binding)){
-            console.warn(`⚠️ Warning: Attempting to register duplicate binding for key '${key}'.`, binding);
-        }else{
+        if (bindingSet.has(binding)) {
+            console.warn(
+                `⚠️ Warning: Attempting to register duplicate binding for key '${key}'.`,
+                binding,
+            );
+        } else {
             bindingSet.add(binding);
         }
         // this.bindingRegistry.get(key).add(binding);
@@ -197,7 +200,10 @@ export class DependencyTracker {
      * @param {Node} node - The DOM Node that holds the template expression.
      */
     registerTemplateBinding(expression, node) {
-        console.log(`🔗 Registering Template Expression: {${expression}}`, node);
+        console.log(
+            `🔗 Registering Template Expression: {${expression}}`,
+            node,
+        );
 
         const parent =
             node.nodeType === Node.ATTRIBUTE_NODE
@@ -208,12 +214,12 @@ export class DependencyTracker {
         this.registerBinding(templateBinding.xpath, templateBinding);
 
         // Register dependencies for the template binding.
- /*       const dependencies = this.extractDependencies(expression);
+        /*       const dependencies = this.extractDependencies(expression);
         dependencies.forEach((dep) => {
             console.log(`🔗 Template depends on: ${dep}`);
             this.registerBinding(dep, templateBinding);
         });
- */       // Also register under a default key.
+ */ // Also register under a default key.
         // this.registerBinding('$default', templateBinding);
 
         // Evaluate the template immediately.
@@ -247,7 +253,7 @@ export class DependencyTracker {
 
     resolveInstanceXPath(xpath) {
         // Replace instance() calls
-        console.log('resolveInstanceXPath',xpath);
+        console.log('resolveInstanceXPath', xpath);
         xpath = xpath.replace(
             /instance\(['"]?([^'"\)]*)['"]?\)/g,
             (_, instanceId) => `$${instanceId || 'default'}/`,
@@ -282,7 +288,6 @@ export class DependencyTracker {
             // repeats listen on the basePath so cut off the resolvedPath
             // const basePath = this.getBaseXPath(resolvedXPath);
             // this.notifyIndexChange(basePath, oldIndex, newIndex);
-
         }
     }
 
@@ -305,13 +310,17 @@ export class DependencyTracker {
      */
     _notifyChange(changedXPath) {
         if (!this.bindingRegistry.has(changedXPath)) {
-            console.warn(`⚠️ Warning: Attempting to notify change for unregistered key '${changedXPath}'.`);
+            console.warn(
+                `⚠️ Warning: Attempting to notify change for unregistered key '${changedXPath}'.`,
+            );
             return;
         }
         console.log('✨ _notifyChange', changedXPath);
         const bindingsSet = this.bindingRegistry.get(changedXPath);
         if (!bindingsSet || bindingsSet.size === 0) {
-            console.warn(`⚠️ Warning: No bindings found for key '${changedXPath}' to notify.`);
+            console.warn(
+                `⚠️ Warning: No bindings found for key '${changedXPath}' to notify.`,
+            );
             return;
         }
 
@@ -344,7 +353,7 @@ export class DependencyTracker {
             }
         });
 
-/*
+        /*
         this.bindingRegistry.forEach((bindings, key) => {
             // Handle parent (`..`) dependencies.
             if (key.includes('..')) {
@@ -383,7 +392,7 @@ export class DependencyTracker {
         }
 
         // Optionally, update template bindings in the scope of pending items.
-/*
+        /*
         for (const binding of this.pendingUpdates) {
             if (binding.templateBindings) {
                 for (const tb of binding.templateBindings) {
@@ -488,13 +497,12 @@ export class DependencyTracker {
             }
         }
 
-/*
+        /*
         console.log(
             'notifyIndexChange pendingUpdates',
             Array.from(this.pendingUpdates),
         );
 */
-
     }
 
     markNonRelevant(binding) {
@@ -515,15 +523,16 @@ export class DependencyTracker {
         console.log('Evaluating all registered template bindings...');
         // Iterate through bindings of type 'template'
         if (this.bindingsByType.template) {
-            if(this.bindingsByType.template.size === 0) return; // nothing to do
+            if (this.bindingsByType.template.size === 0) return; // nothing to do
             this.bindingsByType.template.forEach((binding) => binding.update());
         }
     }
 
-    evaluateTemplateExpressions(key){
+    evaluateTemplateExpressions(key) {
         if (this.bindingRegistry.has(key)) {
-            const templatebindings = this.bindingRegistry.get(key).templateBindings;
-            Array.from(templatebindings).forEach(tb =>{
+            const templatebindings =
+                this.bindingRegistry.get(key).templateBindings;
+            Array.from(templatebindings).forEach((tb) => {
                 console.log(
                     `Updating template expression within scope: ${tb.expression}`,
                 );
@@ -532,10 +541,12 @@ export class DependencyTracker {
         }
     }
 
-    updateUnboundTemplates(){
+    updateUnboundTemplates() {
         // update any template bindings registered as 'unbound:template'
         if (this.bindingRegistry.has('unbound:template')) {
-            for (const binding of this.bindingRegistry.get('unbound:template')) {
+            for (const binding of this.bindingRegistry.get(
+                'unbound:template',
+            )) {
                 if (typeof binding.update === 'function') {
                     console.log(
                         `🔄 Updating template expression in unbound scope: ${binding.expression}`,

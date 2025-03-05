@@ -68,19 +68,23 @@ class FxDelete extends AbstractAction {
             // fore.signalChangeToElement(parent.localName);
 
             nodesToDelete.forEach((item) => {
-                this._deleteNode(parent, item);
-                // fore.signalChangeToElement(item.localName);
-                const modelItem = this.getModel().getModelItem(item);
-                DependencyTracker.getInstance().notifyDelete(modelItem.path);
+                if (this._deleteNode(parent, item)) {
+                    // fore.signalChangeToElement(item.localName);
+                    const modelItem = this.getModel().getModelItem(item);
+                    DependencyTracker.getInstance().notifyDelete(
+                        modelItem.path,
+                    );
+                }
             });
         } else {
             parent = nodesToDelete.parentNode;
             // fore.signalChangeToElement(parent.localName);
             // fore.dependencyTracker.notifyChange(XPathUtil.getCanonicalXPath(parent,instanceId));
 
-            this._deleteNode(parent, nodesToDelete);
-            DependencyTracker.getInstance().notifyDelete(this.ref); // when doing scoped resolution with DT
-            // DependencyTracker.getInstance().notifyDelete(this.modelitem.path); //using modelitem
+            if (this._deleteNode(parent, nodesToDelete)) {
+                DependencyTracker.getInstance().notifyDelete(this.ref); // when doing scoped resolution with DT
+                // DependencyTracker.getInstance().notifyDelete(this.modelitem.path); //using modelitem
+            }
         }
 
         await Fore.dispatch(instance, 'deleted', {
@@ -93,19 +97,23 @@ class FxDelete extends AbstractAction {
     }
 
     _deleteNode(parent, node) {
-        if (parent.nodeType === Node.DOCUMENT_NODE) return;
-        if (node.nodeType === Node.DOCUMENT_NODE) return;
-        if (node.nodeType === Node.DOCUMENT_FRAGMENT_NODE) return;
-        if (node.parentNode === null) return;
+        if (parent.nodeType === Node.DOCUMENT_NODE) return false;
+        if (node.nodeType === Node.DOCUMENT_NODE) return false;
+        if (node.nodeType === Node.DOCUMENT_FRAGMENT_NODE) return false;
+        if (node.parentNode === null) return false;
 
         const mi = this.getModel().getModelItem(node);
-        if (mi.readonly) return;
+        // If there is no model item, there is no bind, it can also not be readonly
+        if (mi && mi.readonly) return false;
 
         parent.removeChild(node);
+
+        return true;
     }
 
     /**
      * overwriting as we need to perform additional rebuild()
+
      */
     actionPerformed() {
         // this.getModel().rebuild();

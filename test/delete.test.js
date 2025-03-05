@@ -132,7 +132,7 @@ describe('delete Tests', () => {
             </fx-fore>
         `);
 
-        await oneEvent(el, 'refresh-done');
+        await oneEvent(el, 'ready');
         //        expect(el.getModel().modelItems.length).to.equal(6);
 
         // hits the first button which is the delete button here
@@ -264,8 +264,8 @@ describe('delete Tests', () => {
         const rItems = repeat.querySelectorAll('fx-repeatitem');
         expect(rItems.length).to.equal(1);
         // expect(rItems[0].hasAttribute('repeat-index')).to.be.true;
-        //        expect(el.getModel().modelItems.length).to.equal(1);
-        expect(el.getModel().modelItems[0].value).to.equal(
+
+        expect(rItems[0].querySelector('fx-control').value).to.contain(
             'Make tutorial part 1',
         );
     });

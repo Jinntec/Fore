@@ -317,7 +317,7 @@ export class FxModel extends HTMLElement {
             // If there are no changed keys, process the entire main graph.
             const orderedKeys =
                 DependencyTracker.getInstance().dependencyGraph.overallOrder(
-                    true,
+                    false,
                 );
 
             if (orderedKeys.length === 0) {
@@ -328,11 +328,14 @@ export class FxModel extends HTMLElement {
 
             orderedKeys.forEach((key) => {
                 if (DependencyTracker.getInstance().bindingRegistry.has(key)) {
-                    DependencyTracker.getInstance()
-                        .bindingRegistry.get(key)
-                        .forEach((binding) => {
-                            binding.update();
-                        });
+                    const bindings = [
+                        ...DependencyTracker.getInstance().bindingRegistry.get(
+                            key,
+                        ),
+                    ];
+                    bindings.forEach((binding) => {
+                        binding.update();
+                    });
                 }
             });
             this.needsFullRecalc = false;
