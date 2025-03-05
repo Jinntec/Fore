@@ -310,21 +310,6 @@ export class DependencyTracker {
      * @private
      */
     _notifyChange(changedXPath) {
-        if (!this.bindingRegistry.has(changedXPath)) {
-            console.warn(
-                `⚠️ Warning: Attempting to notify change for unregistered key '${changedXPath}'.`,
-            );
-            return;
-        }
-        console.log('✨ _notifyChange', changedXPath);
-        const bindingsSet = this.bindingRegistry.get(changedXPath);
-        if (!bindingsSet || bindingsSet.size === 0) {
-            console.warn(
-                `⚠️ Warning: No bindings found for key '${changedXPath}' to notify.`,
-            );
-            return;
-        }
-
         const resolvedXPath = this.resolveInstanceXPath(changedXPath);
         const affectedXPaths = new Set([resolvedXPath]);
 
