@@ -29,7 +29,7 @@ export class TemplateBinding extends Binding {
             super('unbound:template', 'template');
             // super(`${containerPath}`, 'template');
         }
-
+        this.fore = fore;
         this.node = node;
         this.expression = expression;
         // this.scope = scope;
@@ -43,6 +43,9 @@ export class TemplateBinding extends Binding {
     }
 
     update() {
+        // skipping ignored elements
+        if(this._isIgnored(ownerElement)) return;
+
         super.update();
         // console.log('🔄 TemplateBinding update', this);
         const ownerElement = this.node.parentNode
@@ -134,4 +137,13 @@ export class TemplateBinding extends Binding {
         });
         return replaced;
     }
+
+    _isIgnored(element){
+        if (this.fore?.ignoredNodes) {
+            const found = this.fore.ignoredNodes.find(n => n.contains(element));
+            if (found) return true;
+        }
+        return false
+    }
+
 }
