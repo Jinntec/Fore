@@ -43,8 +43,6 @@ export class TemplateBinding extends Binding {
     }
 
     update() {
-        // skipping ignored elements
-        if(this._isIgnored(ownerElement)) return;
 
         super.update();
         // console.log('🔄 TemplateBinding update', this);
@@ -53,6 +51,9 @@ export class TemplateBinding extends Binding {
             : this.node.ownerElement;
         const fore = ownerElement.closest('fx-fore');
         if (!fore.inited) return;
+
+        // skipping ignored elements
+        if(this._isIgnored(ownerElement)) return;
 
 /*
         console.log(
