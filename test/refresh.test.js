@@ -275,19 +275,28 @@ describe('refresh Tests', () => {
     const items = el.querySelectorAll('fx-repeatitem');
     expect(items[0]).to.exist;
     expect(items[0].modelItem).to.exist;
-    expect(items[0].modelItem.boundControls).to.exist;
-    expect(items[0].modelItem.boundControls.length).to.equal(2);
-    expect(items[0].modelItem.boundControls.includes(items[0]));
 
-    expect(items[1]).to.exist;
-    expect(items[1].modelItem).to.exist;
-    expect(items[1].modelItem.boundControls).to.exist;
-    expect(items[0].modelItem.boundControls.length).to.equal(2);
-    expect(items[0].modelItem.boundControls.includes(items[0]));
+    const depTracker = DependencyTracker.getInstance();
+    expect(depTracker).to.exist;
 
-    const task = el.querySelectorAll('.task');
-    expect(task[0].modelItem.boundControls.includes(task));
-    expect(task[1].modelItem.boundControls.includes(task));
+    let mi;
+    mi = items[0].modelItem;
+    expect(mi).to.exist;
+    expect(mi.path).to.equal('$default/task[1]')
+
+    let bindingsFor = depTracker.bindingRegistry.get(mi.path);
+    //2 Node- and 2 ControlBindings...
+    expect(Array.from(bindingsFor).length).to.equal(4);
+
+
+    mi=items[1].modelItem;
+    expect(mi).to.exist;
+    expect(mi.path).to.equal('$default/task[2]');
+    bindingsFor = depTracker.bindingRegistry.get(mi.path);
+
+    //2 Node- and 2 ControlBindings...
+    expect(Array.from(bindingsFor).length).to.equal(4);
+
 
     /*
     const b = el.querySelector('#changePage');

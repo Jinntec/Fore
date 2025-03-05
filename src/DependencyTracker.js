@@ -23,6 +23,7 @@ export class DependencyTracker {
             facet: new Set(), // FacetBinding (for calculate, readonly, relevant, etc.)
             template: new Set(), // TemplateBinding
             control: new Set(), // ControlBinding
+            repeat: new Set(), // RepeatBinding
         };
 
         this.dependencyGraph = new DepGraph(); // Directed graph for dependencies
@@ -49,6 +50,7 @@ export class DependencyTracker {
         this.bindingsByType.facet.clear();
         this.bindingsByType.template.clear();
         this.bindingsByType.control.clear();
+        this.bindingsByType.repeat.clear();
         this.dependencyGraph = new DepGraph();
         this.pendingUpdates.clear();
         this.nonRelevantControls.clear();
