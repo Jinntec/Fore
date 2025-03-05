@@ -69,6 +69,7 @@ export function detectTemplateExpressions(root) {
         switch (item.nodeType) {
             case Node.ELEMENT_NODE:
                 const ele = /** @type {Element} */ (item);
+                if(ele.nodeName === 'FX-MODEL') break;
                 for (const child of Array.from(ele.childNodes)) {
                     stack.unshift(child);
                 }
