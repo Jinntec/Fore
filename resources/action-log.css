@@ -1,0 +1,44 @@
+/* fx-action-log styles */
+
+fx-fore.action-log{
+    /*background: var(--paper-orange-500);*/
+}
+.action-log .action-log-debug {
+    display: block !important;
+    min-height: 3rem;
+    background: var(--paper-orange-500);
+}
+.action-log fx-model{
+    display: block;
+    min-height: 1rem;
+}
+.action-log fx-model::before{
+    content:'model';
+}
+
+.action-log fx-instance,
+.action-log fx-bind,
+.action-log fx-submission,
+.action-log fx-function
+{
+    display: block;
+    min-height: 2rem;
+    background: var(--paper-orange-500);
+}
+
+.action-log fx-bind::before{
+    content:'bind :: ' attr(ref);
+}
+.action-log fx-instance::before{
+    content:'instance :: ' attr(id);
+}
+.action-log fx-submission::before{
+    content:'submission ::' attr(id);
+}
+
+.action-log .action-log-debug::before{
+    content: attr(data-name);
+}
+.action-log .action-log-debug .targetd{
+    cursor: pointer;
+}

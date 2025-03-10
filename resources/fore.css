@@ -1,8 +1,8 @@
-@import 'vars.css';
 @import 'toastify.css';
 
     /*@import url('dev.css');*/
 
+    /*
     html {
         --inspector-bg: var(--paper-grey-300);
         --inspector-pre-bg: var(--paper-grey-100);
@@ -11,6 +11,7 @@
         --inspector-handle-bg: var(--paper-blue-700);
         --inspector-handle-width: 30px;
     }
+    */
 
     [unresolved] {
         display: none;
@@ -148,10 +149,6 @@
         display: block;
     }
 
-    fx-hint {
-        display: none;
-    }
-
     fx-model,
     fx-instance,
     fx-action,
@@ -192,10 +189,6 @@
         opacity: 1;
     }
 
-    .logtree details {
-        padding: 0.1rem 1rem;
-        margin: 0;
-    }
     noscript{
         display: block;
         width: 100%;
@@ -211,58 +204,7 @@
         background: lightpink;
     }
 
-    .vertical label {
-        display: block;
-    }
-
-    /* fx-action-log styles */
-
-    fx-fore.action-log{
-        /*background: var(--paper-orange-500);*/
-    }
-    .action-log .action-log-debug {
-        display: block !important;
-        min-height: 3rem;
-        background: var(--paper-orange-500);
-    }
-    .action-log fx-model{
-        display: block;
-        min-height: 1rem;
-    }
-    .action-log fx-model::before{
-        content:'model';
-    }
-
-    .action-log fx-instance,
-    .action-log fx-bind,
-    .action-log fx-submission,
-    .action-log fx-function
-    {
-        display: block;
-        min-height: 2rem;
-        background: var(--paper-orange-500);
-    }
-
-    .action-log fx-bind::before{
-        content:'bind :: ' attr(ref);
-    }
-    .action-log fx-instance::before{
-        content:'instance :: ' attr(id);
-    }
-    .action-log fx-submission::before{
-        content:'submission ::' attr(id);
-    }
-
-    .action-log .action-log-debug::before{
-        content: attr(data-name);
-    }
-    .action-log .action-log-debug .targetd{
-        cursor: pointer;
-    }
-
-
     /* ### toastify customizations #### */
-
     .toastify.on.warning{
         background: var(--paper-orange-500);
     }
