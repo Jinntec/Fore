@@ -1,6 +1,6 @@
 import resolve from '@rollup/plugin-node-resolve';
 import babel from 'rollup-plugin-babel';
-import { terser } from 'rollup-plugin-terser';
+// import { terser } from 'rollup-plugin-terser';
 import minifyHTML from 'rollup-plugin-minify-html-literals';
 import strip from '@rollup/plugin-strip';
 import versionInjector from 'rollup-plugin-version-injector';
@@ -15,9 +15,10 @@ export default [
       {
         file: 'dist/fore.js',
         format: 'es',
-        sourcemap: true,
+        sourcemap: false,
       },
     ],
+    treeshake:true,
     plugins: [
       versionInjector(),
       resolve(),
@@ -32,7 +33,6 @@ export default [
       }),
       strip(),
       minifyHTML(),
-      terser(),
     ],
   },
   {
@@ -55,7 +55,6 @@ export default [
           [require('@babel/plugin-proposal-class-properties'), { loose: true }],
         ],
       }),
-      terser(),
     ],
   },
 ];
