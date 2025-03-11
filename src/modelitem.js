@@ -1,4 +1,4 @@
-import {XPathUtil} from "./xpath-util";
+import { XPathUtil } from './xpath-util';
 
 /**
  * ModelItem is a state objects that wraps a Node and holds the current state of facets like 'readonly', 'required', 'relevant', 'constraint'
@@ -61,7 +61,11 @@ export class ModelItem {
          */
         this.type = type;
         /**
-         * @type {Node}
+         * The value this model item represents. Usually a node, but for
+         * fx-output and fx-container it can also refer to a simple type, like a
+         * JSON map, JSON array, string, number or boolean
+         *
+         * @type {Node|string}
          */
         this.node = node;
         /**

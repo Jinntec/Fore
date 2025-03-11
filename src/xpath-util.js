@@ -1,17 +1,21 @@
 import * as fx from 'fontoxpath';
 
 export class XPathUtil {
+    /**
+     * @param {Node|Node[]|unknown} node - The thing to calculate the path over
+     */
     static getCanonicalXPath(node) {
         const instanceId = 'default';
-        let path;
-        if (Array.isArray(node) && node.length !== 0) {
-            path = fx.evaluateXPathToString('path()', node[0]);
-            // cut positional attr
-            // path = path.substring(0, path.length - 3);
-        } else {
-            // const path = fx.evaluateXPathToString('path()', node);
-            path = fx.evaluateXPathToString('path()', node);
+        node = Array.isArray(node) ? node[0] : node;
+
+        if (!node || !node.nodeType) {
+            // We have a non-node. There is no path available. This can happen
+            // in fx-output or template expressions.
+            return 'non-node-item';
         }
+
+        const path = fx.evaluateXPathToString('path()', node);
+
         if (
             node?.parentNode &&
             node.parentNode.nodeType === Node.DOCUMENT_NODE

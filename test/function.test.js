@@ -250,11 +250,19 @@ describe('functions', () => {
         `);
 
         await oneEvent(el, 'ready');
+        const indexValBefore = document.getElementById('index').innerText;
+        expect(Number(indexValBefore)).to.equal(
+            1,
+            'The index should start at one',
+        );
         const trigger = el.querySelector('fx-trigger');
         await trigger.performActions();
 
-        const indexVal = document.getElementById('index').innerText;
-        expect(Number(indexVal)).to.equal(3);
+        const indexValAfter = document.getElementById('index').innerText;
+        expect(Number(indexValAfter)).to.equal(
+            3,
+            'The index should point to the last item',
+        );
     });
 
     it.skip('returns correct index after insert for nested repeat index()', async () => {
