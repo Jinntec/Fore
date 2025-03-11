@@ -24,7 +24,7 @@ export class TemplateBinding extends Binding {
         // try to get path() for targetNode - may fail in case of function calls or non-node returns
         try{
             const path = XPathUtil.getCanonicalXPath(targetNode);
-            super(`${path}:template`, 'template');
+            super(`${path}`, 'template');
         }catch (e){
             super('unbound:template', 'template');
             // super(`${containerPath}`, 'template');
