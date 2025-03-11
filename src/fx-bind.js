@@ -88,105 +88,106 @@ export class FxBind extends ForeElementMixin {
     buildBindings() {
         if (this.bindType === 'xml') {
             this.nodeset.forEach((node) => {
-                // create ModelItem to wrap the node
-                const modelItem = this._createModelItem(node);
-
-                // create a NodeBinding and let it take care of facet registration.
-                const nodeBinding = new NodeBinding(
-                    modelItem,
-                    this.getOwnerForm(),
-                );
-                // register the Binding
-                DependencyTracker.getInstance().registerBinding(
-                    modelItem.path,
-                    nodeBinding,
-                );
-
-                if (this.calculate) {
-                    const calculateKey = `${modelItem.path}:calculate`;
-                    // Calculated values are a dependency of the model item.
-                    DependencyTracker.getInstance().dependencyGraph.addDependency(
-                        modelItem.path,
-                        calculateKey,
-                    );
-                }
+                this.createBindingObjects(node);
             });
         }
     }
 
-    /*
-  _buildBindGraph() {
-    if (this.bindType === 'xml') {
-      this.nodeset.forEach((node) => {
-        const instance = XPathUtil.resolveInstance(this, this.ref);
+    createBindingObjects(node) {
+        // create ModelItem to wrap the node
+        const modelItem = this._createModelItem(node);
 
-        const path = XPathUtil.getPath(node, instance);
-        // DependencyTracker.getInstance().dependencyTracker.addNode(path, node);
-        //create and register NodeBinding
-        const nodeBinding = new NodeBinding(path,node);
-
-        // todo: add dependencies by inspecting predicates of path and calling registerDependency
-
-        /!* ### catching references in the 'ref' itself...
-        todo: investigate cases where 'ref' attributes use predicates pointing to other nodes. These would not be handled
-        in current implementation.
-
-        General question: are there valid use-cases for using a 'filter' expression to narrow the nodeset
-          where to apply constraints? Guess yes and if it's 'just' for reducing the amount of necessary modelItem objects.
-
-        *!/
-        // const foreignRefs = this.getReferences(this.ref);
+        // create a NodeBinding and let it take care of facet registration.
+        const nodeBinding = new NodeBinding(modelItem, this.getOwnerForm());
+        // register the Binding
+        DependencyTracker.getInstance().registerBinding(
+            modelItem.path,
+            nodeBinding,
+        );
 
         if (this.calculate) {
-          // DependencyTracker.getInstance().dependencyTracker.addNode(`${path}:calculate`, node);
-          const calcBind = new FacetBinding(path,node,'calculate');
-          // DependencyTracker.getInstance().registerBinding(path,calcBind);
-          DependencyTracker.getInstance().registerDependency(path,`${path}:calculate`)
-          // Calculated values are a dependency of the model item.
-          // DependencyTracker.getInstance().dependencyGraph.addDependency(`${path}:calculate`,path);
+            const calculateKey = `${modelItem.path}:calculate`;
+            // Calculated values are a dependency of the model item.
+            DependencyTracker.getInstance().dependencyGraph.addDependency(
+                modelItem.path,
+                calculateKey,
+            );
         }
-
-        const calculateRefs = this._getReferencesForProperty(this.calculate, node);
-        if (calculateRefs.length !== 0) {
-          this._addDependencies(calculateRefs, node, path, 'calculate');
-        }
-
-        // when values are calculated they are readonly anyway
-        if (!this.calculate) {
-          const readonlyRefs = this._getReferencesForProperty(this.readonly, node);
-          if (readonlyRefs.length !== 0) {
-            this._addDependencies(readonlyRefs, node, path, 'readonly');
-          } else if (this.readonly) {
-            this.model.mainGraph.addNode(`${path}:readonly`, node);
-          }
-        }
-
-        // const requiredRefs = this.requiredReferences;
-        const requiredRefs = this._getReferencesForProperty(this.required, node);
-        if (requiredRefs.length !== 0) {
-          this._addDependencies(requiredRefs, node, path, 'required');
-        } else if (this.required) {
-          this.model.mainGraph.addNode(`${path}:required`, node);
-        }
-
-        const relevantRefs = this._getReferencesForProperty(this.relevant, node);
-        if (relevantRefs.length !== 0) {
-          this._addDependencies(relevantRefs, node, path, 'relevant');
-        } else if (this.relevant) {
-          this.model.mainGraph.addNode(`${path}:relevant`, node);
-        }
-
-        const constraintRefs = this._getReferencesForProperty(this.constraint, node);
-        if (constraintRefs.length !== 0) {
-          this._addDependencies(constraintRefs, node, path, 'constraint');
-        } else if (this.constraint) {
-          this.model.mainGraph.addNode(`${path}:constraint`, node);
-          this.model.mainGraph.addDependency(path, `${path}:constraint`);
-        }
-      });
     }
-  }
-*/
+
+    /*
+      _buildBindGraph() {
+        if (this.bindType === 'xml') {
+          this.nodeset.forEach((node) => {
+            const instance = XPathUtil.resolveInstance(this, this.ref);
+    
+            const path = XPathUtil.getPath(node, instance);
+            // DependencyTracker.getInstance().dependencyTracker.addNode(path, node);
+            //create and register NodeBinding
+            const nodeBinding = new NodeBinding(path,node);
+    
+            // todo: add dependencies by inspecting predicates of path and calling registerDependency
+    
+            /!* ### catching references in the 'ref' itself...
+            todo: investigate cases where 'ref' attributes use predicates pointing to other nodes. These would not be handled
+            in current implementation.
+    
+            General question: are there valid use-cases for using a 'filter' expression to narrow the nodeset
+              where to apply constraints? Guess yes and if it's 'just' for reducing the amount of necessary modelItem objects.
+    
+            *!/
+            // const foreignRefs = this.getReferences(this.ref);
+    
+            if (this.calculate) {
+              // DependencyTracker.getInstance().dependencyTracker.addNode(`${path}:calculate`, node);
+              const calcBind = new FacetBinding(path,node,'calculate');
+              // DependencyTracker.getInstance().registerBinding(path,calcBind);
+              DependencyTracker.getInstance().registerDependency(path,`${path}:calculate`)
+              // Calculated values are a dependency of the model item.
+              // DependencyTracker.getInstance().dependencyGraph.addDependency(`${path}:calculate`,path);
+            }
+    
+            const calculateRefs = this._getReferencesForProperty(this.calculate, node);
+            if (calculateRefs.length !== 0) {
+              this._addDependencies(calculateRefs, node, path, 'calculate');
+            }
+    
+            // when values are calculated they are readonly anyway
+            if (!this.calculate) {
+              const readonlyRefs = this._getReferencesForProperty(this.readonly, node);
+              if (readonlyRefs.length !== 0) {
+                this._addDependencies(readonlyRefs, node, path, 'readonly');
+              } else if (this.readonly) {
+                this.model.mainGraph.addNode(`${path}:readonly`, node);
+              }
+            }
+    
+            // const requiredRefs = this.requiredReferences;
+            const requiredRefs = this._getReferencesForProperty(this.required, node);
+            if (requiredRefs.length !== 0) {
+              this._addDependencies(requiredRefs, node, path, 'required');
+            } else if (this.required) {
+              this.model.mainGraph.addNode(`${path}:required`, node);
+            }
+    
+            const relevantRefs = this._getReferencesForProperty(this.relevant, node);
+            if (relevantRefs.length !== 0) {
+              this._addDependencies(relevantRefs, node, path, 'relevant');
+            } else if (this.relevant) {
+              this.model.mainGraph.addNode(`${path}:relevant`, node);
+            }
+    
+            const constraintRefs = this._getReferencesForProperty(this.constraint, node);
+            if (constraintRefs.length !== 0) {
+              this._addDependencies(constraintRefs, node, path, 'constraint');
+            } else if (this.constraint) {
+              this.model.mainGraph.addNode(`${path}:constraint`, node);
+              this.model.mainGraph.addDependency(path, `${path}:constraint`);
+            }
+          });
+        }
+      }
+    */
 
     /**
      * Add the dependencies of this bind
