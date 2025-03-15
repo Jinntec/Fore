@@ -318,11 +318,6 @@ export class FxBind extends ForeElementMixin {
             modelItem = new ModelItem(
                 path,
                 this.getBindingExpr(),
-                FxBind.READONLY_DEFAULT,
-                FxBind.RELEVANT_DEFAULT,
-                FxBind.REQUIRED_DEFAULT,
-                FxBind.CONSTRAINT_DEFAULT,
-                this.type,
                 targetNode,
                 this,
                 instanceId,

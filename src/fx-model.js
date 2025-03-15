@@ -93,12 +93,6 @@ export class FxModel extends HTMLElement {
             const mi = new ModelItem(
                 XPathUtil.getPath(node, instanceId),
                 ref,
-                Fore.READONLY_DEFAULT,
-                false,
-                Fore.REQUIRED_DEFAULT,
-                Fore.CONSTRAINT_DEFAULT,
-                Fore.TYPE_DEFAULT,
-                null,
                 this,
                 instanceId,
             );
@@ -131,11 +125,6 @@ export class FxModel extends HTMLElement {
         const mi = new ModelItem(
             path,
             ref,
-            Fore.READONLY_DEFAULT,
-            Fore.RELEVANT_DEFAULT,
-            Fore.REQUIRED_DEFAULT,
-            Fore.CONSTRAINT_DEFAULT,
-            Fore.TYPE_DEFAULT,
             targetNode,
             null,
             instanceId,

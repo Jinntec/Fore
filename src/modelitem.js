@@ -7,15 +7,16 @@ import { XPathUtil } from './xpath-util';
  * Each bound node in an instance has exactly one ModelItem associated with it.
  */
 export class ModelItem {
+    static READONLY_DEFAULT = false;
+    static REQUIRED_DEFAULT = false;
+    static RELEVANT_DEFAULT = true;
+    static CONSTRAINT_DEFAULT = true;
+    static TYPE_DEFAULT = 'xs:string';
+
     /**
      *
      * @param {string} path calculated normalized path expression linking to data
      * @param {string} ref relative binding expression
-     * @param {boolean} readonly - boolean to signal readonly/readwrite state
-     * @param {boolean} relevant - boolean to signal relevant/non-relevant state
-     * @param {boolean} required - boolean to signal required/optional state
-     * @param {boolean} constraint - boolean boolean to signal valid/invalid state
-     * @param {string} type - string expression to set a datatype
      * @param {Node} node - the node the 'ref' expression is referring to
      * @param {import('./fx-bind').FxBind} bind - the fx-bind element having created this modelItem
      * @param {string} instance - the fx-instance id having created this modelItem
@@ -23,11 +24,6 @@ export class ModelItem {
     constructor(
         path,
         ref,
-        readonly,
-        relevant,
-        required,
-        constraint,
-        type,
         node,
         bind,
         instance,
@@ -43,23 +39,23 @@ export class ModelItem {
         /**
          * @type {boolean}
          */
-        this.constraint = constraint;
+        this.constraint = ModelItem.CONSTRAINT_DEFAULT;
         /**
          * @type {boolean}
          */
-        this.readonly = readonly;
+        this.readonly = ModelItem.READONLY_DEFAULT;
         /**
          * @type {boolean}
          */
-        this.relevant = relevant;
+        this.relevant = ModelItem.RELEVANT_DEFAULT;
         /**
          * @type {boolean}
          */
-        this.required = required;
+        this.required = ModelItem.REQUIRED_DEFAULT;
         /**
          * @type {string}
          */
-        this.type = type;
+        this.type = ModelItem.TYPE_DEFAULT;
         /**
          * The value this model item represents. Usually a node, but for
          * fx-output and fx-container it can also refer to a simple type, like a
