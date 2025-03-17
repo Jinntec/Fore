@@ -8,6 +8,7 @@ import {
 import { XPathUtil } from '../xpath-util';
 import { Fore } from '../fore.js';
 import { DependencyTracker } from '../DependencyTracker.js';
+import {FxModel as Model} from "../fx-model";
 
 /**
  * `fx-insert`
@@ -182,11 +183,23 @@ export class FxInsert extends AbstractAction {
             targetSequence,
         );
         if (!originSequenceClone) return; // if no origin back out without effect
+/*
+        const instanceId = XPathUtil.resolveInstance(this, this.ref);
+
+        // create ModelItem
+        const bind = this.getOwnerForm().getModel().querySelector(`fx-bind[ref=${this.ref}]`);
+        console.log('matching bind found',bind);
+        if(bind){
+            const modelItem = bind.createModelItem(originSequenceClone);
+            console.log('new ModelItem',modelItem);
+        }else{
+            Model.lazyCreateModelItem(this.getModel(),this.ref,originSequenceClone,this.getOwnerForm(),instanceId)
+        }
+*/
 
         let insertLocationNode;
         let index;
 
-        const instanceId = XPathUtil.resolveInstance(this, this.ref);
 
         // if the targetSequence is empty but we got an originSequence use inscope as context and ignore 'at' and 'position'
         if (targetSequence.length === 0) {
@@ -194,7 +207,7 @@ export class FxInsert extends AbstractAction {
                 insertLocationNode = context;
                 context.appendChild(originSequenceClone);
                 DependencyTracker.getInstance().notifyInsert(
-                    XPathUtil.getPath(insertLocationNode, instanceId),
+                    XPathUtil.getPath(originSequenceClone, instanceId),
                 );
 
                 index = 1;
@@ -256,7 +269,7 @@ export class FxInsert extends AbstractAction {
                 );
                 // fore.signalChangeToElement(insertLocationNode.parentNode);
                 DependencyTracker.getInstance().notifyInsert(
-                    XPathUtil.getPath(insertLocationNode, instanceId),
+                    XPathUtil.getPath(originSequenceClone, instanceId),
                 );
             }
 
@@ -273,7 +286,7 @@ export class FxInsert extends AbstractAction {
                     // fore.signalChangeToElement(insertLocationNode);
                     // fore.signalChangeToElement(originSequenceClone.localName);
                     DependencyTracker.getInstance().notifyInsert(
-                        XPathUtil.getPath(insertLocationNode, instanceId),
+                        XPathUtil.getPath(originSequenceClone, instanceId),
                     );
                 } else {
                     insertLocationNode.insertAdjacentElement(
@@ -283,7 +296,7 @@ export class FxInsert extends AbstractAction {
                     // fore.signalChangeToElement(insertLocationNode);
                     // fore.signalChangeToElement(originSequenceClone.localName);
                     DependencyTracker.getInstance().notifyInsert(
-                        XPathUtil.getPath(insertLocationNode, instanceId),
+                        XPathUtil.getPath(originSequenceClone, instanceId),
                     );
                 }
             }
@@ -354,7 +367,7 @@ export class FxInsert extends AbstractAction {
 
     actionPerformed(changedPaths) {
         // ### make sure the necessary modelItems will get created
-        this.getModel().rebuild();
+        // this.getModel().rebuild();
         super.actionPerformed();
     }
 
