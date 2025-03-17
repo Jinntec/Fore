@@ -65,7 +65,7 @@ export class ModelItem {
          */
         this.node = node;
         /**
-         * @type {import('./fx-bind').FxBind}
+         * @type {import('./fx-bind').FxBind} - optional fx-bind element being used to enforce facets
          */
         this.bind = bind;
         this.changed = false;

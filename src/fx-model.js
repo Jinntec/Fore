@@ -93,7 +93,8 @@ export class FxModel extends HTMLElement {
             const mi = new ModelItem(
                 XPathUtil.getPath(node, instanceId),
                 ref,
-                this,
+                node,
+                null,
                 instanceId,
             );
 
