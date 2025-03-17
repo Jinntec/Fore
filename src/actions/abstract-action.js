@@ -177,6 +177,7 @@ export class AbstractAction extends ForeElementMixin {
       }
     } else {
       this.targetElement = this.parentNode;
+      if(!this.targetElement || this.targetElement.nodeType !== Node.ELEMENT_NODE) return;
       this.targetElement.addEventListener(this.event, e => this.execute(e), {
         capture: this.phase === 'capture',
       });
