@@ -1,4 +1,3 @@
-
 /**
  * a simple component that wraps a Fore page and puts it into shadowDom.
  *
@@ -45,6 +44,11 @@ export class PbLogin extends HTMLElement {
                     </fx-group>
             
                     <dialog id="login-dlg">
+                        <fx-action event="dialog-shown">
+                        <fx-message>shown</fx-message>
+                            <fx-refresh force="true" ></fx-refresh>
+                        </fx-action>
+                        
                         <div class="dialog-content">
                             <fx-control ref="user">
                                 <label>{instance('lang')?login?user}</label>
@@ -80,8 +84,12 @@ export class PbLogin extends HTMLElement {
                 console.log('content',this.content);
 
                 if(target){
-                    target.parentNode.replaceChild(this.content,target)
+                    target.parentNode.replaceChild(this.content.cloneNode(true),target)
                 }
+                this.fore.getModel().updateModel();
+                this.fore._updateTemplateExpressions();
+                this.fore.refresh(true);
+
             }
         });
 

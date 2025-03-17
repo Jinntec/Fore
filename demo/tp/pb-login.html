@@ -12,10 +12,16 @@
         header{
             font-size:2rem;
         }
+        .dialog-content{
+            background:pink;
+        }
     </style>
 </head>
 <body>
 
+<h1>pb-login</h1>
+
+<h2>pb-login replacing the dialog with custom one</h2>
 <pb-login replace="#login-dlg">
     <dialog id="login-dlg">
         <div class="dialog-content">
@@ -40,44 +46,6 @@
             <label>HEY - patched it</label>
         </fx-control>
 </pb-login>
-
-<!--<fx-fore>
-    <fx-model>
-        <fx-instance>
-            <data>
-                <user></user>
-                <pass></pass>
-                <loggedin>false</loggedin>
-            </data>
-        </fx-instance>
-        <fx-instance id="lang" src="en.json" type="json"></fx-instance>
-        <fx-var name="lang" value="instance('lang')"></fx-var>
-        <fx-submission id="s-login" url="login" method="post"></fx-submission>
-    </fx-model>
-
-    <fx-group ref=".">
-        <fx-var name="login" value="instance('lang')?login?login"></fx-var>
-        <fx-trigger ref="loggedin[.='false']" class="label" title="{if(!empty(user) then user else '')}">
-            <a href="#">{instance('lang')?login?login}</a>
-            <fx-show dialog="login-dlg"></fx-show>
-        </fx-trigger>
-        <fx-trigger ref="loggedin[.='true']" class="label" title="{if(!empty(user) then user else '')}"><a href="#">logout</a></fx-trigger>
-    </fx-group>
-
-    <dialog id="login-dlg">
-        <div class="dialog-content">
-            <fx-control ref="user">
-                <label>{instance('lang')?login?user}</label>
-            </fx-control>
-            <fx-control ref="pass">
-                <label>{instance('lang')?login?password}</label>
-                <input type="password">
-            </fx-control>
-            <fx-trigger submission="s-login"></fx-trigger>
-        </div>
-    </dialog>
-
-</fx-fore>-->
 
 <script type="module" src="../demo.js"></script>
 <script type="module" src="./pb-login.js"></script>
