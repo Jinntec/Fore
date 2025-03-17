@@ -34,7 +34,7 @@ export class FxShow extends FxAction {
     if (!targetDlg) {
       console.error('target dialog with given id does not exist', this.dialog);
     }
-    targetDlg.open();
+    targetDlg.showModal();
     Fore.dispatch(targetDlg, 'dialog-shown', {});
   }
 }

@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Using HTML dialog</title>
+
+    <link href="../resources/fore.css" rel="stylesheet">
+    <link href="../resources/demo.css" rel="stylesheet">
+
+    <style>
+        fx-control {
+            display: block;
+            margin-top: 3rem;
+        }
+
+        h2 {
+            width: 100%;
+        }
+
+        label {
+            display: block;
+            white-space: pre-wrap;
+        }
+
+        #dialog2 {
+            width: 600px;
+            height: 500px;
+            max-width: 90%;
+            background: orange;
+        }
+
+        /*
+        #dialog3 {
+            position: fixed;
+            right: 0;
+            top: 0;
+            height: 100vh;
+            width: 10rem;
+            margin: 0;
+        }
+        */
+
+        fx-control {
+            width: 100%;
+        }
+
+        fx-trigger {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <h1>Using HTML Dialog with Actions</h1>
+
+    <p>Fore versions prior to 3.x provided <code>fx-dialog</code> element. This has been removed and
+        standard HTML <code>dialog</code> element is now used instead.</p>
+
+    <p>For reference see on <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog">mdn</a></p>
+
+    <p>While we dropped the <code>fx-dialog</code> element, the <code>fx-show</code> and <code>fx-hide</code>
+        actions are still available.</p>
+
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-model>
+                    <data>
+                        <foo>a data-value from Fore</foo>
+                    </data>
+                </fx-model>
+
+                <h2>modal dialog closing by form method="dialog"</h2>
+                <p>Open a dialog with the <code>fx-show</code> action and using noscript way to close the dialog as defined by HTML.</p>
+                <p>In modal mode you cannot interact with Controls on the page.</p>
+                <fx-trigger>
+                    <button>open dialog 1 in modal mode</button>
+                    <fx-show dialog="dialog1"></fx-show>
+                </fx-trigger>
+
+
+                <h2>modal dialog closing with <code>fx-hide</code></h2>
+                <p>Opens a modal dialog but uses a <code>fx-hide</code> action to close it. This will dispatch
+                    a <code>dialog-hidden</code> event we can catch and show a message. You can also listen for the <code>close</code>
+                    and <code>cancel</code> events.</p>
+                <fx-trigger>
+                    <button>open dialog 2</button>
+                    <fx-show dialog="dialog2"></fx-show>
+                </fx-trigger>
+
+                <h2>non-modal dialog</h2>
+                <p>This opens a non-modal dialog by adding a <code>modal="false"</code> attribute.</p>
+                <p>Please note that the 'Test Control' can still be edited and even update the dialog content.</p>
+                <fx-trigger>
+                    <button>open dialog 3 in non-modal mode</button>
+                    <fx-show dialog="dialog3" modal="false"></fx-show>
+                </fx-trigger>
+
+
+                <fx-control ref="foo" update-event="input">
+                    <label>Test Control</label>
+                </fx-control>
+
+                <dialog id="dialog1">
+                    <div class="dialog-content">
+                        <h3>Here's some dialog content</h3>
+                        <p>ESC will close dialog.</p>
+                        <form method="dialog">
+                            <button autofocus>close</button>
+                        </form>
+                    </div>
+                </dialog>
+
+                <dialog id="dialog2">
+                    <fx-message event="cancel">cancel event on {event('target.id')}</fx-message>
+                    <fx-message event="close">close event on {event('target.id')}</fx-message>
+                    <fx-message event="dialog-hidden">dialog-hidden event on {event('target.id')}</fx-message>
+                    <div class="dialog-content">
+                        <h1>Custom size and background</h1>
+                        <p>....some more content....</p>
+                        <fx-trigger class="action">
+                            <button>close</button>
+                            <fx-hide dialog="dialog2"></fx-hide>
+                        </fx-trigger>
+                    </div>
+                </dialog>
+
+                <dialog id="dialog3">
+                    <div class="dialog-content">
+                        <h3>Here's some dialog content</h3>
+                        <p>ESC will NOT close dialog.</p>
+                        <!--                        <p>{foo}</p>-->
+                        <fx-control ref="foo" update-event="input">
+                            <label>Test Control</label>
+                        </fx-control>
+
+                        <form method="dialog">
+                            <button>close</button>
+                        </form>
+                    </div>
+                </dialog>
+
+            </fx-fore>
+        </template>
+    </demo-snippet>
+
+</div>
+<script type="module" src="./demo.js"></script>
+</body>
+</html>
