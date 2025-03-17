@@ -275,6 +275,7 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
         const oldNodeset = this.nodeset;
         console.log('nodeset before eval', oldNodeset);
         this._evalNodeset();
+        console.log('nodeset after eval', this.nodeset);
 
         const instanceId = XPathUtil.resolveInstance(this, this.ref);
 
