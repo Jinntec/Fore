@@ -1,8 +1,17 @@
 /**
- * a simple component that wraps a Fore page and puts it into shadowDom.
+ * a pb-login implemented with Fore.
  *
- * HTML link elements passed as children will be used to construct a CSSStyleSheet that is passed
- * to the shadowDOM.
+ * Note: this is mainly for demonstration purposes but should already work largely.
+ *
+ * It allows to patch its default rendering by passing markup along with a CSS matcher
+ * which will replace the default rendering or parts thereof with the content of this element.
+ *
+ * It handles authorisation by calling a 'login' endpoint and pass urlencoded 'user' and 'password' fields.
+ *
+ * It uses a native HTML dialog element for the login by default.
+ *
+ * It's prepared for i18n by loading a certain lang file and resolving labels.
+ *
  * @customElement
  */
 export class PbLogin extends HTMLElement {
@@ -20,32 +29,56 @@ export class PbLogin extends HTMLElement {
                         <data>
                             <user></user>
                             <pass></pass>
+                        </data>
+                    </fx-instance>
+                    <fx-bind ref="user" required="true()"></fx-bind>
+                    <fx-instance id="vars">
+                        <data>
+                            <lang>en</lang>
                             <loggedin>false</loggedin>
                         </data>
                     </fx-instance>
+                    <!-- this instance should be a shared one provided by some outer Fore and be re-used throughout its scope -->
                     <fx-instance id="lang" src="en.json" type="json"></fx-instance>
-                    <fx-var name="lang" value="instance('lang')"></fx-var>
-                    <fx-submission id="s-login" url="#echo" method="post" replace="none">
+                    <fx-instance id="login" type="json">{}</fx-instance>
+
+                    <!-- replace '#echo' with 'login' for real request -->
+                    <fx-submission id="s-login"
+                                   ref="instance('default')"
+                                   method="post"
+                                   url="login"
+                                   replace="instance"
+                                   instance="login"
+                                   serialization="application/x-www-form-urlencoded">
+            
+                        <fx-action event="submit-error">
+                            <fx-message>login failed</fx-message>
+                            <fx-show dialog="login-dlg"></fx-show>
+                        </fx-action>
+            
                         <fx-action event="submit-done">
-                            <fx-setvalue ref="loggedin">true</fx-setvalue>
+                            <fx-message>logged in</fx-message>
                             <fx-hide dialog="login-dlg"></fx-hide>
                         </fx-action>
                     </fx-submission>
+                    
                 </fx-model>
+                <fx-var name="vars" value="instance('vars')"></fx-var>
+                <fx-var name="_" value="instance('default')"></fx-var>
             
                 <fx-group id="UI">
                     <fx-group ref=".">
                         <fx-var name="login" value="instance('lang')?login?login"></fx-var>
-                        <fx-trigger ref="loggedin[.='false']" class="label" title="{if(!empty(user) then user else '')}">
+                        <fx-trigger ref="$vars/loggedin[.='false']" class="label" title="{if(!empty($_user) then $_user else '')}">
                             <a href="#">{instance('lang')?login?login}</a>
                             <fx-show dialog="login-dlg"></fx-show>
                         </fx-trigger>
-                        <fx-trigger ref="loggedin[.='true']" class="label" title="{if(!empty(user) then user else '')}"><a href="#">logout</a></fx-trigger>
+                        <fx-trigger ref="$vars/loggedin[.='true']" class="label" title="{if(!empty($_user) then $_user else '')}"><a href="#">logout</a></fx-trigger>
                     </fx-group>
             
                     <dialog id="login-dlg">
                         <fx-action event="dialog-shown">
-                        <fx-message>shown</fx-message>
+                            <fx-message>shown</fx-message>
                             <fx-refresh force="true" ></fx-refresh>
                         </fx-action>
                         
@@ -57,7 +90,7 @@ export class PbLogin extends HTMLElement {
                                 <label>{instance('lang')?login?password}</label>
                                 <input type="password">
                             </fx-control>
-                            <fx-trigger submission="s-login">
+                            <fx-trigger>
                                 <button>Login</button>
                                 <fx-send submission="s-login"></fx-send>
                             </fx-trigger>

@@ -235,6 +235,7 @@ export default class ForeElementMixin extends HTMLElement {
    * @returns {import('./modelitem.js').ModelItem}
    */
   getModelItem() {
+    if(!this.getModel()) return ;
     const mi = this.getModel().getModelItem(this.nodeset);
     if (mi) {
       this.modelItem = mi;

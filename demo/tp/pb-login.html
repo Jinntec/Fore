@@ -28,12 +28,13 @@
             <header>I have more to say</header>
             <fx-control ref="user">
                 <label>{instance('lang')?login?user}</label>
+                <input type="text" auto-complete="username">
             </fx-control>
             <fx-control ref="pass">
                 <label>{instance('lang')?login?password}</label>
                 <input type="password">
             </fx-control>
-            <fx-trigger submission="s-login">
+            <fx-trigger>
                 <button>Login</button>
                 <fx-send submission="s-login"></fx-send>
             </fx-trigger>
