@@ -95,7 +95,7 @@ export class FxBind extends ForeElementMixin {
 
     createBindingObjects(node) {
         // create ModelItem to wrap the node
-        const modelItem = this._createModelItem(node);
+        const modelItem = this.createModelItem(node);
 
         // create a NodeBinding and let it take care of facet registration.
         const nodeBinding = new NodeBinding(modelItem, this.getOwnerForm());
@@ -307,7 +307,7 @@ export class FxBind extends ForeElementMixin {
      * @private
      */
     // _createModelItem(node, index) {
-    _createModelItem(node) {
+    createModelItem(node) {
         let modelItem = this.getModel().getModelItem(node);
         if (!modelItem) {
             const targetNode = node;
