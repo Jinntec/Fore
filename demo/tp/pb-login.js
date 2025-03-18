@@ -15,6 +15,7 @@
  * @customElement
  *
  * todo: make this a base class and import pbMixin
+ * todo: lang switching
  */
 export class PbLogin extends HTMLElement {
     constructor() {
