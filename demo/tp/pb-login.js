@@ -13,6 +13,8 @@
  * It's prepared for i18n by loading a certain lang file and resolving labels.
  *
  * @customElement
+ *
+ * todo: make this a base class and import pbMixin
  */
 export class PbLogin extends HTMLElement {
     constructor() {
@@ -65,12 +67,13 @@ export class PbLogin extends HTMLElement {
                 </fx-model>
                 <fx-var name="vars" value="instance('vars')"></fx-var>
                 <fx-var name="_" value="instance('default')"></fx-var>
+                <fx-var name="lang" value="instance('lang')"></fx-var>
             
                 <fx-group id="UI">
                     <fx-group ref=".">
-                        <fx-var name="login" value="instance('lang')?login?login"></fx-var>
+                        <fx-var name="login" value="$lang?login?login"></fx-var>
                         <fx-trigger ref="$vars/loggedin[.='false']" class="label" title="{if(!empty($_user) then $_user else '')}">
-                            <a href="#">{instance('lang')?login?login}</a>
+                            <a href="#">{$lang?login?login}</a>
                             <fx-show dialog="login-dlg"></fx-show>
                         </fx-trigger>
                         <fx-trigger ref="$vars/loggedin[.='true']" class="label" title="{if(!empty($_user) then $_user else '')}"><a href="#">logout</a></fx-trigger>
@@ -84,10 +87,10 @@ export class PbLogin extends HTMLElement {
                         
                         <div class="dialog-content">
                             <fx-control ref="user">
-                                <label>{instance('lang')?login?user}</label>
+                                <label>{$lang?login?user}</label>
                             </fx-control>
                             <fx-control ref="pass">
-                                <label>{instance('lang')?login?password}</label>
+                                <label>{$lang?login?password}</label>
                                 <input type="password">
                             </fx-control>
                             <fx-trigger>
