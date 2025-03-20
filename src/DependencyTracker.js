@@ -42,6 +42,8 @@ export class DependencyTracker {
 
         // Create the debounced version of our internal notifyChange method.
         this.debouncedNotifyChange = debounce(this, this._notifyChange, 100);
+        this.opNum=0; // global number of operations
+
     }
 
     reset() {
@@ -430,6 +432,8 @@ export class DependencyTracker {
 
     notifyInsert(xpath) {
         console.log('notifyInsert', xpath);
+        this.opNum++;
+
         const resolvedXPath = this.resolveInstanceXPath(xpath);
         const matches = [...resolvedXPath.matchAll(/\[(\d+)\]/g)];
         const baseXPath = resolvedXPath.replace(/\[\d+\]$/, '');
@@ -439,6 +443,7 @@ export class DependencyTracker {
                 this.insertedIndexes.set(baseXPath, []);
             }
             this.insertedIndexes.get(baseXPath).push(index);
+            // make sure the repeat will refresh by adding to pendingUpdates
             if (this.bindingRegistry.has(baseXPath)) {
                 for (const binding of this.bindingRegistry.get(baseXPath)) {
                     if (!this.nonRelevantControls.has(binding)) {
@@ -447,6 +452,12 @@ export class DependencyTracker {
                 }
             }
         }
+
+        // create and register modelItem and Binding
+        // const newPath = `${resolvedXPath}_${this.opNum}`;
+        // this.registerBinding(newPath,new Binding(newPath,'control'));
+        // this.queuedChanges.add(newPath);
+
         if (this.bindingRegistry.has(resolvedXPath)) {
             this.bindingRegistry.get(resolvedXPath).forEach((binding) => {
                 this.nonRelevantControls.delete(binding);
@@ -616,7 +627,8 @@ export class DependencyTracker {
             (binding) =>
                 binding.bindingType === 'control' ||
                 binding.bindingType === 'template' ||
-                binding.bindingType === 'facet',
+                binding.bindingType === 'facet' ||
+                binding.bindingType === 'repeat',
         );
     }
 
