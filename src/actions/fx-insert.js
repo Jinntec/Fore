@@ -183,19 +183,8 @@ export class FxInsert extends AbstractAction {
             targetSequence,
         );
         if (!originSequenceClone) return; // if no origin back out without effect
-/*
         const instanceId = XPathUtil.resolveInstance(this, this.ref);
 
-        // create ModelItem
-        const bind = this.getOwnerForm().getModel().querySelector(`fx-bind[ref=${this.ref}]`);
-        console.log('matching bind found',bind);
-        if(bind){
-            const modelItem = bind.createModelItem(originSequenceClone);
-            console.log('new ModelItem',modelItem);
-        }else{
-            Model.lazyCreateModelItem(this.getModel(),this.ref,originSequenceClone,this.getOwnerForm(),instanceId)
-        }
-*/
 
         let insertLocationNode;
         let index;
@@ -225,6 +214,10 @@ export class FxInsert extends AbstractAction {
                     insertLocationNode = inscope;
                     inscope.appendChild(originSequenceClone);
                     index = 1;
+                    DependencyTracker.getInstance().notifyInsert(
+                        XPathUtil.getPath(originSequenceClone, instanceId),
+                    );
+
                 }
             }
         } else {
@@ -314,10 +307,17 @@ export class FxInsert extends AbstractAction {
         // Note: the parent to insert under is always the parent of the inserted node. The 'context' is not always the parent if the sequence is empty, or the position is different
         // const xpath = XPathUtil.getPath(originSequenceClone.parentNode, instanceId);
         const xpath = XPathUtil.getPath(
+            originSequenceClone,
+            instanceId,
+        );
+
+/*
+        const xpath = XPathUtil.getPath(
             insertLocationNode.parentNode,
             instanceId,
         );
 
+*/
         const path = Fore.getDomNodeIndexString(originSequenceClone);
         this.dispatchEvent(
             new CustomEvent('execute-action', {
@@ -352,6 +352,20 @@ export class FxInsert extends AbstractAction {
         this.needsUpdate = true;
         console.log('Changed!', xpath);
         return [xpath];
+    }
+
+    _createBindingForNode(node){
+        // create ModelItem
+        const bind = this.getOwnerForm().getModel().querySelector(`fx-bind[ref=${this.ref}]`);
+        console.log('matching bind found',bind);
+/*
+        if(bind){
+            const modelItem = bind._createModelItem(originSequenceClone);
+            console.log('new ModelItem',modelItem);
+        }else{
+*/
+            Model.lazyCreateModelItem(this.getModel(),this.ref,originSequenceClone,this.getOwnerForm(),instanceId)
+        // }
     }
 
     // eslint-disable-next-line class-methods-use-this
