@@ -360,7 +360,7 @@ export class FxFore extends HTMLElement {
         );
 
         // register fore element as outer scope for non-enclosed template expressions
-        console.log('dependencyTracker', DependencyTracker.getInstance());
+        // console.log('dependencyTracker', DependencyTracker.getInstance());
 
     }
 
@@ -507,6 +507,8 @@ export class FxFore extends HTMLElement {
         }
 
         this.isRefreshing = true;
+        console.log('💠 DependencyTracker', DependencyTracker.getInstance());
+        console.log('💠 pending updates', Array.from(DependencyTracker.getInstance().pendingUpdates));
 
         // refresh () {
         // ### refresh Fore UI elements
