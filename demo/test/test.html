@@ -4,30 +4,29 @@
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
 
     <title>Epidoc</title>
-    <link href="../../resources/fore.css" rel="stylesheet"/>
+    <link href="../../resources/demo.css" rel="stylesheet"/>
 </head>
 <body>
 <div class="wrapper">
     <fx-fore>
-        <fx-model id="model-1">
-            <fx-instance
-                    id="default"
-                    src="ling-checkboxes.xml"
-                    xpath-default-namespace="http://www.tei-c.org/ns/1.0"
-            ></fx-instance>
-
-            <fx-instance id="i-functions" src="functions.xml" ></fx-instance>
+        <fx-model>
+            <fx-instance>
+                <data>
+                    <theanswer>1</theanswer>
+                    <theanswer>2</theanswer>
+                </data>
+            </fx-instance>
         </fx-model>
-        <fx-control ref="//m/@function" update-event="input">
-            <fx-items ref="instance('i-functions')//option" class="widget">
-                <template>
-              <span class="fx-checkbox">
-                <input id="check" name="option" type="checkbox" value="{@xml:id}" />
-                <label>{.}</label>
-              </span>
-                </template>
-            </fx-items>
-        </fx-control>
+        <fx-repeat id="repeat" ref="theanswer">
+            <template>
+                <fx-output ref="."></fx-output>
+            </template>
+        </fx-repeat>
+        Index<span id="index">{index('repeat')}</span>
+        <fx-trigger>
+            <button>insert at end</button>
+            <fx-insert ref="theanswer" keep-values></fx-insert>
+        </fx-trigger>
     </fx-fore>
 </div>
 <script type="module" src="../demo.js"/>
