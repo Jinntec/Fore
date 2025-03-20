@@ -344,6 +344,9 @@ export class XPathUtil {
             // const path = fx.evaluateXPathToString('path()', node);
             path = fx.evaluateXPathToString('path()', node);
         }
+        if(path.endsWith('root()')){
+            path = '';
+        }
         // Path is like `$default/x[1]/y[1]`
         const shortened = XPathUtil.shortenPath(path);
         const out = shortened.startsWith('/')
