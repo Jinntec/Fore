@@ -8,6 +8,7 @@ import { XPathUtil } from '../xpath-util.js';
 import { withDraggability } from '../withDraggability.js';
 import { DependencyTracker } from '../DependencyTracker';
 import { RepeatBinding } from '../binding/RepeatBinding.js';
+import { FxBind } from '../fx-bind.js';
 import { DependencyNotifyingDomFacade } from '../DependencyNotifyingDomFacade.js';
 
 // import {DependencyNotifyingDomFacade} from '../DependencyNotifyingDomFacade';
@@ -67,6 +68,7 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
         this.index = 1;
         this.repeatSize = 0;
         this.attachShadow({ mode: 'open', delegatesFocus: true });
+        this.xpath = '';
     }
 
     get repeatSize() {
@@ -148,7 +150,12 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
                 if (added) {
                     const instance = XPathUtil.resolveInstance(this, this.ref);
                     const path = XPathUtil.getPath(added, instance);
-                    // console.log('path mutated', path);
+                    console.log('###path mutated', path);
+                    console.log('###path addded', added);
+                    // this._evalNodeset();
+                    console.log('###path mutated', added);
+                    const mi = FxBind.createModelItem(path,added,this);
+                    console.log('***modelitem',mi)
                     // this.dispatch('path-mutated',{'path':path,'nodeset':this.nodeset,'index': this.index});
                     // this.index = index;
                     // const prev = mutations[0].previousSibling.previousElementSibling;
@@ -281,15 +288,27 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
 
         // const xpath = XPathUtil.getCanonicalXPath(this.nodeset)
 
-        if (this.nodeset.length !== 0) {
-            const xpath = XPathUtil.getPath(this.nodeset, instanceId);
-            console.log('xpath', xpath);
-            // @TODO: Repeats have no model item!!!
-            DependencyTracker.getInstance().registerBinding(
+/*
+        if(this.nodeset.length === 0){
+            const inscope = getInScopeContext(
+                this.getAttributeNode('ref') || this,
                 this.ref,
+            );
+
+            const parentPath = XPathUtil.getPath(inscope,instanceId);
+            console.log('newPath', parentPath + '/' + this.ref)
+        }
+        if (this.nodeset.length !== 0) {
+*/
+            // const xpath = XPathUtil.getPath(this.ref, instanceId);
+            console.log('xpath', this.ref);
+            // @TODO: Repeats have no model item!!!
+            this.xpath = `${instanceId}/${this.ref}`
+            DependencyTracker.getInstance().registerBinding(
+                `$default/${this.ref}`,
                 new RepeatBinding(this.ref, this),
             );
-        }
+        // }
 
         // this.getOwnerForm().dependencyTracker.register(this.ref, this);
 
@@ -351,16 +370,24 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
         }
 
         // Insert remaining new elements
+        let inserted;
         for (let i = minLength; i < insertedIndexes.length; i++) {
-            this._insertRepeatItem(insertedIndexes[i]);
+            inserted = this._insertRepeatItem(insertedIndexes[i]);
+            // Fore.refreshChildren(insertedIndexes[i], true);
         }
 
         this.updateIndexes();
         const fore = this.getOwnerForm();
-        if (!fore.lazyRefresh || force) {
+        if(inserted){
+            Fore.refreshChildren(inserted, true);
+        }
+
+        // if (!fore.lazyRefresh || force) {
             // Turn the possibly conditional force refresh into a forced one: we changed our children
             // Fore.refreshChildren(this, force);
-        }
+        // }
+
+
         // DependencyTracker.getInstance().pendingUpdates.clear();
         // DependencyTracker.getInstance().deletedIndexes.clear();
         // DependencyTracker.getInstance().repeatIndexMap.clear();
@@ -373,10 +400,22 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
         newItem.index = index;
         newItem.nodeset = this.nodeset[index - 1];
 
+        const path = XPathUtil.getCanonicalXPath(newItem.nodeset);
+        console.log('inserted path', path);
+
+        // 1. create modelItem
+        // const modelItem = this.getModel().getModelItem(newItem.nodeset);
+        // console.log('new modelitem', modelItem);
+        // 2. create Binding
+        // 3. registerBinding
+
         this.insertBefore(newItem, this.children[index] || null);
+        return newItem;
     }
 
     updateIndexes() {
+        console.log('updateIndexes',this.index);
+        DependencyTracker.getInstance().notifyIndexChange(this.xpath, this.index,this.index);
         this.querySelectorAll(':scope > fx-repeatitem').forEach((item, idx) => {
             item.index = idx + 1;
         });
