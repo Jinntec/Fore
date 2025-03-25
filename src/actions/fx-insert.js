@@ -8,7 +8,8 @@ import {
 import { XPathUtil } from '../xpath-util';
 import { Fore } from '../fore.js';
 import { DependencyTracker } from '../DependencyTracker.js';
-import {FxModel as Model} from "../fx-model";
+import { FxModel as Model } from '../fx-model';
+import { FxBind } from '../fx-bind.js';
 
 /**
  * `fx-insert`
@@ -66,6 +67,9 @@ export class FxInsert extends AbstractAction {
         this.keepValues = !!this.hasAttribute('keep-values');
     }
 
+    /**
+     * @returns {Node}
+     */
     _cloneOriginSequence(inscope, targetSequence) {
         let originSequenceClone;
         if (this.origin) {
@@ -183,22 +187,17 @@ export class FxInsert extends AbstractAction {
             targetSequence,
         );
         if (!originSequenceClone) return; // if no origin back out without effect
-        const instanceId = XPathUtil.resolveInstance(this, this.ref);
 
+        const instanceId = XPathUtil.resolveInstance(this, this.ref);
 
         let insertLocationNode;
         let index;
-
 
         // if the targetSequence is empty but we got an originSequence use inscope as context and ignore 'at' and 'position'
         if (targetSequence.length === 0) {
             if (context) {
                 insertLocationNode = context;
                 context.appendChild(originSequenceClone);
-                DependencyTracker.getInstance().notifyInsert(
-                    XPathUtil.getPath(originSequenceClone, instanceId),
-                );
-
                 index = 1;
             } else {
                 // No context but creating nodes from UI
@@ -214,19 +213,11 @@ export class FxInsert extends AbstractAction {
                     insertLocationNode = inscope;
                     inscope.appendChild(originSequenceClone);
                     index = 1;
-                    DependencyTracker.getInstance().notifyInsert(
-                        XPathUtil.getPath(originSequenceClone, instanceId),
-                    );
-
                 }
             }
         } else {
             /* ### insert at position given by 'at' or use the last item in the targetSequence ### */
             if (this.hasAttribute('at')) {
-                // todo: eval 'at'
-                // index = this.at;
-                // insertLocationNode = targetSequence[this.at - 1];
-
                 index = evaluateXPathToNumber(
                     this.getAttribute('at'),
                     inscope,
@@ -234,7 +225,6 @@ export class FxInsert extends AbstractAction {
                 );
                 insertLocationNode = targetSequence[index - 1];
             } else {
-                // this.at = targetSequence.length;
                 index = targetSequence.length;
                 insertLocationNode = targetSequence[targetSequence.length - 1];
             }
@@ -249,9 +239,7 @@ export class FxInsert extends AbstractAction {
                     targetSequence,
                     this.getOwnerForm(),
                 );
-                // console.log('context', context);
                 index = context + 1;
-                // index = targetSequence.findIndex(insertLocationNode);
             }
 
             if (this.position && this.position === 'before') {
@@ -260,40 +248,32 @@ export class FxInsert extends AbstractAction {
                     originSequenceClone,
                     insertLocationNode,
                 );
-                // fore.signalChangeToElement(insertLocationNode.parentNode);
-                DependencyTracker.getInstance().notifyInsert(
-                    XPathUtil.getPath(originSequenceClone, instanceId),
-                );
             }
 
             if (this.position && this.position === 'after') {
-                // insertLocationNode.parentNode.append(originSequence);
-                // const nextSibl = insertLocationNode.nextSibling;
                 index += 1;
                 if (this.hasAttribute('context') && this.hasAttribute('ref')) {
-                    // index=1;
                     inscope.append(originSequenceClone);
                 } else if (this.hasAttribute('context')) {
                     index = 1;
                     insertLocationNode.prepend(originSequenceClone);
-                    // fore.signalChangeToElement(insertLocationNode);
-                    // fore.signalChangeToElement(originSequenceClone.localName);
-                    DependencyTracker.getInstance().notifyInsert(
-                        XPathUtil.getPath(originSequenceClone, instanceId),
-                    );
                 } else {
                     insertLocationNode.insertAdjacentElement(
                         'afterend',
                         originSequenceClone,
                     );
-                    // fore.signalChangeToElement(insertLocationNode);
-                    // fore.signalChangeToElement(originSequenceClone.localName);
-                    DependencyTracker.getInstance().notifyInsert(
-                        XPathUtil.getPath(originSequenceClone, instanceId),
-                    );
                 }
             }
         }
+
+        const modelItem = FxBind.createModelItem(
+            XPathUtil.getPath(originSequenceClone, instanceId),
+            originSequenceClone,
+            this,
+        );
+
+        DependencyTracker.getInstance().notifyInsert(modelItem);
+
         // instance('default')/items/item[index()]
 
         // console.log('insert context item ', insertLocationNode);
@@ -306,12 +286,9 @@ export class FxInsert extends AbstractAction {
         // console.log('<<<<<<< resolved instance', inst);
         // Note: the parent to insert under is always the parent of the inserted node. The 'context' is not always the parent if the sequence is empty, or the position is different
         // const xpath = XPathUtil.getPath(originSequenceClone.parentNode, instanceId);
-        const xpath = XPathUtil.getPath(
-            originSequenceClone,
-            instanceId,
-        );
+        const xpath = XPathUtil.getPath(originSequenceClone, instanceId);
 
-/*
+        /*
         const xpath = XPathUtil.getPath(
             insertLocationNode.parentNode,
             instanceId,
@@ -354,17 +331,25 @@ export class FxInsert extends AbstractAction {
         return [xpath];
     }
 
-    _createBindingForNode(node){
+    _createBindingForNode(node) {
         // create ModelItem
-        const bind = this.getOwnerForm().getModel().querySelector(`fx-bind[ref=${this.ref}]`);
-        console.log('matching bind found',bind);
-/*
+        const bind = this.getOwnerForm()
+            .getModel()
+            .querySelector(`fx-bind[ref=${this.ref}]`);
+        console.log('matching bind found', bind);
+        /*
         if(bind){
             const modelItem = bind._createModelItem(originSequenceClone);
             console.log('new ModelItem',modelItem);
         }else{
 */
-            Model.lazyCreateModelItem(this.getModel(),this.ref,originSequenceClone,this.getOwnerForm(),instanceId)
+        Model.lazyCreateModelItem(
+            this.getModel(),
+            this.ref,
+            originSequenceClone,
+            this.getOwnerForm(),
+            instanceId,
+        );
         // }
     }
 

@@ -21,13 +21,7 @@ export class ModelItem {
      * @param {import('./fx-bind').FxBind} bind - the fx-bind element having created this modelItem
      * @param {string} instance - the fx-instance id having created this modelItem
      */
-    constructor(
-        path,
-        ref,
-        node,
-        bind,
-        instance,
-    ) {
+    constructor(path, ref, node, bind, instance) {
         /**
          * @type {string}
          */

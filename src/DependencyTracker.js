@@ -471,11 +471,17 @@ export class DependencyTracker {
         }
     }
 
-    notifyInsert(xpath) {
-        console.log('notifyInsert', xpath);
+    /**
+     * @param {import('./modelitem.js').ModelItem} modelItem - The model item of the node that was just inserted
+     */
+    notifyInsert(modelItem) {
+        const xpath = `${modelItem.path}_${this.opNum}`;
+        console.log('notifyInsert', modelItem);
         this.opNum++;
 
-        const resolvedXPath = this.resolveInstanceXPath(xpath);
+        const resolvedXPath = this.resolveInstanceXPath(modelItem.path);
+        modelItem.path = xpath;
+
         const matches = [...resolvedXPath.matchAll(/\[(\d+)\]/g)];
         const baseXPath = resolvedXPath.replace(/\[\d+\]$/, '');
         if (matches.length > 0) {

@@ -3,6 +3,7 @@ import { Fore } from '../fore.js';
 import { resolveId } from '../xpath-evaluation.js';
 import { XPathUtil } from '../xpath-util';
 import { DependencyTracker } from '../DependencyTracker.js';
+import { FxBind } from '../fx-bind.js';
 
 /**
  * `fx-append` appends an entry to a repeat.
@@ -113,7 +114,13 @@ class FxAppend extends AbstractAction {
         // console.log('_dataFromTemplate DATA', data);
         inscope.appendChild(data);
         // parentForm.signalChangeToElement(inscope.localName);
-        DependencyTracker.getInstance().notifyInsert(this.modelItem.path);
+        const modelItem = FxBind.createModelItem(
+            XPathUtil.getPath(data, this.modelItem.instanceId),
+            data,
+            this,
+        );
+
+        DependencyTracker.getInstance().notifyInsert(modelItem);
 
         // parentForm.signalChangeToElement(data.localName);
         // this.getOwnerForm().dependencyTracker.notifyChange(XPathUtil.getPath(data));
