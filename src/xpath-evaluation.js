@@ -13,6 +13,7 @@ import {
 
 import { XPathUtil } from './xpath-util.js';
 import { prettifyXml } from './functions/common-function.js';
+import { DependencyNotifyingDomFacade } from './DependencyNotifyingDomFacade.js';
 
 const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
 
@@ -1175,7 +1176,18 @@ registerCustomXPathFunction(
         if (string === null) {
             return 1;
         }
+        /**
+         * @type {import('./ui/fx-repeat.js').FxRepeat}
+         */
         const repeat = resolveId(string, formElement, 'fx-repeat');
+
+        if (dynamicContext.domFacade instanceof DependencyNotifyingDomFacade) {
+            // Notify the dependency!
+            dynamicContext.domFacade.onOtherDependency({
+                dependencyKind: 'repeat-index',
+                repeat: repeat.uniqueId,
+            });
+        }
 
         // const def = instance.getInstanceData();
         if (repeat) {

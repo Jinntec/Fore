@@ -1,8 +1,11 @@
 import getInScopeContext from '../getInScopeContext.js';
 import { XPathUtil } from '../xpath-util.js';
-import {evaluateXPath, evaluateXPathToString} from '../xpath-evaluation.js';
+import { evaluateXPath, evaluateXPathToString } from '../xpath-evaluation.js';
 import { Binding } from './Binding.js';
+import { DependencyNotifyingDomFacade } from '../DependencyNotifyingDomFacade.js';
+import { DependencyTracker } from '../DependencyTracker.js';
 
+let i = 0;
 /**
  * Handles template-bound expressions (e.g., {value} in text nodes or attributes)
  */
@@ -12,23 +15,11 @@ export class TemplateBinding extends Binding {
             node.nodeType === Node.ATTRIBUTE_NODE
                 ? node.ownerElement
                 : node.parentNode;
-        // Assume we have a function to get the container's canonical XPath.
-        const containerPath = container
-            ? XPathUtil.getCanonicalXPath(container)
-            : '$default';
-        // const compositeKey = `${containerPath}:template:${expression}`;
 
         const fore = container.closest('fx-fore');
-        const inscope = getInScopeContext(node, expression);
-        const targetNode = evaluateXPath(expression, inscope, node, fore);
+
         // try to get path() for targetNode - may fail in case of function calls or non-node returns
-        try{
-            const path = XPathUtil.getCanonicalXPath(targetNode);
-            super(`${path}`, 'template');
-        }catch (e){
-            super('unbound:template', 'template');
-            // super(`${containerPath}`, 'template');
-        }
+        super(`template-binding:{{${expression}}}_${i++}`, 'template');
         this.fore = fore;
         this.node = node;
         this.expression = expression;
@@ -43,7 +34,6 @@ export class TemplateBinding extends Binding {
     }
 
     update() {
-
         super.update();
         // console.log('🔄 TemplateBinding update', this);
         const ownerElement = this.node.parentNode
@@ -53,9 +43,9 @@ export class TemplateBinding extends Binding {
         if (!fore.inited) return;
 
         // skipping ignored elements
-        if(this._isIgnored(ownerElement)) return;
+        if (this._isIgnored(ownerElement)) return;
 
-/*
+        /*
         console.log(
             `Refreshing template expression: {${this.expression}} for`,
             this.node,
@@ -111,7 +101,7 @@ export class TemplateBinding extends Binding {
                 element and the default context.
              */
             // let inscope = this.scope.nodeset;
-            let inscope = getInScopeContext(this.node,naked);
+            let inscope = getInScopeContext(this.node, naked);
             if (!inscope) {
                 const fore = this.node.closest('fx-fore');
                 inscope = fore.getModel().getDefaultContext();
@@ -123,10 +113,12 @@ export class TemplateBinding extends Binding {
             // Templates are special: they use the namespace configuration from where they are defined
             const instanceId = XPathUtil.getInstanceId(naked);
             const inst = instanceId
-                ? ownerElement.closest('fx-fore')
+                ? ownerElement
+                      .closest('fx-fore')
                       .getModel()
                       .getInstance(instanceId)
-                : ownerElement.closest('fx-fore')
+                : ownerElement
+                      .closest('fx-fore')
                       .getModel()
                       .getDefaultInstance();
             try {
@@ -139,12 +131,13 @@ export class TemplateBinding extends Binding {
         return replaced;
     }
 
-    _isIgnored(element){
+    _isIgnored(element) {
         if (this.fore?.ignoredNodes) {
-            const found = this.fore.ignoredNodes.find(n => n.contains(element));
+            const found = this.fore.ignoredNodes.find((n) =>
+                n.contains(element),
+            );
             if (found) return true;
         }
-        return false
+        return false;
     }
-
 }

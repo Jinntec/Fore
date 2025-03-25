@@ -115,6 +115,8 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
         // console.log('connectedCallback',this);
         // this.display = window.getComputedStyle(this, null).getPropertyValue("display");
         this.ref = this.getAttribute('ref');
+
+        this.uniqueId = `$default/${this.ref}`;
         // this.ref = this._getRef();
         // console.log('### fx-repeat connected ', this.id);
         this.addEventListener('item-changed', (e) => {
@@ -140,6 +142,10 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
               console.log('insert catched', nodes, this.index);
             });
         */
+        DependencyTracker.getInstance().registerBinding(
+            this.uniqueId,
+            new RepeatBinding(this.ref, this),
+        );
 
         // if (this.getOwnerForm().lazyRefresh) {
         this.mutationObserver = new MutationObserver((mutations) => {
@@ -154,8 +160,8 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
                     console.log('###path addded', added);
                     // this._evalNodeset();
                     console.log('###path mutated', added);
-                    const mi = FxBind.createModelItem(path,added,this);
-                    console.log('***modelitem',mi)
+                    const mi = FxBind.createModelItem(path, added, this);
+                    console.log('***modelitem', mi);
                     // this.dispatch('path-mutated',{'path':path,'nodeset':this.nodeset,'index': this.index});
                     // this.index = index;
                     // const prev = mutations[0].previousSibling.previousElementSibling;
@@ -288,7 +294,7 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
 
         // const xpath = XPathUtil.getCanonicalXPath(this.nodeset)
 
-/*
+        /*
         if(this.nodeset.length === 0){
             const inscope = getInScopeContext(
                 this.getAttributeNode('ref') || this,
@@ -300,14 +306,10 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
         }
         if (this.nodeset.length !== 0) {
 */
-            // const xpath = XPathUtil.getPath(this.ref, instanceId);
-            console.log('xpath', this.ref);
-            // @TODO: Repeats have no model item!!!
-            this.xpath = `${instanceId}/${this.ref}`
-            DependencyTracker.getInstance().registerBinding(
-                `$default/${this.ref}`,
-                new RepeatBinding(this.ref, this),
-            );
+        // const xpath = XPathUtil.getPath(this.ref, instanceId);
+        console.log('xpath', this.ref);
+        // @TODO: Repeats have no model item!!!
+        this.xpath = `${instanceId}/${this.ref}`;
         // }
 
         // this.getOwnerForm().dependencyTracker.register(this.ref, this);
@@ -378,15 +380,14 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
 
         this.updateIndexes();
         const fore = this.getOwnerForm();
-        if(inserted){
+        if (inserted) {
             Fore.refreshChildren(inserted, true);
         }
 
         // if (!fore.lazyRefresh || force) {
-            // Turn the possibly conditional force refresh into a forced one: we changed our children
-            // Fore.refreshChildren(this, force);
+        // Turn the possibly conditional force refresh into a forced one: we changed our children
+        // Fore.refreshChildren(this, force);
         // }
-
 
         // DependencyTracker.getInstance().pendingUpdates.clear();
         // DependencyTracker.getInstance().deletedIndexes.clear();
@@ -414,8 +415,12 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
     }
 
     updateIndexes() {
-        console.log('updateIndexes',this.index);
-        DependencyTracker.getInstance().notifyIndexChange(this.xpath, this.index,this.index);
+        console.log('updateIndexes', this.index);
+        DependencyTracker.getInstance().notifyIndexChange(
+            this.xpath,
+            this.index,
+            this.index,
+        );
         this.querySelectorAll(':scope > fx-repeatitem').forEach((item, idx) => {
             item.index = idx + 1;
         });

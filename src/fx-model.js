@@ -7,6 +7,7 @@ import { XPathUtil } from './xpath-util.js';
 import { DependencyTracker } from './DependencyTracker.js';
 import { FacetBinding } from './binding/FacetBinding';
 import { NodeBinding } from './binding/NodeBinding';
+import { FxBind } from './fx-bind.js';
 
 /**
  * The model of this Fore scope. It holds all the intances, binding, submissions and custom functions that
@@ -90,19 +91,13 @@ export class FxModel extends HTMLElement {
             (node === null || node === undefined)
         ) {
             // ### intializing ModelItem with default values (as there is no <fx-bind> matching for given ref)
-            const mi = new ModelItem(
-                XPathUtil.getPath(node, instanceId),
-                ref,
-                node,
-                null,
-                instanceId,
-            );
-
-            // console.log('new ModelItem is instanceof ModelItem ', mi instanceof ModelItem);
-            model.registerModelItem(mi);
+            const mi = FxBind.createModelItem(ref, node, formElement);
             return mi;
         }
-        let targetNode = {};
+        /**
+         * @type {Node}
+         */
+        let targetNode = null;
         if (node === null || node === undefined) return null;
         if (node.nodeType === Node.TEXT_NODE) {
             // const parent = node.parentNode;
@@ -123,16 +118,7 @@ export class FxModel extends HTMLElement {
         // const path = XPathUtil.getPath(node);
 
         // ### intializing ModelItem with default values (as there is no <fx-bind> matching for given ref)
-        const mi = new ModelItem(
-            path,
-            ref,
-            targetNode,
-            null,
-            instanceId,
-        );
-
-        // console.log('new ModelItem is instanceof ModelItem ', mi instanceof ModelItem);
-        model.registerModelItem(mi);
+        const mi = FxBind.createModelItem(ref, targetNode, formElement);
         return mi;
     }
 

@@ -11,9 +11,11 @@ import { getBucketsForNode } from 'fontoxpath';
 export class DependencyNotifyingDomFacade {
     /**
      * @param  {(node: Node) => void} onNodeTouched - onNodeTouched A function what will be executed whenever a node is 'touched' by the XPath
+     * @param  {(dep: {dependencyKind: 'repeat-index', repeat: string})=> void} onOtherDependency - A callback that will be fired if the index function is called
      */
-    constructor(onNodeTouched) {
+    constructor(onNodeTouched, onOtherDependency) {
         this._onNodeTouched = onNodeTouched;
+        this.onOtherDependency = onOtherDependency;
     }
 
     /**

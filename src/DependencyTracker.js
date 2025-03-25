@@ -2,8 +2,9 @@ import { DepGraph } from './dep_graph.js';
 import getInScopeContext from './getInScopeContext';
 import { XPathUtil } from './xpath-util';
 import { TemplateBinding } from './binding/TemplateBinding.js';
-import { evaluateXPathToNodes } from './xpath-evaluation';
+import { evaluateXPath, evaluateXPathToNodes } from './xpath-evaluation';
 import { debounce } from './events';
+import { DependencyNotifyingDomFacade } from './DependencyNotifyingDomFacade.js';
 // import { XPathDependencyExtractor } from './XPathDependencyExtractor.js';
 let _instance = null;
 
@@ -42,8 +43,7 @@ export class DependencyTracker {
 
         // Create the debounced version of our internal notifyChange method.
         this.debouncedNotifyChange = debounce(this, this._notifyChange, 100);
-        this.opNum=0; // global number of operations
-
+        this.opNum = 0; // global number of operations
     }
 
     reset() {
@@ -216,6 +216,43 @@ export class DependencyTracker {
         const templateBinding = new TemplateBinding(expression, node);
         this.registerBinding(templateBinding.xpath, templateBinding);
 
+        const deps = [];
+        const dependencyTrackingDomFacade = new DependencyNotifyingDomFacade(
+            (_node) => undefined,
+            ({ dependencyKind, repeat }) => {
+                if (dependencyKind === 'repeat-index') {
+                    deps.push({ kind: 'repeat-index', repeat: repeat });
+                }
+            },
+        );
+        const inscope = getInScopeContext(node, expression);
+
+        const targetNode = evaluateXPath(
+            expression,
+            inscope,
+            node,
+            null,
+            {},
+            dependencyTrackingDomFacade,
+        );
+
+        if (targetNode[0]?.nodeType) {
+            // Line up a dependency from the Template expression to resulting node.
+            // TODO: set up the dependencies to all the nodes touched as well!
+            DependencyTracker.getInstance().registerDependency(
+                templateBinding.xpath,
+                XPathUtil.getCanonicalXPath(targetNode[0]),
+            );
+        }
+
+        for (const dep of deps) {
+            // Set up the dependencies from the template binding to all the repeat-indexes used in the XPath
+            DependencyTracker.getInstance().registerDependency(
+                templateBinding.xpath,
+                dep.repeat,
+            );
+        }
+
         // Register dependencies for the template binding.
         /*       const dependencies = this.extractDependencies(expression);
         dependencies.forEach((dep) => {
@@ -230,6 +267,10 @@ export class DependencyTracker {
     }
 
     // Register a dependency edge in the dependency graph.
+    /**
+     * @param {string} from
+     * @param {string} to
+     */
     registerDependency(from, to) {
         console.log('🔗🔗 registerDependency', from, to);
         if (!this.dependencyGraph.hasNode(from)) {

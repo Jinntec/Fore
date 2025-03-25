@@ -2,7 +2,7 @@ import { Fore } from '../fore.js';
 import ForeElementMixin from '../ForeElementMixin.js';
 import { withDraggability } from '../withDraggability.js';
 import { DependencyTracker } from '../DependencyTracker';
-import {ControlBinding} from "../binding/ControlBinding";
+import { ControlBinding } from '../binding/ControlBinding';
 
 /**
  * `fx-repeat`
@@ -91,8 +91,10 @@ export class FxRepeatitem extends withDraggability(ForeElementMixin, true) {
         console.log('_dispatchIndexChange', this, this.index);
 
         // const path = t
-        DependencyTracker.getInstance().updateRepeatIndex(this.modelItem.path, this.index);
-
+        DependencyTracker.getInstance().updateRepeatIndex(
+            this.modelItem.path,
+            this.index,
+        );
         this.dispatchEvent(
             new CustomEvent('item-changed', {
                 composed: false,
@@ -104,10 +106,10 @@ export class FxRepeatitem extends withDraggability(ForeElementMixin, true) {
 
     refresh(force) {
         // if(!typeof this.refresh === 'function') return;
-        console.log('repeatitem refresh',this);
+        console.log('repeatitem refresh', this);
         this.modelItem = this.getModelItem();
         // ### register ourselves as boundControl
-/*
+        /*
         DependencyTracker.getInstance().registerControl(
             this.modelItem.path,
             this,
@@ -120,7 +122,6 @@ export class FxRepeatitem extends withDraggability(ForeElementMixin, true) {
                 this.binding,
             );
         }
-
 
         if (this.modelItem && !this.modelItem.relevant) {
             this.removeAttribute('relevant');
