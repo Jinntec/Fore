@@ -189,6 +189,7 @@ export class FxModel extends HTMLElement {
 
     registerModelItem(modelItem) {
         // console.log('ModelItem registered ', modelItem);
+        // todo: check for existence
         this.modelItems.push(modelItem);
     }
 

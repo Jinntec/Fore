@@ -130,118 +130,6 @@ export class FxBind extends ForeElementMixin {
         }
     }
 
-    /*
-      _buildBindGraph() {
-        if (this.bindType === 'xml') {
-          this.nodeset.forEach((node) => {
-            const instance = XPathUtil.resolveInstance(this, this.ref);
-
-            const path = XPathUtil.getPath(node, instance);
-            // DependencyTracker.getInstance().dependencyTracker.addNode(path, node);
-            //create and register NodeBinding
-            const nodeBinding = new NodeBinding(path,node);
-
-            // todo: add dependencies by inspecting predicates of path and calling registerDependency
-
-            /!* ### catching references in the 'ref' itself...
-            todo: investigate cases where 'ref' attributes use predicates pointing to other nodes. These would not be handled
-            in current implementation.
-
-            General question: are there valid use-cases for using a 'filter' expression to narrow the nodeset
-              where to apply constraints? Guess yes and if it's 'just' for reducing the amount of necessary modelItem objects.
-
-            *!/
-            // const foreignRefs = this.getReferences(this.ref);
-
-            if (this.calculate) {
-              // DependencyTracker.getInstance().dependencyTracker.addNode(`${path}:calculate`, node);
-              const calcBind = new FacetBinding(path,node,'calculate');
-              // DependencyTracker.getInstance().registerBinding(path,calcBind);
-              DependencyTracker.getInstance().registerDependency(path,`${path}:calculate`)
-              // Calculated values are a dependency of the model item.
-              // DependencyTracker.getInstance().dependencyGraph.addDependency(`${path}:calculate`,path);
-            }
-
-            const calculateRefs = this._getReferencesForProperty(this.calculate, node);
-            if (calculateRefs.length !== 0) {
-              this._addDependencies(calculateRefs, node, path, 'calculate');
-            }
-
-            // when values are calculated they are readonly anyway
-            if (!this.calculate) {
-              const readonlyRefs = this._getReferencesForProperty(this.readonly, node);
-              if (readonlyRefs.length !== 0) {
-                this._addDependencies(readonlyRefs, node, path, 'readonly');
-              } else if (this.readonly) {
-                this.model.mainGraph.addNode(`${path}:readonly`, node);
-              }
-            }
-
-            // const requiredRefs = this.requiredReferences;
-            const requiredRefs = this._getReferencesForProperty(this.required, node);
-            if (requiredRefs.length !== 0) {
-              this._addDependencies(requiredRefs, node, path, 'required');
-            } else if (this.required) {
-              this.model.mainGraph.addNode(`${path}:required`, node);
-            }
-
-            const relevantRefs = this._getReferencesForProperty(this.relevant, node);
-            if (relevantRefs.length !== 0) {
-              this._addDependencies(relevantRefs, node, path, 'relevant');
-            } else if (this.relevant) {
-              this.model.mainGraph.addNode(`${path}:relevant`, node);
-            }
-
-            const constraintRefs = this._getReferencesForProperty(this.constraint, node);
-            if (constraintRefs.length !== 0) {
-              this._addDependencies(constraintRefs, node, path, 'constraint');
-            } else if (this.constraint) {
-              this.model.mainGraph.addNode(`${path}:constraint`, node);
-              this.model.mainGraph.addDependency(path, `${path}:constraint`);
-            }
-          });
-        }
-      }
-    */
-
-    /**
-     * Add the dependencies of this bind
-     *
-     * @param  {Node[]}  refs The nodes that are referenced by this bind. these need to be resolved before
-     * this bind can be resolved.
-     * @param  {Node}    node The start of the reference
-     * @param  {string}  path The path to the start of the reference
-     * @param  {string}  property The property with this dependency
-     */
-
-    /*
-  _addDependencies(refs, node, path, property) {
-    // console.log('_addDependencies',path);
-    const nodeHash = `${path}:${property}`;
-    if (refs.length !== 0) {
-      if (!DependencyTracker.getInstance().dependencyGraph.hasNode(nodeHash)) {
-        DependencyTracker.getInstance().dependencyGraph.addNode(nodeHash, node);
-      }
-      refs.forEach((ref) => {
-        const instance = XPathUtil.resolveInstance(this, path);
-
-        const otherPath = XPathUtil.getPath(ref, instance);
-        // console.log('otherPath', otherPath)
-
-        // todo: nasty hack to prevent duplicate pathes like 'a[1]' and 'a[1]/text()[1]' to end up as separate nodes in the graph
-        if (!otherPath.endsWith('text()[1]')) {
-          if (!DependencyTracker.getInstance().dependencyGraph.hasNode(otherPath)) {
-            DependencyTracker.getInstance().dependencyGraph.addNode(otherPath, ref);
-          }
-          DependencyTracker.getInstance().dependencyGraph.addDependency(nodeHash, otherPath);
-        }
-      });
-    } else {
-      DependencyTracker.getInstance().dependencyGraph.addNode(nodeHash, node);
-    }
-  }
-*/
-
     _processChildren(model) {
         const childbinds = this.querySelectorAll(':scope > fx-bind');
         Array.from(childbinds).forEach((bind) => {
@@ -324,7 +212,7 @@ export class FxBind extends ForeElementMixin {
         const instanceId = XPathUtil.resolveInstance(boundElement, ref);
         if (!node.nodeType) {
             // This node set is not pointing to nodes, but some other type.
-            return new ModelItem(ref, 'non-node item', node, null, instanceId);
+            return new ModelItem(ref, 'non-node item', node, null, instanceId,boundElement.getModel());
         }
 
         const path = XPathUtil.getPath(node, instanceId);
@@ -351,6 +239,7 @@ export class FxBind extends ForeElementMixin {
                     node,
                     bind,
                     instanceId,
+                    boundElement.getModel()
                 );
                 const alert = bind.getAlert();
                 if (alert) {
@@ -364,6 +253,7 @@ export class FxBind extends ForeElementMixin {
                     node,
                     null,
                     instanceId,
+                    boundElement.getModel()
                 );
             }
             boundElement.getModel().registerModelItem(modelItem);

@@ -20,8 +20,9 @@ export class ModelItem {
      * @param {Node} node - the node the 'ref' expression is referring to
      * @param {import('./fx-bind').FxBind} bind - the fx-bind element having created this modelItem
      * @param {string} instance - the fx-instance id having created this modelItem
+     * @param {import('./fx-model').FxModel} model - the fx-model hosting this modelItem
      */
-    constructor(path, ref, node, bind, instance) {
+    constructor(path, ref, node, bind, instance,model) {
         /**
          * @type {string}
          */
@@ -74,6 +75,7 @@ export class ModelItem {
             // this.path = 'anon';
             this.path = XPathUtil.getCanonicalXPath(this.node);
         }
+        this.model=model;
     }
 
     /*
