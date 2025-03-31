@@ -131,7 +131,8 @@ export class FxRepeatitem extends withDraggability(ForeElementMixin, true) {
             this.setAttribute('relevant', '');
         }
         // Always recurse for these refreshes, especially when forced
-        // Fore.refreshChildren(this, force);
+        // todo: refresh all children - to be changed later
+        Fore.refreshChildren(this, force);
     }
 }
 

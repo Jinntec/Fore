@@ -160,8 +160,8 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
                     console.log('###path addded', added);
                     // this._evalNodeset();
                     console.log('###path mutated', added);
-                    const mi = FxBind.createModelItem(path, added, this);
-                    console.log('***modelitem', mi);
+                    // const mi = FxBind.createModelItem(path, added, this);
+                    // console.log('***modelitem', mi);
                     // this.dispatch('path-mutated',{'path':path,'nodeset':this.nodeset,'index': this.index});
                     // this.index = index;
                     // const prev = mutations[0].previousSibling.previousElementSibling;
@@ -381,7 +381,8 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
         this.updateIndexes();
         const fore = this.getOwnerForm();
         if (inserted) {
-            Fore.refreshChildren(inserted, true);
+            // todo: refresh all children - to be changed later
+            Fore.refreshChildren(this, true);
         }
 
         // if (!fore.lazyRefresh || force) {
