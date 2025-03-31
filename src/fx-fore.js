@@ -552,7 +552,7 @@ export class FxFore extends HTMLElement {
     }
 
     // ### refresh template expressions
-    if (this.initialRun || this._scanForNewTemplateExpressionsNextRefresh) {
+    if (force || this.initialRun || this._scanForNewTemplateExpressionsNextRefresh) {
       this._updateTemplateExpressions();
       this._scanForNewTemplateExpressionsNextRefresh = false; // reset
     }
