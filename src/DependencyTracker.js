@@ -475,12 +475,23 @@ export class DependencyTracker {
      * @param {import('./modelitem.js').ModelItem} modelItem - The model item of the node that was just inserted
      */
     notifyInsert(modelItem) {
-        const xpath = `${modelItem.path}_${this.opNum}`;
         console.log('notifyInsert', modelItem);
         this.opNum++;
+        const xpath = `${modelItem.path}_${this.opNum}`;
 
         const resolvedXPath = this.resolveInstanceXPath(modelItem.path);
         modelItem.path = xpath;
+        console.log('notifyInsert new path', xpath);
+
+        // todo: to be continued....
+        // the following kind-of works but needs more consideration and testing
+
+/*
+        if(modelItem.bind){
+            // init() takes care of creating Binding and ModelItem objects and register them
+            modelItem.bind.init(modelItem.model);
+        }
+*/
 
         const matches = [...resolvedXPath.matchAll(/\[(\d+)\]/g)];
         const baseXPath = resolvedXPath.replace(/\[\d+\]$/, '');
