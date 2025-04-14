@@ -47,6 +47,17 @@ export default class FxSetvalue extends AbstractAction {
     let { value } = this;
     if (this.valueAttr !== null) {
       const inscopeContext = getInScopeContext(this, this.valueAttr);
+      /*
+      todo: review @martin - shouldn't we always return a string value?
+      this comes down to the question if setvalue should only allow setting of strings
+      which i tend to agree. Can't remember a case where i wanted to set an attribute
+      or element (for json wouldn't make much sense either) - for cases like that
+      fx-replace would be more appropriate.
+
+      This is of practical relevance cause currently forces to append 'text()' to value expressions
+      or getting unexpected results.
+      */
+
       [value] = evaluateXPath(this.valueAttr, inscopeContext, this, this.detail);
     } else if (this.textContent !== '') {
       value = this.textContent;
