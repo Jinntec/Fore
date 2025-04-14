@@ -15,9 +15,10 @@ export default [
       {
         file: 'dist/fore.js',
         format: 'es',
-        sourcemap: true,
+        sourcemap: false,
       },
     ],
+    treeshake:true,
     plugins: [
       versionInjector(),
       resolve(),
@@ -32,7 +33,6 @@ export default [
       }),
       strip(),
       minifyHTML(),
-      terser(),
     ],
   },
   {
@@ -55,7 +55,6 @@ export default [
           [require('@babel/plugin-proposal-class-properties'), { loose: true }],
         ],
       }),
-      terser(),
     ],
   },
 ];
