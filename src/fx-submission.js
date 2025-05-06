@@ -100,7 +100,7 @@ export class FxSubmission extends ForeElementMixin {
         this.getOwnerForm().classList.add('submit-validation-failed');
         // ### allow alerts to pop up
         // this.dispatch('submit-error', {});
-        Fore.dispatch(this, 'submit-error', {});
+        Fore.dispatch(this, 'submit-error', {status:0,message:'validation failed'});
         this.getModel().parentNode.refresh(true);
         return;
       }
@@ -183,6 +183,7 @@ export class FxSubmission extends ForeElementMixin {
         const serialized = localStorage.getItem(key);
         if (!serialized) {
           Fore.dispatch(this, 'submit-error', {
+            status:400,
             message: `Error reading key ${key} from localstorage`,
           });
           this.parameters.clear();
@@ -230,7 +231,7 @@ export class FxSubmission extends ForeElementMixin {
         method: this.method,
         credentials: this.credentials,
         mode: 'cors',
-        headers,
+        headers,us
         body: serialized,
       });
 
@@ -241,7 +242,7 @@ export class FxSubmission extends ForeElementMixin {
             'background:red; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
         );
 
-        Fore.dispatch(this, 'submit-error', { message: `Error while submitting ${this.id}` });
+        Fore.dispatch(this, 'submit-error', { status: response.status, message: `Error during submit ${this.id}` });
         return;
       }
 
@@ -272,7 +273,7 @@ export class FxSubmission extends ForeElementMixin {
 */
 
     } catch (error) {
-      Fore.dispatch(this, 'submit-error', { error: error.message });
+      Fore.dispatch(this, 'submit-error', { status:500, error: error.message });
     } finally {
       this.parameters.clear();
       const download = document.querySelector('[download]');
@@ -493,10 +494,11 @@ export class FxSubmission extends ForeElementMixin {
     }
   }
 
+/*
   _handleError() {
     // this.dispatch('submit-error', {});
     Fore.dispatch(this, 'submit-error', {});
-    /*
+    /!*
                     console.log('ERRRORRRRR');
                     this.dispatchEvent(
                         new CustomEvent('submit-error', {
@@ -505,8 +507,9 @@ export class FxSubmission extends ForeElementMixin {
                             detail: {},
                         }),
                     );
-            */
+            *!/
   }
+*/
 
   /*
     mergeNodes(node1, node2) {
