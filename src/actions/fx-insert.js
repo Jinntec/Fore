@@ -169,7 +169,15 @@ export class FxInsert extends AbstractAction {
             inscope = inscopeContext;
         }
 
-        if (this.hasAttribute('ref')) {
+        let ref = this.getAttribute('ref');
+        // check for a bind attribute
+        if (this.hasAttribute('bind')) {
+            const bind = this.getOwnerForm().querySelector(
+                `fx-bind[id="${this.getAttribute('bind')}"]`,
+            );
+            ref = bind.getAttribute('ref'); // must exist
+        }
+        if (ref) {
             if (inscope) {
                 targetSequence = evaluateXPathToNodes(this.ref, inscope, this);
             } else {
@@ -344,7 +352,7 @@ export class FxInsert extends AbstractAction {
 
     actionPerformed(changedPaths) {
         // ### make sure the necessary modelItems will get created
-        this.getModel().rebuild();
+        // this.getModel().rebuild();
         super.actionPerformed();
     }
 
