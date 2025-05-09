@@ -9,6 +9,8 @@ import { withDraggability } from '../withDraggability.js';
 import { DependencyTracker } from '../DependencyTracker';
 import { RepeatBinding } from '../binding/RepeatBinding.js';
 import { DependencyNotifyingDomFacade } from '../DependencyNotifyingDomFacade.js';
+import observeXPath, { signalIndexUpdate } from '../xpathObserver.js';
+import { ReturnType } from 'fontoxpath';
 
 // import {DependencyNotifyingDomFacade} from '../DependencyNotifyingDomFacade';
 
@@ -62,12 +64,20 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
         this.focusOnCreate = '';
         this.initDone = false;
         this.repeatIndex = 1;
+        /**
+         * @type {Node[]}
+         */
         this.nodeset = [];
         this.inited = false;
         this.index = 1;
         this.repeatSize = 0;
         this.attachShadow({ mode: 'open', delegatesFocus: true });
         this.xpath = '';
+
+        /**
+         * @type {import('../xpathObserver.js').ObservableResult<Node[]>}
+         */
+        this.refObserver = null;
     }
 
     get repeatSize() {
@@ -84,10 +94,13 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
         const rItems = this.querySelectorAll(':scope > fx-repeatitem');
         this.applyIndex(rItems[this.index - 1]);
 
-        this.getOwnerForm().refresh({
-            reason: 'index-function',
-            elementLocalnamesWithChanges: [],
-        });
+        signalIndexUpdate(this.uniqueId);
+
+        this.getOwnerForm().refresh();
+        // this.getOwnerForm().refresh({
+        //     reason: 'index-function',
+        //     elementLocalnamesWithChanges: [],
+        // });
     }
 
     applyIndex(repeatItem) {
@@ -136,16 +149,49 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
         });
         /*
             document.addEventListener('insert', e => {
-              const nodes = e.detail.insertedNodes;
+            const nodes = e.detail.insertedNodes;
               this.index = e.detail.position;
               console.log('insert catched', nodes, this.index);
             });
         */
+        const binding = new RepeatBinding(this.bindingKey, this);
         DependencyTracker.getInstance().registerBinding(
-            this.uniqueId,
-            new RepeatBinding(this.ref, this),
+            this.bindingKey,
+            binding,
+        );
+        const contextProvider = this.parentNode.closest('[ref]');
+        if (contextProvider) {
+            DependencyTracker.getInstance().registerDependency(
+                this.bindingKey,
+                contextProvider.bindingKey,
+            );
+        }
+
+        // TODO: Add a dep from here to whatever will give this a new inscopecontext
+
+        this.refObserver = observeXPath(
+            this.ref,
+            () => {
+                const isc = getInScopeContext(
+                    this.getAttributeNode('ref') || this,
+                    this.ref,
+                );
+                // TODO: remove old inscopecontext dep here
+                DependencyTracker.getInstance().registerDependency(
+                    this.bindingKey,
+                    XPathUtil.getCanonicalXPath(isc),
+                );
+
+                return isc;
+            },
+            this,
+            ReturnType.NODES,
         );
 
+        this.refObserver.addObserver(() => {
+            DependencyTracker.getInstance().notifyChange(this.bindingKey);
+        });
+        /*
         // if (this.getOwnerForm().lazyRefresh) {
         this.mutationObserver = new MutationObserver((mutations) => {
             // console.log('mutations', mutations);
@@ -173,7 +219,8 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
                     });
                 }
             }
-        });
+            });
+            */
         // }
         this.getOwnerForm().registerLazyElement(this);
 
@@ -234,49 +281,7 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
      * @private
      */
     _evalNodeset() {
-        // const inscope = this.getInScopeContext();
-        const inscope = getInScopeContext(
-            this.getAttributeNode('ref') || this,
-            this.ref,
-        );
-        // console.log('##### inscope ', inscope);
-        // console.log('##### ref ', this.ref);
-        // now we got a nodeset and attach MutationObserver to it
-
-        if (this.mutationObserver && inscope.nodeName) {
-            this.mutationObserver.observe(inscope, {
-                childList: true,
-                subtree: true,
-            });
-        }
-
-        const touchedPaths = new Set();
-        const instance = XPathUtil.resolveInstance(this, this.ref);
-        const depTrackDomfacade = new DependencyNotifyingDomFacade((node) => {
-            const path = XPathUtil.getPath(node, instance);
-            const basePath = DependencyTracker.getInstance().getBaseXPath(path);
-            touchedPaths.add(basePath);
-        });
-        const rawNodeset = evaluateXPath(
-            this.ref,
-            inscope,
-            this,
-            {},
-            {},
-            depTrackDomfacade,
-        );
-
-        console.log('Touched!', this.ref, [...touchedPaths].join(', '));
-        for (const path of touchedPaths) {
-            DependencyTracker.getInstance().registerDependency(this.ref, path);
-        }
-
-        if (rawNodeset.length === 1 && Array.isArray(rawNodeset[0])) {
-            // This XPath likely returned an XPath array. Just collapse to that array
-            this.nodeset = rawNodeset[0];
-            return;
-        }
-        this.nodeset = rawNodeset;
+        this.nodeset = this.refObserver.getResult();
     }
 
     async refresh(force) {
@@ -298,10 +303,10 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
             console.log('xpath', xpath);
             // @TODO: Repeats have no model item!!!
             if (!DependencyTracker.getInstance().bindingRegistry.has(this.ref))
-            DependencyTracker.getInstance().registerBinding(
-                this.ref,
-                new RepeatBinding(this.ref, this),
-            );
+                DependencyTracker.getInstance().registerBinding(
+                    this.ref,
+                    new RepeatBinding(this.ref, this),
+                );
         }
 
         // this.getOwnerForm().dependencyTracker.register(this.ref, this);

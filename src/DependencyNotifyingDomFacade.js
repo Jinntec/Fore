@@ -10,12 +10,14 @@ import { getBucketsForNode } from 'fontoxpath';
  */
 export class DependencyNotifyingDomFacade {
     /**
-     * @param  {(node: Node) => void} onNodeTouched - onNodeTouched A function what will be executed whenever a node is 'touched' by the XPath
+     * @param  {(node: Node, type?: MutationRecordType) => void} onNodeTouched - onNodeTouched A function what will be executed whenever a node is 'touched' by the XPath
      * @param  {(dep: {dependencyKind: 'repeat-index', repeat: string})=> void} onOtherDependency - A callback that will be fired if the index function is called
      */
-    constructor(onNodeTouched, onOtherDependency) {
+    constructor(onNodeTouched, onOtherDependency, mutationRecordMode = false) {
         this._onNodeTouched = onNodeTouched;
         this.onOtherDependency = onOtherDependency;
+
+        this.mutationRecordMode = mutationRecordMode;
     }
 
     /**
@@ -37,6 +39,9 @@ export class DependencyNotifyingDomFacade {
      */
     // eslint-disable-next-line class-methods-use-this
     getAttribute(node, attributeName) {
+        if (this.mutationRecordMode) {
+            this._onNodeTouched(node, 'attributes');
+        }
         return node.getAttribute(attributeName);
     }
 
@@ -53,9 +58,13 @@ export class DependencyNotifyingDomFacade {
             (childNode) =>
                 !bucket || getBucketsForNode(childNode).includes(bucket),
         );
-        matchingNodes.forEach((matchingNode) =>
-            this._onNodeTouched(matchingNode),
-        );
+        if (this.mutationRecordMode) {
+            this._onNodeTouched(node, 'childList');
+        } else {
+            matchingNodes.forEach((matchingNode) =>
+                this._onNodeTouched(matchingNode),
+            );
+        }
         return matchingNodes;
     }
 
@@ -66,11 +75,15 @@ export class DependencyNotifyingDomFacade {
      */
     getData(node) {
         if (node.nodeType === Node.ATTRIBUTE_NODE) {
-            this._onNodeTouched(node);
+            this._onNodeTouched(node, 'attributes');
             return node.value;
         }
         // Text node
-        this._onNodeTouched(node.parentNode);
+        if (this.mutationRecordMode) {
+            this._onNodeTouched(node, 'characterData');
+        } else {
+            this._onNodeTouched(node.parentNode);
+        }
         return node.data;
     }
 
@@ -82,9 +95,14 @@ export class DependencyNotifyingDomFacade {
      * @param  bucket - The bucket that matches the attribute that will be used.
      */
     getFirstChild(node, bucket) {
+        if (this.mutationRecordMode) {
+            this._onNodeTouched(node, 'childList');
+        }
         for (const child of node.childNodes) {
             if (!bucket || getBucketsForNode(child).includes(bucket)) {
-                this._onNodeTouched(child);
+                if (!this.mutationRecordMode) {
+                    this._onNodeTouched(child);
+                }
                 return child;
             }
         }
@@ -100,6 +118,9 @@ export class DependencyNotifyingDomFacade {
      */
     // eslint-disable-next-line class-methods-use-this
     getLastChild(node, bucket) {
+        if (this.mutationRecordMode) {
+            this._onNodeTouched(node, 'childList');
+        }
         const matchingNodes = node
             .getChildNodes()
             .filter(
@@ -122,6 +143,9 @@ export class DependencyNotifyingDomFacade {
      */
     // eslint-disable-next-line class-methods-use-this
     getNextSibling(node, bucket) {
+        if (this.mutationRecordMode) {
+            this._onNodeTouched(node.parentNode, 'childList');
+        }
         for (
             let sibling = node.nextSibling;
             sibling;
@@ -131,7 +155,9 @@ export class DependencyNotifyingDomFacade {
                 // eslint-disable-next-line no-continue
                 continue;
             }
-            this._onNodeTouched(sibling);
+            if (!this.mutationRecordMode) {
+                this._onNodeTouched(sibling);
+            }
             return sibling;
         }
         return null;
@@ -145,6 +171,10 @@ export class DependencyNotifyingDomFacade {
      */
     // eslint-disable-next-line class-methods-use-this
     getParentNode(node) {
+        if (this.mutationRecordMode) {
+            this._onNodeTouched(node.parentNode, 'childList');
+        }
+
         return node.parentNode;
     }
 
@@ -157,6 +187,9 @@ export class DependencyNotifyingDomFacade {
      */
     // eslint-disable-next-line class-methods-use-this
     getPreviousSibling(node, bucket) {
+        if (this.mutationRecordMode) {
+            this._onNodeTouched(node.parentNode, 'childList');
+        }
         for (
             let { previousSibling } = node;
             previousSibling;

@@ -253,6 +253,14 @@ export class DependencyTracker {
             );
         }
 
+        const contextProvider = parent.closest('[ref]');
+        if (contextProvider) {
+            DependencyTracker.getInstance().registerDependency(
+                templateBinding.xpath,
+                contextProvider.bindingKey,
+            );
+        }
+
         // Register dependencies for the template binding.
         /*       const dependencies = this.extractDependencies(expression);
         dependencies.forEach((dep) => {
@@ -339,7 +347,6 @@ export class DependencyTracker {
      *
      *
      * @param changedXPath
-     * @private
      */
     notifyChange(changedXPath) {
         console.log('throttling notifyChange', changedXPath);
@@ -354,16 +361,16 @@ export class DependencyTracker {
      */
     _notifyChange(changedXPath) {
         const resolvedXPath = this.resolveInstanceXPath(changedXPath);
-        const affectedXPaths = new Set([resolvedXPath]);
+        const affectedXPaths = new Set([resolvedXPath, changedXPath]);
 
         // If no binding is registered for this XPath, queue the change.
-        if (!this.bindingRegistry.has(resolvedXPath)) {
-            console.warn(
-                `No bindings yet for: ${resolvedXPath}, queuing change.`,
-            );
-            //      this.queuedChanges.add(resolvedXPath);
-            //      return;
-        }
+        // if (!this.bindingRegistry.has(resolvedXPath)) {
+        //     console.warn(
+        //         `No bindings yet for: ${resolvedXPath}, queuing change.`,
+        //     );
+        //     //      this.queuedChanges.add(resolvedXPath);
+        //     //      return;
+        // }
 
         this.bindingRegistry.forEach((bindings, key) => {
             // Handle wildcard dependencies.
@@ -397,6 +404,10 @@ export class DependencyTracker {
         // Standard dependency resolution from the dependencyGraph.
         if (this.dependencyGraph.hasNode(resolvedXPath)) {
             const dependents = this.dependencyGraph.dependantsOf(resolvedXPath);
+            dependents.forEach((dep) => affectedXPaths.add(dep));
+        }
+        if (this.dependencyGraph.hasNode(changedXPath)) {
+            const dependents = this.dependencyGraph.dependantsOf(changedXPath);
             dependents.forEach((dep) => affectedXPaths.add(dep));
         }
 
@@ -486,7 +497,7 @@ export class DependencyTracker {
         // todo: to be continued....
         // the following kind-of works but needs more consideration and testing
 
-/*
+        /*
         if(modelItem.bind){
             // init() takes care of creating Binding and ModelItem objects and register them
             modelItem.bind.init(modelItem.model);

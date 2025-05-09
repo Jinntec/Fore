@@ -23,6 +23,8 @@ export class RepeatBinding extends Binding {
             );
             return;
         }
-        this.repeat.refresh();
+        if (this.repeat.refresh) {
+            this.repeat.refresh();
+        }
     }
 }
