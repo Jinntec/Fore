@@ -501,7 +501,11 @@ export class DependencyTracker {
                 this.insertedIndexes.set(baseXPath, []);
             }
             this.insertedIndexes.get(baseXPath).push(index);
-            // make sure the repeat will refresh by adding to pendingUpdates
+
+            if (!this.bindingRegistry.has(baseXPath)) {
+                // const repeatBinding = new RepeatBinding(baseXPath,)
+                this.bindingRegistry.set(baseXPath, new Set());
+            }
             if (this.bindingRegistry.has(baseXPath)) {
                 for (const binding of this.bindingRegistry.get(baseXPath)) {
                     if (!this.nonRelevantControls.has(binding)) {

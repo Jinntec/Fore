@@ -2,8 +2,6 @@ import getInScopeContext from '../getInScopeContext.js';
 import { XPathUtil } from '../xpath-util.js';
 import { evaluateXPath, evaluateXPathToString } from '../xpath-evaluation.js';
 import { Binding } from './Binding.js';
-import { DependencyNotifyingDomFacade } from '../DependencyNotifyingDomFacade.js';
-import { DependencyTracker } from '../DependencyTracker.js';
 
 let i = 0;
 /**

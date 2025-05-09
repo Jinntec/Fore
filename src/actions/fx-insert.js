@@ -331,28 +331,6 @@ export class FxInsert extends AbstractAction {
         return [xpath];
     }
 
-    _createBindingForNode(node) {
-        // create ModelItem
-        const bind = this.getOwnerForm()
-            .getModel()
-            .querySelector(`fx-bind[ref=${this.ref}]`);
-        console.log('matching bind found', bind);
-        /*
-        if(bind){
-            const modelItem = bind._createModelItem(originSequenceClone);
-            console.log('new ModelItem',modelItem);
-        }else{
-*/
-        Model.lazyCreateModelItem(
-            this.getModel(),
-            this.ref,
-            originSequenceClone,
-            this.getOwnerForm(),
-            instanceId,
-        );
-        // }
-    }
-
     // eslint-disable-next-line class-methods-use-this
     _cloneTargetSequence(seq) {
         if (Array.isArray(seq) && seq.length !== 0) {

@@ -8,7 +8,6 @@ import { XPathUtil } from '../xpath-util.js';
 import { withDraggability } from '../withDraggability.js';
 import { DependencyTracker } from '../DependencyTracker';
 import { RepeatBinding } from '../binding/RepeatBinding.js';
-import { FxBind } from '../fx-bind.js';
 import { DependencyNotifyingDomFacade } from '../DependencyNotifyingDomFacade.js';
 
 // import {DependencyNotifyingDomFacade} from '../DependencyNotifyingDomFacade';
@@ -294,23 +293,16 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
 
         // const xpath = XPathUtil.getCanonicalXPath(this.nodeset)
 
-        /*
-        if(this.nodeset.length === 0){
-            const inscope = getInScopeContext(
-                this.getAttributeNode('ref') || this,
-                this.ref,
-            );
-
-            const parentPath = XPathUtil.getPath(inscope,instanceId);
-            console.log('newPath', parentPath + '/' + this.ref)
-        }
         if (this.nodeset.length !== 0) {
-*/
-        // const xpath = XPathUtil.getPath(this.ref, instanceId);
-        console.log('xpath', this.ref);
-        // @TODO: Repeats have no model item!!!
-        this.xpath = `${instanceId}/${this.ref}`;
-        // }
+            const xpath = XPathUtil.getPath(this.nodeset, instanceId);
+            console.log('xpath', xpath);
+            // @TODO: Repeats have no model item!!!
+            if (!DependencyTracker.getInstance().bindingRegistry.has(this.ref))
+            DependencyTracker.getInstance().registerBinding(
+                this.ref,
+                new RepeatBinding(this.ref, this),
+            );
+        }
 
         // this.getOwnerForm().dependencyTracker.register(this.ref, this);
 
