@@ -3,7 +3,7 @@ import '../fx-model.js';
 import { AbstractAction } from './abstract-action.js';
 import { evaluateXPath } from '../xpath-evaluation.js';
 import { Fore } from '../fore.js';
-import getInScopeContext from "../getInScopeContext";
+import getInScopeContext from '../getInScopeContext.js';
 
 /**
  * `fx-setvalue`
@@ -11,43 +11,43 @@ import getInScopeContext from "../getInScopeContext";
  * @customElement
  */
 export default class FxSetvalue extends AbstractAction {
-  static get properties() {
-    return {
-      ...super.properties,
-      ref: {
-        type: String,
-      },
-      valueAttr: {
-        type: String,
-      },
-    };
-  }
-
-  constructor() {
-    super();
-    this.ref = '';
-    this.valueAttr = '';
-  }
-
-  connectedCallback() {
-    if (super.connectedCallback) {
-      super.connectedCallback();
+    static get properties() {
+        return {
+            ...super.properties,
+            ref: {
+                type: String,
+            },
+            valueAttr: {
+                type: String,
+            },
+        };
     }
 
-    if (this.hasAttribute('ref')) {
-      this.ref = this.getAttribute('ref');
-    } else {
-      throw new Error('fx-setvalue must specify a "ref" attribute');
+    constructor() {
+        super();
+        this.ref = '';
+        this.valueAttr = '';
     }
-    this.valueAttr = this.getAttribute('value');
-  }
 
-  async perform() {
-    super.perform();
-    let { value } = this;
-    if (this.valueAttr !== null) {
-      const inscopeContext = getInScopeContext(this, this.valueAttr);
-      /*
+    connectedCallback() {
+        if (super.connectedCallback) {
+            super.connectedCallback();
+        }
+
+        if (this.hasAttribute('ref')) {
+            this.ref = this.getAttribute('ref');
+        } else {
+            throw new Error('fx-setvalue must specify a "ref" attribute');
+        }
+        this.valueAttr = this.getAttribute('value');
+    }
+
+    async perform() {
+        super.perform();
+        let { value } = this;
+        if (this.valueAttr !== null) {
+            const inscopeContext = getInScopeContext(this, this.valueAttr);
+            /*
       todo: review @martin - shouldn't we always return a string value?
       this comes down to the question if setvalue should only allow setting of strings
       which i tend to agree. Can't remember a case where i wanted to set an attribute
@@ -58,71 +58,76 @@ export default class FxSetvalue extends AbstractAction {
       or getting unexpected results.
       */
 
-      [value] = evaluateXPath(this.valueAttr, inscopeContext, this, this.detail);
-    } else if (this.textContent !== '') {
-      value = this.textContent;
-    } else {
-      value = '';
-    }
-    if (value?.nodeType && value.nodeType === Node.ATTRIBUTE_NODE) {
-      value = value.nodeValue;
-    }
-    const mi = this.getModelItem();
-    this.setValue(mi, value);
-    // todo: check this again - logically needsUpate should be set but makes tests fail
-    //  this.needsUpdate = true;
-  }
-
-  /**
-   * need to overwrite default dispatchExecute to do it ourselves. This is necessary for tracking control value changes
-   * which call setvalue directly without perform().
-   */
-  dispatchExecute() {}
-
-  setValue(modelItem, newVal) {
-    const item = modelItem;
-    if (!item) return;
-
-    if (item.value !== newVal) {
-      // const path = XPathUtil.getPath(modelItem.node);
-      const path = Fore.getDomNodeIndexString(modelItem.node);
-
-      const ev = this.event;
-      const targetElem = this;
-      this.dispatchEvent(
-        new CustomEvent('execute-action', {
-          composed: true,
-          bubbles: true,
-          cancelable: true,
-          detail: {
-            action: targetElem,
-            event: ev,
-            value: newVal,
-            path,
-          },
-        }),
-      );
-
-      if (newVal?.nodeType) {
-        if (newVal.nodeType === Node.ELEMENT_NODE) {
-          item.value = newVal;
+            [value] = evaluateXPath(
+                this.valueAttr,
+                inscopeContext,
+                this,
+                this.detail,
+            );
+        } else if (this.textContent !== '') {
+            value = this.textContent;
+        } else {
+            value = '';
         }
-        if (newVal.nodeType === Node.ATTRIBUTE_NODE) {
-          item.value = newVal.getValue();
+        if (value?.nodeType && value.nodeType === Node.ATTRIBUTE_NODE) {
+            value = value.nodeValue;
         }
-        if(newVal.nodeType === Node.TEXT_NODE){
-          item.value = newVal.textContent;
-        }
-      } else {
-        item.value = newVal;
-        item.node.textContent = newVal;
-      }
-      this.getModel().changed.push(modelItem);
-      this.needsUpdate = true;
+        const mi = this.getModelItem();
+        this.setValue(mi, value);
+        // todo: check this again - logically needsUpate should be set but makes tests fail
+        //  this.needsUpdate = true;
     }
-  }
+
+    /**
+     * need to overwrite default dispatchExecute to do it ourselves. This is necessary for tracking control value changes
+     * which call setvalue directly without perform().
+     */
+    dispatchExecute() {}
+
+    setValue(modelItem, newVal) {
+        const item = modelItem;
+        if (!item) return;
+
+        if (item.value !== newVal) {
+            // const path = XPathUtil.getPath(modelItem.node);
+            const path = Fore.getDomNodeIndexString(modelItem.node);
+
+            const ev = this.event;
+            const targetElem = this;
+            this.dispatchEvent(
+                new CustomEvent('execute-action', {
+                    composed: true,
+                    bubbles: true,
+                    cancelable: true,
+                    detail: {
+                        action: targetElem,
+                        event: ev,
+                        value: newVal,
+                        path,
+                    },
+                }),
+            );
+
+            if (newVal?.nodeType) {
+                if (newVal.nodeType === Node.ELEMENT_NODE) {
+                    item.value = newVal;
+                }
+                if (newVal.nodeType === Node.ATTRIBUTE_NODE) {
+                    item.value = newVal.getValue();
+                }
+                if (newVal.nodeType === Node.TEXT_NODE) {
+                    item.value = newVal.textContent;
+                }
+            } else {
+                item.value = newVal;
+                item.node.textContent = newVal;
+            }
+            this.getModel().changed.push(modelItem);
+            this.needsUpdate = true;
+        }
+    }
 }
 
 if (!customElements.get('fx-setvalue')) {
-  window.customElements.define('fx-setvalue', FxSetvalue);
+    window.customElements.define('fx-setvalue', FxSetvalue);
 }
