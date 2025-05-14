@@ -1,7 +1,8 @@
 /**
  * @typedef {{
  *        getResult(): T;
- *        addObserver(observer: () => void): () => void
+ *        addObserver(observer: () => void): () => void,
+ *        destroy(): void
  *     }} ObservableResult<T>
  * @template {Node[] | string} T
  *
@@ -31,7 +32,7 @@ import { DependencyNotifyingDomFacade } from './DependencyNotifyingDomFacade';
 const mutationObserverByDocument = new Map();
 
 /**
- * @type {Map<() => Node, Observer>}
+ * @type {Map<Observer, () => Node>}
  */
 const getContextNodeByObserver = new Map();
 
@@ -63,8 +64,9 @@ const processDependencies = (records) => {
         }
     }
 
-    for (const [getContextItem, observer] of getContextNodeByObserver) {
+    for (const [observer, getContextItem] of getContextNodeByObserver) {
         if (getContextItem() !== observer.previousContextNode) {
+            invalidatedObservers.add(observer);
         }
     }
 
@@ -154,7 +156,24 @@ export default function observeXPath(
         previousContextNode: null,
     };
 
-    getContextNodeByObserver.set(getContextNode, observer);
+    let isDestroyed = false;
+    const cleanupListeners = () => {
+        for (const [node, types] of nodeDependencies) {
+            for (const dependencyType of types) {
+                let observers = interestedObserverByMutationRecordType
+                    .get(dependencyType)
+                    .get(node);
+                observers.delete(observer);
+            }
+        }
+        for (const repeatIndexDependency of repeatIndexDependencies) {
+            interestedObserversByRepeatId
+                .get(repeatIndexDependency)
+                .delete(observer);
+        }
+    };
+
+    getContextNodeByObserver.set(observer, getContextNode);
     let oldResult = null;
     return {
         addObserver: (callback) => {
@@ -166,21 +185,19 @@ export default function observeXPath(
         get __oldresult__() {
             return oldResult;
         },
+        destroy() {
+            cleanupListeners();
+            getContextNodeByObserver.delete(observer);
+            isDestroyed = true;
+        },
         getResult: () => {
+            if (isDestroyed) {
+                console.warn(`Accessing destroyed XPath observer: ${xpath}`);
+                return oldResult;
+            }
             // Clean up old dependencies
-            for (const [node, types] of nodeDependencies) {
-                for (const dependencyType of types) {
-                    let observers = interestedObserverByMutationRecordType
-                        .get(dependencyType)
-                        .get(node);
-                    observers.delete(observer);
-                }
-            }
-            for (const repeatIndexDependency of repeatIndexDependencies) {
-                interestedObserversByRepeatId
-                    .get(repeatIndexDependency)
-                    .delete(observer);
-            }
+            cleanupListeners();
+
             nodeDependencies.clear();
             repeatIndexDependencies.clear();
 

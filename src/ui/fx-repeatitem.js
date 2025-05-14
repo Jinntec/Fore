@@ -28,7 +28,7 @@ export class FxRepeatitem extends withDraggability(ForeElementMixin, true) {
         this.inited = false;
         this.binding = null;
 
-        this.addEventListener('click', (e) => this._dispatchIndexChange(e));
+        this.addEventListener('click', this._dispatchIndexChange);
         // this.addEventListener('focusin', this._handleFocus);
         this.addEventListener('focusin', this._dispatchIndexChange);
 
@@ -58,7 +58,7 @@ export class FxRepeatitem extends withDraggability(ForeElementMixin, true) {
     disconnectedCallback() {
         super.disconnectedCallback();
         this.removeEventListener('click', this._dispatchIndexChange);
-        this.removeEventListener('focusin', this._handleFocus);
+        this.removeEventListener('focusin', this._dispatchIndexChange);
     }
 
     init() {

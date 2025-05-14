@@ -14,6 +14,8 @@ import { NodeBinding } from './binding/NodeBinding.js';
 import { RepeatBinding } from './binding/RepeatBinding.js';
 // import DependentXPathQueries from './DependentXPathQueries.js';
 
+let unique_counter = 0;
+
 /**
  * Mixin containing all general functions that are shared by all Fore element classes.
  * @extends {HTMLElement}
@@ -84,9 +86,7 @@ export default class ForeElementMixin extends HTMLElement {
          */
         this.nodeset = null;
 
-        this.bindingKey =
-            'binding-key: ' +
-            DependencyTracker.getInstance().resolveInstanceXPath(this.ref);
+        this.bindingKey = `binding-key: ${DependencyTracker.getInstance().resolveInstanceXPath(this.ref)}-${unique_counter++}`;
         // this.dependencies = new DependentXPathQueries();
     }
 
@@ -149,6 +149,7 @@ export default class ForeElementMixin extends HTMLElement {
 
     disconnectedCallback() {
         this.isDestroyed = true;
+        this.refObserver.destroy();
     }
 
     /**

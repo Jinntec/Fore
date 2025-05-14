@@ -86,6 +86,8 @@ export class FxCase extends FxContainer {
             model.updateModel();
             ownerForm.refresh(true);
         });
+
+        super.connectedCallback();
     }
 
     /**

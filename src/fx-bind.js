@@ -10,7 +10,9 @@ import { XPathUtil } from './xpath-util.js';
 import getInScopeContext from './getInScopeContext.js';
 import { DependencyTracker } from './DependencyTracker';
 import { NodeBinding } from './binding/NodeBinding.js';
-import { evaluateXPathToFirstNode } from 'fontoxpath';
+import { ReturnType, evaluateXPathToFirstNode } from 'fontoxpath';
+import observeXPath from './xpathObserver.js';
+import { RepeatBinding } from './binding/RepeatBinding.js';
 
 // import {FacetBinding} from "./binding/FacetBinding";
 
@@ -47,7 +49,6 @@ export class FxBind extends ForeElementMixin {
     }
 
     connectedCallback() {
-        super.connectedCallback();
         // console.log('connectedCallback ', this);
         // this.id = this.hasAttribute('id')?this.getAttribute('id'):;
         this.constraint = this.getAttribute('constraint');

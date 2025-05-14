@@ -249,6 +249,10 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
         `;
     }
 
+    disconnectedCallback() {
+        this.refObserver.destroy();
+    }
+
     /**
      * @returns {import('./fx-repeatitem.js').FxRepeatitem}
      */
@@ -285,7 +289,17 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
      * @private
      */
     _evalNodeset() {
-        this.nodeset = this.refObserver.getResult();
+        const nodeset = this.refObserver.getResult();
+        if (
+            Array.isArray(nodeset) &&
+            nodeset.length === 1 &&
+            Array.isArray(nodeset[0])
+        ) {
+            // JSON sometimes wraps too much: a sequence of a single array is a nested array in JS...
+            this.nodeset = nodeset[0];
+        } else {
+            this.nodeset = nodeset;
+        }
     }
 
     async refresh(force) {
@@ -303,8 +317,6 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
         // const xpath = XPathUtil.getCanonicalXPath(this.nodeset)
 
         if (this.nodeset.length !== 0) {
-            const xpath = XPathUtil.getPath(this.nodeset, instanceId);
-            console.log('xpath', xpath);
             // @TODO: Repeats have no model item!!!
             if (!DependencyTracker.getInstance().bindingRegistry.has(this.ref))
                 DependencyTracker.getInstance().registerBinding(
@@ -414,10 +426,16 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
         for (const [_, unusedRepeatItem] of repeatItemByNode) {
             unusedRepeatItem.remove();
         }
+        let indexInNewRepeatItems = -1;
         for (const repeatItem of newOrderOfRepeatItems) {
+            indexInNewRepeatItems++;
+            if (repeatItem === this.children[indexInNewRepeatItems]) {
+                // Unchanged place even. Ignore;
+                continue;
+            }
             this.appendChild(repeatItem);
 
-            repeatItem.refresh();
+            Fore.refreshChildren(repeatItem, true);
 
             detectTemplateExpressions(repeatItem);
         }
@@ -443,9 +461,6 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
         newItem.appendChild(clone);
         newItem.index = index;
         newItem.nodeset = this.nodeset[index - 1];
-
-        const path = XPathUtil.getCanonicalXPath(newItem.nodeset);
-        console.log('inserted path', path);
 
         // 1. create modelItem
         // const modelItem = this.getModel().getModelItem(newItem.nodeset);

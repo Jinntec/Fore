@@ -2,8 +2,11 @@ import XfAbstractControl from './abstract-control.js';
 import { leadingDebounce } from '../events.js';
 
 export class FxTrigger extends XfAbstractControl {
-    connectedCallback() {
+    constructor() {
+        super();
         this.attachShadow({ mode: 'open' });
+    }
+    connectedCallback() {
         this.ref = this.hasAttribute('ref') ? this.getAttribute('ref') : null;
 
         super.connectedCallback();

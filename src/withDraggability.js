@@ -20,6 +20,7 @@ export const withDraggability = (superclass, isAlsoDraggable) =>
         }
 
         connectedCallback() {
+            super.connectedCallback();
             this.drop = (event) => this._drop(event);
             this.addEventListener('drop', this.drop);
             this.dragOver = (event) => this._dragOver(event);

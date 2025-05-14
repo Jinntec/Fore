@@ -123,7 +123,9 @@ export class AbstractAction extends ForeElementMixin {
         this.needsUpdate = false;
     }
 
-    disconnectedCallback() {}
+    disconnectedCallback() {
+        super.disconnectedCallback();
+    }
 
     connectedCallback() {
         super.connectedCallback();
@@ -170,6 +172,10 @@ export class AbstractAction extends ForeElementMixin {
     }
 
     _addUpdateListener() {
+        if (!this.event) {
+            // No event: nothing to listen for. Happens when using a fx-setvalue in a control for instance
+            return;
+        }
         this.target = this.getAttribute('target');
         if (this.target) {
             if (this.target === '#window') {
