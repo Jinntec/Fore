@@ -23,7 +23,7 @@
 
 import { ReturnType } from 'fontoxpath';
 import ForeElementMixin from './ForeElementMixin';
-import { evaluateXPath } from './xpath-evaluation';
+import { evaluateXPath, evaluateXPathToString } from './xpath-evaluation';
 import { DependencyNotifyingDomFacade } from './DependencyNotifyingDomFacade';
 
 /**
@@ -202,14 +202,22 @@ export default function observeXPath(
             repeatIndexDependencies.clear();
 
             observer.previousContextNode = getContextNode();
-            const newResult = evaluateXPath(
-                xpath,
-                observer.previousContextNode,
-                formElement,
-                {},
-                {},
-                dependencyTracker,
-            );
+            const newResult =
+                expectedReturnType === ReturnType.NODES
+                    ? evaluateXPath(
+                          xpath,
+                          observer.previousContextNode,
+                          formElement,
+                          {},
+                          {},
+                          dependencyTracker,
+                      )
+                    : evaluateXPathToString(
+                          xpath,
+                          observer.previousContextNode,
+                          formElement,
+                          dependencyTracker,
+                      );
 
             oldResult = newResult;
 

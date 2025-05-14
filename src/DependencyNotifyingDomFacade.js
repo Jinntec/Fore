@@ -171,8 +171,14 @@ export class DependencyNotifyingDomFacade {
      */
     // eslint-disable-next-line class-methods-use-this
     getParentNode(node) {
-        if (this.mutationRecordMode) {
+        if (this.mutationRecordMode && node.parentNode) {
             this._onNodeTouched(node.parentNode, 'childList');
+        }
+        if (node.nodeType === Node.ATTRIBUTE_NODE) {
+            if (this.mutationRecordMode) {
+                this._onNodeTouched(node.ownerElement, 'attribute');
+            }
+            return node.ownerElement;
         }
 
         return node.parentNode;

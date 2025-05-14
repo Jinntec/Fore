@@ -2,6 +2,9 @@ import getInScopeContext from '../getInScopeContext.js';
 import { XPathUtil } from '../xpath-util.js';
 import { evaluateXPath, evaluateXPathToString } from '../xpath-evaluation.js';
 import { Binding } from './Binding.js';
+import observeXPath from '../xpathObserver.js';
+import { ReturnType } from 'fontoxpath';
+import { DependencyTracker } from '../DependencyTracker.js';
 
 let i = 0;
 /**
@@ -27,6 +30,58 @@ export class TemplateBinding extends Binding {
             node.nodeType === Node.ATTRIBUTE_NODE
                 ? node.value
                 : node.textContent;
+
+        this.xpathObserverByExpression = observeXPath(
+            expression,
+            () => node,
+            node,
+            ReturnType.STRING,
+        );
+
+        const ownerElement = node.parentNode
+            ? node.parentNode
+            : node.ownerElement;
+
+        const results = this.template.match(/{[^}]*}/g) ?? [];
+        this.xpathObserverByExpression = new Map(
+            results.map((match) => {
+                if (match === '{}') return match;
+
+                const naked = match.substring(1, match.length - 1);
+                try {
+                    const observer = observeXPath(
+                        naked,
+                        () => {
+                            let inscope = getInScopeContext(this.node, naked);
+                            if (!inscope) {
+                                const fore = this.node.closest('fx-fore');
+                                inscope = fore.getModel().getDefaultContext();
+                            }
+                            if (!inscope) {
+                                console.warn(
+                                    'no inscope context for expr',
+                                    naked,
+                                );
+                                return null;
+                            }
+                            return inscope;
+                        },
+                        node,
+                        ReturnType.STRING,
+                    );
+
+                    observer.addObserver(() => {
+                        DependencyTracker.getInstance().notifyChange(
+                            expression,
+                        );
+                    });
+                    return [match, observer];
+                } catch (error) {
+                    console.warn('ignoring unparseable expr', error);
+                    return null;
+                }
+            }),
+        );
 
         // console.log(`TemplateBinding created for key ${this.key} with expression: ${this.expression}`);
     }
@@ -97,39 +152,8 @@ export class TemplateBinding extends Binding {
         const templateText = this.template;
         const replaced = templateText.replace(/{[^}]*}/g, (match) => {
             if (match === '{}') return match;
-            const naked = match.substring(1, match.length - 1);
 
-            /*
-                template expressions are scoped to their respective container or fallback to containing fx-fore
-                element and the default context.
-             */
-            // let inscope = this.scope.nodeset;
-            let inscope = getInScopeContext(this.node, naked);
-            if (!inscope) {
-                const fore = this.node.closest('fx-fore');
-                inscope = fore.getModel().getDefaultContext();
-            }
-            if (!inscope) {
-                console.warn('no inscope context for expr', naked);
-                return match;
-            }
-            // Templates are special: they use the namespace configuration from where they are defined
-            const instanceId = XPathUtil.getInstanceId(naked);
-            const inst = instanceId
-                ? ownerElement
-                      .closest('fx-fore')
-                      .getModel()
-                      .getInstance(instanceId)
-                : ownerElement
-                      .closest('fx-fore')
-                      .getModel()
-                      .getDefaultInstance();
-            try {
-                return evaluateXPathToString(naked, inscope, node, null, inst);
-            } catch (error) {
-                console.warn('ignoring unparseable expr', error);
-                return match;
-            }
+            return this.xpathObserverByExpression.get(match).getResult();
         });
         return replaced;
     }

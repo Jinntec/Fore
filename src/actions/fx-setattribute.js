@@ -4,6 +4,7 @@ import { AbstractAction } from './abstract-action.js';
 import { evaluateXPathToString } from '../xpath-evaluation.js';
 import { Fore } from '../fore.js';
 import getInScopeContext from '../getInScopeContext';
+import { DependencyTracker } from '../DependencyTracker.js';
 
 /**
  * `fx-setattribute` allows to create and set an attribute value in the data.
@@ -34,9 +35,7 @@ export default class FxSetattribute extends AbstractAction {
     }
 
     connectedCallback() {
-        if (super.connectedCallback) {
-            super.connectedCallback();
-        }
+        super.connectedCallback();
 
         if (this.hasAttribute('ref')) {
             this.ref = this.getAttribute('ref');
@@ -66,6 +65,9 @@ export default class FxSetattribute extends AbstractAction {
             return;
         }
         mi.node.setAttribute(this.attrName, this.attrValue);
+
+        DependencyTracker.getInstance().notifyChange(mi.path);
+
         this.needsUpdate = true;
     }
 }
