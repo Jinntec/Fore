@@ -299,7 +299,7 @@ export class XPathUtil {
     static resolveInstance(boundElement, path) {
         if (path.startsWith('$default')) return 'default';
         let instanceId = XPathUtil.getInstanceId(path, boundElement);
-        if (!instanceId) {
+        if (!instanceId && boundElement.hasAttribute('ref')) {
             instanceId = XPathUtil.getInstanceId(
                 boundElement.getAttribute('ref'),
                 boundElement,
@@ -337,14 +337,14 @@ export class XPathUtil {
         if (Array.isArray(node) && node.length !== 0) {
             path = fx.evaluateXPathToString('path()', node[0]);
             // cut positional attr
-            if(path.includes('[')){
+            if (path.includes('[')) {
                 path = path.substring(0, path.length - 3);
             }
         } else {
             // const path = fx.evaluateXPathToString('path()', node);
             path = fx.evaluateXPathToString('path()', node);
         }
-        if(path.endsWith('root()')){
+        if (path.endsWith('root()')) {
             path = '';
         }
         // Path is like `$default/x[1]/y[1]`

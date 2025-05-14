@@ -1,9 +1,12 @@
-import { createTypedValueFactory, domFacade } from 'fontoxpath';
+import { ReturnType, createTypedValueFactory, domFacade } from 'fontoxpath';
 import { Fore } from './fore.js';
 import './fx-instance.js';
 import { evaluateXPath } from './xpath-evaluation.js';
 import ForeElementMixin from './ForeElementMixin.js';
 import getInScopeContext from './getInScopeContext.js';
+import observeXPath from './xpathObserver.js';
+import { RepeatBinding } from './binding/RepeatBinding.js';
+import { DependencyTracker } from './DependencyTracker.js';
 
 // We are getting sequences here (evaluateXPath is returning all items, as an array)
 // So wrap them into something so FontoXPath also understands they are sequences, always.
@@ -23,17 +26,32 @@ export class FxVariable extends ForeElementMixin {
     connectedCallback() {
         this.name = this.getAttribute('name');
         this.valueQuery = this.getAttribute('value');
+
+        this.bindingKey = DependencyTracker.getInstance().resolveInstanceXPath(
+            this.valueQuery,
+        );
+        // TODO: adapt return types to include ALL
+        this.valueObserver = observeXPath(
+            this.valueQuery,
+            () => getInScopeContext(this, this.valueQuery),
+            this,
+            ReturnType.NODES,
+        );
+
+        const binding = new RepeatBinding(this.bindingKey, this);
+        DependencyTracker.getInstance().registerBinding(
+            this.bindingKey,
+            binding,
+            true,
+        );
+
+        this.valueObserver.addObserver(() => {
+            DependencyTracker.getInstance().notifyChange(this.bindingKey);
+        });
     }
 
     refresh() {
-        const inscope = getInScopeContext(this, this.valueQuery);
-
-        const values = evaluateXPath(
-            this.valueQuery,
-            inscope,
-            this,
-            this.precedingVariables,
-        );
+        const values = this.valueObserver.getResult();
         this.value = typedValueFactory(values, domFacade);
     }
 

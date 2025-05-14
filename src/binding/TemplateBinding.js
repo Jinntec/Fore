@@ -38,6 +38,11 @@ export class TemplateBinding extends Binding {
             ? this.node.parentNode
             : this.node.ownerElement;
         const fore = ownerElement.closest('fx-fore');
+        if (!fore) {
+            console.log(`Dead template binding ${this.expression}`);
+            // TODO: Cleanup
+            return;
+        }
         if (!fore.inited) return;
 
         // skipping ignored elements

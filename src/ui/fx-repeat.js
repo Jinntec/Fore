@@ -11,6 +11,7 @@ import { RepeatBinding } from '../binding/RepeatBinding.js';
 import { DependencyNotifyingDomFacade } from '../DependencyNotifyingDomFacade.js';
 import observeXPath, { signalIndexUpdate } from '../xpathObserver.js';
 import { ReturnType } from 'fontoxpath';
+import { detectTemplateExpressions } from '../binding/detectTemplateStrings.js';
 
 // import {DependencyNotifyingDomFacade} from '../DependencyNotifyingDomFacade';
 
@@ -248,6 +249,9 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
         `;
     }
 
+    /**
+     * @returns {import('./fx-repeatitem.js').FxRepeatitem}
+     */
     _createNewRepeatItem() {
         const newItem = document.createElement('fx-repeatitem');
 
@@ -341,7 +345,12 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
             // TODO: Optimize swaps?
         }
 
-        const repeatItems = this.querySelectorAll(':scope > fx-repeatitem');
+        /**
+         * @type {import('./fx-repeatitem.js').FxRepeatitem[]}
+         */
+        const repeatItems = Array.from(
+            this.querySelectorAll(':scope > fx-repeatitem'),
+        );
         const diff = insertedIndexes.length - deletedIndexes.length;
 
         // Remove excess elements if more are deleted than inserted
@@ -354,7 +363,9 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
                 }
             }
         }
+        let inserted;
 
+        /**
         // Reuse elements where possible
         const minLength = Math.min(
             deletedIndexes.length,
@@ -369,14 +380,48 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
         }
 
         // Insert remaining new elements
-        let inserted;
         for (let i = minLength; i < insertedIndexes.length; i++) {
             inserted = this._insertRepeatItem(insertedIndexes[i]);
             // Fore.refreshChildren(insertedIndexes[i], true);
-        }
+            }
+        */
 
+        // TODO: handle duplicates in here...
+        /**
+         * @type {Map<Node, import('./fx-repeatitem.js').FxRepeatitem>}
+         */
+        const repeatItemByNode = new Map(
+            oldNodeset.map((node, i) => [node, repeatItems[i]]),
+        );
+        const newOrderOfRepeatItems = [];
+        let i = 0;
+        for (const newNode of this.nodeset) {
+            i++;
+            if (repeatItemByNode.has(newNode)) {
+                // We can reuse!
+                const existingRepeatItem = repeatItemByNode.get(newNode);
+                existingRepeatItem.index = i;
+                newOrderOfRepeatItems.push(existingRepeatItem);
+                repeatItemByNode.delete(newNode);
+            } else {
+                const newRepeatItem = this._createNewRepeatItem();
+                newRepeatItem.nodeset = newNode;
+                newRepeatItem.index = i;
+                newOrderOfRepeatItems.push(newRepeatItem);
+                inserted = true;
+            }
+        }
+        for (const [_, unusedRepeatItem] of repeatItemByNode) {
+            unusedRepeatItem.remove();
+        }
+        for (const repeatItem of newOrderOfRepeatItems) {
+            this.appendChild(repeatItem);
+
+            repeatItem.refresh();
+
+            detectTemplateExpressions(repeatItem);
+        }
         this.updateIndexes();
-        const fore = this.getOwnerForm();
         if (inserted) {
             // todo: refresh all children - to be changed later
             Fore.refreshChildren(this, true);

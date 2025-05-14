@@ -118,17 +118,18 @@ export default function observeXPath(
                 nodeDependencies.get(node).add(dependencyType);
             }
             nodeDependencies.set(node, new Set().add(dependencyType));
-            if (mutationObserverByDocument.has(node.ownerDocument)) {
+            const ownerDocument = node.ownerDocument ?? node;
+            if (mutationObserverByDocument.has(ownerDocument)) {
                 return;
             }
             const mutObserver = new MutationObserver(processDependencies);
-            mutObserver.observe(node.ownerDocument, {
+            mutObserver.observe(ownerDocument, {
                 characterData: true,
                 subtree: true,
                 attributes: true,
                 childList: true,
             });
-            mutationObserverByDocument.set(node.ownerDocument, mutObserver);
+            mutationObserverByDocument.set(ownerDocument, mutObserver);
         },
         (dependencyType) => {
             switch (dependencyType.dependencyKind) {

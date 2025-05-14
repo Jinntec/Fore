@@ -64,6 +64,7 @@ export default class ForeElementMixin extends HTMLElement {
         this.modelItem = null;
         this.ref = this.hasAttribute('ref') ? this.getAttribute('ref') : '';
         /**
+         * The inscope variables at this point. Names are without the $.
          * @type {Map<string, import('./fx-var.js').FxVariable>}
          */
         this.inScopeVariables = new Map();
@@ -352,5 +353,18 @@ export default class ForeElementMixin extends HTMLElement {
      */
     setInScopeVariables(inScopeVariables) {
         this.inScopeVariables = inScopeVariables;
+        // TODO: AST processing
+        const refererredVariables = /\$[^ ]+/.exec(this.ref);
+        if (refererredVariables) {
+            for (const refererredVariable of refererredVariables) {
+                const fxVarElement = this.inScopeVariables.get(
+                    refererredVariable.substring(1),
+                );
+                DependencyTracker.getInstance().registerDependency(
+                    this.bindingKey,
+                    fxVarElement.bindingKey,
+                );
+            }
+        }
     }
 }
