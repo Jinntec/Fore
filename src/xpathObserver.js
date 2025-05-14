@@ -57,7 +57,9 @@ const processDependencies = (records) => {
             record.type,
         );
         if (depsForType.has(record.target)) {
-            invalidatedObservers.add(depsForType.get(record.target));
+            for (const observer of depsForType.get(record.target)) {
+                invalidatedObservers.add(observer);
+            }
         }
     }
 
@@ -120,6 +122,12 @@ export default function observeXPath(
                 return;
             }
             const mutObserver = new MutationObserver(processDependencies);
+            mutObserver.observe(node.ownerDocument, {
+                characterData: true,
+                subtree: true,
+                attributes: true,
+                childList: true,
+            });
             mutationObserverByDocument.set(node.ownerDocument, mutObserver);
         },
         (dependencyType) => {
@@ -218,4 +226,10 @@ export default function observeXPath(
             return /** @type {T} */ (/** {any} */ newResult);
         },
     };
+}
+
+export function ensureDomChangesAreProcessed() {
+    for (const [_, mutationObserver] of mutationObserverByDocument) {
+        processDependencies(mutationObserver.takeRecords());
+    }
 }

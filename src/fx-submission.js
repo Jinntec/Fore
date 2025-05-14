@@ -87,6 +87,8 @@ export class FxSubmission extends ForeElementMixin {
             );
         }
         this.shadowRoot.innerHTML = this.renderHTML();
+
+        super.connectedCallback();
     }
 
     // eslint-disable-next-line class-methods-use-this

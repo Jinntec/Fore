@@ -30,6 +30,8 @@ export class FxOutput extends XfAbstractControl {
     }
 
     connectedCallback() {
+        super.connectedCallback();
+
         const style = `
           :host {
             display: inline-block;
@@ -48,7 +50,7 @@ export class FxOutput extends XfAbstractControl {
 
         const outputHtml = `
             <slot name="label"></slot>
-            
+
             <span id="value">
                 <slot name="default"></slot>
             </span>

@@ -5,6 +5,7 @@ import { TemplateBinding } from './binding/TemplateBinding.js';
 import { evaluateXPath, evaluateXPathToNodes } from './xpath-evaluation';
 import { debounce } from './events';
 import { DependencyNotifyingDomFacade } from './DependencyNotifyingDomFacade.js';
+import { ensureDomChangesAreProcessed } from './xpathObserver.js';
 // import { XPathDependencyExtractor } from './XPathDependencyExtractor.js';
 let _instance = null;
 
@@ -647,6 +648,9 @@ export class DependencyTracker {
         const maxPasses = 10; // guard to prevent infinite loops
 
         while (this.hasUpdates() && passCount < maxPasses) {
+            // Make sure all DOM changes are processed by now
+            ensureDomChangesAreProcessed();
+
             passCount++;
             this.reactivatedControls.forEach((item) =>
                 this.pendingUpdates.add(item),

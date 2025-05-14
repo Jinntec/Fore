@@ -99,7 +99,7 @@ export default function registerFunction(functionObject, formElement) {
                     : type === 'text/xquery'
                       ? 'XQuery3.1'
                       : 'XQueryUpdate3.1';
-            const fun = (domFacade, ...args) =>
+            const fun = (dynamicContext, ...args) =>
                 evaluateXPath(
                     functionObject.functionBody,
                     formElement.getInScopeContext(),
@@ -108,10 +108,11 @@ export default function registerFunction(functionObject, formElement) {
                         // Because we know the XPath type here (from the function declaration) we do not have to depend on the implicit typings
                         variablesByName[
                             paramPart.variableName.replace('$', '')
-                        ] = typedValueFactories[i](args[i], domFacade);
+                        ] = typedValueFactories[i](args[i], dynamicContext);
                         return variablesByName;
                     }, {}),
                     { language },
+                    dynamicContext.domFacade,
                 );
             registerCustomXPathFunction(
                 functionIdentifier,

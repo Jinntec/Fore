@@ -5,6 +5,8 @@ export class FxTrigger extends XfAbstractControl {
     connectedCallback() {
         this.attachShadow({ mode: 'open' });
         this.ref = this.hasAttribute('ref') ? this.getAttribute('ref') : null;
+
+        super.connectedCallback();
         this.debounceDelay = this.hasAttribute('debounce')
             ? this.getAttribute('debounce')
             : null;
