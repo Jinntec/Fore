@@ -42,6 +42,7 @@ ${
     }
 
     connectedCallback() {
+        super.connectedCallback();
         if (this.hasAttribute('url')) {
             this._url = this.getAttribute('url');
         }

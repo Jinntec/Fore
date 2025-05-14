@@ -71,6 +71,7 @@ export default class FxControl extends XfAbstractControl {
     }
 
     connectedCallback() {
+        super.connectedCallback();
         this.initial = this.hasAttribute('initial')
             ? this.getAttribute('initial')
             : null;

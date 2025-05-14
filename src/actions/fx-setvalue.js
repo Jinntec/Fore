@@ -32,16 +32,14 @@ export default class FxSetvalue extends AbstractAction {
     }
 
     connectedCallback() {
-        if (super.connectedCallback) {
-            super.connectedCallback();
-        }
-
         if (this.hasAttribute('ref')) {
             this.ref = this.getAttribute('ref');
         } else {
             throw new Error('fx-setvalue must specify a "ref" attribute');
         }
         this.valueAttr = this.getAttribute('value');
+
+        super.connectedCallback();
     }
 
     async perform() {

@@ -47,6 +47,7 @@ export class FxBind extends ForeElementMixin {
     }
 
     connectedCallback() {
+        super.connectedCallback();
         // console.log('connectedCallback ', this);
         // this.id = this.hasAttribute('id')?this.getAttribute('id'):;
         this.constraint = this.getAttribute('constraint');
@@ -212,7 +213,14 @@ export class FxBind extends ForeElementMixin {
         const instanceId = XPathUtil.resolveInstance(boundElement, ref);
         if (!node.nodeType) {
             // This node set is not pointing to nodes, but some other type.
-            return new ModelItem(ref, 'non-node item', node, null, instanceId,boundElement.getModel());
+            return new ModelItem(
+                ref,
+                'non-node item',
+                node,
+                null,
+                instanceId,
+                boundElement.getModel(),
+            );
         }
 
         const path = XPathUtil.getPath(node, instanceId);
@@ -239,7 +247,7 @@ export class FxBind extends ForeElementMixin {
                     node,
                     bind,
                     instanceId,
-                    boundElement.getModel()
+                    boundElement.getModel(),
                 );
                 const alert = bind.getAlert();
                 if (alert) {
@@ -253,7 +261,7 @@ export class FxBind extends ForeElementMixin {
                     node,
                     null,
                     instanceId,
-                    boundElement.getModel()
+                    boundElement.getModel(),
                 );
             }
             boundElement.getModel().registerModelItem(modelItem);
