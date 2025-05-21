@@ -104,6 +104,7 @@ export class FxRepeatAttributes extends withDraggability(
     }
 
     async connectedCallback() {
+        super.connectedCallback();
         // console.log('connectedCallback',this);
         // this.display = window.getComputedStyle(this, null).getPropertyValue("display");
         this.ref = this.getAttribute('ref');
@@ -318,7 +319,7 @@ export class FxRepeatAttributes extends withDraggability(
 
         // Fore.refreshChildren(clone,true);
         const fore = this.getOwnerForm();
-/*
+        /*
         if (!fore.lazyRefresh || force) {
             Fore.refreshChildren(this, force);
         }

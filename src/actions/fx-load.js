@@ -54,7 +54,7 @@ class FxLoad extends AbstractAction {
     }
 
     disconnectedCallback() {
-        // super.disconnectedCallback();
+        super.disconnectedCallback();
         this.targetElement.removeEventListener(this.event, (e) =>
             this.execute(e),
         );

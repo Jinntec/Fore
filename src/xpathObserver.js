@@ -154,16 +154,21 @@ export default function observeXPath(
             }
         },
         previousContextNode: null,
+        isDestroyed: false,
+        xpath,
     };
 
-    let isDestroyed = false;
     const cleanupListeners = () => {
         for (const [node, types] of nodeDependencies) {
             for (const dependencyType of types) {
-                let observers = interestedObserverByMutationRecordType
-                    .get(dependencyType)
-                    .get(node);
+                const observersByNode =
+                    interestedObserverByMutationRecordType.get(dependencyType);
+                const observers = observersByNode.get(node);
                 observers.delete(observer);
+
+                if (observers.size === 0) {
+                    observersByNode.delete(node);
+                }
             }
         }
         for (const repeatIndexDependency of repeatIndexDependencies) {
@@ -188,10 +193,10 @@ export default function observeXPath(
         destroy() {
             cleanupListeners();
             getContextNodeByObserver.delete(observer);
-            isDestroyed = true;
+            observer.isDestroyed = true;
         },
         getResult: () => {
-            if (isDestroyed) {
+            if (observer.isDestroyed) {
                 console.warn(`Accessing destroyed XPath observer: ${xpath}`);
                 return oldResult;
             }

@@ -124,7 +124,7 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
     }
 
     connectedCallback() {
-        super.connectedCallback();
+        //        super.connectedCallback();
         // console.log('connectedCallback',this);
         // this.display = window.getComputedStyle(this, null).getPropertyValue("display");
         this.ref = this.getAttribute('ref');
@@ -247,10 +247,6 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
             </style>
             ${html}
         `;
-    }
-
-    disconnectedCallback() {
-        this.refObserver.destroy();
     }
 
     /**

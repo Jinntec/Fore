@@ -74,6 +74,9 @@ export class FxBind extends ForeElementMixin {
             }
         }
     }
+    disconnectedCallback() {
+        // TODO: Split apart the refObserver on foreElementMixin. Not all Fore Elements have a ref. Though it's many
+    }
 
     /**
      * initializes the bind element by evaluating the binding expression.

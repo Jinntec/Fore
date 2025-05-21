@@ -11,6 +11,7 @@ export class FxFunction extends ForeElementMixin {
     }
 
     connectedCallback() {
+        super.connectedCallback();
         this.style.display = 'none';
 
         this.signature = this.hasAttribute('signature')

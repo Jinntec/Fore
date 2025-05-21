@@ -1,8 +1,6 @@
 // import { FxAction } from './fx-action.js';
 import '../fx-model.js';
 import { AbstractAction } from './abstract-action.js';
-import { evaluateXPath } from '../xpath-evaluation.js';
-import { Fore } from '../fore.js';
 
 /**
  * `fx-setvalue`
@@ -33,9 +31,7 @@ export default class FxToggleboolean extends AbstractAction {
     }
 
     connectedCallback() {
-        if (super.connectedCallback) {
-            super.connectedCallback();
-        }
+        super.connectedCallback();
 
         if (this.hasAttribute('ref')) {
             this.ref = this.getAttribute('ref');

@@ -7,6 +7,7 @@ export class FxAlert extends AbstractControl {
     }
 
     connectedCallback() {
+        super.connectedCallback();
         const style = `
       :host {
         height: auto;

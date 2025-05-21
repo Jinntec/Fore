@@ -176,7 +176,7 @@ export class DependencyNotifyingDomFacade {
         }
         if (node.nodeType === Node.ATTRIBUTE_NODE) {
             if (this.mutationRecordMode) {
-                this._onNodeTouched(node.ownerElement, 'attribute');
+                this._onNodeTouched(node.ownerElement, 'attributes');
             }
             return node.ownerElement;
         }

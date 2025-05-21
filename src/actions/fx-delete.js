@@ -71,9 +71,11 @@ class FxDelete extends AbstractAction {
                 if (this._deleteNode(parent, item)) {
                     // fore.signalChangeToElement(item.localName);
                     const modelItem = this.getModel().getModelItem(item);
-                    DependencyTracker.getInstance().notifyDelete(
-                        modelItem.path,
-                    );
+                    if (modelItem) {
+                        DependencyTracker.getInstance().notifyDelete(
+                            modelItem.path,
+                        );
+                    }
                 }
             });
         } else {

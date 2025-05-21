@@ -1,6 +1,4 @@
 import getInScopeContext from '../getInScopeContext.js';
-import { XPathUtil } from '../xpath-util.js';
-import { evaluateXPath, evaluateXPathToString } from '../xpath-evaluation.js';
 import { Binding } from './Binding.js';
 import observeXPath from '../xpathObserver.js';
 import { ReturnType } from 'fontoxpath';
@@ -22,6 +20,9 @@ export class TemplateBinding extends Binding {
         // try to get path() for targetNode - may fail in case of function calls or non-node returns
         super(`template-binding:{{${expression}}}_${i++}`, 'template');
         this.fore = fore;
+        /**
+         * @type {Node}
+         */
         this.node = node;
         this.expression = expression;
         // this.scope = scope;
@@ -38,49 +39,74 @@ export class TemplateBinding extends Binding {
             ReturnType.STRING,
         );
 
-        const ownerElement = node.parentNode
-            ? node.parentNode
-            : node.ownerElement;
-
+        /**
+         * @type {string[]}
+         */
         const results = this.template.match(/{[^}]*}/g) ?? [];
         this.xpathObserverByExpression = new Map(
-            results.map((match) => {
-                if (match === '{}') return match;
+            results
+                .filter((match) => match !== '{}')
+                .map((match) => {
+                    const naked = match.substring(1, match.length - 1);
+                    try {
+                        const observer = observeXPath(
+                            naked,
+                            () => {
+                                if (
+                                    this.node.nodeType === node.ATTRIBUTE_NODE
+                                ) {
+                                    if (
+                                        !this.node.ownerDocument.contains(
+                                            node.ownerElement,
+                                        )
+                                    ) {
+                                        // TODO: Clean this up. No way to clean up template bindings now
 
-                const naked = match.substring(1, match.length - 1);
-                try {
-                    const observer = observeXPath(
-                        naked,
-                        () => {
-                            let inscope = getInScopeContext(this.node, naked);
-                            if (!inscope) {
-                                const fore = this.node.closest('fx-fore');
-                                inscope = fore.getModel().getDefaultContext();
-                            }
-                            if (!inscope) {
-                                console.warn(
-                                    'no inscope context for expr',
+                                        return null;
+                                    }
+                                } else {
+                                    if (
+                                        !this.node.ownerDocument.contains(node)
+                                    ) {
+                                        // TODO: Clean this up. No way to clean up template bindings now
+
+                                        return null;
+                                    }
+                                }
+                                let inscope = getInScopeContext(
+                                    this.node,
                                     naked,
                                 );
-                                return null;
-                            }
-                            return inscope;
-                        },
-                        node,
-                        ReturnType.STRING,
-                    );
-
-                    observer.addObserver(() => {
-                        DependencyTracker.getInstance().notifyChange(
-                            expression,
+                                if (!inscope) {
+                                    const fore = this.node.closest('fx-fore');
+                                    inscope = fore
+                                        .getModel()
+                                        .getDefaultContext();
+                                }
+                                if (!inscope) {
+                                    console.warn(
+                                        'no inscope context for expr',
+                                        naked,
+                                    );
+                                    return null;
+                                }
+                                return inscope;
+                            },
+                            node,
+                            ReturnType.STRING,
                         );
-                    });
-                    return [match, observer];
-                } catch (error) {
-                    console.warn('ignoring unparseable expr', error);
-                    return null;
-                }
-            }),
+
+                        observer.addObserver(() => {
+                            DependencyTracker.getInstance().notifyChange(
+                                expression,
+                            );
+                        });
+                        return [match, observer];
+                    } catch (error) {
+                        console.warn('ignoring unparseable expr', error);
+                        return null;
+                    }
+                }),
         );
 
         // console.log(`TemplateBinding created for key ${this.key} with expression: ${this.expression}`);

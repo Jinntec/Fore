@@ -50,6 +50,10 @@ export class FxVariable extends ForeElementMixin {
         });
     }
 
+    disconnectedCallback() {
+        this.valueObserver.destroy();
+    }
+
     refresh() {
         const values = this.valueObserver.getResult();
         this.value = typedValueFactory(values, domFacade);
