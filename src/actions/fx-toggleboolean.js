@@ -31,21 +31,22 @@ export default class FxToggleboolean extends AbstractAction {
     }
 
     connectedCallback() {
-        super.connectedCallback();
-
         if (this.hasAttribute('ref')) {
             this.ref = this.getAttribute('ref');
         } else {
             throw new Error('fx-togglealue must specify a "ref" attribute');
         }
+        super.connectedCallback();
     }
 
     async perform() {
         super.perform();
         const mi = this.getModelItem();
-        mi.value === 'true'
-            ? (mi.node.textContent = 'false')
-            : (mi.node.textContent = 'true');
+        if (mi.value.trim() === 'true') {
+            mi.node.textContent = 'false';
+        } else {
+            mi.node.textContent = 'true';
+        }
         this.needsUpdate = true;
     }
 }
