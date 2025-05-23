@@ -134,7 +134,8 @@ export class FxOutput extends XfAbstractControl {
                 const defaultSlot = this.shadowRoot.querySelector('#default');
                 const { node } = this.modelItem;
                 if (node.nodeType) {
-                    valueWrapper.append(node);
+                    // Note: do not directly append this node: it will remove it from the DOM
+                    valueWrapper.append(node.cloneNode(true));
                     // this.appendChild(node);
                     return;
                 }

@@ -37,7 +37,13 @@ const mutationObserverByDocument = new Map();
 const getContextNodeByObserver = new Map();
 
 /**
- * @typedef {{processInvalidation(): void, previousContextNode: Node}} Observer
+ * @typedef {{
+ *    processInvalidation(): void,
+ *    previousContextNode: Node,
+ *    destroy(): void,
+ *    isStillRelevant?:() => boolean,
+ *    isDestroyed: boolean
+ *  }} Observer
  */
 
 /**
@@ -65,6 +71,9 @@ const processDependencies = (records) => {
     }
 
     for (const [observer, getContextItem] of getContextNodeByObserver) {
+        if (observer.isStillRelevant && !observer.isStillRelevant()) {
+            observer.destroy();
+        }
         if (getContextItem() !== observer.previousContextNode) {
             invalidatedObservers.add(observer);
         }
@@ -99,6 +108,10 @@ export function signalIndexUpdate(repeatId) {
  *  @param {() => Node}  getContextNode - The context item to the XPath
 
  * @param {ReturnType.NODES | ReturnType.STRING} expectedReturnType - The expected return type of the XPath
+ * @param {() => boolean} [isStillRelevant] - Tells the system whether the
+ * observer is still relevant, or whether it can be cleaned up (due to te
+ * related node falling out of the DOM for example)
+ *
  * @template {Node[] | string} T
  * @returns {ObservableResult<T>}
  */
@@ -107,6 +120,7 @@ export default function observeXPath(
     getContextNode,
     formElement,
     expectedReturnType,
+    isStillRelevant,
 ) {
     const listeners = new Set();
     /**
@@ -147,17 +161,6 @@ export default function observeXPath(
         true,
     );
 
-    const observer = {
-        processInvalidation: () => {
-            for (const listener of listeners) {
-                listener();
-            }
-        },
-        previousContextNode: null,
-        isDestroyed: false,
-        xpath,
-    };
-
     const cleanupListeners = () => {
         for (const [node, types] of nodeDependencies) {
             for (const dependencyType of types) {
@@ -178,6 +181,26 @@ export default function observeXPath(
         }
     };
 
+    const destroy = () => {
+        cleanupListeners();
+        getContextNodeByObserver.delete(observer);
+        observer.isDestroyed = true;
+    };
+    /**
+     * @type {Observer}
+     */
+    const observer = {
+        processInvalidation: () => {
+            for (const listener of listeners) {
+                listener();
+            }
+        },
+        previousContextNode: null,
+        isStillRelevant,
+        destroy,
+        isDestroyed: false,
+    };
+
     getContextNodeByObserver.set(observer, getContextNode);
     let oldResult = null;
     return {
@@ -190,11 +213,7 @@ export default function observeXPath(
         get __oldresult__() {
             return oldResult;
         },
-        destroy() {
-            cleanupListeners();
-            getContextNodeByObserver.delete(observer);
-            observer.isDestroyed = true;
-        },
+        destroy,
         getResult: () => {
             if (observer.isDestroyed) {
                 console.warn(`Accessing destroyed XPath observer: ${xpath}`);
