@@ -18,7 +18,7 @@ export default [
         sourcemap: false,
       },
     ],
-    treeshake:true,
+    treeshake: true,
     plugins: [
       versionInjector(),
       resolve(),
@@ -41,7 +41,7 @@ export default [
       {
         file: 'dist/fore-dev.js',
         format: 'es',
-        sourcemap: true,
+        sourcemap: false,
       },
     ],
     plugins: [
