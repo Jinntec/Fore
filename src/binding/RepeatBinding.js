@@ -23,6 +23,10 @@ export class RepeatBinding extends Binding {
             );
             return;
         }
+        if (this.repeat.closest('fx-case.deselected-case')) {
+            // Surpress updates in invisible places, like deselected cases
+            return;
+        }
         if (this.repeat.refresh) {
             this.repeat.refresh();
         }

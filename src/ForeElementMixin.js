@@ -7,11 +7,7 @@ import {
 } from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
 import { Fore } from './fore.js';
-import observeXPath from './xpathObserver.js';
-import { ReturnType } from 'fontoxpath';
 import { DependencyTracker } from './DependencyTracker.js';
-import { NodeBinding } from './binding/NodeBinding.js';
-import { RepeatBinding } from './binding/RepeatBinding.js';
 // import DependentXPathQueries from './DependentXPathQueries.js';
 
 let unique_counter = 0;
@@ -66,7 +62,6 @@ export default class ForeElementMixin extends HTMLElement {
         this.modelItem = null;
         this.ref = this.hasAttribute('ref') ? this.getAttribute('ref') : '';
         /**
-         * The inscope variables at this point. Names are without the $.
          * @type {Map<string, import('./fx-var.js').FxVariable>}
          */
         this.inScopeVariables = new Map();
@@ -76,17 +71,8 @@ export default class ForeElementMixin extends HTMLElement {
          */
         this.isDestroyed = false;
 
-        /**
-         * @type {import('./xpathObserver.js').ObservableResult<Node[]>}
-         */
-        this.refObserver = null;
-
-        /**
-         * @type {Node|any}
-         */
-        this.nodeset = null;
-
         this.bindingKey = `binding-key: ${DependencyTracker.getInstance().resolveInstanceXPath(this.ref)}-${unique_counter++}`;
+
         // this.dependencies = new DependentXPathQueries();
     }
 
@@ -95,61 +81,11 @@ export default class ForeElementMixin extends HTMLElement {
     if (this.parentElement) {
       this.dependencies.setParentDependencies(this.parentElement?.closest('[ref]')?.dependencies);
     }
-        */
-
-        this.refObserver = observeXPath(
-            this.ref || '.',
-            () => {
-                let inscopeContext;
-                if (this.hasAttribute('context')) {
-                    inscopeContext = getInScopeContext(
-                        this.getAttributeNode('context') || this,
-                        this.context,
-                    );
-                }
-                if (this.hasAttribute('ref')) {
-                    inscopeContext = getInScopeContext(
-                        this.getAttributeNode('ref') || this,
-                        this.ref,
-                    );
-                }
-                if (!inscopeContext && this.getModel().instances.length !== 0) {
-                    // ### always fall back to default context with there's neither a 'context' or 'ref' present
-                    inscopeContext = this.getModel()
-                        .getDefaultInstance()
-                        .getDefaultContext();
-                    // console.warn('no in scopeContext for ', this);
-                    // console.warn('using default context ', this);
-                    // return;
-                }
-
-                // TODO: remove old inscopecontext dep here
-                DependencyTracker.getInstance().registerDependency(
-                    this.ref,
-                    XPathUtil.getCanonicalXPath(inscopeContext),
-                );
-
-                return inscopeContext;
-            },
-            this,
-            ReturnType.NODES,
-        );
-
-        const binding = new RepeatBinding(this.bindingKey, this);
-        DependencyTracker.getInstance().registerBinding(
-            this.bindingKey,
-            binding,
-            true,
-        );
-
-        this.refObserver.addObserver(() => {
-            DependencyTracker.getInstance().notifyChange(this.bindingKey);
-        });
+*/
     }
 
     disconnectedCallback() {
         this.isDestroyed = true;
-        this.refObserver.destroy();
     }
 
     /**
@@ -198,8 +134,59 @@ export default class ForeElementMixin extends HTMLElement {
         if (!model) {
             return;
         }
-
-        [this.nodeset] = this.refObserver.getResult();
+        let inscopeContext;
+        if (this.hasAttribute('context')) {
+            inscopeContext = getInScopeContext(
+                this.getAttributeNode('context') || this,
+                this.context,
+            );
+        }
+        if (this.hasAttribute('ref')) {
+            inscopeContext = getInScopeContext(
+                this.getAttributeNode('ref') || this,
+                this.ref,
+            );
+        }
+        if (!inscopeContext && this.getModel().instances.length !== 0) {
+            // ### always fall back to default context with there's neither a 'context' or 'ref' present
+            inscopeContext = this.getModel()
+                .getDefaultInstance()
+                .getDefaultContext();
+            // console.warn('no in scopeContext for ', this);
+            // console.warn('using default context ', this);
+            // return;
+        }
+        if (this.ref === '') {
+            this.nodeset = inscopeContext;
+        } else if (Array.isArray(inscopeContext)) {
+            /*
+      inscopeContext.forEach(n => {
+        if (XPathUtil.isSelfReference(this.ref)) {
+        this.nodeset = inscopeContext;
+        } else {
+        const localResult = evaluateXPathToFirstNode(this.ref, n, this);
+        // console.log('local result: ', localResult);
+        this.nodeset.push(localResult);
+        }
+      });
+  */
+            // this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext[0], this);
+            this.nodeset = evaluateXPath(this.ref, inscopeContext[0], this);
+        } else {
+            // this.nodeset = fx.evaluateXPathToFirstNode(this.ref, inscopeContext, null, {namespaceResolver: this.namespaceResolver});
+            if (!inscopeContext) return;
+            const { nodeType } = inscopeContext;
+            if (nodeType && !XPathUtil.isAbsolutePath(this.ref)) {
+                this.nodeset = evaluateXPathToFirstNode(
+                    this.ref,
+                    inscopeContext,
+                    this,
+                );
+            } else {
+                [this.nodeset] = evaluateXPath(this.ref, inscopeContext, this);
+            }
+        }
+        // console.log('UiElement evaluated to nodeset: ', this.nodeset);
     }
 
     /**
@@ -354,18 +341,5 @@ export default class ForeElementMixin extends HTMLElement {
      */
     setInScopeVariables(inScopeVariables) {
         this.inScopeVariables = inScopeVariables;
-        // TODO: AST processing
-        const refererredVariables = /\$[^ ]+/.exec(this.ref);
-        if (refererredVariables) {
-            for (const refererredVariable of refererredVariables) {
-                const fxVarElement = this.inScopeVariables.get(
-                    refererredVariable.substring(1),
-                );
-                DependencyTracker.getInstance().registerDependency(
-                    this.bindingKey,
-                    fxVarElement.bindingKey,
-                );
-            }
-        }
     }
 }

@@ -82,9 +82,8 @@ export class FxCase extends FxContainer {
                 }
                 await parentNode.replaceCase(this, replacement);
             }
-            const model = ownerForm.getModel();
-            model.updateModel();
-            ownerForm.refresh(true);
+
+            Fore.refreshChildren(this, true);
         });
 
         super.connectedCallback();

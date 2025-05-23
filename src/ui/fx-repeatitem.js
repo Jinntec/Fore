@@ -90,11 +90,11 @@ export class FxRepeatitem extends withDraggability(ForeElementMixin, true) {
 
         console.log('_dispatchIndexChange', this, this.index);
 
-        // const path = t
-        DependencyTracker.getInstance().updateRepeatIndex(
-            this.modelItem.path,
-            this.index,
-        );
+        // // const path = t
+        // DependencyTracker.getInstance().updateRepeatIndex(
+        //     this.modelItem.path,
+        //     this.index,
+        // );
         this.dispatchEvent(
             new CustomEvent('item-changed', {
                 composed: false,

@@ -2,13 +2,14 @@ import '../fx-model.js';
 import ForeElementMixin from '../ForeElementMixin.js';
 import { DependencyTracker } from '../DependencyTracker';
 import { ControlBinding } from '../binding/ControlBinding.js';
+import UiElement from './ui-element.js';
 
 /**
  * `fx-container` -
  * is a general class for container elements.
  *
  */
-export class FxContainer extends ForeElementMixin {
+export class FxContainer extends UiElement {
     static get properties() {
         return {
             ...super.properties,

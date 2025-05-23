@@ -2,16 +2,15 @@ import './fx-repeatitem.js';
 
 import { Fore } from '../fore.js';
 import ForeElementMixin from '../ForeElementMixin.js';
-import { evaluateXPath } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 import { XPathUtil } from '../xpath-util.js';
 import { withDraggability } from '../withDraggability.js';
 import { DependencyTracker } from '../DependencyTracker';
 import { RepeatBinding } from '../binding/RepeatBinding.js';
-import { DependencyNotifyingDomFacade } from '../DependencyNotifyingDomFacade.js';
 import observeXPath, { signalIndexUpdate } from '../xpathObserver.js';
 import { ReturnType } from 'fontoxpath';
 import { detectTemplateExpressions } from '../binding/detectTemplateStrings.js';
+import UiElement from './ui-element.js';
 
 // import {DependencyNotifyingDomFacade} from '../DependencyNotifyingDomFacade';
 
@@ -124,7 +123,7 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
     }
 
     connectedCallback() {
-        //        super.connectedCallback();
+        super.connectedCallback();
         // console.log('connectedCallback',this);
         // this.display = window.getComputedStyle(this, null).getPropertyValue("display");
         this.ref = this.getAttribute('ref');
@@ -249,6 +248,10 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
         `;
     }
 
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        this.refObserver.destroy();
+    }
     /**
      * @returns {import('./fx-repeatitem.js').FxRepeatitem}
      */
@@ -431,9 +434,11 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
             }
             this.appendChild(repeatItem);
 
-            Fore.refreshChildren(repeatItem, true);
+            repeatItem.refresh();
 
             detectTemplateExpressions(repeatItem);
+            // Inserted a new repeat item. Focus it.
+            this.setIndex(indexInNewRepeatItems + 1);
         }
         this.updateIndexes();
         if (inserted) {
@@ -512,6 +517,8 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
             repeatItem.index = index + 1; // 1-based index
 
             this.appendChild(repeatItem);
+
+            repeatItem.refresh();
 
             if (this.getOwnerForm().createNodes) {
                 this.getOwnerForm().initData(repeatItem);

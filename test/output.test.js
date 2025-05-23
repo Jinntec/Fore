@@ -11,9 +11,7 @@ describe('fx-output Tests', () => {
                         <data>
                             <div
                                 style="color:white;background:#333;padding:1rem;"
-                            >
-                                hey there
-                            </div>
+                            >hey there</div>
                         </data>
                     </fx-instance>
                 </fx-model>
@@ -44,9 +42,7 @@ describe('fx-output Tests', () => {
                         <data>
                             <div
                                 style="color:white;background:#333;padding:1rem;"
-                            >
-                                hey there
-                            </div>
+                            >hey there</div>
                         </data>
                     </fx-instance>
                 </fx-model>
@@ -78,9 +74,7 @@ describe('fx-output Tests', () => {
                             <div
                                 class="test"
                                 style="color:white;background:#333;padding:1rem;"
-                            >
-                                hey there
-                            </div>
+                             >hey there</div>
                         </data>
                     </fx-instance>
                 </fx-model>
@@ -120,9 +114,7 @@ describe('fx-output Tests', () => {
                         <data>
                             <div
                                 style="color:white;background:#333;padding:1rem;"
-                            >
-                                hey there
-                            </div>
+                             >hey there</div>
                         </data>
                     </fx-instance>
                 </fx-model>

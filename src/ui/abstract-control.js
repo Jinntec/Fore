@@ -1,11 +1,11 @@
 import '../fx-model.js';
-import ForeElementMixin from '../ForeElementMixin.js';
 import { ModelItem } from '../modelitem.js';
 import { Fore } from '../fore.js';
 import getInScopeContext from '../getInScopeContext.js';
 import { evaluateXPathToFirstNode } from '../xpath-evaluation.js';
 import { DependencyTracker } from '../DependencyTracker';
 import { ControlBinding } from '../binding/ControlBinding';
+import UiElement from './ui-element.js';
 
 function isDifferent(oldNodeValue, oldControlValue, newControlValue) {
     if (oldNodeValue === null) {
@@ -38,7 +38,7 @@ function isDifferent(oldNodeValue, oldControlValue, newControlValue) {
  * is a general base class for control elements.
  *
  */
-export default class AbstractControl extends ForeElementMixin {
+export default class AbstractControl extends UiElement {
     constructor() {
         super();
         this.binding = null;

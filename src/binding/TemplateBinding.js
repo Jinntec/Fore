@@ -98,7 +98,7 @@ export class TemplateBinding extends Binding {
 
                         observer.addObserver(() => {
                             DependencyTracker.getInstance().notifyChange(
-                                expression,
+                                this.xpath,
                             );
                         });
                         return [match, observer];

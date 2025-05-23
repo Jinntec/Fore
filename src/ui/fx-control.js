@@ -6,13 +6,8 @@ import {
 } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 import { Fore } from '../fore.js';
-import { ModelItem } from '../modelitem.js';
 import { debounce } from '../events.js';
 import { FxModel } from '../fx-model.js';
-import { XPathUtil } from '../xpath-util';
-import { DependencyTracker } from '../DependencyTracker';
-import { ControlBinding } from '../binding/ControlBinding.js';
-import { Binding } from '../binding/Binding';
 
 const WIDGETCLASS = 'widget';
 
