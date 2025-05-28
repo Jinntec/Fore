@@ -35,6 +35,9 @@
     [relevant] {
         display: block;
     }
+    [on-demand=true]{
+        display: none;
+    }
 
     fx-control[required] label:after {
         content: "*";

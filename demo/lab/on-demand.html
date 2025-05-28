@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport" />
+
+  <title>on demand controls</title>
+
+  <!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+  <link href="../../resources/demo.css" rel="stylesheet">
+<style>
+  fx-control{
+      padding: 0.25rem 0;
+  }
+  fx-control-menu button{
+      background: #76ff03;
+  }
+  fx-control-menu:hover{
+      background: lightgray;
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <h1>On demand controls with <code>fx-control-menu</code></h1>
+
+  <p>In some situations you may want to give the user the option of adding fields or displaying
+    them just on demand.</p>
+
+  <p><code>fx-control-menu</code> is a component displaying a simple button
+    to access a popup list of controls that are available but not currently displayed.</p>
+
+  <p><code>fx-control-menu</code> looks up all child elements with a 'on-demand' attribute
+  starting from the selected element.</p>
+
+  <p>By choosing a item the user can make that control visible.</p>
+
+  <p class="note">
+    Why having 'on-demand' when we have the <code>relevant</code> facet? - the logic of the
+    relevance of data might differ from the input logic. With 'on-demand' it's easier to pass
+    control to users for a single field.
+  </p>
+  <p class="note">
+    IMPORTANT: fx-control-menu in conjunction with 'on-demand' just shows/hides controls - it has
+    no effect on constraints or relevance of controls.
+  </p>
+  <demo-snippet>
+    <template>
+      <fx-fore>
+        <fx-model>
+          <fx-instance id="shared" shared>
+            <data>
+              <greetings>Greetings to all my babies!</greetings>
+              <ondemand>i should be here only when asked</ondemand>
+              <ondemand2>another optional one</ondemand2>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <fx-action event="clock" target="#document">
+          <fx-message>{event('time')}</fx-message>
+        </fx-action>
+
+
+        <fx-group id="outer">
+          <fx-control ref="greetings">
+            <label>Greetings</label>
+          </fx-control>
+          <fx-control ref="ondemand" on-demand="true">
+            <label>On demand</label>
+          </fx-control>
+          <fx-control ref="ondemand2" on-demand="true">
+            <label>optional field</label>
+          </fx-control>
+        </fx-group>
+
+        <fx-control-menu id="menu" select="#outer">
+          <button>+</button>
+        </fx-control-menu>
+
+      </fx-fore>
+    </template>
+  </demo-snippet>
+
+
+</div>
+<script type="module" src="../demo.js"></script>
+<!--
+<script>
+    const tmpl = document.getElementById('foo').content.cloneNode(true);
+    document.body.appendChild(tmpl);
+</script>
+-->
+</body>
+</html>

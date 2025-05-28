@@ -76,10 +76,25 @@ export default class FxControl extends XfAbstractControl {
       : 'blur';
     this.label = this.hasAttribute('label') ? this.getAttribute('label') : null;
     const style = `
-            :host{
-                display:inline-block;
-            }
-        `;
+      :host {
+        display: flex;
+        align-items: center;
+        gap: 0.4em;
+        position: relative;
+      }
+      .trash {
+        position: absolute;
+        right:0;
+        top:0;
+        cursor: pointer;
+        color: #888;
+        font-size: 0.65rem;
+        align-self: center;
+      }
+      .trash:hover {
+        color: red;
+      }        
+      `;
 
     this.credentials = this.hasAttribute('credentials')
       ? this.getAttribute('credentials')
@@ -185,7 +200,39 @@ export default class FxControl extends XfAbstractControl {
     this.template = this.querySelector('template');
     this.boundInitialized = false;
     this.static = !!this.widget.hasAttribute('static');
-    // console.log('template',this.template);
+    this.ondemand = this.hasAttribute('on-demand') ? true : false;
+
+    const trashIcon = this.shadowRoot.querySelector('.trash');
+    if (trashIcon) {
+      trashIcon.addEventListener('click', () => {
+        this.setAttribute('on-demand', 'true');
+        this.style.display = 'none';
+        // Optionally signal that the menu should update:
+        document.dispatchEvent(new CustomEvent('update-control-menu'));
+      });
+    }
+  }
+
+  /**
+   * activates a control that uses 'on-demand' attribute
+   */
+  activate() {
+    console.log('fx-control.activate() called');
+    this.removeAttribute('on-demand');
+    this.style.display = '';
+    this.refresh(true);
+  }
+
+  static get observedAttributes() {
+    return ['on-demand'];
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === 'on-demand') {
+      // Do something when the attribute is removed or added
+      console.log(`on-demand changed:`, newValue);
+      this.ondemand = newValue;
+    }
   }
 
   _debounce(func, timeout = 300) {
@@ -260,9 +307,11 @@ export default class FxControl extends XfAbstractControl {
   }
 
   renderHTML(ref) {
+    const showTrash = this.hasAttribute('on-demand');
     return `
             ${this.label ? `${this.label}` : ''}
             <slot></slot>
+            ${showTrash ? '<span class="trash" title="Hide this control">&#128465;</span>' : ''}
             ${
               this.hasAttribute('as') && this.getAttribute('as') === 'node'
                 ? '<fx-replace id="replace" ref=".">'
@@ -618,15 +667,15 @@ export default class FxControl extends XfAbstractControl {
     const valueExpr = valueAttribute;
     const cutted = valueExpr.substring(1, valueExpr.length - 1);
     const evaluated = evaluateXPathToString(cutted, node, newEntry);
-    newEntry.setAttribute('value',evaluated);
+    newEntry.setAttribute('value', evaluated);
 
     if (this.value === evaluated) {
       newEntry.setAttribute('selected', 'selected');
     }
 
-    if(newEntry.hasAttribute('title')){
+    if (newEntry.hasAttribute('title')) {
       let titleExpr = newEntry.getAttribute('title');
-      titleExpr = titleExpr.substring(1,titleExpr.length -1);
+      titleExpr = titleExpr.substring(1, titleExpr.length - 1);
       const evaluated = evaluateXPathToString(titleExpr, node, newEntry);
       newEntry.setAttribute('title', evaluated);
     }

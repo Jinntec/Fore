@@ -248,7 +248,7 @@ export class FxFore extends HTMLElement {
     this.mergePartial = false;
     this.createNodes = this.hasAttribute('create-nodes') ? true : false;
     this._localNamesWithChanges = new Set();
-    this.setAttribute('role','form'); // set aria role
+    this.setAttribute('role', 'form'); // set aria role
   }
 
   connectedCallback() {
@@ -614,7 +614,7 @@ export class FxFore extends HTMLElement {
       }
 
       // ### check if other controls depend on current modelItem
-      const {mainGraph} = this.getModel();
+      const { mainGraph } = this.getModel();
       if (mainGraph && mainGraph.hasNode(modelItem.path)) {
         const deps = this.getModel().mainGraph.dependentsOf(modelItem.path, false);
         // ### iterate dependant modelItems and refresh all their boundControls
@@ -1009,7 +1009,11 @@ export class FxFore extends HTMLElement {
     // console.log('INIT');
     // const boundControls = Array.from(root.querySelectorAll('[ref]:not(fx-model *),fx-repeatitem'));
 
-    const boundControls = Array.from(root.querySelectorAll('fx-control[ref],fx-upload[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref]'));
+    const boundControls = Array.from(
+      root.querySelectorAll(
+        'fx-control[ref],fx-upload[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref]',
+      ),
+    );
     if (root.matches('fx-repeatitem')) {
       boundControls.unshift(root);
     }
