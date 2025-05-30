@@ -47,27 +47,29 @@
   </p>
   <demo-snippet>
     <template>
-      <fx-fore>
+      <fx-fore id="example1">
         <fx-model>
-          <fx-instance id="shared" shared>
+          <fx-instance>
             <data>
               <greetings>Greetings to all my babies!</greetings>
               <ondemand>i should be here only when asked</ondemand>
               <ondemand2>another optional one</ondemand2>
+              <empty></empty>
             </data>
           </fx-instance>
         </fx-model>
-        <fx-action event="clock" target="#document">
-          <fx-message>{event('time')}</fx-message>
-        </fx-action>
 
 
         <fx-group id="outer">
           <fx-control ref="greetings">
             <label>Greetings</label>
           </fx-control>
+          <fx-control ref="empty">
+            <label>empty value</label>
+          </fx-control>
           <fx-control ref="ondemand" on-demand="true">
             <label>On demand</label>
+            <fx-message event="hide-control">discarded</fx-message>
           </fx-control>
           <fx-control ref="ondemand2" on-demand="true">
             <label>optional field</label>
@@ -75,6 +77,59 @@
         </fx-group>
 
         <fx-control-menu id="menu" select="#outer">
+          <button>+</button>
+        </fx-control-menu>
+
+      </fx-fore>
+    </template>
+  </demo-snippet>
+
+  <h2>mode 'hide-on-empty' and  <code>show-icon</code></h2>
+  <p>If you want your form to hide all empty controls
+  you can use <code>mode="hide-on-empty"</code>. This will hide all controls that have
+  no widget value.</p>
+
+  <p>This example also uses <code>show-icon</code> attribute on the ancestor <code>fx-group</code>.
+  When this attribute is found on a control or an ancestor a trask icon will be displayed
+  to remove the added field from view.</p>
+
+  <h3><code>show-control</code> and <code>hide-control</code></h3>
+
+  <p>Each control getting activated will fire a <code>show-control</code> event.
+  Each control getting deactivated will fire a <code>hide-control</code> event.</p>
+  <demo-snippet>
+    <template>
+      <fx-fore id="example2">
+        <fx-model>
+          <fx-instance>
+            <data>
+              <greetings>Greetings to all my babies!</greetings>
+              <ondemand>i should be here only when asked</ondemand>
+              <ondemand2>another optional one</ondemand2>
+              <empty></empty>
+            </data>
+          </fx-instance>
+        </fx-model>
+
+
+        <fx-group id="outer2" show-icon="true">
+          <fx-control ref="greetings">
+            <label>Greetings</label>
+          </fx-control>
+          <fx-control ref="empty">
+            <label>empty value</label>
+            <fx-message event="hide-control">discarded empty value</fx-message>
+            <fx-message event="show-control">show empty control</fx-message>
+          </fx-control>
+          <fx-control ref="ondemand" on-demand="true">
+            <label>On demand</label>
+          </fx-control>
+          <fx-control ref="ondemand2" on-demand="true" >
+            <label>optional field</label>
+          </fx-control>
+        </fx-group>
+
+        <fx-control-menu id="menu2" select="#outer2" mode="hide-on-empty">
           <button>+</button>
         </fx-control-menu>
 

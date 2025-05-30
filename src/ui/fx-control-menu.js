@@ -93,6 +93,25 @@ export class FxControlMenu extends XfAbstractControl {
       }
     });
 
+    if (this.getAttribute('mode') === 'hide-on-empty') {
+      document.addEventListener('ready', () => {
+        const container = document.querySelector(this.selectExpr);
+        if (!container) return;
+
+        const widgets = container.querySelectorAll('.widget');
+        widgets.forEach(widget => {
+          const value = widget.value?.trim();
+          const control = widget.closest('fx-control');
+          if (control && (value === '' || value == null)) {
+            control.setAttribute('on-demand', 'true');
+          }
+        });
+
+        // After marking empty controls, update the menu
+        this.updateMenu();
+      });
+    }
+
     this.updateMenu();
   }
 
