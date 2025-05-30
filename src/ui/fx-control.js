@@ -209,7 +209,12 @@ export default class FxControl extends XfAbstractControl {
         this.style.display = 'none';
         // Optionally signal that the menu should update:
         document.dispatchEvent(new CustomEvent('update-control-menu'));
+        Fore.dispatch(this, 'hide-control', {});
       });
+    }
+
+    if (this.hasAttribute('on-demand')) {
+      this._addTrashIcon();
     }
   }
 
@@ -221,6 +226,11 @@ export default class FxControl extends XfAbstractControl {
     this.removeAttribute('on-demand');
     this.style.display = '';
     this.refresh(true);
+    Fore.dispatch(this, 'show-control', {});
+    // Focus the widget after the control becomes visible
+    requestAnimationFrame(() => {
+      this.getWidget()?.focus();
+    });
   }
 
   static get observedAttributes() {
@@ -229,9 +239,12 @@ export default class FxControl extends XfAbstractControl {
 
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === 'on-demand') {
-      // Do something when the attribute is removed or added
-      console.log(`on-demand changed:`, newValue);
-      this.ondemand = newValue;
+      this.ondemand = newValue !== null;
+      if (!newValue) {
+        this._removeTrashIcon();
+      } else {
+        this._addTrashIcon();
+      }
     }
   }
 
@@ -308,10 +321,17 @@ export default class FxControl extends XfAbstractControl {
 
   renderHTML(ref) {
     const showTrash = this.hasAttribute('on-demand');
+    const showIcon = this.closest('[show-icon]');
     return `
             ${this.label ? `${this.label}` : ''}
-            <slot></slot>
-            ${showTrash ? '<span class="trash" title="Hide this control">&#128465;</span>' : ''}
+            <div class="wrapper">
+              <slot></slot>
+              ${
+                showTrash && showIcon
+                  ? '<span class="trash" title="Hide this control">&#128465;</span>'
+                  : ''
+              }
+            </div>
             ${
               this.hasAttribute('as') && this.getAttribute('as') === 'node'
                 ? '<fx-replace id="replace" ref=".">'
@@ -713,6 +733,37 @@ export default class FxControl extends XfAbstractControl {
       }
     });
     return result;
+  }
+
+  _addTrashIcon() {
+    // Only show icon if explicitly marked by control-menu
+
+    if (!this.closest('[show-icon]')) return;
+
+    const wrapper = this.shadowRoot.querySelector('.wrapper');
+    if (!wrapper || wrapper.querySelector('.trash')) return;
+
+    const icon = document.createElement('span');
+    icon.innerHTML = '&#128465;'; // trash icon
+    icon.classList.add('trash');
+    icon.setAttribute('title', 'Hide this control');
+    icon.style.cursor = 'pointer';
+    icon.style.marginLeft = '0.5em';
+
+    icon.addEventListener('click', e => {
+      e.stopPropagation();
+      this.setAttribute('on-demand', 'true');
+      this.style.display = 'none';
+      document.dispatchEvent(new CustomEvent('update-control-menu'));
+      Fore.dispatch(this, 'hide-control', {});
+    });
+
+    wrapper.appendChild(icon);
+  }
+
+  _removeTrashIcon() {
+    const icon = this.shadowRoot.querySelector('.trash-icon');
+    if (icon) icon.remove();
   }
 }
 if (!customElements.get('fx-control')) {
