@@ -149,6 +149,7 @@
 
     fx-group, fx-switch, fx-repeat, fx-dialog {
         display: block;
+        position: relative;
     }
 
     fx-hint {
@@ -216,6 +217,13 @@
 
     .vertical label {
         display: block;
+    }
+
+    /* for on-demand elements */
+    .trash {
+        display: inline-block;
+        position: absolute;
+        right:0;
     }
 
     /* fx-action-log styles */

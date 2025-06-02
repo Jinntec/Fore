@@ -29,6 +29,7 @@ export class FxControlMenu extends XfAbstractControl {
         padding: 0.5em;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
         min-width: 10em;
+        white-space:nowrap;
       }
 
       .menu.visible {
@@ -140,7 +141,10 @@ export class FxControlMenu extends XfAbstractControl {
     }
 
     targets.forEach((el, index) => {
-      const label = el.querySelector('label')?.textContent.trim() || `Item ${index + 1}`;
+      let label = el.getAttribute('aria-label');
+      if (!label) {
+        label = el.querySelector('label')?.textContent.trim() || `Item ${index + 1}`;
+      }
       const item = document.createElement('a');
       item.href = '#';
       item.textContent = label;

@@ -214,6 +214,7 @@ export default class FxControl extends XfAbstractControl {
     }
 
     if (this.hasAttribute('on-demand')) {
+      this.style.display = 'none';
       this._addTrashIcon();
     }
   }
@@ -224,6 +225,7 @@ export default class FxControl extends XfAbstractControl {
   activate() {
     console.log('fx-control.activate() called');
     this.removeAttribute('on-demand');
+    this._addTrashIcon();
     this.style.display = '';
     this.refresh(true);
     Fore.dispatch(this, 'show-control', {});
@@ -324,14 +326,7 @@ export default class FxControl extends XfAbstractControl {
     const showIcon = this.closest('[show-icon]');
     return `
             ${this.label ? `${this.label}` : ''}
-            <div class="wrapper">
               <slot></slot>
-              ${
-                showTrash && showIcon
-                  ? '<span class="trash" title="Hide this control">&#128465;</span>'
-                  : ''
-              }
-            </div>
             ${
               this.hasAttribute('as') && this.getAttribute('as') === 'node'
                 ? '<fx-replace id="replace" ref=".">'
@@ -740,13 +735,15 @@ export default class FxControl extends XfAbstractControl {
 
     if (!this.closest('[show-icon]')) return;
 
-    const wrapper = this.shadowRoot.querySelector('.wrapper');
-    if (!wrapper || wrapper.querySelector('.trash')) return;
-
+    // const wrapper = this.shadowRoot.querySelector('.wrapper');
+    // if (!wrapper || wrapper.querySelector('.trash')) return;
+    const trash = this.querySelector('.trash');
+    if (trash) return;
     const icon = document.createElement('span');
     icon.innerHTML = '&#128465;'; // trash icon
     icon.classList.add('trash');
     icon.setAttribute('title', 'Hide this control');
+    icon.setAttribute('part', 'trash');
     icon.style.cursor = 'pointer';
     icon.style.marginLeft = '0.5em';
 
@@ -758,11 +755,11 @@ export default class FxControl extends XfAbstractControl {
       Fore.dispatch(this, 'hide-control', {});
     });
 
-    wrapper.appendChild(icon);
+    this.appendChild(icon);
   }
 
   _removeTrashIcon() {
-    const icon = this.shadowRoot.querySelector('.trash-icon');
+    const icon = this.querySelector('.trash');
     if (icon) icon.remove();
   }
 }

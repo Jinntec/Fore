@@ -18,6 +18,14 @@
   fx-control-menu:hover{
       background: lightgray;
   }
+  fx-group{
+      padding:0;
+      margin:0;
+  }
+  .trash{
+      font-size: 0.75rem;
+      z-index: 10;
+  }
 </style>
 </head>
 <body>
@@ -55,6 +63,8 @@
               <ondemand>i should be here only when asked</ondemand>
               <ondemand2>another optional one</ondemand2>
               <empty></empty>
+              <item1>a control in an on demand group</item1>
+              <item2>another control in an on demand group</item2>
             </data>
           </fx-instance>
         </fx-model>
@@ -74,6 +84,14 @@
           <fx-control ref="ondemand2" on-demand="true">
             <label>optional field</label>
           </fx-control>
+          <fx-group show-icon on-demand="true" aria-label="add section">
+            <fx-control ref="item1">
+              <label>a whole on demand section</label>
+            </fx-control>
+            <fx-control ref="item2">
+              <label>a whole on demand section</label>
+            </fx-control>
+          </fx-group>
         </fx-group>
 
         <fx-control-menu id="menu" select="#outer">

@@ -5,6 +5,7 @@ describe('on-demand.html', () => {
 
   it('creates menu of on-demand items and allows switching them visible"', () => {
     cy.get('#example1 [ref="greetings"]').should('be.visible');
+    cy.get('#example1 [ref="empty"]').should('be.visible');
     cy.get('#example1 [ref="ondemand"]').should('not.be.visible');
     cy.get('#example1 [ref="ondemand2"]').should('not.be.visible');
 
@@ -12,7 +13,7 @@ describe('on-demand.html', () => {
     cy.get('#menu')
       .shadow()
       .find('a')
-      .should('have.length', 2);
+      .should('have.length', 3);
 
     cy.get('#menu')
       .shadow()
@@ -31,6 +32,16 @@ describe('on-demand.html', () => {
     cy.get('#example1 [ref="ondemand"]').should('be.visible');
     cy.get('#example1 [ref="ondemand2"]').should('be.visible');
 
+    cy.get('#menu').click();
+    cy.get('#menu')
+      .shadow()
+      .find('a:nth-child(1)')
+      .click();
+
+    cy.get('#example1 [ref="ondemand"]').should('be.visible');
+    cy.get('#example1 [ref="ondemand2"]').should('be.visible');
+    cy.get('#example1 [aria-label="add section"]').should('be.visible');
+
     cy.get('#menu button').should('have.attr', 'disabled', 'disabled');
   });
 
@@ -44,10 +55,7 @@ describe('on-demand.html', () => {
 
     cy.get('#example2 [ref="empty"]').should('not.be.visible');
     cy.get('#example2 [ref="ondemand"]').should('be.visible');
-    cy.get('#example2 [ref="ondemand"]')
-      .shadow()
-      .find('.trash')
-      .click();
+    cy.get('#example2 [ref="ondemand"] .trash').click();
 
     cy.get('#example2 [ref="ondemand"]').should('not.be.visible');
 
@@ -75,13 +83,9 @@ describe('on-demand.html', () => {
       .find('a:nth-child(1)')
       .click();
 
-    cy.get('#example2 [ref="empty"]')
-      .shadow()
-      .find('.trash')
-      .should('be.visible');
+    cy.get('#example2 [ref="empty"] .trash').should('be.visible');
 
     cy.get('#example2 [ref="empty"]')
-      .shadow()
       .find('.trash')
       .click();
 
