@@ -59,7 +59,7 @@ export default class AbstractControl extends ForeElementMixin {
     // Save the old value of this control. this may be the stringified version, contrast to the node in `nodeset`
     const oldValue = this.value;
 
-    if (this.ondemand && !this.value) return;
+    // if (this.ondemand && !this.value) return;
     // console.log('### AbstractControl.refresh on : ', this);
 
     // if(this.repeated) return
