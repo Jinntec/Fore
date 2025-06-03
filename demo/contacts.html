@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport" />
+
+  <title>Contacts</title>
+
+  <!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+  <link href="../resources/demo.css" rel="stylesheet">
+<style>
+  fx-control{
+      padding: 0.25rem 0;
+      width:20rem;
+  }
+  input{
+      width:100%;
+      padding:0.25rem;
+  }
+  fx-control-menu button{
+      background: lightgray;
+  }
+  fx-control-menu:hover{
+      background: lightgray;
+  }
+  fx-group,
+  [role="group"]{
+      padding: 0;
+      margin: 0;
+  }
+  .trash{
+      z-index: 10;
+      font-size:0.75rem;
+      top:0;
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <h1>Contact</code></h1>
+
+<!--  <demo-snippet>
+    <template>
+ -->     <fx-fore id="example1">
+        <fx-model>
+          <fx-instance>
+            <data>
+              <contact>
+                <phone>
+                  <mobile></mobile>
+                  <home>030 1239089238</home>
+                </phone>
+                <email></email>
+                <workmail>another@me.com</workmail>
+                <middlename></middlename>
+                <name>John Doe</name>
+                <forename></forename>
+                <title></title>
+              </contact>
+
+            </data>
+          </fx-instance>
+        </fx-model>
+
+
+        <fx-group id="outer" ref="contact" show-icon="true">
+          <fx-control ref="title" on-demand="true">
+            <label>Title</label>
+          </fx-control>
+          <fx-control ref="name">
+            <label>Name</label>
+          </fx-control>
+          <fx-control ref="forename" on-demand="true">
+            <label>Forename</label>
+          </fx-control>
+          <fx-control ref="middlename" on-demand="true">
+            <label>Middlename</label>
+            <fx-message event="hide-control">discarded</fx-message>
+          </fx-control>
+          <fx-control ref="email">
+            <label>Email</label>
+            <input type="email">
+          </fx-control>
+          <fx-control ref="workmail" on-demand="true">
+            <label>Work Email</label>
+            <input type="email">
+          </fx-control>
+          <fx-group ref="phone" on-demand="true" aria-label="Phones">
+            <fx-control ref="mobile">
+              <label>Mobile</label>
+              <input type="tel">
+            </fx-control>
+            <fx-control ref="home">
+              <label>home</label>
+              <input type="tel">
+            </fx-control>
+          </fx-group>
+          <fx-control-menu id="menu" select="#outer">
+            <button>+</button>
+          </fx-control-menu>
+
+        </fx-group>
+
+
+      </fx-fore>
+<!--
+    </template>
+  </demo-snippet>
+-->
+
+
+
+
+</div>
+<script type="module" src="./demo.js"></script>
+<!--
+<script>
+    const tmpl = document.getElementById('foo').content.cloneNode(true);
+    document.body.appendChild(tmpl);
+</script>
+-->
+</body>
+</html>
