@@ -1,4 +1,3 @@
-import AbstractControl from './abstract-control.js';
 import ForeElementMixin from '../ForeElementMixin';
 import { Fore } from '../fore';
 
@@ -8,11 +7,31 @@ export class UIElement extends ForeElementMixin {
   }
 
   connectedCallback() {
+    super.connectedCallback();
     this.ondemand = this.hasAttribute('on-demand') ? true : false;
+    this.wasOnDemandInitially = this.ondemand;
     if (this.ondemand) {
-      this.style.display = 'none';
+      this.addEventListener('show-control', () => {
+        this.removeAttribute('on-demand');
+      });
       this.addTrashIcon();
     }
+  }
+
+  attributeChangedCallback(name, _oldValue, newValue) {
+    if (name === 'on-demand') {
+      this.ondemand = newValue !== null;
+      if (!newValue && !this.wasOnDemandInitially) {
+        this.removeTrashIcon();
+      } else {
+        this.wasOnDemandInitially = true;
+        this.addTrashIcon();
+      }
+    }
+  }
+
+  static get observedAttributes() {
+    return ['on-demand'];
   }
 
   addTrashIcon() {
@@ -44,6 +63,7 @@ export class UIElement extends ForeElementMixin {
   }
 
   removeTrashIcon() {
+    debugger;
     const icon = this.querySelector('.trash');
     if (icon) icon.remove();
   }

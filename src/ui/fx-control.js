@@ -93,7 +93,7 @@ export default class FxControl extends XfAbstractControl {
       }
       .trash:hover {
         color: red;
-      }        
+      }
       `;
 
     this.credentials = this.hasAttribute('credentials')
@@ -200,23 +200,7 @@ export default class FxControl extends XfAbstractControl {
     this.template = this.querySelector('template');
     this.boundInitialized = false;
     this.static = !!this.widget.hasAttribute('static');
-    this.ondemand = this.hasAttribute('on-demand') ? true : false;
-
-    const trashIcon = this.shadowRoot.querySelector('.trash');
-    if (trashIcon) {
-      trashIcon.addEventListener('click', () => {
-        this.setAttribute('on-demand', 'true');
-        this.style.display = 'none';
-        // Optionally signal that the menu should update:
-        document.dispatchEvent(new CustomEvent('update-control-menu'));
-        Fore.dispatch(this, 'hide-control', {});
-      });
-    }
-
-    if (this.hasAttribute('on-demand')) {
-      this.style.display = 'none';
-      this._addTrashIcon();
-    }
+    super.connectedCallback();
   }
 
   /**
@@ -225,7 +209,6 @@ export default class FxControl extends XfAbstractControl {
   activate() {
     console.log('fx-control.activate() called');
     this.removeAttribute('on-demand');
-    this._addTrashIcon();
     this.style.display = '';
     this.refresh(true);
     Fore.dispatch(this, 'show-control', {});
@@ -233,21 +216,6 @@ export default class FxControl extends XfAbstractControl {
     requestAnimationFrame(() => {
       this.getWidget()?.focus();
     });
-  }
-
-  static get observedAttributes() {
-    return ['on-demand'];
-  }
-
-  attributeChangedCallback(name, oldValue, newValue) {
-    if (name === 'on-demand') {
-      this.ondemand = newValue !== null;
-      if (!newValue) {
-        this._removeTrashIcon();
-      } else {
-        this._addTrashIcon();
-      }
-    }
   }
 
   _debounce(func, timeout = 300) {
@@ -375,6 +343,12 @@ export default class FxControl extends XfAbstractControl {
    */
   async updateWidgetValue() {
     // this._getValueFromHtmlDom() = this.value;
+    if (this.value) {
+      this.setAttribute('has-value', '');
+      await Fore.dispatch(this, 'show-control');
+    } else {
+      this.removeAttribute('has-value');
+    }
 
     let { widget } = this;
     if (!widget) {
@@ -728,39 +702,6 @@ export default class FxControl extends XfAbstractControl {
       }
     });
     return result;
-  }
-
-  _addTrashIcon() {
-    // Only show icon if explicitly marked by control-menu
-
-    if (!this.closest('[show-icon]')) return;
-
-    // const wrapper = this.shadowRoot.querySelector('.wrapper');
-    // if (!wrapper || wrapper.querySelector('.trash')) return;
-    const trash = this.querySelector('.trash');
-    if (trash) return;
-    const icon = document.createElement('span');
-    icon.innerHTML = '&#128465;'; // trash icon
-    icon.classList.add('trash');
-    icon.setAttribute('title', 'Hide this control');
-    icon.setAttribute('part', 'trash');
-    icon.style.cursor = 'pointer';
-    icon.style.marginLeft = '0.5em';
-
-    icon.addEventListener('click', e => {
-      e.stopPropagation();
-      this.setAttribute('on-demand', 'true');
-      this.style.display = 'none';
-      document.dispatchEvent(new CustomEvent('update-control-menu'));
-      Fore.dispatch(this, 'hide-control', {});
-    });
-
-    this.appendChild(icon);
-  }
-
-  _removeTrashIcon() {
-    const icon = this.querySelector('.trash');
-    if (icon) icon.remove();
   }
 }
 if (!customElements.get('fx-control')) {

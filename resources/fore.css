@@ -35,9 +35,6 @@
     [relevant] {
         display: block;
     }
-    [on-demand=true]{
-        display: none;
-    }
 
     fx-control[required] label:after {
         content: "*";
@@ -278,3 +275,9 @@
         background: var(--paper-orange-500);
     }
 
+	/*
+	 * For on-demand stuff, if it has no value initially,hide it
+	 */
+	[on-demand] {
+		display: none
+	}

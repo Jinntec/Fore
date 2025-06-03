@@ -95,7 +95,7 @@ export class FxControlMenu extends XfAbstractControl {
     });
 
     if (this.getAttribute('mode') === 'hide-on-empty') {
-      document.addEventListener('ready', () => {
+      this.getOwnerForm().addEventListener('ready', () => {
         const container = document.querySelector(this.selectExpr);
         if (!container) return;
 
@@ -113,6 +113,11 @@ export class FxControlMenu extends XfAbstractControl {
       });
     }
 
+    const container = document.querySelector(this.selectExpr);
+    container?.addEventListener('show-control', event => {
+      this.updateMenu();
+    });
+
     this.updateMenu();
   }
 
@@ -120,7 +125,7 @@ export class FxControlMenu extends XfAbstractControl {
     const container = document.querySelector(this.selectExpr);
     if (!container) return;
 
-    const targets = Array.from(container.querySelectorAll('[on-demand="true"]'));
+    const targets = Array.from(container.querySelectorAll('[on-demand]'));
     this._currentTargets = targets;
     this.menuEl.innerHTML = ''; // Clear menu
 
