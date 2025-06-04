@@ -125,7 +125,20 @@ export class FxControlMenu extends XfAbstractControl {
     const container = document.querySelector(this.selectExpr);
     if (!container) return;
 
-    const targets = Array.from(container.querySelectorAll('[on-demand]'));
+    let targets = [];
+
+    if (container.hasAttribute('on-demand')) {
+      if (container.nodeName === 'FX-REPEAT') {
+        // If it's an <fx-repeat> with on-demand, use only the container
+        targets = [container];
+      } else {
+        // If it's not <fx-repeat>, include container and inner [on-demand] targets
+        targets = [container, ...container.querySelectorAll('[on-demand]')];
+      }
+    } else {
+      // If container is not on-demand, only look for inner [on-demand]
+      targets = Array.from(container.querySelectorAll('[on-demand]'));
+    }
     this._currentTargets = targets;
     this.menuEl.innerHTML = ''; // Clear menu
 
@@ -149,6 +162,13 @@ export class FxControlMenu extends XfAbstractControl {
       let label = el.getAttribute('aria-label');
       if (!label) {
         label = el.querySelector('label')?.textContent.trim() || `Item ${index + 1}`;
+      }
+      if (!label) {
+        console.warn(
+          'no label found - cannot create menu entry for ',
+          el,
+          ' - please add aria-label or label element to control',
+        );
       }
       const item = document.createElement('a');
       item.href = '#';
