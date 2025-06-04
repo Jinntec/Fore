@@ -67,3 +67,12 @@ header{
 #BT-1{
 
 }
+.note{
+    /*background: var(--paper-amber-300);*/
+    background: var(--paper-orange-100);
+    padding:10px;
+    font-size: 1rem;
+    border-radius: 0.2rem;
+    line-height: 1.5;
+    margin:1rem 0;
+}
