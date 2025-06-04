@@ -217,10 +217,25 @@
     }
 
     /* for on-demand elements */
+    [role=group][on-demand=true] {
+            display: none;
+    }
     .trash {
         display: inline-block;
         position: absolute;
         right:0;
+        top:0;
+        z-index: 10;
+        font-size: 0.8rem;
+    }
+    .trash svg{
+        width: 1rem;
+        height: 1rem;
+        color:#666666;
+    }
+    .trash svg:hover{
+        color:black;
+
     }
 
     /* fx-action-log styles */

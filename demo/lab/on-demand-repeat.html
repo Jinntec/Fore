@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport" />
+
+  <title>on demand repeat</title>
+
+  <!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+  <link href="../../resources/demo.css" rel="stylesheet">
+<style>
+  fx-control{
+      padding: 0.25rem 0;
+  }
+  #menu button{
+      background: #76ff03;
+  }
+  fx-control-menu  button:hover{
+      background: white;
+  }
+  fx-control-menu button{
+      border-radius: 50%;
+      width: 1.5rem;
+      height: 1.5rem;
+      background: lightgray;
+      padding:1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+  }
+  fx-group{
+      padding:0;
+      margin:0;
+  }
+  .trash{
+      right:-2rem;
+  }
+  #repeat::before{
+      content:attr(aria-label);
+      /*background: orange;*/
+      font-size:1.25rem;
+      white-space: nowrap;
+      border-bottom: 1px solid lightgray;
+      color:steelblue;
+  }
+  fx-trigger[slot=footer] {
+    margin: 0.5rem 0;
+      display: inline-block;
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <h1>On demand repeat</h1>
+
+  <p>Hit the button below to insert an on-demand repeat.</p>
+
+  <p class="note">Please note to add an <code>aria-label</code> to the repeat.</p>
+
+  <p>ATTENTION: do not use <code>on-demand</code> <span style="text-decoration:underline;">within</span> the repeat template. Behavior
+  is considered undefined in that case currently. We're still gathering experience
+  with the feature before refining.</p>
+  <demo-snippet>
+    <template>
+      <fx-fore id="example2">
+        <fx-model>
+          <fx-instance>
+            <data>
+              <row>
+                <greetings></greetings>
+                <ondemand></ondemand>
+                <ondemand2></ondemand2>
+                <empty></empty>
+              </row>
+              <template>
+                <row>
+                  <greetings></greetings>
+                  <ondemand></ondemand>
+                  <ondemand2></ondemand2>
+                  <empty></empty>
+                </row>
+              </template>
+            </data>
+          </fx-instance>
+        </fx-model>
+
+        <fx-message event="show-control" target="repeat">
+          Hey that repeat was shown
+        </fx-message>
+        <fx-message event="hide-control" target="repeat">
+          Hey that repeat was shown
+        </fx-message>
+        <fx-repeat ref="row" id="repeat" on-demand="true" aria-label="on-demand repeat" show-icon="true" >
+          <template>
+            <fx-control ref="greetings">
+              <label>Greetings</label>
+            </fx-control>
+            <fx-control ref="empty">
+              <label>empty value</label>
+              <fx-message event="hide-control">discarded empty value</fx-message>
+              <fx-message event="show-control">show empty control</fx-message>
+            </fx-control>
+            <fx-control ref="ondemand">
+              <label>On demand</label>
+            </fx-control>
+            <fx-control ref="ondemand2">
+              <label>optional field</label>
+            </fx-control>
+            <fx-trigger ref=".">
+              <button>delete</button>
+              <fx-delete ref="."></fx-delete>
+            </fx-trigger>
+          </template>
+          <fx-trigger slot="footer">
+            <button>append</button>
+            <!-- we need to use context() instead of 'row' or '.' here -->
+            <fx-insert context="instance()" ref="instance()/row" origin="instance()/template/row"></fx-insert>
+          </fx-trigger>
+        </fx-repeat>
+
+        <fx-control-menu id="menu2" select="#repeat">
+          <button>+</button>
+        </fx-control-menu>
+
+      </fx-fore>
+    </template>
+  </demo-snippet>
+
+
+</div>
+<script type="module" src="../demo.js"></script>
+<!--
+<script>
+    const tmpl = document.getElementById('foo').content.cloneNode(true);
+    document.body.appendChild(tmpl);
+</script>
+-->
+</body>
+</html>

@@ -6,6 +6,7 @@ import { evaluateXPath } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 import { XPathUtil } from '../xpath-util.js';
 import { withDraggability } from '../withDraggability.js';
+import { UIElement } from './UIElement.js';
 
 // import {DependencyNotifyingDomFacade} from '../DependencyNotifyingDomFacade';
 
@@ -25,7 +26,7 @@ import { withDraggability } from '../withDraggability.js';
  * todo: it should be seriously be considered to extend FxContainer instead but needs refactoring first.
  * @extends {ForeElementMixin}
  */
-export class FxRepeat extends withDraggability(ForeElementMixin, false) {
+export class FxRepeat extends withDraggability(UIElement, false) {
   static get properties() {
     return {
       ...super.properties,
@@ -172,6 +173,7 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
     const html = `
           <slot name="header"></slot>
           <slot></slot>
+          <slot name="footer"></slot>
         `;
     this.shadowRoot.innerHTML = `
             <style>
