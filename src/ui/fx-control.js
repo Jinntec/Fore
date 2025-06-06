@@ -344,8 +344,9 @@ export default class FxControl extends XfAbstractControl {
   async updateWidgetValue() {
     // this._getValueFromHtmlDom() = this.value;
     if (this.value) {
+      // Fire and forget this: the value is set right away anyway
       this.setAttribute('has-value', '');
-      await Fore.dispatch(this, 'show-control');
+      Fore.dispatch(this, 'show-control');
     } else {
       this.removeAttribute('has-value');
     }
