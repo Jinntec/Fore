@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Invoice Agent Demo</title>
+  <script type="module">
+    import '../demo.js';
+    import './main.js';
+  </script>
+  <link href="../../resources/fore.css" rel="stylesheet">
+  <link href="../../resources/vars.css" rel="stylesheet">
+  <link href="../../resources/toastify.css" rel="stylesheet">
+  <link href="../demo.css" rel="stylesheet">
+  <link href="default.css" rel="stylesheet">
+  <style>
+      html, body {
+          margin: 0;
+          padding: 0;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          background-color: #fdfdfd;
+          color: #333;
+      }
+
+      fx-fore {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          border: 1px solid #ddd;
+          border-radius: 6px;
+          margin: 10px;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+          background-color: white;
+      }
+
+      main {
+          flex: 1;
+          overflow-y: auto;
+          padding: 1.5em;
+          border-bottom: 1px solid #e0e0e0;
+      }
+
+      footer {
+          padding: 0.75em 1em;
+          background: #fafafa;
+          border-top: 1px solid #ccc;
+          display: flex;
+          align-items: center;
+          gap: 1.75em;
+          dispay:flex;
+          flex-direction: row;
+          justify-content: center;
+          position: fixed;
+          width: calc(100% - 3rem);
+          bottom: 0;
+
+      }
+
+      footer fx-control {
+          flex: 1;
+      }
+
+      button {
+          background-color: #007acc;
+          color: white;
+          border: none;
+          padding: 0.5em 1em;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 1em;
+      }
+
+      button:hover {
+          background-color: #005fa3;
+      }
+      textarea{
+          width: 100%;
+          padding: 0.25rem 0.5em;
+          font-size: 1rem;
+          height: 3.5rem;
+      }
+  </style>
+</head>
+<body>
+<fx-fore>
+  <fx-model>
+    <fx-instance id="input">
+      <data>
+        <request></request>
+      </data>
+    </fx-instance>
+    <fx-instance id="customer-data">
+      <customers></customers>
+    </fx-instance>
+  </fx-model>
+
+  <main>
+    <!-- The actual invoice form will be imported via src -->
+    <fx-fore src="invoice.html"></fx-fore>
+  </main>
+
+  <footer>
+    <fx-control ref="request">
+      <label hidden>Chat</label>
+      <textarea class="widget"></textarea>
+    </fx-control>
+    <button onclick="parseInput()">Send</button>
+  </footer>
+</fx-fore>
+</body>
+</html>
