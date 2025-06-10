@@ -8,108 +8,192 @@
 
   <!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
   <link href="../resources/demo.css" rel="stylesheet">
-<style>
-  fx-control{
-      padding: 0.25rem 0;
-      width:20rem;
-  }
-  input{
-      width:100%;
-      padding:0.25rem;
-  }
-  fx-control-menu button{
-      background: lightgray;
-  }
-  fx-control-menu:hover{
-      background: lightgray;
-  }
-  fx-group,
-  [role="group"]{
-      padding: 0;
-      margin: 0;
-  }
-  .trash{
-      z-index: 10;
-      font-size:0.75rem;
-      top:0;
-  }
-</style>
+  <style>
+      fx-control {
+          padding: 0.25rem 0;
+          width: 100%;
+          display: flex;
+          gap: 1rem;
+          border-bottom:thin  solid #ccc;
+      }
+
+      label {
+          width: 10rem;
+          text-align: right;
+      }
+
+      input {
+          width: 100%;
+          padding: 0.25rem;
+          border: none;
+      }
+      input[type=date] + .trash{
+          right:1.5rem;
+      }
+
+      fx-control-menu button {
+          background: lightgray;
+      }
+
+      fx-control-menu:hover {
+          background: lightgray;
+      }
+
+      fx-group,
+      [role="group"] {
+          padding: 0;
+          margin: 0;
+      }
+
+      fieldset {
+          padding: 1rem 0;
+      }
+
+      .trash {
+          z-index: 10;
+          font-size: 0.75rem;
+          right: 0.5rem;
+          top: 0.5rem;
+      }
+
+      .bubble {
+          border-radius: 50%;
+          background: lightskyblue;
+          width: 4rem;
+          height: 4rem;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 2rem;
+      }
+
+      #emails fx-repeatitem {
+          display: flex;
+          gap: 1rem;
+          justify-content: center;
+      }
+
+      #emails fx-repeatitem fx-control:nth-child(1) {
+          width: 10rem;
+          text-align: right;
+          display: inline-block;
+          justify-content: center;
+          align-items: center;
+      }
+      .top{
+          display: flex;
+          gap: 5rem;
+          margin-bottom: 2rem;
+      }
+      .top fx-control{
+          display: inline-block;
+          width: auto;
+      }
+      .top input{
+          width: fit-content;
+          font-size: 1.2rem;
+      }
+      [ref="title"] input{
+          width: 4rem;
+      }
+  </style>
 </head>
 <body>
 <div class="wrapper">
 
   <h1>Contact</code></h1>
 
-<!--  <demo-snippet>
-    <template>
- -->     <fx-fore id="example1">
-        <fx-model>
-          <fx-instance>
-            <data>
-              <contact>
-                <phone>
-                  <mobile></mobile>
-                  <home>030 1239089238</home>
-                </phone>
-                <email></email>
-                <workmail>another@me.com</workmail>
-                <middlename></middlename>
-                <name>John Doe</name>
-                <forename></forename>
-                <title></title>
-              </contact>
+  <fx-fore id="example1">
+    <fx-model>
+      <fx-instance>
+        <data>
+          <contact>
+            <title></title>
+            <forename>John</forename>
+            <middlename></middlename>
+            <name>Doe</name>
+            <company></company>
+            <emails>
+              <private>foo@bar.com</private>
+              <work></work>
+              <other></other>
+            </emails>
+            <phones>
+              <work>030 1239089238</work>
+              <private>030 987654321</private>
+              <other></other>
+            </phones>
+            <birthday></birthday>
+          </contact>
+        </data>
+      </fx-instance>
 
-            </data>
-          </fx-instance>
-        </fx-model>
+    </fx-model>
 
+    <fx-group id="outer" ref="contact" show-icon="true">
+      <fx-var name="finitial" value="substring(forename,1,1)"></fx-var>
+      <fx-var name="ninitial" value="substring(name,1,1)"></fx-var>
 
-        <fx-group id="outer" ref="contact" show-icon="true">
-          <fx-control ref="title" on-demand="true">
-            <label>Title</label>
-          </fx-control>
-          <fx-control ref="name">
-            <label>Name</label>
-          </fx-control>
-          <fx-control ref="forename" on-demand="true">
-            <label>Forename</label>
-          </fx-control>
-          <fx-control ref="middlename" on-demand="true">
-            <label>Middlename</label>
+      <div class="top">
+        <div class="bubble">{upper-case(if($finitial) then $finitial else $ninitial)}</div>
+        <div class="names">
+          <fx-control ref="title" aria-label="Title" on-demand="true"><input placeholder="Title"></fx-control>
+          <fx-control ref="forename" aria-label="Forename" on-demand="true"></fx-control>
+          <fx-control ref="middlename" aria-label="Middlename" on-demand="true">
+            <input placeholder="Middlename">
             <fx-message event="hide-control">discarded</fx-message>
           </fx-control>
-          <fx-control ref="email">
-            <label>Email</label>
-            <input type="email">
-          </fx-control>
-          <fx-control ref="workmail" on-demand="true">
-            <label>Work Email</label>
-            <input type="email">
-          </fx-control>
-          <fx-group ref="phone" on-demand="true" aria-label="Phones">
-            <fx-control ref="mobile">
-              <label>Mobile</label>
-              <input type="tel">
-            </fx-control>
-            <fx-control ref="home">
-              <label>home</label>
-              <input type="tel">
-            </fx-control>
-          </fx-group>
-          <fx-control-menu id="menu" select="#outer">
-            <button>+</button>
-          </fx-control-menu>
+          <fx-control aria-label="Name" ref="name" aria-label="Name"></fx-control>
+        </div>
+      </div>
+      <fx-control ref="birthday" on-demand="true">
+        <label>Birthday</label>
+        <input type="date">
+      </fx-control>
 
-        </fx-group>
+      <fieldset id="emails">
+        <legend>Emails</legend>
+        <fx-control ref="emails/private" aria-label="private email" on-demand="true">
+          <label>private</label>
+          <input type="email" placeholder="private email">
+        </fx-control>
+        <fx-control ref="emails/work" aria-label="work email" on-demand="true">
+          <label>work</label>
+          <input type="email" placeholder="work email">
+        </fx-control>
+        <fx-control ref="emails/other" aria-label="other email" on-demand="true">
+          <label>other</label>
+          <input type="email" placeholder="other email">
+        </fx-control>
+      </fieldset>
+      <fieldset id="phones">
+        <legend>Phones</legend>
+        <fx-control ref="phones/private" aria-label="private phone" on-demand="true">
+          <label>private</label>
+          <input type="tel" placeholder="private phone">
+        </fx-control>
+        <fx-control ref="phones/work" aria-label="work phone" on-demand="true">
+          <label>work</label>
+          <input type="tel" placeholder="work phone">
+        </fx-control>
+        <fx-control ref="phones/other" aria-label="other phone" on-demand="true">
+          <label>other</label>
+          <input type="tel" placeholder="other phone">
+        </fx-control>
+      </fieldset>
+
+      <fx-control-menu id="menu" select="#outer">
+        <button>+</button>
+      </fx-control-menu>
+
+    </fx-group>
 
 
-      </fx-fore>
-<!--
-    </template>
-  </demo-snippet>
--->
-
-
+  </fx-fore>
+  <!--
+      </template>
+    </demo-snippet>
+  -->
 
 
 </div>

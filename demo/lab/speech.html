@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>fx-speech Demo</title>
+  <script type="module" src="../../index.js"></script>
+  <style>
+      fx-control { display: block; margin-bottom: 1em; }
+      input, textarea { width: 100%; padding: 0.5em; }
+  </style>
+</head>
+<body>
+
+<fx-fore>
+  <fx-model>
+    <fx-instance>
+      <data>
+        <name></name>
+        <email></email>
+        <message></message>
+      </data>
+    </fx-instance>
+  </fx-model>
+
+  <fx-control ref="name">
+    <label>Name</label>
+    <input type="text" placeholder="Your name"/>
+  </fx-control>
+
+  <fx-control ref="email">
+    <label>Email</label>
+    <input type="email"/>
+  </fx-control>
+
+  <fx-control ref="message">
+    <label>Message</label>
+    <textarea class="widget"></textarea>
+  </fx-control>
+
+  <fx-speech mode="guided" voice="female"></fx-speech>
+</fx-fore>
+
+</body>
+</html>
