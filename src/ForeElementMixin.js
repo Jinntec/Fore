@@ -1,9 +1,9 @@
 import { XPathUtil } from './xpath-util.js';
 import { FxModel } from './fx-model.js';
 import {
-  evaluateXPath,
-  evaluateXPathToFirstNode,
-  evaluateXPathToString,
+    evaluateXPath,
+    evaluateXPathToFirstNode,
+    evaluateXPathToString,
 } from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
 import { Fore } from './fore.js';
@@ -14,291 +14,320 @@ import DependentXPathQueries from './DependentXPathQueries.js';
  * @extends {HTMLElement}
  */
 export default class ForeElementMixin extends HTMLElement {
-  static get properties() {
-    return {
-      /**
-       * context object for evaluation
-       */
-      context: {
-        type: Object,
-      },
-      /**
-       * the model of this element
-       */
-      model: {
-        type: Object,
-      },
-      /**
-       * The modelitem object associated to the bound node holding the evaluated state.
-       */
-      modelItem: {
-        type: Object,
-      },
-      /**
-       * the node(s) bound by this element
-       */
-      nodeset: {
-        type: Object,
-      },
-      /**
-       * XPath binding expression pointing to bound node
-       */
-      ref: {
-        type: String,
-      },
-      inScopeVariables: {
-        type: Map,
-      },
-    };
-  }
+    static get properties() {
+        return {
+            /**
+             * context object for evaluation
+             */
+            context: {
+                type: Object,
+            },
+            /**
+             * the model of this element
+             */
+            model: {
+                type: Object,
+            },
+            /**
+             * The modelitem object associated to the bound node holding the evaluated state.
+             */
+            modelItem: {
+                type: Object,
+            },
+            /**
+             * the node(s) bound by this element
+             */
+            nodeset: {
+                type: Object,
+            },
+            /**
+             * XPath binding expression pointing to bound node
+             */
+            ref: {
+                type: String,
+            },
+            inScopeVariables: {
+                type: Map,
+            },
+        };
+    }
 
-  constructor() {
-    super();
-    this.context = null;
-    this.model = null;
-    this.modelItem = null;
-    this.ref = this.hasAttribute('ref') ? this.getAttribute('ref') : '';
+    constructor() {
+        super();
+        this.context = null;
+        this.model = null;
+        this.modelItem = null;
+        this.ref = this.hasAttribute('ref') ? this.getAttribute('ref') : '';
+        /**
+         * @type {Map<string, import('./fx-var.js').FxVariable>}
+         */
+        this.inScopeVariables = new Map();
+
+        this.dependencies = new DependentXPathQueries();
+    }
+
+    connectedCallback() {
+        if (this.parentElement) {
+            this.dependencies.setParentDependencies(
+                this.parentElement?.closest('[ref]')?.dependencies,
+            );
+        }
+    }
+
     /**
-     * @type {Map<string, import('./fx-var.js').FxVariable>}
+     * @returns {import('./fx-model.js').FxModel}
      */
-    this.inScopeVariables = new Map();
-
-    this._dependencies = new DependentXPathQueries();
-    this._dependencies.setParentDependencies(this.parent?.closest('[ref]')?._dependencies);
-  }
-
-  /**
-   * @returns {import('./fx-model.js').FxModel}
-   */
-  getModel() {
-    // console.log('getModel this ', this);
-    if (this.model) {
-      return this.model;
+    getModel() {
+        // console.log('getModel this ', this);
+        if (this.model) {
+            return this.model;
+        }
+        // const ownerForm = this.closest('fx-fore');
+        // const ownerForm = this.getOwnerForm(this);
+        const ownerForm = this.getOwnerForm();
+        return ownerForm.querySelector('fx-model');
     }
-    // const ownerForm = this.closest('fx-fore');
-    // const ownerForm = this.getOwnerForm(this);
-    const ownerForm = this.getOwnerForm();
-    return ownerForm.querySelector('fx-model');
-  }
 
-  /**
-   *
-   * @returns {import('./fx-fore.js').FxFore} The fx-fore element associated with this form node
-   */
-  getOwnerForm() {
-    let currentElement = this;
-    while (currentElement && currentElement.parentNode) {
-      // console.log('current ', currentElement);
+    /**
+     *
+     * @returns {import('./fx-fore.js').FxFore} The fx-fore element associated with this form node
+     */
+    getOwnerForm() {
+        let currentElement = this;
+        while (currentElement && currentElement.parentNode) {
+            // console.log('current ', currentElement);
 
-      if (currentElement.nodeName.toUpperCase() === 'FX-FORE') {
+            if (currentElement.nodeName.toUpperCase() === 'FX-FORE') {
+                return currentElement;
+            }
+
+            if (currentElement.parentNode instanceof DocumentFragment) {
+                currentElement = currentElement.parentNode.host;
+            } else {
+                currentElement = currentElement.parentNode;
+            }
+        }
         return currentElement;
-      }
+    }
 
-      if (currentElement.parentNode instanceof DocumentFragment) {
-        currentElement = currentElement.parentNode.host;
-      } else {
-        currentElement = currentElement.parentNode;
-      }
-    }
-    return currentElement;
-  }
-
-  /**
-   * evaluation of fx-bind and UiElements differ in details so that each class needs it's own implementation.
-   */
-  evalInContext() {
-    this._dependencies.resetDependencies();
-    // const inscopeContext = this.getInScopeContext();
-    const model = this.getModel();
-    if (!model) {
-      return;
-    }
-    let inscopeContext;
-    if (this.hasAttribute('context')) {
-      inscopeContext = getInScopeContext(this.getAttributeNode('context') || this, this.context);
-    }
-    if (this.hasAttribute('ref')) {
-      inscopeContext = getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
-      this._dependencies.addXPath(this.ref);
-    }
-    if (!inscopeContext && this.getModel().instances.length !== 0) {
-      // ### always fall back to default context with there's neither a 'context' or 'ref' present
-      inscopeContext = this.getModel().getDefaultInstance().getDefaultContext();
-      // console.warn('no in scopeContext for ', this);
-      // console.warn('using default context ', this);
-      // return;
-    }
-    if (this.ref === '') {
-      this.nodeset = inscopeContext;
-    } else if (Array.isArray(inscopeContext)) {
-      /*
-			inscopeContext.forEach(n => {
-			  if (XPathUtil.isSelfReference(this.ref)) {
-				this.nodeset = inscopeContext;
-			  } else {
-				const localResult = evaluateXPathToFirstNode(this.ref, n, this);
-				// console.log('local result: ', localResult);
-				this.nodeset.push(localResult);
-			  }
-			});
-	*/
-      // this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext[0], this);
-      this.nodeset = evaluateXPath(this.ref, inscopeContext[0], this);
-    } else {
-      // this.nodeset = fx.evaluateXPathToFirstNode(this.ref, inscopeContext, null, {namespaceResolver: this.namespaceResolver});
-      if (!inscopeContext) return;
-      const { nodeType } = inscopeContext;
-      if (nodeType && !XPathUtil.isAbsolutePath(this.ref)) {
-        this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext, this);
-      } else {
-        [this.nodeset] = evaluateXPath(this.ref, inscopeContext, this);
-      }
-    }
-    // console.log('UiElement evaluated to nodeset: ', this.nodeset);
-  }
-
-  /**
-   * resolves template expressions for a single attribute
-   * @param {string} expr an attribute value containing curly brackets containing XPath expressions to evaluate
-   * @param {Node} node the attribute node used for scoped resolution
-   * @returns {string}
-   * @protected
-   */
-  evaluateAttributeTemplateExpression(expr, node) {
-    const matches = expr.match(/{[^}]*}/g);
-    if (matches) {
-      matches.forEach(match => {
-        // console.log('match ', match);
-        const naked = match.substring(1, match.length - 1);
-        const inscope = getInScopeContext(node, naked);
-        const result = evaluateXPathToString(naked, inscope, this);
-        const replaced = expr.replaceAll(match, result);
-        // console.log('replacing ', expr, ' with ', replaced);
-        expr = replaced;
+    /**
+     * evaluation of fx-bind and UiElements differ in details so that each class needs it's own implementation.
+     */
+    evalInContext() {
+        this.dependencies.resetDependencies();
+        // const inscopeContext = this.getInScopeContext();
+        const model = this.getModel();
+        if (!model) {
+            return;
+        }
+        let inscopeContext;
+        if (this.hasAttribute('context')) {
+            inscopeContext = getInScopeContext(
+                this.getAttributeNode('context') || this,
+                this.context,
+            );
+        }
+        if (this.hasAttribute('ref')) {
+            inscopeContext = getInScopeContext(
+                this.getAttributeNode('ref') || this,
+                this.ref,
+            );
+            this.dependencies.addXPath(this.ref);
+        }
+        if (!inscopeContext && this.getModel().instances.length !== 0) {
+            // ### always fall back to default context with there's neither a 'context' or 'ref' present
+            inscopeContext = this.getModel()
+                .getDefaultInstance()
+                .getDefaultContext();
+            // console.warn('no in scopeContext for ', this);
+            // console.warn('using default context ', this);
+            // return;
+        }
+        if (this.ref === '') {
+            this.nodeset = inscopeContext;
+        } else if (Array.isArray(inscopeContext)) {
+            /*
+      inscopeContext.forEach(n => {
+        if (XPathUtil.isSelfReference(this.ref)) {
+        this.nodeset = inscopeContext;
+        } else {
+        const localResult = evaluateXPathToFirstNode(this.ref, n, this);
+        // console.log('local result: ', localResult);
+        this.nodeset.push(localResult);
+        }
       });
-    }
-    return expr;
-  }
-
-  isNotBound() {
-    return !this.hasAttribute('ref');
-  }
-
-  isBound() {
-    return this.hasAttribute('ref');
-  }
-
-  getBindingExpr() {
-    if (this.hasAttribute('ref')) {
-      return this.getAttribute('ref');
-    }
-    // try to get closest parent bind
-    const parent = XPathUtil.getClosest('[ref]', this.parentNode);
-    if (!parent) {
-      return 'instance()'; // the default instance
-    }
-    return parent.getAttribute('ref');
-  }
-
-  /**
-   * @returns {import('./fx-instance.js').FxInstance}
-   */
-  getInstance() {
-    if (this.ref.startsWith('instance(')) {
-      const instId = XPathUtil.getInstanceId(this.ref);
-      return this.getModel().getInstance(instId);
-    }
-    return this.getModel().getInstance('default');
-  }
-
-  _getParentBindingElement(start) {
-    if (start.parentNode.host) {
-      const { host } = start.parentNode;
-      if (host.hasAttribute('ref')) {
-        return host;
-      }
-    } else if (start.parentNode) {
-      if (start.parentNode.hasAttribute('ref')) {
-        return this.parentNode;
-      }
-      this._getParentBindingElement(this.parentNode);
-    }
-    return null;
-  }
-
-  /**
-   * @returns {import('./modelitem.js').ModelItem}
-   */
-  getModelItem() {
-    const mi = this.getModel().getModelItem(this.nodeset);
-    if (mi) {
-      this.modelItem = mi;
+  */
+            // this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext[0], this);
+            this.nodeset = evaluateXPath(this.ref, inscopeContext[0], this);
+        } else {
+            // this.nodeset = fx.evaluateXPathToFirstNode(this.ref, inscopeContext, null, {namespaceResolver: this.namespaceResolver});
+            if (!inscopeContext) return;
+            const { nodeType } = inscopeContext;
+            if (nodeType && !XPathUtil.isAbsolutePath(this.ref)) {
+                this.nodeset = evaluateXPathToFirstNode(
+                    this.ref,
+                    inscopeContext,
+                    this,
+                );
+            } else {
+                [this.nodeset] = evaluateXPath(this.ref, inscopeContext, this);
+            }
+        }
+        // console.log('UiElement evaluated to nodeset: ', this.nodeset);
     }
 
-    const repeated = XPathUtil.getClosest('fx-repeatitem', this);
-    let existed;
-    if (repeated) {
-      const { index } = repeated;
-      if (Array.isArray(this.nodeset)) {
-        existed = this.getModel().getModelItem(this.nodeset[index - 1]);
-      } else {
-        existed = this.getModel().getModelItem(this.nodeset);
-      }
-    } else {
-      existed = this.nodeset ? this.getModel().getModelItem(this.nodeset) : null;
+    /**
+     * resolves template expressions for a single attribute
+     * @param {string} expr an attribute value containing curly brackets containing XPath expressions to evaluate
+     * @param {Node} node the attribute node used for scoped resolution
+     * @returns {string}
+     * @protected
+     */
+    evaluateAttributeTemplateExpression(expr, node) {
+        const matches = expr.match(/{[^}]*}/g);
+        if (matches) {
+            matches.forEach((match) => {
+                // console.log('match ', match);
+                const naked = match.substring(1, match.length - 1);
+                const inscope = getInScopeContext(node, naked);
+                const result = evaluateXPathToString(naked, inscope, this);
+                const replaced = expr.replaceAll(match, result);
+                // console.log('replacing ', expr, ' with ', replaced);
+                expr = replaced;
+            });
+        }
+        return expr;
     }
 
-    if (!existed) {
-      const lazyCreatedModelItem = FxModel.lazyCreateModelItem(
-        this.getModel(),
-        this.ref,
-        this.nodeset,
-        this,
-      );
-      this.modelItem = lazyCreatedModelItem;
-      return lazyCreatedModelItem;
+    isNotBound() {
+        return !this.hasAttribute('ref');
     }
-    this.modelItem = existed;
 
-    return existed;
-  }
-
-  /**
-   * Returns the effective value for the element.
-   * a: look for 'value' attribute and if present evaluate it and return the resulting value
-   * b: look for textContent and return the value if present
-   * c: return null
-   * @returns {string}
-   */
-  getValue() {
-    if (this.hasAttribute('value')) {
-      const valAttr = this.getAttribute('value');
-      try {
-        const inscopeContext = getInScopeContext(this, valAttr);
-        return evaluateXPathToString(valAttr, inscopeContext, this.getOwnerForm());
-      } catch (error) {
-        console.error(error);
-        Fore.dispatch(this, 'error', { message: error });
-      }
+    isBound() {
+        return this.hasAttribute('ref');
     }
-    if (this.textContent) {
-      return this.textContent;
+
+    getBindingExpr() {
+        if (this.hasAttribute('ref')) {
+            return this.getAttribute('ref');
+        }
+        // try to get closest parent bind
+        const parent = XPathUtil.getClosest('[ref]', this.parentNode);
+        if (!parent) {
+            return 'instance()'; // the default instance
+        }
+        return parent.getAttribute('ref');
     }
-    return null;
-  }
 
-  /**
-   * @returns {Node}
-   */
-  getInScopeContext() {
-    return getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
-  }
+    /**
+     * @returns {import('./fx-instance.js').FxInstance}
+     */
+    getInstance() {
+        if (this.ref.startsWith('instance(')) {
+            const instId = XPathUtil.getInstanceId(this.ref);
+            return this.getModel().getInstance(instId);
+        }
+        return this.getModel().getInstance('default');
+    }
 
-  /**
-   * Set variables in scope here
-   * @param {Map} inScopeVariables
-   */
-  setInScopeVariables(inScopeVariables) {
-    this.inScopeVariables = inScopeVariables;
-  }
+    _getParentBindingElement(start) {
+        if (start.parentNode.host) {
+            const { host } = start.parentNode;
+            if (host.hasAttribute('ref')) {
+                return host;
+            }
+        } else if (start.parentNode) {
+            if (start.parentNode.hasAttribute('ref')) {
+                return this.parentNode;
+            }
+            this._getParentBindingElement(this.parentNode);
+        }
+        return null;
+    }
+
+    /**
+     * @returns {import('./modelitem.js').ModelItem}
+     */
+    getModelItem() {
+        if (!this.getModel()) return;
+        const mi = this.getModel().getModelItem(this.nodeset);
+        if (mi) {
+            this.modelItem = mi;
+        }
+
+        const repeated = XPathUtil.getClosest('fx-repeatitem', this);
+        let existed;
+        if (repeated) {
+            const { index } = repeated;
+            if (Array.isArray(this.nodeset)) {
+                existed = this.getModel().getModelItem(this.nodeset[index - 1]);
+            } else {
+                existed = this.getModel().getModelItem(this.nodeset);
+            }
+        } else {
+            existed = this.nodeset
+                ? this.getModel().getModelItem(this.nodeset)
+                : null;
+        }
+
+        if (!existed) {
+            const lazyCreatedModelItem = FxModel.lazyCreateModelItem(
+                this.getModel(),
+                this.ref,
+                this.nodeset,
+                this,
+            );
+            this.modelItem = lazyCreatedModelItem;
+            return lazyCreatedModelItem;
+        }
+        this.modelItem = existed;
+
+        return existed;
+    }
+
+    /**
+     * Returns the effective value for the element.
+     * a: look for 'value' attribute and if present evaluate it and return the resulting value
+     * b: look for textContent and return the value if present
+     * c: return null
+     * @returns {string}
+     */
+    getValue() {
+        if (this.hasAttribute('value')) {
+            const valAttr = this.getAttribute('value');
+            try {
+                const inscopeContext = getInScopeContext(this, valAttr);
+                return evaluateXPathToString(
+                    valAttr,
+                    inscopeContext,
+                    this.getOwnerForm(),
+                );
+            } catch (error) {
+                console.error(error);
+                Fore.dispatch(this, 'error', { message: error });
+            }
+        }
+        if (this.textContent) {
+            return this.textContent;
+        }
+        return null;
+    }
+
+    /**
+     * @returns {Node}
+     */
+    getInScopeContext() {
+        return getInScopeContext(
+            this.getAttributeNode('ref') || this,
+            this.ref,
+        );
+    }
+
+    /**
+     * Set variables in scope here
+     * @param {Map} inScopeVariables
+     */
+    setInScopeVariables(inScopeVariables) {
+        this.inScopeVariables = inScopeVariables;
+    }
 }

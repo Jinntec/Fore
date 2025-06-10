@@ -52,19 +52,31 @@ class FxDelete extends AbstractAction {
       }),
     );
 
+    const fore = this.getOwnerForm();
+
     let parent;
     if (Array.isArray(nodesToDelete)) {
       if (nodesToDelete.length === 0) return;
       parent = nodesToDelete[0].parentNode;
+      fore.signalChangeToElement(parent.localName);
       nodesToDelete.forEach(item => {
         this._deleteNode(parent, item);
+        fore.signalChangeToElement(item.localName);
       });
     } else {
       parent = nodesToDelete.parentNode;
+      fore.signalChangeToElement(parent.localName);
+
       this._deleteNode(parent, nodesToDelete);
+      fore.signalChangeToElement(nodesToDelete.localName);
     }
-    const foreId = this.getOwnerForm().id;
-    await Fore.dispatch(instance, 'deleted', { ref: path, deletedNodes: nodesToDelete , instanceId:instanceId, foreId:foreId});
+
+    await Fore.dispatch(instance, 'deleted', {
+      ref: path,
+      deletedNodes: nodesToDelete,
+      instanceId,
+      foreId: fore.id,
+    });
     this.needsUpdate = true;
   }
 

@@ -4,7 +4,9 @@ import { resolveId } from '../xpath-evaluation.js';
 
 /**
  * `fx-show`
- * Displays a simple confirmation before actually executing the nested actions.
+ * to show a `<dialog>` with given id.
+ *
+ *
  *
  * @customElement
  * @event fx-show dispatched when dialog is shown
@@ -34,7 +36,7 @@ export class FxShow extends FxAction {
     if (!targetDlg) {
       console.error('target dialog with given id does not exist', this.dialog);
     }
-    targetDlg.open();
+    targetDlg.showModal();
     Fore.dispatch(targetDlg, 'dialog-shown', {});
   }
 }

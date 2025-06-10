@@ -1,0 +1,320 @@
+{
+  "language": "Language",
+  "menu": {
+    "documentation": "Documentation",
+    "admin": {
+      "title": "Admin",
+      "recompile": "Recompile ODD",
+      "appGenerator": "App Generator",
+      "edit-odd": "Edit ODD"
+    },
+    "news": "News",
+    "download": {
+      "title": "Download",
+      "pdf-latex": "PDF (LaTeX Version)",
+      "pdf-fo": "PDF (FO Version)",
+      "pdf-title": "Download as PDF",
+      "fo-source": "FO Source",
+      "latex-source": "TeX Source",
+      "single-page": "Single Page",
+      "epub-download": "Download as epub ebook",
+      "view-tei": "View TEI XML"
+    }
+  },
+  "dialogs": {
+    "error": "Ooops",
+    "close": "Close",
+    "yes": "Yes",
+    "no": "no",
+    "serverError": "The request to the server failed.",
+    "generatingFile": "Generating File...",
+    "downloadMessage": "Generating a file for download may take up to a few minutes. Please wait. This dialog should close automatically when the download has completed.",
+    "loading": "Loading ..."
+  },
+  "document": {
+    "contents": "Contents",
+    "selectODD": "Select ODD",
+    "selectTemplate": "Select Template",
+    "selectFeature": "Select Feature",
+    "normalized": "Normalized View",
+    "plain": "Plain Reading View",
+    "view-type": "Page View",
+    "add-panel": "Add View",
+    "caveat-heading": "Caveat",
+    "settings": "Settings",
+    "caveat": "Experiment with different page templates and ODDs just changing these options here. Please note that not every combination of settings makes sense for every document. For example, a map cannot be produced without coordinates explicitly encoded and processed, and page view assumes page breaks have been marked up. If you see 'the server did not return any content' message, it is usually a sign of such misalignment between encoded data, ODD and page template."
+  },
+  "browse": {
+    "description": "Use this app to experiment and try out various ODDs containing processing model instructions. Upload your own files and create a custom ODD.",
+    "login": "to upload files or see administrative functions (default user: 'tei-demo', password: 'demo').",
+    "login-1": "Log in as ",
+    "login-2": "with password",
+    "login-3": "to experiment with your own files and ODDs",
+    "sort": "Sort by",
+    "filter": "Filter by",
+    "filterPlaceholder": "Filter",
+    "items": "Found {{count}} item",
+    "items_plural": "Found {{count}} items",
+    "title": "Title",
+    "author": "Author",
+    "modificationDate": "Modification Date",
+    "file": "Filename",
+    "delete": "Delete",
+    "confirmDeletion": "Are you sure you want to delete the file?",
+    "confirmDeletion_plural": "Are you sure you want to delete {{count}} files?",
+    "documents": "Documents",
+    "documents-removed":"Removed documents",
+    "document-not-found":"Document not found",
+    "document-remove-failed":"Failed to remove document",
+    "collections": "Local Collection",
+    "dts": "Distributed Text Services (Experimental)",
+    "test": {
+      "title": "TEI Publisher Demo Collection",
+      "description": "Documents demonstrating various features. The selection is in no way comprehensive but represents a subset of what is possible. Please contribute your own use cases to complement this."
+    },
+    "playground": {
+      "title": "Playground",
+      "description": "A writable collection into which you can upload your own documents for testing."
+    },
+    "doc": {
+      "title": "Documentation",
+      "description": "Documentation (using Docbook XML)."
+    },
+    "markdown": {
+      "title": "Markdown Sample",
+      "description": "An example of using markdown for static content."
+    },
+    "annotate": {
+      "title": "Annotation Samples",
+      "description": "Another playground for annotating documents."
+    },
+    "up": "Go to parent"
+  },
+  "upload": {
+    "upload": "Upload",
+    "drop": "Drop {{accept}} files here to upload."
+  },
+  "demo": {
+    "showCode": {
+      "show": "Show Code",
+      "hide": "Hide Code"
+    },
+    "editCode": {
+      "show": "Edit Code",
+      "hide": "Close Editor"
+    }
+  },
+  "clipboard": {
+    "copy": "Click the icon to copy to clipboard",
+    "paste": "Paste in the input field to test"
+  },
+  "login": {
+    "login": "Login",
+    "as": "Logged in as {{user}}",
+    "user": "User",
+    "password": "Password",
+    "invalid": "Wrong password or invalid user",
+    "requiredGroup": "must be member of group {{group}}"
+  },
+  "search": {
+    "search": "Search",
+    "reset": "Reset",
+    "placeholder": "Enter Query",
+    "sections": "Search sections",
+    "headings": "Search headings",
+    "title": "Search titles",
+    "content": "Search content",
+    "scope": "Query scope"
+  },
+  "dts": {
+    "endpoint": "Select Endpoint",
+    "note": "Experimental: access other editions which expose the DTS API",
+    "requires-login":"Requires login"
+  },
+  "odd": {
+    "files": "ODD Files",
+    "manage": {
+      "filename": "File name of the ODD (without suffix)",
+      "title": "Title for display",
+      "create": "Create",
+      "create-from-example": "Create from examples",
+      "delete": "Are you sure you want to delete the ODD file {{file}}?",
+      "regenerate-all": "Regenerate All ODDs (Slow)",
+      "filename-error": "Required. Use letters, numbers, - and _",
+      "title-error": "A title is required"
+    },
+    "editor": {
+      "delete-spec": "Really delete the element spec for '{{ident}}'?",
+      "save": "Save",
+      "saving": "Saving ...",
+      "saved": "Saved",
+      "unsaved": "There are unsaved changes, which will be included in the export! Continue anyway?",
+      "download": "Download ODD",
+      "save-as": "Save ODD to directory",
+      "denied": "Permission Denied",
+      "denied-message": "You do not have permission to save {{odd}}",
+      "reload": "Reload",
+      "reload-confirm": "Any unsaved changes will be lost. Continue?",
+      "add-element": "Add Element",
+      "odd-source": "ODD Source",
+      "specs": "Element Specs",
+      "jump-to": "Jump to element ...",
+      "title-short": "Short title",
+      "title-short-placeholder": "Short title for display",
+      "description-label": "Description",
+      "description-placeholder": "Description of the ODD",
+      "source-label": "Base ODD",
+      "source-placeholder": "ODD to inherit from",
+      "use-namespace": "Check for using a different namespace than TEI",
+      "namespace-placeholder": "Default namespace URI (if not TEI)",
+      "title": "Title",
+      "title-placeholder": "Title of the ODD",
+      "model": {
+        "delete-model-label": "Delete Model?",
+        "delete-model-message": "Do you really want to delete the selected model?",
+        "description-placeholder": "[Document the model]",
+        "predicate-placeholder": "[Define further conditions that have to be met (in xquery)]",
+        "link-with-or": "or",
+        "css-class-placeholder": "[Define CSS class name (for external CSS)]",
+        "custom-behaviour-placeholder": "[Custom Behaviour]",
+        "template-placeholder": "[Define code template to apply to content]",
+        "param-name-placeholder": "[Param name]",
+        "empty": "[Empty]",
+        "mode-placeholder": "[Processing mode - passed to subsequent models]",
+        "set-param": "set"
+      },
+      "css-source": "Open CSS file"
+    }
+  },
+  "facets": {
+    "show": "Show top 50",
+    "genre": "Genre",
+    "language": "Language",
+    "feature": "Feature",
+    "form": "Form",
+    "period": "Period"
+  },
+  "appgen": {
+    "account": {
+      "user": "User account for administrative tasks. The user will be created if it does not yet exist.",
+      "owner": "The user account who will own the app.",
+      "password": "Password for the user owning this app."
+    },
+    "submit": "Save/Generate",
+    "index": {
+      "help": "Define the smallest block on which a full text index is created. For documents                         organized into divisions, choosing 'Create on division' is usually best. If there are no divisions, choose 'Create on text'.",
+      "label": "Default Full Text Index",
+      "index-div": "Create on division",
+      "index-text": "Create on text"
+    },
+    "view": {
+      "help": "Choose what is shown by default when browsing text: a single page                         or an entire division. Display by page requires that the TEI is properly marked up                         with &lt;tei:pb&gt; tags.",
+      "div": "By division (chapter/section...)",
+      "page": "By page"
+    },
+    "label": "Default View",
+    "template": {
+      "help": "Choose the HTML template to be used as default",
+      "label": "HTML Template"
+    },
+    "title": {
+      "help": "Title of the app which will be shown e.g. in the dashboard",
+      "label": "Title of the app"
+    },
+    "collection": "Name of subcollection to hold TEI documents",
+    "abbrev": {
+      "label": "Short name to be used in URLs and file names",
+      "placeholder": "Short name"
+    },
+    "uri": "URL to uniquely identify the app",
+    "dialog": {
+      "title": "App generated"
+    },
+    "open": "Open",
+    "success": "Your app has been successfully generated!"
+  },
+  "annotations": {
+    "edit": "Edit annotation",
+    "delete": "Delete annotation",
+    "save": "Merge and save annotations to TEI",
+    "no-properties": "No properties defined.",
+    "person": "Person",
+    "organisation": "Organisation",
+    "place": "Place",
+    "term": "Term",
+    "date": "Date",
+    "reg": "Regularization",
+    "app": "Apparatus Entry",
+    "hi": "Highlight",
+    "ref": "Link (ref)",
+    "pb": "Page break (pb)",
+    "pagenum": "Page number (@n)",
+    "facs": "Image URL (@facs)",
+    "abbreviation": "Abbreviation",
+    "occurrences": "Occurrences in text",
+    "correction": "Correction",
+    "expansion": "Expansion",
+    "reference": "Reference",
+    "lookup": "Search entity",
+    "apply": "Apply annotation",
+    "apply-all": "Select and apply all",
+    "search-other": "Search for occurrences in other documents",
+    "save-other": "Search for occurrences in other documents and apply annotations immediately",
+    "changes": "Changes",
+    "undo": "Undo last change",
+    "download": "Save merged TEI to local file",
+    "reload": "Reload source TEI",
+    "preview": "Refresh preview",
+    "confirm-restore-title": "Confirm Restore",
+    "restore": "Annotations made for this document in a previous session have been found. Would you like to reload them?",
+    "confirm-reload-title": "Confirm Reload",
+    "confirm-reload": "Discard current annotations and reload the source?",
+    "modify": "Apply an edit to the base text",
+    "modify-info": "Note: this is not an annotation, but will modify the base text when merged.",
+    "permission": "Permission denied: you are not allowed to save annotations.",
+    "ner": {
+      "title": "Named Entity Extraction",
+      "description": "Try to automatically find named entities in the text and mark them as annotations.",
+      "run": "Run",
+      "model": "Select a model",
+      "denied": "Unsaved changes found: please store or discard them first."
+    },
+    "confirm-discard-title": "Discard",
+    "confirm-discard": "Discard the list of occurrences?",
+    "doc-count": "{{count}} of {{total}}",
+    "toggle": "Show/hide preview/control panel",
+    "add-entity": "Create entity",
+    "edit-entity": "Edit entity",
+    "edit-reference": "Search/edit reference",
+    "hints": {
+      "modify": "marked entity of same type but different key",
+      "incomplete": "marked same type but without key",
+      "unmarked": "unmarked occurrence in text",
+      "open-in-tab": "Open document in new tab to review"
+    }
+  },
+  "ner": {
+    "title": "Train a Named Entity Recognition Model",
+    "not-found": "This feature requires the TEI Publisher NER service to be running! Failed to contact the service.",
+    "found": "Found TEI Publisher NER with spaCy version",
+    "name-placeholder": "Name of the model to create",
+    "name": "Name",
+    "path": "Path",
+    "path-placeholder": "Relative path to document or collection",
+    "path-info": "Enter path to a document or collection to use as training input. Should be relative to TEI Publisher's data root.",
+    "lang-info": "You may either train a new model for a language or select an existing model to extend below. If not extending an existing model, you must specify a language. Otherwise leave it empty.",
+    "language-placeholder": "Language to create the model for",
+    "language": "Language",
+    "language-error": "Either a language or a base model are required",
+    "model": "Base Model",
+    "model-placeholder": "Base model to extend or copy from",
+    "vectors": "Only copy vectors from base model",
+    "output": "Training Output",
+    "prepare": "Preparing training data",
+    "start": "Run"
+  },
+  "timeline": {
+    "unknown": "undated",
+    "clear": "Clear date selection"
+  }
+}

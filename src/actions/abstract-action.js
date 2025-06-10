@@ -122,6 +122,7 @@ export class AbstractAction extends ForeElementMixin {
   disconnectedCallback() {}
 
   connectedCallback() {
+    super.connectedCallback();
     this.setAttribute('inert', 'true');
     this.style.display = 'none';
     this.propagate = this.hasAttribute('propagate') ? this.getAttribute('propagate') : 'continue';
@@ -176,6 +177,7 @@ export class AbstractAction extends ForeElementMixin {
       }
     } else {
       this.targetElement = this.parentNode;
+      if(!this.targetElement || this.targetElement.nodeType !== Node.ELEMENT_NODE) return;
       this.targetElement.addEventListener(this.event, e => this.execute(e), {
         capture: this.phase === 'capture',
       });
@@ -212,29 +214,27 @@ export class AbstractAction extends ForeElementMixin {
    * @param e
    */
   async execute(e) {
-    if(!this.getModel().modelConstructed) return;
+    if (!this.getModel().modelConstructed) return;
     // console.log(this, this.event);
-    if(this.event){
-      if(this.event === 'submit-done'){
+    if (this.event) {
+      if (this.event === 'submit-done') {
         console.info(
-            `%csubmit-done ${this.event} #${this?.parentNode?.id}`,
-            'background:lime; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+          `%csubmit-done ${this.event} #${this?.parentNode?.id}`,
+          'background:lime; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
         );
-      }else{
+      } else {
         console.info(
-            `%cexecuting ${this.constructor.name} ${this.event}`,
-            'background:lime; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+          `%cexecuting ${this.constructor.name} ${this.event}`,
+          'background:lime; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
         );
       }
-
-    }else{
+    } else {
       console.info(
-          `%cexecuting ${this.constructor.name}`,
-          'background:limegreen; color:black; margin-left:1rem; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
-          this
+        `%cexecuting ${this.constructor.name}`,
+        'background:limegreen; color:black; margin-left:1rem; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+        this,
       );
     }
-
 
     if (e && e.target.nodeType !== Node.DOCUMENT_NODE && e.target !== window) {
       /*
@@ -260,7 +260,7 @@ export class AbstractAction extends ForeElementMixin {
     let resolveThisEvent = () => {};
     if (e && e.listenerPromises) {
       e.listenerPromises.push(
-        new Promise((resolve) => {
+        new Promise(resolve => {
           resolveThisEvent = resolve;
         }),
       );
@@ -269,9 +269,9 @@ export class AbstractAction extends ForeElementMixin {
     // Outermost handling
     if (FxFore.outermostHandler === null) {
       console.log(
-          `%coutermost Action on ${this.getOwnerForm().id}`,
-          'background:darkblue; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
-          this,
+        `%coutermost Action on ${this.getOwnerForm().id}`,
+        'background:darkblue; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
+        this,
       );
 
       FxFore.outermostHandler = this;
@@ -406,9 +406,9 @@ export class AbstractAction extends ForeElementMixin {
     this.actionPerformed();
     if (FxFore.outermostHandler === this) {
       console.log(
-          `%cfinalizing outermost Action on ${this.getOwnerForm().id}`,
-          'background:darkblue; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
-          this,
+        `%cfinalizing outermost Action on ${this.getOwnerForm().id}`,
+        'background:darkblue; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
+        this,
       );
 
       FxFore.outermostHandler = null;
@@ -467,8 +467,8 @@ export class AbstractAction extends ForeElementMixin {
       return;
     }
     if (
-      FxFore.outermostHandler
-      && !XPathUtil.contains(FxFore.outermostHandler.ownerDocument, FxFore.outermostHandler)
+      FxFore.outermostHandler &&
+      !XPathUtil.contains(FxFore.outermostHandler.ownerDocument, FxFore.outermostHandler)
     ) {
       // The old outermostHandler fell out of the document. An error has happened.
       // Just remove the old one and act like we are starting anew.
@@ -480,7 +480,7 @@ export class AbstractAction extends ForeElementMixin {
       // console.log('running update cycle for outermostHandler', this);
       model.recalculate();
       model.revalidate();
-      model.parentNode.refresh(true);
+      this.getOwnerForm().refresh(true);
       this.dispatchActionPerformed();
     } else if (this.needsUpdate) {
       // console.log('Update delayed!');

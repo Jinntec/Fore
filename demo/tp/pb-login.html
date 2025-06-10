@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>template</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+    <style>
+        dialog{
+            background:lightblue;
+        }
+        header{
+            font-size:2rem;
+        }
+        .dialog-content{
+            background:pink;
+        }
+    </style>
+</head>
+<body>
+
+<h1>pb-login</h1>
+
+<h2>pb-login replacing the dialog with custom one</h2>
+<pb-login replace="#login-dlg">
+    <dialog id="login-dlg">
+        <div class="dialog-content">
+            <header>I have more to say</header>
+            <fx-control ref="user">
+                <label>{instance('lang')?login?user}</label>
+                <input type="text" auto-complete="username">
+            </fx-control>
+            <fx-control ref="pass">
+                <label>{instance('lang')?login?password}</label>
+                <input type="password">
+            </fx-control>
+            <fx-trigger>
+                <button>Login</button>
+                <fx-send submission="s-login"></fx-send>
+            </fx-trigger>
+        </div>
+    </dialog>
+</pb-login>
+
+<pb-login replace="[ref=user]">
+        <fx-control ref="user">
+            <label>HEY - patched it</label>
+        </fx-control>
+</pb-login>
+
+<script type="module" src="../demo.js"></script>
+<script type="module" src="./pb-login.js"></script>
+</body>
+</html>

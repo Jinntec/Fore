@@ -6,6 +6,7 @@ import { evaluateXPath } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 import { XPathUtil } from '../xpath-util.js';
 import { withDraggability } from '../withDraggability.js';
+import { UIElement } from './UIElement.js';
 
 // import {DependencyNotifyingDomFacade} from '../DependencyNotifyingDomFacade';
 
@@ -25,7 +26,7 @@ import { withDraggability } from '../withDraggability.js';
  * todo: it should be seriously be considered to extend FxContainer instead but needs refactoring first.
  * @extends {ForeElementMixin}
  */
-export class FxRepeat extends withDraggability(ForeElementMixin, false) {
+export class FxRepeat extends withDraggability(UIElement, false) {
   static get properties() {
     return {
       ...super.properties,
@@ -80,7 +81,7 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
     const rItems = this.querySelectorAll(':scope > fx-repeatitem');
     this.applyIndex(rItems[this.index - 1]);
 
-    this.getOwnerForm().refresh({ reason: 'index-function' });
+    this.getOwnerForm().refresh({ reason: 'index-function', elementLocalnamesWithChanges: [] });
   }
 
   applyIndex(repeatItem) {
@@ -107,6 +108,7 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
     // console.log('connectedCallback',this);
     // this.display = window.getComputedStyle(this, null).getPropertyValue("display");
     this.ref = this.getAttribute('ref');
+    this.dependencies.addXPath(this.ref);
     // this.ref = this._getRef();
     // console.log('### fx-repeat connected ', this.id);
     this.addEventListener('item-changed', e => {
@@ -171,6 +173,7 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
     const html = `
           <slot name="header"></slot>
           <slot></slot>
+          <slot name="footer"></slot>
         `;
     this.shadowRoot.innerHTML = `
             <style>
@@ -197,7 +200,7 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
 
   init() {
     // ### there must be a single 'template' child
-    console.log('##### repeat init ', this.id);
+    // console.log('##### repeat init ', this.id);
     // if(!this.inited) this.init();
     // does not use this.evalInContext as it is expecting a nodeset instead of single node
     this._evalNodeset();
@@ -321,6 +324,7 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
     // Fore.refreshChildren(clone,true);
     const fore = this.getOwnerForm();
     if (!fore.lazyRefresh || force) {
+      // Turn the possibly conditional force refresh into a forced one: we changed our children
       Fore.refreshChildren(this, force);
     }
     // this.style.display = 'block';
@@ -400,6 +404,12 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
 
       if (this.getOwnerForm().createNodes) {
         this.getOwnerForm().initData(repeatItem);
+        const repeatItemClone = repeatItem.nodeset.cloneNode(true);
+        this.clearTextValues(repeatItemClone);
+
+        // this.createdNodeset = repeatItem.nodeset.cloneNode(true);
+        this.createdNodeset = repeatItemClone;
+        // console.log('createdNodeset', this.createdNodeset)
       }
 
       if (repeatItem.index === 1) {
@@ -409,6 +419,26 @@ export class FxRepeat extends withDraggability(ForeElementMixin, false) {
       Fore.dispatch(this, 'item-created', { nodeset: repeatItem.nodeset, pos: index + 1 });
       this._initVariables(repeatItem);
     });
+  }
+  clearTextValues(node) {
+    if (!node) return;
+
+    // Clear text node content
+    if (node.nodeType === Node.TEXT_NODE) {
+      node.nodeValue = '';
+    }
+
+    // Clear all attribute values
+    if (node.nodeType === Node.ELEMENT_NODE) {
+      for (const attr of Array.from(node.attributes)) {
+        attr.value = ''; // Clear attribute value
+      }
+    }
+
+    // Recursively clear child nodes
+    for (const child of node.childNodes) {
+      this.clearTextValues(child);
+    }
   }
 
   _initVariables(newRepeatItem) {

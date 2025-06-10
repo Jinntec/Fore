@@ -1,0 +1,119 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>Fore UI Profile Editor</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+
+    <style>
+        [repeat-index] {
+            background: var(--paper-blue-500);
+        }
+        input{
+            border:none;
+        }
+        .level-1{
+            padding-left: 1rem;
+        }
+        .level-2{
+            padding-left: 2rem;
+        }
+        .level-3{
+            padding-left: 3rem;
+        }
+        .level-4{
+            padding-left: 4rem;
+        }
+        .level-5{
+            padding-left: 5rem;
+        }
+        .level-6{
+            padding-left: 6rem;
+        }
+        .level-7{
+            padding-left: 7rem;
+        }
+        .level-8{
+            padding-left: 8rem;
+        }
+        .level-9{
+            padding-left: 9rem;
+        }
+        .level-10{
+            padding-left: 10rem;
+        }
+        fx-control{
+            display:inline-block;
+            width:14rem;
+            padding:0.5rem 1rem;
+        }
+        fx-control input{
+            width:100%;
+        }
+        fx-repeatitem{
+            display:flex;
+        }
+        [nonrelevant]{
+            visibility:hidden;
+            display:inline-block;
+        }
+
+        fx-repeatitem.drag-over{
+            outline: 0.25rem solid orange;
+        }
+
+    </style>
+</head>
+<body>
+
+<fx-fore>
+   <fx-model>
+       <fx-instance id="default" src="UIDefinition.xml"></fx-instance>
+<!--
+       <fx-instance id="generated">
+           <fx-fore>
+               <fx-model>
+                   <fx-instance src="baseprofile.xml"></fx-instance>
+               </fx-model>
+               <fx-group id="editor"></fx-group>
+           </fx-fore>
+       </fx-instance>
+-->
+       <fx-instance id="vars">
+           <data>
+               <selected></selected>
+           </data>
+       </fx-instance>
+<!--
+       <fx-function signature="generate()" type="text/javascript">
+           console.log('node',$node);
+           const data = document.querySelector('#default').instanceData;
+           console.log('node',$node);
+
+           return true;
+       </fx-function>
+-->
+   </fx-model>
+    <header>
+        <h1>UI Definition</h1>
+    </header>
+   <main>
+       <fx-repeat id="r-components" ref="//group | //repeat | //control">
+           <template draggable="true" drop-target="r-components">
+               <div class="level-{count(ancestor::group | ancestor::repeat)}">
+                   {name(.)}
+                   <fx-control ref="@id"></fx-control>
+                   <fx-control ref="@ref"></fx-control>
+                   <fx-control ref="@type"></fx-control>
+                   <fx-control ref="@label"></fx-control>
+               </div>
+           </template>
+       </fx-repeat>
+   </main>
+</fx-fore>
+<script type="module" src="../../index.js"></script>
+
+</body>
+</html>

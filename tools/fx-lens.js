@@ -34,11 +34,13 @@ export class FxLens extends HTMLElement {
                 });
 
                 fore.addEventListener('value-changed',(ev)=>{
+                    // console.log('+++++++++++++++++++++++++++++++value-changed')
                     this.update();
                     const targetId = `${ev.detail.foreId}#${ev.detail.instanceId}`;
                     const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
                     // console.log('value-changed on ',`${ev.detail.foreId}#${ev.detail.instanceId}`);
-                    this.flashEffect(targetSummary);
+                    // this.flashEffect(targetSummary);
+                    ev.preventDefault();
                 });
                 fore.addEventListener('deleted',(ev)=>{
                     this.update();
@@ -53,6 +55,34 @@ export class FxLens extends HTMLElement {
                     const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
                     this.flashEffect(targetSummary);
                 });
+                fore.addEventListener('index-changed',(ev)=>{
+                    console.log('+++++++++++++++++++++++++++++++index-changed')
+                    this.update();
+                    const targetId = `${ev.detail.foreId}#${ev.detail.instanceId}`;
+                    const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
+                    this.flashEffect(targetSummary);
+                });
+                fore.addEventListener('submit',(ev)=>{
+                    console.log('+++++++++++++++++++++++++++++++submit')
+                    this.update();
+                    const targetId = `${ev.detail.foreId}#${ev.detail.instanceId}`;
+                    const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
+                    this.flashEffect(targetSummary);
+                });
+                fore.addEventListener('submit-done',(ev)=>{
+                    console.log('+++++++++++++++++++++++++++++++submit-done')
+                    this.update();
+                    const targetId = `${ev.detail.foreId}#${ev.detail.instanceId}`;
+                    const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
+                    this.flashEffect(targetSummary);
+                });
+                fore.addEventListener('submit-error',(ev)=>{
+                    console.log('+++++++++++++++++++++++++++++++submit-error')
+                    this.update();
+                    const targetId = `${ev.detail.foreId}#${ev.detail.instanceId}`;
+                    const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
+                    this.flashEffect(targetSummary);
+                });
             });
             this.lastWidth = this.offsetWidth;
         });
@@ -60,6 +90,7 @@ export class FxLens extends HTMLElement {
     }
     flashEffect(element) {
         // Add a glow effect
+        if(!element) return;
         element.style.background = 'rgba(55,55,255,0.1)';
 
         // Remove the effect after 1 second

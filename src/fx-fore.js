@@ -247,6 +247,8 @@ export class FxFore extends HTMLElement {
     // this.mergePartial = this.hasAttribute('merge-partial')? true:false;
     this.mergePartial = false;
     this.createNodes = this.hasAttribute('create-nodes') ? true : false;
+    this._localNamesWithChanges = new Set();
+    this.setAttribute('role', 'form'); // set aria role
   }
 
   connectedCallback() {
@@ -389,6 +391,16 @@ export class FxFore extends HTMLElement {
   }
 
   /**
+   * Signal something happened with an element with the given local name. This will be used in the
+   * next (non-forceful) refresh to detect whether a component (usually a repeat) should update
+   *
+   * @param {string} localNameOfElement
+   */
+  signalChangeToElement(localNameOfElement) {
+    this._localNamesWithChanges.add(localNameOfElement);
+  }
+
+  /**
    * Raise a flag that there might be new template expressions under some node. This happens with
    * repeats updating (new repeat items can have new template expressions) or switches changing their case (new case = new raw HTML)
    */
@@ -502,89 +514,26 @@ export class FxFore extends HTMLElement {
    * @param {(boolean|{reason:'index-function'})} [force]fx-fore
    */
   async refresh(force) {
-    /*
-
-                    if (!changedPaths) {
-                        changedPaths = this.toRefresh.map(item => item.path);
-                    } else {
-                        this.toRefresh.push(
-                            ...changedPaths
-                                .map(
-                                    path =>
-                                    this.getModel()
-                                        .modelItems
-                                        .find(item => item.path === path)
-                                )
-                                .filter(Boolean)
-                        );
-
-                        for(const changedPath of changedPaths) {
-                            for (const repeat of this.querySelectorAll('fx-repeat')) {
-                                if (repeat.closest('fx-fore') !== this) {
-                                    continue;
-                                }
-
-                                if (repeat.touchedPaths && repeat.touchedPaths.has(changedPath)) {
-                                    // Make a temporary model-item-like structure for this
-                                    this.toRefresh.push({
-                                        path: changedPath,
-                                        boundControls: [repeat]
-                                    });
-
-                                    console.log('Found a repeat to update!!!', repeat)
-                                }
-                            }
-                        }
-            }
-            */
     if (this.isRefreshing) {
       return;
     }
+
+    if (force !== true && this._localNamesWithChanges.size > 0) {
+      force = {
+        ...(force || { reason: undefined }),
+        elementLocalnamesWithChanges: Array.from(this._localNamesWithChanges),
+      };
+      this._localNamesWithChanges.clear();
+    }
+
     this.isRefreshing = true;
-    // console.log(`### <<<<< refresh() on '${this.id}' >>>>>`);
 
     // refresh () {
     // ### refresh Fore UI elements
     // if (!this.initialRun && this.toRefresh.length !== 0) {
+    // if (!this.initialRun && this.toRefresh.length !== 0) {
     if (!force && !this.initialRun && this.toRefresh.length !== 0) {
-      // console.log('toRefresh', this.toRefresh);
-      let needsRefresh = false;
-
-      // ### after recalculation the changed modelItems are copied to 'toRefresh' array for processing
-      this.toRefresh.forEach(modelItem => {
-        // check if modelItem has boundControls - if so, call refresh() for each of them
-        const controlsToRefresh = modelItem.boundControls;
-        if (controlsToRefresh) {
-          controlsToRefresh.forEach(ctrl => {
-            ctrl.refresh(force);
-          });
-        }
-
-        // ### check if other controls depend on current modelItem
-        const { mainGraph } = this.getModel();
-        if (mainGraph && mainGraph.hasNode(modelItem.path)) {
-          const deps = this.getModel().mainGraph.dependentsOf(modelItem.path, false);
-          // ### iterate dependant modelItems and refresh all their boundControls
-          if (deps.length !== 0) {
-            deps.forEach(dep => {
-              // ### if changed modelItem has a 'facet' path we use the basePath that is the locationPath without facet name
-              const basePath = XPathUtil.getBasePath(dep);
-              const modelItemOfDep = this.getModel().modelItems.find(mip => mip.path === basePath);
-              // ### refresh all boundControls
-              modelItemOfDep.boundControls.forEach(control => {
-                control.refresh(force);
-              });
-            });
-            needsRefresh = true;
-          }
-        }
-      });
-      this.toRefresh = [];
-      /*
-                  if (!needsRefresh) {
-                      console.log('no dependants to refresh');
-                  }
-      */
+      this.refreshChanged(force);
     } else {
       // ### resetting visited state for controls to refresh
       /*
@@ -595,13 +544,15 @@ export class FxFore extends HTMLElement {
       */
 
       if (this.inited) {
+        console.log(`### <<<<< refresh() on '${this.id}' >>>>>`);
+
         Fore.refreshChildren(this, force);
       }
       // console.timeEnd('refreshChildren');
     }
 
     // ### refresh template expressions
-    if (this.initialRun || this._scanForNewTemplateExpressionsNextRefresh) {
+    if (force || this.initialRun || this._scanForNewTemplateExpressionsNextRefresh) {
       this._updateTemplateExpressions();
       this._scanForNewTemplateExpressionsNextRefresh = false; // reset
     }
@@ -641,10 +592,47 @@ export class FxFore extends HTMLElement {
     for (const subFore of subFores) {
       // subFore.refresh(false, changedPaths);
       if (subFore.ready) {
-        await subFore.refresh(force);
+        // Do an unconditional hard refresh: there might be changes that are relevant
+        await subFore.refresh(true);
       }
     }
     this.isRefreshing = false;
+  }
+
+  refreshChanged(force) {
+    console.log('toRefresh', this.toRefresh);
+    let needsRefresh = false;
+
+    // ### after recalculation the changed modelItems are copied to 'toRefresh' array for processing
+    this.toRefresh.forEach(modelItem => {
+      // check if modelItem has boundControls - if so, call refresh() for each of them
+      const controlsToRefresh = modelItem.boundControls;
+      if (controlsToRefresh) {
+        controlsToRefresh.forEach(ctrl => {
+          ctrl.refresh(force);
+        });
+      }
+
+      // ### check if other controls depend on current modelItem
+      const { mainGraph } = this.getModel();
+      if (mainGraph && mainGraph.hasNode(modelItem.path)) {
+        const deps = this.getModel().mainGraph.dependentsOf(modelItem.path, false);
+        // ### iterate dependant modelItems and refresh all their boundControls
+        if (deps.length !== 0) {
+          deps.forEach(dep => {
+            // ### if changed modelItem has a 'facet' path we use the basePath that is the locationPath without facet name
+            const basePath = XPathUtil.getBasePath(dep);
+            const modelItemOfDep = this.getModel().modelItems.find(mip => mip.path === basePath);
+            // ### refresh all boundControls
+            modelItemOfDep.boundControls.forEach(control => {
+              control.refresh(force);
+            });
+          });
+          needsRefresh = true;
+        }
+      }
+    });
+    this.toRefresh = [];
   }
 
   /**
@@ -1018,20 +1006,30 @@ export class FxFore extends HTMLElement {
    */
   initData(root = this) {
     // const created = new Promise(resolve => {
-    console.log('INIT');
-    const boundControls = Array.from(root.querySelectorAll('[ref]:not(fx-model *),fx-repeatitem'));
+    // console.log('INIT');
+    // const boundControls = Array.from(root.querySelectorAll('[ref]:not(fx-model *),fx-repeatitem'));
+
+    const boundControls = Array.from(
+      root.querySelectorAll(
+        'fx-control[ref],fx-upload[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref]',
+      ),
+    );
     if (root.matches('fx-repeatitem')) {
       boundControls.unshift(root);
     }
     // console.log('_initD', boundControls);
     for (let i = 0; i < boundControls.length; i++) {
-      const control = boundControls[i];
-      if (!control.matches('fx-repeatitem')) {
+      const bound = boundControls[i];
+
+      /*
+      ignore bound elements that are enclosed with a control like <select> or <fx-items> and repeated items
+       */
+      if (!bound.matches('fx-repeatitem') && !bound.parentNode.closest('fx-control')) {
         // Repeat items are dumb. They do not respond to evalInContext
-        control.evalInContext();
+        bound.evalInContext();
       }
       let ownerDoc;
-      if (control.nodeset !== null) {
+      if (bound.nodeset !== null) {
         // console.log('Node exists', control.nodeset);
         continue;
       }
@@ -1042,7 +1040,7 @@ export class FxFore extends HTMLElement {
 
       // Previous control can either be an ancestor of us, or a previous node, which can be a sibling, or a child of a sibling.
       // First: parent
-      if (previousControl.contains(control)) {
+      if (previousControl.contains(bound)) {
         // Parent is here.
         // console.log('insert into', control,previousControl);
         // console.log('insert into nodeset', control.nodeset);
@@ -1050,7 +1048,7 @@ export class FxFore extends HTMLElement {
         // console.log('parentNodeset', parentNodeset);
 
         // const parentModelItemNode = parentModelItem.node;
-        const ref = control.ref;
+        const ref = bound.ref;
         // const newElement = parentModelItemNode.ownerDocument.createElement(ref);
         if (parentNodeset.querySelector(`[ref="${ref}"]`)) {
           console.log(`Node with ref "${ref}" already exists.`);
@@ -1061,8 +1059,8 @@ export class FxFore extends HTMLElement {
 
         // Plonk it in at the start!
         parentNodeset.insertBefore(newElement, parentNodeset.firstChild);
-        control.evalInContext();
-        console.log('CREATED child', newElement);
+        bound.evalInContext();
+        // console.log('CREATED child', newElement);
         // console.log('new control evaluated to ', control.nodeset);
         // Done!
         continue;
@@ -1070,7 +1068,7 @@ export class FxFore extends HTMLElement {
       // console.log('previousControl', previousControl);
       // console.log('control', control);
       // Is previousControl a sibling or a descendant of a logical sibling? Keep looking backwards until we share parents!
-      const ourParent = XPathUtil.getParentBindingElement(control);
+      const ourParent = XPathUtil.getParentBindingElement(bound);
       // console.log('ourParent', ourParent);
       let siblingControl = null;
       /*
@@ -1093,8 +1091,9 @@ export class FxFore extends HTMLElement {
         throw new Error('Unexpected! there must be a sibling right?');
       }
       // console.log('sibling', siblingControl);
+      // todo: review: should this not just be inscopeContext?
       const parentNodeset = ourParent.nodeset;
-      const ref = control.ref;
+      const ref = bound.ref;
       let referenceNodeset = siblingControl.nodeset;
       const newElement = this._createNodes(ref, parentNodeset);
 
@@ -1110,9 +1109,9 @@ export class FxFore extends HTMLElement {
             console.log('control ref', control.ref);
             console.log('control new element parent', newElement.parentNode.nodeName);
 */
-      control.evalInContext();
+      bound.evalInContext();
       // console.log('new control evaluated to ', control.nodeset);
-      console.log('CREATED sibling', newElement);
+      // console.log('CREATED sibling', newElement);
     }
     // console.log('DATA', this.getModel().getDefaultContext());
   }
@@ -1126,16 +1125,16 @@ export class FxFore extends HTMLElement {
             console.log(`Node already exists for ref: ${ref}`);
             return existingNode;
         }
-*/
     console.log(`creating new node for ref: ${ref}`);
+*/
     let newElement;
     if (ref.includes('/')) {
       // multi-step ref expressions
-      newElement = XPathUtil.createElementFromXPath(ref, referenceNode.ownerDocument, this);
+      newElement = XPathUtil.createNodesFromXPath(ref, referenceNode.ownerDocument, this);
       // console.log('new subtree', newElement);
       return newElement;
     } else {
-      return XPathUtil.createElementFromXPath(ref, referenceNode.ownerDocument, this);
+      return XPathUtil.createNodesFromXPath(ref, referenceNode.ownerDocument, this);
     }
   }
 

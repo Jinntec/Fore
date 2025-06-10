@@ -1,9 +1,9 @@
 import '../fx-model.js';
-import ForeElementMixin from '../ForeElementMixin.js';
 import { ModelItem } from '../modelitem.js';
 import { Fore } from '../fore.js';
 import getInScopeContext from '../getInScopeContext.js';
 import { evaluateXPathToFirstNode } from '../xpath-evaluation.js';
+import { UIElement } from './UIElement.js';
 
 function isDifferent(oldNodeValue, oldControlValue, newControlValue) {
   if (oldNodeValue === null) {
@@ -13,7 +13,7 @@ function isDifferent(oldNodeValue, oldControlValue, newControlValue) {
   if the oldControlValue is null we know the widget is used for the first time and is not considered
   a value change.
   */
-  if(oldControlValue === null) return false;
+  if (oldControlValue === null) return false;
 
   if (newControlValue && oldControlValue && newControlValue.nodeType && oldControlValue.nodeType) {
     return newControlValue.outerHTML !== oldControlValue.outerHTML;
@@ -31,7 +31,7 @@ function isDifferent(oldNodeValue, oldControlValue, newControlValue) {
  * is a general base class for control elements.
  *
  */
-export default class AbstractControl extends ForeElementMixin {
+export default class AbstractControl extends UIElement {
   constructor() {
     super();
     this.value = null;
@@ -41,6 +41,7 @@ export default class AbstractControl extends ForeElementMixin {
     this.widget = null;
     this.visited = false;
     this.force = false;
+    this.ondemand = false;
     // this.attachShadow({ mode: 'open' });
   }
 
@@ -54,10 +55,12 @@ export default class AbstractControl extends ForeElementMixin {
    */
   async refresh(force) {
     if (force) this.force = true;
-    // console.log('### AbstractControl.refresh on : ', this);
 
     // Save the old value of this control. this may be the stringified version, contrast to the node in `nodeset`
     const oldValue = this.value;
+
+    // if (this.ondemand && !this.value) return;
+    // console.log('### AbstractControl.refresh on : ', this);
 
     // if(this.repeated) return
     if (this.isNotBound()) return;
@@ -170,14 +173,14 @@ export default class AbstractControl extends ForeElementMixin {
         // if oldVal is null we haven't received a concrete value yet
 
         if (!(this.localName === 'fx-control' || this.localName === 'fx-upload')) return;
-        if (isDifferent(this.oldVal,  oldValue, this.value)) {
+        if (isDifferent(this.oldVal, oldValue, this.value)) {
           const model = this.getModel();
           Fore.dispatch(this, 'value-changed', {
             path: this.modelItem.path,
             value: this.modelItem.value,
             oldvalue: oldValue,
-            instanceId:this.modelItem.instanceId,
-            foreId:this.getOwnerForm().id
+            instanceId: this.modelItem.instanceId,
+            foreId: this.getOwnerForm().id,
           });
         }
       }

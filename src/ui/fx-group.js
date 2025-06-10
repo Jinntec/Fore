@@ -95,6 +95,20 @@ class FxGroup extends FxContainer {
     // context item
     Fore.refreshChildren(this, !!force);
   }
+
+  // todo: this code should go
+  /**
+   * activates a control that uses 'on-demand' attribute
+   */
+  activate() {
+    console.log('fx-group.activate() called');
+    this.removeAttribute('on-demand');
+    this.style.display = '';
+    if (this.isBound()) {
+      this.refresh(true);
+    }
+    Fore.dispatch(this, 'show-group', {});
+  }
 }
 
 if (!customElements.get('fx-group')) {

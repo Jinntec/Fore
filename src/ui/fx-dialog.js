@@ -61,7 +61,7 @@ export class FxDialog extends HTMLElement {
     `;
   }
 
-  open() {
+  showModal() {
     window.addEventListener(
       'keyup',
       e => {
@@ -75,7 +75,7 @@ export class FxDialog extends HTMLElement {
     this.classList.add('show');
   }
 
-  async hide() {
+  async close() {
     await Fore.fadeOutElement(this, 400);
     this.classList.remove('show');
   }

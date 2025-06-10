@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>Fore UI Profile Editor</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+
+    <style>
+        [repeat-index] {
+            background: var(--paper-blue-500);
+        }
+
+        input {
+            border: none;
+        }
+
+        .level-1 {
+            padding-left: 1rem;
+        }
+
+        .level-2 {
+            padding-left: 2rem;
+        }
+
+        .level-3 {
+            padding-left: 3rem;
+        }
+
+        .level-4 {
+            padding-left: 4rem;
+        }
+
+        .level-5 {
+            padding-left: 5rem;
+        }
+
+        .level-6 {
+            padding-left: 6rem;
+        }
+
+        .level-7 {
+            padding-left: 7rem;
+        }
+
+        .level-8 {
+            padding-left: 8rem;
+        }
+
+        .level-9 {
+            padding-left: 9rem;
+        }
+
+        .level-10 {
+            padding-left: 10rem;
+        }
+
+        fx-control {
+            display: block;
+            width: 14rem;
+            padding: 0.5rem 0;
+        }
+
+        fx-control input {
+            width: 100%;
+        }
+
+        fx-repeat {
+            display: block;
+            width: 100%;
+        }
+
+        fx-repeatitem {
+            display: flex;
+            padding: 1rem;
+        }
+
+        [nonrelevant] {
+            visibility: hidden;
+            display: inline-block;
+        }
+
+        fx-repeatitem.drag-over {
+            outline: 0.25rem solid orange;
+        }
+
+        fx-dialog fx-control,
+        fx-dialog fx-control input {
+            width: 100%;
+        }
+
+        fx-dialog fx-control label {
+            display: block;
+        }
+
+        #r-cases fx-repeatitem {
+            padding: 1rem;
+        }
+        #r-cases [repeat-index] {
+            background:white;
+            border:2px solid var(--paper-blue-500);
+        }
+
+        #r-includes {
+            margin: 1rem;
+        }
+
+    </style>
+</head>
+<body>
+
+<fx-fore>
+    <fx-model>
+        <fx-instance id="default" src="viewdef.xml"></fx-instance>
+        <fx-instance id="uidef" src="UIDefinition.xml"></fx-instance>
+        <!--
+               <fx-instance id="generated">
+                   <fx-fore>
+                       <fx-model>
+                           <fx-instance src="baseprofile.xml"></fx-instance>
+                       </fx-model>
+                       <fx-group id="editor"></fx-group>
+                   </fx-fore>
+               </fx-instance>
+        -->
+        <fx-instance id="vars">
+            <data>
+                <selected></selected>
+                <include ref=""></include>
+            </data>
+        </fx-instance>
+        <!--
+               <fx-function signature="generate()" type="text/javascript">
+                   console.log('node',$node);
+                   const data = document.querySelector('#default').instanceData;
+                   console.log('node',$node);
+
+                   return true;
+               </fx-function>
+        -->
+    </fx-model>
+    <header>
+        <h1>View Definition</h1>
+    </header>
+    <main>
+        <fx-trigger>
+            <button>add view</button>
+            <fx-insert ref="switch/case"></fx-insert>
+        </fx-trigger>
+        <fx-repeat id="r-cases" ref="//case">
+            <template>
+                <h2>{@id}</h2>
+                <div>
+                    <fx-control ref="@id">
+                        <label>Id:</label>
+                    </fx-control>
+                    <fx-trigger>
+                        <button>add components to view</button>
+                        <fx-action>
+                            <fx-show dialog="add-controls"></fx-show>
+                        </fx-action>
+                    </fx-trigger>
+                    <fx-trigger>
+                        <button>delete this view</button>
+                        <fx-confirm message="really delete?">
+                            <fx-delete ref="."></fx-delete>
+                        </fx-confirm>
+                    </fx-trigger>
+                </div>
+                <fx-repeat id="r-includes" ref="include">
+                    <template>
+                        <fx-var name="ref" value="@ref"></fx-var>
+                        <fx-group ref="instance('uidef')//*[@id=$ref]">
+                            <fx-output ref="@id"></fx-output>
+                            <fx-output ref="@label"></fx-output>
+                            <fx-output ref="@ref"></fx-output>
+                        </fx-group>
+                    </template>
+                </fx-repeat>
+
+                <fx-dialog id="add-controls">
+                    <div class="dialog-content">
+                        <fx-control ref="instance('vars')/selected">
+                            <label>Select components to add</label>
+                            <select class="widget" ref="instance('uidef')//*[@id]" multiple>
+                                <template>
+                                    <option value="{@id}">{@label}</option>
+                                </template>
+                            </select>
+                        </fx-control>
+                        <fx-trigger>
+                            <button>select</button>
+                            <fx-action>
+                                <fx-hide dialog="add-controls"></fx-hide>
+                                <fx-action iterate="tokenize(instance('vars')/selected,' ')">
+                                    <fx-message>{.} {index('r-cases')}</fx-message>
+<!--                                    <fx-var name="idx" value="index('r-cases')"></fx-var>-->
+<!--                                    <fx-message>index is {$idx}</fx-message>-->
+                                    <!--                                   <fx-var name="id" value="./@ref"></fx-var>-->
+                                    <!--                                   <fx-message>id:{$id}</fx-message>-->
+
+                                    <fx-setvalue ref="instance('vars')/include/@ref" value="."></fx-setvalue>
+                                    <fx-insert context="instance('default')//case[index('r-cases')]"
+                                               origin="instance('vars')/include"></fx-insert>
+                                </fx-action>
+                            </fx-action>
+                        </fx-trigger>
+                    </div>
+                </fx-dialog>
+            </template>
+        </fx-repeat>
+    </main>
+</fx-fore>
+<script type="module" src="../../index.js"></script>
+
+</body>
+</html>
