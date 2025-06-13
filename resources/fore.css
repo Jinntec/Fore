@@ -294,5 +294,5 @@
 	 * For on-demand stuff, if it has no value initially,hide it
 	 */
 	[on-demand] {
-		display: none
+		display: none !important;
 	}

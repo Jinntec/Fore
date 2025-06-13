@@ -130,63 +130,67 @@
 
     </fx-model>
 
-    <fx-group id="outer" ref="contact" show-icon="true">
-      <fx-var name="finitial" value="substring(forename,1,1)"></fx-var>
-      <fx-var name="ninitial" value="substring(name,1,1)"></fx-var>
+    <demo-snippet>
+      <template>
+        <fx-group id="outer" ref="contact" show-icon="true">
+          <fx-var name="finitial" value="substring(forename,1,1)"></fx-var>
+          <fx-var name="ninitial" value="substring(name,1,1)"></fx-var>
 
-      <div class="top">
-        <div class="bubble">{upper-case(if($finitial) then $finitial else $ninitial)}</div>
-        <div class="names">
-          <fx-control ref="title" aria-label="Title" on-demand="true"><input placeholder="Title"></fx-control>
-          <fx-control ref="forename" aria-label="Forename" on-demand="true"></fx-control>
-          <fx-control ref="middlename" aria-label="Middlename" on-demand="true">
-            <input placeholder="Middlename">
-            <fx-message event="hide-control">discarded</fx-message>
+          <div class="top">
+            <div class="bubble">{upper-case(if($finitial) then $finitial else $ninitial)}</div>
+            <div class="names">
+              <fx-control ref="title" aria-label="Title" on-demand="true"><input placeholder="Title"></fx-control>
+              <fx-control ref="forename" aria-label="Forename" on-demand="true"></fx-control>
+              <fx-control ref="middlename" aria-label="Middlename" on-demand="true">
+                <input placeholder="Middlename">
+                <fx-message event="hide-control">discarded</fx-message>
+              </fx-control>
+              <fx-control aria-label="Name" ref="name" aria-label="Name"></fx-control>
+            </div>
+          </div>
+          <fx-control ref="birthday" on-demand="true">
+            <label>Birthday</label>
+            <input type="date">
           </fx-control>
-          <fx-control aria-label="Name" ref="name" aria-label="Name"></fx-control>
-        </div>
-      </div>
-      <fx-control ref="birthday" on-demand="true">
-        <label>Birthday</label>
-        <input type="date">
-      </fx-control>
 
-      <fieldset id="emails">
-        <legend>Emails</legend>
-        <fx-control ref="emails/private" aria-label="private email" on-demand="true">
-          <label>private</label>
-          <input type="email" placeholder="private email">
-        </fx-control>
-        <fx-control ref="emails/work" aria-label="work email" on-demand="true">
-          <label>work</label>
-          <input type="email" placeholder="work email">
-        </fx-control>
-        <fx-control ref="emails/other" aria-label="other email" on-demand="true">
-          <label>other</label>
-          <input type="email" placeholder="other email">
-        </fx-control>
-      </fieldset>
-      <fieldset id="phones">
-        <legend>Phones</legend>
-        <fx-control ref="phones/private" aria-label="private phone" on-demand="true">
-          <label>private</label>
-          <input type="tel" placeholder="private phone">
-        </fx-control>
-        <fx-control ref="phones/work" aria-label="work phone" on-demand="true">
-          <label>work</label>
-          <input type="tel" placeholder="work phone">
-        </fx-control>
-        <fx-control ref="phones/other" aria-label="other phone" on-demand="true">
-          <label>other</label>
-          <input type="tel" placeholder="other phone">
-        </fx-control>
-      </fieldset>
+          <fieldset id="emails">
+            <legend>Emails</legend>
+            <fx-control ref="emails/private" aria-label="private email" on-demand="true">
+              <label>private</label>
+              <input type="email" placeholder="private email">
+            </fx-control>
+            <fx-control ref="emails/work" aria-label="work email" on-demand="true">
+              <label>work</label>
+              <input type="email" placeholder="work email">
+            </fx-control>
+            <fx-control ref="emails/other" aria-label="other email" on-demand="true">
+              <label>other</label>
+              <input type="email" placeholder="other email">
+            </fx-control>
+          </fieldset>
+          <fieldset id="phones">
+            <legend>Phones</legend>
+            <fx-control ref="phones/private" aria-label="private phone" on-demand="true">
+              <label>private</label>
+              <input type="tel" placeholder="private phone">
+            </fx-control>
+            <fx-control ref="phones/work" aria-label="work phone" on-demand="true">
+              <label>work</label>
+              <input type="tel" placeholder="work phone">
+            </fx-control>
+            <fx-control ref="phones/other" aria-label="other phone" on-demand="true">
+              <label>other</label>
+              <input type="tel" placeholder="other phone">
+            </fx-control>
+          </fieldset>
 
-      <fx-control-menu id="menu" select="#outer">
-        <button>+</button>
-      </fx-control-menu>
+          <fx-control-menu id="menu" select="#outer">
+            <button>+</button>
+          </fx-control-menu>
 
-    </fx-group>
+        </fx-group>
+      </template>
+    </demo-snippet>
 
 
   </fx-fore>
