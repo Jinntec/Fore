@@ -3,6 +3,7 @@ import {
   evaluateXPath,
   evaluateXPathToString,
   evaluateXPathToFirstNode,
+  evaluateXPathToBoolean,
 } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 import { Fore } from '../fore.js';
@@ -10,6 +11,7 @@ import { ModelItem } from '../modelitem.js';
 import { debounce } from '../events.js';
 import { FxModel } from '../fx-model.js';
 import { DependencyNotifyingDomFacade } from '../DependencyNotifyingDomFacade';
+import { extractPredicateDependencies } from '../extract-predicate-deps.js';
 
 const WIDGETCLASS = 'widget';
 
@@ -587,14 +589,19 @@ export default class FxControl extends XfAbstractControl {
       const domFacade = new DependencyNotifyingDomFacade(node => touchedNodes.add(node));
 
       const nodeset = evaluateXPath(ref, inscope, this, domFacade);
-      // Register dynamic observers based on evaluation
-      touchedNodes.forEach(node => {
-        const mi = model.getModelItem(node);
-        if (mi) {
-          mi.addObserver(this);
-          console.log(`[UIElement] Dynamically observing ${mi.path} due to predicate`);
-        }
-      });
+
+      const contextNode = Array.isArray(inscope) ? inscope[0] : inscope;
+      console.log('Extracting model', this.getModel());
+      console.log('Extracting model inited', this.getModel().inited);
+      const model = this.getModel();
+      if (!contextNode) return;
+      console.log('Extracting predicate deps from ref:', ref);
+      extractPredicateDependencies(
+        ref,
+        model,
+        mi => mi.addObserver(this),
+        node => model.getModelItem(node),
+      );
 
       // ### clear items
       const { children } = widget;

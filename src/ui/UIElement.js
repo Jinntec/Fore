@@ -1,5 +1,7 @@
 import ForeElementMixin from '../ForeElementMixin.js';
 import { Fore } from '../fore.js';
+import { evaluateXPath, evaluateXPathToBoolean } from '../xpath-evaluation';
+import { DependencyNotifyingDomFacade } from '../DependencyNotifyingDomFacade';
 
 export class UIElement extends ForeElementMixin {
   constructor() {
@@ -25,6 +27,50 @@ export class UIElement extends ForeElementMixin {
       this.modelItem.removeObserver(this);
     }
   }
+  /*
+  evalInContext() {
+    this.dependencies.resetDependencies();
+    const model = this.getModel();
+    if (!model) return;
+
+    const touchedNodes = new Set();
+    const domFacade = new DependencyNotifyingDomFacade(node => touchedNodes.add(node));
+
+    const context = this.getInScopeContext();
+    const result = evaluateXPath(this.ref, context, this, domFacade);
+    this.nodeset = Array.isArray(result) ? result : [result];
+
+    touchedNodes.forEach(node => {
+      const mi = model.getModelItem(node);
+      if (mi) {
+        mi.addObserver(this);
+        console.log(`[UIElement] Dynamically observing ${mi.path} due to XPath dependency`);
+      }
+    });
+
+    // Manually evaluate predicate parts to ensure detection
+    const predicateRegex = /\[(.*?)\]/g;
+    let match;
+    while ((match = predicateRegex.exec(this.ref)) !== null) {
+      const predicate = match[1];
+      try {
+        const predicateContext = model.getDefaultInstance().getDefaultContext();
+        const predDomFacade = new DependencyNotifyingDomFacade(n => touchedNodes.add(n));
+        evaluateXPathToBoolean(predicate, predicateContext, this, predDomFacade);
+
+        touchedNodes.forEach(node => {
+          const mi = model.getModelItem(node);
+          if (mi) {
+            mi.addObserver(this);
+            console.log(`[UIElement] Observing ${mi.path} (from predicate: ${predicate})`);
+          }
+        });
+      } catch (e) {
+        console.warn('Predicate evaluation failed for dependency tracking:', predicate, e);
+      }
+    }
+  }
+*/
 
   attachObserver() {
     const modelItem = this.getModelItem();

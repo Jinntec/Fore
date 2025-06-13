@@ -88,6 +88,7 @@ export class ModelItem {
   }
 
   notify() {
+    console.log('[ModelItem] notifying observers');
     if (this.observers) {
       this.observers.forEach(observer => {
         if (typeof observer.update === 'function') {
