@@ -493,8 +493,8 @@ export class FxFore extends HTMLElement {
    *
    */
   async forceRefresh() {
-    // console.time('refresh');
-    // console.group('### forced refresh', this);
+    console.time('refresh');
+    console.group('### forced refresh', this);
 
     Fore.refreshChildren(this, true);
     this._updateTemplateExpressions();

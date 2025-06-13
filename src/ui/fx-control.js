@@ -9,6 +9,7 @@ import { Fore } from '../fore.js';
 import { ModelItem } from '../modelitem.js';
 import { debounce } from '../events.js';
 import { FxModel } from '../fx-model.js';
+import { DependencyNotifyingDomFacade } from '../DependencyNotifyingDomFacade';
 
 const WIDGETCLASS = 'widget';
 
@@ -581,7 +582,19 @@ export default class FxControl extends XfAbstractControl {
       // ### eval nodeset for list control
       const inscope = getInScopeContext(this, ref);
       // const nodeset = evaluateXPathToNodes(ref, inscope, this);
-      const nodeset = evaluateXPath(ref, inscope, this);
+
+      const touchedNodes = new Set();
+      const domFacade = new DependencyNotifyingDomFacade(node => touchedNodes.add(node));
+
+      const nodeset = evaluateXPath(ref, inscope, this, domFacade);
+      // Register dynamic observers based on evaluation
+      touchedNodes.forEach(node => {
+        const mi = model.getModelItem(node);
+        if (mi) {
+          mi.addObserver(this);
+          console.log(`[UIElement] Dynamically observing ${mi.path} due to predicate`);
+        }
+      });
 
       // ### clear items
       const { children } = widget;

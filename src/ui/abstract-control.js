@@ -125,6 +125,7 @@ export default class AbstractControl extends UIElement {
       if (this.modelItem instanceof ModelItem) {
         // console.log('### XfAbstractControl.refresh modelItem : ', this.modelItem);
 
+        this.attachObserver();
         if (this.hasAttribute('as') && this.getAttribute('as') === 'node') {
           // console.log('as', this.nodeset);
           // this.modelItem.value = this.nodeset;

@@ -66,11 +66,67 @@ export class FxModel extends HTMLElement {
   }
 
   /**
+   * Lazily create a ModelItem for nodes not explicitly bound via fx-bind
+   * @param {FxModel} model
+   * @param {string} ref
+   * @param {Node|Node[]} nodeset
+   * @param {Element} foreElement
+   * @returns {ModelItem}
+   */
+  static lazyCreateModelItem(model, ref, node, formElement) {
+    const instanceId = XPathUtil.resolveInstance(formElement, ref);
+
+    if (model.parentNode?.createNodes && (node === null || node === undefined)) {
+      const mi = new ModelItem(
+        undefined,
+        ref,
+        Fore.READONLY_DEFAULT,
+        false,
+        Fore.REQUIRED_DEFAULT,
+        Fore.CONSTRAINT_DEFAULT,
+        Fore.TYPE_DEFAULT,
+        null,
+        this,
+        instanceId,
+      );
+      mi.isSynthetic = true;
+      model.registerModelItem(mi);
+      return mi;
+    }
+
+    if (node === null || node === undefined) return null;
+
+    let targetNode = node.nodeType === Node.TEXT_NODE ? node.parentNode : node;
+
+    let path = null;
+    if (targetNode?.nodeType) {
+      path = XPathUtil.getPath(targetNode, instanceId);
+    }
+
+    const mi = new ModelItem(
+      path,
+      ref,
+      Fore.READONLY_DEFAULT,
+      Fore.RELEVANT_DEFAULT,
+      Fore.REQUIRED_DEFAULT,
+      Fore.CONSTRAINT_DEFAULT,
+      Fore.TYPE_DEFAULT,
+      targetNode,
+      this,
+      instanceId,
+    );
+    mi.isSynthetic = true;
+    model.registerModelItem(mi);
+    return mi;
+  }
+
+  /**
    * @param {FxModel}           model        The model to create a model item for
    * @param {string}            ref          The XPath ref that led to this model item
    * @param {Node}              node         The node the XPath led to
    * @param {ForeElementMixin}  formElement  The form element making this model. Used to resolve variables against
    */
+  /*
   static lazyCreateModelItem(model, ref, node, formElement) {
     // console.log('lazyCreateModelItem ', node);
     const instanceId = XPathUtil.resolveInstance(formElement, ref);
@@ -132,6 +188,7 @@ export class FxModel extends HTMLElement {
     model.registerModelItem(mi);
     return mi;
   }
+*/
 
   /**
    * modelConstruct starts actual processing of the model by
@@ -478,12 +535,12 @@ export class FxModel extends HTMLElement {
   }
 
   /**
-   *
-   * @param {Node} node
-   * @returns {ModelItem}
+   * Find a ModelItem by exact node or path
+   * @param {Node|string} nodeOrPath
+   * @returns {ModelItem|null}
    */
-  getModelItem(node) {
-    return this.modelItems.find(m => m.node === node);
+  getModelItem(nodeOrPath) {
+    return this.modelItems.find(mi => mi.node === nodeOrPath || mi.path === nodeOrPath) || null;
   }
 
   /**
