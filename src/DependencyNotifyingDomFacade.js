@@ -37,6 +37,7 @@ export class DependencyNotifyingDomFacade {
   // eslint-disable-next-line class-methods-use-this
   getAttribute(node, attributeName) {
     const attr = node.getAttributeNode(attributeName);
+    console.log('[DomFacade] getAttribute touched:', attr);
     if (attr) this._onNodeTouched(attr);
     return attr?.value ?? null;
   }
@@ -64,10 +65,12 @@ export class DependencyNotifyingDomFacade {
    */
   getData(node) {
     if (node.nodeType === Node.ATTRIBUTE_NODE) {
+      console.log('[DomFacade] getData on attribute:', node);
       this._onNodeTouched(node);
       return node.value;
     }
     // Text node
+    console.log('[DomFacade] getData on text node parent:', node.parentNode);
     this._onNodeTouched(node.parentNode);
     return node.data;
   }
