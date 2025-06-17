@@ -1,10 +1,8 @@
-import {
-  html, fixtureSync, expect, oneEvent,
-} from '@open-wc/testing';
+import { html, fixtureSync, expect, oneEvent } from '@open-wc/testing';
 
 import { XPathUtil } from '../src/xpath-util.js';
 
-describe('XPathUtil Tests', () => {
+describe.only('XPathUtil Tests', () => {
   it('returns "default" if call without args', async () => {
     expect(XPathUtil.getInstanceId('instance()')).to.equal('default');
   });
@@ -56,5 +54,30 @@ describe('XPathUtil Tests', () => {
     expect(XPathUtil.getParentBindingElement(inner)).to.equal(outer);
     const action = el.querySelector('fx-setvalue');
     expect(XPathUtil.getParentBindingElement(action)).to.equal(inner);
+  });
+
+  it('isDymanic returns true for "index" func', async () => {
+    expect(XPathUtil.isDynamic('index("foo")')).to.equal(true);
+  });
+  it('isDymanic returns true for "instance()" func', async () => {
+    expect(XPathUtil.isDynamic('instance()')).to.equal(true);
+  });
+  it('isDymanic returns true for any func', async () => {
+    expect(XPathUtil.isDynamic('myfunc()')).to.equal(true);
+  });
+  it('isDymanic returns true for any func with args', async () => {
+    expect(XPathUtil.isDynamic('myfunc("foo","bar")')).to.equal(true);
+  });
+  it('isDymanic returns true for a var', async () => {
+    expect(XPathUtil.isDynamic('$var')).to.equal(true);
+  });
+  it('isDymanic returns true for some text and a var', async () => {
+    expect(XPathUtil.isDynamic('"some text" || $var')).to.equal(true);
+  });
+  it('isDymanic returns false for some text', async () => {
+    expect(XPathUtil.isDynamic('"some text"')).to.equal(false);
+  });
+  it('isDymanic returns false for some concatenated text', async () => {
+    expect(XPathUtil.isDynamic('"some text" || ""')).to.equal(false);
   });
 });
