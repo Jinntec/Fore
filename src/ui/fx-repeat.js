@@ -76,7 +76,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
   }
 
   setIndex(index) {
-    // console.log('new repeat index ', index);
+    console.log('new repeat index ', index);
     this.index = index;
     const rItems = this.querySelectorAll(':scope > fx-repeatitem');
     this.applyIndex(rItems[this.index - 1]);
@@ -113,9 +113,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     // console.log('### fx-repeat connected ', this.id);
     this.addEventListener('item-changed', e => {
       const { item } = e.detail;
-      const idx = Array.from(this.children).indexOf(item);
-      // Warning: index is one-based
-      this.setIndex(idx + 1);
+      this.setIndex(item.index);
     });
     // todo: review - this is just used by append action - event consolidation ?
     document.addEventListener('index-changed', e => {
@@ -415,7 +413,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       if (repeatItem.index === 1) {
         this.applyIndex(repeatItem);
       }
-      // console.log('*********repeat item created', repeatItem.nodeset)
+      console.log('*********repeat item created', repeatItem.nodeset);
       Fore.dispatch(this, 'item-created', { nodeset: repeatItem.nodeset, pos: index + 1 });
       this._initVariables(repeatItem);
     });
