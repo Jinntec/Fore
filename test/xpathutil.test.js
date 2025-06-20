@@ -62,11 +62,20 @@ describe.only('XPathUtil Tests', () => {
   it('isDymanic returns true for "instance()" func', async () => {
     expect(XPathUtil.isDynamic('instance()')).to.equal(true);
   });
+  it('isDymanic returns true for "context()" func', async () => {
+    expect(XPathUtil.isDynamic('context()/foo')).to.equal(true);
+  });
   it('isDymanic returns true for any func', async () => {
     expect(XPathUtil.isDynamic('myfunc()')).to.equal(true);
   });
   it('isDymanic returns true for any func with args', async () => {
     expect(XPathUtil.isDynamic('myfunc("foo","bar")')).to.equal(true);
+  });
+  it('isDymanic returns true for any func with locationpath args', async () => {
+    expect(XPathUtil.isDynamic('myfunc(foo/bar, //bar)')).to.equal(true);
+  });
+  it('isDymanic returns true for any func with variable as arg', async () => {
+    expect(XPathUtil.isDynamic('myfunc($var,"bar")')).to.equal(true);
   });
   it('isDymanic returns true for a var', async () => {
     expect(XPathUtil.isDynamic('$var')).to.equal(true);
@@ -79,5 +88,40 @@ describe.only('XPathUtil Tests', () => {
   });
   it('isDymanic returns false for some concatenated text', async () => {
     expect(XPathUtil.isDynamic('"some text" || ""')).to.equal(false);
+  });
+  it('isDymanic returns false for some concatenated text using concat', async () => {
+    expect(XPathUtil.isDynamic('concat("some concatted"," text")')).to.equal(false);
+  });
+  it('isDymanic returns false for string-length on fixed string', async () => {
+    expect(XPathUtil.isDynamic('string-length("some concatted")')).to.equal(false);
+  });
+  it('isDymanic returns true for string-length on locationpath', async () => {
+    expect(XPathUtil.isDynamic('string-length(foo)')).to.equal(true);
+  });
+  it('isDymanic returns true for pathes with predicates', async () => {
+    expect(XPathUtil.isDynamic('foo[true]')).to.equal(true);
+  });
+  it('isDynamic returns true for path with literal predicate', async () => {
+    expect(XPathUtil.isDynamic('foo[1]')).to.equal(true);
+  });
+
+  it('isDynamic returns true for path with boolean predicate', async () => {
+    expect(XPathUtil.isDynamic('foo[true()]')).to.equal(true);
+  });
+
+  it('isDynamic returns true for path with location predicate', async () => {
+    expect(XPathUtil.isDynamic('foo[bar]')).to.equal(true);
+  });
+
+  it('isDynamic returns true for nested predicates', async () => {
+    expect(XPathUtil.isDynamic('foo[bar[baz = 1]]')).to.equal(true);
+  });
+
+  it('isDynamic returns true for multiple predicates', async () => {
+    expect(XPathUtil.isDynamic('foo[bar][baz]')).to.equal(true);
+  });
+
+  it('isDynamic returns true for predicate with function', async () => {
+    expect(XPathUtil.isDynamic('foo[string-length(bar) > 0]')).to.equal(true);
   });
 });
