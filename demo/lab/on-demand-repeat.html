@@ -48,6 +48,9 @@
     margin: 0.5rem 0;
       display: inline-block;
   }
+  [repeat-index]{
+      background:lightskyblue;
+  }
 </style>
 </head>
 <body>
@@ -102,16 +105,20 @@
               <fx-message event="hide-control">discarded empty value</fx-message>
               <fx-message event="show-control">show empty control</fx-message>
             </fx-control>
-            <fx-control ref="ondemand">
+            <fx-control ref="ondemand" on-demand="">
               <label>On demand</label>
             </fx-control>
-            <fx-control ref="ondemand2">
+            <fx-control ref="ondemand2" on-demand="true">
               <label>optional field</label>
             </fx-control>
             <fx-trigger ref=".">
               <button>delete</button>
               <fx-delete ref="."></fx-delete>
             </fx-trigger>
+
+            <fx-control-menu id="menu2">
+              <button>+</button>
+            </fx-control-menu>
           </template>
           <fx-trigger slot="footer">
             <button>append</button>

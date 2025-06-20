@@ -121,28 +121,37 @@ export class FxControlMenu extends XfAbstractControl {
     this.updateMenu();
   }
 
+  _getScopedContainer() {
+    const repeatItem = this.closest('fx-repeatitem');
+    if (repeatItem) return repeatItem;
+
+    if (this.selectExpr) {
+      return document.querySelector(this.selectExpr);
+    }
+
+    return null;
+  }
+
   updateMenu() {
-    const container = document.querySelector(this.selectExpr);
+    const container = this._getScopedContainer();
     if (!container) return;
 
     let targets = [];
-
+    // ✅ Include container itself if it has on-demand
     if (container.hasAttribute('on-demand')) {
-      if (container.nodeName === 'FX-REPEAT') {
-        // If it's an <fx-repeat> with on-demand, use only the container
-        targets = [container];
-      } else {
-        // If it's not <fx-repeat>, include container and inner [on-demand] targets
-        targets = [container, ...container.querySelectorAll('[on-demand]')];
-      }
-    } else {
-      // If container is not on-demand, only look for inner [on-demand]
-      targets = Array.from(container.querySelectorAll('[on-demand]'));
+      targets.push(container);
     }
-    this._currentTargets = targets;
-    this.menuEl.innerHTML = ''; // Clear menu
 
-    // Find the slotted button
+    // ✅ Also include any descendant [on-demand] controls if not within repeat
+    if (container.nodeName !== 'FX-REPEAT') {
+      const innerTargets = Array.from(container.querySelectorAll('[on-demand]'));
+      targets.push(...innerTargets);
+    }
+
+    this._currentTargets = targets;
+    this.menuEl.innerHTML = '';
+
+    // Find the button to disable if needed
     const slot = this.shadowRoot.querySelector('slot');
     const assignedNodes = slot.assignedNodes({ flatten: true });
     const button = assignedNodes.find(
