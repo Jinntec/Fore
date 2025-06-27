@@ -11,6 +11,12 @@ import getInScopeContext from './getInScopeContext';
  * This refactored version includes observable mechanics and scoped XPath evaluation support.
  */
 export class ModelItem {
+  static READONLY_DEFAULT = false;
+  static REQUIRED_DEFAULT = false;
+  static RELEVANT_DEFAULT = true;
+  static CONSTRAINT_DEFAULT = true;
+  static TYPE_DEFAULT = 'xs:string';
+
   /**
    * @param {string} path - Calculated normalized path expression linking to data
    * @param {string} ref - Relative binding expression
@@ -23,14 +29,14 @@ export class ModelItem {
    * @param {import('./fx-bind').FxBind} bind - The fx-bind element having created this ModelItem
    * @param {string} instance - The fx-instance id having created this ModelItem
    */
-  constructor(path, ref, readonly, relevant, required, constraint, type, node, bind, instance) {
+  constructor(path, ref, node, bind, instance) {
     this.path = path;
     this.ref = ref;
-    this.readonly = readonly;
-    this.relevant = relevant;
-    this.required = required;
-    this.constraint = constraint;
-    this.type = type;
+    this.readonly = ModelItem.READONLY_DEFAULT;
+    this.relevant = ModelItem.RELEVANT_DEFAULT;
+    this.required = ModelItem.REQUIRED_DEFAULT;
+    this.constraint = ModelItem.CONSTRAINT_DEFAULT;
+    this.type = ModelItem.TYPE_DEFAULT;
     this.node = node;
     this.bind = bind;
     this.instanceId = instance;
