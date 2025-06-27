@@ -45,12 +45,24 @@ export class FxBind extends ForeElementMixin {
     // console.log('connectedCallback ', this);
     // this.id = this.hasAttribute('id')?this.getAttribute('id'):;
     this.constraint = this.getAttribute('constraint');
-    this.ref = this.getAttribute('ref');
+    this.ref = this.getAttribute('ref') || '.';
     this.readonly = this.getAttribute('readonly');
     this.required = this.getAttribute('required');
     this.relevant = this.getAttribute('relevant');
     this.type = this.hasAttribute('type') ? this.getAttribute('type') : FxBind.TYPE_DEFAULT;
     this.calculate = this.getAttribute('calculate');
+    // For self-references, just apply the facets to the parent bind
+    if (this.ref === '.') {
+      const parent = this.parentNode;
+      if (parent instanceof FxBind) {
+        // For overlapping binds, the last one wins
+        parent.calculate ||= this.calculate;
+        parent.readonly ||= this.readonly;
+        parent.required ||= this.required;
+        parent.relevant ||= this.relevant;
+        parent.constraint ||= this.constraint;
+      }
+    }
   }
 
   /**
@@ -335,18 +347,7 @@ export class FxBind extends ForeElementMixin {
     // ### constructing default modelitem - will get evaluated during recalculate()
     // ### constructing default modelitem - will get evaluated during recalculate()
     // const newItem = new ModelItem(shortPath,
-    const newItem = new ModelItem(
-      path,
-      this.getBindingExpr(),
-      FxBind.READONLY_DEFAULT,
-      FxBind.RELEVANT_DEFAULT,
-      FxBind.REQUIRED_DEFAULT,
-      FxBind.CONSTRAINT_DEFAULT,
-      this.type,
-      targetNode,
-      this,
-      instanceId,
-    );
+    const newItem = new ModelItem(path, this.getBindingExpr(), targetNode, this, instanceId);
 
     const alert = this.getAlert();
     if (alert) {

@@ -77,18 +77,7 @@ export class FxModel extends HTMLElement {
     const instanceId = XPathUtil.resolveInstance(formElement, ref);
 
     if (model.parentNode?.createNodes && (node === null || node === undefined)) {
-      const mi = new ModelItem(
-        undefined,
-        ref,
-        Fore.READONLY_DEFAULT,
-        false,
-        Fore.REQUIRED_DEFAULT,
-        Fore.CONSTRAINT_DEFAULT,
-        Fore.TYPE_DEFAULT,
-        null,
-        this,
-        instanceId,
-      );
+      const mi = new ModelItem(undefined, ref, null, null, instanceId);
       mi.isSynthetic = true;
       model.registerModelItem(mi);
       return mi;
@@ -103,92 +92,11 @@ export class FxModel extends HTMLElement {
       path = XPathUtil.getPath(targetNode, instanceId);
     }
 
-    const mi = new ModelItem(
-      path,
-      ref,
-      Fore.READONLY_DEFAULT,
-      Fore.RELEVANT_DEFAULT,
-      Fore.REQUIRED_DEFAULT,
-      Fore.CONSTRAINT_DEFAULT,
-      Fore.TYPE_DEFAULT,
-      targetNode,
-      this,
-      instanceId,
-    );
+    const mi = new ModelItem(path, ref, targetNode, null, instanceId);
     mi.isSynthetic = true;
     model.registerModelItem(mi);
     return mi;
   }
-
-  /**
-   * @param {FxModel}           model        The model to create a model item for
-   * @param {string}            ref          The XPath ref that led to this model item
-   * @param {Node}              node         The node the XPath led to
-   * @param {ForeElementMixin}  formElement  The form element making this model. Used to resolve variables against
-   */
-  /*
-  static lazyCreateModelItem(model, ref, node, formElement) {
-    // console.log('lazyCreateModelItem ', node);
-    const instanceId = XPathUtil.resolveInstance(formElement, ref);
-
-    if (model.parentNode.createNodes && (node === null || node === undefined)) {
-      // ### intializing ModelItem with default values (as there is no <fx-bind> matching for given ref)
-      const mi = new ModelItem(
-        undefined,
-        ref,
-        Fore.READONLY_DEFAULT,
-        false,
-        Fore.REQUIRED_DEFAULT,
-        Fore.CONSTRAINT_DEFAULT,
-        Fore.TYPE_DEFAULT,
-        null,
-        this,
-        instanceId,
-      );
-
-      // console.log('new ModelItem is instanceof ModelItem ', mi instanceof ModelItem);
-      model.registerModelItem(mi);
-      return mi;
-    }
-    let targetNode = {};
-    if (node === null || node === undefined) return null;
-    if (node.nodeType === Node.TEXT_NODE) {
-      // const parent = node.parentNode;
-      // console.log('PARENT ', parent);
-      targetNode = node.parentNode;
-    } else {
-      targetNode = node;
-    }
-
-    // const path = fx.evaluateXPath('path()',node);
-    let path;
-    if (node.nodeType) {
-      path = XPathUtil.getPath(node, instanceId);
-    } else {
-      path = null;
-      targetNode = node;
-    }
-    // const path = XPathUtil.getPath(node);
-
-    // ### intializing ModelItem with default values (as there is no <fx-bind> matching for given ref)
-    const mi = new ModelItem(
-      path,
-      ref,
-      Fore.READONLY_DEFAULT,
-      Fore.RELEVANT_DEFAULT,
-      Fore.REQUIRED_DEFAULT,
-      Fore.CONSTRAINT_DEFAULT,
-      Fore.TYPE_DEFAULT,
-      targetNode,
-      this,
-      instanceId,
-    );
-
-    // console.log('new ModelItem is instanceof ModelItem ', mi instanceof ModelItem);
-    model.registerModelItem(mi);
-    return mi;
-  }
-*/
 
   /**
    * modelConstruct starts actual processing of the model by
