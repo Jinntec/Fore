@@ -1,0 +1,1685 @@
+fee928d6 | 10.06.2025 | 2.6.0
+90cf8887 | 10.06.2025 | some demos
+e4044afa | 06.06.2025 | Fix tests by not awaiting for 'show-control' event
+82bf8116 | 04.06.2025 | added demo
+55452715 | 04.06.2025 | adding docs to create-nodes page
+d96905b0 | 04.06.2025 | bit bigger text
+5c07fbf2 | 04.06.2025 | pic
+a1dc25dd | 04.06.2025 | add on-demand demos
+aa3a3231 | 04.06.2025 | check on-demand on matched target, check for label
+390466f2 | 04.06.2025 | move activate to UIElement
+edc432d7 | 04.06.2025 | fx-repeat extending UIElement
+fba1ea54 | 03.06.2025 | Move handling of ondemand to UIElement and handle initial values
+c88f5951 | 03.06.2025 | contacts.html
+f4d05b0a | 03.06.2025 | don't not throw on on-demand, UIElement.js
+d2132522 | 02.06.2025 | fx-control-menu now also picks up fx-group as on-demand.
+39cae4fd | 30.05.2025 | fixed
+ec0ef432 | 30.05.2025 | fixed
+6675632f | 30.05.2025 | styling
+6167e614 | 30.05.2025 | fx-control allows to show a trash icon for on-demand controls (default:false) - activate by setting attribute 'show-icon' on ancestor or self.
+eb9202ba | 30.05.2025 | in mode 'hide-on-empty' all empty controls become 'on-demand' and be hidden.
+76e68dd6 | 28.05.2025 | new class fx-control-menu allowing to manually add field to the view along with changes in fx-control to support on-demand controls.
+c3a318d2 | 23.05.2025 | souremaps seem to cause trouble
+65c031cc | 23.05.2025 | fix typo, linting
+2c02dfe3 | 09.05.2025 | linting
+90acd86d | 06.05.2025 | passing status code to submit-error
+545e35a1 | 14.04.2025 | quieten
+ada460ef | 14.04.2025 | fix function sig
+ca1b1c01 | 14.04.2025 | rollup fixes
+82fdb8a7 | 14.04.2025 | more events for Lens to listen for
+06fbfe94 | 14.04.2025 | todo
+2671f367 | 31.03.2025 | if force also rescan template expressions
+30a2cb10 | 18.03.2025 | added todo
+f506cc2b | 18.03.2025 | shortcut for lang
+996e7bcb | 17.03.2025 | bail out if no modelItem
+863af78a | 17.03.2025 | fixed template expression eval
+43ba3852 | 17.03.2025 | safety check
+749c44a2 | 17.03.2025 | pb-login demo
+232f538c | 17.03.2025 | legacy and native support of dialog
+b954d68d | 24.01.2025 | refactored refresh - extracted function
+2aafda0e | 24.01.2025 | just saved for later
+3e685181 | 23.01.2025 | moved fx-lens import to demo.js to fix demo
+fc27a009 | 17.01.2025 | renamed function
+dc809ba2 | 17.01.2025 | console
+0ed7ddb5 | 17.01.2025 | commented excessive console
+b198e0fc | 16.01.2025 | Merge remote-tracking branch 'origin/dev' into dev
+c5d1a85d | 16.01.2025 | Merge pull request #297 from Jinntec/performance-is-affected
+136d9a78 | 16.01.2025 | added demo data
+46fb080e | 13.01.2025 | Merge branch 'dev' into performance-is-affected
+0c545bb9 | 13.01.2025 | kroki demo files
+b83983f0 | 13.01.2025 | create-nodes demo fixes
+ae6ef8b4 | 30.12.2024 | in create-nodes mode fx-insert may use created nodeset as origin. origin then points to repeat by CSS id selector.
+9e5e09ec | 30.12.2024 | in 'create-nodes' mode store created nodeset for use with fx-insert. Cleaning text values when present
+4365dcad | 30.12.2024 | prevents option label evaluation to fail when containing line breaks
+86aa8d32 | 30.12.2024 | added comment
+70735800 | 30.12.2024 | demo with data
+2ac20531 | 23.12.2024 | lens listening for index-changed also
+f3aaede5 | 23.12.2024 | renamed function
+c9a89966 | 19.12.2024 | * setting aria role on fx-fore * adding fx-upload to list of boundcontrols
+8faa3cbd | 17.12.2024 | Detect whether a component should be refreshed by elementname
+d555d2e5 | 16.12.2024 | testpage
+cb5c4791 | 16.12.2024 | setvalue uses inscopecontext
+727fff1e | 16.12.2024 | explicitly handle control, group, repeat, switch
+3610d216 | 16.12.2024 | additional support for title attr on templated options
+7ca744ef | 16.12.2024 | demo stuff
+7ccde691 | 12.12.2024 | 2.5.0
+b1b08526 | 12.12.2024 | tweak
+1ea945d8 | 12.12.2024 | create-nodes test page fixed
+4e7c6c63 | 10.12.2024 | Do not init data if the flag is not raised
+d909144a | 10.12.2024 | Make repeats create nodes for its descendant controls
+0dc6f319 | 10.12.2024 | Make repeats create nodes for its descendant controls
+ec7cb6a4 | 10.12.2024 | Fix merge with ValueChanged
+ae458855 | 10.12.2024 | create-nodes test page
+dce14b8f | 10.12.2024 | create-nodes related
+8463d677 | 09.12.2024 | test
+32c4b6d6 | 06.12.2024 | value-changed failing in cypress but working interactively - skipping and fixing test later
+5ed3ee73 | 06.12.2024 | comments
+c3ebb785 | 06.12.2024 | fixes the scoping of variables,scoped binding element resolution
+5694ea7f | 06.12.2024 | fixes the scoping of variables,scoped binding element resolution
+ce8cf797 | 06.12.2024 | comments + super.properties fix
+bfbb20a6 | 06.12.2024 | comments
+87e05793 | 06.12.2024 | fix oldValue
+005f2e1f | 06.12.2024 | do not break loop but continue
+1a04a79c | 06.12.2024 | lookupNamespace utility function
+705121ef | 06.12.2024 | check null value
+ac4eedbc | 06.12.2024 | rewritten initData to operate on pure nodesets instead of modelitems and run before initial refresh.
+c2f3c68a | 06.12.2024 | save creation of modelitem, this.modelitem defaults to null instead of object
+5200f847 | 05.12.2024 | partly merged create-nodes feature
+147beb19 | 04.12.2024 | putting text content within CDATA section
+a8140d78 | 04.12.2024 | supporting 'accept' attribute
+cec1b05f | 03.12.2024 | new fx-upload to embed uploaded content into XML with demo
+c21902c9 | 03.12.2024 | handling textnodes explicitly in fx-setvalue
+a471b277 | 03.12.2024 | changed title for clarity
+fe8a7ead | 03.12.2024 | avoid duplicate insertion of fx-lens
+7d50bab5 | 03.12.2024 | let fx-upload pass
+97107db8 | 30.11.2024 | deleted comments
+3bc62e9b | 27.11.2024 | demo fix
+0abbdde2 | 27.11.2024 | guard against empty ref
+3407eb33 | 23.11.2024 | pushed down css to have re-entrant render(), added deleted, insert event listeners, added a reset to delete all localStorage keys
+d88b9961 | 23.11.2024 | delete passes instanceId, foreId with event
+ba8ae437 | 23.11.2024 | insert fx-lens on query-param 'lens' - same behavior as with 'inspect'
+fb68a50a | 23.11.2024 | fixed stored fx-lens width
+47c41497 | 22.11.2024 | added flash effect to change instance summary
+90e3c1dc | 22.11.2024 | pass foreId with value-changed
+5591c399 | 22.11.2024 | fixed scrolling
+ffa9732b | 21.11.2024 | new fx-lens
+1f9f999a | 21.11.2024 | logging
+655c0185 | 21.11.2024 | demo with fx-lens
+0b2e86ad | 21.11.2024 | modelitem is now storing its instance id + value-changed event passes it along
+f7e23964 | 21.11.2024 | starting to gather function-libs in lib, 2 new functions to get/set value in localstorage
+9d8245a5 | 11.11.2024 | improved text support for instances
+e4f36332 | 11.11.2024 | support for svg with replace=target
+5d218c77 | 23.10.2024 | refreshChildren does not update inert elements
+91a41bbf | 22.10.2024 | colored logging
+b7952c9f | 21.10.2024 | colored logging
+91886405 | 21.10.2024 | colored logging
+c0e5e0e7 | 19.10.2024 | 2.4.2
+70a2f239 | 19.10.2024 | * added flag to reset visited only once in switch * fixing responsemediatype and some colored logging
+239dbff7 | 19.10.2024 | fixes submission/@targetref for text/plain responses
+c33c2728 | 17.10.2024 | demo works
+622545c5 | 08.10.2024 | 2.4.1
+1e3ffc28 | 08.10.2024 | fixing issue with not refreshing in some cases
+274c15e6 | 08.10.2024 | quitening log
+ede435db | 07.10.2024 | 2.4.0
+0c7f2a15 | 07.10.2024 | prepare due, fixed sig,
+407cb451 | 07.10.2024 | print styling
+7d33f61c | 07.10.2024 | adding missing fx-case.selected-case rule
+a99f5eb9 | 07.10.2024 | moved functions to lib page
+4083f04e | 07.10.2024 | cleanup mywork.html
+b1121fe9 | 04.10.2024 | Merge pull request #290 from Jinntec/index-dependencies
+f28cfa5a | 04.10.2024 | value-changed is not dispatched when the control value has been null before. We can savely assume that the widget is used the first time.
+89f8cdb7 | 04.10.2024 | mywork demo done
+f7d4e7b0 | 04.10.2024 | improvement to markdown demo
+97cc7934 | 02.10.2024 | Merge pull request #291 from Jinntec/fx-switch
+352fb112 | 01.10.2024 | Fix fx-switch test
+ed458a83 | 01.10.2024 | Formalize dependencies on the 'index' function
+003bbb13 | 25.09.2024 | 2.3.2
+133f2523 | 25.09.2024 | demo
+4309a54c | 25.09.2024 | never use !important
+6423e845 | 19.09.2024 | cleanup markup
+f5a99fc9 | 19.09.2024 | fix quirks mode
+1446076a | 19.09.2024 | 2.3.1
+c0840d60 | 19.09.2024 | added some missing resources
+da980516 | 18.09.2024 | Update package lock for new FontoXPath
+f9667771 | 18.09.2024 | 2.3.0
+748993b0 | 18.09.2024 | demo layout fix
+09d91b0e | 18.09.2024 | * docs on fx-unmodified * tiny refactoring
+fa7093f9 | 18.09.2024 | Merge branch 'beforeunload' into dev
+240cb62c | 17.09.2024 | demo
+1220e17d | 17.09.2024 | formatting
+6c872e27 | 17.09.2024 | update fontoxpath
+925bdbb4 | 17.09.2024 | new function dayOfWeekISO
+472ebb8d | 17.09.2024 | Implement fx-unmodified as a new way to handle beforeunload
+f3059f37 | 17.09.2024 | Merge pull request #288 from Jinntec/dependabot/npm_and_yarn/body-parser-1.20.3
+dd820f03 | 16.09.2024 | Bump body-parser from 1.20.0 to 1.20.3
+b7d11a63 | 05.09.2024 | Merge pull request #286 from Jinntec/nested-fx-fore
+6e8cb582 | 27.08.2024 | Handle nested controls (loaded with src) with data-lists
+b1180efe | 13.08.2024 | demos
+0e787213 | 13.08.2024 | Merge remote-tracking branch 'origin/dev' into dev
+d5a78bc8 | 13.08.2024 | fixed handling of radiobuttons, added demo + test
+89c0a2b2 | 09.08.2024 | Merge pull request #285 from Jinntec/repeat-item-changed
+90d693d8 | 07.08.2024 | Fix item-changed firing way too often
+c8281141 | 30.07.2024 | Merge remote-tracking branch 'origin/dev' into dev
+f12924fb | 29.07.2024 | Merge pull request #282 from Jinntec/dependabot/npm_and_yarn/socket.io-parser-3.3.4
+ea937693 | 29.07.2024 | quitened log
+f68c5744 | 29.07.2024 | quitened log
+e926f6f9 | 27.07.2024 | generator plays - nothing workable
+5dde05b0 | 27.07.2024 | demo styling
+4af705a5 | 25.07.2024 | Merge remote-tracking branch 'origin/dev' into dev
+bd031958 | 25.07.2024 | Merge pull request #283 from Jinntec/function-regex
+643dc7bb | 23.07.2024 | Fix regular expression for functions
+01d19acb | 23.07.2024 | Bump socket.io-parser from 3.3.3 to 3.3.4
+2c3bd671 | 20.07.2024 | refinements
+36cbbe94 | 20.07.2024 | new fx-case with src demo
+776b736f | 20.07.2024 | * fixed inert state for fx-case * defaulting to fx-case as selector
+97917ee2 | 17.07.2024 | Merge branch 'fx-case-src' into dev
+eea0e810 | 17.07.2024 | Merge remote-tracking branch 'origin/dev' into dev
+920d0b4e | 17.07.2024 | dispatch select,deselect event only if case changed
+09a422e8 | 17.07.2024 | setting modelConstructed
+eec29d63 | 17.07.2024 | missing model update in fx-case
+b4e73342 | 17.07.2024 | Merge pull request #281 from Jinntec/index-repeat
+4f862d28 | 17.07.2024 | execute action not before model is constructed
+c27c3b7d | 17.07.2024 | Make index changes refresh the UI
+dad06d3e | 16.07.2024 | Merge remote-tracking branch 'origin/fx-case-src' into fx-case-src
+84507046 | 16.07.2024 | Fix select case with src attribute
+62e832c8 | 16.07.2024 | some demos + fx-case extension for loading from src
+7e8d593b | 10.07.2024 | * new demo
+b3708dc3 | 16.07.2024 | some demos + fx-case extension for loading from src
+7e9ff95a | 12.07.2024 | Merge pull request #270 from Jinntec/typing
+c43501dc | 26.06.2024 | Add more typedocs
+a0a6010b | 26.06.2024 | Allow unused args if they start with `_`
+931e6bd6 | 26.06.2024 | Fix linter errors
+3dc2fe97 | 26.06.2024 | Fix and run linter
+c89b0fd5 | 12.06.2024 | Add better typing / autocomplete for esdoc-aware IDEs
+cf95370c | 10.07.2024 | * new demo
+21bd6584 | 10.07.2024 | Merge remote-tracking branch 'origin/dev' into dev
+0db9e5d0 | 10.07.2024 | * fixed initialization of multi-select controls * added multi-select demo + added unit test for multiselect
+fb66780e | 06.07.2024 | Merge pull request #276 from rkottmann/patch-1
+f00b0c27 | 05.07.2024 | Update fun-with-actions.html delete x
+a87da00a | 04.07.2024 | migration script starter
+f9f9df3a | 01.07.2024 | wip fx-insertchild.js
+3292490e | 01.07.2024 | getBindingElement crosses shadowRoot
+590d1c67 | 01.07.2024 | providing old value with value-changed event
+8bcf6e17 | 27.06.2024 | Merge remote-tracking branch 'origin/dev' into dev
+b4514df2 | 27.06.2024 | removed duplicate ids
+53b205e6 | 20.06.2024 | cleanup
+256fcac0 | 20.06.2024 | settling for plain html syntax instead of custom element
+ed381569 | 20.06.2024 | deprecating fx-hint as it can be easily achieved with plain spans and template expressions
+c6b6cf6c | 19.06.2024 | Merge pull request #266 from Jinntec/dependabot/npm_and_yarn/braces-3.0.3
+57d8bbbf | 19.06.2024 | Merge pull request #267 from Jinntec/dependabot/npm_and_yarn/ws-7.5.10
+fba2947c | 18.06.2024 | Bump ws from 7.5.8 to 7.5.10
+a4f674ee | 17.06.2024 | Bump braces from 3.0.2 to 3.0.3
+7bf5cb02 | 17.06.2024 | moving required star to after label of a control
+498ca6d1 | 17.06.2024 | demo refinements
+d6ebab1e | 12.06.2024 | Further fix difference detection
+3fe23566 | 12.06.2024 | Fix abstract control's isDifferent
+66e69fd6 | 12.06.2024 | chat demo
+63ccd494 | 12.06.2024 | new demo implementing simple 'Lean Canvas' project planning tool.
+af7b31c6 | 12.06.2024 | Merge remote-tracking branch 'origin/dev' into dev
+d01706f3 | 12.06.2024 | new demo implementing simple 'Lean Canvas' project planning tool.
+156c1289 | 12.06.2024 | Update README.md
+33e6be9a | 10.06.2024 | Improve connection demo to pass XML back and forth!
+ec55a530 | 10.06.2024 | fx-connnection in progress
+3cdc98da | 07.06.2024 | Merge branch 'connection' into dev
+1a68d46d | 06.06.2024 | simplified function lib rendering
+b97b5fe2 | 04.06.2024 | adding pico
+e06c1b14 | 31.05.2024 | bit of refinement work
+8a3bd4b0 | 31.05.2024 | bit of refinement work
+bd37ad1c | 31.05.2024 | making actions and the model inert
+9048f278 | 29.05.2024 | 2.2.0
+c61f04bc | 29.05.2024 | refining demos and styling
+fa5ea50d | 29.05.2024 | added and styled drap n drop demo
+d9c1184e | 29.05.2024 | demo refinements
+185329a9 | 29.05.2024 | playing with editor
+3b0cec5a | 29.05.2024 | Merge remote-tracking branch 'origin/dev' into dev
+45eb8204 | 28.05.2024 | Merge pull request #260 from Jinntec/vars
+ec78961b | 28.05.2024 | Merge pull request #261 from Jinntec/double-submit
+31bfcdea | 28.05.2024 | Merge pull request #262 from Jinntec/fx-functionlib
+17cb447c | 28.05.2024 | Integrate the demo for fx-functionlib
+f76d2c2a | 28.05.2024 | Implement the fx-functionlib element. Reuse your functions!
+af07101f | 28.05.2024 | Prevent value-changed on things that are not actually controls
+a3b3b03a | 28.05.2024 | Properly fix variables returning multiple items
+a3c3ed7b | 24.05.2024 | passing incopeVariables passing incopeVariables
+c5859bf0 | 24.05.2024 | new demo started
+dfa7958e | 22.05.2024 | Merge pull request #255 from Jinntec/dependabot/npm_and_yarn/ejs-3.1.10
+83642ba4 | 21.05.2024 | Fix failing test for variables
+ea0a220b | 21.05.2024 | Fix error logging in fx-instance
+0a085e5f | 21.05.2024 | Fix regex for function argument type
+2d6b95b7 | 16.05.2024 | some demo refinement for vars
+d0b0bbde | 16.05.2024 | Merge pull request #258 from Jinntec/variables-fix
+fc5a56b3 | 16.05.2024 | extended iterate demo
+6b61f5b5 | 14.05.2024 | Register variablesa bit earlier
+dba14d98 | 08.05.2024 | Update README.md
+cbfa5d2c | 07.05.2024 | 2.1.1
+abbeb4d5 | 07.05.2024 | Fix fx-var usage in attributes
+b74d06b5 | 07.05.2024 | Fix fx-var setting its value to `undefined` sometimes
+a303f727 | 06.05.2024 | fixes tabindex behavior for trigger
+d0d5735e | 02.05.2024 | 2.1.0
+453b7dfe | 02.05.2024 | kanban styling
+c978c2e2 | 02.05.2024 | fixed test, merged kanban
+d63a1f58 | 02.05.2024 | Merge branch 'drag-n-drop-nested' into dev
+b68b32ab | 02.05.2024 | Merge branch 'drag-n-drop' into dev
+587dbff9 | 02.05.2024 | refined and documented dnd example
+10d65b19 | 02.05.2024 | Merge remote-tracking branch 'origin/drag-n-drop-nested' into drag-n-drop-nested
+29250582 | 02.05.2024 | Make copyable items be removed when dropped on something that does not accept it
+cf60b955 | 02.05.2024 | refined iterate.html
+1eaabaae | 02.05.2024 | just resorte props
+aed91804 | 02.05.2024 | Merge remote-tracking branch 'origin/dev' into dev
+d39f8f76 | 02.05.2024 | Merge remote-tracking branch 'origin/drag-n-drop-nested' into drag-n-drop-nested
+187e0dbc | 02.05.2024 | Bump ejs from 3.1.8 to 3.1.10
+44c3535a | 30.04.2024 | in progress
+e818e028 | 30.04.2024 | Fix iterate for multiple iterations
+7a004a42 | 29.04.2024 | Merge pull request #250 from Jinntec/dependabot/npm_and_yarn/follow-redirects-1.15.6
+51ebf928 | 24.04.2024 | Merge pull request #254 from Jinntec/iterate
+c12dade5 | 23.04.2024 | Make dropEffect copy work
+c726f6bb | 23.04.2024 | Fix kanban and DnD tests
+872d0a21 | 23.04.2024 | samples i progress
+01ccae06 | 23.04.2024 | * details on demo, some comments, cleanup
+a3a8b2e6 | 22.04.2024 | * fixed some imports * refined dnd demo + code * added 'accept' + 'drop-location' attrs
+132b13b0 | 16.04.2024 | Fix small bug with insert
+a47fc0cb | 16.04.2024 | Add test for iterate
+767d182b | 16.04.2024 | styled dnd demo
+a60d505b | 09.04.2024 | Fix iterate with insert
+b8d9c887 | 02.04.2024 | Implement iterate attribute
+d6843df7 | 27.03.2024 | Merge remote-tracking branch 'origin/drag-n-drop-nested' into drag-n-drop-nested
+12b94d36 | 26.03.2024 | Implement simple UI drag and drop
+35243a0b | 26.03.2024 | Merge remote-tracking branch 'origin/drag-n-drop-nested' into drag-n-drop-nested
+9137564e | 26.03.2024 | fix for submission localStore delete - should replace instance
+bdf98b75 | 26.03.2024 | todo fixex
+454ab1d0 | 26.03.2024 | relevance refactoring prep
+5b395597 | 26.03.2024 | fixing todo2 demo
+f0653aaf | 26.03.2024 | fixing repeatitem relevant/nonrelevant attribute behavior
+4fdf4bc6 | 26.03.2024 | * added response-mediatype but not using yet
+c3258d82 | 26.03.2024 | * new url-relpath function returning the url path without filename
+ddfdef9d | 26.03.2024 | * new demo for fx-construct-done * demo draft * e2e test for setattribute
+9dbbeb1e | 19.03.2024 | Fix index type
+92c9328e | 19.03.2024 | Make index changing work again
+af38bd02 | 19.03.2024 | Make tests work again
+e6d10e41 | 19.03.2024 | matomo for home and demo page
+32ebabc2 | 16.03.2024 | Bump follow-redirects from 1.15.4 to 1.15.6
+78e407dd | 15.03.2024 | new setattribute action with demo and test
+dba9f322 | 15.03.2024 | some refinements to kanban.html
+cc4e0a07 | 15.03.2024 | Merge remote-tracking branch 'origin/drag-n-drop-nested' into drag-n-drop-nested
+e727caf9 | 12.03.2024 | Make drag and drop swapping work more intuitively
+e7085edb | 09.03.2024 | attempt to make nested dnd work
+c6794567 | 12.03.2024 | TMP
+3b532c58 | 12.03.2024 | Fix nesting
+131c4927 | 12.03.2024 | Move drag and drop to a mixin
+483867d9 | 09.03.2024 | attempt to make nested dnd work
+7e27fbd4 | 05.03.2024 | Stabilize drag and drop and add simple test
+26d98475 | 05.03.2024 | dnd in vanilla working for before and after insertion
+6b8a676f | 01.03.2024 | dnd in vanilla working for before and after insertion
+83927515 | 01.03.2024 | dnd working okish in vanilla js
+0fd0aae0 | 29.02.2024 | tp layout template playground
+2167dda5 | 29.02.2024 | tp layout template playground
+29d64d72 | 29.02.2024 | kanban demo layout
+74fcad55 | 27.02.2024 | Implement outline of drag and drop!
+f668d403 | 22.02.2024 | 2.0.0
+bac6c819 | 22.02.2024 | Merge pull request #249 from Jinntec/dependabot/npm_and_yarn/ip-1.1.9
+35f3de00 | 22.02.2024 | Merge pull request #241 from Jinntec/dependabot/npm_and_yarn/follow-redirects-1.15.4
+214829f0 | 22.02.2024 | quiten console a bit
+308000c2 | 22.02.2024 | refined e2e tests
+24d15263 | 22.02.2024 | detail changes to demos
+96f7075c | 22.02.2024 | var initialization
+68b9607f | 22.02.2024 | partly refactored loading functions into fore.js for fx-fore (others following later)
+a2409541 | 22.02.2024 | fixed demo
+cf9e8aa4 | 22.02.2024 | new app-generator test
+0d924883 | 22.02.2024 | Merge branch 'container-src-support' into dev
+d540a0a2 | 22.02.2024 | breaking change: 'url' attribute of fx-control changed to 'src'
+1be4f8ca | 22.02.2024 | * merged changes to fix switch/repeat refresh lost by rebase
+4af50588 | 22.02.2024 | Bump ip from 1.1.8 to 1.1.9
+8f4c5780 | 21.02.2024 | Merge remote-tracking branch 'origin/dev' into dev
+a6450388 | 20.02.2024 | Do not update the values of template expressions if they are not changed
+abdc8ace | 17.02.2024 | wip - nesting with plain fore elements instead of controls still needs work
+18a651f8 | 17.02.2024 | small fix
+1cd0e877 | 17.02.2024 | added file
+0bc462ab | 17.02.2024 | * fx-fore listens for 'refresh' event now * added some inline comment about the parent refresh 'problem' - code review ! * console.log now logs id of fx-fore (if given) to ease debugging in nested situations
+08310705 | 17.02.2024 | console - scoping to fore element
+d033234a | 17.02.2024 | minor demo changes
+a936b3f5 | 17.02.2024 | merged in fixes from 'fix-dev' branch regarding the getInstance function and finding default instance.
+3ae9ac20 | 17.02.2024 | modified shared-instances.html to dispatch 'refresh' explicitly
+029ea9b5 | 17.02.2024 | removed inspector
+505f9b28 | 17.02.2024 | * new tests with control embedding fx-fore * replaced one unit-test with cypress test
+4cef6b05 | 17.02.2024 | * removed refresh call in _replaceNode causing unnecesssary refresh * during import model is looked up in markup and not as object
+48c440fe | 17.02.2024 | scoping console messages to Fore element
+01139d31 | 17.02.2024 | appgenerator demo
+ca3bbe8e | 13.02.2024 | fix regression of fx-toggle to leave out refresh which is of course needed.
+342c04b8 | 13.02.2024 | new demo and testcases for fx-switch
+b5555b27 | 13.02.2024 | fixing check for parent Fore by taking shadow boundary into account.
+cd9d4368 | 13.02.2024 | typo
+8d704be5 | 12.02.2024 | wip - support 'src' on all container elements including fx-case
+93359f4a | 12.02.2024 | refactored fx-load extracting generic loadHtml() function to fore.js.
+d7b6766f | 02.02.2024 | removed stale code
+eeab8f34 | 02.02.2024 | tp demo
+b0dec803 | 01.02.2024 | 1.10.3
+0e19441e | 01.02.2024 | fixes issue with instance resolution within fx-bind elements
+53e54c48 | 01.02.2024 | improve error message on required validation
+460c7b1c | 01.02.2024 | just a comment when picking up later again
+19c4075e | 29.01.2024 | commented console message for eventual usage
+0bfebdfd | 29.01.2024 | fixed demo path
+d6296ae7 | 29.01.2024 | not setting tabindex any more. This is the authors business.
+2084c3f4 | 27.01.2024 | 1.10.2
+36a93872 | 27.01.2024 | added e2e tests for shared instances
+c90ae848 | 27.01.2024 | * model stores its fore element for use with shared instances * if model.getInstance() fails to find instance in local model it will try to find it in its parent Fore shared instances. Otherwise error is dispatched
+277c2c45 | 27.01.2024 | cleanup
+2df6a82d | 27.01.2024 | cleanup
+d5145650 | 27.01.2024 | re-implementation of fx-switch to properly handle event dispatching. Non-active cases will be inert now. Fixes problems with eventual refresh loops when using 'select' event
+a40dec80 | 27.01.2024 | adding messages to switch demo to show event handling
+de2f5e78 | 27.01.2024 | cleaning up instance function
+c1f1eefb | 27.01.2024 | fixed calc-order.html - needs number conversion
+df143cbb | 26.01.2024 | 1.10.1
+1b7a4fd2 | 25.01.2024 | fix: inserts requires rebuild
+295b9871 | 25.01.2024 | fix: inserts requires rebuild fix: missing import
+82009d03 | 25.01.2024 | fixed circular dep
+f2d43671 | 25.01.2024 | asserting pathes
+08031263 | 25.01.2024 | * error-handling * getDocPath utility func for logging
+01a6b7fe | 24.01.2024 | * rollback changedPath approach  for now causing too many issues. * relevant/nonrelevant now using explicit boolean attribute instead of hardcoded display nones * fix for _handleBoundWidget to clear list before bailing out * fixed several occurrences of resolveInstance (for shared instance support) * fixed a bug with XPathUtil.getPath
+2f77ff50 | 17.01.2024 | made _loadFromSrc async
+0e47d0c2 | 17.01.2024 | fix relevance by using boolean attributes instead of using display:none style
+c31f9c23 | 17.01.2024 | demo styling fix
+e65019c2 | 10.01.2024 | Bump follow-redirects from 1.15.1 to 1.15.4
+72a0580e | 09.01.2024 | fixed header style
+a5846b26 | 20.12.2023 | 1.10.0
+00d7184a | 20.12.2023 | playground files + images
+4b40024d | 20.12.2023 | wip markup for partial instance problem - testing different approaches
+755414dd | 20.12.2023 | refined shared demo
+f1baccd8 | 18.12.2023 | adding uri.html to the demos
+7061a005 | 18.12.2023 | fixes #240 on dev - Tutorial to-do app: string-length constraint malfunctions
+51a54c45 | 14.12.2023 | refined demo
+37bd17c4 | 13.12.2023 | Merge pull request #239 from Jinntec/required-event
+5e27f9c6 | 13.12.2023 | Fix required event not always being fired
+102ce0af | 12.12.2023 | new demo
+62259197 | 08.12.2023 | preps for submission replace="merge"
+fcb96141 | 08.12.2023 | only refresh if inited
+1b10ba8c | 08.12.2023 | improving i18n demo
+cf1cb297 | 08.12.2023 | graphing experiments
+ff8efcd3 | 07.12.2023 | avoid redundant 'role' attr when we have a button
+364c8114 | 27.11.2023 | sample for combining instances
+ce9cb7db | 27.11.2023 | link fixed
+baa6ec6d | 27.11.2023 | do not ignore 'select' mode
+0cd7dd5a | 24.11.2023 | show all attributes in DOM inspector except 'style'
+f8e97363 | 24.11.2023 | some demo enhancements
+86e8a024 | 24.11.2023 | email demo refinements
+917b9d4b | 24.11.2023 | some aria role settings
+4b1cc09f | 24.11.2023 | execute-action should be dispatched by concrete actions - avoid double dispatching with setvalue
+f5a9d5a0 | 16.11.2023 | * new demo for just appending data * restructered demos again
+fa5138b4 | 08.12.2023 | Merge pull request #238 from Jinntec/repeat-e2e
+e3b2ee02 | 08.12.2023 | Merge pull request #237 from Jinntec/wip-repeat-depteack
+6c9d2b7a | 05.12.2023 | Add E2E test for repeats
+eb1e6e62 | 05.12.2023 | Make tests work
+3cacf284 | 21.11.2023 | Make real-time demo work
+17bec35b | 14.11.2023 | Implement repeat updates through dependency tracking
+e7527636 | 15.11.2023 | * new demo on appending data * new set of functions for reading uris and localdate + time
+4e8b7a37 | 08.11.2023 | * new demo for just appending data * restructered demos again
+a2f24fd6 | 08.11.2023 | * cleaning shared-instances.html demo and integrated it. * introduced new section for instances in demos.html
+1cc67a73 | 08.11.2023 | fixing tests for new path
+6e445c40 | 07.11.2023 | Remove bad error
+5e73b6ab | 07.11.2023 | Try to make shared instances work!
+806f17c4 | 07.11.2023 | Make sure we have encode the instance in a path
+2b5e9e16 | 01.11.2023 | 1.9.0
+b7112b31 | 01.11.2023 | added the demo for credentials
+6a2adf5c | 01.11.2023 | added the demo for credentials
+5ee0c24a | 01.11.2023 | making credentials setting for fetch configurable via 'credentials' attribute - defaults to 'same-origin'
+08de3e17 | 01.11.2023 | Merge pull request #234 from Jinntec/submission-cors
+5422e9f9 | 31.10.2023 | Skip function test for now and fix publish workflow
+3f558107 | 31.10.2023 | Allow submission to send credentials
+77f36746 | 31.10.2023 | Manually install demos before cypress run
+a882c794 | 24.10.2023 | Add test for i18n demo (and document how to peer into shadowDOM
+4163dd03 | 24.10.2023 | Add CYPRESS.md and new test
+3cb63830 | 03.10.2023 | Add test for url overwrite demo
+4a3dcc47 | 03.10.2023 | Skip output from es-dev-server
+056bfa67 | 03.10.2023 | Fix user agent string
+a3058289 | 03.10.2023 | Add simple github action for cypress
+b1b4fd1e | 03.10.2023 | Implement simple example Cypress test
+736463a9 | 31.10.2023 | Update release script and don't have the `dist` folder
+061adcb5 | 30.10.2023 | 1.8.1
+91722e95 | 30.10.2023 | prevent control from updating when modelitem is nonrelevant
+b4ff2914 | 30.10.2023 | new test to assert correct resolution of instances in nested fore elements
+acb2b66f | 24.10.2023 | updated build
+77253017 | 24.10.2023 | versioning
+227c6b5b | 24.10.2023 | versioning
+6b847486 | 24.10.2023 | versioning
+f7398d51 | 24.10.2023 | versioning
+fa5877a2 | 24.10.2023 | versioning
+8d4d07dd | 24.10.2023 | versioning
+e1ff91b4 | 24.10.2023 | * ignoring template expressions on attributes when ignoredNodes exist
+7b163f70 | 23.10.2023 | added support for 'ignore-expressions' attribute taking a querySelector to identify some nodes to NOT consider for template evaluation.
+880db125 | 19.10.2023 | Merge remote-tracking branch 'origin/dev' into dev
+3e69a06a | 19.10.2023 | Merge pull request #233 from Jinntec/dependabot/npm_and_yarn/babel/traverse-7.23.2
+02f2472e | 19.10.2023 | Merge pull request #232 from Jinntec/feature/fix-race
+e65e5925 | 18.10.2023 | Bump @babel/traverse from 7.18.5 to 7.23.2
+733254fc | 17.10.2023 | Fix race with sub-fores
+9f34f5a2 | 17.10.2023 | * enable warn messages
+f7faa144 | 12.10.2023 | * cleanup download link * replace="download"
+29843f24 | 12.10.2023 | 1.8.0
+4e20d676 | 12.10.2023 | updated build
+d71ad33a | 12.10.2023 | * removing postinstall task from package.json to fix installation issues * replaced postinstall with install-demos task to be called explicitly. Documented that in README.md
+da8b4932 | 12.10.2023 | * support for instance type text * replace="all" can now be combined with target="_blank" to send response to new browser tab * added demo
+d77951d6 | 07.10.2023 | new fx-call action to call an action or function
+7ce5c879 | 29.09.2023 | 1.7.2
+0f802e9d | 29.09.2023 | * fixed fx-load action wrongly overwriting url attribute instead of just evaluating it
+e55bbc99 | 28.09.2023 | * added version property to fx-fore allowing to query current version at runtime * added rollup plugin to inject version * checking for window as target in abstract-action.js
+6ebcdf7a | 20.09.2023 | 1.7.1
+49b51f6e | 20.09.2023 | rebuild
+7f5d3800 | 20.09.2023 | small demo changes and comments
+f48ba413 | 19.09.2023 | Merge remote-tracking branch 'origin/dev' into dev
+49740e1a | 19.09.2023 | Merge pull request #228 from Jinntec/stop-at-subfore
+3f80c420 | 19.09.2023 | Merge remote-tracking branch 'origin/dev' into dev
+8fcfbd26 | 19.09.2023 | Properly stop at subfore boundaries
+63371333 | 18.09.2023 | Merge pull request #227 from Jinntec/context-bug
+a2848932 | 15.09.2023 | Fix context function in repeats
+cb9bb2e1 | 15.09.2023 | Make unit test of bug #223 and fix context function
+f6b4a70e | 11.09.2023 | wip on partial demo
+16d6ff20 | 11.09.2023 | commenting replace merge related code for now
+7d34b693 | 11.09.2023 | quieten inscopecontext
+30065cab | 06.09.2023 | submission merge working - further tests needed
+6ac1060d | 05.09.2023 | wip
+9a0cfa18 | 05.09.2023 | Add typedValueFactories to convert types to Function Calls
+b410950a | 05.09.2023 | wip
+a61e6a3b | 05.09.2023 | Merge remote-tracking branch 'origin/dev' into dev
+24ca5696 | 05.09.2023 | wip
+c3232c0e | 04.09.2023 | Update README.md
+e4a0e3a9 | 01.09.2023 | 1.7.0
+35aa7df8 | 31.08.2023 | Merge remote-tracking branch 'origin/dev' into dev
+6d6def6a | 31.08.2023 | Merge pull request #224 from Jinntec/dependabot/npm_and_yarn/word-wrap-1.2.4
+cdddd2b1 | 31.08.2023 | deleted duplicate
+b1122f86 | 31.08.2023 | * applied various Demo refinements * fixed reset
+db9f8988 | 31.08.2023 | * updated fontoxpath * fixed subgraph demo
+39e39bc1 | 28.07.2023 | refined demo
+c73f4f8c | 28.07.2023 | fixed bug: edge creation for constraint facet was missing fixed/adapted tests
+295563df | 28.07.2023 | fore-component.html update
+45a3e2ad | 28.07.2023 | * demo snippet can hide Demo section by adding a 'nodemo' class to it * some refinements on demos * change the first demo on index page
+1d1446b7 | 25.07.2023 | * demo-snippet css glitch fixed * new demo for toggleboolean * new toggleboolean action
+5b254ccd | 22.07.2023 | 1.6.0
+749209dd | 22.07.2023 | updated build
+bf7ac482 | 22.07.2023 | updated build
+34ff1bd9 | 19.07.2023 | Bump word-wrap from 1.2.3 to 1.2.4
+d548f0f4 | 19.07.2023 | * improved error-reporting for load action * extracting Fore if load content contains a fore element
+7d041d43 | 18.07.2023 | just changed debounce value
+dd827ac2 | 17.07.2023 | test for attribute creation via fx-control create
+aaf03eed | 17.07.2023 | fx-control can now create attributes if they don't exist in the data
+f256128d | 14.07.2023 | updated demo
+62ecadd8 | 14.07.2023 | * enhanced submission-relevance.html * enhanced relevance selection to consider empty attribures as non-relevant by default. This can be changed with nonrelevant="empty | keep" * added tests
+dc317e02 | 14.07.2023 | * when update-event is not blur we need to add a blur handler once to get setvalue being fired. * passing number of computes in recalculate-done * added validate-on prop * revalidate constraint just when there's a value
+d5288707 | 12.07.2023 | * always add 'widget' class to input
+5b72917b | 08.07.2023 | * demo-snippet styling again * made the whole demo boxes clickable * overhauled .getstarted.html * added title to fore corner
+3ca3dc85 | 07.07.2023 | * linked new demo * more overview on demo page through new navigation * new layout finetuning
+2cdc2028 | 07.07.2023 | adding fore-corner to demos - still some missing
+1ba2d01a | 06.07.2023 | Merge remote-tracking branch 'origin/dev' into dev
+e80ed7e1 | 06.07.2023 | * fixing event cancellation for nested fx-fore elements * extended fore-as-control.test.js * updated jinn-toast and fontoXPath
+d4863fa9 | 05.07.2023 | Update main.yml
+ed34aa7b | 05.07.2023 | Update main.yml
+e52196ec | 05.07.2023 | change gitaction to use node 18
+2f44397f | 05.07.2023 | * fix cyclic import * fix tests
+d20312c0 | 04.07.2023 | Fix graph demo
+9823dbc4 | 04.07.2023 | Report readable errors to display something to users for failure
+f67acddd | 04.07.2023 | webpage redesign
+78a980ef | 29.06.2023 | * trying to parse content as HTML when getting string * check for nodeType in setvalue
+1af78fe5 | 28.06.2023 | quitening debug
+6c941dc9 | 28.06.2023 | layout changes to index and demo.html
+44ea356d | 28.06.2023 | evaluating labels
+d8f79e57 | 26.06.2023 | another i18n example with fx-items
+64f496f4 | 26.06.2023 | i18n example cleanup
+75a0faa9 | 26.06.2023 | i18n example
+ed185a18 | 22.06.2023 | * preventing mousedown on container * preventing mousedown on fx-control if it's outside the widget * preventing mousedown on fx-items.js * setting default case in fx-switch * new static function to detect if event target is the widget or a descendant * preserving original instance data in fx-instance
+69f691c3 | 21.06.2023 | Fix multiselect
+d1e8b7c7 | 21.06.2023 | Add a work-around against focus stealing
+c2251d6f | 21.06.2023 | Fix focusing the instance from a click on control
+c2e1cd25 | 20.06.2023 | tests for fx-items
+7ccf2603 | 20.06.2023 | fx-items with json demo
+20fae8ac | 19.06.2023 | * cancel event on fx-items * dispatching execute-action after evaluation in abstract-action.js
+02da3da2 | 19.06.2023 | * cancel event on fx-items * dispatching execute-action after evaluation in abstract-action.js
+d7e798aa | 19.06.2023 | Merge remote-tracking branch 'origin/dev' into dev
+f3124c65 | 19.06.2023 | * extracted util function * fx-items working with json
+a62927e0 | 19.06.2023 | demo refinement
+5668d89c | 19.06.2023 | Merge pull request #217 from Jinntec/dependabot/npm_and_yarn/got-and-np-11.8.6
+95f900ba | 16.06.2023 | * new fx-reset action that replaces current instance with given id with inline template data + using evaluateXPath instead of evaluateToFirstNode in ForeElementMixin.js avoids some issue with binding json * new demo
+22db8189 | 15.06.2023 | quiten console
+1dda0003 | 15.06.2023 | * refactored load actionp to use inherited function for evaluation * fixed _replaceNode in fx-control to support text nodes * preventing _loadForeFromUrl from inserting running twice and nesting within itself * changes to handling of mediatype=html in fx-output adding outputted content to shadowDOM instead of lightDOM. This needs another consideration as it has implication on the styleability * submission using inherited function for evaluation
+3efbab4e | 13.06.2023 | Pass instance by instance, not by ID
+8430f987 | 13.06.2023 | Only render a single devtools
+11cb8110 | 13.06.2023 | Do not error out if the document node gets selected
+aa1073df | 13.06.2023 | Do not wait for DOMContentLoaded event
+8cf52465 | 13.06.2023 | Merge remote-tracking branch 'origin/dev' into dev
+b7036ecc | 13.06.2023 | * send action supports overwriting of 'target' attribute * improved 'replace="all"' handling (checking for contentType) * minor demo css changes *  new demo for target overwrite
+738ec9dd | 13.06.2023 | Bump got and np
+08392280 | 13.06.2023 | Merge pull request #216 from Jinntec/dependabot/npm_and_yarn/socket.io-parser-3.4.3
+e7322e29 | 09.06.2023 | merged adi-inspector branch into dev.
+293fca7e | 09.06.2023 | merging devtools manually: * added tools folder * merged fx-fore
+40aab224 | 09.06.2023 | * refactoring: moved evaluateAttributeTemplateExpression from Submission up into ForeElementMixin.js as it can be useful in other places * introduced a parameters map in submission allowing to store overwrites of submission attribute values * extended fx-send action to evaluate its own 'url' attribute inscope and pass it to submission * added demo file for documentation
+3e1059ba | 08.06.2023 | * fixes submission replace="all"
+268e4e49 | 08.06.2023 | * fix to replaceNode in fx-control to handle attributes properly * reflect instance type to DOM if unset by user * getInstance(id) returns default instance if id is not found. This can easily happen with default instances that use a custom id * dispatch warning if instance is not found by submission
+81223a92 | 07.06.2023 | * fx-control does its own data-ref handling now for easier dealing with datalist and select. New policy is to use 'data-ref' on any non-Fore element where 'ref' is used instead. * wired the warn listener in fx-fore
+7644c458 | 03.06.2023 | very basic and rough example - still not working fully but connection can be made and basic message exchange possible. Comes with simple server to start with npm run websocket-server.
+b165f8ca | 02.06.2023 | migrated from adi branch: outermostHandler is now stored only once on fx-fore element instead of outermost action element.
+e145bc8d | 23.05.2023 | Bump socket.io-parser from 3.4.2 to 3.4.3
+55583b02 | 27.04.2023 | * using 'click' as default event caused control to fire unwanted updates whenever being clicked on (which should not cause any action) * added isInShadow function for use in resolveId function - the setvalue action of controls cause error in resolveId as they are in shadowRoot and couldn't find their parent fore.
+99c629c8 | 27.04.2023 | new fx-connection element - wip
+c689a0d7 | 26.04.2023 | new fx-connection element - wip
+defb8c02 | 24.04.2023 | Enhanced load demo
+0f5692c0 | 27.03.2023 | Revert "action-log improvements"
+66d42b25 | 27.03.2023 | action-log improvements
+e416ed37 | 25.03.2023 | action-log improvements
+0a549118 | 16.03.2023 | creating alternative dist with buildnumber
+77e9c30a | 11.03.2023 | detail work on load action added id to default slot added noscript
+80ac05a5 | 03.03.2023 | small demo fixes; attempt to implement light-dom component to insert some fx-elements
+6242a3ff | 03.03.2023 | refined fore component demo
+4614a8d0 | 03.03.2023 | refined fore component demo
+adf5fcbc | 03.03.2023 | fore component demo
+53e10524 | 03.03.2023 | started page to edit fore metadata; fixed attribute declarations in metadata;
+317a373e | 28.02.2023 | Make outermost handle detection work in shadowroots
+03b4b6aa | 28.02.2023 | Split out template from fore-component
+fcbff46a | 28.02.2023 | Make examples work by fixing contains
+0f0587b9 | 28.02.2023 | add generated attribute pages
+26301d22 | 28.02.2023 | wip
+1fea092a | 27.02.2023 | wip
+91157019 | 21.02.2023 | hacking dom-inspector
+a66dbbdf | 21.02.2023 | * cleaned up todos * cleaned/fixed up demos * rebuild dist * new error logging in send action * extracted common-function.js to avoid circ dep * fixed trigger action execution * still not fully baked error logging with showing element that errored
+f4d790d3 | 18.02.2023 | * added some missing super calls * fixed regression with missing url in load action * outputting error to document when send action points to nowhere * trigger checks for corrected event type and only fires action if event type matches
+06458fef | 15.02.2023 | wip example
+94e47809 | 15.02.2023 | wip example
+82883fb4 | 15.02.2023 | fixing showing of alert - requires that the control has focus as otherwise the 'visited' class won't be set and alerts don't show.
+1d639acb | 15.02.2023 | Merge remote-tracking branch 'origin/dev' into dev
+12e46dc3 | 15.02.2023 | fixing issue with missing demo node_modules by introducing a postinstall; updated build
+b9058880 | 15.02.2023 | Merge branch 'fx-load' into dev
+6f35c72d | 15.02.2023 | tiny demo fix
+32f05ea3 | 15.02.2023 | Merge pull request #203 from Jinntec/position-relative
+471ad2e6 | 14.02.2023 | Remove position:relative for code containers
+c18c217e | 14.02.2023 | Make FX-load accept a done-event
+6ff63d29 | 14.02.2023 | tiny demo fix
+56e00b33 | 13.02.2023 | wip
+f4880f7e | 10.02.2023 | pb-view example
+362a961c | 10.02.2023 | still not working
+3c967961 | 07.02.2023 | Merge pull request #196 from Jinntec/defaultAction
+42d5c249 | 07.02.2023 | Add phase xml event attribute
+38e049f5 | 07.02.2023 | Add defaultAction xml event attribute
+6d60b481 | 06.02.2023 | Merge remote-tracking branch 'origin/dev' into dev
+d39fbf7b | 06.02.2023 | fixes #192 fixed issue with 'visited' class and setting 'invalid'; fixed typos, removed unused vars and imports
+79ecb0c4 | 04.02.2023 | Merge pull request #194 from Jinntec/dependabot/npm_and_yarn/http-cache-semantics-4.1.1
+ba851a6c | 04.02.2023 | Merge pull request #183 from Jinntec/dependabot/npm_and_yarn/json5-2.2.3
+65f3f724 | 04.02.2023 | Bump http-cache-semantics from 4.1.0 to 4.1.1
+b13a0970 | 31.01.2023 | Merge pull request #193 from Jinntec/bubbles
+d6f95bdd | 31.01.2023 | Do not listen to events of sub-fore instances
+7e62da0b | 31.01.2023 | Do not bubble ready/refresh-done events
+2f1b52f0 | 31.01.2023 | Fix event 'detail' handling.
+f0a165d3 | 30.01.2023 | fixes #192 fixed issue with 'visited' class and setting 'invalid'; moved resetting of 'visited' from fx-fore to fx-switch which actually causes the issue of displaying outdated 'visited' state; updated build
+59b08cce | 26.01.2023 | improved load action
+36581d5b | 25.01.2023 | fixed misleading console output; resetting 'submit-validation-failed' css class before a new submission starts in send action; fixed error with setfocus when target is undefined; added some code to deal with xpath elements as return values and take respective strings; resetting 'visited' class before each hard refresh; unfortunately one test broke due to testability issues - skipped for now
+659aaba8 | 24.01.2023 | moved getClosest function to xpath-util.js instead of fore.js to resolve circular dep;
+1fe04444 | 24.01.2023 | Merge remote-tracking branch 'origin/dev' into dev
+23f62207 | 24.01.2023 | Merge pull request #190 from Jinntec/performance-resolveid
+396af51b | 24.01.2023 | Merge pull request #189 from Jinntec/rebuild-replace
+081db199 | 24.01.2023 | Merge pull request #187 from Jinntec/improvements
+04f432d7 | 24.01.2023 | Simplify event handling code
+b4eeedb3 | 19.01.2023 | fixing gap between tiles
+e3c7e864 | 17.01.2023 | Make the Pemberton map work
+74f8d5c1 | 17.01.2023 | Make fx-load fire only once
+b603b06f | 24.01.2023 | Also rebuild binds after a replace takes place
+4163c5fb | 24.01.2023 | Improve performance of resolveId by optimizing for common case
+39a9c2a0 | 24.01.2023 | Remove node 18 from test runner due to instability
+ba0701de | 24.01.2023 | [chore] Update node versions in test runner
+736bb615 | 19.01.2023 | Merge pull request #186 from nverwer/dev
+e5636a79 | 18.01.2023 | updated dist; tiny change to load demo
+fb791758 | 16.01.2023 | new fx-load action; fixing inscopeContext within fx-control; extracted static version of evaluateAttributeTemplateExpression and handleResponse; dispatching an 'init' event to fx-controls now;
+8d04cc7f | 09.01.2023 | allow text/xml responses and do not allow unhandled content types
+3b561fee | 09.01.2023 | fix to setfocus action added !important to nonrelevant rule
+cd7d7432 | 05.01.2023 | 1.5.0
+762f3ba5 | 05.01.2023 | update release doc and dist
+89538c71 | 05.01.2023 | fixing binding in demo
+a67b6554 | 05.01.2023 | merged repeat-attributes branch and refined demo
+b50bd153 | 05.01.2023 | refinements on new repeat attributes demo and css
+9c0dc4ba | 02.01.2023 | Bump json5 from 2.2.1 to 2.2.3
+d1d36c36 | 29.12.2022 | merged repeat-attributes branch and refined demo
+edc9031d | 29.12.2022 | Merge branch 'repeat-attributes' into dev
+22647bc5 | 29.12.2022 | fixed import
+5a859dc4 | 22.12.2022 | implementation of 'propagate' for actions with demo and tests
+0281f0c3 | 22.12.2022 | 1.4.0
+e65475c2 | 22.12.2022 | docs
+73c9e9b8 | 22.12.2022 | Merge remote-tracking branch 'origin/dev' into dev
+492d5485 | 22.12.2022 | added timer for outermost action;
+ed50d003 | 22.12.2022 | fixed some minor issue in comments (typos); cleaned up CSS; fixed dispatch of error; preventing issue with refresh-on-view firing too early;
+90b4c92e | 22.12.2022 | change instance() implementation to use plain querySelector instead of resolveId as instances are always unique at least within their form element. Removed hack for instance function in resolveId()
+511a56f1 | 20.12.2022 | Merge pull request #177 from Jinntec/dependabot/npm_and_yarn/engine.io-3.6.1
+95af78c5 | 20.12.2022 | refactored xpath-evaluation.js to use array of instances in model instead of evaluating over and over; removed unused functions from xpath-util.js; new getFore() function in fore.js returning fore element in scope without using evaluation
+0c7371b9 | 20.12.2022 | fixed modelitem alerts (defined on fx-bind); moved alert creation to bind instead of model.revalidate; fixed a demo; added test for modelitem alerts
+6359ad86 | 20.12.2022 | wip fx-copy
+ede7533d | 19.12.2022 | getInScopeContext always returns the default context if all other fails
+581cb7cf | 14.12.2022 | return if actionPerformed has no model (might happen after fx-delete); prevent fx-refresh from failing if control is not found (might happen after delete action) return from evalInContext if no model is found (might happen after delete)
+586ac9e3 | 14.12.2022 | prepared demo
+25224f48 | 14.12.2022 | Merge remote-tracking branch 'origin/wait-for-construct-done-merged' into wait-for-construct-done-merged
+428f7d3e | 13.12.2022 | Clean up template expressions without recomputing them
+f75835f4 | 13.12.2022 | Clear outermost event if an `if` prevents an action from running
+b702661c | 13.12.2022 | Properly close instance elements in tests
+2ddfa32b | 13.12.2022 | Optimize instance resolution
+989122e6 | 13.12.2022 | Merge remote-tracking branch 'origin/dev' into wait-for-construct-done-merged
+f954525d | 13.12.2022 | Add missing return
+0c405e75 | 13.12.2022 | added demo
+234940ee | 13.12.2022 | dispatching select/deselect events to fx-case when changing
+b58df98d | 13.12.2022 | dispatching select/deselect events to fx-case when changing
+d6912c11 | 13.12.2022 | a demo + instance logging
+dc718959 | 09.12.2022 | test prep
+40b9eb5f | 08.12.2022 | comment + test for setvalue
+9854b67e | 07.12.2022 | static loadForeFromUrl improved
+7a9e4e19 | 07.12.2022 | tiny demo fixes message async perform
+3d9dd086 | 06.12.2022 | Do not make while with a delay block the event loop
+1543a42a | 06.12.2022 | adapted
+b1090516 | 06.12.2022 | unified signature of perform; skipped action tests run again; some corrections to perf.html to fix some of the actions
+7fb969f3 | 06.12.2022 | fixed syntax error from merge
+79a0ff55 | 06.12.2022 | Merge branch 'dev' into wait-for-construct-done-merged
+3794153d | 05.12.2022 | 1.3.0
+90e4a4b4 | 05.12.2022 | updated
+daca18ed | 05.12.2022 | demo with complex submission/action combination - still to be documented
+1f653b6e | 05.12.2022 | another demo using Fore as control to build a duration component from select controls
+b6b21303 | 05.12.2022 | fixing message in demo
+366bff6b | 03.12.2022 | updated build
+9ecf949b | 03.12.2022 | fixed regression with fx-action calling perform instead of execute. Creates 2 false negative tests that are hard to replace with current testing. Migration to cypress hopefully could solve such issues.
+f6ec2f76 | 03.12.2022 | new demo/test
+fbca8a6a | 03.12.2022 | Fore as control example fixed again
+1758f406 | 03.12.2022 | preserving the option to attach sub-Fore as shadowDOM (whatever its good for)
+72c95fa6 | 25.11.2022 | fixed regression with loading fore as control
+18415248 | 25.11.2022 | tiny refactoring in abstract-control.js
+0f4bb4a5 | 24.11.2022 | alert only shown when control is visited; removing display:none from :host styles
+ca91606f | 24.11.2022 | updated
+864b1f5e | 24.11.2022 | Bump engine.io from 3.6.0 to 3.6.1
+c90e6356 | 23.11.2022 | tests for isEmpty and visited state
+f33d01ed | 23.11.2022 | fix in inscopecontext to not reach out of fx-fore element; added try catch to submission fetch; refactored required handling to fix issue in submission-required.html demo; fixing context element when evaluating 'value' attr so that is passed its event detail vars; lots of detail refinements to the demos
+3083be7c | 23.11.2022 | fixing clock
+1c59765e | 22.11.2022 | Merge pull request #176 from Jinntec/templates
+4604edf3 | 22.11.2022 | Fix newlines in template attributes and templates in messages
+4a016724 | 22.11.2022 | fixed regression with required updating on control
+e4fe1ed8 | 22.11.2022 | fixing relevance behavior if group is unbound; example for setfocus select; adapting todo2.html to new localStore;
+cbc2a2fe | 22.11.2022 | adding support for 'select' attribute that optionally select the value of the control for overwriting
+6b989834 | 21.11.2022 | #fixes #140 along with test
+b333d9f6 | 21.11.2022 | added demo
+1b412aa6 | 21.11.2022 | Merge remote-tracking branch 'origin/dev' into dev
+1c6829e0 | 21.11.2022 | fixed issue with fx-group binding to non-existing (nonrelevant) node. Now will be correctly hidden from display by using marker attributes 'relevant' and 'nonrelevant'. Added tests;
+c8a3ebca | 21.11.2022 | Merge pull request #174 from Jinntec/dependabot/npm_and_yarn/socket.io-parser-3.3.3
+1a367dde | 18.11.2022 | cleaned up and refactored localStore support; refined localStore demo showing support on instance also;
+c1ce3f9b | 18.11.2022 | control logging sub-fore instead of parent; using importNdde to load external fore; preventing error when inspector has nothing to show; removing submit-validation-error class when revalidating; instance also supporting localStore scheme now;
+ec8f9371 | 10.11.2022 | Bump socket.io-parser from 3.3.2 to 3.3.3
+7591541b | 03.11.2022 | minor demo fixes
+ea95c796 | 03.11.2022 | build updated
+d1f8a364 | 03.11.2022 | item-changed event not using 'composed' event to not leave shadowDOM; typo in console
+6e48125d | 27.10.2022 | fixed confirm: extends FxAction now
+34dde54e | 26.10.2022 | fix submission headers
+f270899e | 26.10.2022 | setting marker attributes for valid state; fixing submission to use value of serialization attr for setting content-type of request; fixes problem with repeated urlencoded requests
+7477241e | 19.10.2022 | fixed data; added trigger icons; added a timer;
+fecd7a9b | 19.10.2022 | Merge remote-tracking branch 'origin/dev' into dev
+f054c07c | 19.10.2022 | new demo
+ce627da0 | 19.10.2022 | Merge pull request #166 from Jinntec/dependabot/npm_and_yarn/engine.io-and-socket.io-3.6.0
+e711c907 | 19.10.2022 | Merge pull request #167 from Jinntec/event-code
+fee2b29e | 19.10.2022 | Merge pull request #168 from Jinntec/demo-fix
+2ed394ce | 18.10.2022 | some more experiments with editor
+c216afc9 | 18.10.2022 | cleaned up data; added icons to perf.html
+f2da2d09 | 18.10.2022 | Fix `pre.html` demo
+446cb986 | 18.10.2022 | Fix event code being applied
+136ed7bc | 18.10.2022 | Make all tests work
+8892fe06 | 17.10.2022 | fixing regression
+6b7e00e4 | 13.10.2022 | inserting todos at top again
+cc960f9b | 13.10.2022 | fixing setfocus in case it's part of some repeat itself.
+494dac51 | 12.10.2022 | further improved dataChanged handling - now setting the flag whenever a key event happens on a control not just when a value is actually changed which depends on the update-event to fire.
+78e214c2 | 12.10.2022 | moved dataChanged static field to model; setvalue is no longer triggering dataChanged to be true; updated build
+dc26db0f | 12.10.2022 | check show-confirmation values
+43aad798 | 12.10.2022 | Bump engine.io and socket.io
+43341fd2 | 12.10.2022 | Merge remote-tracking branch 'origin/dev' into dev
+85dd4188 | 12.10.2022 | updated fontoXPath
+e1a20197 | 12.10.2022 | Merge pull request #165 from Jinntec/optimization
+9a4ddae8 | 11.10.2022 | Refactor model-construct-done to make it wait for event handlers
+df8fa007 | 11.10.2022 | enhanced page exit confirmation
+129bd00a | 11.10.2022 | Prevent calling `.closest` on non-elements
+8e9d9879 | 11.10.2022 | quiten fore again; updated demos
+ec24df7a | 06.10.2022 | fixing an action test
+f4993baa | 06.10.2022 | converted original Steven Pemberton example
+93dabc13 | 06.10.2022 | fixing todo and adding reload action
+9ac32c8e | 04.10.2022 | Rewrite XPath to CSS selector + closest
+fdf57c31 | 04.10.2022 | Micro-optimize template finding and instance finding
+a66dd5bb | 04.10.2022 | added demo;
+49c97c0f | 30.09.2022 | modified instance generator to create some random data; created large repeat sample with either 100 or 1000 entries for performance testing
+131d9da5 | 30.09.2022 | added missing map files;
+7958cb3c | 30.09.2022 | fx-switch only refresh children of a selected case; deleted some deprecated elements from UI elements list; fx-container does not automatically refresh children any more; fx-group changed to overwrite container.refresh and refresh children;
+24ba9fc2 | 30.09.2022 | fixes #160 problem actually was in the sample form not the code. however now catching non-existing case elements and throwing error as its an authoring issue.
+9075c634 | 29.09.2022 | introducting 'static' list widgets that construct their listitems just once. off-screen rendering of list items; fixed abstract-action.js to not force refresh but respect changed items; added demo;
+784bdfba | 29.09.2022 | updated build
+79e645eb | 29.09.2022 | further streamlining console for a better trace of things;
+49f584eb | 28.09.2022 | streamlining console for a better trace of things; added static outermostHandler to abstract-action.js - not doing much except logging to console
+27787843 | 28.09.2022 | Merge remote-tracking branch 'origin/dev' into dev
+fc45abe1 | 28.09.2022 | Merge pull request #163 from Jinntec/performance-templates
+ff422e1b | 27.09.2022 | Optimize template gathering XPath
+1de9ec9e | 26.09.2022 | just a todo
+ef02a763 | 26.09.2022 | turned epidoc solution into static mockup version for performance testing certain aspects of Fore
+66c16c64 | 20.09.2022 | output mediatype=image now supported; small css fixes
+acd82ca1 | 20.09.2022 | dispatching 'dialog-shown', 'dialog-hidden' events; fixed dialog styling; added dialog tests
+21f3a761 | 20.09.2022 | Added hook for converting non-prefixed elements to prefixed elements.
+203b8251 | 20.09.2022 | added submission that fails with an error instead of dispatching submit-error
+7308759e | 19.09.2022 | new reload action
+2da7c9ce | 16.09.2022 | todo refinements
+cc150070 | 16.09.2022 | just added a reminder in code to revisit issue of unwanted value-changes
+a78d0112 | 16.09.2022 | repeatitem does not simply set 'display' property any more but a CSS class 'nonrelevant' instead. Allows the user to make adaptions e.g. transitions
+dc710ff7 | 15.09.2022 | feature show-confirmation to show onbeforeunload dialog depending on a condition; new demo
+971871bd | 13.09.2022 | extracted debouncing functions to events.js trigger and control now use the new module sorted fore.css
+3685b2f9 | 09.09.2022 | missing style rules
+88fa63da | 09.09.2022 | editing experiments
+cae877de | 08.09.2022 | fx-trigger now supports leading debounce to limit action execution within a timespan e.g. prevent fast clicking of save button.
+82c976e4 | 08.09.2022 | quitened logging again;
+0e337915 | 07.09.2022 | adding 'submit-validation-failed' class on submit error; adding class 'visited' whenever a control's update handler is called (after user interaction); scoping setfocus to ownerform
+c0c4fc2e | 06.09.2022 | fixing 'into' for submission; changing event dispatching to static version in fore; passing down the 'force' flag;
+b987ab62 | 02.09.2022 | fix to delete when there's no nodeset
+bbdadcf8 | 31.08.2022 | added resolveInstance function that returns the correct instance id for given bound element; re-implementation of fx-delete to make it ignorant of fx-repeat; added a couple of delete tests;
+4fc3adca | 31.08.2022 | Merge pull request #162 from Jinntec/xquf-idref
+15ec56fd | 30.08.2022 | Fix the querying in the XQuf script
+63568b57 | 26.08.2022 | 1.2.0
+abd693b3 | 26.08.2022 | changed colors
+b0393bf1 | 26.08.2022 | fixed initialization of inscopeVariables; setting modelItem.node instead of modelItem.value for mode as="node"; refreshed dist;
+2f8d2554 | 26.08.2022 | fixing inscopeVariables in abstract-action.js + added test; actions now dispatch 'while-performed' after loop execution;
+73d17083 | 25.08.2022 | checking for modelitem in container and adding as boundcontrol
+695e791e | 25.08.2022 | log message; checking for 'force' mode in refresh; pushing to boundControl in setvalue of control if not there already;
+1f176b7f | 25.08.2022 | forcing full refresh after replace=instance
+0969b1cd | 25.08.2022 | guarding varElement
+55bc9e05 | 25.08.2022 | syntax
+306c0bed | 25.08.2022 | rolling back
+90c48742 | 23.08.2022 | clean up logging
+d32f268f | 23.08.2022 | remove console logging
+2cc48137 | 23.08.2022 | missing resources
+a5488d9f | 23.08.2022 | removed debugger; removed logging; fixed implementation of refresh with control attr
+686f7a9f | 23.08.2022 | quitening fx-output logging
+a794e0e4 | 23.08.2022 | new test for epidoc processing - not fully working yet
+f603368a | 23.08.2022 | tiny change to functions.html;
+dc1298e1 | 23.08.2022 | fixed an issue with json refs not becoming nonrelevant; added some tests
+2830961b | 18.08.2022 | 1.1.0
+5852492d | 18.08.2022 | release how-to
+c3355177 | 18.08.2022 | release how-to
+949003e3 | 18.08.2022 | demo refinements; updated dist
+046b3c79 | 17.08.2022 | tiny demo refinement
+d7bebc19 | 17.08.2022 | reverting check of readonly prop in fx-control.js and fixing the trigger.html demo
+0e5d8e0e | 17.08.2022 | refinements on functions.html; todo2 with setfocus action; demos.html having markers for new or modified demo files; added demo for submission with required values; inspector instances collapsed now;
+0a8338fa | 16.08.2022 | Merge pull request #159 from Jinntec/xquery-functions
+af28f5b4 | 16.08.2022 | Merge pull request #158 from Jinntec/template-expressions
+75fb6107 | 16.08.2022 | Add more elaborate XQuery function example
+0b335c9e | 16.08.2022 | Do not double-parse template expressions
+ea7d5dc2 | 15.08.2022 | ignoring unparseable template expressions instead of throwing error;
+4f9addd6 | 15.08.2022 | adding support for submission with required check; adds a new isRequiredFalse class that is set on controls that fails validation during submit; validating required alongside constraints
+0e54c572 | 13.08.2022 | fixing oldVal in fx-control when its a node; checking for existence of dialog in show; updated build;
+21991ad3 | 13.08.2022 | added setfocus action
+c80672fa | 12.08.2022 | Merge remote-tracking branch 'origin/dev' into dev
+d2b1eccb | 12.08.2022 | fixed two bugs: -getting parentBindElement; -returning parentBind.nodeset instead of parentBind from context() function;
+8e03cb21 | 12.08.2022 | Improve docbook example with more namespace usage
+3c53cf2c | 11.08.2022 | updated dist files
+b5a8e474 | 11.08.2022 | guarding define again
+a5215cd7 | 10.08.2022 | new section on demos.page; fixes a bug with not preserving the root element of the instance when submitting; + test
+bd622ca5 | 10.08.2022 | support for open selection on select elements; +test +demo
+24e90c79 | 10.08.2022 | Merge branch 'demo-autocomplete' into dev
+b9c91134 | 10.08.2022 | support for open selection
+30e18cd7 | 10.08.2022 | demo for testing
+0ab2f1f2 | 10.08.2022 | Merge remote-tracking branch 'origin/dev' into dev
+3a96ee88 | 10.08.2022 | added submission 'localStore' feature to load and save from/to localstorage
+73b6fbba | 10.08.2022 | Merge pull request #155 from Jinntec/predicate-in-ref
+068375b7 | 10.08.2022 | Merge pull request #156 from Jinntec/performance
+6c0b1162 | 09.08.2022 | Improve performance
+53bd4739 | 09.08.2022 | Fix usage of functions in refs
+aced176c | 05.08.2022 | Merge remote-tracking branch 'origin/dev' into dev
+53d0d08e | 05.08.2022 | package.json description; fix to selection of case in switch; overhauled demo page with css;
+bf286a4a | 05.08.2022 | Merge pull request #154 from Jinntec/dependabot/npm_and_yarn/terser-4.8.1
+63055878 | 03.08.2022 | minor changes... inscopeContext now using closest() instead of Fore.getClosest()
+77835096 | 02.08.2022 | sample extended; delete action handling repeat via attributes;
+f08fdf11 | 02.08.2022 | sample working; tests needed
+9e7c98ed | 02.08.2022 | intermediate working except wwith header
+86271f5e | 02.08.2022 | rendering but still wrong values
+f9d6f789 | 01.08.2022 | experimental repeat from attributes
+7c6e4526 | 21.07.2022 | Bump terser from 4.8.0 to 4.8.1
+30e31b31 | 08.07.2022 | minor guard in loading initial node; commented line in replace that caused error but needs revisit confirm extending AbstractAction instead of xf-action
+940c01ea | 07.07.2022 | epidoc files
+9acb6a78 | 07.07.2022 | updated jinn-codemirror.js; replace now correctly adds its modelItem to changed list; passing modelItem.node instead of value when 'as' is 'node'; updating of widget value when 'as' is 'node' fixed; added new 'parse' function to parse a string to xml;
+34ee56f8 | 05.07.2022 | fixed README.md; core function call demo to illustrate bug; fixed output test; added a forced refresh function to fx-fore; added 'force' attribute support to fx-refresh.js; quiten fx-inspector; passing e.detail to inscopeVariables to make them available to event() function;
+50d1e1b2 | 29.06.2022 | layout fix for inspector
+13889912 | 24.06.2022 | evalInContext should not error when there are no instances as it might alreay be called before initialization is done e.g. during model-construct.
+253197a0 | 24.06.2022 | passing keycode to xpath vars to access it from event(); Additional guard of mainGraph in recalculate; Jump out of validation when there are no modelitems; changed event() to read vars directly from inscopeVariables
+ceea3444 | 23.06.2022 | added accordion.html to demos
+9593ac93 | 23.06.2022 | using visibility instead of display to hide element by default. added a default display none for case in fore.css instead to keep standard behavior.
+8237a6f7 | 22.06.2022 | improved example
+04c148e1 | 21.06.2022 | add demo showing problem with resolution -> #140
+b6a0f90f | 16.06.2022 | 1.0.0
+286d93dc | 16.06.2022 | added map files to dist
+76341506 | 16.06.2022 | minor fixes
+b7e4181e | 16.06.2022 | fixed api.html
+ad028091 | 16.06.2022 | avoid error in FF with pretty printing - however does not work in FF (does not intend as not supported by FF).
+a4125175 | 15.06.2022 | updated build
+f007fb4d | 15.06.2022 | removing 'local' from functions
+3205c5dd | 15.06.2022 | fixed a bug with setvalue to make reference.html run again. added it to the demos
+56967478 | 15.06.2022 | css
+d2bb12ed | 15.06.2022 | tiny fix
+7bbcb0e7 | 15.06.2022 | linting
+401b0f2f | 14.06.2022 | prettier
+fefb2f6c | 14.06.2022 | fixed logo link;
+8a31e985 | 14.06.2022 | fixed model creation when there's none; fixed subgraph creation when there was no maingraph;
+777aa00d | 14.06.2022 | missing logo added; removed style and content from forward index.html; small refinements on getstarted.html;
+eb11a192 | 14.06.2022 | Merge pull request #136 from Jinntec/fore-as-control
+9b7b1f91 | 14.06.2022 | Fix clock styling
+b2435cff | 14.06.2022 | Fix typo
+a219e920 | 14.06.2022 | Fallback to global id resolution for fx-dispatch
+26a8960b | 14.06.2022 | Refrain from using 'closest' since that does not respect boundaries
+9246393c | 14.06.2022 | Make labels work in nested controls
+768e31a6 | 14.06.2022 | Fix dialogs in subcontrols
+7520e67b | 14.06.2022 | Fix id resolution in abstract-action
+0bdd2882 | 14.06.2022 | Fix id resolution in fx-dispatch
+08d2f04a | 14.06.2022 | enhanced fx-fore control example
+0bb2c5e6 | 10.06.2022 | fixed required attribute handling; fixed invalid attribute handling; added a couple of tests for control state attributes;
+af46f061 | 10.06.2022 | default font setting
+e9c24eab | 10.06.2022 | updated dist versions
+2501e721 | 10.06.2022 | guarded customElements.define for all components now to prevent "this name has already been used with this registry" errors; merged PR #134 using marker attributes for states on control now instead of CSS classes; fixed trigger tests;
+d8619fc9 | 10.06.2022 | merged index.html + demo.html changes from demo branch
+69da776d | 10.06.2022 | removed unnecessary import of webcomponen-loader.js
+45acfd7e | 10.06.2022 | Merge remote-tracking branch 'origin/dev' into dev
+4232433a | 10.06.2022 | Merge pull request #134 from Jinntec/readonly-attributes-vs-class
+e0b62a19 | 07.06.2022 | Add readonly and required as attributes not as classes
+f4ce8f07 | 09.06.2022 | inspector in demo
+5d6b8096 | 09.06.2022 | prettier; linter issues fixed
+d3e0da6d | 08.06.2022 | prefix-less custom function in the example
+4db33956 | 08.06.2022 | smaller font on demo code on index.html;
+451fb56c | 08.06.2022 | Merge remote-tracking branch 'origin/dev' into dev
+2064da75 | 08.06.2022 | inspector uses absolute instead of fixed positioning
+da71bca7 | 07.06.2022 | Also make the clock in the index page work
+7856d3cb | 07.06.2022 | Make clock example work with all locales
+4913d097 | 07.06.2022 | Merge remote-tracking branch 'origin/dev' into dev
+660b60a5 | 07.06.2022 | Fix repeats over JSON
+70792e52 | 07.06.2022 | Fix fx-function and xpath-evaluation cyclic dependency
+4af45608 | 07.06.2022 | Merge remote-tracking branch 'origin/dev' into dev
+a296c5c2 | 07.06.2022 | Fix returning attributes (or nodes) from `fx-control`
+60585c42 | 07.06.2022 | Fix while demo HTML format
+7a5cb118 | 07.06.2022 | inspector uses absolute instead of fixed positioning
+374f0bb8 | 07.06.2022 | Merge remote-tracking branch 'origin/dev' into dev
+97c6c05b | 07.06.2022 | re-added dist dir
+a34e8826 | 07.06.2022 | Merge pull request #129 from Jinntec/friendly-functions
+1d0251b9 | 03.06.2022 | remove a link
+6511a5e1 | 03.06.2022 | fixed link
+3bcd6668 | 03.06.2022 | fixed demo-snippet.js styling; fixed clock demo; fixed fx-control demo;
+9b233ca3 | 02.06.2022 | added some docs
+f28c77c7 | 01.06.2022 | immediately forward to doc/index.html
+83c45836 | 01.06.2022 | Merge remote-tracking branch 'origin/dev' into dev
+5b55179b | 01.06.2022 | Update README.md
+3e80774f | 01.06.2022 | Update README.md
+7ce3891c | 01.06.2022 | Merge remote-tracking branch 'origin/dev' into dev
+25d1302b | 01.06.2022 | Update README.md
+1c0acb0c | 01.06.2022 | Merge remote-tracking branch 'origin/dev' into dev
+882266e5 | 01.06.2022 | Update README.md
+687f0478 | 01.06.2022 | reverting change to insert that causes errors in project.html demo.
+57a3abfa | 01.06.2022 | switching to new homepage doc/index.html
+df671b79 | 01.06.2022 | Merge pull request #128 from Jinntec/update-fontoxpath
+9bfcf255 | 01.06.2022 | Merge branch 'dev' into update-fontoxpath
+5548f8f6 | 31.05.2022 | fixed action to defer updates; various demo refinements;
+860aada3 | 31.05.2022 | demo details
+2c367b10 | 31.05.2022 | upgraded npm packages to their latest versions
+04562744 | 31.05.2022 | control setvalue does nothing when node is readonly
+59c1bb2b | 31.05.2022 | Make functions that are declared without a prefix available always
+2ef5f5b1 | 31.05.2022 | Update FontoXPath to its latest version
+7e7b338a | 31.05.2022 | reverted change to xpath-evaluation.js
+825efc28 | 31.05.2022 | new homepage and demo page design; renamed distribution files fore-debug.js -> fore-dev.js, fore-all.js -> fore.js
+1dc5ee6d | 24.05.2022 | new homepage in progress
+c5391229 | 20.05.2022 | re-added dist folder for npm (otherwise not containerd in npm package)
+6d8e9b0f | 18.05.2022 | fixing missing refreshes on repeatitems. Now are registering correctly in modelitem.boundControls.
+bef7698f | 17.05.2022 | merged all changes from fore-as-control and fore-as-widget branches. dev is therefore latest and greatest again.
+db781bae | 17.05.2022 | demo changes; tiny alert fix
+30419f84 | 17.05.2022 | fx-replace also allows to replace attributes. improved demo for replace; added test; added improved watch demo
+cae475ad | 17.05.2022 | Merge remote-tracking branch 'origin/feature-as-node' into feature-as-node
+a13966b3 | 17.05.2022 | comments; checking for node in replace action;
+c6cf62c2 | 16.05.2022 | styling on codemirror.html and demo/index
+18e67fab | 16.05.2022 | new clock demo
+f4a5217d | 12.05.2022 | update jinn-codemirror
+f1262dc7 | 11.05.2022 | change epidoc example (element title)
+f097e4a6 | 11.05.2022 | update epidoc example and dependencies
+a8d867d3 | 10.05.2022 | epdidoc binds to first node
+b6e62f27 | 10.05.2022 | new fx-replace action; fx-control now supports passing a node as value to a widget;
+ca01da20 | 10.05.2022 | feature as node in progress
+c60932ec | 09.05.2022 | just a comment
+613cc5a7 | 09.05.2022 | epidoc + demo
+7ef9ee35 | 04.05.2022 | tiny change to debounce demo
+90499eee | 04.05.2022 | adding debounce to fx-control.js to delay calling of updating event-handlers
+729b7801 | 03.05.2022 | Merge remote-tracking branch 'origin/dev' into dev
+0b666b7b | 03.05.2022 | new samples
+5b2a9705 | 03.05.2022 | prevent error when no vars are defined in xpath-evaluation.js
+a9ce1b2d | 03.05.2022 | fixed barebone.html
+b1103db5 | 27.04.2022 | Merge pull request #123 from Jinntec/dependabot/npm_and_yarn/async-2.6.4
+73f47d0c | 26.04.2022 | replacing doc and element nodes when setting value of modelitem updated codemirror-raw.html to update value - still not working for repeated updates
+4b7e52b6 | 21.04.2022 | Bump async from 2.6.3 to 2.6.4
+1983a2a6 | 21.04.2022 | fixed a bug with inscopecontext when using context attribute
+44f4ee38 | 19.04.2022 | fix for empty nodesets when control uses widget with ref
+a9fb4c46 | 12.04.2022 | Merge remote-tracking branch 'origin/dev' into dev
+16055208 | 12.04.2022 | Merge pull request #121 from Jinntec/fontoxpath-upgrade
+913e6649 | 12.04.2022 | Correctly implement DependencyNotifyingDomFacade#getNextSibling
+32499eef | 12.04.2022 | further steps for 'fore as widget': - added initial attr and evalutes it - added some docs - adds ready eventlistener to loaded fore element to replace instance (root data wrapper still missing) - fixed example binding
+abd8d525 | 08.04.2022 | extending inscopeContext to respect fx-fore element boundaries when resolving; new demo showing nested fx-fore elements (fx-fore as control); implemented basic loading of fore element into control; refactored updateWidgetValue;
+bbf9ea0a | 07.04.2022 | ready event does not bubble any more; externalized relevance processing from submission in preparation of 'return' action;
+670d36ad | 07.04.2022 | refactoring fx-control.js
+ce3e4bdd | 06.04.2022 | fixed project.html; added insert test to ensure element are deep cloned
+991cb633 | 05.04.2022 | some demos using fx-inspector
+e16d8937 | 05.04.2022 | Upgrade FontoXPath to 3.26.0
+d16b6ac0 | 01.04.2022 | fixed relevance handling for json; patched demo-snippet.js and using local copy due to ugly z-index problem; fx-inspector working for json now and revamped layout to be a sidepanel; added open feature to display opened or closed initially; internalized styles for fx-inspector;
+d1ddd321 | 31.03.2022 | fixing delayed update of template expressions in repeats
+523c9d34 | 31.03.2022 | json submission and replacement;
+0f1248ba | 31.03.2022 | fixed #98 toggle action; using Fore.dispatch instead of inherited function; added test; updated fontoXPath version
+bb1e7d15 | 30.03.2022 | Merge pull request #120 from Jinntec/action-context
+a2277dca | 29.03.2022 | Use correct inscopecontext for if and while in actions
+217dcffc | 29.03.2022 | Update README.md
+46f3092a | 29.03.2022 | show alert and throw Error when instance src returns failure status
+6f53630d | 28.03.2022 | codemirror example
+271ac5ad | 28.03.2022 | Merge branch 'codemirror' into dev
+9807397d | 17.03.2022 | demos.html is a Fore page now; added doc/index.html as new homepage (under construction) added fonts to project 'fixed' reference.html revealing a new bug added doc for fx-var element
+ecc0ae20 | 16.03.2022 | 1.0.0-5
+1ee1b850 | 16.03.2022 | fixed bound.test.js
+29d18c9c | 16.03.2022 | Merge pull request #99 from Jinntec/dependabot/npm_and_yarn/follow-redirects-1.14.8
+ae3fc08f | 16.03.2022 | Merge pull request #106 from Jinntec/dependabot/npm_and_yarn/demo/prismjs-1.27.0
+09fa0b01 | 16.03.2022 | Merge pull request #107 from Jinntec/dependabot/npm_and_yarn/prismjs-1.27.0
+40e644c5 | 16.03.2022 | Merge pull request #114 from Jinntec/lone-checkbox
+a0bde708 | 16.03.2022 | just a comment
+ca5e8e58 | 16.03.2022 | Merge pull request #115 from Jinntec/var-example
+13433196 | 16.03.2022 | Merge pull request #116 from Jinntec/prerequisites
+6313b4ac | 15.03.2022 | Add workaround to prereq example for cyclic graph
+e0462d22 | 15.03.2022 | Improve example for vars
+926ade61 | 15.03.2022 | Fix lone checkboxes displaying `[object Element]`
+8a861c31 | 15.03.2022 | some additional test demo
+cc3ce332 | 11.03.2022 | fixing error when there are no vars
+9113fd67 | 11.03.2022 | toggle now overwrites perform instead of execute as it should; important fix to include containers into array of modelItem.boundControls to be refreshed; adding 'fx-ready' class to document body to allow smooth page loading via css. however might not work as expected when several fx-fore elements are in one page. added refresh test;
+db349b18 | 10.03.2022 | some additional tests
+e13e078f | 10.03.2022 | experimental integration of codemirror - renders referred nodes syntax-highlighted but cannot update yet.
+e02f5af0 | 10.03.2022 | Merge remote-tracking branch 'origin/dev' into dev
+9b3fbd83 | 10.03.2022 | another fix to getInScopeContext.js now correctly getting and using instance id.
+279d2d7a | 10.03.2022 | Update README.md
+960e093f | 10.03.2022 | moved prettifyXml to fore.js
+a45c6ab1 | 10.03.2022 | screenshot
+f43dbd36 | 09.03.2022 | insert with context prepends element in context (inserted as first element); improved tests to include index checking;
+15704f62 | 09.03.2022 | always falling back to default context if there's none found. insert action with just 'context' attribute working now. however indexes are not right yet.
+85eb55cd | 09.03.2022 | Merge branch 'ling-1.0.0-4' into dev
+38c0fcf0 | 09.03.2022 | updated jinntoast
+b3c7a235 | 07.03.2022 | ling-sources.html running for outer and inner repeat now when there are no elements left. Outer repeat now also uses template instance for origin. tests still tbd.
+8271790a | 07.03.2022 | Merge branch 'dev' into ling-1.0.0-4
+0b44c75a | 07.03.2022 | update package-lock.json package.json
+c6885a1a | 07.03.2022 | updated demos.html; editor - basic steps
+c908d276 | 04.03.2022 | adding sticky toast message; fx-message demo
+afb81b2b | 03.03.2022 | fade out transition for dialog; dialog styles; test form;
+f014f3b8 | 01.03.2022 | 1.0.0-4
+15ec3fc7 | 01.03.2022 | fixed npm bundling
+16a6299f | 01.03.2022 | using new bundled css
+7392c0ec | 01.03.2022 | docs
+b945e02f | 01.03.2022 | merge styles
+b550ed48 | 01.03.2022 | updated build
+2b6196fb | 01.03.2022 | bugfix: added missing actions for dialog to list
+24b2a5dc | 01.03.2022 | Merge remote-tracking branch 'origin/dev' into dev
+8783391e | 01.03.2022 | graph demo refinements
+d9f1adf9 | 28.02.2022 | Update README.md
+0c8e6e44 | 28.02.2022 | 1.0.0-3
+619e2131 | 28.02.2022 | Merge remote-tracking branch 'origin/dev' into dev
+73b1c3b4 | 28.02.2022 | added image
+f6e56e6b | 28.02.2022 | Merge pull request #92 from Jinntec/variables
+fed1953f | 28.02.2022 | Merge branch 'refresh' into dev
+12669208 | 28.02.2022 | updated dist
+253217b2 | 28.02.2022 | some demo fixes
+ad1bb991 | 28.02.2022 | storing boundControls in modelItem now; completed refresh algorithm to include dependant modelItems and refreshing their respective controls; added testcases for dependant controls;
+01fa4a45 | 27.02.2022 | Add test for variables in actions and add to demo
+3284568f | 26.02.2022 | fixed case when there are no addedNodes (e.g. delete); merged fix from dev for superfluous nodes in maingraph; fixed refresh of template expressions - will be processed always but just rebuild after structural change of instance
+adfb8527 | 26.02.2022 | found bug with staggering processing times - nodeControls array was cleared. not at least run very fast unless repeat is modified. fx-repeat now send a 'path-mutated' event which is currently just used as a simple flag to trigger full run of updateExressions. Next step is to just add template expressions to the stored ones for the mutated repeat-item.
+e75bf31f | 26.02.2022 | Bump prismjs from 1.26.0 to 1.27.0
+e562567a | 26.02.2022 | Bump prismjs from 1.24.1 to 1.27.0 in /demo
+183ab5a4 | 25.02.2022 | found bug with staggering processing times - nodeControls array was cleared. not at least run very fast unless repeat is modified. fx-repeat now send a 'path-mutated' event which is currently just used as a simple flag to trigger full run of updateExressions. Next step is to just add template expressions to the stored ones for the mutated repeat-item.
+5e665834 | 24.02.2022 | tests adapted
+7ddac792 | 24.02.2022 | fixed duplicate text nodes; test pending
+d411d319 | 24.02.2022 | isolated problem of adding an entry into a repeate
+e1111cf4 | 24.02.2022 | not ready but down to 1 failing test
+19085429 | 24.02.2022 | new demo
+0de975d2 | 24.02.2022 | Merge branch 'feature-load-fore-from-src' into dev
+beab0cd2 | 24.02.2022 | changed demos.html
+2dadde00 | 22.02.2022 | added show() and hide() to fx-dialog; acting on esc key
+f0742cb7 | 22.02.2022 | fx-dialog with example and docs
+ccb30ee6 | 22.02.2022 | Merge branch 'feature-dialog' into dev
+78ad25c0 | 22.02.2022 | fx-dialog with example
+32680680 | 22.02.2022 | dispatch submit-error when validation failed
+a008dedd | 22.02.2022 | updated dist files
+b64c1e13 | 22.02.2022 | refreshing after falsy validation during submission to allow alerts to show
+6c5492fd | 22.02.2022 | es-ev-server config enabling CORS requests when remote app also supports it.
+0240d3f5 | 18.02.2022 | Merge branch 'context-function-fix' into dev
+4b88a2f3 | 18.02.2022 | missing test mockup files
+15fce3db | 18.02.2022 | fixed fx-items to match correct values when there are matching substring in them; additional tests;
+1558893b | 18.02.2022 | fixing type in binding demo
+49ff32b1 | 18.02.2022 | using copied instances for tests to not break when demo changes
+974a6326 | 18.02.2022 | changed name of bundle to 'fore-ling.js'. There's an additional variant 'fore-ling.min.js' with console stripped out;
+dd96bc56 | 18.02.2022 | fixing checkboxes with tests;
+150ce708 | 18.02.2022 | new sample
+5cee0f8a | 18.02.2022 | restoring ling files
+07c5599c | 18.02.2022 | rebuild fore
+ca4eb537 | 18.02.2022 | Merge branch 'dev' into ling-1.0.0-2
+e4cbd8ed | 18.02.2022 | full list of function items
+e56d61d0 | 17.02.2022 | fixed inscopeContext resolution for context() function; context() with idref argument;
+fe716a8c | 17.02.2022 | dialog in progress
+0bdec6ee | 15.02.2022 | Make context function with an argument working
+171d11a8 | 15.02.2022 | Make the context function work when there is a ref defined
+89173875 | 15.02.2022 | Merge remote-tracking branch 'origin/dev' into dev
+42e30170 | 15.02.2022 | context() in repeat demo
+bfac3153 | 15.02.2022 | Bump follow-redirects from 1.14.7 to 1.14.8
+3bb6bea7 | 11.02.2022 | Merge branch 'dev' into variables
+d94ed810 | 11.02.2022 | refinement of graph (detected new bug) - in progress
+b6c7f60b | 11.02.2022 | graphing interaction with validation backend
+f891d229 | 11.02.2022 | loading fore with src attribute
+01476b52 | 08.02.2022 | Merge pull request #95 from Jinntec/dependabot/npm_and_yarn/follow-redirects-1.14.7
+3f33fe0b | 08.02.2022 | Merge pull request #94 from Jinntec/dependabot/npm_and_yarn/node-fetch-2.6.7
+d183047d | 08.02.2022 | Merge pull request #97 from joewiz/patch-1
+4bb802f0 | 08.02.2022 | Add unit tests for fx-var
+c839c1f2 | 07.02.2022 | Fix typo
+39535cc4 | 04.02.2022 | Update README.md
+21224b71 | 04.02.2022 | adding link to element reference
+07cea357 | 04.02.2022 | Bump follow-redirects from 1.13.3 to 1.14.7
+1b2849bc | 04.02.2022 | Bump node-fetch from 2.6.1 to 2.6.7
+15f0283f | 04.02.2022 | 1.0.0-2
+e4295ff9 | 04.02.2022 | rebuild
+d619ee20 | 04.02.2022 | skipping updateModel() when there are no binds
+f75803df | 04.02.2022 | fixed calc demo to use number() function; extended css.html demo
+018a5c24 | 04.02.2022 | removed stylesheet import in fx-output causing ugly console errors
+32844cf5 | 04.02.2022 | fixed subgraph.html to use number() function in computes
+17553700 | 04.02.2022 | fixing regression in DependencyNotifyingDomFacade.js, added test to catch it.
+163c866f | 04.02.2022 | tiny fixes
+24979b5a | 03.02.2022 | fixed project.html
+ea7b0db3 | 03.02.2022 | updated build
+ceb7de08 | 03.02.2022 | fixed links
+54615664 | 03.02.2022 | prettier
+f8d88990 | 03.02.2022 | prevent accessing defaultContext before model has completed init.
+697e082f | 03.02.2022 | fixed another glitch with recalc
+ca6749ae | 03.02.2022 | demos
+38916d0b | 03.02.2022 | right approach but still causing test failures
+1a909ba9 | 03.02.2022 | demo refinements
+a5ab6c64 | 02.02.2022 | demo refinements
+892d65f8 | 01.02.2022 | fix in maingraph construction - always add a vertex for the node itself; some tests adapted - some tests missing; ignore 'readonly' attrs when a calculate is present in maingraph building
+725905ae | 01.02.2022 | the calculation examples working now
+d6bb61f5 | 01.02.2022 | Improve example for variables to be more verbose
+3f68dc25 | 01.02.2022 | recalc working with two examples which one open issue with required
+e75f12ce | 26.01.2022 | some still commented preps
+04246831 | 26.01.2022 | demo
+e1ead4dd | 26.01.2022 | improved path calculation
+fec9f371 | 26.01.2022 | documentation
+87302580 | 26.01.2022 | maingraph visualization
+9d65480c | 25.01.2022 | Implement the fx-var element. VARIABLES!!!
+0fc942d3 | 24.01.2022 | subgraph recalculation: when a list of changes exist only the affected subgraph of the mainGraph is recalculated.
+398d6fdb | 24.01.2022 | styling demo page. additional doc refinements
+600db155 | 24.01.2022 | add close action for details when switching filter; reference now fully working.
+bc9743ac | 24.01.2022 | fixed docs
+24f95c8f | 24.01.2022 | fixed filtering repeat; only load if not already done;
+01b571c0 | 21.01.2022 | completed quick reference
+a756efbd | 21.01.2022 | logging location href when starting Fore; added drawdown markdown function; output rendering markdown; new Fore Quick Reference which uses single markdown files for each element;
+0eb5afe2 | 21.01.2022 | added support for html instance parsing it appropriately
+5c6be671 | 21.01.2022 | added support for type="html" in fx-instance
+339baa8d | 21.01.2022 | tiny doc fix
+9655981a | 21.01.2022 | adding capability to insert into a target node when replacing instance with submission
+2045fa44 | 19.01.2022 | using first entry of array when inscopeContext is array for context when evaluating (first node rule)
+8083ec58 | 19.01.2022 | fixing example of using fx-inspector in editor-lazy
+1bece847 | 19.01.2022 | re-added missing function
+f6e70520 | 19.01.2022 | manuually merged from feature-context-fn but still problems in implementation of context
+5cea1792 | 19.01.2022 | manuually merged from feature-context-fn but still problems in implementation of context
+a354e26a | 19.01.2022 | Merge branch 'feat-namespaces' into dev
+43ff08b9 | 13.01.2022 | re-added package-lock.json
+7799858c | 13.01.2022 | refactor(abstract-control): renaming function to be public
+6db607fe | 13.01.2022 | new fx-inspector component lists out all instances at bottom of viewport in details elements.
+a32e8a61 | 13.01.2022 | include paper-dialog-scrollable
+c023ae30 | 10.01.2022 | turned fx-alert into plain vanilla component and fixed tests
+fa4d3f5f | 22.12.2021 | fixed issue with dispatchActionPerformed
+a6bd9066 | 22.12.2021 | fix setvalue
+3bcacab7 | 22.12.2021 | fixed build again - use fore-debug.js (with console) or fore-all.js (without)
+e8c0d034 | 22.12.2021 | cleaned up markup
+90ba4d26 | 22.12.2021 | segmentation section layout
+39af5635 | 22.12.2021 | added missing package-lock.json
+fd77b1bb | 22.12.2021 | remove dependencies that are not used by Fore
+d0332cd9 | 21.12.2021 | updated depgraph
+c3e360c7 | 21.12.2021 | dispatcb 'performed' also for fx-action elements
+50066b95 | 21.12.2021 | Merge remote-tracking branch 'origin/dev' into dev
+be355a55 | 21.12.2021 | cleanup new incubator dir to keep wip demos out of 'demo' folder
+bee4b9d4 | 21.12.2021 | ling: subform for lexemes
+0ab78723 | 21.12.2021 | instance-generator.html demo
+e2fa4d96 | 21.12.2021 | demo stuff in progress
+5bbfc493 | 18.12.2021 | merged lazy loading from respective branch
+178f6ce8 | 18.12.2021 | wip
+4c24bee0 | 17.12.2021 | perf(refresh): hide fx-fore at start and show after refresh-done
+0d2ab0c2 | 17.12.2021 | quitening console
+1d19182a | 17.12.2021 | model docs and logging
+c8829f17 | 17.12.2021 | jsdoc added
+8907c502 | 17.12.2021 | sample
+247dc60a | 17.12.2021 | tiny ling changes
+9ba40a23 | 17.12.2021 | added static dispatch
+75c2a859 | 16.12.2021 | new version of ling-editor without old style.css; added some counters
+84c8058a | 15.12.2021 | ling: remove some debug styles
+436d882c | 15.12.2021 | ling: visual division between preroot/root1/2
+87a73634 | 15.12.2021 | ling: attempt at showing counts of available segmentation hypotheses
+5d4237ed | 15.12.2021 | ling: dialects and name variants into collapsible details/summary
+24397e10 | 15.12.2021 | wrap segmentation and bibliography in details/summary
+40670336 | 15.12.2021 | ling: add root2
+e249b03b | 15.12.2021 | ling: add root1 and tidy up
+b3511248 | 15.12.2021 | ling: tidy up
+e0af7bfe | 15.12.2021 | indent
+2cc6faa1 | 15.12.2021 | ling: relative names fixed
+c77c6852 | 15.12.2021 | fixed lint/insert.html example. There was an XPath error plus here the 'context' is actually needed. fx-insert does not call super.perform but evaluates itself;
+795d4282 | 15.12.2021 | demo: broken insert
+0641f947 | 15.12.2021 | ling: general segmentation charact.
+3b42c11f | 15.12.2021 | ling: remove superfluous fx-groups
+8d7a7e6e | 15.12.2021 | fix typo
+d3bf0e64 | 15.12.2021 | attempt to add 'significant relative' section; insert doesn't work though
+fb0aab58 | 15.12.2021 | new ling form: Bibliography fixed
+93b60353 | 15.12.2021 | fix for the insert problem
+2747d8c7 | 15.12.2021 | shorten nested-repeats
+282f450e | 15.12.2021 | demo: nested repeats
+16d1411a | 15.12.2021 | ling: nested repeats in Bibliography (draft, not working properly)
+f98a9d6a | 15.12.2021 | new ling form: suffixes
+761de0ba | 15.12.2021 | new ling form: segmentation/lexeme elements
+aead7fce | 14.12.2021 | new ling form: name variants
+e407e56c | 14.12.2021 | reconstruct ling editor: general section and dialects
+c5b71945 | 14.12.2021 | fixed template loading; changed focus handling in repeatitem to not refresh on focus but just dispatch index change
+2029fe23 | 14.12.2021 | Merge remote-tracking branch 'origin/dev' into dev
+b04d3683 | 14.12.2021 | fixed regression in fx-control. must use evaluateXPath; quitened logging;
+43b43e58 | 14.12.2021 | broken select in a repeat example
+298736c8 | 13.12.2021 | Merge remote-tracking branch 'origin/dev' into dev
+8a5929d0 | 13.12.2021 | another small fix to make it work inside of lazy-loaded sections
+59de3395 | 13.12.2021 | fix to template finding; cleanup and documentation; testcases
+8fd19129 | 10.12.2021 | cleanup
+28d2876a | 10.12.2021 | feature(selectMultiple): new fx-item component to template groups of checkboxes
+2b65b324 | 08.12.2021 | fix(dispatch): now resolves id reference when used in repeat; had to add a custom build to avoid clashes with polymer
+494b7572 | 07.12.2021 | build does not handle modern syntax - reverting
+28edeba0 | 07.12.2021 | alternative mode for lazy refresh processing by adding a 'refresh-on-view' attribute to a UI element.
+a69b9fdf | 07.12.2021 | quieten console
+4810c6a2 | 06.12.2021 | merged editor.html added meanings subform extracted styles.css
+d1a40635 | 06.12.2021 | short demo for dispatch in repeat
+38e37526 | 06.12.2021 | import paper-dialog
+93f171c4 | 30.11.2021 | shortened demo to illustrate remaining issues
+d4ef5835 | 30.11.2021 | set value from the dialog
+8bec74f4 | 30.11.2021 | attempt to get ling to have autocompleteßlike behaviour
+ccc89997 | 30.11.2021 | Merge pull request #88 from Jinntec/test-ling
+0589bc0f | 30.11.2021 | Make more complex example with nested implicit namespacebindings work
+c3481e29 | 25.11.2021 | editor.html is binding nearly all controls without errors and renders in reasonable time. Styling is fully broken and needs complete overhaul. fix(container): bail out if no modelItem
+93ee244a | 25.11.2021 | fix(control): updating of options when there's only one node first block of ling form binding
+8fd889b1 | 25.11.2021 | fix(submission): targetref evaluation was wrongly using instance object instead of firstChildElement of instanceData refactor(instance): setting of data-id attribute removed again (not needed) fix(control): xpath evaluation reverted to use formElement instead of instance fix(demo): select control now working but found weak implementation
+86cda1d1 | 24.11.2021 | things are more complicated ...
+6c0fb7aa | 23.11.2021 | Improve namespace resolving based on an instance
+33c0c51e | 20.11.2021 | wip: ns resolution still failing
+ea74f5c1 | 10.11.2021 | chore(build) update dist files
+84272a14 | 10.11.2021 | feat(action): allow to connect to window events
+c48ce812 | 10.11.2021 | fix(submision response): check on status code before handling content
+7e570df7 | 05.11.2021 | Update README.md
+7f679270 | 02.11.2021 | Merge pull request #78 from Jinntec/continue-linting
+7a608709 | 01.11.2021 | Rewrite target object resolving to fix linting error
+2fb065f8 | 28.10.2021 | 1.0.0-1
+66d83690 | 28.10.2021 | style(demo):changed colors again
+59bb7792 | 28.10.2021 | docs(demo):auth demo
+848688e4 | 28.10.2021 | refactor(linting): linting + prettier
+5fff06b3 | 28.10.2021 | docs(demo): added randomizer demo
+ad9c4731 | 27.10.2021 | Merge pull request #74 from Jinntec/id-resolving
+c89a5ebf | 27.10.2021 | fix(output): syntax issue chore(dist): updated dist files
+83f3e0d3 | 27.10.2021 | refactor(insert): added a todo
+785a0c7c | 27.10.2021 | feat(output): support to output html instead of text value - test cases included
+495a0ace | 27.10.2021 | Merge branch 'dev' into id-resolving
+10f33304 | 27.10.2021 | fix(repeatitem): relevance handling fixed
+72f35384 | 27.10.2021 | refactor(repeat): cleanup
+29c05420 | 27.10.2021 | refactor(ouput):removed console.log
+4dfa01b3 | 27.10.2021 | docs(demo):setting title
+7d01af8e | 27.10.2021 | refactor(model): improved logging of recalculation
+723c54a1 | 27.10.2021 | refactor(xpath-evaluation): resorted functions
+aea407ba | 27.10.2021 | fix(relevance): fixed unreliable behavior of relevant prop not always having been updated
+416111b9 | 27.10.2021 | docs(demo): new demos
+c2a21f38 | 27.10.2021 | Merge pull request #76 from Jinntec/function-regex
+158eaa54 | 26.10.2021 | Fix the regular expression for function declarations
+c9168653 | 26.10.2021 | chore(demo): new demo
+f60a4233 | 26.10.2021 | Add a unit test for index lookup in repeats and fix some typos
+922fe9f1 | 26.10.2021 | chore(docs): clarify status of inline instances in demo page
+1b179860 | 22.10.2021 | docs(demos): new demo playing with bound CSS properties
+1fb4bf7c | 22.10.2021 | test(functions): additional test with multiple arguments
+f7b7b568 | 22.10.2021 | chore(barebone): removed polyfill
+7d3c1102 | 22.10.2021 | fix(evaluateTemplateExpression): multiple expressions in attributes failed and are fixed with test now
+80b6e27c | 19.10.2021 | Implement correct algorithm for id resolving
+95efc1bf | 17.10.2021 | 1.0.0-0
+a1e4cb0b | 17.10.2021 | updated dist files
+dc8d6cdb | 17.10.2021 | demo refinements; removed deprecated import; added screenshot to README.md
+63840adb | 17.10.2021 | deleted unused class
+e11d30bc | 17.10.2021 | readme updates
+05fa6b42 | 16.10.2021 | Update README.md
+62ccbc7c | 16.10.2021 | Update README.md
+eb5f5c83 | 16.10.2021 | lint+prettier
+b62ee98b | 16.10.2021 | toast styling; refined chaining demo; refined submission event dispatching; #echo submission chainable now (dispatching submit-done)
+ce90a751 | 15.10.2021 | fx-message can take dynamic value via 'value' attribute fx-submission tests for valid method
+7362870f | 15.10.2021 | implemented disabled state for triggers when they are bound to readonly nodes. only validity won't be applied at intial refresh run to avoid alerts before the user could interact. fixes content-type for urlencoded-post; Accept header can now be set from fx-header element overwriting browsers' setting. additional tests for trigger
+46c97d24 | 14.10.2021 | test for alert; preventing updating of modelItem properties before form 'ready' event esentially to not show alerts before user could interact. re-integrated enter key support (will still always have a blur listener as fallback); checking in fore-elements.json to not force the wca dependendy
+b99a4510 | 14.10.2021 | fixed rendering issues with non-relevant and repeats; some demo refinements
+8123cbb8 | 14.10.2021 | changes to docs
+72b7e661 | 13.10.2021 | fixed linting issues
+993bab74 | 13.10.2021 | cleaned up redundant prop; fixes(16)
+62c93fd6 | 13.10.2021 | prettier
+01b248e7 | 13.10.2021 | fx-output evaluating 'value' attribute now; added slot to repeat for header; new error toast reacting to 'error' events; catching xpath errors in evaluateTemplateExpression; preserving display css property for becoming relevant again;
+763fe451 | 12.10.2021 | added some docs
+4b00ba92 | 12.10.2021 | Update package-lock.json
+efe521bf | 12.10.2021 | Fix api.html example to process JSON, but only check templates once
+ba2aaafe | 12.10.2021 | Add WCA as a dep
+79f679b4 | 12.10.2021 | Merge remote-tracking branch 'origin/dev' into dev
+d28344ee | 12.10.2021 | api demo
+d5d6284f | 12.10.2021 | Fix namespace lookups for queries on XHTML
+3d159d24 | 11.10.2021 | new fx-confirm element for simple confirmation dialog before going on with actions.
+2a1dacec | 11.10.2021 | new fx-confirm element for simple confirmation dialog before going on with actions.
+d95477a4 | 11.10.2021 | tests for #43 #63
+f8d8674d | 11.10.2021 | tests for #43
+15b4fdeb | 09.10.2021 | css rollback (merge loss)
+4829c422 | 09.10.2021 | partial submission and replacement of instance data; demo + test
+153007ae | 08.10.2021 | implemented urlencoded post;
+59d9b6e2 | 23.09.2021 | merging deps from 'demo' dir into root package.json
+65867ae1 | 08.10.2021 | lint & prettier
+8b520ce7 | 08.10.2021 | changing to 'credentials':'include' for fetch requests
+1246be41 | 08.10.2021 | updated demos to provide 'red line' via prev/next navigation
+fbc85a1d | 08.10.2021 | small fix to fx-alert; extracted getContentType function to fore.js; added a getValue() function to ForeElementMixin.js that evaluates the effective value of a bound element. implemented fx-header to set a request header; submission sets headers from fx-header children; additional instance tests;
+228d1347 | 07.10.2021 | fixing submission relevance selection to not crash but throw an Error when trying to submit JSON
+1e155406 | 05.10.2021 | editor sandbox
+2be7d4f4 | 05.10.2021 | fixed test
+427b6632 | 05.10.2021 | serialization="none" support; a couple of tests and a demo;
+176e1596 | 04.10.2021 | demo stuff
+20205f28 | 01.10.2021 | catching empty contextnode in template evaluation and log a warning; fix in repeat to remove repeatitems completely instead of just hiding; renaming functions in insert; new demo with 3-level nested repeat;
+888ea632 | 30.09.2021 | added a dispatch function to ForeElementMixin.js; there's still a local _dispatchEvent in abstract-control.js to make sure that state events are not firing during init; not generating an id attribute on instance document any more; fixed echo submission;
+83db689b | 29.09.2021 | Merge pull request #66 from Jinntec/feature-echo
+4f9a40bb | 29.09.2021 | added a dispatch function to ForeElementMixin.js; there's still a local _dispatchEvent in abstract-control.js to make sure that state events are not firing during init; not generating an id attribute on instance document any more; fixed echo submission;
+9923fb5d | 28.09.2021 | added additional build bundle with console messages (fore-debug.js)
+1adb0d7d | 27.09.2021 | preparing echo feature that just returns the instance data it gets. Needed for testing submissions without hacking es-dev-server
+e3f3de8c | 27.09.2021 | refined demo and formatting
+9b872969 | 27.09.2021 | Merge remote-tracking branch 'origin/dev' into dev
+35e25ffc | 27.09.2021 | Merge pull request #52 from DrRataplan/docbook-example-namespaces
+cd8e5f69 | 26.09.2021 | Fix template expression namespace bindings
+0cba5190 | 24.08.2021 | Adapt to rename of `fx-form` to `fx-fore`
+25f0367d | 14.07.2021 | Add missing xml file
+7a3ab426 | 06.07.2021 | Temporary fix fx-form not always being found
+698ecb75 | 06.07.2021 | Add a concrete example of using namespaces
+714585cd | 24.09.2021 | submission relevance: nonrelevant="empty" support
+9da2679a | 24.09.2021 | submission relevance: tests working; important change: modelitems are also created seperately for text nodes.
+21914f27 | 23.09.2021 | namespace support integration; one test still failing
+1fa3e12f | 20.09.2021 | do not build fore-demo.js on dev branch
+0d7b9625 | 20.09.2021 | updated README.md
+7e64917b | 20.09.2021 | preparing new demo branch with custom build
+29e059be | 20.09.2021 | preliminary .ico
+ef01350f | 20.09.2021 | started relevance selection in submission
+3fc92a65 | 15.09.2021 | stripping console statements from fore-all.js
+37142178 | 15.09.2021 | 0.25.1
+b899c71c | 15.09.2021 | updated build
+bf3c4bac | 15.09.2021 | formatting demo
+df26b111 | 15.09.2021 | formatting demo
+fe8a0418 | 15.09.2021 | Merge pull request #59 from DrRataplan/dev
+471f3f35 | 14.09.2021 | Improve readability of while/delay/if of actions
+f60eba67 | 14.09.2021 | resolved cyclic dep; prettier + lint
+ca486f2d | 13.09.2021 | docs;
+fed4cfe2 | 13.09.2021 | fixed trigger performActions to execute child actions in order; updated demos; fixed fx-action.js to call execute() instead of perform();
+85612fd4 | 09.09.2021 | additional demos for 'delay' and 'while'
+d2c84ed4 | 09.09.2021 | Merge remote-tracking branch 'origin/dev' into dev
+d8a53235 | 09.09.2021 | fixed setvalue to use this.nodeset when evaluating the 'value' attribute
+61e6d84a | 08.09.2021 | Update README.md
+4aff0177 | 03.09.2021 | 0.25.0
+8a597ebe | 03.09.2021 | release prep
+85a16a8b | 03.09.2021 | fixed typo
+36dd6a65 | 03.09.2021 | prettier
+4bdac7f2 | 03.09.2021 | implemented while with demo + test; implemented fx-update and fx-refresh actions; fixed template; started implementation of delay. Works for simple case but not alongside 'while'
+77325c8f | 31.08.2021 | circular dep
+e862ffe9 | 30.08.2021 | started new demo; repeat with atomic values working however breaking other use case (interims commit); added evaluateXPathToNumber
+fc3c5f48 | 27.08.2021 | fixed insert tests; implemented support for 'context' (example from spec) attribute with test; refactored getInScopeContext.js;
+6603788e | 20.08.2021 | fixing index for copy use case; introducted 'keep-values' to change default XForms 2.0 behavior to NOT copy the values of the inserted item; added 'context' property to ElementMixin for future use; refined the insert.html example;
+5f81b7fd | 20.08.2021 | added more insert examples along with tests; one failing test that needs investigation; new index() function that returns current repeat index;
+1541d52b | 17.08.2021 | ignoring dist
+69c36ebc | 11.08.2021 | fixes to delete: triggering rebuild(); most of insert working but still glitches; repeat refresh behavior fixed; some first insert tests;
+2d5893b3 | 16.07.2021 | 0.24.0
+fba5f985 | 16.07.2021 | added toastify.css to the project for customization; importing it from fore.css; removed <link> elements;
+5b83019b | 16.07.2021 | Merge remote-tracking branch 'origin/dev' into dev
+8c7d90c5 | 16.07.2021 | fixed output; fixed regression in fx-append.js; refinements in demos;
+589bcf39 | 16.07.2021 | Big changes: - renamed fx-form to fx-fore and adopted everywhere - consolidated demo links - fixed issue with fx-output.js
+1e1bd156 | 16.07.2021 | adapted switch tests
+6278c130 | 16.07.2021 | just some starter on fx-insert wip
+3386dcf7 | 13.07.2021 | fixed switch case handling
+37f89d11 | 06.07.2021 | Fix JSON example only working a few days per week
+1e4d9875 | 10.07.2021 | Update README.md
+87a102a0 | 13.07.2021 | fixed demo file pathes
+129b1215 | 10.07.2021 | 0.23.0
+ae2374ad | 10.07.2021 | release color theme
+a593acbf | 10.07.2021 | linting applied - DependencyNotifyingDomFacade.js still has some issues which have been switched off for now. ignore liniting for demo folder
+703457af | 10.07.2021 | prettier
+3d7c0c70 | 10.07.2021 | separates demo dependencies from main ones. demo dir has its own package.json now to keep third-party deps out of a Fore build. Demo files now can use demo.js to load third-party deps without the need to install them project-wide.
+cee7bcc4 | 08.07.2021 | rewritten fx-instance to use fetch API instead of iron-ajax; now also handling remote json loading; added test; dropped iron-ajax dependency;
+346a400c | 02.07.2021 | 0.22.0
+9833ccea | 02.07.2021 | re-added np
+44773acd | 16.07.2021 | Big changes: - renamed fx-form to fx-fore and adopted everywhere - consolidated demo links - fixed issue with fx-output.js
+d8c5f192 | 16.07.2021 | adapted switch tests
+9ef7146e | 16.07.2021 | just some starter on fx-insert wip
+f4dc8aad | 13.07.2021 | some demo fixes
+819cfab8 | 13.07.2021 | fixed switch case handling
+64cd8d1e | 13.07.2021 | Merge remote-tracking branch 'origin/dev' into dev
+529352f3 | 13.07.2021 | fixed demo file pathes
+2e73c15a | 13.07.2021 | Merge pull request #53 from DrRataplan/dev
+ddca187a | 10.07.2021 | Update README.md
+e13a03fa | 10.07.2021 | 0.23.0
+186be3e9 | 10.07.2021 | release color theme
+cee4b395 | 10.07.2021 | linting applied - DependencyNotifyingDomFacade.js still has some issues which have been switched off for now. ignore liniting for demo folder
+087f4ddb | 10.07.2021 | prettier
+f6fb9a31 | 10.07.2021 | separates demo dependencies from main ones. demo dir has its own package.json now to keep third-party deps out of a Fore build. Demo files now can use demo.js to load third-party deps without the need to install them project-wide.
+0fcb46d6 | 08.07.2021 | rewritten fx-instance to use fetch API instead of iron-ajax; now also handling remote json loading; added test; dropped iron-ajax dependency;
+36f8a74a | 06.07.2021 | Fix JSON example only working a few days per week
+cf76d404 | 02.07.2021 | 0.22.0
+16bf669d | 02.07.2021 | re-added np
+5face739 | 02.07.2021 | Merge branch 'dev' into demo
+9b7c6865 | 02.07.2021 | fixed usages of fx-setvalue
+808280de | 02.07.2021 | new events demos; passing event detail to actions; implemented event() function that allows access to the event detail object in actions; new ability to register event on document; breaking behavior: static values are passed as content of fx-setvalue while 'value' attribute will be evaluated as XPath; modelitem now capable of accepting document and element nodes as values;
+15bb2127 | 30.06.2021 | 0.21.0
+8dc809f2 | 30.06.2021 | fixed test
+2bb051fd | 30.06.2021 | removed dependency by replacing use of paper-dialog with simple css solution
+20fe7e23 | 29.06.2021 | 0.20.1
+8a4b411b | 29.06.2021 | fixed test
+08c5d0db | 29.06.2021 | demo
+5347732d | 29.06.2021 | Merge remote-tracking branch 'origin/dev' into dev
+f9273232 | 29.06.2021 | renamed fx-dispatch 'event' attr to 'name' to avoid confusion and clashes
+eabdcfff | 25.06.2021 | demo refinements
+a1f09298 | 25.06.2021 | added demo link
+3c3cd08a | 25.06.2021 | Merge branch 'dev' into demo
+c0ea6fa8 | 25.06.2021 | demo refinements
+6f3dcb0e | 25.06.2021 | fixed demo
+b5098262 | 25.06.2021 | updated dist
+bf8882b5 | 25.06.2021 | added dist for gitpages
+99584ab4 | 25.06.2021 | Merge branch 'dev' into demo
+dfff2640 | 25.06.2021 | added dist for gitpages
+68cc9261 | 25.06.2021 | changed imports for gitpages
+2f995166 | 25.06.2021 | 0.20.0
+3a063720 | 25.06.2021 | bit of styling
+b1a3c7cf | 25.06.2021 | action running external javascript; demos;
+6eb55f0d | 25.06.2021 | bound switch implemented along with tests and demo
+58333a02 | 25.06.2021 | refined JSON demo
+5fb506d3 | 25.06.2021 | fx-dispatch action implemented with demo and tests;
+c986ba63 | 24.06.2021 | removed div wrapper for fx-group; added styles to demo;
+e9e6341a | 23.06.2021 | Merge pull request #46 from DrRataplan/dev
+7cbe8104 | 22.06.2021 | Add some intricate (working) JSON examples
+e0378cea | 22.06.2021 | prettier
+1c165dbe | 17.06.2021 | changed demo to use cdn
+2a018e19 | 16.06.2021 | Merge remote-tracking branch 'origin/dev' into dev
+c42faa91 | 16.06.2021 | changed demo to use cdn
+137e2dc5 | 16.06.2021 | Set theme jekyll-theme-cayman
+e6ec5d38 | 15.06.2021 | Merge pull request #45 from Jinntec/tei-header
+7abb8539 | 15.06.2021 | value-changed also dispatches path to changed node; new logtree function to output a tree of details/summary elements;
+972f8b45 | 14.06.2021 | loading webcomponents-loader from cdn
+f81ab492 | 11.06.2021 | tei header form + some experiments
+275d6965 | 11.06.2021 | removed unused dep
+48978edb | 09.06.2021 | test using cdn for one demo
+9af275d1 | 09.06.2021 | fixing import for fx-switch.js
+e0db87fe | 09.06.2021 | fixing import for fx-submission.js
+fe9d2b76 | 09.06.2021 | Merge remote-tracking branch 'origin/dev' into dev
+2f13145a | 09.06.2021 | update demo page
+4e4203d1 | 04.06.2021 | Update README.md
+adee1d5a | 04.06.2021 | Update README.md
+b223bb04 | 04.06.2021 | sample demo file
+1f5221a4 | 04.06.2021 | Update README.md
+40cbaf06 | 03.06.2021 | 0.19.0
+bce3b7be | 03.06.2021 | demo refinements
+49f029e6 | 02.06.2021 | prettier
+0d62c622 | 02.06.2021 | restore display none on abstract-control.js
+bab3ab0d | 02.06.2021 | Merge branch 'submission-fetch' into dev
+5bf62c2a | 02.06.2021 | fx-submission.js cleanup
+9218ece5 | 02.06.2021 | Merge branch 'repeat-sequence' into dev
+1fc6016d | 02.06.2021 | removed deprecated uses of depends(); config-editor demo
+bc1402af | 02.06.2021 | tiny update
+e58a3bd1 | 02.06.2021 | fixed regression with templated selects; rewritten fx-submission to use fetch processes url template expressions; improved contentType handling; more replace modes; refined submission demos
+578f11c0 | 02.06.2021 | fixing control demo; set back submission to work as before - continue working on submission-fetch branch
+15ba2d45 | 02.06.2021 | Merge remote-tracking branch 'origin/dev' into dev
+3d49a303 | 02.06.2021 | Merge branch 'DrRataplan-template-fix' into dev
+300b7305 | 02.06.2021 | Merge branch 'template-fix' of https://github.com/DrRataplan/Fore into DrRataplan-template-fix
+d58ba9c7 | 02.06.2021 | merged dev into repeat-sequence
+a67cee2c | 02.06.2021 | Merge pull request #32 from DrRataplan/template-fix
+c73558ee | 02.06.2021 | Merge pull request #34 from DrRataplan/repeat-sequence
+35f22024 | 01.06.2021 | Make tests run
+838ea3ba | 01.06.2021 | Merge branch 'dev' into template-fix
+fd0dc519 | 01.06.2021 | Fix xf-repeat example work correctly
+b579f18d | 01.06.2021 | Make _inScopeContext public (and rename)
+d07e782c | 01.06.2021 | Add xf:instance#0
+6ca27655 | 01.06.2021 | merged dev into repeat-sequence
+efe18ea1 | 01.06.2021 | Merge branch 'dev' into repeat-sequence
+050811e5 | 01.06.2021 | starting to migrate iron-ajax to fetch
+8673af18 | 31.05.2021 | json demo preparations; submission testing endpoint in es-dev-server.config.js
+d6112a71 | 26.05.2021 | changed XPath for refresh again; evaluation of submission attributes (request params still faulty); prettier
+01c25755 | 26.05.2021 | Fix the XPath used to detect templates
+3399682b | 25.05.2021 | some demo refinements
+ada5287d | 25.05.2021 | Merge pull request #31 from DrRataplan/depends
+bd02131d | 25.05.2021 | Merge pull request #30 from DrRataplan/submission-template-expression
+64e5345c | 25.05.2021 | Add unit test for depencency tracking
+29cd5861 | 25.05.2021 | Fix dependency tracking
+63b5d474 | 25.05.2021 | Fix the XPath used to detect template expressions
+0944e42a | 25.05.2021 | attempts to make submission url template processing available
+b12a43b7 | 18.05.2021 | factored out function to evaluate template expressions in nodes and moved to xpath-evaluation.js
+8f4ffabd | 17.05.2021 | added repeat-in-switch demo to demos.html
+7d9330b1 | 17.05.2021 | added repeat-in-switch demo to demos.html
+4edee6a5 | 17.05.2021 | new switch + repeat demo; migrating repeat to getInscopeContext func; refreshChildren in switch fixes broken rendering;
+18b2c789 | 17.05.2021 | demos
+aceb0dc5 | 17.05.2021 | added a demo with a repeat within a switch / case, demo does not work yet for unknown reasons
+b7ace68e | 14.05.2021 | repeat with sequence as binding codemirror experiments
+cf0aaa75 | 13.05.2021 | 0.18.0
+ca421dfe | 13.05.2021 | actions.html restructured
+b2d59ccc | 13.05.2021 | linting
+d662a34b | 13.05.2021 | new functions.html demo new submission demos adapted send action to new interface implemented submission validation logic
+4f452dc4 | 13.05.2021 | Merge remote-tracking branch 'origin/dev' into dev
+177cf40a | 13.05.2021 | adapted submission1.html - breaking change in attribute usage: 'replace' now gets static values (instance|none|all). 'instance' attribute denotes the target instance if present - otherwise defaults to 'default'
+e7917323 | 13.05.2021 | Create CODE_OF_CONDUCT.md
+4622dbaa | 12.05.2021 | Create contributing.md
+4d58f36b | 12.05.2021 | extracted class from PR for integration
+4fcf2a85 | 12.05.2021 | linting - just one left intentionally
+b10e3bc2 | 12.05.2021 | prettier
+6f942fc2 | 12.05.2021 | fixed function tests; added bind tests; added instance test
+ce8a7aed | 10.05.2021 | Merge pull request #24 from DrRataplan/functions
+118db97d | 04.05.2021 | Implement XPath functions
+a62aebb8 | 04.05.2021 | Implement JavaScript functions
+95369376 | 07.05.2021 | 0.17.0
+0abab70e | 07.05.2021 | refined evaluation of conditional on actions; fx-action cleanup; fixed dispatching of index events in nested repeats; adapted fx-message.js to abstract-action.js some linting
+617b24fc | 07.05.2021 | adapted append to new interface; index-handling fixed esp. for nested; append resolves target repeat;
+e1330a98 | 06.05.2021 | fixes the repeat tests again
+f9111f8b | 06.05.2021 | extracted abstract-action.js from fx-action.js; using template method execute to handle conditional (later while and iterate); actions now overwrite 'perform' for their actual task; added some tests;
+27f7a348 | 05.05.2021 | Merge pull request #25 from DrRataplan/evaluate
+f32abde5 | 04.05.2021 | removed LitElement dependency for fx-container.js
+abe7491f | 04.05.2021 | removed LitElement dependency for fx-submission.js
+0aee343d | 04.05.2021 | Refactor all Fore.evaluate* to the central evaluate*
+3b543a94 | 04.05.2021 | new fx-funtion.js - barebones for local custom functions
+f942f16a | 03.05.2021 | fx-message.js now plain vanilla (removed LitElement); do not dispatch non-default state events during initial refresh();
+fba61905 | 30.04.2021 | conditional setvalue action running in one demo template factory ideas sketched in demo
+8c574e7c | 30.04.2021 | linting
+ecf62686 | 30.04.2021 | fix a few linting issues Fixes #19 added test added 'modelConstructed' property to fx-model.js
+db110b84 | 30.04.2021 | small updates on demos new demo for actions
+1db6aa56 | 28.04.2021 | 0.16.0
+e8c69e14 | 28.04.2021 | new log() function to output an instance for debugging example of log() function in hello-fonto.html change another usage of eval... to xpath-evaluation.js
+ae8a1e2c | 28.04.2021 | fixed nested-todo.html
+c833e245 | 28.04.2021 | many demo improvements; reverted change to setvalue (caused a bug); using evalX functions from xpath-evaluation.js instead of Fore class; added codemirror component for future fx-instance-mirror
+232352f0 | 23.04.2021 | lots of detail improvements to demos; adopted new fx-trigger in demos; fixed invalid event not firing;
+f1352a8d | 22.04.2021 | Merge branch 'control-refactoring' into dev
+26e31e6a | 22.04.2021 | fixed or refined some demos; instance generation now works for locationPathes also; added test; updated README.md
+400a52a0 | 22.04.2021 | deprecated fx-input and fx-button in favor of fx-control and fx-trigger generic controls; fixing tests again; fixing index.js
+031f3192 | 22.04.2021 | deprecated fx-input and fx-button in favor of fx-control and fx-trigger generic controls
+cd8ef83e | 17.04.2021 | renamed fx-abstract-control to abstract-control fx-control is plain vanilla now introducted template methods in abstract-control to be overwritten by extenders adapted tests
+e863f73b | 17.04.2021 | 0.15.0
+4614226e | 17.04.2021 | starting refactoring of abstract control and improving fx-control.js
+4133d840 | 17.04.2021 | updated README.md
+0d9e0279 | 17.04.2021 | updated README.md
+bf306238 | 17.04.2021 | additional tests; linting
+f36f3916 | 17.04.2021 | additional tests; linting
+4f74c819 | 16.04.2021 | prettier run
+18bc3abc | 16.04.2021 | linting down to 10 issues; fixed diverse rules and removed stale code
+9de5eb25 | 16.04.2021 | new demo testing calc order (and revealing a bug); some linting fixes; adding state classes for validity to controls; added and made all depGraph tests run;
+0438ee28 | 12.04.2021 | linting errors - 70 to go
+ad918de5 | 12.04.2021 | linting errors - 199 to go
+35f43e09 | 12.04.2021 | fixed a bunch of linting issues
+712e8a58 | 12.04.2021 | applied format:prettier to have a ground for fixing linting issues
+a5034ea1 | 12.04.2021 | Merge pull request #11 from DrRataplan/xpath-centralization
+44eaa67e | 12.04.2021 | Merge branch 'dev' into xpath-centralization
+642ad42a | 12.04.2021 | adding switch and supporting classes; small fix to ForeElementMixin.js
+dda69d2b | 06.04.2021 | switch files
+2be1b8f0 | 06.04.2021 | Centralize XPath calls
+4aac7b48 | 31.03.2021 | 0.14.1
+a87ede8d | 31.03.2021 | fixed package.json to include dist files
+4ac69289 | 31.03.2021 | 0.14.0
+f5deae83 | 31.03.2021 | refined/revised repeat demos; new repeat entries always inserted from repeat template; added repeat tests;
+478c75d8 | 30.03.2021 | nested repeat sample working with append + delete actions; fixed rendering issue with fx-control in repeat; fx-repeatitem is no longer a lit element;
+dd53ce78 | 30.03.2021 | improved scoped resolution; delete and append working one-level nested;
+791e374c | 29.03.2021 | nested outer append working
+a74e182c | 27.03.2021 | 0.13.0
+a0ab95fc | 27.03.2021 | Delete workspace.xml
+30e75631 | 27.03.2021 | Remove .DS_Store from everywhere
+5aacf5fa | 27.03.2021 | changed gitignore
+d70a6165 | 27.03.2021 | completed embedded delete action; improved getModel() function in ForeElementMixin.js; improved getOwnerForm() function in ForeElementMixin.js; new repeat tests;
+318fb572 | 27.03.2021 | added second build with bundles all dependencies into one
+16b6f216 | 25.03.2021 | removed some unused dependencies and moved some others to devdependencies
+82bce008 | 25.03.2021 | webcomponentsjs should not be a dependency
+e3c8e5b8 | 25.03.2021 | small fix in xpath-util.js
+bdd4ed1c | 20.03.2021 | bumped version
+c3e9bdc8 | 19.03.2021 | Merge pull request #7 from DrRataplan/dev
+2c7ae9ed | 18.03.2021 | Fix bundle not bundling all polymer things and minify bundle
+4f3c0ff8 | 17.03.2021 | Merge pull request #5 from DrRataplan/rollup
+5af43343 | 16.03.2021 | Add build to CI
+943525c3 | 16.03.2021 | Add basic github action
+6984a27c | 16.03.2021 | Implement rollup config
+75759ca7 | 23.02.2021 | Use the new incoming functionNameResolver
+c6582daf | 16.03.2021 | removed assets from repo
+0b1ce1ae | 16.03.2021 | restore package-lock.json
+fff5a3d7 | 16.03.2021 | Delete package-lock.json
+01d090c0 | 16.03.2021 | Merge pull request #4 from Jinntec/fix/settings
+5f999504 | 13.03.2021 | fix(version): Fix semver non-compliant version number
+5774008a | 13.03.2021 | chore: Remove all "dot" files from revision, except gitignore
+7de8ff27 | 13.03.2021 | chore: Remove IDE files from revision
+e3df2892 | 13.03.2021 | 0.11.1
+e10fa103 | 13.03.2021 | removed assets from repo
+6c7593a2 | 13.03.2021 | 0.11.0
+113ab9eb | 13.03.2021 | another change to finally publish to npm
+47690572 | 13.03.2021 | removed assets from repo
+f059fcdd | 13.03.2021 | tests running again; some additional manual tests done
+da41503e | 13.03.2021 | tests running again; some additional manual tests done
+eb25f596 | 13.03.2021 | semver rollback as we haven't had a release before not major increment
+3de2a4a8 | 13.03.2021 | removed deprecated docs; fixed liniting issue with import sequence; added files section to package.json for whitelisting files in npm package
+d8ab5251 | 13.03.2021 | Merge remote-tracking branch 'origin/dev' into dev
+9f7eefc9 | 13.03.2021 | removed assets from repo; breaking change: renamed xf-bound to xf-control
+01427834 | 12.03.2021 | Update README.md
+94381c25 | 12.03.2021 | Update README.md
+463f8bbf | 12.03.2021 | Update README.md
+365ca0cc | 12.03.2021 | Update README.md
+5aadf6a1 | 12.03.2021 | Merge remote-tracking branch 'origin/dev' into dev
+d49c7e58 | 12.03.2021 | new icon size
+28da4283 | 12.03.2021 | Update README.md
+c0af6481 | 12.03.2021 | Update README.md
+7b15b813 | 12.03.2021 | license change to MIT
+35b73ee8 | 12.03.2021 | some more demos
+075779b8 | 12.03.2021 | fixes search pattern for template expressions; required handling (styling); non-functioning rollup.config.js; lots of changes to demo files;
+d7581dbd | 06.03.2021 | some tiny preps for json support; fixed template expression search limiting it to the UI fixed init of type attribute of instance
+37655990 | 06.03.2021 | template expressions working; new demo for template expressions; some additional tests;
+228c90cd | 05.03.2021 | new demos; dynamic select working; dependent select demo;
+c47cdf6b | 04.03.2021 | cleanup; new demo files; fix to getModel()
+57c7d045 | 26.02.2021 | cleanup
+511757ee | 26.02.2021 | improving demo files
+add434ba | 26.02.2021 | refactored to remove cyclic dependency
+b47cbb9c | 26.02.2021 | fixed lazy instance creation; cleaned up imports; unfinished item creation for selects; fixed module imports not replying on assets any more; xf-form, xf-instance are native components again created index.js for all imports
+febbcfaa | 19.02.2021 | got samples working without errors (invoice, todo)
+c285e382 | 15.02.2021 | basic delete action working
+d367e63f | 15.02.2021 | just some logging
+7967f6a5 | 11.02.2021 | debug output changes
+c51bbb73 | 08.02.2021 | bound example with datalist
+00243059 | 08.02.2021 | fixed bound checkbox
+aa18a52d | 08.02.2021 | cleanup up console logging; handling controls with textcontent as value; awaiting refresh in _initUI;
+06a4517d | 08.02.2021 | fixed cyclic dependency; minor code style fixes and cleanups
+d73e838d | 08.02.2021 | refactored AbstractControl moving parts into xf-bound where they belong; additional tests; other minor fixes
+8c411190 | 06.02.2021 | additional demo; repeat index introduced again; fixed setvalue; various minor fixes;
+d1665f48 | 05.02.2021 | generating instance from UI if there's none;
+c3aa6fc3 | 05.02.2021 | xf-form cleanup: just using a single model now and removed all code relating to multiple models (gain of 100lines of code); adapted/fixed tests;
+3d1c8de8 | 04.02.2021 | improved detection of control in abstract-control; improved demos; new tests (one failing)
+0f22e230 | 30.01.2021 | conditional validation; handling response as text and parsing ourselves for control; general error handler in form; extended submission demo;
+399dabf0 | 30.01.2021 | submission can replace instance data and update UI accordingly; fixed controls to be hidden if they are not bound; demos to demonstrate new features
+230835d0 | 30.01.2021 | xf-submission.js - basic implementation running first post request ported xf-message.js; fixed some app.js imports;
+f06fdfcc | 29.01.2021 | another attempt to get rid of .idea versioning
+e69f992d | 29.01.2021 | setup semver / intial state
+4f56865e | 08.01.2021 | cleanup step 2
+8384fda9 | 08.01.2021 | cleanup step 1
+77516142 | 08.01.2021 | fix .gitignore
+cddfa6ac | 08.01.2021 | load instance with src attribute
+cc3b59ef | 08.01.2021 | basic instance type switching but just prep (still far from working)
+d7b3af3d | 05.01.2021 | example refinement
+8229a3ed | 05.01.2021 | works with xf-alert child of xf-bind for styled content
+96789e75 | 05.01.2021 | model alerts;
+0e1096f4 | 05.01.2021 | first primitive version of alert works
+f78bb52e | 05.01.2021 | not rebuilding after setvalue any more; fixed path expr in bindGraph;
+5037c083 | 05.01.2021 | additional xf-bound examples; some documentation changes; completed setvalue implementation to support textContent and empty value; introduced changed flag on modelitem; additional setvalue tests
+5194e730 | 12.12.2020 | xf-bound running again; still some work to do;
+09e2146e | 12.12.2020 | fixed all tests - repeats running again :)
+81076aaa | 12.12.2020 | fixed/completed buildBindGraph to add property when it exists but has no dependencies
+1aaf68b5 | 12.12.2020 | test for modelitem path
+550273b5 | 12.12.2020 | xf-instance cleanup;
+133c6f49 | 12.12.2020 | fixed path for lazy created modelItems; xf-instance cleanup;
+22a16ef2 | 12.12.2020 | remove BoundElement.js + ForeElement.js classes which have been refactored to ForeElementMixin; updated class diagram;
+ebea6c22 | 12.12.2020 | improved getBindingExpr(); XfBind now also extend HTMLElement!; fix to nodeset eval in xf-bind; xf-instance also vanilla web component; added loading promises for instances; xf-model turned into vanilla web component; found a way to listen for refresh-done before checking on props
+d07e99b0 | 11.12.2020 | fix recalc when no expr exists
+a8b9361e | 11.12.2020 | actions now extends HTMLElement; AbstractFormControl and XfContainer use ForeElementMixin; new ForeElementMixin combines ForeElement and BoundElement into one which are intended to be factored out
+8cfbf1fb | 09.12.2020 | instance id on path now; fixed test; shortened path
+0e041063 | 09.12.2020 | soem recalculation refinements
+d75c99c8 | 29.11.2020 | recalculation mostly working- one test fails
+4f330477 | 28.11.2020 | move registerCustomXPathFunction to fore.js
+c16215e8 | 21.11.2020 | fixed updating of button in repeat (async refresh); all tests + repeat sample working
+877db147 | 21.11.2020 | AbstractControl handling relevance now; basic revalidate; (not tested yet)
+1bc7cf4d | 21.11.2020 | patched depGraph code to work with ES6; refactored property names in modelitem; just creating the modelItems now during rebuild but not evaluating them already. This is done in recalculate now. All tests running
+e2cbc0b6 | 21.11.2020 | patched depGraph code to work with ES6; refactored property names in modelitem; just creating the modelItems now during rebuild but not evaluating them already. This is done in recalculate now. All tests running
+dfafb4ea | 20.11.2020 | fix refresh in AbstractControl to only update in case of being bound.
+fc03376b | 20.11.2020 | merged changes from dom-repeat branch;
+b54b0e7a | 20.11.2020 | factored out evaluate* functions into Fore; started recalculate
+1ffea8e9 | 02.11.2020 | rather tiny changes to repeat + test
+47d088a3 | 31.10.2020 | all tests running but todo.html not showing its values
+431c30df | 31.10.2020 | refactoring of lazy modelItem creation complete: functions moved to xf-bind;
+a079ffce | 31.10.2020 | created xf-container class to handle differences in refresh; fixed static Fore.refreshChildren function; form refresh uses static Fore function now; fixes some linting issues; wip refactoring lazyCreation of modelItems;
+9e0ecafb | 31.10.2020 | Merge pull request #4 from DrRataplan/dev
+b049842e | 28.10.2020 | Add a comment explaining how to make custom updating functions
+a90520fd | 27.10.2020 | Add a TODO explaining how to work with ASTs in fontoXPath
+d53780f4 | 21.10.2020 | Merge pull request #3 from DrRataplan/dev
+953d2f4c | 20.10.2020 | Correctly call XForms functions wherever we should
+3c341671 | 30.09.2020 | Merge pull request #2 from DrRataplan/dev
+c7967793 | 29.09.2020 | Fix fx:instance function
+80ec1d6a | 24.09.2020 | fixed model access in ForeElement; restored? changes made during last dev session with Martin adding the defaultNamespace XForms Function still not works and complains about wrong return type Multiplicity. Suspect it expects a constant instead of 'node()'.
+34bec930 | 24.09.2020 | Merge pull request #1 from DrRataplan/dev
+ee797e55 | 24.09.2020 | Fix imports of FontoXPath
+009641ff | 21.09.2020 | test for instance() function
+60a758f3 | 19.09.2020 | fixed xf-input - control doesn't have to look after lifecycle as it uses the action for that.
+7332b27f | 19.09.2020 | fixed xf-input - control doesn't have to look after lifecycle as it uses the action for that.
+325f7cfc | 19.09.2020 | back to flat refresh - repeat has no special magic
+bf340c5d | 19.09.2020 | wait for last updateComplete on last repeat: fixed xf-input model usage
+d3cf1525 | 19.09.2020 | refresh with repeat fixed for single repeat
+3f98eea3 | 19.09.2020 | factored out eval
+0b8150a0 | 19.09.2020 | shutting up
+38c39a08 | 19.09.2020 | template function handleModelItemProperties to be overwritten by e.g. group;
+44e53edd | 19.09.2020 | prepare group collapse support
+bca6fc66 | 19.09.2020 | finally successfully using lit-element repeat directive to render repeat in lightDOM allowing full style access to form content.
+f36ab662 | 19.09.2020 | using model getter now everywhere; fixed refresh behavior in certain situations - now async; basic repeat working but still using shadowDOM; all except repeat tests running
+f0fbef73 | 17.09.2020 | additional tests; moved files
+6f6784f6 | 17.09.2020 | fixed missing dependency prep; .gitignore first corrections of docs
+6d3e6e05 | 16.09.2020 | .gitignore
+d28e9aae | 16.09.2020 | .gitignore
+d2235412 | 16.09.2020 | .gitignore
+728c5305 | 14.09.2020 | fixing use of xf-setvalue within xf-input
+a4c4e92f | 14.09.2020 | refactored again and killed one level of inheritence (UiElement); So, for the sake of simplicity now all actions inherit from BoundElement even if they are not bound. Code needs to test for that.
+ac7b65e1 | 14.09.2020 | added init to actions and calling in BoundElement.init; factored out constant handling
+d981770e | 14.09.2020 | xf-model and xf-instance are ForeElements
+b1b21e0d | 14.09.2020 | update class diagram; introduced ForeElement as an 'abstract' base class of all other elements
+dcd96c50 | 12.09.2020 | testsuite running green after heavy refactoring
+0f08ef3e | 11.09.2020 | added a path to modelItem for debugging purposes; fixed a scoping bug;
+5bcbb14f | 11.09.2020 | new (failing) tests; extended demos; xf-bound component ongoing
+ec580747 | 07.09.2020 | fixed document creation for queryInstance; simple first version of calculate; scoped resolution for bind elements (not yet for BoundElements) new demo for xf-bound
+6434339c | 05.09.2020 | made several bind tests working and further improved code.
+d2c6f33e | 05.09.2020 | refactoring of nodeset evaluation with new inScope handling; new tests
+ed2e44f5 | 05.09.2020 | lazy creation of modelItems during refresh
+f1f35c84 | 04.09.2020 | reverting some details
+1e86e4d3 | 04.09.2020 | just some preps
+b98c84be | 02.09.2020 | minor changes plus samples
+5d9e276f | 01.09.2020 | a few minor fixes; ignoring '.' and './text' and 'text()' when creating modelitems; ability to create instance from querystring;
+9305a363 | 07.08.2020 | fixed broken tests after refactoring;
+911e8589 | 07.08.2020 | refactored to use modelitem class instead of anon object; uiElements don't deal with nodesets any more but just with their modelItem; actions manipulate the modelitems;
+9043e050 | 31.07.2020 | state-change events do not fire during ui init; fixed eval context node in model.revalidate; firing of state-change events (required,optional,readonly, readwrite, valid, invalid ...); class diagram
+bfaceeac | 03.07.2020 | heavy refactoring; new class diagram to document the changes;
+81fca18b | 02.07.2020 | preliminary instance function implementation; using plain fontoxpath again from node_modules
+4fcc6a0b | 26.06.2020 | missing log statement
+48fff2d5 | 26.06.2020 | using outer group to wrap UI now -> improved refresh; refresh now working for plain and repeated controls; fixed 'clear' feature of append to create an emptied item cloned from last; fixed repeat refreshing;
+9f74c785 | 25.06.2020 | created xf-button; implemented append action; ignoring text nodes for creation of modelitems; refresh now recurses down the tree; improved logging; improving refresh;
+b928c033 | 19.06.2020 | fixed getValue
+c308eca1 | 19.06.2020 | created interaction diagram for illustrating init process; extracted ModelItems into their own explicit class; cleaned up xf-input;
+da4913b9 | 27.03.2020 | 13 tests running
+96541a8c | 03.03.2020 | some more tests for instance and basic bind tests; updated fontoxpath;
+4ada91fa | 28.02.2020 | pushed 'refresh' up to BoundElement; model elements now all hidden; creation of single modelItem working (with test); registration of bindings in Model; cleanup;
+aabb4e69 | 27.02.2020 | tests and samples running so far
+49fc7760 | 27.02.2020 | removed unused properties from model
+a0ac323d | 27.02.2020 | some basic initialization with tests
+78313233 | 14.02.2020 | todo initialization working
+b00546a4 | 14.02.2020 | refresh called on repeat-items
+2029f17e | 14.02.2020 | basic repeat rendering but without updating yet
+20aabf85 | 14.02.2020 | defining global css vars
+76f426eb | 13.02.2020 | basic model init procedure working
+f93ce639 | 03.01.2020 | preparing for xquery integration functions; sequence diagram of init process; init.xql; created dummy functions;
+aa6fddda | 03.01.2020 | basic serialization after init (first refresh) working
