@@ -304,11 +304,13 @@ function createNamespaceResolver(xpathQuery, formElement) {
       return resolveNamespacePrefix;
     }
   }
+  /*
   if (instanceReferences.length > 1) {
     console.warn(
       `More than one instance is used in the query "${xpathQuery}". The default namespace resolving will be used`,
     );
   }
+*/
 
   const xpathDefaultNamespace =
     fxEvaluateXPathToString('ancestor-or-self::*/@xpath-default-namespace[last()]', formElement) ||
@@ -1075,7 +1077,11 @@ const jsonToXml = (_dynamicContext, json) => {
   const escapeXml = str =>
     str.replace(
       /[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD]/g,
-      char => `\\u${char.charCodeAt(0).toString(16).padStart(4, '0')}`,
+      char =>
+        `\\u${char
+          .charCodeAt(0)
+          .toString(16)
+          .padStart(4, '0')}`,
     );
 
   const convert = (obj, parent) => {
