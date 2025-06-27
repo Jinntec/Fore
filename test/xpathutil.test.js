@@ -2,7 +2,7 @@ import { html, fixtureSync, expect, oneEvent } from '@open-wc/testing';
 
 import { XPathUtil } from '../src/xpath-util.js';
 
-describe.only('XPathUtil Tests', () => {
+describe('XPathUtil Tests', () => {
   it('returns "default" if call without args', async () => {
     expect(XPathUtil.getInstanceId('instance()')).to.equal('default');
   });
