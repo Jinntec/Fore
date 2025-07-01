@@ -94,6 +94,13 @@ export class UIElement extends ForeElementMixin {
 
   update(modelItem) {
     console.log(`[UIElement] update() called for ref="${this.ref}" with value:`, modelItem?.value);
+    if (this.isBound()) {
+      this.refresh();
+    }
+  }
+
+  async refresh() {
+    console.log(`[UIElement] refresh() called for ref="${this.ref}"`);
   }
 
   activate() {
