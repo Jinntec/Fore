@@ -83,21 +83,25 @@ export class UIElement extends ForeElementMixin {
       console.log(`[UIElement] Observer already registered for ref="${this.ref}"`);
       return;
     }
-    modelItem.observers.add(this);
     modelItem.addObserver(this);
     console.log(`[UIElement] Adding observer for ref="${this.ref}"`);
 
-    if (typeof this.update === 'function') {
-      this.update(modelItem);
-    }
+    // if (typeof this.update === 'function') {
+    //   this.update(modelItem);
+    // }
   }
 
   update(modelItem) {
     console.log(`[UIElement] update() called for ref="${this.ref}" with value:`, modelItem?.value);
     if (this.isBound()) {
+      console.log('[UIElement] update() calling refresh');
       this.refresh();
     }
   }
+
+  // init() {
+  //   throw new Error('You have to implement the method init!');
+  // }
 
   async refresh() {
     console.log(`[UIElement] refresh() called for ref="${this.ref}"`);
