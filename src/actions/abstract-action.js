@@ -177,7 +177,7 @@ export class AbstractAction extends ForeElementMixin {
       }
     } else {
       this.targetElement = this.parentNode;
-      if(!this.targetElement || this.targetElement.nodeType !== Node.ELEMENT_NODE) return;
+      if (!this.targetElement || this.targetElement.nodeType !== Node.ELEMENT_NODE) return;
       this.targetElement.addEventListener(this.event, e => this.execute(e), {
         capture: this.phase === 'capture',
       });
@@ -480,7 +480,7 @@ export class AbstractAction extends ForeElementMixin {
       // console.log('running update cycle for outermostHandler', this);
       model.recalculate();
       model.revalidate();
-      this.getOwnerForm().refresh(true);
+      this.getOwnerForm().refresh();
       this.dispatchActionPerformed();
     } else if (this.needsUpdate) {
       // console.log('Update delayed!');
