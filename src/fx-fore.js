@@ -946,7 +946,7 @@ export class FxFore extends HTMLElement {
    * @private
    */
   async _initUI() {
-    // console.log('### _initUI()');
+    console.log('### _initUI()');
     console.info(
       `%cinitUI #${this.id}`,
       'background:lightblue; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
@@ -969,6 +969,7 @@ export class FxFore extends HTMLElement {
       this.initData();
     }
     await this.refresh(true);
+    // await Fore.initUI(this);
 
     // this.style.display='block'
     this.classList.add('fx-ready');

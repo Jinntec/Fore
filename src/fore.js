@@ -271,6 +271,22 @@ export class Fore {
     return Fore.UI_ELEMENTS.includes(elementName);
   }
 
+  static async initUI(startElement) {
+    const inited = new Promise(resolve => {
+      const { children } = startElement;
+      if (children) {
+        for (const element of Array.from(children)) {
+          if (element.nodeName.toUpperCase() === 'FX-FORE') {
+            break;
+          }
+          if (Fore.isUiElement(element.nodeName) && typeof element.refresh === 'function') {
+            element.init();
+          }
+        }
+      }
+      resolve('done');
+    });
+  }
   /**
    * recursively refreshes all UI Elements.
    *
@@ -542,7 +558,10 @@ export class Fore {
     const reg = /(>)(<)(\/*)/g;
     const wsexp = / *(.*) +\n/g;
     const contexp = /(<.+>)(.+\n)/g;
-    xml = xml.replace(reg, '$1\n$2$3').replace(wsexp, '$1\n').replace(contexp, '$1\n$2');
+    xml = xml
+      .replace(reg, '$1\n$2$3')
+      .replace(wsexp, '$1\n')
+      .replace(contexp, '$1\n$2');
     let formatted = '';
     const lines = xml.split('\n');
     let indent = 0;
