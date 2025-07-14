@@ -347,7 +347,8 @@ export class FxBind extends ForeElementMixin {
     // ### constructing default modelitem - will get evaluated during recalculate()
     // ### constructing default modelitem - will get evaluated during recalculate()
     // const newItem = new ModelItem(shortPath,
-    const newItem = new ModelItem(path, this.getBindingExpr(), targetNode, this, instanceId);
+    const fore = this.closest('fx-fore');
+    const newItem = new ModelItem(path, this.getBindingExpr(), targetNode, this, instanceId, fore);
 
     const alert = this.getAlert();
     if (alert) {

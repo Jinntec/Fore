@@ -9,28 +9,30 @@
 <body>
 <div class="wrapper">
     <fx-fore>
-        <fx-model id="model1">
+        <fx-model>
             <fx-instance>
                 <data>
-                    <item>foobar</item>
-                    <result>foobar</result>
+                    <page>page2</page>
                 </data>
-                <fx-bind ref="item"></fx-bind>
             </fx-instance>
         </fx-model>
-        <fx-group>
-            <span id="result">{result}</span>
-            <fx-control id="input1" ref="result">
-                <fx-items ref="instance('default')/item">
-                    <template>
-                        <span id="checkbox">
-                          <label slot="label">{.}</label>
-                          <input type="checkbox" value="{.}" />
-                        </span>
-                    </template>
-                </fx-items>
-            </fx-control>
-        </fx-group>
+
+        <fx-trigger id="changePage">
+            <button>change</button>
+            <fx-setvalue ref="page">page3</fx-setvalue>
+        </fx-trigger>
+
+        <fx-switch class="second" ref="page">
+            <fx-case id="page1" name="page1">
+                <h2>Page1</h2>
+            </fx-case>
+            <fx-case id="page2" name="page2">
+                <h2>Page 2</h2>
+            </fx-case>
+            <fx-case id="page3" name="page3">
+                <h2>Page 3</h2>
+            </fx-case>
+        </fx-switch>
     </fx-fore>
 </div>
 <script type="module" src="../demo.js"/>

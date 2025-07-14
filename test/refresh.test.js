@@ -1,6 +1,4 @@
-import {
-  html, fixtureSync, expect, oneEvent,
-} from '@open-wc/testing';
+import { html, fixtureSync, expect, oneEvent } from '@open-wc/testing';
 
 import '../src/fx-instance.js';
 import '../src/ui/fx-container.js';
@@ -277,6 +275,12 @@ describe('refresh Tests', () => {
     expect(items[0]).to.exist;
     expect(items[0].modelItem).to.exist;
     expect(items[0].modelItem.boundControls).to.exist;
+
+    // Debug logging
+    console.log('[DEBUG_LOG] items[0].modelItem.boundControls:', items[0].modelItem.boundControls);
+    console.log('[DEBUG_LOG] items[0].modelItem.observers:', items[0].modelItem.observers);
+    console.log('[DEBUG_LOG] items[0].nodeName:', items[0].nodeName);
+
     expect(items[0].modelItem.boundControls.length).to.equal(2);
     expect(items[0].modelItem.boundControls.includes(items[0]));
 

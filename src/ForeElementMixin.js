@@ -250,6 +250,8 @@ export default class ForeElementMixin extends HTMLElement {
      */
     getModelItem() {
         if (!this.getModel()) return;
+
+        // First try to find by node reference
         const mi = this.getModel().getModelItem(this.nodeset);
         if (mi) {
             this.modelItem = mi;
@@ -268,6 +270,25 @@ export default class ForeElementMixin extends HTMLElement {
             existed = this.nodeset
                 ? this.getModel().getModelItem(this.nodeset)
                 : null;
+        }
+
+        // If we couldn't find by node reference, try to find by path
+        if (!existed && this.nodeset) {
+            // Get the path for the current nodeset
+            const instanceId = XPathUtil.resolveInstance(this, this.ref);
+            let targetNode = this.nodeset.nodeType === Node.TEXT_NODE ? this.nodeset.parentNode : this.nodeset;
+
+            if (targetNode?.nodeType) {
+                const path = XPathUtil.getPath(targetNode, instanceId);
+
+                // Try to find a ModelItem with this path
+                existed = this.getModel().modelItems.find(item => item.path === path);
+
+                if (existed) {
+                    // Update the node reference in the existing ModelItem
+                    existed.node = targetNode;
+                }
+            }
         }
 
         if (!existed) {

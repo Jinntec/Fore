@@ -1,6 +1,7 @@
 import { Fore } from '../fore.js';
-import ForeElementMixin from '../ForeElementMixin.js';
+// import ForeElementMixin from '../ForeElementMixin.js';
 import { withDraggability } from '../withDraggability.js';
+import { UIElement } from './UIElement.js';
 
 /**
  * `fx-repeat`
@@ -11,7 +12,7 @@ import { withDraggability } from '../withDraggability.js';
  *
  * @extends {ForeElementMixin}
  */
-export class FxRepeatitem extends withDraggability(ForeElementMixin, true) {
+export class FxRepeatitem extends withDraggability(UIElement, true) {
   static get properties() {
     return {
       ...super.properties,

@@ -43,7 +43,9 @@ export default class FxSetvalue extends AbstractAction {
   }
 
   async perform() {
-    super.perform();
+    // Don't call super.perform() to avoid redundant evalInContext() call
+    // The evalInContext() is already called in execute() method
+
     let { value } = this;
     if (this.valueAttr !== null) {
       const inscopeContext = getInScopeContext(this, this.valueAttr);
@@ -67,7 +69,20 @@ export default class FxSetvalue extends AbstractAction {
     if (value?.nodeType && value.nodeType === Node.ATTRIBUTE_NODE) {
       value = value.nodeValue;
     }
+
+    // Get the ModelItem without re-evaluating the context
     const mi = this.getModelItem();
+
+    // Dispatch the execute-action event required by AbstractAction
+    this.dispatchEvent(
+      new CustomEvent('execute-action', {
+        composed: true,
+        bubbles: true,
+        cancelable: true,
+        detail: { action: this, event: this.event },
+      }),
+    );
+
     this.setValue(mi, value);
     // todo: check this again - logically needsUpate should be set but makes tests fail
     //  this.needsUpdate = true;
@@ -84,7 +99,6 @@ export default class FxSetvalue extends AbstractAction {
     if (!item) return;
 
     if (item.value !== newVal) {
-      item.notify();
       // const path = XPathUtil.getPath(modelItem.node);
       const path = Fore.getDomNodeIndexString(modelItem.node);
 
@@ -120,6 +134,7 @@ export default class FxSetvalue extends AbstractAction {
       }
       this.getModel().changed.push(modelItem);
       this.needsUpdate = true;
+      modelItem.notify();
     }
   }
 }

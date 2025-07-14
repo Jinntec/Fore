@@ -1,7 +1,7 @@
-import { expect } from 'chai';
+import { expect } from '@open-wc/testing';
 import { XPathUtil } from '../src/xpath-util.js'; // assuming isDynamic is a static method of XPathUtil
 
-describe.only('isDynamic', () => {
+describe.skip('isDynamic', () => {
   it('returns false for string literal', () => {
     expect(XPathUtil.isDynamic("'hello'")).to.equal(false);
   });

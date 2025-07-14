@@ -75,9 +75,10 @@ export class FxModel extends HTMLElement {
    */
   static lazyCreateModelItem(model, ref, node, formElement) {
     const instanceId = XPathUtil.resolveInstance(formElement, ref);
+    const fore = model.parentNode;
 
     if (model.parentNode?.createNodes && (node === null || node === undefined)) {
-      const mi = new ModelItem(undefined, ref, null, null, instanceId);
+      const mi = new ModelItem(undefined, ref, null, null, instanceId, fore);
       mi.isSynthetic = true;
       model.registerModelItem(mi);
       return mi;
@@ -92,7 +93,19 @@ export class FxModel extends HTMLElement {
       path = XPathUtil.getPath(targetNode, instanceId);
     }
 
-    const mi = new ModelItem(path, ref, targetNode, null, instanceId);
+    // Check if a ModelItem with the same path already exists
+    if (path) {
+      const existingModelItem = model.modelItems.find(mi => mi.path === path);
+      if (existingModelItem) {
+        // Update the node reference if needed
+        if (existingModelItem.node !== targetNode) {
+          existingModelItem.node = targetNode;
+        }
+        return existingModelItem;
+      }
+    }
+
+    const mi = new ModelItem(path, ref, targetNode, null, instanceId, fore);
     mi.isSynthetic = true;
     model.registerModelItem(mi);
     return mi;
@@ -339,11 +352,13 @@ export class FxModel extends HTMLElement {
           const compute = evaluateXPath(expr, modelItem.node, this);
           modelItem.value = compute;
           modelItem.readonly = true; // calculated nodes are always readonly
+          modelItem.notify(); // Notify observers directly
         } else if (property !== 'constraint' && property !== 'type') {
           // ### re-compute the Boolean value of all facets expect 'constraint' and 'type' which are handled in revalidate()
           if (expr) {
             const compute = evaluateXPathToBoolean(expr, modelItem.node, this);
             modelItem[property] = compute;
+            modelItem.notify(); // Notify observers directly
             /*
                                     console.log(
                                       `recalculating path ${path} - Expr:'${expr}' computed`,
@@ -396,6 +411,7 @@ export class FxModel extends HTMLElement {
             // console.log('modelItem validity computed: ', compute);
             modelItem.constraint = compute;
             this.formElement.addToRefresh(modelItem); // let fore know that modelItem needs refresh
+            modelItem.notify(); // Notify observers directly
             if (!compute) {
               console.log('validation failed on modelitem ', modelItem);
               valid = false;
@@ -409,6 +425,7 @@ export class FxModel extends HTMLElement {
             // console.log('modelItem required computed: ', compute);
             modelItem.required = compute;
             this.formElement.addToRefresh(modelItem); // let fore know that modelItem needs refresh
+            modelItem.notify(); // Notify observers directly
             if (!modelItem.node.textContent) {
               /*
               console.log(

@@ -28,8 +28,9 @@ export class ModelItem {
    * @param {Node} node - The node the 'ref' expression is referring to
    * @param {import('./fx-bind').FxBind} bind - The fx-bind element having created this ModelItem
    * @param {string} instance - The fx-instance id having created this ModelItem
+   * @param {import('./fx-fore').FxFore} fore - The fx-fore element this ModelItem belongs to
    */
-  constructor(path, ref, node, bind, instance) {
+  constructor(path, ref, node, bind, instance, fore) {
     this.path = path;
     this.ref = ref;
     this.readonly = ModelItem.READONLY_DEFAULT;
@@ -40,12 +41,16 @@ export class ModelItem {
     this.node = node;
     this.bind = bind;
     this.instanceId = instance;
+    this.fore = fore;
     this.changed = false;
+
+    console.log('[ModelItem] created:', this.path);
 
     /** @type {import('./ui/fx-alert').FxAlert[]} */
     this.alerts = [];
 
     /** @type {import('./ui/abstract-control').default[]} */
+    // For backward compatibility
     this.boundControls = [];
 
     // Observable mechanics
@@ -85,22 +90,56 @@ export class ModelItem {
     }
   }
 
+  /**
+   * Add an observer to this ModelItem
+   * @param {Object} observer - The observer to add
+   */
   addObserver(observer) {
     this.observers.add(observer);
+
+    // For backward compatibility with boundControls
+    if (
+      observer.nodeName &&
+      (observer.nodeName.startsWith('FX-') || observer.nodeName.startsWith('UI-')) &&
+      !this.boundControls.includes(observer)
+    ) {
+      this.boundControls.push(observer);
+    }
   }
 
+  /**
+   * Remove an observer from this ModelItem
+   * @param {Object} observer - The observer to remove
+   */
   removeObserver(observer) {
     this.observers.delete(observer);
+
+    // For backward compatibility with boundControls
+    const index = this.boundControls.indexOf(observer);
+    if (index !== -1) {
+      this.boundControls.splice(index, 1);
+    }
   }
 
+  /**
+   * Notify all observers that this ModelItem has changed
+   */
   notify() {
-    console.log('[ModelItem] notifying observers');
-    if (this.observers) {
-      this.observers.forEach(observer => {
-        if (typeof observer.update === 'function') {
-          observer.update(this);
-        }
-      });
+    // Only log in debug mode or reduce verbosity to prevent console flooding
+    // console.log('[ModelItem] notifying observers for path:', this.path);
+
+    // If we're in a refresh phase, add to batched notifications
+    if (this.fore && this.fore.isRefreshPhase) {
+      this.fore.addToBatchedNotifications(this);
+    } else {
+      // Otherwise, notify observers immediately
+      if (this.observers) {
+        this.observers.forEach(observer => {
+          if (typeof observer.update === 'function') {
+            observer.update(this);
+          }
+        });
+      }
     }
   }
 

@@ -136,6 +136,10 @@ export class FxFore extends HTMLElement {
     this.dirtyState = dirtyStates.CLEAN;
     this.showConfirmation = false;
 
+    // Batching for observer notifications during refresh
+    this.isRefreshPhase = false;
+    this.batchedNotifications = new Set();
+
     const style = `
             :host {
                 display: block;
@@ -518,6 +522,7 @@ export class FxFore extends HTMLElement {
       return;
     }
 
+    /*
     if (force !== true && this._localNamesWithChanges.size > 0) {
       force = {
         ...(force || { reason: undefined }),
@@ -525,8 +530,11 @@ export class FxFore extends HTMLElement {
       };
       this._localNamesWithChanges.clear();
     }
+*/
 
     this.isRefreshing = true;
+    this.isRefreshPhase = true;
+    this.batchedNotifications.clear();
 
     // refresh () {
     // ### refresh Fore UI elements
@@ -558,6 +566,10 @@ export class FxFore extends HTMLElement {
     }
 
     this._processTemplateExpressions();
+
+    // Process all batched notifications at the end of the refresh phase
+    this._processBatchedNotifications();
+    this.isRefreshPhase = false;
 
     // console.log('### <<<<< dispatching refresh-done - end of UI update cycle >>>>>');
     // this.dispatchEvent(new CustomEvent('refresh-done'));
@@ -599,40 +611,76 @@ export class FxFore extends HTMLElement {
     this.isRefreshing = false;
   }
 
+  /**
+   * Refreshes UI controls based on changed ModelItems
+   * This method is being refactored to use the observer pattern
+   * @param {boolean} force - Whether to force a refresh
+   */
   refreshChanged(force) {
-    console.log('toRefresh', this.toRefresh);
-    let needsRefresh = false;
+    console.log('toRefresh length:', this.toRefresh.length);
 
-    // ### after recalculation the changed modelItems are copied to 'toRefresh' array for processing
-    this.toRefresh.forEach(modelItem => {
-      // check if modelItem has boundControls - if so, call refresh() for each of them
-      const controlsToRefresh = modelItem.boundControls;
-      if (controlsToRefresh) {
-        controlsToRefresh.forEach(ctrl => {
-          ctrl.refresh(force);
-        });
-      }
+    // Create a copy of the array to avoid modification during iteration
+    const itemsToRefresh = [...this.toRefresh];
 
-      // ### check if other controls depend on current modelItem
+    // Clear the array before processing to prevent potential circular updates
+    this.toRefresh = [];
+
+    // The ModelItems in toRefresh will notify their observers directly
+    // This is kept for backward compatibility
+    itemsToRefresh.forEach(modelItem => {
+      // Notify observers (which will call update() on them)
+      modelItem.notify();
+
+      // Check if other ModelItems depend on this one through the dependency graph
       const { mainGraph } = this.getModel();
       if (mainGraph && mainGraph.hasNode(modelItem.path)) {
         const deps = this.getModel().mainGraph.dependentsOf(modelItem.path, false);
-        // ### iterate dependant modelItems and refresh all their boundControls
+
+        // Notify dependent ModelItems
         if (deps.length !== 0) {
           deps.forEach(dep => {
-            // ### if changed modelItem has a 'facet' path we use the basePath that is the locationPath without facet name
             const basePath = XPathUtil.getBasePath(dep);
             const modelItemOfDep = this.getModel().modelItems.find(mip => mip.path === basePath);
-            // ### refresh all boundControls
-            modelItemOfDep.boundControls.forEach(control => {
-              control.refresh(force);
-            });
+            if (modelItemOfDep) {
+              modelItemOfDep.notify();
+            }
           });
-          needsRefresh = true;
         }
       }
     });
-    this.toRefresh = [];
+  }
+
+  /**
+   * Add a ModelItem to the batch of notifications to be processed at the end of the refresh phase
+   * @param {import('./modelitem.js').ModelItem} modelItem - The ModelItem to add to the batch
+   */
+  addToBatchedNotifications(modelItem) {
+    if (this.isRefreshPhase) {
+      this.batchedNotifications.add(modelItem);
+    }
+  }
+
+  /**
+   * Process all batched notifications at the end of the refresh phase
+   */
+  _processBatchedNotifications() {
+    if (this.batchedNotifications.size > 0) {
+      console.log(`Processing ${this.batchedNotifications.size} batched notifications`);
+
+      // Process all batched notifications
+      this.batchedNotifications.forEach(modelItem => {
+        if (modelItem.observers) {
+          modelItem.observers.forEach(observer => {
+            if (typeof observer.update === 'function') {
+              observer.update(modelItem);
+            }
+          });
+        }
+      });
+
+      // Clear the batch
+      this.batchedNotifications.clear();
+    }
   }
 
   /**

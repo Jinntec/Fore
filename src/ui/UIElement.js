@@ -91,6 +91,10 @@ export class UIElement extends ForeElementMixin {
     // }
   }
 
+  /**
+   * Called by ModelItem when it changes
+   * @param {import('../modelitem.js').ModelItem} modelItem - The ModelItem that changed
+   */
   update(modelItem) {
     console.log(`[UIElement] update() called for ref="${this.ref}" with value:`, modelItem?.value);
     if (this.isBound()) {
