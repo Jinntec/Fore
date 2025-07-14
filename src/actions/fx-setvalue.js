@@ -43,9 +43,7 @@ export default class FxSetvalue extends AbstractAction {
   }
 
   async perform() {
-    // Don't call super.perform() to avoid redundant evalInContext() call
-    // The evalInContext() is already called in execute() method
-
+    super.perform();
     let { value } = this;
     if (this.valueAttr !== null) {
       const inscopeContext = getInScopeContext(this, this.valueAttr);
