@@ -21,9 +21,7 @@ describe('refresh Tests', () => {
           <fx-bind ref="c" relevant="../b = 'B'"></fx-bind>
         </fx-model>
         <fx-group collapse="true">
-          <h1>
-            Recalculation
-          </h1>
+          <h1>Recalculation</h1>
           <div class="display">
             <fx-output id="output1" ref="a">
               <label slot="label">a:</label>
@@ -86,9 +84,7 @@ describe('refresh Tests', () => {
           <fx-bind ref="c" relevant="../b = 'B'"></fx-bind>
         </fx-model>
         <fx-group collapse="true">
-          <h1>
-            Recalculation
-          </h1>
+          <h1>Recalculation</h1>
           <div class="display">
             <fx-output id="output1" ref="a">
               <label slot="label">a:</label>
@@ -185,8 +181,22 @@ describe('refresh Tests', () => {
 
     await oneEvent(el, 'refresh-done');
 
+    const page1 = el.querySelector('#page1');
+    const page2 = el.querySelector('#page2');
+    const page3 = el.querySelector('#page3');
+
     const sw = el.querySelector('fx-switch');
     expect(sw.modelItem.value).to.equal('page2');
+
+    expect(page1.classList.toString()).to.not.equal(
+      'selected-case',
+      'Page 2 should be visible, not Page 1',
+    );
+    expect(page2.classList.toString()).to.equal('selected-case', 'Page 2 should be visible');
+    expect(page3.classList.toString()).to.not.equal(
+      'selected-case',
+      'Page 3 should be visible, not Page 3',
+    );
 
     const b = el.querySelector('#changePage');
     await b.performActions();
@@ -195,12 +205,15 @@ describe('refresh Tests', () => {
     expect(sw.modelItem.boundControls).to.exist;
     expect(sw.modelItem.boundControls.length).to.equal(1);
 
-    const page1 = el.querySelector('#page1');
-    expect(page1.classList.contains('selected-case')).to.be.false;
-    const page2 = el.querySelector('#page2');
-    expect(page2.classList.contains('selected-case')).to.be.false;
-    const page3 = el.querySelector('#page3');
-    expect(page3.classList.contains('selected-case')).to.be.true;
+    expect(page1.classList.toString()).to.not.equal(
+      'selected-case',
+      'Page 3 should be visible, not Page 1',
+    );
+    expect(page2.classList.toString()).to.not.equal(
+      'selected-case',
+      'Page 3 should be visible, not Page 2',
+    );
+    expect(page3.classList.toString()).to.equal('selected-case', 'Page 3 should be visible');
   });
 
   it('registers fx-repeat items in modelitem', async () => {
@@ -229,9 +242,7 @@ describe('refresh Tests', () => {
           <fx-insert ref="task" at="1" position="before" origin="template/task"></fx-insert>
         </fx-trigger>
 
-        <div class="info">
-          You have {count(instance()/task[@complete='true'])} completed tasks
-        </div>
+        <div class="info">You have {count(instance()/task[@complete='true'])} completed tasks</div>
 
         <div class="info open">
           {if(count(instance()/task[@complete='false'])!=0) then "You have " ||
