@@ -96,10 +96,10 @@ export class UIElement extends ForeElementMixin {
    * @param {import('../modelitem.js').ModelItem} modelItem - The ModelItem that changed
    */
   update(modelItem) {
-    console.log(`[UIElement] update() called for ref="${this.ref}" with value:`, modelItem?.value);
     if (this.isBound()) {
-      console.log('[UIElement] update() calling refresh');
+      console.log('[UIElement] update()', modelItem);
       this.refresh();
+      this.getOwnerForm().addToBatchedNotifications(modelItem);
     }
   }
 

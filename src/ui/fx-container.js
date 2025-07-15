@@ -78,11 +78,9 @@ export class FxContainer extends UIElement {
     if (this.isBound()) {
       this.evalInContext();
       this.modelItem = this.getModelItem();
-      /* deprecated
       if (this.modelItem && !this.modelItem.boundControls.includes(this)) {
         this.modelItem.boundControls.push(this);
       }
-*/
       if (this.modelItem) {
         this.attachObserver();
       }

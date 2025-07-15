@@ -9,30 +9,41 @@
 <body>
 <div class="wrapper">
     <fx-fore>
-        <fx-model>
+        <fx-model id="record">
             <fx-instance>
                 <data>
-                    <page>page2</page>
+                    <task complete="false" due="2019-02-04">Pick up Milk</task>
+                    <task complete="true" due="2019-01-04">Make tutorial part 1</task>
+                    <task complete="false" due="2019-01-05">third task</task>
+                    <task complete="false" due="2019-01-06">fourth task</task>
                 </data>
             </fx-instance>
+
+            <fx-bind ref="task" readonly="count(../task) lt 3">
+                <fx-bind ref="./text()" required="true()"></fx-bind>
+                <fx-bind ref="@complete" type="xs:boolean"></fx-bind>
+                <fx-bind ref="@due" type="xs:date"></fx-bind>
+            </fx-bind>
         </fx-model>
+        <fx-group>
+            <h1>todos</h1>
 
-        <fx-trigger id="changePage">
-            <button>change</button>
-            <fx-setvalue ref="page">page3</fx-setvalue>
-        </fx-trigger>
+            <fx-repeat id="todos" ref="task" focus-on-create="task" id="r-todos">
+                <template>
+                    <fx-control ref="." id="task" type="text">
+                        <label>Task</label>
+                    </fx-control>
+                    <fx-trigger>
+                        <button>delete</button>
+                        <fx-delete ref="."></fx-delete>
+                    </fx-trigger>
+                </template>
+            </fx-repeat>
 
-        <fx-switch class="second" ref="page">
-            <fx-case id="page1" name="page1">
-                <h2>Page1</h2>
-            </fx-case>
-            <fx-case id="page2" name="page2">
-                <h2>Page 2</h2>
-            </fx-case>
-            <fx-case id="page3" name="page3">
-                <h2>Page 3</h2>
-            </fx-case>
-        </fx-switch>
+            <fx-button label="append">
+                <fx-append repeat="todos" ref="task"></fx-append>
+            </fx-button>
+        </fx-group>
     </fx-fore>
 </div>
 <script type="module" src="../demo.js"/>

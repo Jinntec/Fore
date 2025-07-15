@@ -71,16 +71,6 @@ export default class FxSetvalue extends AbstractAction {
     // Get the ModelItem without re-evaluating the context
     const mi = this.getModelItem();
 
-    // Dispatch the execute-action event required by AbstractAction
-    this.dispatchEvent(
-      new CustomEvent('execute-action', {
-        composed: true,
-        bubbles: true,
-        cancelable: true,
-        detail: { action: this, event: this.event },
-      }),
-    );
-
     this.setValue(mi, value);
     // todo: check this again - logically needsUpate should be set but makes tests fail
     //  this.needsUpdate = true;

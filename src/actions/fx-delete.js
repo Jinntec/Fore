@@ -58,15 +58,20 @@ class FxDelete extends AbstractAction {
     if (Array.isArray(nodesToDelete)) {
       if (nodesToDelete.length === 0) return;
       parent = nodesToDelete[0].parentNode;
+
       fore.signalChangeToElement(parent.localName);
       nodesToDelete.forEach(item => {
         this._deleteNode(parent, item);
+        // const mi = this.getModel().getModelItem(item);
+        // console.log('delete node ', nodesToDelete, mi);
+        // mi.notify();
         fore.signalChangeToElement(item.localName);
       });
     } else {
       parent = nodesToDelete.parentNode;
       fore.signalChangeToElement(parent.localName);
-
+      // const mi = this.getModelItem();
+      // console.log('delete node ', nodesToDelete, mi);
       this._deleteNode(parent, nodesToDelete);
       fore.signalChangeToElement(nodesToDelete.localName);
     }

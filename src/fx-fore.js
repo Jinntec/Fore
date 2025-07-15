@@ -522,7 +522,6 @@ export class FxFore extends HTMLElement {
       return;
     }
 
-    /*
     if (force !== true && this._localNamesWithChanges.size > 0) {
       force = {
         ...(force || { reason: undefined }),
@@ -530,7 +529,6 @@ export class FxFore extends HTMLElement {
       };
       this._localNamesWithChanges.clear();
     }
-*/
 
     this.isRefreshing = true;
     this.isRefreshPhase = true;
@@ -540,24 +538,26 @@ export class FxFore extends HTMLElement {
     // ### refresh Fore UI elements
     // if (!this.initialRun && this.toRefresh.length !== 0) {
     // if (!this.initialRun && this.toRefresh.length !== 0) {
-    if (!force && !this.initialRun && this.toRefresh.length !== 0) {
-      this.refreshChanged(force);
+    // if (!force && !this.initialRun && this.toRefresh.length !== 0) {
+    if (force || this.initialRun) {
+      Fore.refreshChildren(this, force);
     } else {
-      // ### resetting visited state for controls to refresh
-      /*
-                  const visited = this.parentNode.querySelectorAll('.visited');
-                  Array.from(visited).forEach(v =>{
-                      v.classList.remove('visited');
-                  });
-      */
-
-      if (this.inited) {
-        console.log(`### <<<<< refresh() on '${this.id}' >>>>>`);
-
-        Fore.refreshChildren(this, force);
-      }
-      // console.timeEnd('refreshChildren');
+      // Process all batched notifications at the end of the refresh phase
+      this._processBatchedNotifications();
     }
+
+    /*
+        if (!force && !this.initialRun) {
+          console.log('### batched refresh()', this.batchedNotifications);
+          this.refreshChanged();
+        } else {
+          if (this.inited) {
+            console.log(`### <<<<< refresh() on '${this.id}' >>>>>`);
+
+            Fore.refreshChildren(this, force);
+          }
+        }
+    */
 
     // ### refresh template expressions
     if (force || this.initialRun || this._scanForNewTemplateExpressionsNextRefresh) {
@@ -567,8 +567,6 @@ export class FxFore extends HTMLElement {
 
     this._processTemplateExpressions();
 
-    // Process all batched notifications at the end of the refresh phase
-    this._processBatchedNotifications();
     this.isRefreshPhase = false;
 
     // console.log('### <<<<< dispatching refresh-done - end of UI update cycle >>>>>');
@@ -616,7 +614,7 @@ export class FxFore extends HTMLElement {
    * This method is being refactored to use the observer pattern
    * @param {boolean} force - Whether to force a refresh
    */
-  refreshChanged(force) {
+  refreshChanged() {
     console.log('toRefresh length:', this.toRefresh.length);
 
     // Create a copy of the array to avoid modification during iteration

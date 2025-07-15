@@ -1,7 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import {
-  html, fixture, fixtureSync, expect, elementUpdated, oneEvent,
-} from '@open-wc/testing';
+import { html, fixture, fixtureSync, expect, elementUpdated, oneEvent } from '@open-wc/testing';
 
 import '../index.js';
 import { evaluateXPathToNodes } from 'fontoxpath';
@@ -413,7 +411,6 @@ describe('delete Tests', () => {
           </fx-instance>
         </fx-model>
         <fx-group>
-
           <fx-trigger>
             <label>delete</label>
             <fx-delete ref="instance('items')/item"></fx-delete>
