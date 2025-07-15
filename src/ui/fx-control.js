@@ -603,20 +603,24 @@ export default class FxControl extends XfAbstractControl {
         node => model.getModelItem(node),
       );
 
-      // ### clear items
-      const { children } = widget;
-      Array.from(children).forEach(child => {
-        if (child.nodeName.toLowerCase() !== 'template') {
-          child.parentNode.removeChild(child);
-        }
-      });
-
       // ### bail out when nodeset is array and empty
       if (Array.isArray(nodeset) && nodeset.length === 0) return;
 
       // ### build the items
       const { template } = this;
       if (template) {
+        // ### clear items
+        if (!this.boundInitialized) {
+          const { children } = widget;
+          Array.from(children).forEach(child => {
+            if (child.nodeName.toLowerCase() !== 'template') {
+              child.parentNode.removeChild(child);
+            }
+          });
+        } else {
+          return;
+        }
+
         // ### handle 'selection'  open and insert an empty option in that case
         if (
           this.widget.nodeName === 'SELECT' &&
