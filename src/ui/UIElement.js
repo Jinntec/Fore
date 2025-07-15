@@ -98,8 +98,8 @@ export class UIElement extends ForeElementMixin {
   update(modelItem) {
     if (this.isBound()) {
       console.log('[UIElement] update()', modelItem);
+      // this.getOwnerForm().addToBatchedNotifications(modelItem);
       this.refresh();
-      this.getOwnerForm().addToBatchedNotifications(modelItem);
     }
   }
 
