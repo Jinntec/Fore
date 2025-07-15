@@ -138,6 +138,11 @@ export class FxFore extends HTMLElement {
 
     // Batching for observer notifications during refresh
     this.isRefreshPhase = false;
+    /**
+     * The model items that will be updated next refresh
+     *
+     * @type {Set<ModelItem>}
+     */
     this.batchedNotifications = new Set();
 
     const style = `

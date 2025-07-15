@@ -54,6 +54,9 @@ export class ModelItem {
     this.boundControls = [];
 
     // Observable mechanics
+    /**
+     * @type {Set<import('./ui/UIElement').UIElement>}
+     */
     this.observers = new Set();
     this.dependencies = new Set();
     this.stateExpressions = {}; // e.g. { required: { expr: '../x', type: 'boolean' } }
