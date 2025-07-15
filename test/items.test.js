@@ -1,7 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import {
-  html, fixtureSync, expect, oneEvent,
-} from '@open-wc/testing';
+import { html, fixtureSync, expect, oneEvent } from '@open-wc/testing';
 
 import '../index.js';
 
@@ -104,9 +102,10 @@ describe('fx-items tests', () => {
           <fx-instance
             id="default"
             src="/base/test/ling-checkboxes.xml"
-              xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
+            xpath-default-namespace="http://www.tei-c.org/ns/1.0"
+          ></fx-instance>
 
-          <fx-instance id="i-functions" src="/base/test/functions.xml" ></fx-instance>
+          <fx-instance id="i-functions" src="/base/test/functions.xml"></fx-instance>
         </fx-model>
         <fx-control ref="//m/@function" update-event="input">
           <fx-items ref="instance('i-functions')//option" class="widget">
@@ -153,7 +152,7 @@ describe('fx-items tests', () => {
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"
           ></fx-instance>
 
-          <fx-instance id="i-functions" src="/base/test/functions.xml" ></fx-instance>
+          <fx-instance id="i-functions" src="/base/test/functions.xml"></fx-instance>
         </fx-model>
         <fx-control ref="//m/@function" update-event="input">
           <fx-items ref="instance('i-functions')//option" class="widget">
@@ -202,7 +201,7 @@ describe('fx-items tests', () => {
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"
           ></fx-instance>
 
-          <fx-instance id="i-functions" src="/base/test/functions.xml" ></fx-instance>
+          <fx-instance id="i-functions" src="/base/test/functions.xml"></fx-instance>
         </fx-model>
         <fx-control ref="//m/@function" update-event="input">
           <fx-items ref="instance('i-functions')//option" class="widget">
@@ -217,25 +216,56 @@ describe('fx-items tests', () => {
       </fx-fore>
     `);
 
-    await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'ready');
+    let checkboxes = el.querySelectorAll('input');
+    expect(checkboxes.length).to.equal(11);
+    expect(checkboxes[0].checked).to.equal(false, 'Checkbox #0 should be unchecked initially');
+    expect(checkboxes[1].checked).to.equal(true, 'Checkbox #1 should be checked initially');
+    expect(checkboxes[2].checked).to.equal(false, 'Checkbox #2 should be unchecked initially');
+    expect(checkboxes[3].checked).to.equal(true, 'Checkbox #3 should be checked initially');
+    expect(checkboxes[4].checked).to.equal(true, 'Checkbox #4 should be checked initially');
+    expect(checkboxes[5].checked).to.equal(false, 'Checkbox #5 should be unchecked initially');
+    expect(checkboxes[6].checked).to.equal(true, 'Checkbox #6 should be checked initially');
+    expect(checkboxes[7].checked).to.equal(false, 'Checkbox #7 should be unchecked initially');
+    expect(checkboxes[8].checked).to.equal(false, 'Checkbox #8 should be unchecked initially');
+    expect(checkboxes[9].checked).to.equal(false, 'Checkbox #9 should be unchecked initially');
+    expect(checkboxes[10].checked).to.equal(false, 'Checkbox #10 should be unchecked initially');
 
     const labels = el.querySelectorAll('label');
 
     labels[2].click();
+    checkboxes = el.querySelectorAll('input');
 
-    const checkboxes = el.querySelectorAll('input');
     expect(checkboxes.length).to.equal(11);
-    expect(checkboxes[0].checked).to.be.false;
-    expect(checkboxes[1].checked).to.be.true;
-    expect(checkboxes[2].checked).to.be.true;
-    expect(checkboxes[3].checked).to.be.true;
-    expect(checkboxes[4].checked).to.be.true;
-    expect(checkboxes[5].checked).to.be.false;
-    expect(checkboxes[6].checked).to.be.true;
-    expect(checkboxes[7].checked).to.be.false;
-    expect(checkboxes[8].checked).to.be.false;
-    expect(checkboxes[9].checked).to.be.false;
-    expect(checkboxes[10].checked).to.be.false;
+    expect(checkboxes[0].checked).to.equal(
+      false,
+      'Checkbox #0 should be unchecked after the click?',
+    );
+    expect(checkboxes[1].checked).to.equal(true, 'Checkbox #1 should be checked after the click');
+    expect(checkboxes[2].checked).to.equal(true, 'Checkbox #2 should be checked after the click');
+    expect(checkboxes[3].checked).to.equal(true, 'Checkbox #3 should be checked after the click');
+    expect(checkboxes[4].checked).to.equal(true, 'Checkbox #4 should be checked after the click');
+    expect(checkboxes[5].checked).to.equal(
+      false,
+      'Checkbox #5 should be unchecked after the click',
+    );
+    expect(checkboxes[6].checked).to.equal(true, 'Checkbox #6 should be checked after the click');
+    expect(checkboxes[7].checked).to.equal(
+      false,
+      'Checkbox #7 should be unchecked after the click',
+    );
+    expect(checkboxes[8].checked).to.equal(
+      false,
+      'Checkbox #8 should be unchecked after the click',
+    );
+    expect(checkboxes[9].checked).to.equal(
+      false,
+      'Checkbox #9 should be unchecked after the click',
+    );
+    expect(checkboxes[10].checked).to.equal(
+      false,
+      'Checkbox #10 should be unchecked after the click',
+    );
 
     const control = el.querySelector('fx-control');
     expect(control.value).to.equal('VAdj Part AgtNoun ActNoun PropN');
@@ -252,29 +282,19 @@ describe('fx-items tests', () => {
             </data>
           </fx-instance>
           <fx-instance id="list" type="json">
-            [
-            {
-            "name": "Akklamation",
-            "value": "https://www.eagle-network.eu/voc/typeins/lod/73"
-            },
-            {
-            "name": "Adnuntiatio",
-            "value": "https://www.eagle-network.eu/voc/typeins/lod/113"
-            },
-            {
-            "name": "Assignationsinschrift",
-            "value": "https://www.eagle-network.eu/voc/typeins/lod/116"
-            }
-            ]
+            [ { "name": "Akklamation", "value": "https://www.eagle-network.eu/voc/typeins/lod/73" },
+            { "name": "Adnuntiatio", "value": "https://www.eagle-network.eu/voc/typeins/lod/113" },
+            { "name": "Assignationsinschrift", "value":
+            "https://www.eagle-network.eu/voc/typeins/lod/116" } ]
           </fx-instance>
         </fx-model>
         <fx-control ref="selected" update-event="input">
           <fx-items ref="instance('list')?*" class="widget">
             <template>
-                  <span class="fx-checkbox">
-                    <input id="check" name="option" type="checkbox" value="{value}"/>
-                    <label>{name}</label>
-                  </span>
+              <span class="fx-checkbox">
+                <input id="check" name="option" type="checkbox" value="{value}" />
+                <label>{name}</label>
+              </span>
             </template>
           </fx-items>
         </fx-control>
@@ -307,29 +327,19 @@ describe('fx-items tests', () => {
             </data>
           </fx-instance>
           <fx-instance id="list" type="json">
-            [
-            {
-            "name": "Akklamation",
-            "value": "https://www.eagle-network.eu/voc/typeins/lod/73"
-            },
-            {
-            "name": "Adnuntiatio",
-            "value": "https://www.eagle-network.eu/voc/typeins/lod/113"
-            },
-            {
-            "name": "Assignationsinschrift",
-            "value": "https://www.eagle-network.eu/voc/typeins/lod/116"
-            }
-            ]
+            [ { "name": "Akklamation", "value": "https://www.eagle-network.eu/voc/typeins/lod/73" },
+            { "name": "Adnuntiatio", "value": "https://www.eagle-network.eu/voc/typeins/lod/113" },
+            { "name": "Assignationsinschrift", "value":
+            "https://www.eagle-network.eu/voc/typeins/lod/116" } ]
           </fx-instance>
         </fx-model>
         <fx-control ref="selected" update-event="input">
           <fx-items ref="instance('list')?*" class="widget">
             <template>
-                  <span class="fx-checkbox">
-                    <input id="check" name="option" type="checkbox" value="{value}"/>
-                    <label>{name}</label>
-                  </span>
+              <span class="fx-checkbox">
+                <input id="check" name="option" type="checkbox" value="{value}" />
+                <label>{name}</label>
+              </span>
             </template>
           </fx-items>
         </fx-control>
@@ -351,33 +361,26 @@ describe('fx-items tests', () => {
         <fx-model id="model-1">
           <fx-instance>
             <data>
-              <selected>https://www.eagle-network.eu/voc/typeins/lod/73 https://www.eagle-network.eu/voc/typeins/lod/113</selected>
+              <selected
+                >https://www.eagle-network.eu/voc/typeins/lod/73
+                https://www.eagle-network.eu/voc/typeins/lod/113</selected
+              >
             </data>
           </fx-instance>
           <fx-instance id="list" type="json">
-            [
-            {
-            "name": "Akklamation",
-            "value": "https://www.eagle-network.eu/voc/typeins/lod/73"
-            },
-            {
-            "name": "Adnuntiatio",
-            "value": "https://www.eagle-network.eu/voc/typeins/lod/113"
-            },
-            {
-            "name": "Assignationsinschrift",
-            "value": "https://www.eagle-network.eu/voc/typeins/lod/116"
-            }
-            ]
+            [ { "name": "Akklamation", "value": "https://www.eagle-network.eu/voc/typeins/lod/73" },
+            { "name": "Adnuntiatio", "value": "https://www.eagle-network.eu/voc/typeins/lod/113" },
+            { "name": "Assignationsinschrift", "value":
+            "https://www.eagle-network.eu/voc/typeins/lod/116" } ]
           </fx-instance>
         </fx-model>
         <fx-control ref="selected" update-event="input">
           <fx-items ref="instance('list')?*" class="widget">
             <template>
-                  <span class="fx-checkbox">
-                    <input id="check" name="option" type="checkbox" value="{value}"/>
-                    <label>{name}</label>
-                  </span>
+              <span class="fx-checkbox">
+                <input id="check" name="option" type="checkbox" value="{value}" />
+                <label>{name}</label>
+              </span>
             </template>
           </fx-items>
         </fx-control>
@@ -388,7 +391,9 @@ describe('fx-items tests', () => {
     await oneEvent(el, 'refresh-done');
 
     const output = el.querySelector('fx-output');
-    expect(output.value).to.equal('https://www.eagle-network.eu/voc/typeins/lod/73 https://www.eagle-network.eu/voc/typeins/lod/113');
+    expect(output.value).to.equal(
+      'https://www.eagle-network.eu/voc/typeins/lod/73 https://www.eagle-network.eu/voc/typeins/lod/113',
+    );
 
     const checkboxes = el.querySelectorAll('input');
     expect(checkboxes[0].checked).to.be.true;
