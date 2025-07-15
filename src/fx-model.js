@@ -189,6 +189,18 @@ export class FxModel extends HTMLElement {
     // console.timeEnd('updateModel');
   }
 
+  /**
+   * @param {Node} node - The node for which to remove the model item
+   */
+  removeModelItem(node) {
+    const index = this.modelItems.findIndex(mi => mi.node === node);
+    if (index === -1) {
+      // Strange already gone. Should not hapen
+      return;
+    }
+    this.modelItems.splice(index, 1);
+  }
+
   rebuild() {
     // console.log(`### <<<<< rebuild() '${this.fore.id}' >>>>>`);
 

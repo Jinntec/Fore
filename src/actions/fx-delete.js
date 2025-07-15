@@ -91,18 +91,12 @@ class FxDelete extends AbstractAction {
     if (node.nodeType === Node.DOCUMENT_FRAGMENT_NODE) return;
     if (node.parentNode === null) return;
 
-    const mi = this.getModelItem();
+    const mi = this.getModel().getModelItem(node);
     if (mi.readonly) return;
 
     parent.removeChild(node);
-  }
 
-  /**
-   * overwriting as we need to perform additional rebuild()
-   */
-  actionPerformed() {
-    this.getModel().rebuild();
-    super.actionPerformed();
+    this.getModel().removeModelItem(node);
   }
 }
 
