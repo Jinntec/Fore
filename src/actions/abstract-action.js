@@ -480,7 +480,7 @@ export class AbstractAction extends ForeElementMixin {
       // console.log('running update cycle for outermostHandler', this);
       model.recalculate();
       model.revalidate();
-      this.getOwnerForm().refresh();
+      this.getOwnerForm().refresh(false);
       this.dispatchActionPerformed();
     } else if (this.needsUpdate) {
       // console.log('Update delayed!');

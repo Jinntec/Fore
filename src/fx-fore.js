@@ -521,6 +521,7 @@ export class FxFore extends HTMLElement {
     if (this.isRefreshing) {
       return;
     }
+    console.log('### refresh() on ', this);
 
     if (force !== true && this._localNamesWithChanges.size > 0) {
       force = {
@@ -540,9 +541,11 @@ export class FxFore extends HTMLElement {
     // if (!this.initialRun && this.toRefresh.length !== 0) {
     // if (!force && !this.initialRun && this.toRefresh.length !== 0) {
     if (force || this.initialRun) {
+      console.log('### full refresh() on ', this);
       Fore.refreshChildren(this, force);
     } else {
       // Process all batched notifications at the end of the refresh phase
+      console.log('### processing batched notifications');
       this._processBatchedNotifications();
     }
 
