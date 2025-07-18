@@ -236,7 +236,7 @@ export class FxModel extends HTMLElement {
 
     console.log(`🔷 ### <<<<< recalculate() '${this.fore.id}' >>>>>`);
 
-    // console.log('changed nodes ', this.changed);
+    console.log('changed nodes ', this.changed);
     this.computes = 0;
 
     this.subgraph = new DepGraph(false);
@@ -363,6 +363,14 @@ export class FxModel extends HTMLElement {
           modelItem.readonly = true; // calculated nodes are always readonly
           modelItem.notify(); // Notify observers directly
         } else if (property !== 'constraint' && property !== 'type') {
+          console.log(
+            'recalculating path ',
+            path,
+            ' Expr:',
+            expr,
+            'modelitem value',
+            modelItem.node.textContent,
+          );
           // ### re-compute the Boolean value of all facets expect 'constraint' and 'type' which are handled in revalidate()
           if (expr) {
             const compute = evaluateXPathToBoolean(expr, modelItem.node, this);
@@ -459,6 +467,15 @@ export class FxModel extends HTMLElement {
       }
     });
     console.log('modelItems after revalidate: ', this.modelItems);
+    console.log('changed after revalidate: ', this.changed);
+    console.log(
+      'changed after revalidate changed: ',
+      Array.from(this.parentNode._localNamesWithChanges),
+    );
+    console.log(
+      'changed after revalidate batchedNotifications: ',
+      Array.from(this.parentNode.batchedNotifications),
+    );
     return valid;
   }
 
