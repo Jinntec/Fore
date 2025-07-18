@@ -660,9 +660,10 @@ export class FxFore extends HTMLElement {
    * @param {import('./modelitem.js').ModelItem} modelItem - The ModelItem to add to the batch
    */
   addToBatchedNotifications(modelItem) {
-    if (this.isRefreshPhase) {
-      this.batchedNotifications.add(modelItem);
-    }
+    // if (this.isRefreshPhase) {
+    console.log('adding to batched notifications', modelItem);
+    this.batchedNotifications.add(modelItem);
+    // }
   }
 
   /**
@@ -670,13 +671,15 @@ export class FxFore extends HTMLElement {
    */
   _processBatchedNotifications() {
     if (this.batchedNotifications.size > 0) {
-      console.log(`Processing ${this.batchedNotifications.size} batched notifications`);
+      console.log(`🔍 Processing ${this.batchedNotifications.size} batched notifications`);
 
       // Process all batched notifications
       this.batchedNotifications.forEach(modelItem => {
         if (modelItem.observers) {
           modelItem.observers.forEach(observer => {
+            console.log('🔍 processing observer', observer);
             if (typeof observer.update === 'function') {
+              console.log('updating observer', observer);
               observer.update(modelItem);
             }
           });
