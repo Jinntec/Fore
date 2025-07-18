@@ -84,7 +84,7 @@ export class UIElement extends ForeElementMixin {
       return;
     }
     modelItem.addObserver(this);
-    console.log(`[UIElement] Adding observer for ref="${this.ref}"`);
+    console.log(`[UIElement] attaching observer for ref="${this.ref}"`, this);
 
     // if (typeof this.update === 'function') {
     //   this.update(modelItem);

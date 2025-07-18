@@ -153,6 +153,9 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
           Fore.dispatch(this, 'path-mutated', { path, index: this.index });
         }
+        if (!this.getOwnerForm().initialRun) {
+          this.refresh();
+        }
       }
     });
     // }
@@ -251,7 +254,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
   }
 
   async refresh(force) {
-    // console.group('fx-repeat.refresh on', this.id);
+    console.log('🔄 fx-repeat.refresh on', this.id);
 
     if (!this.inited) this.init();
     // console.time('repeat-refresh', this);
@@ -323,6 +326,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
     // Fore.refreshChildren(clone,true);
     const fore = this.getOwnerForm();
+    // if (!fore.lazyRefresh || force) {
     if (!fore.lazyRefresh || force) {
       // Turn the possibly conditional force refresh into a forced one: we changed our children
       Fore.refreshChildren(this, force);
