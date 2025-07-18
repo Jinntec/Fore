@@ -356,8 +356,8 @@ export class Fore {
               continue;
             }
 
-            // console.log('refreshing', element, element?.ref);
-            // console.log('refreshing ',element);
+            // console.log('🔄 refreshing', element, element?.ref);
+            console.log('🔄 refreshing ', element);
           }
           if (!(element.inert === true)) {
             // testing for inert catches model and action elements and should just leave updateable html elements
