@@ -93,6 +93,8 @@ export class FxRepeatitem extends withDraggability(UIElement, true) {
 
   refresh(force) {
     this.modelItem = this.getModelItem();
+    console.log('repeatitem modelitem', this.modelItem);
+    // this.attachObserver();
     // ### register ourselves as boundControl
     if (!this.modelItem.boundControls.includes(this)) {
       this.modelItem.boundControls.push(this);
