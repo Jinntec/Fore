@@ -44,7 +44,7 @@ export class ModelItem {
     this.fore = fore;
     this.changed = false;
 
-    console.log('[ModelItem] created:', this.path);
+    // console.log('[ModelItem] created:', this.path);
 
     /** @type {import('./ui/fx-alert').FxAlert[]} */
     this.alerts = [];
@@ -129,7 +129,7 @@ export class ModelItem {
    */
   notify() {
     // Only log in debug mode or reduce verbosity to prevent console flooding
-    // console.log('[ModelItem] notifying observers for path:', this.path);
+    console.log('[ModelItem] notifying observers for path:', this);
 
     // If we're in a refresh phase, add to batched notifications
     if (this.fore && this.fore.isRefreshPhase) {
@@ -147,6 +147,7 @@ export class ModelItem {
   }
 
   update() {
+    console.log('[ModelItem] update:', this);
     this.evaluateStateExpressions();
   }
 
