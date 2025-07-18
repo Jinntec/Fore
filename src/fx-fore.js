@@ -526,7 +526,6 @@ export class FxFore extends HTMLElement {
     if (this.isRefreshing) {
       return;
     }
-    console.log('### refresh() on ', this);
 
     if (force !== true && this._localNamesWithChanges.size > 0) {
       force = {
@@ -546,11 +545,11 @@ export class FxFore extends HTMLElement {
     // if (!this.initialRun && this.toRefresh.length !== 0) {
     // if (!force && !this.initialRun && this.toRefresh.length !== 0) {
     if (force || this.initialRun) {
-      console.log('### full refresh() on ', this);
+      console.log('🔄 🔴 ### full refresh() on ', this);
       Fore.refreshChildren(this, force);
     } else {
       // Process all batched notifications at the end of the refresh phase
-      console.log('### processing batched notifications');
+      console.log('🔄 🎯  ### processing batched notifications');
       this._processBatchedNotifications();
     }
 
@@ -1000,7 +999,6 @@ export class FxFore extends HTMLElement {
    * @private
    */
   async _initUI() {
-    console.log('### _initUI()');
     console.info(
       `%cinitUI #${this.id}`,
       'background:lightblue; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
@@ -1034,7 +1032,7 @@ export class FxFore extends HTMLElement {
     // console.log('### >>>>> dispatching ready >>>>>', this);
     console.info(
       `%c #${this.id} is ready`,
-      'background:lightblue; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+      'background:lightgreen; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
     );
 
     // console.log(`### <<<<< ${this.id} ready >>>>>`);

@@ -108,7 +108,7 @@ export class UIElement extends ForeElementMixin {
   // }
 
   async refresh() {
-    console.log(`[UIElement] refresh() called for ref="${this.ref}"`);
+    console.log(`🔄 [UIElement] refresh() called for ref="${this.ref}"`);
   }
 
   activate() {

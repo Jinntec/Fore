@@ -121,10 +121,7 @@ export class FxModel extends HTMLElement {
    *
    */
   async modelConstruct() {
-    console.info(
-      `%cdispatching model-construct for #${this.parentNode.id}`,
-      'background:lightblue; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
-    );
+    console.info(`📌 model-construct for #${this.parentNode.id}`);
 
     // this.dispatchEvent(new CustomEvent('model-construct', { detail: this }));
     Fore.dispatch(this, 'model-construct', { model: this });
@@ -237,7 +234,7 @@ export class FxModel extends HTMLElement {
       return;
     }
 
-    // console.log(`### <<<<< recalculate() '${this.fore.id}' >>>>>`);
+    console.log(`🔷 ### <<<<< recalculate() '${this.fore.id}' >>>>>`);
 
     // console.log('changed nodes ', this.changed);
     this.computes = 0;
@@ -403,7 +400,7 @@ export class FxModel extends HTMLElement {
   revalidate() {
     if (this.modelItems.length === 0) return true;
 
-    // console.log(`### <<<<< revalidate() '${this.fore.id}' >>>>>`);
+    console.log(`🔷 ### <<<<< revalidate() '${this.fore.id}' >>>>>`);
 
     // reset submission validation
     // this.parentNode.classList.remove('submit-validation-failed')

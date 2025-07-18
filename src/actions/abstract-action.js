@@ -218,15 +218,9 @@ export class AbstractAction extends ForeElementMixin {
     // console.log(this, this.event);
     if (this.event) {
       if (this.event === 'submit-done') {
-        console.info(
-          `%csubmit-done ${this.event} #${this?.parentNode?.id}`,
-          'background:lime; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
-        );
+        console.info(`📌 ${this.event} #${this?.parentNode?.id}`);
       } else {
-        console.info(
-          `%cexecuting ${this.constructor.name} ${this.event}`,
-          'background:lime; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
-        );
+        console.info(`📌 ${this.constructor.name} ${this.event}`);
       }
     } else {
       console.info(

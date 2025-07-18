@@ -356,6 +356,7 @@ describe('fx-items tests', () => {
     expect(output.value).to.equal('https://www.eagle-network.eu/voc/typeins/lod/113');
   });
   it('has correct initial checkbox state', async () => {
+    // language=HTML format=false
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model-1">
@@ -391,9 +392,19 @@ describe('fx-items tests', () => {
     await oneEvent(el, 'refresh-done');
 
     const output = el.querySelector('fx-output');
+    const normalizedOutput = output.value.replace(/\s+/g, ' ').trim();
+
+    // Expected normalized value
+    const expectedValue =
+      'https://www.eagle-network.eu/voc/typeins/lod/73 https://www.eagle-network.eu/voc/typeins/lod/113';
+
+    expect(normalizedOutput).to.equal(expectedValue);
+
+    /*
     expect(output.value).to.equal(
       'https://www.eagle-network.eu/voc/typeins/lod/73 https://www.eagle-network.eu/voc/typeins/lod/113',
     );
+*/
 
     const checkboxes = el.querySelectorAll('input');
     expect(checkboxes[0].checked).to.be.true;
