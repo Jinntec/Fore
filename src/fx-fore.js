@@ -539,7 +539,6 @@ export class FxFore extends HTMLElement {
 
     this.isRefreshing = true;
     this.isRefreshPhase = true;
-    this.batchedNotifications.clear();
 
     // refresh () {
     // ### refresh Fore UI elements
@@ -580,7 +579,7 @@ export class FxFore extends HTMLElement {
 
     // console.log('### <<<<< dispatching refresh-done - end of UI update cycle >>>>>');
     // this.dispatchEvent(new CustomEvent('refresh-done'));
-    // this.initialRun = false;
+    this.initialRun = false;
     this.style.visibility = 'visible';
     console.info(
       `%crefresh-done on #${this.id}`,
