@@ -10,7 +10,7 @@ import { UIElement } from './UIElement.js';
  * @customElement
  * @demo demo/index.html
  *
- * @extends {ForeElementMixin}
+ * @extends {UIElement}
  */
 export class FxRepeatitem extends withDraggability(UIElement, true) {
   static get properties() {
