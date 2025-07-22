@@ -9,41 +9,33 @@
 <body>
 <div class="wrapper">
     <fx-fore>
-        <fx-model id="record">
+        <fx-model id="model-1">
             <fx-instance>
                 <data>
-                    <task complete="false" due="2019-02-04">Pick up Milk</task>
-                    <task complete="true" due="2019-01-04">Make tutorial part 1</task>
-                    <task complete="false" due="2019-01-05">third task</task>
-                    <task complete="false" due="2019-01-06">fourth task</task>
+                    <selected
+>https://www.eagle-network.eu/voc/typeins/lod/73
+                        https://www.eagle-network.eu/voc/typeins/lod/113</selected
+                    >
                 </data>
             </fx-instance>
-
-            <fx-bind ref="task" readonly="count(../task) lt 3">
-                <fx-bind ref="./text()" required="true()"></fx-bind>
-                <fx-bind ref="@complete" type="xs:boolean"></fx-bind>
-                <fx-bind ref="@due" type="xs:date"></fx-bind>
-            </fx-bind>
+            <fx-instance id="list" type="json">
+                [ { "name": "Akklamation", "value": "https://www.eagle-network.eu/voc/typeins/lod/73" },
+                { "name": "Adnuntiatio", "value": "https://www.eagle-network.eu/voc/typeins/lod/113" },
+                { "name": "Assignationsinschrift", "value":
+                "https://www.eagle-network.eu/voc/typeins/lod/116" } ]
+            </fx-instance>
         </fx-model>
-        <fx-group>
-            <h1>todos</h1>
-
-            <fx-repeat id="todos" ref="task" focus-on-create="task" id="r-todos">
+        <fx-control ref="selected" update-event="input">
+            <fx-items ref="instance('list')?*" class="widget">
                 <template>
-                    <fx-control ref="." id="task" type="text">
-                        <label>Task</label>
-                    </fx-control>
-                    <fx-trigger>
-                        <button>delete</button>
-                        <fx-delete ref="."></fx-delete>
-                    </fx-trigger>
+              <span class="fx-checkbox">
+                <input id="check" name="option" type="checkbox" value="{value}" />
+                <label>{name}</label>
+              </span>
                 </template>
-            </fx-repeat>
-
-            <fx-button label="append">
-                <fx-append repeat="todos" ref="task"></fx-append>
-            </fx-button>
-        </fx-group>
+            </fx-items>
+        </fx-control>
+        <fx-output ref="selected"></fx-output>
     </fx-fore>
 </div>
 <script type="module" src="../demo.js"/>
