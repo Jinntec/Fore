@@ -349,12 +349,6 @@ export class Fore {
               bound.refresh(force);
               continue;
             }
-            // Repeat items are not always inited. they should be refreshed int he initial cycle
-            // TODO: same with groups?
-            if (bound.inited === false) {
-              bound.refresh(force);
-              continue;
-            }
 
             // console.log('🔄 refreshing', element, element?.ref);
             console.log('🔄 refreshing ', element);
@@ -564,7 +558,10 @@ export class Fore {
     const reg = /(>)(<)(\/*)/g;
     const wsexp = / *(.*) +\n/g;
     const contexp = /(<.+>)(.+\n)/g;
-    xml = xml.replace(reg, '$1\n$2$3').replace(wsexp, '$1\n').replace(contexp, '$1\n$2');
+    xml = xml
+      .replace(reg, '$1\n$2$3')
+      .replace(wsexp, '$1\n')
+      .replace(contexp, '$1\n$2');
     let formatted = '';
     const lines = xml.split('\n');
     let indent = 0;
