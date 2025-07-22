@@ -131,8 +131,8 @@ export class ModelItem {
     // Only log in debug mode or reduce verbosity to prevent console flooding
     console.log('[ModelItem] notifying observers for path:', this);
 
-    // If we're in a refresh phase, add to batched notifications
-    if (this.fore && this.fore.isRefreshPhase) {
+    // Add to batched notifications. TODO: is the else needed?
+    if (this.fore) {
       this.fore.addToBatchedNotifications(this);
     } else {
       // Otherwise, notify observers immediately
