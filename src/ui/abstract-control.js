@@ -157,9 +157,11 @@ export default class AbstractControl extends UIElement {
         /*
         this is another case that highlights the fact that an init() function might make sense in general.
          */
+        /*
         if (!this.modelItem.boundControls.includes(this)) {
           this.modelItem.boundControls.push(this);
         }
+*/
 
         // console.log('>>>>>>>> abstract refresh ', this.control);
         // this.control[this.valueProp] = this.value;

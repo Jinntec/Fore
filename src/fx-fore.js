@@ -392,12 +392,14 @@ export class FxFore extends HTMLElement {
    * @param {import('./modelitem.js').ModelItem} modelItem
    * @returns {void}
    */
+  /*
   addToRefresh(modelItem) {
     const found = this.toRefresh.find(mi => mi.path === modelItem.path);
     if (!found) {
       this.toRefresh.push(modelItem);
     }
   }
+*/
 
   /**
    * Signal something happened with an element with the given local name. This will be used in the
@@ -621,6 +623,7 @@ export class FxFore extends HTMLElement {
    * This method is being refactored to use the observer pattern
    * @param {boolean} force - Whether to force a refresh
    */
+  /*
   refreshChanged() {
     console.log('toRefresh length:', this.toRefresh.length);
 
@@ -654,6 +657,7 @@ export class FxFore extends HTMLElement {
       }
     });
   }
+*/
 
   /**
    * Add a ModelItem to the batch of notifications to be processed at the end of the refresh phase

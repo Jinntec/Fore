@@ -268,9 +268,11 @@ export default class FxControl extends XfAbstractControl {
     const setval = this.shadowRoot.getElementById('setvalue');
     setval.setValue(modelitem, val);
 
+    /*
     if (this.modelItem instanceof ModelItem && !this.modelItem?.boundControls.includes(this)) {
       this.modelItem.boundControls.push(this);
     }
+*/
 
     setval.actionPerformed(false);
     // this.visited = true;

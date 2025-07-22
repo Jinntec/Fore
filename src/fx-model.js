@@ -282,8 +282,10 @@ export class FxModel extends HTMLElement {
           this.compute(node, path);
         }
       });
+      /*
       const toRefresh = [...this.changed];
       this.formElement.toRefresh = toRefresh;
+*/
       this.changed = [];
       Fore.dispatch(this, 'recalculate-done', { graph: this.subgraph, computes: this.computes });
     } else {
@@ -427,7 +429,7 @@ export class FxModel extends HTMLElement {
             const compute = evaluateXPathToBoolean(constraint, modelItem.node, this);
             // console.log('modelItem validity computed: ', compute);
             modelItem.constraint = compute;
-            this.formElement.addToRefresh(modelItem); // let fore know that modelItem needs refresh
+            // this.formElement.addToRefresh(modelItem); // let fore know that modelItem needs refresh
             modelItem.notify(); // Notify observers directly
             if (!compute) {
               console.log('validation failed on modelitem ', modelItem);
@@ -441,7 +443,7 @@ export class FxModel extends HTMLElement {
             const compute = evaluateXPathToBoolean(required, modelItem.node, this);
             // console.log('modelItem required computed: ', compute);
             modelItem.required = compute;
-            this.formElement.addToRefresh(modelItem); // let fore know that modelItem needs refresh
+            // this.formElement.addToRefresh(modelItem); // let fore know that modelItem needs refresh
             modelItem.notify(); // Notify observers directly
             if (!modelItem.node.textContent) {
               /*
