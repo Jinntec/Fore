@@ -430,7 +430,7 @@ describe('scoped resolution tests', () => {
         </fx-model>
         <fx-control ref="ptr/@target">
           <label>{.}</label>
-          <fx-action event="init"  if="string-length(.) != 0">
+          <fx-action if="string-length(.) != 0" id="theaction">
             <fx-setvalue ref="../../check">ok</fx-setvalue>
           </fx-action>
         </fx-control>
@@ -450,7 +450,10 @@ describe('scoped resolution tests', () => {
 
     expect(label.textContent).to.equal('target');
 
+    // Perform the action, and wait until the refresh is done
+    void el.querySelector('#theaction').perform();
     await oneEvent(el, 'refresh-done');
+
     const output = el.querySelector('fx-output');
     expect(output).to.exist;
     expect(output.value).to.equal('ok');
