@@ -38,13 +38,13 @@
 
     <h1>Looping with an action block</h1>
 
-    <p>This demo shows how to create a loop of submissions by using a action block and the <code><a href="https://jinntec.github.io/fore-docs/elements/actions/dispatch/"target="_blank">fx-dispatch</a></code>
+    <p>This demo shows how to create a loop of submissions by using a action block and the <code><a href="https://jinntec.github.io/fore-docs/elements/actions/dispatch/" target="_blank">fx-dispatch</a></code>
     action.</p>
 
     <demo-snippet>
         <template>
             <fx-fore>
-                <fx-model>                    
+                <fx-model>
                     <fx-instance>
                         <data>
                             <test/>
@@ -52,19 +52,19 @@
                     </fx-instance>
 
                     <fx-instance id="vars" type="xml">
-                        <data>                         
+                        <data>
                             <completed>0</completed>
                             <success>false</success>
                         </data>
                     </fx-instance>
-                    
+
                     <!-- SUBMISSIONS -->
                     <fx-submission id="s-submission1" method="get" url="#echo" replace="none">
                         <fx-message event="submit">submit {instance('vars')/completed + 1}</fx-message>
                         <fx-message event="submit-error">error</fx-message>
                         <fx-dispatch event="submit-done" name="check-done" targetid="deployment"></fx-dispatch>
                     </fx-submission>
-                    
+
                 </fx-model>
 
                 <fx-action id="deployment" event="check-done">
@@ -93,7 +93,7 @@
                             <li>Completed: { instance('vars')/completed } checks</li>
                             <li>Complete = {instance('vars')/completed = 6}</li>
                             <li>success: {instance('vars')/success}</li>
-                        </ul>    
+                        </ul>
                     </fx-group>
                 </fx-group>
             </fx-fore>

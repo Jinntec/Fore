@@ -11,6 +11,7 @@
     "@polymer/paper-input": "^3.2.1"
   },
   "devDependencies": {
+    "@polymer/marked-element": "^3.0.1",
     "@webcomponents/webcomponentsjs": "^2.0.0"
   },
   "author": "Joern Turner",
