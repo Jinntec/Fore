@@ -1,7 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import {
-  html, fixture, fixtureSync, expect, elementUpdated, oneEvent,
-} from '@open-wc/testing';
+import { html, fixture, fixtureSync, expect, elementUpdated, oneEvent } from '@open-wc/testing';
 
 import '../index.js';
 import { evaluateXPathToNodes } from 'fontoxpath';
@@ -150,6 +148,11 @@ describe('delete Tests', () => {
 
     await elementUpdated(el);
 
+    expect(el.getModel().modelItems.length).to.equal(
+      2,
+      'There are TWO model items when we start. One for the control in each repeat item.',
+    );
+
     // hits the first button which is the delete button here
     const button = el.querySelector('fx-trigger');
     await button.performActions();
@@ -160,7 +163,10 @@ describe('delete Tests', () => {
     const rItems = repeat.querySelectorAll('fx-repeatitem');
     expect(rItems.length).to.equal(0);
     // expect(rItems[0].hasAttribute('repeat-index')).to.be.true;
-    expect(el.getModel().modelItems.length).to.equal(0);
+    expect(el.getModel().modelItems.length).to.equal(
+      0,
+      'There are no model items: instance is empty',
+    );
   });
 
   it('deletes first task', async () => {
@@ -333,17 +339,24 @@ describe('delete Tests', () => {
 
     await elementUpdated(el);
 
+    const repeat = el.querySelector('fx-repeat');
+    expect(repeat).to.exist;
+
+    expect(el.getModel().modelItems.length).to.equal(2, 'There are two model items when we start');
+    const rItemsBefore = repeat.querySelectorAll('fx-repeatitem');
+    expect(rItemsBefore.length).to.equal(2, 'The repeat is two items');
+
     // hits the first button which is the delete button here
     const button = el.querySelector('fx-trigger');
     await button.performActions();
 
-    const repeat = el.querySelector('fx-repeat');
-    expect(repeat).to.exist;
-
-    const rItems = repeat.querySelectorAll('fx-repeatitem');
-    expect(rItems.length).to.equal(2);
+    const rItemsAfter = repeat.querySelectorAll('fx-repeatitem');
+    expect(rItemsAfter.length).to.equal(2);
     // expect(rItems[0].hasAttribute('repeat-index')).to.be.true;
-    expect(el.getModel().modelItems.length).to.equal(2);
+    expect(el.getModel().modelItems.length).to.equal(
+      2,
+      'There are still two model items when we are done: we did nothing',
+    );
   });
 
   it('does not delete instance root', async () => {
@@ -413,7 +426,6 @@ describe('delete Tests', () => {
           </fx-instance>
         </fx-model>
         <fx-group>
-
           <fx-trigger>
             <label>delete</label>
             <fx-delete ref="instance('items')/item"></fx-delete>
@@ -433,11 +445,11 @@ describe('delete Tests', () => {
     expect(items.length).to.equal(0);
   });
 
-  it('deletes one from non-default instance', async () => {
+  it('deletes one from default instance', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
+        <fx-delete event="ready" ref="//item[2]"></fx-delete>
         <fx-model id="record">
-          <fx-delete event="model-construct-done" ref="//item[2]"></fx-delete>
           <fx-instance>
             <data>
               <item>item1</item>
@@ -456,17 +468,19 @@ describe('delete Tests', () => {
       </fx-fore>
     `);
 
-    await oneEvent(el, 'refresh-done');
+    await elementUpdated(el);
+
     const repeat = el.querySelector('fx-repeat');
     expect(repeat.nodeset.length).to.equal(2);
     expect(repeat.nodeset[0].textContent).to.equal('item1');
     expect(repeat.nodeset[1].textContent).to.equal('item3');
   });
+
   it('deletes one from non-default instance', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
+        <fx-delete event="ready" ref="instance('items')//item[2]"></fx-delete>
         <fx-model id="record">
-          <fx-delete event="model-construct-done" ref="instance('items')//item[2]"></fx-delete>
           <fx-instance>
             <data></data>
           </fx-instance>

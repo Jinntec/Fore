@@ -83,10 +83,7 @@ export class FxSubmission extends ForeElementMixin {
   }
 
   async _submit() {
-    console.info(
-      `%csubmitting #${this.id}`,
-      'background:yellow; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
-    );
+    console.info(`🚀 #${this.id}`);
 
     this.evalInContext();
     const model = this.getModel();

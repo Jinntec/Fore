@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        fx-fore{
+            border: 1px solid lightblue;
+            padding: 1rem;
+            margin: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+
+<fx-fore id="outer">
+    <fx-model>
+        <fx-instance src="mydata.xml" shared="true">
+            <data></data>
+        </fx-instance>
+    </fx-model>
+
+    <h1>nested Fore elements with shared instance</h1>
+    <h2>//lifecycleNote[1]</h2>
+    <fx-output ref="//lifecycleNote[1]"></fx-output>
+    <fx-control ref="//lifecycleNote[1]">
+        <label>lifeCycleNote</label>
+    </fx-control>
+
+    <fx-fore src="testA.html"></fx-fore>
+
+</fx-fore>
+
+<script type="module" src="../demo.js"></script>
+<script type="module" src="../../tools/fx-lens.js"></script>
+
+</body>
+
+</html>

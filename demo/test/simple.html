@@ -1,0 +1,34 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Epidoc</title>
+    <link href="../../resources/fore.css" rel="stylesheet"/>
+    <link href="../../resources/demo.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="wrapper">
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-model id="model1">
+                    <fx-instance>
+                        <data>
+                            <item>foobar</item>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+                <fx-control ref="item" update-event="input">
+                    <label>a binding</label>
+                </fx-control>
+                <fx-control ref="item">
+                    <label>same binding</label>
+                </fx-control>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+<script type="module" src="../demo.js"/>
+</body>
+</html>

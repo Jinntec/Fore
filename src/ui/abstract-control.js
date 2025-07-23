@@ -125,6 +125,7 @@ export default class AbstractControl extends UIElement {
       if (this.modelItem instanceof ModelItem) {
         // console.log('### XfAbstractControl.refresh modelItem : ', this.modelItem);
 
+        this.attachObserver();
         if (this.hasAttribute('as') && this.getAttribute('as') === 'node') {
           // console.log('as', this.nodeset);
           // this.modelItem.value = this.nodeset;
@@ -156,9 +157,11 @@ export default class AbstractControl extends UIElement {
         /*
         this is another case that highlights the fact that an init() function might make sense in general.
          */
+        /*
         if (!this.modelItem.boundControls.includes(this)) {
           this.modelItem.boundControls.push(this);
         }
+*/
 
         // console.log('>>>>>>>> abstract refresh ', this.control);
         // this.control[this.valueProp] = this.value;

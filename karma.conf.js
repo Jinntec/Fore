@@ -24,6 +24,16 @@ module.exports = config => {
       browserDisconnectTolerance: 3,
       browserNoActivityTimeout: 60000,
       flags: ['--disable-web-security', '--disable-gpu', '--no-sandbox'],
+      // Extremely simplified reporter configuration for easier analysis
+      reporters: ['dots'],
+      client: {
+        captureConsole: false,
+        mocha: {
+          reporter: 'html',
+          ui: 'bdd'
+        }
+      },
+      logLevel: config.LOG_ERROR,
       // you can overwrite/extend the config further
 
       // In headless mode (ie. CI), do not open a browser. The default will suffice

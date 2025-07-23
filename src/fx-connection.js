@@ -38,7 +38,7 @@ ${
   }
 
   static get observedAttributes() {
-    return ['url', 'heartbeat', 'message-format'];
+    return ['url', 'heartbeat', 'message-format', 'messageformat'];
   }
 
   connectedCallback() {
@@ -78,6 +78,7 @@ ${
         this._setupHeartbeat();
         break;
       case 'messageformat':
+      case 'message-format':
         this._messageFormat = newValue;
         break;
       default:
@@ -87,19 +88,35 @@ ${
   }
 
   send(data) {
-    this.evalInContext();
-    data = this.nodeset;
+    // If data is provided directly, use it; otherwise evaluate from context
+    if (data === undefined) {
+      this.evalInContext();
+      data = this.nodeset;
+    }
+
     if (this._socket && this._socket.readyState === WebSocket.OPEN) {
       let message;
       switch (this._messageFormat) {
         case 'json':
-          message = JSON.stringify(data);
+          if (typeof data === 'string') {
+            message = data; // Assume it's already JSON string
+          } else {
+            message = JSON.stringify(data);
+          }
           break;
         case 'xml':
-          message = new XMLSerializer().serializeToString(data);
+          if (typeof data === 'string') {
+            message = data;
+          } else {
+            message = new XMLSerializer().serializeToString(data);
+          }
           break;
         case 'text':
-          message = data.textContent;
+          if (typeof data === 'string') {
+            message = data;
+          } else {
+            message = data.textContent;
+          }
           break;
         default:
           throw new Error(`Unsupported message format: ${this._messageFormat}`);
@@ -123,7 +140,7 @@ ${
   _disconnect() {
     if (this._socket) {
       this._socket.removeEventListener('open', this._onOpen.bind(this));
-      this._socket.removeEventListener('message', event => this._onMessage(event));
+      this._socket.removeEventListener('message', this._onMessage);
       this._socket.removeEventListener('close', this._onClose.bind(this));
       this._socket.close();
       this._socket = null;

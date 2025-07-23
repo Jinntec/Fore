@@ -134,25 +134,47 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     */
 
     // if (this.getOwnerForm().lazyRefresh) {
+    /**
+     * @type {MutationRecord[]}
+     */
+    let bufferedMutationRecords = [];
+    let debouncedOnMutations = null;
     this.mutationObserver = new MutationObserver(mutations => {
-      // console.log('mutations', mutations);
+      bufferedMutationRecords.push(...mutations);
+      if (!debouncedOnMutations) {
+        debouncedOnMutations = new Promise(() => {
+          debouncedOnMutations = null;
+          const records = bufferedMutationRecords;
+          bufferedMutationRecords = [];
+          let shouldRefresh = false;
+          for (const mutation of records) {
+            if (mutation.type === 'childList') {
+              const added = mutation.addedNodes[0];
+              if (added) {
+                const instance = XPathUtil.resolveInstance(this, this.ref);
+                const path = XPathUtil.getPath(added, instance);
+                // console.log('path mutated', path);
+                // this.dispatch('path-mutated',{'path':path,'nodeset':this.nodeset,'index': this.index});
+                // this.index = index;
+                // const prev = mutations[0].previousSibling.previousElementSibling;
+                // const index = prev.index();
+                // this.applyIndex(this.index -1);
 
-      if (mutations[0].type === 'childList') {
-        const added = mutations[0].addedNodes[0];
-        if (added) {
-          const instance = XPathUtil.resolveInstance(this, this.ref);
-          const path = XPathUtil.getPath(added, instance);
-          // console.log('path mutated', path);
-          // this.dispatch('path-mutated',{'path':path,'nodeset':this.nodeset,'index': this.index});
-          // this.index = index;
-          // const prev = mutations[0].previousSibling.previousElementSibling;
-          // const index = prev.index();
-          // this.applyIndex(this.index -1);
-
-          Fore.dispatch(this, 'path-mutated', { path, index: this.index });
-        }
+                Fore.dispatch(this, 'path-mutated', { path, index: this.index });
+              }
+              if (!this.getOwnerForm().initialRun) {
+                shouldRefresh = true;
+              }
+            }
+          }
+          if (shouldRefresh) {
+            this.refresh();
+          }
+        });
       }
     });
+
+    // console.log('mutations', mutations);
     // }
     this.getOwnerForm().registerLazyElement(this);
 
@@ -183,6 +205,9 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     // this.init();
   }
 
+  /**
+   * @returns {import('./fx-repeatitem.js').FxRepeatitem}
+   */
   _createNewRepeatItem() {
     const newItem = document.createElement('fx-repeatitem');
 
@@ -249,7 +274,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
   }
 
   async refresh(force) {
-    // console.group('fx-repeat.refresh on', this.id);
+    console.log('🔄 fx-repeat.refresh on', this.id);
 
     if (!this.inited) this.init();
     // console.time('repeat-refresh', this);
@@ -295,6 +320,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
         const newItem = this._createNewRepeatItem();
 
         this.appendChild(newItem);
+
         this._initVariables(newItem);
 
         newItem.nodeset = this.nodeset[position - 1];
@@ -306,6 +332,8 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
         // Tell the owner form we might have new template expressions here
         this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh();
+
+        newItem.refresh(true);
       }
     }
 
@@ -321,6 +349,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
     // Fore.refreshChildren(clone,true);
     const fore = this.getOwnerForm();
+    // if (!fore.lazyRefresh || force) {
     if (!fore.lazyRefresh || force) {
       // Turn the possibly conditional force refresh into a forced one: we changed our children
       Fore.refreshChildren(this, force);

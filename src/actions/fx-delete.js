@@ -58,15 +58,20 @@ class FxDelete extends AbstractAction {
     if (Array.isArray(nodesToDelete)) {
       if (nodesToDelete.length === 0) return;
       parent = nodesToDelete[0].parentNode;
+
       fore.signalChangeToElement(parent.localName);
       nodesToDelete.forEach(item => {
         this._deleteNode(parent, item);
+        // const mi = this.getModel().getModelItem(item);
+        // console.log('delete node ', nodesToDelete, mi);
+        // mi.notify();
         fore.signalChangeToElement(item.localName);
       });
     } else {
       parent = nodesToDelete.parentNode;
       fore.signalChangeToElement(parent.localName);
-
+      // const mi = this.getModelItem();
+      // console.log('delete node ', nodesToDelete, mi);
       this._deleteNode(parent, nodesToDelete);
       fore.signalChangeToElement(nodesToDelete.localName);
     }
@@ -86,18 +91,14 @@ class FxDelete extends AbstractAction {
     if (node.nodeType === Node.DOCUMENT_FRAGMENT_NODE) return;
     if (node.parentNode === null) return;
 
-    const mi = this.getModelItem();
-    if (mi.readonly) return;
+    const mi = this.getModel().getModelItem(node);
+    // Note that the model item can be absent, For elements that had no controls on them.
+    // In that case, allow removals
+    if (mi?.readonly) return;
 
     parent.removeChild(node);
-  }
 
-  /**
-   * overwriting as we need to perform additional rebuild()
-   */
-  actionPerformed() {
-    this.getModel().rebuild();
-    super.actionPerformed();
+    this.getModel().removeModelItem(node);
   }
 }
 

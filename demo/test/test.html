@@ -9,28 +9,33 @@
 <body>
 <div class="wrapper">
     <fx-fore>
-        <fx-model id="model1">
+        <fx-model id="model-1">
             <fx-instance>
                 <data>
-                    <item>foobar</item>
-                    <result>foobar</result>
+                    <selected
+>https://www.eagle-network.eu/voc/typeins/lod/73
+                        https://www.eagle-network.eu/voc/typeins/lod/113</selected
+                    >
                 </data>
-                <fx-bind ref="item"></fx-bind>
+            </fx-instance>
+            <fx-instance id="list" type="json">
+                [ { "name": "Akklamation", "value": "https://www.eagle-network.eu/voc/typeins/lod/73" },
+                { "name": "Adnuntiatio", "value": "https://www.eagle-network.eu/voc/typeins/lod/113" },
+                { "name": "Assignationsinschrift", "value":
+                "https://www.eagle-network.eu/voc/typeins/lod/116" } ]
             </fx-instance>
         </fx-model>
-        <fx-group>
-            <span id="result">{result}</span>
-            <fx-control id="input1" ref="result">
-                <fx-items ref="instance('default')/item">
-                    <template>
-                        <span id="checkbox">
-                          <label slot="label">{.}</label>
-                          <input type="checkbox" value="{.}" />
-                        </span>
-                    </template>
-                </fx-items>
-            </fx-control>
-        </fx-group>
+        <fx-control ref="selected" update-event="input">
+            <fx-items ref="instance('list')?*" class="widget">
+                <template>
+              <span class="fx-checkbox">
+                <input id="check" name="option" type="checkbox" value="{value}" />
+                <label>{name}</label>
+              </span>
+                </template>
+            </fx-items>
+        </fx-control>
+        <fx-output ref="selected"></fx-output>
     </fx-fore>
 </div>
 <script type="module" src="../demo.js"/>

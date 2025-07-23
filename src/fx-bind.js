@@ -45,12 +45,24 @@ export class FxBind extends ForeElementMixin {
     // console.log('connectedCallback ', this);
     // this.id = this.hasAttribute('id')?this.getAttribute('id'):;
     this.constraint = this.getAttribute('constraint');
-    this.ref = this.getAttribute('ref');
+    this.ref = this.getAttribute('ref') || '.';
     this.readonly = this.getAttribute('readonly');
     this.required = this.getAttribute('required');
     this.relevant = this.getAttribute('relevant');
     this.type = this.hasAttribute('type') ? this.getAttribute('type') : FxBind.TYPE_DEFAULT;
     this.calculate = this.getAttribute('calculate');
+    // For self-references, just apply the facets to the parent bind
+    if (this.ref === '.') {
+      const parent = this.parentNode;
+      if (parent instanceof FxBind) {
+        // For overlapping binds, the last one wins
+        parent.calculate ||= this.calculate;
+        parent.readonly ||= this.readonly;
+        parent.required ||= this.required;
+        parent.relevant ||= this.relevant;
+        parent.constraint ||= this.constraint;
+      }
+    }
   }
 
   /**
@@ -80,7 +92,7 @@ export class FxBind extends ForeElementMixin {
 
   _buildBindGraph() {
     if (this.bindType === 'xml') {
-      this.nodeset.forEach((node) => {
+      this.nodeset.forEach(node => {
         const instance = XPathUtil.resolveInstance(this, this.ref);
 
         const path = XPathUtil.getPath(node, instance);
@@ -143,6 +155,26 @@ export class FxBind extends ForeElementMixin {
   }
 
   /**
+   * Resolves a referenced ModelItem using the model's graph and node registry.
+   * @param {string} refName
+   * @returns {ModelItem | null}
+   */
+  resolveModelItem(refName) {
+    if (!this.model?.mainGraph || !this.model?.getModelItemForNode) return null;
+
+    const suffixes = [`/${refName}`, `:${refName}`];
+
+    for (const [path, node] of this.model.mainGraph.nodeMap.entries()) {
+      if (suffixes.some(suffix => path.endsWith(suffix))) {
+        const modelItem = this.model.getModelItemForNode(node);
+        if (modelItem) return modelItem;
+      }
+    }
+
+    return null;
+  }
+
+  /**
    * Add the dependencies of this bind
    *
    * @param  {Node[]}  refs The nodes that are referenced by this bind. these need to be resolved before
@@ -158,7 +190,7 @@ export class FxBind extends ForeElementMixin {
       if (!this.model.mainGraph.hasNode(nodeHash)) {
         this.model.mainGraph.addNode(nodeHash, node);
       }
-      refs.forEach((ref) => {
+      refs.forEach(ref => {
         const instance = XPathUtil.resolveInstance(this, path);
 
         const otherPath = XPathUtil.getPath(ref, instance);
@@ -179,7 +211,7 @@ export class FxBind extends ForeElementMixin {
 
   _processChildren(model) {
     const childbinds = this.querySelectorAll(':scope > fx-bind');
-    Array.from(childbinds).forEach((bind) => {
+    Array.from(childbinds).forEach(bind => {
       // console.log('init child bind ', bind);
       bind.init(model);
     });
@@ -208,14 +240,14 @@ export class FxBind extends ForeElementMixin {
     if (this.ref === '' || this.ref === null) {
       this.nodeset = inscopeContext;
     } else if (Array.isArray(inscopeContext)) {
-      inscopeContext.forEach((n) => {
+      inscopeContext.forEach(n => {
         if (XPathUtil.isSelfReference(this.ref)) {
           this.nodeset = inscopeContext;
         } else {
           // eslint-disable-next-line no-lonely-if
           if (this.ref) {
             const localResult = evaluateXPathToNodes(this.ref, n, this);
-            localResult.forEach((item) => {
+            localResult.forEach(item => {
               this.nodeset.push(item);
             });
             /*
@@ -243,7 +275,7 @@ export class FxBind extends ForeElementMixin {
     if (Array.isArray(this.nodeset)) {
       // console.log('################################################ ', this.nodeset);
       // Array.from(this.nodeset).forEach((n, index) => {
-      Array.from(this.nodeset).forEach((n) => {
+      Array.from(this.nodeset).forEach(n => {
         // console.log('node ',n);
         // this._createModelItem(n, index);
         this._createModelItem(n);
@@ -315,18 +347,8 @@ export class FxBind extends ForeElementMixin {
     // ### constructing default modelitem - will get evaluated during recalculate()
     // ### constructing default modelitem - will get evaluated during recalculate()
     // const newItem = new ModelItem(shortPath,
-    const newItem = new ModelItem(
-      path,
-      this.getBindingExpr(),
-      FxBind.READONLY_DEFAULT,
-      FxBind.RELEVANT_DEFAULT,
-      FxBind.REQUIRED_DEFAULT,
-      FxBind.CONSTRAINT_DEFAULT,
-      this.type,
-      targetNode,
-      this,
-      instanceId
-    );
+    const fore = this.closest('fx-fore');
+    const newItem = new ModelItem(path, this.getBindingExpr(), targetNode, this, instanceId, fore);
 
     const alert = this.getAlert();
     if (alert) {
@@ -355,7 +377,7 @@ export class FxBind extends ForeElementMixin {
   getReferences(propertyExpr) {
     const touchedNodes = new Set();
     const domFacade = new DependencyNotifyingDomFacade(otherNode => touchedNodes.add(otherNode));
-    this.nodeset.forEach((node) => {
+    this.nodeset.forEach(node => {
       evaluateXPathToString(propertyExpr, node, this, domFacade);
     });
     return Array.from(touchedNodes.values());

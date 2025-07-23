@@ -136,6 +136,15 @@ export class FxFore extends HTMLElement {
     this.dirtyState = dirtyStates.CLEAN;
     this.showConfirmation = false;
 
+    // Batching for observer notifications during refresh
+    this.isRefreshPhase = false;
+    /**
+     * The model items that will be updated next refresh
+     *
+     * @type {Set<ModelItem>}
+     */
+    this.batchedNotifications = new Set();
+
     const style = `
             :host {
                 display: block;
@@ -383,12 +392,14 @@ export class FxFore extends HTMLElement {
    * @param {import('./modelitem.js').ModelItem} modelItem
    * @returns {void}
    */
+  /*
   addToRefresh(modelItem) {
     const found = this.toRefresh.find(mi => mi.path === modelItem.path);
     if (!found) {
       this.toRefresh.push(modelItem);
     }
   }
+*/
 
   /**
    * Signal something happened with an element with the given local name. This will be used in the
@@ -493,8 +504,8 @@ export class FxFore extends HTMLElement {
    *
    */
   async forceRefresh() {
-    // console.time('refresh');
-    // console.group('### forced refresh', this);
+    console.time('refresh');
+    console.group('### forced refresh', this);
 
     Fore.refreshChildren(this, true);
     this._updateTemplateExpressions();
@@ -527,29 +538,34 @@ export class FxFore extends HTMLElement {
     }
 
     this.isRefreshing = true;
+    this.isRefreshPhase = true;
 
     // refresh () {
     // ### refresh Fore UI elements
     // if (!this.initialRun && this.toRefresh.length !== 0) {
     // if (!this.initialRun && this.toRefresh.length !== 0) {
-    if (!force && !this.initialRun && this.toRefresh.length !== 0) {
-      this.refreshChanged(force);
+    // if (!force && !this.initialRun && this.toRefresh.length !== 0) {
+    if (force || this.initialRun) {
+      console.log('🔄 🔴 ### full refresh() on ', this);
+      Fore.refreshChildren(this, force);
     } else {
-      // ### resetting visited state for controls to refresh
-      /*
-                  const visited = this.parentNode.querySelectorAll('.visited');
-                  Array.from(visited).forEach(v =>{
-                      v.classList.remove('visited');
-                  });
-      */
-
-      if (this.inited) {
-        console.log(`### <<<<< refresh() on '${this.id}' >>>>>`);
-
-        Fore.refreshChildren(this, force);
-      }
-      // console.timeEnd('refreshChildren');
+      // Process all batched notifications at the end of the refresh phase
+      console.log('🔄 🎯  ### processing batched notifications');
+      this._processBatchedNotifications();
     }
+
+    /*
+        if (!force && !this.initialRun) {
+          console.log('### batched refresh()', this.batchedNotifications);
+          this.refreshChanged();
+        } else {
+          if (this.inited) {
+            console.log(`### <<<<< refresh() on '${this.id}' >>>>>`);
+
+            Fore.refreshChildren(this, force);
+          }
+        }
+    */
 
     // ### refresh template expressions
     if (force || this.initialRun || this._scanForNewTemplateExpressionsNextRefresh) {
@@ -559,9 +575,11 @@ export class FxFore extends HTMLElement {
 
     this._processTemplateExpressions();
 
+    this.isRefreshPhase = false;
+
     // console.log('### <<<<< dispatching refresh-done - end of UI update cycle >>>>>');
     // this.dispatchEvent(new CustomEvent('refresh-done'));
-    // this.initialRun = false;
+    this.initialRun = false;
     this.style.visibility = 'visible';
     console.info(
       `%crefresh-done on #${this.id}`,
@@ -599,40 +617,81 @@ export class FxFore extends HTMLElement {
     this.isRefreshing = false;
   }
 
-  refreshChanged(force) {
-    console.log('toRefresh', this.toRefresh);
-    let needsRefresh = false;
+  /**
+   * Refreshes UI controls based on changed ModelItems
+   * This method is being refactored to use the observer pattern
+   * @param {boolean} force - Whether to force a refresh
+   */
+  /*
+  refreshChanged() {
+    console.log('toRefresh length:', this.toRefresh.length);
 
-    // ### after recalculation the changed modelItems are copied to 'toRefresh' array for processing
-    this.toRefresh.forEach(modelItem => {
-      // check if modelItem has boundControls - if so, call refresh() for each of them
-      const controlsToRefresh = modelItem.boundControls;
-      if (controlsToRefresh) {
-        controlsToRefresh.forEach(ctrl => {
-          ctrl.refresh(force);
-        });
-      }
+    // Create a copy of the array to avoid modification during iteration
+    const itemsToRefresh = [...this.toRefresh];
 
-      // ### check if other controls depend on current modelItem
+    // Clear the array before processing to prevent potential circular updates
+    this.toRefresh = [];
+
+    // The ModelItems in toRefresh will notify their observers directly
+    // This is kept for backward compatibility
+    itemsToRefresh.forEach(modelItem => {
+      // Notify observers (which will call update() on them)
+      modelItem.notify();
+
+      // Check if other ModelItems depend on this one through the dependency graph
       const { mainGraph } = this.getModel();
       if (mainGraph && mainGraph.hasNode(modelItem.path)) {
         const deps = this.getModel().mainGraph.dependentsOf(modelItem.path, false);
-        // ### iterate dependant modelItems and refresh all their boundControls
+
+        // Notify dependent ModelItems
         if (deps.length !== 0) {
           deps.forEach(dep => {
-            // ### if changed modelItem has a 'facet' path we use the basePath that is the locationPath without facet name
             const basePath = XPathUtil.getBasePath(dep);
             const modelItemOfDep = this.getModel().modelItems.find(mip => mip.path === basePath);
-            // ### refresh all boundControls
-            modelItemOfDep.boundControls.forEach(control => {
-              control.refresh(force);
-            });
+            if (modelItemOfDep) {
+              modelItemOfDep.notify();
+            }
           });
-          needsRefresh = true;
         }
       }
     });
-    this.toRefresh = [];
+  }
+*/
+
+  /**
+   * Add a ModelItem to the batch of notifications to be processed at the end of the refresh phase
+   * @param {import('./modelitem.js').ModelItem} modelItem - The ModelItem to add to the batch
+   */
+  addToBatchedNotifications(modelItem) {
+    // if (this.isRefreshPhase) {
+    console.log('adding to batched notifications', modelItem);
+    this.batchedNotifications.add(modelItem);
+    // }
+  }
+
+  /**
+   * Process all batched notifications at the end of the refresh phase
+   */
+  _processBatchedNotifications() {
+    if (this.batchedNotifications.size > 0) {
+      console.log(`🔍 Processing ${this.batchedNotifications.size} batched notifications`);
+
+      // Process all batched notifications
+      this.batchedNotifications.forEach(modelItem => {
+        if (modelItem.observers) {
+          modelItem.observers.forEach(observer => {
+            console.log('🔍 processing observer', observer);
+            if (typeof observer.update === 'function') {
+              console.log('updating observer', observer);
+              observer.update(modelItem);
+            }
+          });
+        }
+      });
+
+      // Clear the batch
+      this.batchedNotifications.clear();
+    }
   }
 
   /**
@@ -946,7 +1005,6 @@ export class FxFore extends HTMLElement {
    * @private
    */
   async _initUI() {
-    // console.log('### _initUI()');
     console.info(
       `%cinitUI #${this.id}`,
       'background:lightblue; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
@@ -973,6 +1031,7 @@ export class FxFore extends HTMLElement {
       }
     }
     await this.refresh(true);
+    // await Fore.initUI(this);
 
     // this.style.display='block'
     this.classList.add('fx-ready');
@@ -983,7 +1042,7 @@ export class FxFore extends HTMLElement {
     // console.log('### >>>>> dispatching ready >>>>>', this);
     console.info(
       `%c #${this.id} is ready`,
-      'background:lightblue; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+      'background:lightgreen; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
     );
 
     // console.log(`### <<<<< ${this.id} ready >>>>>`);
