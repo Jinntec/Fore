@@ -99,14 +99,14 @@
                 <ondemand2></ondemand2>
                 <empty></empty>
               </row>
-              <template>
+              <tmpl>
                 <row>
                   <greetings></greetings>
                   <ondemand></ondemand>
                   <ondemand2></ondemand2>
                   <empty></empty>
                 </row>
-              </template>
+              </tmpl>
             </data>
           </fx-instance>
         </fx-model>
@@ -117,7 +117,7 @@
         <fx-message event="hide-control" target="repeat">
           Hey that repeat was shown
         </fx-message>
-        <fx-repeat ref="row" id="repeat" on-demand="true" aria-label="on-demand repeat" show-icon="true" >
+        <fx-repeat ref="row" id="repeat" on-demand="true"  aria-label="on-demand repeat" show-icon="true" >
           <template>
             <fx-control ref="greetings">
               <label>Greetings</label>
@@ -145,7 +145,7 @@
           <fx-trigger slot="footer">
             <button>append</button>
             <!-- we need to use context() instead of 'row' or '.' here -->
-            <fx-insert context="instance()" ref="instance()/row" origin="instance()/template/row"></fx-insert>
+            <fx-insert context="instance()" ref="instance()/row" origin="instance()/tmpl/row"></fx-insert>
           </fx-trigger>
         </fx-repeat>
 
