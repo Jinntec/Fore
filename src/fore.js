@@ -328,8 +328,10 @@ export class Fore {
               continue;
             }
             if (force === true) {
+              console.log('🔄 refreshing ', element);
               // Unconditional force refresh
               bound.refresh(force);
+
               continue;
             }
             if (typeof force !== 'object') {
@@ -339,6 +341,8 @@ export class Fore {
               force.reason === 'index-function' &&
               bound.dependencies.isInvalidatedByIndexFunction()
             ) {
+              console.log('🔄 refreshing ', element);
+
               bound.refresh(force);
               continue;
             }
@@ -346,12 +350,11 @@ export class Fore {
             if (
               bound.dependencies.isInvalidatedByChildlistChanges(force.elementLocalnamesWithChanges)
             ) {
+              console.log('🔄 refreshing ', element);
+
               bound.refresh(force);
               continue;
             }
-
-            // console.log('🔄 refreshing', element, element?.ref);
-            console.log('🔄 refreshing ', element);
           }
           if (!(element.inert === true)) {
             // testing for inert catches model and action elements and should just leave updateable html elements
@@ -558,10 +561,7 @@ export class Fore {
     const reg = /(>)(<)(\/*)/g;
     const wsexp = / *(.*) +\n/g;
     const contexp = /(<.+>)(.+\n)/g;
-    xml = xml
-      .replace(reg, '$1\n$2$3')
-      .replace(wsexp, '$1\n')
-      .replace(contexp, '$1\n$2');
+    xml = xml.replace(reg, '$1\n$2$3').replace(wsexp, '$1\n').replace(contexp, '$1\n$2');
     let formatted = '';
     const lines = xml.split('\n');
     let indent = 0;
