@@ -4,7 +4,7 @@ describe('binding.html', () => {
 	});
 
 	it('toggle the "required buttons"', () => {
-		cy.get('[data-cy="required"]').click()
+		cy.get('fx-fore.fx-ready [data-cy="required"]').click()
 
 		cy.get('#input input').should('have.attr', 'required');
 		cy.get('[data-cy="optional"]').click();
@@ -25,7 +25,7 @@ describe('binding.html', () => {
 	});
 
 	it('toggle the "readonly"', () => {
-		cy.get('[data-cy="readonly"').click()
+		cy.get('fx-fore.fx-ready [data-cy="readonly"').click()
 		cy.get('#input input').should('have.attr', 'readonly')
 
 		cy.get('[data-cy="readwrite"]').click();

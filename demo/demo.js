@@ -1,4 +1,5 @@
 // import '@polymer/iron-demo-helpers/demo-snippet.js';
+import '../index.js';
 
 const main = async () => {
   // These imports are required to run early. Vite seems to not play nicely with the implicit
@@ -23,7 +24,6 @@ const main = async () => {
   await import('@polymer/paper-checkbox/paper-checkbox.js');
   await import('@polymer/paper-button/paper-button.js');
   await import('../src/lab/instance-inspector.js');
-  await import('../index.js');
   await import('../tools/fx-lens.js');
   await import('../doc/fore-corner.js');
 };
