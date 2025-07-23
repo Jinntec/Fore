@@ -60,7 +60,6 @@ export class FxInsert extends AbstractAction {
     this.keepValues = !!this.hasAttribute('keep-values');
   }
 
-
   _cloneOriginSequence(inscope, targetSequence) {
     let originSequenceClone;
     if (this.origin) {
@@ -76,13 +75,13 @@ export class FxInsert extends AbstractAction {
         if in 'create-nodes' mode and origin targets a repeat, the repeat
         we use the already during initData() created nodeset as a template for insertion
          */
-        if(this.origin.startsWith('#') && this.getOwnerForm().createNodes){
+        if (this.origin.startsWith('#') && this.getOwnerForm().createNodes) {
           const repeat = this.getOwnerForm().querySelector(this.origin);
           originSequenceClone = repeat.createdNodeset.cloneNode(true);
-          if(!originSequenceClone){
+          if (!originSequenceClone) {
             console.error(`createdNodeset for repeat ${this.origin} does not exist`);
           }
-        }else{
+        } else {
           // originTarget = evaluateXPathToFirstNode(this.origin, inscope, this);
           originTarget = evaluateXPathToFirstNode(this.origin, inscope, this);
           if (Array.isArray(originTarget) && originTarget.length === 0) {
@@ -128,7 +127,7 @@ export class FxInsert extends AbstractAction {
 
     // ### 'context' attribute takes precedence over 'ref'
     if (this.hasAttribute('context')) {
-      [context] = evaluateXPathToNodes(this.getAttribute('context'), inscopeContext, fore);
+      [context] = evaluateXPathToNodes(this.getAttribute('context'), inscopeContext, this);
       inscope = inscopeContext;
     }
 
@@ -157,20 +156,18 @@ export class FxInsert extends AbstractAction {
         fore.signalChangeToElement(originSequenceClone.localName);
         index = 1;
       } else {
-
         // No context but creating nodes from UI
-        if(!inscope && this.getOwnerForm().createNodes){
+        if (!inscope && this.getOwnerForm().createNodes) {
           const repeat = this.getOwnerForm().querySelector(this.origin);
           inscope = getInScopeContext(repeat, repeat.ref);
           insertLocationNode = inscope;
           inscope.appendChild(originSequenceClone);
           index = inscope.length - 1;
-        }else{
+        } else {
           insertLocationNode = inscope;
           inscope.appendChild(originSequenceClone);
           index = 1;
         }
-
       }
     } else {
       /* ### insert at position given by 'at' or use the last item in the targetSequence ### */
@@ -216,6 +213,8 @@ export class FxInsert extends AbstractAction {
         if (this.hasAttribute('context') && this.hasAttribute('ref')) {
           // index=1;
           inscope.append(originSequenceClone);
+          fore.signalChangeToElement(insertLocationNode);
+          fore.signalChangeToElement(originSequenceClone.localName);
         } else if (this.hasAttribute('context')) {
           index = 1;
           insertLocationNode.prepend(originSequenceClone);
