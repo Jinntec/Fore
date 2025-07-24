@@ -27,6 +27,16 @@ describe('on-demand.html', () => {
     cy.get('#example1 [ref="ondemand"]').should('be.visible');
     cy.get('#example1 [ref="ondemand2"]').should('be.visible');
     cy.get('#example1 [aria-label="section"]').should('not.be.visible');
+    cy.get('#menu').click();
+    cy.get('#menu')
+      .shadow()
+      .find('a:nth-child(1)')
+      .click();
+
+    cy.get('#example1 [aria-label="section"]').should('be.visible');
+
+    cy.get('#menu button').should('have.attr', 'disabled', 'disabled');
+
   });
 
   it('allows switching them non-visible again"', () => {

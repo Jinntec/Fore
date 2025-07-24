@@ -321,9 +321,11 @@ export default class AbstractControl extends UIElement {
         // if (alert) alert.style.display = 'none';
         this._dispatchEvent('valid');
         this.setAttribute('valid', '');
+        this.getWidget().setAttribute('aria-invalid', 'false');
         this.removeAttribute('invalid');
       } else {
         this.setAttribute('invalid', '');
+        this.getWidget().setAttribute('aria-invalid', 'true');
         this.removeAttribute('valid');
         // ### constraint is invalid - handle alerts
         /*

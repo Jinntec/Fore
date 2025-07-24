@@ -1,0 +1,131 @@
+<data>
+    <greeting>Hello Greg</greeting>
+    <dataEntry></dataEntry>
+    <lifecycle>
+        <clientVersion>
+            <lifecycleSelected>false</lifecycleSelected>
+            <lifecycleId>DrgIsUs:clientVersion1</lifecycleId>
+            <lifecycleTimestamp>2025-01-01T121212</lifecycleTimestamp>
+            <lifecycleState>created</lifecycleState>
+            <lifecycleUser>greg.soulsby@modeldrivers.uk</lifecycleUser>
+            <lifecycleNote>Client just signed - yay!</lifecycleNote>
+        </clientVersion>
+        <clientVersion>
+            <lifecycleSelected>false</lifecycleSelected>
+            <lifecycleId>DrgIsUs:clientVersion2</lifecycleId>
+            <lifecycleTimestamp>2025-01-02T121212</lifecycleTimestamp>
+            <lifecycleState>in-progress</lifecycleState>
+            <lifecycleUser>greg.soulsby@modeldrivers.uk</lifecycleUser>
+            <lifecycleNote></lifecycleNote>
+        </clientVersion>
+        <clientVersion>
+            <lifecycleSelected>false</lifecycleSelected>
+            <lifecycleId>DrgIsUs:clientVersion3</lifecycleId>
+            <lifecycleTimestamp>2025-01-03T121212</lifecycleTimestamp>
+            <lifecycleState>awaiting-client-input</lifecycleState>
+            <lifecycleUser>greg.soulsby@modeldrivers.uk</lifecycleUser>
+            <lifecycleNote>Client asked for receipts</lifecycleNote>
+        </clientVersion>
+        <clientVersion>
+                <lifecycleId>DrgIsUs:clientVersion4</lifecycleId>
+                    <lifecycleTimestamp>2025-01-04T130000</lifecycleTimestamp>
+                    <lifecycleState>submitted"</lifecycleState>
+                    <lifecycleUser>greg.soulsby@modeldrivers.uk"</lifecycleUser>
+                    <lifecycleNote>Client notified</lifecycleNote>
+        </clientVersion>
+    </lifecycle>
+    <executive></executive>
+    <parties>
+        <partyRole>
+            <partyRoleSelected>false</partyRoleSelected>
+            <partyRoleId>Prpl:DredingIsUsClient</partyRoleId>
+            <partyRoleRole>Prpl:ClientRole</partyRoleRole>
+            <partyRoleName>Aarav Sharma</partyRoleName>
+            <partyRoleEmail>Aarav.Sharma@dredgingisus.uk</partyRoleEmail>
+            <partyRoleState>Prpl:Active</partyRoleState>
+            <partyRoleNote>Very important as a demonstration"</partyRoleNote>
+        </partyRole>
+        <partyRole>
+            <partyRoleSelected>false</partyRoleSelected>
+            <partyRoleId>DrgIsUs:Client</partyRoleId>
+            <partyRoleRole>Prpl:AccountManager</partyRoleRole>
+            <partyRoleName>Ian</partyRoleName>
+            <partyRoleEmail>ian@propl.uk</partyRoleEmail>
+            <partyRoleState>Prpl:Active</partyRoleState>
+            <partyRoleNote>Responsible for the Account</partyRoleNote>
+        </partyRole>
+    </parties>
+    <client>
+        <clientPeriods>
+            <financialPeriod>
+                <financialPeriodSelected>false</financialPeriodSelected>
+                <financialPeriodId>DrgIsUs:FinPeriod2025</financialPeriodId>
+                <financialPeriodFrom>2024-04</financialPeriodFrom>
+                <financialPeriodTo>2025-03</financialPeriodTo>
+                <financialPeriodState>Prpl:Active</financialPeriodState>
+                <financialPeriodNote>The first year as a client</financialPeriodNote>
+                <finanicalLineItems>
+                    <finanicalLineItem>
+                    </finanicalLineItem>
+                </finanicalLineItems>
+            </financialPeriod>
+            <financialPeriod>
+                <financialPeriodSelected>false</financialPeriodSelected>
+                <financialPeriodId>DrgIsUs:FinPeriod2026</financialPeriodId>
+                <financialPeriodFrom>2025-04</financialPeriodFrom>
+                <financialPeriodTo>2025-03</financialPeriodTo>
+                <financialPeriodState>Prpl:Active</financialPeriodState>
+                <financialPeriodNote>The second year as a client</financialPeriodNote>
+                <finanicalLineItems>
+                    <finanicalLineItem>
+                    </finanicalLineItem>
+                </finanicalLineItems>
+            </financialPeriod>
+        </clientPeriods>
+    </client>
+    <finanicals>
+    </finanicals>
+    <construction>
+        <line-item
+                assetId="PrplDredgingIsUs:Pump001"
+                category="PrplCat:Annual"
+                id="PrplDredgingIsUs:CL001-L002"
+                type="XXX"
+                description="Dredging"
+                amount="123"
+                expected="100"
+                due="2022-06-05"
+                low="0"
+                high="1000"
+                confidence="25"
+                state="created"
+                partyRoleId="DrgIsUs:Client"
+        >
+            <xxxx>MY XXXX</xxxx>
+        </line-item>
+        <line-item
+                assetId="PrplDredgingIsUs:Pump001"
+                category="PrplCat:Cash"
+                id="PrplDredgingIsUs:CL001-L002"
+                type="YYY"
+                description="Research"
+                amount="456"
+                expected="100"
+                due="2022-06-15"
+                low="0"
+                high="1000"
+                confidence="75"
+                state="Initiated"
+                partyRoleId="DrgIsUs:Client"
+        >
+        </line-item>
+    </construction>
+    <asset-name>Leeds to Manchester Canal</asset-name>
+    <asset-id>DredgingIsUs:LeedsToManchesterCanal</asset-id>
+    <user>greg.soulsby&#64;modeldrivers.uk</user>
+    <client-id>Prpl:DredgingIsUs</client-id>
+    <claim-id>Prpl:CL001</claim-id>
+    <entry-timestamp>2025-06-25T12:04:12Z</entry-timestamp>
+    <count>1</count>
+
+</data>

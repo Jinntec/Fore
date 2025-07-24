@@ -1025,6 +1025,10 @@ export class FxFore extends HTMLElement {
     // First refresh should be forced
     if (this.createNodes) {
       this.initData();
+      const binds = this.getModel().querySelector('fx-bind');
+      if (binds) {
+        this.getModel().updateModel();
+      }
     }
     await this.refresh(true);
     // await Fore.initUI(this);

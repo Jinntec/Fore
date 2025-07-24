@@ -145,7 +145,7 @@
     }
 
     fx-group, fx-switch, fx-repeat, fx-dialog {
-        display: block;
+        /*display: block;*/
         position: relative;
     }
 

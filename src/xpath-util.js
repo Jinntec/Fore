@@ -372,6 +372,7 @@ export class XPathUtil {
    */
   static shortenPath(path) {
     const tmp = path.replaceAll(/(Q{(.*?)\})/g, '');
+    if (tmp === 'root()') return tmp;
     // cut off leading slash
     const tmp1 = tmp.substring(1, tmp.length);
     // ### cut-off root node ref
