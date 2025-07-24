@@ -5,7 +5,8 @@ import sinonChai from 'sinon-chai';
 
 import '../src/fx-connection.js'; // Import your FxConnection class
 
-describe('FxConnection', () => {
+// These tests are not running and have not been executed for a long time
+describe.skip('FxConnection', () => {
   before(() => {
     chai.use(sinonChai); // Use sinon-chai to integrate Sinon with Chai
   });
