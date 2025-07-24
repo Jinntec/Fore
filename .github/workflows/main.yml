@@ -36,4 +36,4 @@ jobs:
               with:
                 install-command: |
                   npm run install-demos
-                start: npm run start-cypress > /dev/null
+                start: npm run start-cypress
