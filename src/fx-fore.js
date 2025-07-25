@@ -455,6 +455,8 @@ export class FxFore extends HTMLElement {
       const { target } = entry;
 
       const fore = Fore.getFore(target);
+      // Skip if this is the initial run of the fore element
+      // This check prevents issues with nested fx-fore elements loaded via fx-control
       if (fore.initialRun) return;
 
       if (entry.isIntersecting) {
@@ -1010,7 +1012,12 @@ export class FxFore extends HTMLElement {
       'background:lightblue; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
     );
 
-    if (!this.initialRun) return;
+    const parentFore = this.closest('fx-fore');
+    if (parentFore) {
+      this.initialRun = false;
+    } else {
+      if (!this.initialRun) return;
+    }
     this.classList.add('initialRun');
     await this._lazyCreateInstance();
 
