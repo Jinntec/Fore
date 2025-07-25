@@ -22,7 +22,7 @@
 <body>
 <div class="wrapper">
 
-    <fx-fore>
+    <fx-fore id="inner">
         <fx-setfocus control="email" event="ready"></fx-setfocus>
         <fx-model>
             <fx-instance>
@@ -31,8 +31,10 @@
                 </data>
             </fx-instance>
         </fx-model>
-        <fx-control id="email" ref="from">
+        <fx-control id="email" ref="from" update-event="input">
+            <input name="email" class="widget" type="email">
 <!--            <label>From</label>-->
+            <fx-return ref="." event="value-changed"></fx-return>
         </fx-control>
     </fx-fore>
 
