@@ -1,15 +1,27 @@
 <fx-fore id="testA">
+
+    <fx-dispatch name="refresh" targetid="outer" event="value-changed"></fx-dispatch>
+
     <!-- fails if model is omitted as the path for fx-control cannot be lazily created - must
     be a simple path name e.g. 'foo' -->
+<!--
     <fx-model>
         <fx-instance></fx-instance>
     </fx-model>
+-->
     <h2>TestA.html</h2>
 
     <h2>//lifecycleNote[1]</h2>
-    <fx-output ref="//lifecycleNote[1]"></fx-output>
-    <fx-control ref="//lifecycleNote[1]">
+    <fx-output ref="greeting"></fx-output>
+    <fx-control ref="greeting">
         <label>lifeCycleNote</label>
+
+<!--
+        <fx-dispatch name="myEvent" event="value-changed">
+            <fx-property name="value" expr="./text()"></fx-property>
+        </fx-dispatch>
+-->
+
     </fx-control>
 
     <h2>testB.html</h2>
