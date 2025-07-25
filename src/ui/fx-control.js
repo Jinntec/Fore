@@ -292,6 +292,9 @@ export default class FxControl extends XfAbstractControl {
       });
     }
     // this.getOwnerForm().refresh();
+    const body = this.closest('body');
+    const outerfore = body.querySelector('fx-fore');
+    outerfore.refresh(true);
   }
 
   renderHTML(ref) {
@@ -501,6 +504,8 @@ export default class FxControl extends XfAbstractControl {
           imported.model = imported.querySelector('fx-model');
           imported.model.updateModel();
 
+          // Ensure initialRun is true for the first refresh
+          imported.initialRun = true;
           imported.refresh(true);
         },
         { once: true },

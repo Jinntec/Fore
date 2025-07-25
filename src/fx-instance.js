@@ -19,10 +19,6 @@ async function handleResponse(fxInstance, response) {
       new DOMParser().parseFromString(result, 'text/html'),
     );
   }
-  if (responseContentType.startsWith('text/')) {
-    // console.log("********** inside  res plain *********");
-    return response.text();
-  }
   if (responseContentType.startsWith('application/json')) {
     // console.log("********** inside res json *********");
     return response.json();
@@ -36,6 +32,11 @@ async function handleResponse(fxInstance, response) {
     // console.log('xml ********', result);
     return new DOMParser().parseFromString(text, 'application/xml');
   }
+  if (responseContentType.startsWith('text/')) {
+    // console.log("********** inside  res plain *********");
+    return response.text();
+  }
+
   throw new Error(`unable to handle response content type: ${responseContentType}`);
 }
 
