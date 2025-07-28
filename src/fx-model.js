@@ -3,6 +3,7 @@ import { Fore } from './fore.js';
 import './fx-instance.js';
 import { ModelItem } from './modelitem.js';
 import { evaluateXPath, evaluateXPathToBoolean } from './xpath-evaluation.js';
+import { getPath } from './xpath-path.js';
 import { XPathUtil } from './xpath-util.js';
 
 /**
@@ -90,7 +91,7 @@ export class FxModel extends HTMLElement {
 
     let path = null;
     if (targetNode?.nodeType) {
-      path = XPathUtil.getPath(targetNode, instanceId);
+      path = getPath(targetNode, instanceId);
     }
 
     // Check if a ModelItem with the same path already exists

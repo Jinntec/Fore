@@ -13,6 +13,7 @@ import {
 
 import { XPathUtil } from './xpath-util.js';
 import { prettifyXml } from './functions/common-function.js';
+import * as fx from 'fontoxpath';
 
 const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
 
@@ -1370,3 +1371,16 @@ registerCustomXPathFunction(
     return uri.substring(uri.indexOf(':') + 1, uri.length);
   },
 );
+
+/**
+ * @param {Node} node
+ * @returns string
+ */
+/*
+export static getDocPath(node) {
+  const path = fx.evaluateXPathToString('path()', node);
+  // Path is like `$default/x[1]/y[1]`
+  const shortened = XPathUtil.shortenPath(path);
+  return shortened.startsWith('/') ? `${shortened}` : `/${shortened}`;
+}
+*/

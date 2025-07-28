@@ -1,64 +1,6 @@
 import * as fx from 'fontoxpath';
-import { parseScript } from 'fontoxpath';
-import { evaluateXPathToString } from './xpath-evaluation';
 
 export class XPathUtil {
-  /**
-   * Checks if a template expression is dynamic, i.e. refers to data (via XPath) or functions.
-   * Used to determine whether to set up data observers or evaluate on every refresh.
-   *
-   * @param {string} expr - The raw XPath expression (from inside `{}`)
-   * @returns {boolean} - True if the expression is dynamic (data/function dependent)
-   */
-  /*
-  static isDynamic(expr) {
-    try {
-      const parsed = parseScript(expr, {}, new Document());
-      console.log('parsed:', parsed);
-      // If any part of the expression contains a location path, variable, or function call, it's dynamic
-      return XPathUtil.containsDynamicContent(parsed);
-    } catch (e) {
-      // On parse failure, assume it's dynamic to be safe
-      console.warn('XPath parse error in isDynamic:', e);
-      return true;
-    }
-  }
-*/
-
-  static isDynamic(expr) {
-    try {
-      const result = evaluateXPathToString(expr, document, null);
-
-      // 1. Check for function calls with non-literal arguments
-      const functionCallPattern = /\b([\w-]+)\s*\(\s*([^)]+)\)/g;
-      let match;
-      while ((match = functionCallPattern.exec(expr)) !== null) {
-        const arg = match[2].trim();
-        if (!/^(['"]).*\1$/.test(arg) && isNaN(arg)) {
-          return true;
-        }
-      }
-
-      // 2. Check for variable references
-      if (expr.includes('$')) return true;
-
-      // 3. Check for unquoted predicates
-      let inQuote = false;
-      for (let i = 0; i < expr.length; i++) {
-        const char = expr[i];
-        if (char === '"' || char === "'") {
-          inQuote = inQuote === char ? false : char;
-        } else if (!inQuote && char === '[') {
-          return true;
-        }
-      }
-
-      return false;
-    } catch {
-      return true;
-    }
-  }
-
   /**
    * Recursively check AST for any dynamic expression components.
    */
@@ -347,12 +289,14 @@ export class XPathUtil {
    * @param {Node} node
    * @returns string
    */
+  /*
   static getDocPath(node) {
     const path = fx.evaluateXPathToString('path()', node);
     // Path is like `$default/x[1]/y[1]`
     const shortened = XPathUtil.shortenPath(path);
     return shortened.startsWith('/') ? `${shortened}` : `/${shortened}`;
   }
+*/
 
   /**
    * @param {Node} node

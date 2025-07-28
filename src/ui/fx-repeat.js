@@ -7,6 +7,7 @@ import getInScopeContext from '../getInScopeContext.js';
 import { XPathUtil } from '../xpath-util.js';
 import { withDraggability } from '../withDraggability.js';
 import { UIElement } from './UIElement.js';
+import { getPath } from '../xpath-path.js';
 
 // import {DependencyNotifyingDomFacade} from '../DependencyNotifyingDomFacade';
 
@@ -152,7 +153,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
               const added = mutation.addedNodes[0];
               if (added) {
                 const instance = XPathUtil.resolveInstance(this, this.ref);
-                const path = XPathUtil.getPath(added, instance);
+                const path = getPath(added, instance);
                 // console.log('path mutated', path);
                 // this.dispatch('path-mutated',{'path':path,'nodeset':this.nodeset,'index': this.index});
                 // this.index = index;

@@ -4,6 +4,7 @@ import getInScopeContext from '../getInScopeContext.js';
 import { Fore } from '../fore.js';
 import { FxFore } from '../fx-fore.js';
 import { XPathUtil } from '../xpath-util.js';
+import { getDocPath } from '../xpath-path.js';
 
 /**
  * @param {number} howLong How long to wait, in ms
@@ -194,7 +195,7 @@ export class AbstractAction extends ForeElementMixin {
       await Fore.dispatch(this, 'error', {
         origin: this,
         message: 'Action execution failed',
-        expr: XPathUtil.getDocPath(this),
+        expr: getDocPath(this),
         level: 'Error',
       });
       // Return false to indicate failure. Any loops must be canceled

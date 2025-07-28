@@ -4,6 +4,7 @@ import getInScopeContext from '../getInScopeContext.js';
 import { XPathUtil } from '../xpath-util.js';
 import ForeElementMixin from '../ForeElementMixin.js';
 import { withDraggability } from '../withDraggability.js';
+import { getPath } from '../xpath-path.js';
 
 /**
  * `fx-repeat`
@@ -136,7 +137,7 @@ export class FxRepeatAttributes extends withDraggability(ForeElementMixin, false
         const added = mutations[0].addedNodes[0];
         if (added) {
           const instance = XPathUtil.resolveInstance(this, this.ref);
-          const path = XPathUtil.getPath(added, instance);
+          const path = getPath(added, instance);
           // this.dispatch('path-mutated',{'path':path,'nodeset':this.nodeset,'index': this.index});
           // this.index = index;
           // const prev = mutations[0].previousSibling.previousElementSibling;

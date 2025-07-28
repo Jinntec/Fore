@@ -8,6 +8,7 @@ import {
 } from './xpath-evaluation.js';
 import { XPathUtil } from './xpath-util.js';
 import getInScopeContext from './getInScopeContext.js';
+import { getPath } from './xpath-path.js';
 
 /**
  * FxBind declaratively attaches constraints to nodes in the data (instances).
@@ -95,7 +96,7 @@ export class FxBind extends ForeElementMixin {
       this.nodeset.forEach(node => {
         const instance = XPathUtil.resolveInstance(this, this.ref);
 
-        const path = XPathUtil.getPath(node, instance);
+        const path = getPath(node, instance);
         this.model.mainGraph.addNode(path, node);
 
         /* ### catching references in the 'ref' itself...
@@ -193,7 +194,7 @@ export class FxBind extends ForeElementMixin {
       refs.forEach(ref => {
         const instance = XPathUtil.resolveInstance(this, path);
 
-        const otherPath = XPathUtil.getPath(ref, instance);
+        const otherPath = getPath(ref, instance);
         // console.log('otherPath', otherPath)
 
         // todo: nasty hack to prevent duplicate pathes like 'a[1]' and 'a[1]/text()[1]' to end up as separate nodes in the graph
@@ -340,7 +341,7 @@ export class FxBind extends ForeElementMixin {
     // const path = this.getPath(node);
     const instanceId = XPathUtil.resolveInstance(this, this.ref);
 
-    const path = XPathUtil.getPath(node, instanceId);
+    const path = getPath(node, instanceId);
     // const shortPath = this.shortenPath(path);
 
     // ### constructing default modelitem - will get evaluated during recalculate()

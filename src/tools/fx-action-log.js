@@ -1,6 +1,7 @@
 import { XPathUtil } from '../xpath-util';
 import './fx-log-item.js';
 import { FxLogSettings } from './fx-log-settings.js';
+import { getDocPath, getPath } from '../xpath-path.js';
 
 export class FxActionLog extends HTMLElement {
   constructor() {
@@ -520,7 +521,7 @@ export class FxActionLog extends HTMLElement {
    */
   _logDetails(e) {
     const eventType = e.type;
-    const path = XPathUtil.getDocPath(e.target);
+    const path = getDocPath(e.target);
     // console.log('>>>> _logDetails', path);
     const cut = path.substring(path.indexOf('/fx-fore'), path.length);
     const xpath = `/${cut}`;
@@ -589,8 +590,8 @@ export class FxActionLog extends HTMLElement {
         eventName = e.target.currentEvent
           ? e.target.currentEvent.type
           : e.detail.event
-            ? e.detail.event
-            : '';
+          ? e.detail.event
+          : '';
 
         return `
                 <fx-log-item event-name="${eventName}"
@@ -653,13 +654,14 @@ export class FxActionLog extends HTMLElement {
                 `;
       // break;
       case 'FX-SETVALUE':
-        const instPath = XPathUtil.getPath(e.target.nodeset);
+        const instanceId = XPathUtil.getInstanceId(xpath, actionElement);
+        const instPath = getPath(e.target.nodeset, instanceId);
         const listensOn =
           e.target.nodeName === 'FX-CONTROL'
             ? e.target.updateEvent
             : e.detail.event
-              ? e.detail.event
-              : '';
+            ? e.detail.event
+            : '';
         return `
                 <fx-log-item short-name="SETVALUE"
                              short-info="${instPath}"
@@ -677,8 +679,8 @@ export class FxActionLog extends HTMLElement {
         eventName = e.target.currentEvent
           ? e.target.currentEvent.type
           : e.detail.event
-            ? e.detail.event
-            : '';
+          ? e.detail.event
+          : '';
         return `
                     <fx-log-item event-name="${eventName}" 
                                 short-name="${e.target.nodeName}"
