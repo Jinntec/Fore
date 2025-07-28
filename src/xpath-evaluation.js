@@ -506,7 +506,7 @@ export function evaluateXPath(xpath, contextNode, formElement, variables = {}, o
         bubbles: true,
         detail: {
           origin: formElement,
-          message: `Expression '${xpath}' failed`,
+          message: `Expression '${xpath}' failed: ${e}`,
           expr: xpath,
           level: 'Error',
         },
@@ -561,7 +561,7 @@ export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
         bubbles: true,
         detail: {
           origin: formElement,
-          message: `Expression '${xpath}' failed`,
+          message: `Expression '${xpath}' failed: ${e}`,
           expr: xpath,
           level: 'Error',
         },
@@ -600,7 +600,7 @@ export function evaluateXPathToNodes(xpath, contextNode, formElement) {
         bubbles: true,
         detail: {
           origin: formElement,
-          message: `Expression '${xpath}' failed`,
+          message: `Expression '${xpath}' failed: ${e}`,
           expr: xpath,
           level: 'Error',
         },
@@ -637,7 +637,7 @@ export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
         bubbles: true,
         detail: {
           origin: formElement,
-          message: `Expression '${xpath}' failed`,
+          message: `Expression '${xpath}' failed: ${e}`,
           expr: xpath,
           level: 'Error',
         },
@@ -677,7 +677,7 @@ export function evaluateXPathToString(xpath, contextNode, formElement, domFacade
         bubbles: true,
         detail: {
           origin: formElement,
-          message: `Expression '${xpath}' failed`,
+          message: `Expression '${xpath}' failed: ${e}`,
           expr: xpath,
           level: 'Error',
         },
@@ -721,7 +721,7 @@ export function evaluateXPathToStrings(xpath, contextNode, formElement, domFacad
         bubbles: true,
         detail: {
           origin: formElement,
-          message: `Expression '${xpath}' failed`,
+          message: `Expression '${xpath}' failed: ${e}`,
           expr: xpath,
           level: 'Error',
         },
@@ -761,7 +761,7 @@ export function evaluateXPathToNumber(xpath, contextNode, formElement, domFacade
         bubbles: true,
         detail: {
           origin: formElement,
-          message: `Expression '${xpath}' failed`,
+          message: `Expression '${xpath}' failed: ${e}`,
           expr: xpath,
           level: 'Error',
         },
@@ -1078,11 +1078,7 @@ const jsonToXml = (_dynamicContext, json) => {
   const escapeXml = str =>
     str.replace(
       /[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD]/g,
-      char =>
-        `\\u${char
-          .charCodeAt(0)
-          .toString(16)
-          .padStart(4, '0')}`,
+      char => `\\u${char.charCodeAt(0).toString(16).padStart(4, '0')}`,
     );
 
   const convert = (obj, parent) => {
