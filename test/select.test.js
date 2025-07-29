@@ -1,7 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import {
-  html, fixture, expect, elementUpdated, oneEvent,
-} from '@open-wc/testing';
+import { html, fixture, expect, elementUpdated, oneEvent } from '@open-wc/testing';
 
 import '../index.js';
 
@@ -26,9 +24,13 @@ describe('fx-control with select tests', () => {
           </fx-instance>
         </fx-model>
         <fx-control ref="instance()/selected">
-          <input placeholder="put your Ids here"/>
+          <input placeholder="put your Ids here" />
         </fx-control>
-        <fx-control ref="instance()/selected" class="{$vars/show-multiple}" value-prop="selectedOptions">
+        <fx-control
+          ref="instance()/selected"
+          class="{$vars/show-multiple}"
+          value-prop="selectedOptions"
+        >
           <select class="widget" multiple="multiple" ref="instance('vars')/item" size="8">
             <template>
               <option value="{@id}">{.}</option>
@@ -51,7 +53,7 @@ describe('fx-control with select tests', () => {
     expect(select.selectedOptions[1].value).to.equal('3');
 
     const control = el.querySelector('fx-control');
-    expect (control.value).to.equal('1 3');
+    expect(control.value).to.equal('1 3');
   });
 
   it('is creates a select with one option', async () => {
@@ -179,5 +181,52 @@ describe('fx-control with select tests', () => {
     expect(select.children[3].textContent).to.equal('option2');
     expect(select.children[4].nodeName).to.equal('OPTION');
     expect(select.children[4].textContent).to.equal('option3');
+  });
+
+  it('honours namespace declarations in the templates', async () => {
+    const el = await fixture(html`
+      <fx-fore xmlns:example="http://www.example.com/">
+        <fx-model>
+          <fx-instance>
+            <data><selected></selected></data>
+          </fx-instance>
+          <fx-instance id="data" src="base/test/instance-namespace.xml">
+            <data> </data>
+          </fx-instance>
+        </fx-model>
+        <fx-control id="wildcard-namespace" ref="instance()/selected">
+          <select class="widget" ref="instance('data')//*:greeting">
+            <template>
+              <option data-id="wildcard" value="{@*:id}">{self::*:greeting}</option>
+            </template>
+          </select>
+        </fx-control>
+        <fx-control id="explicit-namespace" ref="instance()/selected">
+          <select class="widget" ref="instance('data')//example:greeting">
+            <template>
+              <option data-id="explicit" value="{@example:id}">{self::example:greeting}</option>
+            </template>
+          </select>
+        </fx-control>
+      </fx-fore>
+    `);
+
+    //    await oneEvent(el, 'ready');
+    await elementUpdated(el);
+
+    const wildCardNamespace = el.querySelector('#wildcard-namespace');
+
+    const optionElementsA = wildCardNamespace.getElementsByTagName('option');
+
+    expect(optionElementsA).to.have.length(1, 'The wildcard namespace variant should find results');
+    expect(optionElementsA[0]).to.have.attribute('value', 'A');
+    expect(optionElementsA[0]).to.have.text('hello from the file');
+
+    const explicitNamespace = el.querySelector('#explicit-namespace');
+    const optionElementsB = explicitNamespace.getElementsByTagName('option');
+
+    expect(optionElementsB).to.have.length(1, 'The explicit namespace variant should find results');
+    expect(optionElementsB[0]).to.have.attribute('value', 'A');
+    expect(optionElementsB[0]).to.have.text('hello from the file');
   });
 });
