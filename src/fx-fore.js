@@ -706,7 +706,7 @@ export class FxFore extends HTMLElement {
    */
   _updateTemplateExpressions() {
     const search =
-      "(descendant-or-self::*!(text(), @*))[contains(., '{')][substring-after(., '{') => contains('}')][not(ancestor-or-self::fx-model)]";
+      "(descendant-or-self::*!(text(), @*))[contains(., '{')][substring-after(., '{') => contains('}')][not(ancestor-or-self::*[self::fx-model or self::fx-function])]";
 
     const tmplExpressions = evaluateXPathToNodes(search, this, this);
     // console.log('template expressions found ', tmplExpressions);
