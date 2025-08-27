@@ -435,8 +435,12 @@ export class FxSubmission extends ForeElementMixin {
         throw new Error(`${this.id} needs to specify "target" attribute`);
       }
       const downloadLink = document.createElement('a');
+      const textEncoder = new TextEncoder();
+      const utf8Data = textEncoder.encode(data);
+      const binData = [...utf8Data].map(byte => String.fromCodePoint(byte)).join("");
+      const base64Data = btoa(binData);
       downloadLink.setAttribute('download', target);
-      downloadLink.setAttribute('href', `data:${contentType},${data}`);
+      downloadLink.setAttribute('href', `data:${contentType};base64,${base64Data}`);
       document.body.appendChild(downloadLink);
       downloadLink.click();
     }
