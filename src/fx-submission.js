@@ -257,7 +257,7 @@ export class FxSubmission extends ForeElementMixin {
       } else if (contentType.startsWith('application/json')) {
         const json = await response.json();
         this._handleResponse(json, resolvedUrl, contentType);
-      } else if (contentType.startsWith('application/xml')) {
+      } else if (contentType.endsWith('xml')) {
         const text = await response.text();
         const xml = new DOMParser().parseFromString(text, 'application/xml');
         this._handleResponse(xml, resolvedUrl, contentType);

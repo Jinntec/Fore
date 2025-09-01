@@ -23,10 +23,7 @@ async function handleResponse(fxInstance, response) {
     // console.log("********** inside res json *********");
     return response.json();
   }
-  if (
-    responseContentType.startsWith('application/xml') ||
-    responseContentType.startsWith('text/xml')
-  ) {
+  if (responseContentType.endsWith('xml')) {
     // See https://www.rfc-editor.org/rfc/rfc7303
     const text = await response.text();
     // console.log('xml ********', result);
