@@ -436,7 +436,7 @@ export class FxSubmission extends ForeElementMixin {
       }
       const downloadLink = document.createElement('a');
       downloadLink.setAttribute('download', target);
-      downloadLink.setAttribute('href', `data:${contentType},${data}`);
+      downloadLink.setAttribute('href', `data:${contentType},${encodeURIComponent(data)}`);
       document.body.appendChild(downloadLink);
       downloadLink.click();
     }

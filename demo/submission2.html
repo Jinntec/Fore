@@ -52,6 +52,7 @@
                         <data>
                             <greeting>Hello World!</greeting>
                             <prop></prop>
+                            <special-characters>é Γ 😻 ! , # 你好 مَرْحَبًا</special-characters>
                             <filename>saved.xml</filename>
                         </data>
                     </fx-instance>
@@ -126,7 +127,6 @@
                                    url="#echo"
                                    replace="download"
                                    ></fx-submission>
-
                 </fx-model>
                 <fx-group collapse="true">
 
@@ -188,7 +188,7 @@
                     <p>In this example the <code>fx-send</code> action sets the target dynamically. You can also specifiy it statically
                     on the <code>fx-submission</code> element directly.</p>
                     <fx-trigger>
-                        <button>replace=download</button>
+                        <button data-cy="download">replace=download</button>
                         <fx-send submission="submission10" target="{filename}"></fx-send>
                     </fx-trigger>
 
