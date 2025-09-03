@@ -250,14 +250,18 @@ export class FxSubmission extends ForeElementMixin {
         return;
       }
 
-      const contentType = response.headers.get('content-type').toLowerCase();
+      const contentType = response.headers
+        .get('content-type')
+        .split(';')[0]
+        .trim()
+        .toLowerCase();
       if (contentType.startsWith('text/')) {
         const text = await response.text();
         this._handleResponse(text, resolvedUrl, contentType);
-      } else if (contentType.startsWith('application/json')) {
+      } else if (contentType.endsWith('/json') || contentType.endsWith('+json')) {
         const json = await response.json();
         this._handleResponse(json, resolvedUrl, contentType);
-      } else if (contentType.endsWith('xml')) {
+      } else if (contentType.endsWith('/xml') || contentType.endsWith('+xml')) {
         const text = await response.text();
         const xml = new DOMParser().parseFromString(text, 'application/xml');
         this._handleResponse(xml, resolvedUrl, contentType);

@@ -8,7 +8,11 @@ async function handleResponse(fxInstance, response) {
     alert(`response status:  ${status} - failed to load data for '${fxInstance.src}' - stopping.`);
     throw new Error(`failed to load data - status: ${status}`);
   }
-  const responseContentType = response.headers.get('content-type').toLowerCase();
+  let responseContentType = response.headers
+    .get('content-type')
+    .split(';')[0]
+    .trim()
+    .toLowerCase();
   // console.log('********** responseContentType *********', responseContentType);
   if (responseContentType.startsWith('text/html')) {
     // const htmlResponse = response.text();
@@ -19,11 +23,11 @@ async function handleResponse(fxInstance, response) {
       new DOMParser().parseFromString(result, 'text/html'),
     );
   }
-  if (responseContentType.startsWith('application/json')) {
+  if (responseContentType.endsWith('/json') || responseContentType.endsWith('+json')) {
     // console.log("********** inside res json *********");
     return response.json();
   }
-  if (responseContentType.endsWith('xml')) {
+  if (responseContentType.endsWith('/xml') || responseContentType.endsWith('+xml')) {
     // See https://www.rfc-editor.org/rfc/rfc7303
     const text = await response.text();
     // console.log('xml ********', result);
