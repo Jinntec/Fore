@@ -217,12 +217,12 @@ export class FxModel extends HTMLElement {
       bind.init(this);
     });
 
-    console.log('mainGraph', this.mainGraph);
-    console.log('rebuild mainGraph calc order', this.mainGraph.overallOrder());
+    // console.log('mainGraph', this.mainGraph);
+    // console.log('rebuild mainGraph calc order', this.mainGraph.overallOrder());
 
     // this.dispatchEvent(new CustomEvent('rebuild-done', {detail: {maingraph: this.mainGraph}}));
     Fore.dispatch(this, 'rebuild-done', { maingraph: this.mainGraph });
-    console.log('mainGraph', this.mainGraph);
+    // console.log('mainGraph', this.mainGraph);
   }
 
   /**
@@ -380,7 +380,8 @@ export class FxModel extends HTMLElement {
           if (expr) {
             const compute = evaluateXPathToBoolean(expr, modelItem.node, this);
             modelItem[property] = compute;
-            modelItem.notify(); // Notify observers directly
+            // modelItem.notify(); // Notify observers directly
+            this.fore.addToBatchedNotifications(modelItem);
             /*
                                     console.log(
                                       `recalculating path ${path} - Expr:'${expr}' computed`,

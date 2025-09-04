@@ -8,6 +8,7 @@ import { XPathUtil } from '../xpath-util.js';
 import { withDraggability } from '../withDraggability.js';
 import { UIElement } from './UIElement.js';
 import { getPath } from '../xpath-path.js';
+import { FxModel } from '../fx-model';
 
 // import {DependencyNotifyingDomFacade} from '../DependencyNotifyingDomFacade';
 
@@ -154,6 +155,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
               if (added) {
                 const instance = XPathUtil.resolveInstance(this, this.ref);
                 const path = getPath(added, instance);
+                this.handleInsert(added);
                 // console.log('path mutated', path);
                 // this.dispatch('path-mutated',{'path':path,'nodeset':this.nodeset,'index': this.index});
                 // this.index = index;
@@ -163,14 +165,23 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
                 Fore.dispatch(this, 'path-mutated', { path, index: this.index });
               }
+              const deleted = mutation.removedNodes[0];
+              if (deleted) {
+                this.handleDelete(deleted);
+              }
+              /*
               if (!this.getOwnerForm().initialRun) {
                 shouldRefresh = true;
               }
+*/
             }
           }
+
+          /*
           if (shouldRefresh) {
             this.refresh();
           }
+*/
         });
       }
     });
@@ -204,6 +215,25 @@ export class FxRepeat extends withDraggability(UIElement, false) {
         `;
 
     // this.init();
+  }
+
+  async handleInsert(added) {
+    console.log('handleInsert', added);
+    const newRepeatItem = this._createNewRepeatItem();
+    const newModelItem = FxModel.lazyCreateModelItem(
+      this.getModel(),
+      this.ref,
+      added,
+      newRepeatItem,
+    );
+    console.log('newModelItem', newModelItem);
+    newRepeatItem.modelItem = newModelItem;
+    this.appendChild(newRepeatItem);
+    // this.getOwnerForm().addToBatchedNotifications(newModelItem);
+    this.getOwnerForm().addToBatchedNotifications(newRepeatItem);
+  }
+  handleDelete(deleted) {
+    console.log('handleDelete', deleted);
   }
 
   /**
@@ -348,7 +378,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       }
     }
 
-    // Fore.refreshChildren(clone,true);
+    // Fore.refreshChildren(clone, true);
     const fore = this.getOwnerForm();
     // if (!fore.lazyRefresh || force) {
     if (!fore.lazyRefresh || force) {
