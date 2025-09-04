@@ -531,6 +531,7 @@ export class FxFore extends HTMLElement {
       return;
     }
 
+    /*
     if (force !== true && this._localNamesWithChanges.size > 0) {
       force = {
         ...(force || { reason: undefined }),
@@ -538,6 +539,7 @@ export class FxFore extends HTMLElement {
       };
       this._localNamesWithChanges.clear();
     }
+*/
 
     this.isRefreshing = true;
     this.isRefreshPhase = true;
@@ -665,7 +667,7 @@ export class FxFore extends HTMLElement {
    * @param {import('./modelitem.js').ModelItem} modelItem - The ModelItem to add to the batch
    */
   addToBatchedNotifications(modelItem) {
-    // if (this.isRefreshPhase) {
+    // if (!this.batchedNotifications.has(modelItem)) {
     console.log('adding to batched notifications', modelItem);
     this.batchedNotifications.add(modelItem);
     // }
@@ -679,13 +681,16 @@ export class FxFore extends HTMLElement {
       console.log(`🔍 Processing ${this.batchedNotifications.size} batched notifications`);
 
       // Process all batched notifications
-      this.batchedNotifications.forEach(modelItem => {
-        if (modelItem.observers) {
-          modelItem.observers.forEach(observer => {
+      this.batchedNotifications.forEach(entry => {
+        if (entry && typeof entry.refresh === 'function') {
+          entry.refresh();
+        }
+        if (entry.observers) {
+          entry.observers.forEach(observer => {
             console.log('🔍 processing observer', observer);
             if (typeof observer.update === 'function') {
               console.log('updating observer', observer);
-              observer.update(modelItem);
+              observer.update(entry);
             }
           });
         }
@@ -1037,7 +1042,7 @@ export class FxFore extends HTMLElement {
         this.getModel().updateModel();
       }
     }
-    await this.refresh(true);
+    await this.forceRefresh();
     // await Fore.initUI(this);
 
     // this.style.display='block'

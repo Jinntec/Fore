@@ -93,7 +93,7 @@ export class FxRepeatitem extends withDraggability(UIElement, true) {
 
   refresh(force) {
     this.modelItem = this.getModelItem();
-    console.log('repeatitem modelitem', this.modelItem);
+    console.log('repeatitem modelitem', this.getModelItem());
     // this.attachObserver();
     // ### register ourselves as boundControl
     if (!this.modelItem.boundControls.includes(this)) {
@@ -108,7 +108,9 @@ export class FxRepeatitem extends withDraggability(UIElement, true) {
       }
     }
     // Always recurse for these refreshes, especially when forced
-    Fore.refreshChildren(this, force);
+    if (force) {
+      Fore.refreshChildren(this, false);
+    }
   }
 }
 
