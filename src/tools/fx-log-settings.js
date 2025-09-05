@@ -1,5 +1,6 @@
 import { XPathUtil } from '../xpath-util';
 import './fx-log-item.js';
+import { getPath } from '../xpath-path.js';
 
 export class FxLogSettings extends HTMLElement {
   constructor() {
@@ -330,7 +331,7 @@ export class FxLogSettings extends HTMLElement {
   _logDetails(e) {
     const eventType = e.type;
     // console.log('>>>> event type', type)
-    const path = XPathUtil.getPath(e.target);
+    const path = getPath(e.target);
     const cut = path.substring(path.indexOf('/fx-fore'), path.length);
 
     const xpath = `/${cut}`;
@@ -452,7 +453,8 @@ export class FxLogSettings extends HTMLElement {
                 `;
       // break;
       case 'FX-SETVALUE':
-        const instPath = XPathUtil.getPath(e.target.nodeset);
+        const instanceId = XPathUtil.getInstanceId(xpath, actionElement);
+        const instPath = getPath(e.target.nodeset, instanceId);
         const listensOn =
           e.target.nodeName === 'FX-CONTROL' ? e.target.updateEvent : e.detail.event;
         return `

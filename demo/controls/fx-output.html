@@ -65,16 +65,16 @@
                     <h3>Outputting a referenced value</h3>
                     <div><fx-output ref="b"></fx-output> ⇒ 2</div>
 
-                    <h3>Using the <code><a href="https://jinntec.github.io/fore-docs/elements/ui/output/#attributes"target="_blank">value</a></code> attribute to evaluate an expression in context</h3>
+                    <h3>Using the <code><a href="https://jinntec.github.io/fore-docs/elements/ui/output/#attributes" target="_blank">value</a></code> attribute to evaluate an expression in context</h3>
                     <div><fx-output value="b"></fx-output> ⇒ 2</div>
 
-                    <h3>Using the <code><a href="https://jinntec.github.io/fore-docs/elements/ui/output/#attributes"target="_blank">value</a></code> attribute to evaluate an expression in context of its <code><a href="https://jinntec.github.io/fore-docs/glossary/" target="_blank">ref</a></code></h3>
+                    <h3>Using the <code><a href="https://jinntec.github.io/fore-docs/elements/ui/output/#attributes" target="_blank">value</a></code> attribute to evaluate an expression in context of its <code><a href="https://jinntec.github.io/fore-docs/glossary/" target="_blank">ref</a></code></h3>
                     <div><fx-output ref="a" value="b"></fx-output> ⇒ 1 </div>
 
-                    <h3>Using the <code><a href="https://jinntec.github.io/fore-docs/functions/#fore-functions"target="_blank">context()</a></code> function to use the parent context</h3>
+                    <h3>Using the <code><a href="https://jinntec.github.io/fore-docs/functions/#fore-functions" target="_blank">context()</a></code> function to use the parent context</h3>
                     <div><fx-output ref="a" value="context()/b[1]"></fx-output> ⇒ 2 </div>
 
-                    <h3>Using <code><a href="https://jinntec.github.io/fore-docs/elements/ui/output/#attributes"target="_blank">value</a></code> with predicate</h3>
+                    <h3>Using <code><a href="https://jinntec.github.io/fore-docs/elements/ui/output/#attributes" target="_blank">value</a></code> with predicate</h3>
                     <div><fx-output  value="b[last()]"></fx-output> ⇒ 3 </div>
                 </section>
             </fx-fore>
@@ -83,7 +83,7 @@
 
     <h2>Output different mediatypes</h2>
     <h3>HTML taken from an instance (mediatype='html')</h3>
-    <p>For demo purposes the <code><a href="https://jinntec.github.io/fore-docs/elements/ui/output/"target="_blank">fx-output</a></code> element with mediatype have a blue border.</p>
+    <p>For demo purposes the <code><a href="https://jinntec.github.io/fore-docs/elements/ui/output/" target="_blank">fx-output</a></code> element with mediatype have a blue border.</p>
 
     <demo-snippet>
         <template>
@@ -119,7 +119,7 @@
 
                 <h4>Same but different</h4>
                 <p>Same result can be achieved with a simple template expression. However for accessibility reasons (label)
-                and potentially attaching listeners the <code><a href="https://jinntec.github.io/fore-docs/elements/ui/output/"target="_blank">fx-output</a></code> variant is still valid.</p>
+                and potentially attaching listeners the <code><a href="https://jinntec.github.io/fore-docs/elements/ui/output/" target="_blank">fx-output</a></code> variant is still valid.</p>
 
                 <img src="{pic}">
             </fx-fore>

@@ -76,6 +76,8 @@ class FxAppend extends AbstractAction {
 
   actionPerformed() {
     super.actionPerformed();
+    const mi = this.getModelItem();
+    mi.notify();
     // const repeat = document.getElementById(this.repeat);
     // repeat.setIndex(repeat.nodeset.length);
     this._dispatch();

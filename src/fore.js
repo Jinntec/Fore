@@ -271,6 +271,22 @@ export class Fore {
     return Fore.UI_ELEMENTS.includes(elementName);
   }
 
+  static async initUI(startElement) {
+    const inited = new Promise(resolve => {
+      const { children } = startElement;
+      if (children) {
+        for (const element of Array.from(children)) {
+          if (element.nodeName.toUpperCase() === 'FX-FORE') {
+            break;
+          }
+          if (Fore.isUiElement(element.nodeName) && typeof element.refresh === 'function') {
+            element.init();
+          }
+        }
+      }
+      resolve('done');
+    });
+  }
   /**
    * recursively refreshes all UI Elements.
    *
@@ -312,8 +328,10 @@ export class Fore {
               continue;
             }
             if (force === true) {
+              console.log('🔄 refreshing ', element);
               // Unconditional force refresh
               bound.refresh(force);
+
               continue;
             }
             if (typeof force !== 'object') {
@@ -323,6 +341,8 @@ export class Fore {
               force.reason === 'index-function' &&
               bound.dependencies.isInvalidatedByIndexFunction()
             ) {
+              console.log('🔄 refreshing ', element);
+
               bound.refresh(force);
               continue;
             }
@@ -330,12 +350,11 @@ export class Fore {
             if (
               bound.dependencies.isInvalidatedByChildlistChanges(force.elementLocalnamesWithChanges)
             ) {
+              console.log('🔄 refreshing ', element);
+
               bound.refresh(force);
               continue;
             }
-
-            // console.log('refreshing', element, element?.ref);
-            // console.log('refreshing ',element);
           }
           if (!(element.inert === true)) {
             // testing for inert catches model and action elements and should just leave updateable html elements

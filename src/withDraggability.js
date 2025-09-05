@@ -82,6 +82,7 @@ export const withDraggability = (superclass, isAlsoDraggable) =>
 
     _dragEnd(event) {
       const item = this.getOwnerForm().draggedItem;
+      if (!item) return;
       if (item.getAttribute('drop-action') === 'copy') {
         item.remove();
       }
@@ -174,7 +175,9 @@ export const withDraggability = (superclass, isAlsoDraggable) =>
 			}
 */
         event.preventDefault();
-        this.getOwnerForm().getModel().updateModel();
+        this.getOwnerForm()
+          .getModel()
+          .updateModel();
         this.getOwnerForm().refresh(true);
         return;
       }
@@ -214,7 +217,9 @@ export const withDraggability = (superclass, isAlsoDraggable) =>
 
       // Note: full refresh needed since multiple model items may be affected.
       // TODO: Leverage the changedPaths trick
-      this.getOwnerForm().getModel().updateModel();
+      this.getOwnerForm()
+        .getModel()
+        .updateModel();
       this.getOwnerForm().refresh(true);
     }
   };

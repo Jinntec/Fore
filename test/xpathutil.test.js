@@ -1,6 +1,4 @@
-import {
-  html, fixtureSync, expect, oneEvent,
-} from '@open-wc/testing';
+import { html, fixtureSync, expect, oneEvent } from '@open-wc/testing';
 
 import { XPathUtil } from '../src/xpath-util.js';
 

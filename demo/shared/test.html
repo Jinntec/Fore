@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link href="../../resources/fore.css" rel="stylesheet">
+    <link href="../../resources/demo.css" rel="stylesheet">
+
+    <style>
+        fx-fore{
+            border: 1px solid lightblue;
+            padding: 1rem;
+            margin: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+
+<fx-fore id="outer">
+<!--
+    <fx-action event="myEvent" target="#document">
+        <fx-message>returned value {event('value')}</fx-message>
+
+        <fx-setvalue ref="instance()//lifecycleNote[1]" value="event('value')"></fx-setvalue>
+        <fx-refresh force="true"></fx-refresh>
+    </fx-action>
+-->
+
+    <fx-model>
+        <fx-instance id="default" src="data.xml" shared="true">
+            <data></data>
+        </fx-instance>
+    </fx-model>
+
+    <h1>nested Fore elements with shared instance</h1>
+    <h2>greeting</h2>
+    <fx-output ref="greeting"></fx-output>
+    <fx-control ref="greeting">
+        <label>lifeCycleNote</label>
+    </fx-control>
+
+    <fx-fore src="testA.html"></fx-fore>
+
+</fx-fore>
+
+<script type="module" src="../../index.js"></script>
+<script type="module" src="../../tools/fx-lens.js"></script>
+
+</body>
+
+</html>

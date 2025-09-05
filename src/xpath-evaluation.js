@@ -13,6 +13,7 @@ import {
 
 import { XPathUtil } from './xpath-util.js';
 import { prettifyXml } from './functions/common-function.js';
+import * as fx from 'fontoxpath';
 
 const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
 
@@ -304,11 +305,13 @@ function createNamespaceResolver(xpathQuery, formElement) {
       return resolveNamespacePrefix;
     }
   }
+  /*
   if (instanceReferences.length > 1) {
     console.warn(
       `More than one instance is used in the query "${xpathQuery}". The default namespace resolving will be used`,
     );
   }
+*/
 
   const xpathDefaultNamespace =
     fxEvaluateXPathToString('ancestor-or-self::*/@xpath-default-namespace[last()]', formElement) ||
@@ -503,7 +506,7 @@ export function evaluateXPath(xpath, contextNode, formElement, variables = {}, o
         bubbles: true,
         detail: {
           origin: formElement,
-          message: `Expression '${xpath}' failed`,
+          message: `Expression '${xpath}' failed: ${e}`,
           expr: xpath,
           level: 'Error',
         },
@@ -558,7 +561,7 @@ export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
         bubbles: true,
         detail: {
           origin: formElement,
-          message: `Expression '${xpath}' failed`,
+          message: `Expression '${xpath}' failed: ${e}`,
           expr: xpath,
           level: 'Error',
         },
@@ -597,7 +600,7 @@ export function evaluateXPathToNodes(xpath, contextNode, formElement) {
         bubbles: true,
         detail: {
           origin: formElement,
-          message: `Expression '${xpath}' failed`,
+          message: `Expression '${xpath}' failed: ${e}`,
           expr: xpath,
           level: 'Error',
         },
@@ -634,7 +637,7 @@ export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
         bubbles: true,
         detail: {
           origin: formElement,
-          message: `Expression '${xpath}' failed`,
+          message: `Expression '${xpath}' failed: ${e}`,
           expr: xpath,
           level: 'Error',
         },
@@ -674,7 +677,7 @@ export function evaluateXPathToString(xpath, contextNode, formElement, domFacade
         bubbles: true,
         detail: {
           origin: formElement,
-          message: `Expression '${xpath}' failed`,
+          message: `Expression '${xpath}' failed: ${e}`,
           expr: xpath,
           level: 'Error',
         },
@@ -718,7 +721,7 @@ export function evaluateXPathToStrings(xpath, contextNode, formElement, domFacad
         bubbles: true,
         detail: {
           origin: formElement,
-          message: `Expression '${xpath}' failed`,
+          message: `Expression '${xpath}' failed: ${e}`,
           expr: xpath,
           level: 'Error',
         },
@@ -758,7 +761,7 @@ export function evaluateXPathToNumber(xpath, contextNode, formElement, domFacade
         bubbles: true,
         detail: {
           origin: formElement,
-          message: `Expression '${xpath}' failed`,
+          message: `Expression '${xpath}' failed: ${e}`,
           expr: xpath,
           level: 'Error',
         },
@@ -1364,3 +1367,16 @@ registerCustomXPathFunction(
     return uri.substring(uri.indexOf(':') + 1, uri.length);
   },
 );
+
+/**
+ * @param {Node} node
+ * @returns string
+ */
+/*
+export static getDocPath(node) {
+  const path = fx.evaluateXPathToString('path()', node);
+  // Path is like `$default/x[1]/y[1]`
+  const shortened = XPathUtil.shortenPath(path);
+  return shortened.startsWith('/') ? `${shortened}` : `/${shortened}`;
+}
+*/

@@ -8,7 +8,7 @@
 </head>
 <body>
 <div class="wrapper">
-    <fx-fore>
+    <fx-fore id="outer">
         <fx-setvalue ref="cnt" event="ready" value=". + 1"></fx-setvalue>
         <fx-model>
             <fx-instance>
@@ -22,13 +22,14 @@
             </fx-instance>
         </fx-model>
         <fx-group>
-            <fx-control ref="from" url="email2.html" initial=".">
+            <fx-output id="output" ref="from"></fx-output>
+            <fx-control ref="from" src="email2.html" initial=".">
                 <label>From</label>
             </fx-control>
             <fx-output ref="cnt"></fx-output>
         </fx-group>
     </fx-fore>
 </div>
-<script type="module" src="../demo.js"/>
+<script type="module" src="../demo.js" ></script>
 </body>
 </html>

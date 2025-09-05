@@ -16,7 +16,8 @@ describe('drag-drop-interface.html', () => {
 	}
 
 	it('can drag an item to the first column', () => {
-		cy.get('.portal > :nth-child(1)').should('contain.text', 'Tasks');
+		// Detect fore fully loaded
+		cy.get('.portal > :nth-child(1)').should('not.contain.text', '{"Tasks"}');
 		cy.get('.portal > :nth-child(2)').should('contain.text', 'Updates');
 
 		dragItem('.portal > :nth-child(2)', '.portal > :nth-child(1)');

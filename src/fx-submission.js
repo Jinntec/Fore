@@ -83,10 +83,7 @@ export class FxSubmission extends ForeElementMixin {
   }
 
   async _submit() {
-    console.info(
-      `%csubmitting #${this.id}`,
-      'background:yellow; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
-    );
+    console.info(`🚀 #${this.id}`);
 
     this.evalInContext();
     const model = this.getModel();
@@ -166,8 +163,12 @@ export class FxSubmission extends ForeElementMixin {
 
     // if (resolvedUrl === '#echo') {
     if (resolvedUrl.startsWith('#echo')) {
-      const data = this._parse(serialized, instance);
-      this._handleResponse(data);
+      if (this.replace === 'download') {
+        this._handleResponse(serialized, resolvedUrl, 'application/xml');
+      } else {
+        const data = this._parse(serialized, instance);
+        this._handleResponse(data, resolvedUrl, 'application/xml');
+      }
       // this.dispatch('submit-done', {});
       console.log('### <<<<< submit-done >>>>>');
       Fore.dispatch(this, 'submit-done', {});
@@ -249,14 +250,18 @@ export class FxSubmission extends ForeElementMixin {
         return;
       }
 
-      const contentType = response.headers.get('content-type').toLowerCase();
+      const contentType = response.headers
+        .get('content-type')
+        .split(';')[0]
+        .trim()
+        .toLowerCase();
       if (contentType.startsWith('text/')) {
         const text = await response.text();
         this._handleResponse(text, resolvedUrl, contentType);
-      } else if (contentType.startsWith('application/json')) {
+      } else if (contentType.endsWith('/json') || contentType.endsWith('+json')) {
         const json = await response.json();
         this._handleResponse(json, resolvedUrl, contentType);
-      } else if (contentType.startsWith('application/xml')) {
+      } else if (contentType.endsWith('/xml') || contentType.endsWith('+xml')) {
         const text = await response.text();
         const xml = new DOMParser().parseFromString(text, 'application/xml');
         this._handleResponse(xml, resolvedUrl, contentType);
@@ -375,26 +380,6 @@ export class FxSubmission extends ForeElementMixin {
 
     const targetInstance = this._getTargetInstance();
 
-    /*
-        if(this.replace === 'merge'){
-            if(targetInstance.type !== 'xml') {
-                Fore.dispatch(this, "warn", {'message': 'merging of instances only work for type xml'});
-            }
-            if (targetInstance && targetInstance.type === 'xml') {
-                targetInstance.partialInstance = data;
-                // const resultDoc = new DOMParser(`${data.nodeName}`, 'application/xml');
-                // console.log('resultDoc', resultDoc)
-                const merged = Fore.combine(targetInstance.instanceData.firstElementChild, data.firstElementChild, this,null);
-                console.log('merged', merged);
-
-                targetInstance.instanceData = merged;
-                console.log('merging partial instance',targetInstance.partialInstance)
-                this.model.updateModel();
-                this.getOwnerForm().refresh(true);
-            }
-        }
-*/
-
     if (this.replace === 'instance') {
       if (targetInstance) {
         if (this.targetref) {
@@ -450,12 +435,16 @@ export class FxSubmission extends ForeElementMixin {
 
     if (this.replace === 'download') {
       const target = this._getProperty('target');
+      if (!target) {
+        throw new Error(`${this.id} needs to specify "target" attribute`);
+      }
       const downloadLink = document.createElement('a');
       downloadLink.setAttribute('download', target);
-      downloadLink.setAttribute('href', `data:${contentType},${data}`);
+      downloadLink.setAttribute('href', `data:${contentType},${encodeURIComponent(data)}`);
       document.body.appendChild(downloadLink);
       downloadLink.click();
     }
+
     if (this.replace === 'all') {
       const target = this._getProperty('target');
       if (target && target === '_blank') {
