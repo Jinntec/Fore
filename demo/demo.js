@@ -18,8 +18,10 @@ const main = async () => {
   await import('@polymer/prism-element/prism-highlighter.js');
   await import('@polymer/prism-element/prism-theme-default.js');
 
-  await import('./js/demo-snippet.js');
-  await import('@polymer/iron-demo-helpers/demo-pages-shared-styles.js');
+  // await import('./js/demo-snippet.js');
+  await import('./js/demo-snippet-vanilla.js');
+  // await import('@polymer/iron-demo-helpers/demo-pages-shared-styles.js');
+
   await import('@polymer/paper-input/paper-input.js');
   await import('@polymer/paper-checkbox/paper-checkbox.js');
   await import('@polymer/paper-button/paper-button.js');

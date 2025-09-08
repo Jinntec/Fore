@@ -71,8 +71,10 @@
         of countries
         by the continent selected.</p>
 
+<!--
     <demo-snippet>
         <template>
+-->
 
             <fx-fore>
                 <fx-model id="model1">
@@ -98,7 +100,7 @@
                                     <option value="asia">Asia</option>
                                     <option value="africa">Africa</option>
                                     <option value="antarctica">Antarctica</option>
-                                    <option value="australasia">Australia</option>
+                                    <option value="australia">Australia</option>
                                     <option value="europe">Europe</option>
                                     <option value="north america">North America</option>
                                     <option value="central america">Central America</option>
@@ -122,7 +124,7 @@
                                     </template>
                                 </select>
                                 <!-- # refresh ourselves whenever 'continent' control changes -->
-<!--                                <fx-refresh event="value-changed" target="continent" self></fx-refresh>-->
+                                <fx-refresh event="value-changed" target="continent" self></fx-refresh>
                             </fx-control>
                             <br>
                             Country code is:
@@ -133,22 +135,28 @@
                     <!--                    <fx-output ref="instance('default')" mediatype="xml"></fx-output>-->
                 </fx-group>
             </fx-fore>
+<!--
         </template>
     </demo-snippet>
+-->
     <p>the country list is not show here as its quite long but it loaded from an external instance.</p>
 
     <p>It is structered like this:</p>
 
+<!--
     <demo-snippet>
         <template>
+-->
             <countries>
                 <country code='af' handle='afghanistan' continent='asia' iso='4'>Afghanistan</country>
                 <country code='al' handle='albania' continent='europe' iso='8'>Albania</country>
                 <country code='dz' handle='algeria' continent='africa' iso='12'>Algeria</country>
                 <country>...</country>
             </countries>
+<!--
         </template>
     </demo-snippet>
+-->
     <!--
         <fx-output ref="instance('default')">
             <wc-codemirror mode="xml" class="widget">
