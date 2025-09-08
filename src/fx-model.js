@@ -366,6 +366,7 @@ export class FxModel extends HTMLElement {
           modelItem.readonly = true; // calculated nodes are always readonly
           modelItem.notify(); // Notify observers directly
         } else if (property !== 'constraint' && property !== 'type') {
+          /*
           console.log(
             'recalculating path ',
             path,
@@ -374,6 +375,7 @@ export class FxModel extends HTMLElement {
             'modelitem value',
             modelItem.node.textContent,
           );
+*/
           // ### re-compute the Boolean value of all facets expect 'constraint' and 'type' which are handled in revalidate()
           if (expr) {
             const compute = evaluateXPathToBoolean(expr, modelItem.node, this);
