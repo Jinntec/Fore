@@ -25,9 +25,11 @@
                         <show-completed>false</show-completed>
                     </data>
                 </fx-instance>
+<!--
                 <fx-bind ref="task" relevant="../show-completed='true' or ./@complete='false'">
                     <fx-bind ref="./text()" required="true()"></fx-bind>
                 </fx-bind>
+-->
                 <fx-submission id="save"
                                url="localStore:todos"
                                method="post"
@@ -62,8 +64,11 @@
             <h1>Todo
                 <fx-trigger class="btn add">
                     <button>+</button>
-                    <fx-insert ref="task" origin="instance('helper')/template/task" at="1" position="before"></fx-insert>
-                    <fx-setfocus control="task"></fx-setfocus>
+                  <fx-action>
+<!--                    <fx-insert ref="task" origin="instance('helper')/template/task" at="1" position="before"></fx-insert>-->
+                    <fx-insert ref="task" origin="instance('helper')/template/task"></fx-insert>
+                    <fx-setfocus control="task" delay="300"></fx-setfocus>
+                  </fx-action>
                 </fx-trigger>
             </h1>
             <div class="info">
@@ -83,7 +88,7 @@
             <fx-control id="switch" ref="show-completed" value-prop="checked" update-event="input">
                 <label for="showcompleted">show completed</label>
                 <input id="showcompleted" type="checkbox" class="widget">
-                <fx-send submission="save" event="value-changed"></fx-send>
+<!--                <fx-send submission="save" event="value-changed"></fx-send>-->
             </fx-control>
 
             <fx-repeat id="r-task" ref="task">
@@ -106,7 +111,7 @@
                             <button>x</button>
                             <fx-action>
                                 <fx-delete ref="."></fx-delete>
-                                <fx-send submission="save"></fx-send>
+<!--                                <fx-send submission="save"></fx-send>-->
                             </fx-action>
                         </fx-trigger>
                     </div>

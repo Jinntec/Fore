@@ -337,6 +337,7 @@ export class Fore {
             if (typeof force !== 'object') {
               continue;
             }
+            /*
             if (
               force.reason === 'index-function' &&
               bound.dependencies.isInvalidatedByIndexFunction()
@@ -355,6 +356,7 @@ export class Fore {
               bound.refresh(force);
               continue;
             }
+*/
           }
           if (!(element.inert === true)) {
             // testing for inert catches model and action elements and should just leave updateable html elements
@@ -561,7 +563,10 @@ export class Fore {
     const reg = /(>)(<)(\/*)/g;
     const wsexp = / *(.*) +\n/g;
     const contexp = /(<.+>)(.+\n)/g;
-    xml = xml.replace(reg, '$1\n$2$3').replace(wsexp, '$1\n').replace(contexp, '$1\n$2');
+    xml = xml
+      .replace(reg, '$1\n$2$3')
+      .replace(wsexp, '$1\n')
+      .replace(contexp, '$1\n$2');
     let formatted = '';
     const lines = xml.split('\n');
     let indent = 0;

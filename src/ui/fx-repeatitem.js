@@ -91,26 +91,19 @@ export class FxRepeatitem extends withDraggability(UIElement, true) {
     );
   }
 
-  refresh(force) {
-    this.modelItem = this.getModelItem();
-    console.log('repeatitem modelitem', this.getModelItem());
-    // this.attachObserver();
-    // ### register ourselves as boundControl
-    if (!this.modelItem.boundControls.includes(this)) {
-      this.modelItem.boundControls.push(this);
+  async refresh(force = false) {
+    // this.modelItem = this.getModelItem();
+    // console.log('repeatitem modelitem', this.getModelItem());
+    this.attachObserver();
 
-      if (this.modelItem && !this.modelItem.relevant) {
-        this.removeAttribute('relevant');
-        this.setAttribute('nonrelevant', '');
-      } else {
-        this.removeAttribute('nonrelevant');
-        this.setAttribute('relevant', '');
-      }
+    if (this.modelItem && !this.modelItem.relevant) {
+      this.removeAttribute('relevant');
+      this.setAttribute('nonrelevant', '');
+    } else {
+      this.removeAttribute('nonrelevant');
+      this.setAttribute('relevant', '');
     }
-    // Always recurse for these refreshes, especially when forced
-    if (force) {
-      Fore.refreshChildren(this, false);
-    }
+    await Fore.refreshChildren(this, force);
   }
 }
 

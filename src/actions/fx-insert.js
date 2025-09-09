@@ -254,11 +254,14 @@ export class FxInsert extends AbstractAction {
     );
 
     Fore.dispatch(inst, 'insert', {
-      'inserted-nodes': originSequenceClone,
-      'insert-location-node': insertLocationNode,
+      insertedNodes: originSequenceClone,
+      insertedParent: insertLocationNode.parentNode,
+      ref: this.ref,
+      location: insertLocationNode,
       position: this.position,
       instanceId,
       foreId: fore.id,
+      index,
     });
 
     // todo: this actually should dispatch to respective instance

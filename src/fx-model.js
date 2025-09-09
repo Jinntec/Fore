@@ -164,7 +164,7 @@ export class FxModel extends HTMLElement {
   }
 
   registerModelItem(modelItem) {
-    // console.log('ModelItem registered ', modelItem);
+    console.log('ModelItem registered ', this.modelItems, modelItem);
     this.modelItems.push(modelItem);
   }
 

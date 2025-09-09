@@ -107,8 +107,12 @@ export class UIElement extends ForeElementMixin {
   //   throw new Error('You have to implement the method init!');
   // }
 
-  async refresh() {
+  async refresh(force) {
     console.log(`🔄 [UIElement] refresh() called for ref="${this.ref}"`);
+  }
+
+  async refreshChildren(force) {
+    await Fore.refreshChildren(this, force);
   }
 
   activate() {
