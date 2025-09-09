@@ -545,8 +545,8 @@ export default class FxControl extends XfAbstractControl {
     return this.querySelector('template');
   }
 
-  async refresh(force) {
-    // console.log('fx-control refresh', this);
+  async refresh(force = false) {
+    console.log('🔄 fx-control refresh', this);
     super.refresh(force);
     // console.log('refresh template', this.template);
     // const {widget} = this;
