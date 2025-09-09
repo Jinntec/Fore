@@ -333,7 +333,7 @@ export class FxFore extends HTMLElement {
       }
       if (!modelElement.inited) {
         console.info(
-          `%cFore is processing fx-fore#${this.id}`,
+          `%cFore running ... ${this.id ? '#' + this.id : ''}`,
           'background:#64b5f6; color:white; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
         );
 
@@ -550,7 +550,7 @@ export class FxFore extends HTMLElement {
     // if (!this.initialRun && this.toRefresh.length !== 0) {
     // if (!force && !this.initialRun && this.toRefresh.length !== 0) {
     if (force === true || this.initialRun) {
-      console.log('🔄 🔴 ### full refresh() on ', this);
+      console.log('🔄 🔴🔴🔴 ### full refresh() on ', this);
       Fore.refreshChildren(this, force);
     } else {
       // Process all batched no tifications at the end of the refresh phase
@@ -586,7 +586,7 @@ export class FxFore extends HTMLElement {
     this.initialRun = false;
     this.style.visibility = 'visible';
     console.info(
-      `%crefresh-done on #${this.id}`,
+      `%c ✅ refresh-done on #${this.id}`,
       'background:darkorange; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
     );
 
@@ -1055,7 +1055,7 @@ export class FxFore extends HTMLElement {
     this.initialRun = false;
     // console.log('### >>>>> dispatching ready >>>>>', this);
     console.info(
-      `%c #${this.id} is ready`,
+      `%c ✅ ${this.id ? '# ' + this.id : 'Fore'} is ready`,
       'background:lightgreen; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
     );
 
