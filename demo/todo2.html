@@ -64,11 +64,8 @@
             <h1>Todo
                 <fx-trigger class="btn add">
                     <button>+</button>
-                  <fx-action>
-<!--                    <fx-insert ref="task" origin="instance('helper')/template/task" at="1" position="before"></fx-insert>-->
-                    <fx-insert ref="task" origin="instance('helper')/template/task"></fx-insert>
+                    <fx-insert ref="task" origin="instance('helper')/template/task" at="1" position="before"></fx-insert>
                     <fx-setfocus control="task"></fx-setfocus>
-                  </fx-action>
                 </fx-trigger>
             </h1>
             <div class="info">
