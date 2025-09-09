@@ -549,13 +549,13 @@ export class FxFore extends HTMLElement {
     // if (!this.initialRun && this.toRefresh.length !== 0) {
     // if (!this.initialRun && this.toRefresh.length !== 0) {
     // if (!force && !this.initialRun && this.toRefresh.length !== 0) {
-    if (force || this.initialRun) {
+    if (force === true || this.initialRun) {
       console.log('🔄 🔴 ### full refresh() on ', this);
       Fore.refreshChildren(this, force);
     } else {
-      // Process all batched notifications at the end of the refresh phase
+      // Process all batched no tifications at the end of the refresh phase
       console.log('🔄 🎯  ### processing batched notifications');
-      this._processBatchedNotifications();
+      await this._processBatchedNotifications();
     }
 
     /*
@@ -572,7 +572,7 @@ export class FxFore extends HTMLElement {
     */
 
     // ### refresh template expressions
-    if (force || this.initialRun || this._scanForNewTemplateExpressionsNextRefresh) {
+    if (force === true || this.initialRun || this._scanForNewTemplateExpressionsNextRefresh) {
       this._updateTemplateExpressions();
       this._scanForNewTemplateExpressionsNextRefresh = false; // reset
     }
@@ -682,6 +682,7 @@ export class FxFore extends HTMLElement {
 
       // Process all batched notifications
       this.batchedNotifications.forEach(entry => {
+        console.log('batched update', entry);
         if (entry && typeof entry.refresh === 'function') {
           entry.refresh();
         }
@@ -1042,7 +1043,8 @@ export class FxFore extends HTMLElement {
         this.getModel().updateModel();
       }
     }
-    await this.forceRefresh();
+    // await this.forceRefresh();
+    await this.refresh(true);
     // await Fore.initUI(this);
 
     // this.style.display='block'

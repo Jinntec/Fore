@@ -127,13 +127,52 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       this.index = parseInt(index, 10);
       this.applyIndex(this.children[index - 1]);
     });
+
+    // Listen for insertion events
+    this.getOwnerForm().addEventListener('insert', event => {
+      const { detail } = event;
+      if (!detail || detail.ref !== this.ref) return;
+
+      // grab the current repeat items (tweak selector if yours differs)
+      const items = Array.from(
+        this.querySelectorAll(
+          ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
+        ),
+      );
+
+      // search fx-bind elements with same nodeset as this repeat - if present update modelItem instead of creating one
+      const newRepeatItem = this._createNewRepeatItem();
+      // insert so the new item becomes position `pos`
+      const beforeNode = items[detail.index - 1] || null; // null appends
+      this.insertBefore(newRepeatItem, beforeNode);
+      newRepeatItem.nodeset = detail.insertedNodes[0];
+      this.setAttribute('index', detail.index);
+      this.applyIndex(newRepeatItem);
+
+      this.getOwnerForm().addToBatchedNotifications(newRepeatItem);
+    });
+
     /*
-        document.addEventListener('insert', e => {
-          const nodes = e.detail.insertedNodes;
-          this.index = e.detail.position;
-          console.log('insert catched', nodes, this.index);
-        });
-    */
+    this.getOwnerForm().addEventListener('insert', e => {
+      const { detail } = event;
+      this.index = detail.index;
+      console.log('insert catched', this.index);
+      if (!detail || detail.targetRef !== this.ref) return;
+
+      // Schedule a targeted refresh for the affected repeat items
+      const affectedNodes = detail.insertedNodes || [];
+      for (const node of affectedNodes) {
+        this.scheduleRefreshForNode(node);
+      }
+    });
+*/
+
+    // this.insertLocation = e.detail.location;
+    // console.log('insert catched', this.insertLocation);
+    // this.position = e.detail.position;
+    // console.log('insert catched', this.position);
+
+    // });
 
     // if (this.getOwnerForm().lazyRefresh) {
     /**
@@ -155,7 +194,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
               if (added) {
                 const instance = XPathUtil.resolveInstance(this, this.ref);
                 const path = getPath(added, instance);
-                this.handleInsert(added);
+                // this.handleInsert(added);
                 // console.log('path mutated', path);
                 // this.dispatch('path-mutated',{'path':path,'nodeset':this.nodeset,'index': this.index});
                 // this.index = index;
@@ -219,19 +258,42 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
   async handleInsert(added) {
     console.log('handleInsert', added);
+    this._evalNodeset();
+
+    // grab the current repeat items (tweak selector if yours differs)
+    const items = Array.from(
+      this.querySelectorAll(
+        ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
+      ),
+    );
+
+    // search fx-bind elements with same nodeset as this repeat - if present update modelItem instead of creating one
     const newRepeatItem = this._createNewRepeatItem();
+    // insert so the new item becomes position `pos`
+    const beforeNode = items[this.index - 1] || null; // null appends
+    this.insertBefore(newRepeatItem, beforeNode);
+    newRepeatItem.nodeset = added;
+    this.setAttribute('index', this.index);
+    this.applyIndex(newRepeatItem);
+
     const newModelItem = FxModel.lazyCreateModelItem(
       this.getModel(),
       this.ref,
       added,
       newRepeatItem,
     );
+
+    newModelItem.path += '_1';
     console.log('newModelItem', newModelItem);
+
     newRepeatItem.modelItem = newModelItem;
-    this.appendChild(newRepeatItem);
-    // this.getOwnerForm().addToBatchedNotifications(newModelItem);
+    this.getModel().registerModelItem(newModelItem);
+
+    this.getOwnerForm().addToBatchedNotifications(newModelItem);
+    this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh();
     this.getOwnerForm().addToBatchedNotifications(newRepeatItem);
   }
+
   handleDelete(deleted) {
     console.log('handleDelete', deleted);
   }
