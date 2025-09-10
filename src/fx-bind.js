@@ -80,7 +80,14 @@ export class FxBind extends ForeElementMixin {
     }
     if (!node.nodeType) {
       // This node set is not pointing to nodes, but some other type.
-      return new ModelItem(ref, 'non-node item', node, null, instanceId, boundElement.getModel());
+      return new ModelItem(
+        ref,
+        'non-node item',
+        node,
+        null,
+        instanceId,
+        boundElement.getOwnerForm(),
+      );
     }
 
     // ✅ only the repeat item gets the _<opNum> suffix; children do not.
@@ -111,7 +118,7 @@ export class FxBind extends ForeElementMixin {
           node,
           bind,
           instanceId,
-          boundElement.getModel(),
+          boundElement.getOwnerForm(),
         );
         const alert = bind.getAlert();
         if (alert) {
@@ -125,7 +132,7 @@ export class FxBind extends ForeElementMixin {
           node,
           null,
           instanceId,
-          boundElement.getModel(),
+          boundElement.getOwnerForm(),
         );
       }
       // boundElement.getModel().registerModelItem(modelItem);
