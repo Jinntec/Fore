@@ -4,6 +4,7 @@ import { Fore } from '../fore.js';
 import { evaluateXPathToNodes, evaluateXPathToString } from '../xpath-evaluation.js';
 import { XPathUtil } from '../xpath-util.js';
 import getInScopeContext from '../getInScopeContext.js';
+import { getPath } from '../xpath-path';
 
 /**
  * `fx-delete`
@@ -80,6 +81,7 @@ class FxDelete extends AbstractAction {
       ref: path,
       deletedNodes: nodesToDelete,
       instanceId,
+      parent,
       foreId: fore.id,
     });
     this.needsUpdate = true;
