@@ -164,7 +164,7 @@ export class FxModel extends HTMLElement {
   }
 
   registerModelItem(modelItem) {
-    console.log('ModelItem registered ', this.modelItems, modelItem);
+    console.log('ModelItem registered ', modelItem);
     this.modelItems.push(modelItem);
   }
 
@@ -200,7 +200,7 @@ export class FxModel extends HTMLElement {
   }
 
   rebuild() {
-    // console.log(`### <<<<< rebuild() '${this.fore.id}' >>>>>`);
+    console.log(`🔷   rebuild() '${this.fore.id}'`);
 
     this.mainGraph = new DepGraph(false); // do: should be moved down below binds.length check but causes errors in tests.
     this.modelItems = [];
@@ -230,12 +230,12 @@ export class FxModel extends HTMLElement {
    *
    * todo: use 'changed' flag on modelItems to determine subgraph for recalculation. Flag already exists but is not used.
    */
-  recalculate() {
+  async recalculate() {
     if (!this.mainGraph) {
       return;
     }
 
-    console.log(`🔷 ### <<<<< recalculate() '${this.fore.id}' >>>>>`);
+    console.log(`🔷🔷 recalculate() '${this.fore.id}'`);
 
     console.log('changed nodes ', this.changed);
     this.computes = 0;
@@ -414,7 +414,7 @@ export class FxModel extends HTMLElement {
   revalidate() {
     if (this.modelItems.length === 0) return true;
 
-    console.log(`🔷 ### <<<<< revalidate() '${this.fore.id}' >>>>>`);
+    console.log(`🔷🔷🔷 revalidate() '${this.fore.id}'`);
 
     // reset submission validation
     // this.parentNode.classList.remove('submit-validation-failed')

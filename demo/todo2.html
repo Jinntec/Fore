@@ -7,14 +7,13 @@
     <link rel="stylesheet" href="../resources/fore.css">
     <link rel="stylesheet" href="todo.css">
     <script type="module" src="./demo.js"></script>
+    <script type="module" src="../tools/fx-lens.js"></script>
 </head>
 <body unresolved="unresolved">
 <fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
 
     <div class="wrapper">
         <fx-fore id="todo">
-<!--            <fx-send submission="load" event="model-construct-done"></fx-send>-->
-<!--            <fx-setvalue ref="instance('helper')/changed" event="value-changed">true</fx-setvalue>-->
 
             <fx-model id="record">
                 <fx-instance>
@@ -64,8 +63,10 @@
             <h1>Todo
                 <fx-trigger class="btn add">
                     <button>+</button>
+                  <fx-action>
                     <fx-insert ref="task" origin="instance('helper')/template/task" at="1" position="before"></fx-insert>
                     <fx-setfocus control="task"></fx-setfocus>
+                  </fx-action>
                 </fx-trigger>
             </h1>
             <div class="info">
@@ -85,17 +86,11 @@
             <fx-control id="switch" ref="show-completed" value-prop="checked" update-event="input">
                 <label for="showcompleted">show completed</label>
                 <input id="showcompleted" type="checkbox" class="widget">
-<!--                <fx-send submission="save" event="value-changed"></fx-send>-->
             </fx-control>
 
             <fx-repeat id="r-task" ref="task">
                 <template>
                     <div data-cy="task-{count(preceding-sibling::task)}">
-<!--
-                        <fx-action event="value-changed">
-                            <fx-send submission="save"></fx-send>
-                        </fx-action>
--->
 
                         <fx-control id="completeCtrl" ref="@complete" value-prop="checked" update-event="input">
                             <input class="widget" type="checkbox">
@@ -106,20 +101,13 @@
                         </fx-control>
                         <fx-trigger class="btn delete">
                             <button>x</button>
-                            <fx-action>
                                 <fx-delete ref="."></fx-delete>
-<!--                                <fx-send submission="save"></fx-send>-->
-                            </fx-action>
                         </fx-trigger>
                     </div>
                 </template>
             </fx-repeat>
 
 
-            <fx-trigger id="clearbtn">
-                <button>clear your data</button>
-                <fx-send submission="clear"></fx-send>
-            </fx-trigger>
 
 
 <!--
