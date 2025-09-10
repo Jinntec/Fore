@@ -619,6 +619,7 @@ export class FxFore extends HTMLElement {
       }
     }
     this.isRefreshing = false;
+    console.log('### <<<<< refresh() done - modelItems >>>>>', this.getModel().modelItems);
   }
 
   /**
@@ -1055,7 +1056,7 @@ export class FxFore extends HTMLElement {
     this.initialRun = false;
     // console.log('### >>>>> dispatching ready >>>>>', this);
     console.info(
-      `%c ✅ ${this.id ? '# ' + this.id : 'Fore'} is ready`,
+      `%c ✅ ${this.id ? '#' + this.id : 'Fore'} is ready`,
       'background:lightgreen; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
     );
 
