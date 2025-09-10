@@ -9,6 +9,7 @@ import {
 import { XPathUtil } from './xpath-util.js';
 import getInScopeContext from './getInScopeContext.js';
 import { getPath } from './xpath-path.js';
+import { evaluateXPathToFirstNode } from 'fontoxpath';
 
 /**
  * FxBind declaratively attaches constraints to nodes in the data (instances).
@@ -64,6 +65,73 @@ export class FxBind extends ForeElementMixin {
         parent.constraint ||= this.constraint;
       }
     }
+  }
+  /**
+   * @param {string} ref -
+   * @param {Node} node -
+   * @param {ForeElementMixin} boundElement -
+   *
+   * @returns {ModelItem}
+   */
+  static createModelItem(ref, node, boundElement, opNum) {
+    const instanceId = XPathUtil.resolveInstance(boundElement, boundElement.ref);
+    if (Array.isArray(node)) {
+      node = node[0];
+    }
+    if (!node.nodeType) {
+      // This node set is not pointing to nodes, but some other type.
+      return new ModelItem(ref, 'non-node item', node, null, instanceId, boundElement.getModel());
+    }
+
+    // ✅ only the repeat item gets the _<opNum> suffix; children do not.
+    const basePath = XPathUtil.getPath(node, instanceId);
+    const path = opNum ? `${basePath}_${opNum}` : basePath;
+
+    // const path = XPathUtil.getPath(node, instanceId);
+
+    // naive approach to finding matching bind elements for given ref if not provided by caller.
+    // Use XPath and variables to escape XPaths in the ref
+    /**
+     * @type {import('./fx-bind.js').FxBind}
+     */
+    const bind = evaluateXPathToFirstNode(
+      'descendant::fx-bind[@ref=$ref]',
+      boundElement.getModel(),
+      null,
+      {
+        ref: boundElement.ref,
+      },
+    );
+    let modelItem = boundElement.getModel().getModelItem(node);
+    if (!modelItem) {
+      if (bind) {
+        modelItem = new ModelItem(
+          path,
+          boundElement.getBindingExpr(),
+          node,
+          bind,
+          instanceId,
+          boundElement.getModel(),
+        );
+        const alert = bind.getAlert();
+        if (alert) {
+          modelItem.addAlert(alert);
+        }
+      } else {
+        // no binding facets apply
+        modelItem = new ModelItem(
+          path,
+          boundElement.getBindingExpr(),
+          node,
+          null,
+          instanceId,
+          boundElement.getModel(),
+        );
+      }
+      // boundElement.getModel().registerModelItem(modelItem);
+    }
+
+    return modelItem;
   }
 
   /**
