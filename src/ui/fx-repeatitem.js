@@ -93,8 +93,8 @@ export class FxRepeatitem extends withDraggability(UIElement, true) {
 
   async refresh(force = false) {
     // this.modelItem = this.getModelItem();
-    // console.log('repeatitem modelitem', this.getModelItem());
     this.attachObserver();
+    console.log('🔄 repeatitem modelitem', this.getModelItem());
 
     if (this.modelItem && !this.modelItem.relevant) {
       this.removeAttribute('relevant');
