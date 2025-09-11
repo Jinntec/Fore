@@ -668,10 +668,10 @@ export class FxFore extends HTMLElement {
    * @param {ModelItem | import('./ui/ui-element.js').default} item - The ModelItem or UI Element to add to the batch
    */
   addToBatchedNotifications(item) {
-    // if (!this.batchedNotifications.has(modelItem)) {
-    console.log('adding to batched notifications', item);
-    this.batchedNotifications.add(item);
-    // }
+    if (!this.batchedNotifications.has(item)) {
+      console.log('adding to batched notifications', item);
+      this.batchedNotifications.add(item);
+    }
   }
 
   /**
