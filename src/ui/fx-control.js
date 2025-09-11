@@ -241,6 +241,7 @@ export default class FxControl extends XfAbstractControl {
    * @param val the new value to be set
    */
   setValue(val) {
+    console.log('Control.setValue', val, 'on', this);
     const modelitem = this.getModelItem();
 
     if (this.getAttribute('class')) {
