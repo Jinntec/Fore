@@ -33,6 +33,8 @@ export class FxRepeatitem extends withDraggability(UIElement, true) {
     this.attachShadow({ mode: 'open', delegatesFocus: true });
 
     this.dropTarget = null;
+    // TODO: rename to position?
+    this.index = -1;
   }
 
   connectedCallback() {

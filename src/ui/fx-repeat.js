@@ -120,16 +120,6 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       const { item } = e.detail;
       this.setIndex(item.index);
     });
-    // todo: review - this is just used by append action - event consolidation ?
-    document.addEventListener('index-changed', e => {
-      e.stopPropagation();
-      if (!e.target === this) return;
-      // const { item } = e.detail;
-      // const idx = Array.from(this.children).indexOf(item);
-      const { index } = e.detail;
-      this.index = parseInt(index, 10);
-      this.applyIndex(this.children[index - 1]);
-    });
 
     // Listen for insertion events
     this.getOwnerForm().addEventListener('insert', event => {
@@ -139,9 +129,27 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       if (!detail || detail.ref !== this.ref) return;
 
       // Step 1: Refresh/re-evaluate the nodeset
+      const oldNodesetLength = this.nodeset.length;
       this._evalNodeset();
+      const newNodesetLength = this.nodeset.length;
+      if (oldNodesetLength === newNodesetLength) {
+        return;
+      }
 
+      /**
+       * @type {number}
+       */
+      //      const insertionIndex = detail.index;
+      /**
+       * The newly inserted node. TODO: handle multiple?
+       * @type {Node}
+       */
+      const insertedNode = detail.insertedNodes;
+      const insertionIndex = this.nodeset.indexOf(insertedNode) + 1;
       // Step 2: Get current repeat items and create a new item
+      /**
+       * @type {import('./fx-repeatitem.js').FxRepeatitem[]}
+       */
       const repeatItems = Array.from(
         this.querySelectorAll(
           ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
@@ -152,26 +160,23 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       const newRepeatItem = this._createNewRepeatItem();
 
       // Step 3: Insert the new repeatItem at the correct position
-      const beforeNode = repeatItems[this.index - 1] || null; // Null appends by default
+      const beforeNode = repeatItems[insertionIndex - 1] ?? null; // Null appends by default
       this.insertBefore(newRepeatItem, beforeNode);
+      newRepeatItem.index = insertionIndex;
 
       // Step 4: Assign the inserted nodeset to the new `repeatItem`
       newRepeatItem.nodeset = detail.insertedNodes;
       // this.setAttribute('index', detail.index);
       // this.applyIndex(newRepeatItem);
 
-      {
-        const items = this.querySelectorAll(':scope > fx-repeatitem');
-        // const newIndex = Array.from(items).indexOf(newRepeatItem) + 1; // 1-based
-        const newIndex = detail.index;
-
-        if (typeof this.setIndex === 'function') {
-          this.setIndex(newIndex); // sets attribute + applies repeat-index + refresh
-        } else {
-          this.index = newIndex; // falls back to setter -> sets attribute
-          this.applyIndex(newRepeatItem); // mark the new item
-        }
+      // Update all the indices following here
+      for (let i = insertionIndex - 1; i < repeatItems.length; ++i) {
+        const sibling = repeatItems[i];
+        // TODO: handle the next ones
+        sibling.index += 1;
       }
+
+      this.setIndex(insertionIndex); // sets attribute + applies repeat-index + refresh
 
       // Generate the parent `modelItem` for the new repeat item
       this.opNum++;
@@ -193,7 +198,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       this.getOwnerForm().addToBatchedNotifications(newRepeatItem);
     });
 
-    this.getOwnerForm().addEventListener('deleted', event => {
+    this.handleDelete = event => {
       console.log('delete catched', event);
       const { detail } = event;
       if (!detail || !detail.deletedNodes) {
@@ -202,10 +207,12 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
       // Remove corresponding repeat items for deleted nodes
       detail.deletedNodes.forEach(node => {
-        this.removeRepeatItemForNode(node);
+        this.handleDelete(node);
+        //        this.removeRepeatItemForNode(node);
       });
       this.getOwnerForm().addToBatchedNotifications(this);
-    });
+    };
+    this.getOwnerForm().addEventListener('deleted', this.handleDelete);
 
     // if (this.getOwnerForm().lazyRefresh) {
     /**
@@ -228,7 +235,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
                 const instance = XPathUtil.resolveInstance(this, this.ref);
                 const path = getPath(added, instance);
                 // this.handleInsert(added);
-                // console.log('path mutated', path);
+                //                // console.log('path mutated', path);
                 // this.dispatch('path-mutated',{'path':path,'nodeset':this.nodeset,'index': this.index});
                 // this.index = index;
                 // const prev = mutations[0].previousSibling.previousElementSibling;
@@ -304,33 +311,37 @@ export class FxRepeat extends withDraggability(UIElement, false) {
         // Evaluate relative to the *node* of the parent repeat item
         let nodeset = evaluateXPath(ref, parentModelItem.node, this);
         if (Array.isArray(nodeset)) nodeset = nodeset[0];
-        // const nodeset = evaluateXPath(ref, parentModelItem.node, this);
-        child.nodeset = nodeset;
-        // Create child modelItem with NO opNum — children must not get their own _n
-        let mi = FxBind.createModelItem(ref, nodeset, child, null);
-        mi.parentModelItem = parentModelItem;
-
-        // Prefix-replace once: $default/task[1] -> $default/task[1]_1
-        if (
-          parentWithDewey &&
-          parentBase &&
-          typeof mi.path === 'string' &&
-          mi.path.startsWith(parentBase) && // child under parent
-          !mi.path.startsWith(parentWithDewey) // not already suffixed
-        ) {
-          mi.path = parentWithDewey + mi.path.slice(parentBase.length);
+        if (!nodeset) {
+          // This is not relevant, or an empty repeat
+          return;
         }
 
-        // Register (optionally idempotent if your model supports it)
-        this.getModel().registerModelItem(mi);
-        child.attachObserver();
+        let modelItem = this.getModel().getModelItem(nodeset);
+        if (!modelItem) {
+          // Already known. Ignore.
+          // Create child modelItem with NO opNum — children must not get their own _n
+          modelItem = FxBind.createModelItem(ref, nodeset, child, null);
+          modelItem.parentModelItem = parentModelItem;
 
-        // Only advance the parent when we actually created a new modelItem
-        nextParentMI = mi;
-        // } else {
-        // ref === '.' → do not create a duplicate; keep using parentModelItem
-        nextParentMI = parentModelItem;
-        // }
+          // Register
+          this.getModel().registerModelItem(modelItem);
+
+          // Prefix-replace once: $default/task[1] -> $default/task[1]_1
+          if (
+            parentWithDewey &&
+            parentBase &&
+            typeof modelItem.path === 'string' &&
+            modelItem.path.startsWith(parentBase) && // child under parent
+            !modelItem.path.startsWith(parentWithDewey) // not already suffixed
+          ) {
+            modelItem.path = parentWithDewey + modelItem.path.slice(parentBase.length);
+          }
+        }
+        // const nodeset = evaluateXPath(ref, parentModelItem.node, this);
+        child.nodeset = nodeset;
+        if (child.attachObserver) {
+          child.attachObserver();
+        }
       }
 
       // Recurse down with whichever parent we decided on

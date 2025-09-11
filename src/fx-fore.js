@@ -141,7 +141,7 @@ export class FxFore extends HTMLElement {
     /**
      * The model items that will be updated next refresh
      *
-     * @type {Set<ModelItem>}
+     * @type {Set<ModelItem|import('./ui/ui-element.js').default}
      */
     this.batchedNotifications = new Set();
 
@@ -665,12 +665,12 @@ export class FxFore extends HTMLElement {
 
   /**
    * Add a ModelItem to the batch of notifications to be processed at the end of the refresh phase
-   * @param {import('./modelitem.js').ModelItem} modelItem - The ModelItem to add to the batch
+   * @param {ModelItem | import('./ui/ui-element.js').default} item - The ModelItem or UI Element to add to the batch
    */
-  addToBatchedNotifications(modelItem) {
+  addToBatchedNotifications(item) {
     // if (!this.batchedNotifications.has(modelItem)) {
-    console.log('adding to batched notifications', modelItem);
-    this.batchedNotifications.add(modelItem);
+    console.log('adding to batched notifications', item);
+    this.batchedNotifications.add(item);
     // }
   }
 
@@ -685,9 +685,12 @@ export class FxFore extends HTMLElement {
       this.batchedNotifications.forEach(entry => {
         console.log('batched update', entry);
         if (entry && typeof entry.refresh === 'function') {
-          entry.refresh();
+          // Entry is a ForeElementMixin
+          // Force refresh for this whole subtree
+          entry.refresh(true);
         }
         if (entry.observers) {
+          // Item is a model item
           entry.observers.forEach(observer => {
             console.log('🔍 processing observer', observer);
             if (typeof observer.update === 'function') {

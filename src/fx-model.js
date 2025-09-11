@@ -527,6 +527,9 @@ export class FxModel extends HTMLElement {
     return this.instances[0].getInstanceData();
   }
 
+  /**
+   * @returns {import('./fx-instance.js').FxInstance}
+   */
   getInstance(id) {
     // console.log('getInstance ', id);
     // console.log('instances ', this.instances);

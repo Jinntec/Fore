@@ -145,7 +145,13 @@ export class FxInsert extends AbstractAction {
     const originSequenceClone = this._cloneOriginSequence(inscope, targetSequence);
     if (!originSequenceClone) return; // if no origin back out without effect
 
+    /**
+     * @type {Node}
+     */
     let insertLocationNode;
+    /**
+     * @type {number}
+     */
     let index;
 
     // if the targetSequence is empty but we got an originSequence use inscope as context and ignore 'at' and 'position'

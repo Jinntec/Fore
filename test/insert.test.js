@@ -1,7 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import {
-  html, oneEvent, fixtureSync, expect,
-} from '@open-wc/testing';
+import { html, oneEvent, fixtureSync, expect } from '@open-wc/testing';
 import * as fx from 'fontoxpath';
 
 import '../src/fx-instance.js';
@@ -85,7 +83,7 @@ describe('insert Tests', () => {
     expect(tasks[3].getAttribute('complete')).to.equal('true');
     expect(tasks[3].getAttribute('due')).to.equal('2020-01-05');
 
-    expect(el.getModel().modelItems.length).to.equal(4);
+    expect(el.getModel().modelItems.length).to.equal(4, 'There should be 4 model items');
 
     expect(tasks[2].textContent).to.equal(tasks[3].textContent);
     expect(tasks[2].getAttribute('complete')).to.equal(tasks[3].getAttribute('complete'));
@@ -484,7 +482,7 @@ describe('insert Tests', () => {
             id="default"
             src="/base/test/ling-sources.xml"
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"
-         ></fx-instance>
+          ></fx-instance>
 
           <fx-instance
             id="i-template"

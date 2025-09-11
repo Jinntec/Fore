@@ -141,6 +141,11 @@
                             </task>
                         </data>
                     </fx-instance>
+					<fx-instance id="template">
+					  <data>
+						<task text=""></task>
+					  </data>
+					</fx-instance>
 
 
                     <fx-bind ref="task">
@@ -172,14 +177,14 @@
 
                         <fx-trigger>
                             <button>add Task</button>
-                            <fx-append ref="task" repeat="r-subtask"></fx-append>
+                            <fx-insert ref="task" origin="instance('template')/task"></fx-insert>
                         </fx-trigger>
                     </template>
                 </fx-repeat>
 
                 <fx-trigger label="add Todo">
                     <button>add maintask</button>
-                    <fx-append ref="task" repeat="r-todos"></fx-append>
+                    <fx-insert ref="task" origin="instance('template')/task"></fx-insert>
                 </fx-trigger>
 
 <!--                <div id="logtree">{logtree('default')}</div>-->
