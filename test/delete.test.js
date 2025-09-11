@@ -55,9 +55,12 @@ describe('delete Tests', () => {
     expect(repeat).to.exist;
 
     const rItems = repeat.querySelectorAll('fx-repeatitem');
-    expect(rItems.length).to.equal(3);
-    expect(rItems[2].hasAttribute('repeat-index')).to.be.true;
-    expect(repeat.getAttribute('index')).to.equal('3');
+    expect(rItems.length).to.equal(3, 'One of the items should be removed');
+    expect(Array.from(rItems).map(item => item.hasAttribute('repeat-index'))).to.deep.equal(
+      [false, false, true],
+      'Only the last item should have the repeat-index attribute set',
+    );
+    expect(repeat.getAttribute('index')).to.equal('3', 'The index should be updated');
   });
 
   it('does not delete readonly item', async () => {

@@ -296,6 +296,28 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
   handleDelete(deleted) {
     console.log('handleDelete', deleted);
+    // grab the current repeat items (tweak selector if yours differs)
+    /**
+     * @type {import('./fx-repeatitem.js').FxRepeatitem[]}
+     */
+    const items = Array.from(
+      this.querySelectorAll(
+        ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
+      ),
+    );
+
+    this._evalNodeset();
+
+    const indexToRemove = items.findIndex(item => item.nodeset === deleted);
+    if (indexToRemove === -1) {
+      return;
+    }
+    const itemToRemove = items[indexToRemove];
+
+    itemToRemove.remove();
+
+    // Make the next item the 'current'
+    this.setIndex(indexToRemove + 1);
   }
 
   /**
