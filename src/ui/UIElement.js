@@ -1,11 +1,13 @@
 import ForeElementMixin from '../ForeElementMixin.js';
 import { Fore } from '../fore.js';
-import { evaluateXPath, evaluateXPathToBoolean } from '../xpath-evaluation';
+import { evaluateXPath, evaluateXPathToBoolean, resolveId } from '../xpath-evaluation';
 import { DependencyNotifyingDomFacade } from '../DependencyNotifyingDomFacade';
 
 export class UIElement extends ForeElementMixin {
   constructor() {
     super();
+
+    this._removeEventListeners = [];
   }
 
   connectedCallback() {
@@ -19,12 +21,35 @@ export class UIElement extends ForeElementMixin {
       });
       this.addTrashIcon();
     }
+
+    const ref = this.getAttribute('ref');
+    // TODO: make this smarter, handling multiple index functions etc
+    if (ref && ref.includes('index(')) {
+      const repeatId = ref.match(/index\(['"](?<repeatId>[^'"]*)['"]\)/)?.groups?.repeatId;
+      if (repeatId) {
+        /**
+         * @type {import('./fx-repeat.js').FxRepeat}
+         */
+        const repeat = resolveId(repeatId, this, 'fx-repeat');
+        const onRepeatItemChanged = () => {
+          this.getOwnerForm().addToBatchedNotifications(this);
+        };
+        repeat.addEventListener('item-changed', onRepeatItemChanged);
+        this._removeEventListeners.push(() =>
+          repeat.removeEventListener('item-changed', onRepeatItemChanged),
+        );
+      }
+    }
   }
 
   disconnectedCallback() {
     if (this.modelItem && typeof this.modelItem.removeObserver === 'function') {
       console.log(`[UIElement] Removing observer for ref="${this.ref}"`);
       this.modelItem.removeObserver(this);
+    }
+
+    for (const removeEventListener of this._removeEventListeners) {
+      removeEventListener();
     }
   }
   /*

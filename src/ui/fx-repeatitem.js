@@ -75,7 +75,7 @@ export class FxRepeatitem extends withDraggability(UIElement, true) {
       }
     */
 
-  _dispatchIndexChange() {
+  async _dispatchIndexChange() {
     /**
      * @type {import('./fx-repeat.js').FxRepeat}
      */
@@ -84,13 +84,16 @@ export class FxRepeatitem extends withDraggability(UIElement, true) {
       // The index did not really change if it did not change :wink:
       return;
     }
-    this.dispatchEvent(
+    await this.dispatchEvent(
       new CustomEvent('item-changed', {
         composed: false,
         bubbles: true,
         detail: { item: this, index: this.index },
       }),
     );
+
+    // Refresh after all of the listeners for that item-changed have had their turn to update!
+    this.getOwnerForm().refresh();
   }
 
   async refresh(force = false) {

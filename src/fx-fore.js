@@ -141,7 +141,7 @@ export class FxFore extends HTMLElement {
     /**
      * The model items that will be updated next refresh
      *
-     * @type {Set<ModelItem|import('./ui/ui-element.js').default}
+     * @type {Set<ModelItem|import('./ui/UIElement.js').UIElement}
      */
     this.batchedNotifications = new Set();
 
@@ -665,7 +665,7 @@ export class FxFore extends HTMLElement {
 
   /**
    * Add a ModelItem to the batch of notifications to be processed at the end of the refresh phase
-   * @param {ModelItem | import('./ui/ui-element.js').default} item - The ModelItem or UI Element to add to the batch
+   * @param {ModelItem | import('./ui/UIElement.js').UIElement} item - The ModelItem or UI Element to add to the batch
    */
   addToBatchedNotifications(item) {
     if (!this.batchedNotifications.has(item)) {
