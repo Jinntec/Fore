@@ -125,8 +125,6 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     this.getOwnerForm().addEventListener('insert', event => {
       const { detail } = event;
       console.log('insert catched', detail);
-      // checking insert ref against repeat ref - these need to be equal!
-      if (!detail || detail.ref !== this.ref) return;
 
       // Step 1: Refresh/re-evaluate the nodeset
       const oldNodesetLength = this.nodeset.length;
