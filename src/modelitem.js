@@ -98,6 +98,7 @@ export class ModelItem {
    * @param {Object} observer - The observer to add
    */
   addObserver(observer) {
+    console.log('[ModelItem] adding observer:', observer);
     this.observers.add(observer);
 
     // For backward compatibility with boundControls
