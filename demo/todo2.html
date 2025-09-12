@@ -63,10 +63,8 @@
             <h1>Todo
                 <fx-trigger class="btn add">
                     <button>+</button>
-                  <fx-action>
                     <fx-insert ref="task" origin="instance('helper')/template/task" at="1" position="before"></fx-insert>
                     <fx-setfocus control="task"></fx-setfocus>
-                  </fx-action>
                 </fx-trigger>
             </h1>
             <div class="info">
@@ -86,6 +84,7 @@
             <fx-control id="switch" ref="show-completed" value-prop="checked" update-event="input">
                 <label for="showcompleted">show completed</label>
                 <input id="showcompleted" type="checkbox" class="widget">
+                <fx-send submission="save" event="value-changed"></fx-send>
             </fx-control>
 
             <fx-repeat id="r-task" ref="task">
@@ -101,13 +100,20 @@
                         </fx-control>
                         <fx-trigger class="btn delete">
                             <button>x</button>
+                            <fx-action>
                                 <fx-delete ref="."></fx-delete>
+                                <fx-send submission="save"></fx-send>
+                            </fx-action>
                         </fx-trigger>
                     </div>
                 </template>
             </fx-repeat>
 
 
+            <fx-trigger id="clearbtn">
+                <button>clear your data</button>
+                <fx-send submission="clear"></fx-send>
+            </fx-trigger>
 
 
 <!--
