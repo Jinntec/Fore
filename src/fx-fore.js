@@ -620,6 +620,7 @@ export class FxFore extends HTMLElement {
     }
     this.isRefreshing = false;
     console.log('### <<<<< refresh() done - modelItems >>>>>', this.getModel().modelItems);
+    console.log('### <<<<< refresh() done - modelItems >>>>>', this.getModel().nonrelevant);
   }
 
   /**
@@ -688,6 +689,15 @@ export class FxFore extends HTMLElement {
           // Entry is a ForeElementMixin
           // Force refresh for this whole subtree
           entry.refresh(true);
+        }
+        const nonrelevant = Array.from(this.querySelectorAll('[nonrelevant]'));
+        // loop nonrelevant elements
+        if (nonrelevant) {
+          nonrelevant.forEach(entry => {
+            if (entry.refresh) {
+              entry.refresh();
+            }
+          });
         }
         if (entry.observers) {
           // Item is a model item
