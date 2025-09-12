@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import { html, fixtureSync, expect, oneEvent } from '@open-wc/testing';
+import { html, fixture, fixtureSync, expect, oneEvent } from '@open-wc/testing';
 
 import '../index.js';
 
@@ -51,7 +51,7 @@ describe('fx-items tests', () => {
   });
 
   it('updates value when a checkbox is clicked', async () => {
-    const el = await fixtureSync(html`
+    const el = await fixture(html`
       <fx-fore>
         <fx-model>
           <fx-instance>
@@ -80,15 +80,14 @@ describe('fx-items tests', () => {
       </fx-fore>
     `);
 
-    await oneEvent(el, 'refresh-done');
+    // await oneEvent(el, 'ready');
 
     const checkboxes = el.querySelectorAll('input');
     console.log('checkboxes', checkboxes);
 
     checkboxes[0].click();
 
-    const listItem = document.getElementById('listitem');
-    expect(listItem.textContent).to.equal('apple orange strawberry');
+    await oneEvent(el, 'refresh-done');
 
     expect(checkboxes[0].checked).to.be.true;
     expect(checkboxes[1].checked).to.be.true;

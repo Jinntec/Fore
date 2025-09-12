@@ -1,7 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import {
-  html, oneEvent, fixtureSync, expect,
-} from '@open-wc/testing';
+import { html, oneEvent, fixtureSync, expect } from '@open-wc/testing';
 
 import '../index.js';
 
@@ -176,10 +174,30 @@ describe('model tests', () => {
               <z>0</z>
             </data>
           </fx-instance>
-          <fx-bind ref="c" calculate="number(../a) * number(../b)" constraint="number(.) <= 100" readonly="true()"></fx-bind>
-          <fx-bind ref="d" calculate="number(../a) + number(../b)" constraint="number(.) <= 20" readonly="true()"></fx-bind>
-          <fx-bind ref="e" calculate="number(../a) + 5" constraint="number(.) <= 10" readonly="true()"></fx-bind>
-          <fx-bind ref="y" calculate="number(../x) + 5" readonly="true()" constraint="number(.) <= 10"></fx-bind>
+          <fx-bind
+            ref="c"
+            calculate="number(../a) * number(../b)"
+            constraint="number(.) <= 100"
+            readonly="true()"
+          ></fx-bind>
+          <fx-bind
+            ref="d"
+            calculate="number(../a) + number(../b)"
+            constraint="number(.) <= 20"
+            readonly="true()"
+          ></fx-bind>
+          <fx-bind
+            ref="e"
+            calculate="number(../a) + 5"
+            constraint="number(.) <= 10"
+            readonly="true()"
+          ></fx-bind>
+          <fx-bind
+            ref="y"
+            calculate="number(../x) + 5"
+            readonly="true()"
+            constraint="number(.) <= 10"
+          ></fx-bind>
         </fx-model>
         <fx-control ref="a" update-event="input">
           <label>a</label>
@@ -506,6 +524,8 @@ describe('model tests', () => {
     expect(control.getAttribute('style')).to.equal('transform:translate(0px);');
     control.setValue(10);
     // control.blur();
+    await oneEvent(el, 'refresh-done');
+
     expect(control.modelItem.value).to.equal('10');
 
     expect(control.getAttribute('style')).to.equal('transform:translate(20px);');

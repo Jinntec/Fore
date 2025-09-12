@@ -206,14 +206,14 @@ describe('functions', () => {
         <fx-model>
           <fx-instance>
             <data>
-              <theanswer></theanswer>
-              <theanswer></theanswer>
+              <theanswer>a</theanswer>
+              <theanswer>b</theanswer>
             </data>
           </fx-instance>
         </fx-model>
-        <fx-repeat id="repeat">
+        <fx-repeat id="repeat" ref="theanswer">
           <template>
-            <fx-output ref="theanswer"></fx-output>
+            <fx-output ref="."></fx-output>
           </template>
         </fx-repeat>
         <span id="index">{index('repeat')}</span>
@@ -224,11 +224,13 @@ describe('functions', () => {
       </fx-fore>
     `);
 
-    await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'ready');
+    const refreshed = oneEvent(el, 'refresh-done');
     const trigger = el.querySelector('fx-trigger');
-    await trigger.performActions();
+    trigger.performActions();
+    await refreshed;
 
-    const indexVal = document.getElementById('index').innerText;
+    const indexVal = document.querySelector('#index').innerText;
     expect(Number(indexVal)).to.equal(3);
   });
 
@@ -276,75 +278,77 @@ describe('functions', () => {
 
   it('context() in repeats returns the correct item', async () => {
     const el = await fixtureSync(
-      html` <fx-fore>
-        <fx-model>
-          <fx-instance id="mapping">
-            <data>
-              <df tag="245" scope="bf:Instance" scope-rel="bf:title" domain="bf:Title">
-                <sf code="a">bf:mainTitle</sf>
-                <sf code="b">bf:subtitle</sf>
-                <sf code="c">bf:responsibilityStatement</sf>
-              </df>
-            </data>
-          </fx-instance>
-          <fx-instance id="desc">
-            <data>
-              <df>
-                <tag>245</tag>
-                <ind1></ind1>
-                <ind2></ind2>
-                <sfs>
-                  <sf>
-                    <code>a</code>
-                    <value>value-of-a</value>
-                  </sf>
-                  <sf>
-                    <code>b</code>
-                    <value>value-of-b</value>
-                  </sf>
-                </sfs>
-              </df>
-            </data>
-          </fx-instance>
-        </fx-model>
+      html`
+        <fx-fore>
+          <fx-model>
+            <fx-instance id="mapping">
+              <data>
+                <df tag="245" scope="bf:Instance" scope-rel="bf:title" domain="bf:Title">
+                  <sf code="a">bf:mainTitle</sf>
+                  <sf code="b">bf:subtitle</sf>
+                  <sf code="c">bf:responsibilityStatement</sf>
+                </df>
+              </data>
+            </fx-instance>
+            <fx-instance id="desc">
+              <data>
+                <df>
+                  <tag>245</tag>
+                  <ind1></ind1>
+                  <ind2></ind2>
+                  <sfs>
+                    <sf>
+                      <code>a</code>
+                      <value>value-of-a</value>
+                    </sf>
+                    <sf>
+                      <code>b</code>
+                      <value>value-of-b</value>
+                    </sf>
+                  </sfs>
+                </df>
+              </data>
+            </fx-instance>
+          </fx-model>
 
-        <fx-repeat ref="instance('desc')/df">
-          <template>
-            <fx-control ref="tag" update-event="input">
-              <label>Datafield</label>
-            </fx-control>
-            <fx-control ref="sfs/sf/code" update-event="input">
-              <label>Subfield</label>
-            </fx-control>
-            <fx-control ref="sfs/sf/value" update-event="input">
-              <label>Content</label>
-            </fx-control>
-          </template>
-        </fx-repeat>
+          <fx-repeat ref="instance('desc')/df">
+            <template>
+              <fx-control ref="tag" update-event="input">
+                <label>Datafield</label>
+              </fx-control>
+              <fx-control ref="sfs/sf/code" update-event="input">
+                <label>Subfield</label>
+              </fx-control>
+              <fx-control ref="sfs/sf/value" update-event="input">
+                <label>Content</label>
+              </fx-control>
+            </template>
+          </fx-repeat>
 
-        <fx-repeat ref="instance('mapping')/df[@tag = instance('desc')/df/tag]" id="outer-repeat">
-          <template>
-            <h2>{@scope || " ➙ " || @scope-rel || " ➙ " || @domain}</h2>
-            <fx-repeat ref="sf[@code = instance('desc')/df/sfs/sf/code]" id="inner-repeat">
-              <template>
-                <fx-var name="current" value="."></fx-var>
-                <h3 style="display: inline;">{.}</h3>
+          <fx-repeat ref="instance('mapping')/df[@tag = instance('desc')/df/tag]" id="outer-repeat">
+            <template>
+              <h2>{@scope || " ➙ " || @scope-rel || " ➙ " || @domain}</h2>
+              <fx-repeat ref="sf[@code = instance('desc')/df/sfs/sf/code]" id="inner-repeat">
+                <template>
+                  <fx-var name="current" value="."></fx-var>
+                  <h3 style="display: inline;">{.}</h3>
 
-                <!-- context() does not work here, but $current does -->
-                <span id="context-item-span">{@code}</span>
-                <span id="context-function-span">{context()/@code}</span>
-                <span id="current-span">{$current/@code}</span>
-                <p id="result-p-with-context" style="display: inline;">
-                  {instance('desc')/df/sfs/sf[code = context()/@code]/value}
-                </p>
-                <p id="result-p-with-current" style="display: inline;">
-                  {instance('desc')/df/sfs/sf[code = $current/@code]/value}
-                </p>
-              </template>
-            </fx-repeat>
-          </template>
-        </fx-repeat>
-      </fx-fore>`,
+                  <!-- context() does not work here, but $current does -->
+                  <span id="context-item-span">{@code}</span>
+                  <span id="context-function-span">{context()/@code}</span>
+                  <span id="current-span">{$current/@code}</span>
+                  <p id="result-p-with-context" style="display: inline;">
+                    {instance('desc')/df/sfs/sf[code = context()/@code]/value}
+                  </p>
+                  <p id="result-p-with-current" style="display: inline;">
+                    {instance('desc')/df/sfs/sf[code = $current/@code]/value}
+                  </p>
+                </template>
+              </fx-repeat>
+            </template>
+          </fx-repeat>
+        </fx-fore>
+      `,
     );
 
     await oneEvent(el, 'refresh-done');

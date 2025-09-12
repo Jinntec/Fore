@@ -1,7 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import {
-  html, fixture, expect, elementUpdated, oneEvent, fixtureSync,
-} from '@open-wc/testing';
+import { html, fixture, expect, elementUpdated, oneEvent, fixtureSync } from '@open-wc/testing';
 
 import '../index.js';
 
@@ -225,10 +223,11 @@ describe('fx-control tests', () => {
     `);
 
     // await elementUpdated(el);
-    await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'ready');
 
     const checkbox = el.querySelector('#checkbox input');
     checkbox.click();
+    await oneEvent(el, 'refresh-done');
 
     const resultSpan = el.querySelector('#result');
     expect(resultSpan.innerText).to.equal('foobar');
@@ -263,10 +262,11 @@ describe('fx-control tests', () => {
     `);
 
     // await elementUpdated(el);
-    await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'ready');
 
     const checkbox = el.querySelector('#checkbox input');
     checkbox.click();
+    await oneEvent(el, 'refresh-done');
     const resultSpan = el.querySelector('#result');
     expect(resultSpan.innerText).to.equal('');
   });
