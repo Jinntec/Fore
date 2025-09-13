@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport" />
+  <title>Repeats via attributes</title>
+  <link href="../resources/fore.css" rel="stylesheet">
+  <link href="../resources/demo.css" rel="stylesheet">
+
+  <style>
+      fx-repeatitem {
+          display: block;
+      }
+
+      [repeat-index] {
+          background: lightblue;
+      }
+
+      th, td {
+          border: thin solid;
+          padding: 0.5rem;
+      }
+
+      th {
+          font-weight: 700;
+          background: aqua;
+      }
+
+      [readonly] {
+          background: transparent;
+      }
+
+      fx-repeat-attributes {
+          width: 100%;
+      }
+  </style>
+</head>
+<body>
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+
+<div class="wrapper">
+  <demo-snippet>
+    <template>
+
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <bound>a</bound>
+              <item>
+                <field name="a">a</field>
+                <field name="b">b</field>
+                <field name="c">c</field>
+                <field name="d">d</field>
+                <field name="e">e</field>
+                <field name="f">f</field>
+              </item>
+              <item>
+                <field name="a">g</field>
+                <field name="b">h</field>
+                <field name="c">i</field>
+                <field name="d">j</field>
+                <field name="e">k</field>
+                <field name="f">l</field>
+              </item>
+              <item>
+                <field name="a">m</field>
+                <field name="b">n</field>
+                <field name="c">o</field>
+                <field name="d">p</field>
+                <field name="e">q</field>
+                <field name="f">r</field>
+              </item>
+            </data>
+          </fx-instance>
+        </fx-model>
+
+        <h1>Table with header via attributes</h1>
+        <p>The <code><a href="https://jinntec.github.io/fore-docs/glossary/#binding-expression" target="_blank">data-ref</a></code> can also be used deeper down in the markup like here on a <code>tbody</code>.</p>
+            <table>
+              <thead>
+              <th>A</th>
+              <th>B</th>
+              <th>C</th>
+              <th>D</th>
+              <th>E</th>
+              <th>F</th>
+              <th>x</th>
+              </thead>
+              <tbody data-ref="item">
+              <template>
+                <tr>
+                  <td>
+                    <fx-output ref="field[@name='a']"></fx-output>
+                  </td>
+                  <td>
+                    <fx-output ref="field[@name='b']"></fx-output>
+                  </td>
+                  <td>
+                    <fx-output ref="field[@name='c']"></fx-output>
+                  </td>
+                  <td>
+                    <fx-output ref="field[@name='d']"></fx-output>
+                  </td>
+                  <td>
+                    <fx-output ref="field[@name='e']"></fx-output>
+                  </td>
+                  <td>
+                    <fx-output ref="field[@name='f']"></fx-output>
+                  </td>
+                  <td>
+                    <fx-trigger>
+                      <button>del</button>
+                      <fx-delete ref="."></fx-delete>
+                    </fx-trigger>
+                  </td>
+                </tr>
+              </template>
+              </tbody>
+            </table>
+            <fx-trigger>
+              <button>append</button>
+              <fx-insert ref="item" keep-values></fx-insert>
+            </fx-trigger>
+            <fx-trigger>
+              <button>delete second</button>
+              <fx-delete ref="item[2]"></fx-delete>
+            </fx-trigger>
+            <fx-trigger>
+              <button>insert before second</button>
+              <fx-insert ref="item" at="2" position="before"></fx-insert>
+            </fx-trigger>
+            <fx-trigger>
+              <button>insert after second with values</button>
+              <fx-insert ref="item" at="2" keep-values></fx-insert>
+            </fx-trigger>
+
+      </fx-fore>
+    </template>
+  </demo-snippet>
+
+</div>
+
+<script src="./demo.js" type="module"></script>
+</body>
+</html>
