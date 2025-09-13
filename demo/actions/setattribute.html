@@ -41,14 +41,16 @@
                     <fx-trigger>
                         <button>Create an attribute 'type' with value 'myType'</button>
                         <fx-setattribute ref="value" name="type" value="myType"></fx-setattribute>
+<!--                        <fx-refresh force></fx-refresh>-->
                     </fx-trigger>
 
                     <div>The type is '{value/@type}'</div>
-<!--
-                    <fx-output ref="value/@type">
-                        <label slot="label">the type is</label>
+                    <fx-output  ref="value/@type">
+                        <label slot="label">output type:</label>
                     </fx-output>
--->
+                    <fx-output  ref="value/@foo">
+                        <label slot="label">nonrelevant output type:</label>
+                    </fx-output>
 
                 </section>
 
