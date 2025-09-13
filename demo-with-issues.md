@@ -1,10 +1,7 @@
 # Broken or flaky demos:
 
 ## open
-* subgraph.html
 * kanban.html (check again)
-* hello-json.html 
-* reload.html
 * actions.html
 * if.html
 * on-demand-repeat.html
@@ -14,6 +11,8 @@
 * repeat-attributes-3.html
 * repeat-attributes-5.html
 * repeat-attributes-8.html (delete not working)
+* fx-output markdown should update 
+* selects.html - updating improved but still not 100% reliable esp. when countries are selected and continent changes again
 
 ## fixed 
 
