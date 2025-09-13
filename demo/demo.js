@@ -27,5 +27,4 @@ const main = async () => {
   await import('../tools/fx-lens.js');
   await import('../doc/fore-corner.js');
 };
-
 main();

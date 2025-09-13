@@ -23,42 +23,42 @@
 <fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
 
 <div class="wrapper">
-    <h1>Fore and Radio Buttons</h1>
+    <h1>Radio Buttons</h1>
 
     <p>To handle radio buttons wrap them into a <code>fx-items</code> element. This will take
     care that the correct item will be selected.</p>
     <demo-snippet>
         <template>
-            <fx-fore>
-                <fx-model>
-                    <fx-instance>
-                        <root>
-                            <radio>second</radio>
-                        </root>
-                    </fx-instance>
-                </fx-model>
-                <fieldset>
-                    <legend>Radios</legend>
-                    <fx-control ref="radio">
-                        <span>Choose a radio</span>
-                        <fx-items>
-                            <input type="radio" id="first" name="radio-input" value="first" />
-                            <label for="first">first radio</label>
+<fx-fore>
+    <fx-model>
+        <fx-instance>
+            <root>
+                <radio>second</radio>
+            </root>
+        </fx-instance>
+    </fx-model>
+    <fieldset>
+        <legend>Radios</legend>
+        <fx-control ref="radio">
+            <span>Choose a radio</span>
+            <fx-items>
+                <input type="radio" id="first" name="radio-input" value="first" />
+                <label for="first">first radio</label>
 
-                            <input type="radio" id="second" name="radio-input" value="second"/>
-                            <label for="second">second radio</label>
+                <input type="radio" id="second" name="radio-input" value="second"/>
+                <label for="second">second radio</label>
 
-                            <input type="radio" id="third" name="radio-input" value="third" />
-                            <label for="third">third radio</label>
-                        </fx-items>
-                        <fx-message event="value-changed">changed to {.}</fx-message>
-                    </fx-control>
-                </fieldset>
-                radio:{radio}
-            </fx-fore>
+                <input type="radio" id="third" name="radio-input" value="third" />
+                <label for="third">third radio</label>
+            </fx-items>
+            <fx-message event="value-changed">changed to {.}</fx-message>
+        </fx-control>
+    </fieldset>
+    radio:{radio}
+</fx-fore>
         </template>
     </demo-snippet>
 </div>
-<script type="module" src="./demo.js"/>
+<script type="module" src="./demo.js"></script>
 </body>
 </html>
