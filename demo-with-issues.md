@@ -1,10 +1,9 @@
-Broken or flaky demos:
+# Broken or flaky demos:
 
+## open
 * subgraph.html
 * kanban.html (check again)
-* i18n.html
 * hello-json.html 
-* reset.html
 * fx-replace.html
 * reload.html
 * actions.html
@@ -13,4 +12,9 @@ Broken or flaky demos:
 * repeat-attributes.html
 * group-relevance.html
 * shared-instances.html (insert behavior when adding to child)
-* 
+
+
+## fixed 
+
+ * i18n2.html - fixed and tested
+ * reset.html
