@@ -89,7 +89,7 @@ class FxSend extends AbstractAction {
     await submission.submit();
     if (submission.replace === 'instance') {
       this.getModel().updateModel();
-      this.getOwnerForm().refresh();
+      this.getOwnerForm().refresh(true); //whole instance changes - full refresh necessary
     }
     // if not of type fx-submission signal error
   }

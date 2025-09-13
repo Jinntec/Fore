@@ -554,7 +554,7 @@ export default class FxControl extends XfAbstractControl {
 
     // ### if we find a ref on control we have a 'select' control of some kind
     const widget = this.getWidget();
-    this._handleBoundWidget(widget);
+    this._handleBoundWidget(widget, force);
     this._handleDataAttributeBinding();
     Fore.refreshChildren(this, force);
   }
@@ -569,7 +569,7 @@ export default class FxControl extends XfAbstractControl {
     if (dataRefd && dataRefd.closest('fx-control') === this) {
       this.boundList = dataRefd;
       const ref = dataRefd.getAttribute('data-ref');
-      this._handleBoundWidget(dataRefd);
+      this._handleBoundWidget(dataRefd, force);
     }
   }
 
@@ -581,7 +581,8 @@ export default class FxControl extends XfAbstractControl {
    * @param widget the widget to handle
    * @private
    */
-  _handleBoundWidget(widget) {
+  _handleBoundWidget(widget, force = false) {
+    console.log('_handleBoundWidget', widget);
     if (this.boundInitialized && this.static) return;
 
     const ref = widget.hasAttribute('ref')
@@ -618,7 +619,7 @@ export default class FxControl extends XfAbstractControl {
       const { template } = this;
       if (template) {
         // ### clear items
-        if (!this.boundInitialized) {
+        if (force === true || !this.boundInitialized) {
           const { children } = widget;
           Array.from(children).forEach(child => {
             if (child.nodeName.toLowerCase() !== 'template') {

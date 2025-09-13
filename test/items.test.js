@@ -409,4 +409,64 @@ describe('fx-items tests', () => {
     expect(checkboxes[0].checked).to.be.true;
     expect(checkboxes[1].checked).to.be.true;
   });
+
+  it('updates after submission replace=instance', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance id="default" src="/base/test/data/typeins-de.json" type="json">
+            <div>Hello</div>
+          </fx-instance>
+          <fx-instance id="vars">
+            <data>
+              <selected></selected>
+            </data>
+          </fx-instance>
+          <fx-submission id="switch-lang" method="get" replace="instance" instance="default">
+          </fx-submission>
+        </fx-model>
+
+        <h1>i18n</h1>
+        <p>
+          This example uses a single instance which holds the current language. It simply loads one
+          language as the default with <code>src</code> and switches between different languages by
+          exchanging the instance with a submission.
+        </p>
+        <fx-group>
+          <fx-control ref="instance('vars')/selected">
+            <label>Select</label>
+            <fx-items ref="instance('default')?*" class="widget">
+              <template>
+                <div class="fx-checkbox">
+                  <input type="radio" name="group" value="{value}" />
+                  <label>{name}</label>
+                </div>
+              </template>
+            </fx-items>
+          </fx-control>
+          {instance('vars')/selected}
+        </fx-group>
+
+        <fx-trigger id="de">
+          <button>DE</button>
+          <fx-send submission="switch-lang" url="/base/test/data/typeins-de.json">de</fx-send>
+        </fx-trigger>
+        <fx-trigger id="en">
+          <button>EN</button>
+          <fx-send submission="switch-lang" url="/base/test/data/typeins-en.json">en</fx-send>
+        </fx-trigger>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'ready');
+    const button = el.querySelector('#en button');
+    button.click();
+    await oneEvent(el, 'refresh-done');
+
+    const labels = el.querySelectorAll('.fx-checkbox label');
+    expect(labels[0].textContent).to.equal('Letter');
+    expect(labels[1].textContent).to.equal('Prayer');
+    expect(labels[2].textContent).to.equal('Calendar');
+    expect(labels[3].textContent).to.equal('Directory');
+  });
 });
