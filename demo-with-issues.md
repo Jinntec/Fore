@@ -2,10 +2,7 @@
 
 ## open
 * kanban.html (check again)
-* actions.html
-* if.html
 * on-demand-repeat.html
-* repeat-attributes.html
 * group-relevance.html
 * shared-instances.html (insert behavior when adding to child)
 * repeat-attributes-3.html

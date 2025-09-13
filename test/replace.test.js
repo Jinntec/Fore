@@ -98,7 +98,7 @@ describe('replace Tests', () => {
     expect(replaced).to.equal('foo');
   });
 
-  it.only('updates after replace', async () => {
+  it('updates after replace', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
