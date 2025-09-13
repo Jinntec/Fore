@@ -24,7 +24,7 @@ class FxRefresh extends AbstractAction {
       console.log(`### <<<<< refresh() self ${this} >>>>>`);
       const control = XPathUtil.getClosest('fx-control', this);
       if (control) {
-        control.refresh();
+        control.refresh(true);
         return;
       }
     }
@@ -38,7 +38,7 @@ class FxRefresh extends AbstractAction {
       console.log(`### <<<<< refresh() control '${targetId}' >>>>>`);
       const ctrl = resolveId(targetId, this);
       if (ctrl && Fore.isUiElement(ctrl.nodeName) && typeof ctrl.refresh === 'function') {
-        ctrl.refresh();
+        ctrl.refresh(true);
       }
       return;
     }

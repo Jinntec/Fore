@@ -569,7 +569,7 @@ export default class FxControl extends XfAbstractControl {
     if (dataRefd && dataRefd.closest('fx-control') === this) {
       this.boundList = dataRefd;
       const ref = dataRefd.getAttribute('data-ref');
-      this._handleBoundWidget(dataRefd, false);
+      this._handleBoundWidget(dataRefd, true); //todo: revisit !!! observer
     }
   }
 
@@ -619,7 +619,8 @@ export default class FxControl extends XfAbstractControl {
       const { template } = this;
       if (template) {
         // ### clear items
-        if (force === true || !this.boundInitialized) {
+        // if (force === true || !this.boundInitialized) {
+        if (force === true) {
           const { children } = widget;
           Array.from(children).forEach(child => {
             if (child.nodeName.toLowerCase() !== 'template') {
