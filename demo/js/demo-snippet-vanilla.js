@@ -32,7 +32,7 @@ class DemoSnippet extends HTMLElement {
         details > summary { cursor: pointer; user-select: none; padding: 10px 14px; outline: none; font-weight: 600; }
         details[open] > summary { border-bottom: 1px solid rgba(0,0,0,.08); background: #f5f5f5; }
         .source { position: relative; }
-        pre { margin: 0; padding: 14px; overflow: auto; max-height: 60vh; tab-size: 2; }
+        pre { margin: 0; padding: 14px; overflow: auto; tab-size: 2; }
         code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 12.5px; }
         .toolbar { position: absolute; top: 8px; right: 8px; display: flex; gap: 6px; }
         button { border: 1px solid rgba(0,0,0,.2); background: #fff; border-radius: 8px; padding: 6px 8px; font: inherit; cursor: pointer; }
