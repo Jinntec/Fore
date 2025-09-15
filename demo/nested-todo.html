@@ -13,14 +13,9 @@
 
 
     <style>
-/*
-        .header, fx-repeat-item {
-            display: grid;
-            grid-template-columns: 200px 120px 50px 20px;
-            grid-column-gap: 10px;
+        input{
+            width: calc(100% - 1rem);
         }
-*/
-
         [required] {
             background: lightyellow;
         }
@@ -34,15 +29,6 @@
         }
 
         fx-repeatitem {
-/*
-            background: rgba( 255, 255, 255, 0.25 );
-            box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
-            backdrop-filter: blur( 4px );
-            -webkit-backdrop-filter: blur( 4px );
-            border-radius: 10px;
-            border: 1px solid rgba( 255, 255, 255, 0.18 );
-*/
-            /*border: thin solid white;*/
             background: var(--paper-grey-200);
             margin: 4px 0;
 
@@ -76,9 +62,7 @@
         }
 
         fx-repeat fx-repeat {
-            /*padding: 4px 0;*/
             margin: 8px 0;
-            /*background: var(--paper-grey-400);*/
         }
 
 
@@ -94,25 +78,20 @@
             display: inline-block;
             text-decoration: none;
             color: darkred;
-            /*width:1rem;*/
-            /*height: 1rem;*/
-            /*border-radius:0.5rem;*/
-            /*background: darkred;*/
         }
 
 
         [repeat-index] {
             filter:none;
             outline:none;
-            /*outline:var(--paper-blue-500) solid 2px;*/
             filter: brightness(120%);
-            /*margin: 8px 0;*/
         }
         [repeat-index] [repeat-index] {
             outline:var(--paper-blue-500) solid 2px;
         }
         fx-control{
-            display: inline;
+            display: inline-block;
+            width: calc(100% - 3rem);
         }
     </style>
 </head>
@@ -120,79 +99,67 @@
 <fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
 
 <div class="wrapper">
-<!--
     <demo-snippet>
         <template>
--->
+<fx-fore>
+    <fx-model id="record">
+        <fx-instance>
+            <data>
+                <task text="Pick up Milk">
+                    <task text="go to store"></task>
+                    <task text="find milk"></task>
+                    <task text="pay milk"></task>
+                    <task text="take it home"></task>
+                </task>
+                <task complete="true" due="2019-01-04" text="Make tutorial part 1">
+                    <task text="take it home"></task>
+                </task>
+            </data>
+        </fx-instance>
+        <fx-instance id="template">
+            <data>
+                <task text=""></task>
+            </data>
+        </fx-instance>
+        <fx-bind ref="task">
+            <fx-bind ref="@text"></fx-bind>
+            <fx-bind ref="task">
+                <fx-bind ref="@text"></fx-bind>
+            </fx-bind>
+        </fx-bind>
+    </fx-model>
+    <h1>Tasks with SubTasks</h1>
+    <fx-repeat id="r-todos" ref="task">
+        <template>
+            <fx-control label="Todo" ref="@text" data-cy="todo-widget-{count(preceding-sibling::*)}"></fx-control>
+            <fx-trigger>
+                <a href="#" data-cy="remove-todo-button-{count(preceding-sibling::*)}">X</a>
+                <fx-delete ref="."></fx-delete>
+            </fx-trigger>
+            <fx-repeat id="r-subtask" ref="task">
+                <template>
+                    <fx-control id="task" label="Task" ref="@text" type="text" data-cy="task-widget-{count(../preceding-sibling::*)}-{count(preceding-sibling::*)}"></fx-control>
+                    <fx-trigger>
+                        <a href="#" data-cy="remove-task-button-{count(../preceding-sibling::*)}-{count(preceding-sibling::*)}">X</a>
+                        <fx-delete ref="."></fx-delete>
+                    </fx-trigger>
+                </template>
+            </fx-repeat>
 
-            <fx-fore>
-                <fx-model id="record">
+            <fx-trigger>
+                <button>add Task</button>
+                <fx-insert ref="task" origin="instance('template')/task"></fx-insert>
+            </fx-trigger>
+        </template>
+    </fx-repeat>
 
-                    <fx-instance>
-                        <data>
-                            <task text="Pick up Milk">
-                                <task text="go to store"></task>
-                                <task text="find milk"></task>
-                                <task text="pay milk"></task>
-                                <task text="take it home"></task>
-                            </task>
-                            <task complete="true" due="2019-01-04" text="Make tutorial part 1">
-                                <task text="take it home"></task>
-                            </task>
-                        </data>
-                    </fx-instance>
-					<fx-instance id="template">
-					  <data>
-						<task text=""></task>
-					  </data>
-					</fx-instance>
-
-
-                    <fx-bind ref="task">
-                        <fx-bind ref="@text"></fx-bind>
-
-                        <fx-bind ref="task">
-                            <fx-bind ref="@text"></fx-bind>
-                        </fx-bind>
-                    </fx-bind>
-
-                </fx-model>
-                <h1>Todos with SubTasks</h1>
-                <fx-repeat focus-on-create="task" id="r-todos" ref="task">
-                    <template>
-                        <fx-control label="Todo" ref="@text" data-cy="todo-widget-{count(preceding-sibling::*)}"></fx-control>
-                        <fx-trigger>
-                            <a href="#" data-cy="remove-todo-button-{count(preceding-sibling::*)}">X</a>
-                            <fx-delete ref="."></fx-delete>
-                        </fx-trigger>
-                        <fx-repeat id="r-subtask" ref="task">
-                            <template>
-                                <fx-control id="task" label="Task" ref="@text" type="text" data-cy="task-widget-{count(../preceding-sibling::*)}-{count(preceding-sibling::*)}"></fx-control>
-                                <fx-trigger>
-                                    <a href="#" data-cy="remove-task-button-{count(../preceding-sibling::*)}-{count(preceding-sibling::*)}">X</a>
-                                    <fx-delete ref="."></fx-delete>
-                                </fx-trigger>
-                            </template>
-                        </fx-repeat>
-
-                        <fx-trigger>
-                            <button>add Task</button>
-                            <fx-insert ref="task" origin="instance('template')/task"></fx-insert>
-                        </fx-trigger>
-                    </template>
-                </fx-repeat>
-
-                <fx-trigger label="add Todo">
-                    <button>add maintask</button>
-                    <fx-insert ref="task" origin="instance('template')/task"></fx-insert>
-                </fx-trigger>
-
-<!--                <div id="logtree">{logtree('default')}</div>-->
-            </fx-fore>
-<!--
+    <fx-trigger label="add Todo">
+        <button>add maintask</button>
+        <fx-insert ref="task" origin="instance('template')/task"></fx-insert>
+    </fx-trigger>
+</fx-fore>
         </template>
     </demo-snippet>
--->
 </div>
 <script type="module" src="./demo.js"></script>
 
