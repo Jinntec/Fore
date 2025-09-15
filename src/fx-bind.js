@@ -101,6 +101,7 @@ export class FxBind extends ForeElementMixin {
     /**
      * @type {import('./fx-bind.js').FxBind}
      */
+    /*
     const bind = evaluateXPathToFirstNode(
       'descendant::fx-bind[@ref=$ref]',
       boundElement.getModel(),
@@ -109,6 +110,9 @@ export class FxBind extends ForeElementMixin {
         ref: boundElement.ref,
       },
     );
+*/
+    const bind = boundElement.getOwnerForm().querySelector(`fx-bind[ref="${ref}"]`);
+
     let modelItem = boundElement.getModel().getModelItem(node);
     if (!modelItem) {
       if (bind) {

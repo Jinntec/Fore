@@ -7,7 +7,7 @@
   <link href="../../resources/fore.css" rel="stylesheet">
   <link href="../../resources/vars.css" rel="stylesheet">
   <link href="../../resources/toastify.css" rel="stylesheet">
-  <link href="../demo.css" rel="stylesheet">
+  <link href="../../resources/demo.css" rel="stylesheet">
   <link href="default.css" rel="stylesheet">
   <script type="module">
     // import '../../dist/fore-dev.js';
@@ -24,14 +24,16 @@
   <h1>Auto-create XML structure with create-nodes</h1>
 </header>
 <main>
+<!--
   <demo-snippet>
     <template>
+-->
       <fx-fore create-nodes="create-nodes"
                id="fx-invoice"
                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
         <fx-model>
           <fx-instance src="test/ubl-empty.xml"></fx-instance>
-          <fx-instance id="untdid-5189" src="codelists/xml/UNTDID-5305-3.xml"></fx-instance>
+<!--          <fx-instance id="untdid-5189" src="codelists/xml/UNTDID-5189-3.xml"></fx-instance>-->
           <fx-instance id="untdid-5305" src="codelists/xml/UNTDID-5305-3.xml"></fx-instance>
         </fx-model>
 
@@ -65,9 +67,10 @@
           </section>
         </fx-group>
       </fx-fore>
-      <fx-lens></fx-lens>
+<!--
     </template>
   </demo-snippet>
+-->
 </main>
 </body>
 </html>
