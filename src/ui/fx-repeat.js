@@ -295,55 +295,76 @@ export class FxRepeat extends withDraggability(UIElement, false) {
   }
 
   _createModelItemsRecursively(parentNode, parentModelItem) {
-    const parentWithDewey = parentModelItem?.path || null; // e.g., $default/task[1]_1
-    const parentBase = parentWithDewey ? parentWithDewey.replace(/_\d+$/, '') : null; // $default/task[1]
+    const parentWithDewey = parentModelItem?.path || null; // e.g. $default/AllowanceCharge[2]_1
+    const parentBase = parentWithDewey ? parentWithDewey.replace(/_\d+$/, '') : null; // e.g. $default/AllowanceCharge[2]
+
+    // Robust Dewey rewrite that tolerates $inst vs instance('inst') forms
+    const __applyDeweyRewrite = mi => {
+      if (!mi || typeof mi.path !== 'string' || !parentModelItem?.path) return;
+
+      const pWith = parentModelItem.path; // e.g. $default/AllowanceCharge[2]_1  or  instance('default')/AllowanceCharge[2]_1
+      const opMatch = pWith.match(/_(\d+)$/);
+      if (!opMatch) return;
+      const op = opMatch[1];
+
+      // Normalize to $name/ and strip _n on parent; normalize child for prefix test only
+      const toDollar = s => s.replace(/^instance\('([^']+)'\)\//, (_m, g1) => `$${g1}/`);
+      const parentBaseNorm = toDollar(pWith).replace(/_\d+$/, ''); // $default/AllowanceCharge[2]
+      const childNorm = toDollar(mi.path);
+
+      if (!childNorm.startsWith(parentBaseNorm)) return; // unrelated subtree
+
+      // Preserve original style of child's instance prefix
+      const childUsesInstanceFn = /^instance\('/.test(mi.path);
+      const parentBaseInChildStyle = childUsesInstanceFn
+        ? parentBaseNorm.replace(/^\$([A-Za-z0-9_-]+)\//, `instance('$1')/`)
+        : parentBaseNorm;
+
+      // If already suffixed for this parent, nothing to do
+      if (mi.path.startsWith(parentBaseInChildStyle + '_')) return;
+
+      // Inject _op immediately after the parent base segment
+      mi.path = parentBaseInChildStyle + `_${op}` + mi.path.slice(parentBaseInChildStyle.length);
+    };
 
     Array.from(parentNode.children).forEach(child => {
-      let nextParentMI = parentModelItem; // default: keep walking with current parent
+      let nextParentMI = parentModelItem;
 
-      if (child.hasAttribute('ref')) {
+      // Skip native/embedded widgets that may carry a 'ref' but are UI only
+      const isWidgetEl =
+        child &&
+        ((child.classList && child.classList.contains('widget')) ||
+          (typeof Fore !== 'undefined' && Fore.isWidget && Fore.isWidget(child)) ||
+          (child.tagName &&
+            ['INPUT', 'SELECT', 'TEXTAREA', 'OPTION', 'DATALIST'].includes(child.tagName)));
+
+      if (!isWidgetEl && child.hasAttribute('ref')) {
         const ref = child.getAttribute('ref').trim();
+        if (ref && ref !== '.') {
+          // Evaluate the FULL ref once — this yields the terminal (last) node(s)
+          let node = evaluateXPath(ref, parentModelItem.node, this);
+          if (Array.isArray(node)) node = node[0];
 
-        // todo: dot ref handling ????
-        // if (ref !== '.') {
-        // Evaluate relative to the *node* of the parent repeat item
-        let nodeset = evaluateXPath(ref, parentModelItem.node, this);
-        if (Array.isArray(nodeset)) nodeset = nodeset[0];
-        if (!nodeset) {
-          // This is not relevant, or an empty repeat
-          return;
-        }
+          if (node) {
+            let modelItem = this.getModel().getModelItem(node);
+            if (!modelItem) {
+              // Create a ModelItem only for the final node; children never get their own opNum
+              modelItem = FxBind.createModelItem(ref, node, child, null);
+              modelItem.parentModelItem = parentModelItem;
+              this.getModel().registerModelItem(modelItem);
+            }
 
-        let modelItem = this.getModel().getModelItem(nodeset);
-        if (!modelItem) {
-          // Already known. Ignore.
-          // Create child modelItem with NO opNum — children must not get their own _n
-          modelItem = FxBind.createModelItem(ref, nodeset, child, null);
-          modelItem.parentModelItem = parentModelItem;
+            // Always apply Dewey rewrite (handles both $inst and instance('inst') forms)
+            __applyDeweyRewrite(modelItem);
 
-          // Register
-          this.getModel().registerModelItem(modelItem);
-
-          // Prefix-replace once: $default/task[1] -> $default/task[1]_1
-          if (
-            parentWithDewey &&
-            parentBase &&
-            typeof modelItem.path === 'string' &&
-            modelItem.path.startsWith(parentBase) && // child under parent
-            !modelItem.path.startsWith(parentWithDewey) // not already suffixed
-          ) {
-            modelItem.path = parentWithDewey + modelItem.path.slice(parentBase.length);
+            child.nodeset = node;
+            if (child.attachObserver) child.attachObserver();
           }
-        }
-        // const nodeset = evaluateXPath(ref, parentModelItem.node, this);
-        child.nodeset = nodeset;
-        if (child.attachObserver) {
-          child.attachObserver();
         }
       }
 
-      // Recurse down with whichever parent we decided on
-      this._createModelItemsRecursively(child, nextParentMI);
+      // Recurse into non-widget subtrees
+      if (!isWidgetEl) this._createModelItemsRecursively(child, nextParentMI);
     });
   }
 

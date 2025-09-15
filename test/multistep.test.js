@@ -4,7 +4,7 @@ import { html, fixtureSync, expect, oneEvent } from '@open-wc/testing';
 import '../index.js';
 import * as fx from 'fontoxpath';
 
-describe.skip('multi-step refs', () => {
+describe.only('multi-step refs', () => {
   it('creates modelitems for repeat correct initially', async () => {
     const el = await fixtureSync(html`
       <fx-fore
@@ -65,7 +65,7 @@ describe.skip('multi-step refs', () => {
 
     expect(el.getModel().getModelItem('$default/AllowanceCharge[1]')).to.exist;
     expect(el.getModel().getModelItem('$default/AllowanceCharge[1]/TaxCategory[1]/ID[1]')).to.exist;
-    expect(el.getModel().getModelItem('$default/AllowanceCharge[1]/TaxCategory[1]/Percent[1]')).to.exist;
+    expect(el.getModel().getModelItem('$default/AllowanceCharge[1]/TaxCategory[2]/Percent[1]')).to.exist;
 
   });
 
@@ -93,28 +93,6 @@ describe.skip('multi-step refs', () => {
             </header>
             <fx-repeat id="r-BG-20" ref="cac:AllowanceCharge">
               <template>
-                <fx-group ref="cac:TaxCategory">
-                  <fx-control id="BT-95" ref="cbc:ID">
-                    <label for="BT-95">Document level allowance VAT category code</label>
-                    <select
-                      class="widget"
-                      id="BT-95"
-                      ref="instance('untdid-5305')//Row"
-                      selection="open"
-                    >
-                      <template>
-                        <option title="{Value[3]/SimpleValue}" value="{Value[1]/SimpleValue}"
-                        >{Value[2]/SimpleValue}</option
-                        >
-                      </template>
-                    </select>
-                  </fx-control>
-                  <fx-control id="BT-96" ref="cbc:Percent">
-                    <label for="BT-96">Document level allowance VAT rate</label>
-                    <input type="number"
-                    /></fx-control>
-                </fx-group>
-<!--
                 <fx-control id="BT-95" ref="cac:TaxCategory/cbc:ID">
                   <label for="BT-95">Document level allowance VAT category code</label>
                   <select
@@ -132,10 +110,7 @@ describe.skip('multi-step refs', () => {
                 </fx-control>
                 <fx-control id="BT-96" ref="cac:TaxCategory/cbc:Percent">
                   <label for="BT-96">Document level allowance VAT rate</label>
-                  <input type="number"
-                /></fx-control>
--->
-
+                  <input type="number" /></fx-control>
                 <fx-trigger>
                   <button>delete</button>
                   <fx-delete ref="."></fx-delete>
@@ -214,10 +189,10 @@ describe.skip('multi-step refs', () => {
       </fx-fore>
     `);
 
+    await oneEvent(el, 'ready');
     const button = el.querySelector('button');
     button.click();
     await oneEvent(el, 'refresh-done');
-    await oneEvent(el, 'ready');
     expect(el.getModel().modelItems.length).to.equal(10);
   });
   it('created modelItems are observed by correct elements', async () => {
@@ -286,10 +261,20 @@ describe.skip('multi-step refs', () => {
     const modelItems = el.getModel().modelItems;
 
     const mi4 = modelItems[4];
-    expect(mi4.observers.includes(repeatitems[1])).to.be.true;
+    expect(mi4.observers.has(repeatitems[1])).to.be.true;
+    expect(mi4.path).to.equal('$default/AllowanceCharge[2]_1');
 
     const mi5 = modelItems[5];
-    const control = repeatitems[1].querySelector('#BT-95');
-    expect(mi5.observers.includes(control)).to.be.true;
+    let control = repeatitems[1].querySelector('#BT-95');
+    expect(control).to.exist;
+    expect(mi5.observers.has(control)).to.be.true;
+    expect(mi5.path).to.equal('$default/AllowanceCharge[2]_1/TaxCategory[1]/ID[1]');
+
+    const mi6 = modelItems[6];
+    control = repeatitems[1].querySelector('#BT-96');
+    expect(control).to.exist;
+    expect(mi6.observers.has(control)).to.be.true;
+    expect(mi6.path).to.equal('$default/AllowanceCharge[2]_1/TaxCategory[2]/Percent[1]');
+
   });
 });
