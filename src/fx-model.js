@@ -188,15 +188,20 @@ export class FxModel extends HTMLElement {
   }
 
   /**
+   * (Recursively) remove the model item of a node.
    * @param {Node} node - The node for which to remove the model item
    */
   removeModelItem(node) {
     const index = this.modelItems.findIndex(mi => mi.node === node);
-    if (index === -1) {
-      // Strange already gone. Should not hapen
-      return;
+    // The model item is not always there. Might be the case if a node is 'skipped' during rendering. All paths jump over it.
+    // It may still have descendants that can have model items
+    if (index !== -1) {
+      this.modelItems.splice(index, 1);
     }
-    this.modelItems.splice(index, 1);
+
+    for (const child of Array.from(node.childNodes)) {
+      this.removeModelItem(child);
+    }
   }
 
   rebuild() {
