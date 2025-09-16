@@ -196,7 +196,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       this.getOwnerForm().addToBatchedNotifications(newRepeatItem);
     });
 
-    this.handleDelete = event => {
+    this.handleDeleteHandler = event => {
       console.log('delete catched', event);
       const { detail } = event;
       if (!detail || !detail.deletedNodes) {
@@ -210,7 +210,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       });
       this.getOwnerForm().addToBatchedNotifications(this);
     };
-    this.getOwnerForm().addEventListener('deleted', this.handleDelete);
+    this.getOwnerForm().addEventListener('deleted', this.handleDeleteHandler);
 
     // if (this.getOwnerForm().lazyRefresh) {
     /**
