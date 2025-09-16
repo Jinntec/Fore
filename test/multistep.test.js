@@ -2,9 +2,8 @@
 import { html, fixtureSync, expect, oneEvent } from '@open-wc/testing';
 
 import '../index.js';
-import * as fx from 'fontoxpath';
 
-describe.only('multi-step refs', () => {
+describe('multi-step refs', () => {
   it('creates modelitems for repeat correct initially', async () => {
     const el = await fixtureSync(html`
       <fx-fore
@@ -38,9 +37,9 @@ describe.only('multi-step refs', () => {
                     selection="open"
                   >
                     <template>
-                      <option title="{Value[3]/SimpleValue}" value="{Value[1]/SimpleValue}"
-                        >{Value[2]/SimpleValue}</option
-                      >
+                      <option title="{Value[3]/SimpleValue}" value="{Value[1]/SimpleValue}">
+                        {Value[2]/SimpleValue}
+                      </option>
                     </template>
                   </select>
                 </fx-control>
@@ -65,8 +64,8 @@ describe.only('multi-step refs', () => {
 
     expect(el.getModel().getModelItem('$default/AllowanceCharge[1]')).to.exist;
     expect(el.getModel().getModelItem('$default/AllowanceCharge[1]/TaxCategory[1]/ID[1]')).to.exist;
-    expect(el.getModel().getModelItem('$default/AllowanceCharge[1]/TaxCategory[2]/Percent[1]')).to.exist;
-
+    expect(el.getModel().getModelItem('$default/AllowanceCharge[1]/TaxCategory[2]/Percent[1]')).to
+      .exist;
   });
 
   it('creates modelitems dynamically in fx-repeat', async () => {
@@ -102,15 +101,16 @@ describe.only('multi-step refs', () => {
                     selection="open"
                   >
                     <template>
-                      <option title="{Value[3]/SimpleValue}" value="{Value[1]/SimpleValue}"
-                        >{Value[2]/SimpleValue}</option
-                      >
+                      <option title="{Value[3]/SimpleValue}" value="{Value[1]/SimpleValue}">
+                        {Value[2]/SimpleValue}
+                      </option>
                     </template>
                   </select>
                 </fx-control>
                 <fx-control id="BT-96" ref="cac:TaxCategory/cbc:Percent">
                   <label for="BT-96">Document level allowance VAT rate</label>
-                  <input type="number" /></fx-control>
+                  <input type="number"
+                /></fx-control>
                 <fx-trigger>
                   <button>delete</button>
                   <fx-delete ref="."></fx-delete>
@@ -128,8 +128,10 @@ describe.only('multi-step refs', () => {
     await oneEvent(el, 'refresh-done');
     expect(el.getModel().modelItems.length).to.equal(7);
     expect(el.getModel().getModelItem('$default/AllowanceCharge[2]_1')).to.exist;
-    expect(el.getModel().getModelItem('$default/AllowanceCharge[2]_1/TaxCategory[1]/ID[1]')).to.exist;
-    expect(el.getModel().getModelItem('$default/AllowanceCharge[2]_1/TaxCategory[2]/Percent[1]')).to.exist;
+    expect(el.getModel().getModelItem('$default/AllowanceCharge[2]_1/TaxCategory[1]/ID[1]')).to
+      .exist;
+    expect(el.getModel().getModelItem('$default/AllowanceCharge[2]_1/TaxCategory[2]/Percent[1]')).to
+      .exist;
   });
 
   it('creates correct number of modelItems for a set of actions', async () => {
@@ -167,9 +169,9 @@ describe.only('multi-step refs', () => {
                     selection="open"
                   >
                     <template>
-                      <option title="{Value[3]/SimpleValue}" value="{Value[1]/SimpleValue}"
-                        >{Value[2]/SimpleValue}</option
-                      >
+                      <option title="{Value[3]/SimpleValue}" value="{Value[1]/SimpleValue}">
+                        {Value[2]/SimpleValue}
+                      </option>
                     </template>
                   </select>
                 </fx-control>
@@ -228,8 +230,8 @@ describe.only('multi-step refs', () => {
                     selection="open"
                   >
                     <template>
-                      <option title="{Value[3]/SimpleValue}" value="{Value[1]/SimpleValue}"
-                        >{Value[2]/SimpleValue}
+                      <option title="{Value[3]/SimpleValue}" value="{Value[1]/SimpleValue}">
+                        {Value[2]/SimpleValue}
                       </option>
                     </template>
                   </select>
@@ -275,6 +277,5 @@ describe.only('multi-step refs', () => {
     expect(control).to.exist;
     expect(mi6.observers.has(control)).to.be.true;
     expect(mi6.path).to.equal('$default/AllowanceCharge[2]_1/TaxCategory[2]/Percent[1]');
-
   });
 });
