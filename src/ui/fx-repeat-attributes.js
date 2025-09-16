@@ -5,6 +5,7 @@ import { XPathUtil } from '../xpath-util.js';
 import ForeElementMixin from '../ForeElementMixin.js';
 import { withDraggability } from '../withDraggability.js';
 import { getPath } from '../xpath-path.js';
+import { UIElement } from './UIElement.js';
 
 /**
  * `fx-repeat`
@@ -21,7 +22,7 @@ import { getPath } from '../xpath-path.js';
  *
  * todo: it should be seriously be considered to extend FxContainer instead but needs refactoring first.
  */
-export class FxRepeatAttributes extends withDraggability(ForeElementMixin, false) {
+export class FxRepeatAttributes extends withDraggability(UIElement, false) {
   static get properties() {
     return {
       ...super.properties,
@@ -195,6 +196,16 @@ export class FxRepeatAttributes extends withDraggability(ForeElementMixin, false
     });
 
     return inited;
+  }
+
+  setIndex(index) {
+    // console.log('new repeat index ', index);
+    this.index = index;
+    const rItems = this.querySelectorAll(':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item');
+    this.applyIndex(rItems[this.index - 1]);
+
+    // trying to do without
+    // this.getOwnerForm().refresh({ reason: 'index-function', elementLocalnamesWithChanges: [] });
   }
 
   _getRef() {

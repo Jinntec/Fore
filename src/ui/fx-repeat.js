@@ -10,6 +10,7 @@ import { UIElement } from './UIElement.js';
 import { getPath } from '../xpath-path.js';
 import { FxModel } from '../fx-model.js';
 import { FxBind } from '../fx-bind.js';
+import { RepeatBase } from './repeat-base.js';
 
 // import {DependencyNotifyingDomFacade} from '../DependencyNotifyingDomFacade';
 
@@ -29,7 +30,7 @@ import { FxBind } from '../fx-bind.js';
  * todo: it should be seriously be considered to extend FxContainer instead but needs refactoring first.
  * @extends {ForeElementMixin}
  */
-export class FxRepeat extends withDraggability(UIElement, false) {
+export class FxRepeat extends withDraggability(RepeatBase, false) {
   static get properties() {
     return {
       ...super.properties,
@@ -71,6 +72,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     this.opNum = 0; // global number of operations
   }
 
+  /*
   get repeatSize() {
     return this.querySelectorAll(':scope > fx-repeatitem').length;
   }
@@ -79,15 +81,18 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     this.size = size;
   }
 
+*/
+/*
   setIndex(index) {
     // console.log('new repeat index ', index);
     this.index = index;
-    const rItems = this.querySelectorAll(':scope > fx-repeatitem');
+    const rItems = this.querySelectorAll(':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',);
     this.applyIndex(rItems[this.index - 1]);
 
     // trying to do without
     // this.getOwnerForm().refresh({ reason: 'index-function', elementLocalnamesWithChanges: [] });
   }
+*/
 
   applyIndex(repeatItem) {
     this._removeIndexMarker();
@@ -205,7 +210,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
       // Remove corresponding repeat items for deleted nodes
       detail.deletedNodes.forEach(node => {
-        this.handleDelete(node);
+        this._handleDelete(node);
         //        this.removeRepeatItemForNode(node);
       });
       this.getOwnerForm().addToBatchedNotifications(this);
@@ -225,7 +230,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
           debouncedOnMutations = null;
           const records = bufferedMutationRecords;
           bufferedMutationRecords = [];
-          let shouldRefresh = false;
+          const shouldRefresh = false;
           for (const mutation of records) {
             if (mutation.type === 'childList') {
               const added = mutation.addedNodes[0];
@@ -247,18 +252,18 @@ export class FxRepeat extends withDraggability(UIElement, false) {
                 // this.handleDelete(deleted);
               }
               /*
-              if (!this.getOwnerForm().initialRun) {
-                shouldRefresh = true;
-              }
-*/
+                if (!this.getOwnerForm().initialRun) {
+                  shouldRefresh = true;
+                }
+  */
             }
           }
 
           /*
-          if (shouldRefresh) {
-            this.refresh();
-          }
-*/
+            if (shouldRefresh) {
+              this.refresh();
+            }
+  */
         });
       }
     });
@@ -268,32 +273,33 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     this.getOwnerForm().registerLazyElement(this);
 
     const style = `
-      :host{
-      }
-       .fade-out-bottom {
-          -webkit-animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-          animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-      }
-      .fade-out-bottom {
-          -webkit-animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-          animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-      }
-   `;
+        :host{
+        }
+         .fade-out-bottom {
+            -webkit-animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+            animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+        }
+        .fade-out-bottom {
+            -webkit-animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+            animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+        }
+     `;
     const html = `
-          <slot name="header"></slot>
-          <slot></slot>
-          <slot name="footer"></slot>
-        `;
+            <slot name="header"></slot>
+            <slot></slot>
+            <slot name="footer"></slot>
+          `;
     this.shadowRoot.innerHTML = `
-            <style>
-                ${style}
-            </style>
-            ${html}
-        `;
+              <style>
+                  ${style}
+              </style>
+              ${html}
+          `;
 
     // this.init();
   }
 
+  /*
   _createModelItemsRecursively(parentNode, parentModelItem) {
     const parentWithDewey = parentModelItem?.path || null; // e.g. $default/AllowanceCharge[2]_1
     const parentBase = parentWithDewey ? parentWithDewey.replace(/_\d+$/, '') : null; // e.g. $default/AllowanceCharge[2]
@@ -367,6 +373,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       if (!isWidgetEl) this._createModelItemsRecursively(child, nextParentMI);
     });
   }
+*/
 
   /**
    * Removes the repeat item corresponding to a deleted node.
@@ -423,12 +430,13 @@ export class FxRepeat extends withDraggability(UIElement, false) {
   }
 */
 
+/*
   handleDelete(deleted) {
     console.log('handleDelete', deleted);
     // grab the current repeat items (tweak selector if yours differs)
-    /**
+    /!**
      * @type {import('./fx-repeatitem.js').FxRepeatitem[]}
-     */
+     *!/
     const items = Array.from(
       this.querySelectorAll(
         ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
@@ -448,6 +456,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     // Make the next item the 'current'
     this.setIndex(indexToRemove + 1);
   }
+*/
 
   /**
    * @returns {import('./fx-repeatitem.js').FxRepeatitem}
@@ -480,10 +489,11 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     this.inited = true;
   }
 
-  /**
+/*
+  /!**
    * repeat has no own modelItems
    * @private
-   */
+   *!/
   _evalNodeset() {
     // const inscope = this.getInScopeContext();
     const inscope = getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
@@ -498,14 +508,14 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       });
     }
 
-    /*
+    /!*
               this.touchedPaths = new Set();
               const instance = XPathUtil.resolveInstance(this, this.ref);
               const depTrackDomfacade = new DependencyNotifyingDomFacade((node) => {
                   this.touchedPaths.add(XPathUtil.getPath(node, instance));
               });
               const rawNodeset = evaluateXPath(this.ref, inscope, this, {}, {}, depTrackDomfacade );
-        */
+        *!/
     const rawNodeset = evaluateXPath(this.ref, inscope, this);
 
     // console.log('Touched!', this.ref, [...this.touchedPaths].join(', '));
@@ -516,7 +526,9 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     }
     this.nodeset = rawNodeset;
   }
+*/
 
+/*
   async refresh(force) {
     console.log('🔄 fx-repeat.refresh on', this.id);
 
@@ -601,7 +613,9 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     // this.repeatCount = contextSize;
     // console.log('repeatCount', this.repeatCount);
   }
+*/
 
+/*
   // eslint-disable-next-line class-methods-use-this
   _fadeOut(el) {
     el.style.opacity = 1;
@@ -634,7 +648,9 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       // }, 40);
     })();
   }
+*/
 
+/*
   _initTemplate() {
     this.template = this.querySelector('template');
     // console.log('### init template for repeat ', this.id, this.template);
@@ -657,7 +673,9 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
     this.shadowRoot.appendChild(this.template);
   }
+*/
 
+/*
   _initRepeatItems() {
     this.nodeset.forEach((item, index) => {
       const repeatItem = this._createNewRepeatItem();
@@ -684,7 +702,9 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       this._initVariables(repeatItem);
     });
   }
+*/
 
+/*
   clearTextValues(node) {
     if (!node) return;
 
@@ -705,7 +725,9 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       this.clearTextValues(child);
     }
   }
+*/
 
+/*
   _initVariables(newRepeatItem) {
     const inScopeVariables = new Map(this.inScopeVariables);
     newRepeatItem.setInScopeVariables(inScopeVariables);
@@ -718,7 +740,9 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       }
     })(newRepeatItem);
   }
+*/
 
+/*
   _clone() {
     // const content = this.template.content.cloneNode(true);
     this.template = this.shadowRoot.querySelector('template');
@@ -731,12 +755,15 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       item.removeAttribute('repeat-index');
     });
   }
+*/
 
+/*
   setInScopeVariables(inScopeVariables) {
     // Repeats are interesting: the variables should be scoped per repeat item, they should not be
     // able to see the variables in adjacent repeat items!
     this.inScopeVariables = new Map(inScopeVariables);
   }
+*/
 }
 
 if (!customElements.get('fx-repeat')) {
