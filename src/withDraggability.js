@@ -20,6 +20,8 @@ export const withDraggability = (superclass, isAlsoDraggable) =>
     }
 
     connectedCallback() {
+      super.connectedCallback();
+
       this.drop = event => this._drop(event);
       this.addEventListener('drop', this.drop);
       this.dragOver = event => this._dragOver(event);
@@ -31,6 +33,8 @@ export const withDraggability = (superclass, isAlsoDraggable) =>
     }
 
     disconnectedCallback() {
+      super.disconnectedCallback();
+
       this.removeEventListener('drop', this.drop);
       this.removeEventListener('dragover', this.dragOver);
       this.removeEventListener('dragleave', this.dragLeave);
@@ -175,9 +179,7 @@ export const withDraggability = (superclass, isAlsoDraggable) =>
 			}
 */
         event.preventDefault();
-        this.getOwnerForm()
-          .getModel()
-          .updateModel();
+        this.getOwnerForm().getModel().updateModel();
         this.getOwnerForm().refresh(true);
         return;
       }
@@ -217,9 +219,7 @@ export const withDraggability = (superclass, isAlsoDraggable) =>
 
       // Note: full refresh needed since multiple model items may be affected.
       // TODO: Leverage the changedPaths trick
-      this.getOwnerForm()
-        .getModel()
-        .updateModel();
+      this.getOwnerForm().getModel().updateModel();
       this.getOwnerForm().refresh(true);
     }
   };

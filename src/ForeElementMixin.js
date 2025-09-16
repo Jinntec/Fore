@@ -65,12 +65,17 @@ export default class ForeElementMixin extends HTMLElement {
     this.inScopeVariables = new Map();
 
     this.dependencies = new DependentXPathQueries();
+    this.ownerForm = null;
   }
 
   connectedCallback() {
     if (this.parentElement) {
       this.dependencies.setParentDependencies(this.parentElement?.closest('[ref]')?.dependencies);
     }
+
+    // The fx-model linked to here won't ever change
+    this.model = this.getModel();
+    this.ownerForm = this.getOwnerForm();
   }
 
   /**
@@ -92,6 +97,9 @@ export default class ForeElementMixin extends HTMLElement {
    * @returns {import('./fx-fore.js').FxFore} The fx-fore element associated with this form node
    */
   getOwnerForm() {
+    if (this.ownerForm) {
+      return this.ownerForm;
+    }
     let currentElement = this;
     while (currentElement && currentElement.parentNode) {
       // console.log('current ', currentElement);
@@ -106,7 +114,7 @@ export default class ForeElementMixin extends HTMLElement {
         currentElement = currentElement.parentNode;
       }
     }
-    return currentElement;
+    return null;
   }
 
   /**
@@ -129,9 +137,7 @@ export default class ForeElementMixin extends HTMLElement {
     }
     if (!inscopeContext && this.getModel().instances.length !== 0) {
       // ### always fall back to default context with there's neither a 'context' or 'ref' present
-      inscopeContext = this.getModel()
-        .getDefaultInstance()
-        .getDefaultContext();
+      inscopeContext = this.getModel().getDefaultInstance().getDefaultContext();
       // console.warn('no in scopeContext for ', this);
       // console.warn('using default context ', this);
       // return;
