@@ -1,5 +1,8 @@
 import getInScopeContext from './getInScopeContext.js';
 
+/**
+ * @param {typeof import('./ForeElementMixin.js').default} superclass
+ */
 export const withDraggability = (superclass, isAlsoDraggable) =>
   /**
    * Adds draggability to generic components.
@@ -33,8 +36,6 @@ export const withDraggability = (superclass, isAlsoDraggable) =>
     }
 
     disconnectedCallback() {
-      super.disconnectedCallback();
-
       this.removeEventListener('drop', this.drop);
       this.removeEventListener('dragover', this.dragOver);
       this.removeEventListener('dragleave', this.dragLeave);
