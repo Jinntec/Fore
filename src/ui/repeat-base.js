@@ -17,11 +17,8 @@
 import { Fore } from '../fore.js';
 import { evaluateXPath } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
-import { XPathUtil } from '../xpath-util.js';
 import { withDraggability } from '../withDraggability.js';
 import { UIElement } from './UIElement.js';
-import { getPath } from '../xpath-path.js';
-import { FxModel } from '../fx-model.js';
 import { FxBind } from '../fx-bind.js';
 
 const BaseEl = typeof UIElement !== 'undefined' ? UIElement : HTMLElement;
@@ -143,6 +140,96 @@ export class RepeatBase extends withDraggability(UIElement, false) {
     // console.log('repeatCount', this.repeatCount);
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+
+    // Listen for insertion events
+    this.handleInsert = event => {
+      const { detail } = event;
+      console.log('insert catched', detail);
+
+      // Step 1: Refresh/re-evaluate the nodeset
+      const oldNodesetLength = this.nodeset.length;
+      this._evalNodeset();
+      const newNodesetLength = this.nodeset.length;
+      if (oldNodesetLength === newNodesetLength) {
+        return;
+      }
+
+      this._handleInsert(detail.insertedNodes);
+    };
+
+    this.getOwnerForm().addEventListener('insert', this.handleInsert);
+
+    this.handleDelete = event => {
+      console.log('delete catched', event);
+      const { detail } = event;
+      if (!detail || !detail.deletedNodes) {
+        return;
+      }
+
+      // Remove corresponding repeat items for deleted nodes
+      detail.deletedNodes.forEach(node => {
+        this._handleDelete(node);
+        //        this.removeRepeatItemForNode(node);
+      });
+      this.getOwnerForm().addToBatchedNotifications(this);
+    };
+    this.getOwnerForm().addEventListener('deleted', this.handleDelete);
+  }
+  disconnectedCallback() {
+    this.getOwnerForm().removeEventListener('deleted', this.handleDelete);
+    this.getOwnerForm().removeEventListener('insert', this.handleInsert);
+  }
+
+  /**
+   * Handle an insert
+   *
+   * @param {Node} node
+   */
+  _handleInsert(node) {
+    /**
+     * @type {number}
+     */
+    const insertionIndex = this.nodeset.indexOf(node) + 1;
+    // Step 2: Get current repeat items and create a new item
+    // todo: search fx-bind elements with same nodeset as this repeat - if present update modelItem instead of creating one
+    const newRepeatItem = this._createNewRepeatItem(insertionIndex, node);
+
+    this.setIndex(insertionIndex); // sets attribute + applies repeat-index + refresh
+
+    // Generate the parent `modelItem` for the new repeat item
+    this.opNum++;
+    const parentModelItem = FxBind.createModelItem(this.ref, node, this, this.opNum);
+    newRepeatItem.modelItem = parentModelItem;
+
+    this.setIndex(insertionIndex);
+
+    this.getModel().registerModelItem(parentModelItem);
+
+    // Step 5: Create modelItems recursively for child elements
+    this._createModelItemsRecursively(newRepeatItem, parentModelItem);
+
+    // Step 6: Notify and refresh the UI
+    this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh();
+
+    this.getOwnerForm().addToBatchedNotifications({
+      refresh: force => {
+        Fore.refreshChildren(newRepeatItem, force);
+      },
+    });
+  }
+
+  /**
+   * @abstract
+   *
+   * @param {number} index - the one-based index of where to insert the new node
+   * @param {Node} node - the new node that's inserted
+   *
+   * @returns {HTMLElement}
+   */
+  _createNewRepeatItem(index, node) {}
+
   setInScopeVariables(inScopeVariables) {
     // Repeats are interesting: the variables should be scoped per repeat item, they should not be
     // able to see the variables in adjacent repeat items!
@@ -215,7 +302,7 @@ export class RepeatBase extends withDraggability(UIElement, false) {
       repeatItem.nodeset = this.nodeset[index];
       repeatItem.index = index + 1; // 1-based index
 
-      this.appendChild(repeatItem);
+      //      this.appendChild(repeatItem);
 
       if (this.getOwnerForm().createNodes) {
         this.getOwnerForm().initData(repeatItem);
@@ -262,6 +349,19 @@ export class RepeatBase extends withDraggability(UIElement, false) {
     this.setIndex(indexToRemove + 1);
   }
 
+  /**
+   * @abstract
+   */
+  setIndex(index) {
+    throw new Error('Not implemented');
+  }
+
+  applyIndex(repeatItem) {
+    this._removeIndexMarker();
+    if (repeatItem) {
+      repeatItem.setAttribute('repeat-index', '');
+    }
+  }
 
   _initVariables(newRepeatItem) {
     const inScopeVariables = new Map(this.inScopeVariables);
@@ -343,6 +443,9 @@ export class RepeatBase extends withDraggability(UIElement, false) {
       mi.path = `${parentBaseInChildStyle}_${op}${mi.path.slice(parentBaseInChildStyle.length)}`;
     };
 
+    if (parentNode.attachObserver) {
+      parentNode.attachObserver();
+    }
     Array.from(parentNode.children).forEach(child => {
       const nextParentMI = parentModelItem;
 

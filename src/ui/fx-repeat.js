@@ -28,7 +28,6 @@ import { RepeatBase } from './repeat-base.js';
  * @demo demo/todo.html
  *
  * todo: it should be seriously be considered to extend FxContainer instead but needs refactoring first.
- * @extends {ForeElementMixin}
  */
 export class FxRepeat extends withDraggability(RepeatBase, false) {
   static get properties() {
@@ -82,23 +81,20 @@ export class FxRepeat extends withDraggability(RepeatBase, false) {
   }
 
 */
-/*
+
+  /**
+   * @override
+   */
   setIndex(index) {
     // console.log('new repeat index ', index);
     this.index = index;
-    const rItems = this.querySelectorAll(':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',);
+    const rItems = this.querySelectorAll(
+      ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
+    );
     this.applyIndex(rItems[this.index - 1]);
 
     // trying to do without
     // this.getOwnerForm().refresh({ reason: 'index-function', elementLocalnamesWithChanges: [] });
-  }
-*/
-
-  applyIndex(repeatItem) {
-    this._removeIndexMarker();
-    if (repeatItem) {
-      repeatItem.setAttribute('repeat-index', '');
-    }
   }
 
   get index() {
@@ -125,97 +121,6 @@ export class FxRepeat extends withDraggability(RepeatBase, false) {
       const { item } = e.detail;
       this.setIndex(item.index);
     });
-
-    // Listen for insertion events
-    this.getOwnerForm().addEventListener('insert', event => {
-      const { detail } = event;
-      console.log('insert catched', detail);
-
-      // Step 1: Refresh/re-evaluate the nodeset
-      const oldNodesetLength = this.nodeset.length;
-      this._evalNodeset();
-      const newNodesetLength = this.nodeset.length;
-      if (oldNodesetLength === newNodesetLength) {
-        return;
-      }
-
-      /**
-       * @type {number}
-       */
-      //      const insertionIndex = detail.index;
-      /**
-       * The newly inserted node. TODO: handle multiple?
-       * @type {Node}
-       */
-      const insertedNode = detail.insertedNodes;
-      const insertionIndex = this.nodeset.indexOf(insertedNode) + 1;
-      // Step 2: Get current repeat items and create a new item
-      /**
-       * @type {import('./fx-repeatitem.js').FxRepeatitem[]}
-       */
-      const repeatItems = Array.from(
-        this.querySelectorAll(
-          ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
-        ),
-      );
-
-      // todo: search fx-bind elements with same nodeset as this repeat - if present update modelItem instead of creating one
-      const newRepeatItem = this._createNewRepeatItem();
-
-      // Step 3: Insert the new repeatItem at the correct position
-      const beforeNode = repeatItems[insertionIndex - 1] ?? null; // Null appends by default
-      this.insertBefore(newRepeatItem, beforeNode);
-      newRepeatItem.index = insertionIndex;
-
-      // Step 4: Assign the inserted nodeset to the new `repeatItem`
-      newRepeatItem.nodeset = detail.insertedNodes;
-      // this.setAttribute('index', detail.index);
-      // this.applyIndex(newRepeatItem);
-
-      // Update all the indices following here
-      for (let i = insertionIndex - 1; i < repeatItems.length; ++i) {
-        const sibling = repeatItems[i];
-        // TODO: handle the next ones
-        sibling.index += 1;
-      }
-
-      this.setIndex(insertionIndex); // sets attribute + applies repeat-index + refresh
-
-      // Generate the parent `modelItem` for the new repeat item
-      this.opNum++;
-      const parentModelItem = FxBind.createModelItem(
-        this.ref,
-        detail.insertedNodes,
-        newRepeatItem,
-        this.opNum,
-      );
-      newRepeatItem.modelItem = parentModelItem;
-
-      this.getModel().registerModelItem(parentModelItem);
-
-      // Step 5: Create modelItems recursively for child elements
-      this._createModelItemsRecursively(newRepeatItem, parentModelItem);
-
-      // Step 6: Notify and refresh the UI
-      this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh();
-      this.getOwnerForm().addToBatchedNotifications(newRepeatItem);
-    });
-
-    this.handleDeleteHandler = event => {
-      console.log('delete catched', event);
-      const { detail } = event;
-      if (!detail || !detail.deletedNodes) {
-        return;
-      }
-
-      // Remove corresponding repeat items for deleted nodes
-      detail.deletedNodes.forEach(node => {
-        this._handleDelete(node);
-        //        this.removeRepeatItemForNode(node);
-      });
-      this.getOwnerForm().addToBatchedNotifications(this);
-    };
-    this.getOwnerForm().addEventListener('deleted', this.handleDeleteHandler);
 
     // if (this.getOwnerForm().lazyRefresh) {
     /**
@@ -430,7 +335,7 @@ export class FxRepeat extends withDraggability(RepeatBase, false) {
   }
 */
 
-/*
+  /*
   handleDelete(deleted) {
     console.log('handleDelete', deleted);
     // grab the current repeat items (tweak selector if yours differs)
@@ -461,8 +366,10 @@ export class FxRepeat extends withDraggability(RepeatBase, false) {
   /**
    * @returns {import('./fx-repeatitem.js').FxRepeatitem}
    */
-  _createNewRepeatItem() {
-    const newItem = document.createElement('fx-repeatitem');
+  _createNewRepeatItem(insertionIndex, node) {
+    const newItem =
+      /** @type {import('./fx-repeatitem.js').FxRepeatitem} **/
+      (document.createElement('fx-repeatitem'));
 
     if (this.isDraggable) {
       newItem.setAttribute('draggable', 'true');
@@ -470,6 +377,32 @@ export class FxRepeat extends withDraggability(RepeatBase, false) {
     }
     const clone = this._clone();
     newItem.appendChild(clone);
+    /**
+     * @type {import('./fx-repeatitem.js').FxRepeatitem[]}
+     */
+    const repeatItems = Array.from(
+      this.querySelectorAll(
+        ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
+      ),
+    );
+
+    const beforeNode = repeatItems[insertionIndex - 1] ?? null; // Null appends by default
+    this.insertBefore(newItem, beforeNode);
+    newItem.index = insertionIndex;
+
+    // Step 3: Insert the new repeatItem at the correct position
+
+    // Step 4: Assign the inserted nodeset to the new `repeatItem`
+    newItem.nodeset = node;
+    // this.setAttribute('index', detail.index);
+    // this.applyIndex(newRepeatItem);
+
+    // Update all the indices following here
+    for (let i = insertionIndex - 1; i < repeatItems.length; ++i) {
+      const sibling = repeatItems[i];
+      // TODO: handle the next ones
+      sibling.index += 1;
+    }
 
     return newItem;
   }
@@ -489,7 +422,7 @@ export class FxRepeat extends withDraggability(RepeatBase, false) {
     this.inited = true;
   }
 
-/*
+  /*
   /!**
    * repeat has no own modelItems
    * @private
@@ -528,7 +461,7 @@ export class FxRepeat extends withDraggability(RepeatBase, false) {
   }
 */
 
-/*
+  /*
   async refresh(force) {
     console.log('🔄 fx-repeat.refresh on', this.id);
 
@@ -615,7 +548,7 @@ export class FxRepeat extends withDraggability(RepeatBase, false) {
   }
 */
 
-/*
+  /*
   // eslint-disable-next-line class-methods-use-this
   _fadeOut(el) {
     el.style.opacity = 1;
@@ -650,7 +583,7 @@ export class FxRepeat extends withDraggability(RepeatBase, false) {
   }
 */
 
-/*
+  /*
   _initTemplate() {
     this.template = this.querySelector('template');
     // console.log('### init template for repeat ', this.id, this.template);
@@ -675,7 +608,7 @@ export class FxRepeat extends withDraggability(RepeatBase, false) {
   }
 */
 
-/*
+  /*
   _initRepeatItems() {
     this.nodeset.forEach((item, index) => {
       const repeatItem = this._createNewRepeatItem();
@@ -704,7 +637,7 @@ export class FxRepeat extends withDraggability(RepeatBase, false) {
   }
 */
 
-/*
+  /*
   clearTextValues(node) {
     if (!node) return;
 
@@ -727,7 +660,7 @@ export class FxRepeat extends withDraggability(RepeatBase, false) {
   }
 */
 
-/*
+  /*
   _initVariables(newRepeatItem) {
     const inScopeVariables = new Map(this.inScopeVariables);
     newRepeatItem.setInScopeVariables(inScopeVariables);
@@ -742,7 +675,7 @@ export class FxRepeat extends withDraggability(RepeatBase, false) {
   }
 */
 
-/*
+  /*
   _clone() {
     // const content = this.template.content.cloneNode(true);
     this.template = this.shadowRoot.querySelector('template');
@@ -757,7 +690,7 @@ export class FxRepeat extends withDraggability(RepeatBase, false) {
   }
 */
 
-/*
+  /*
   setInScopeVariables(inScopeVariables) {
     // Repeats are interesting: the variables should be scoped per repeat item, they should not be
     // able to see the variables in adjacent repeat items!

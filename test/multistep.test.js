@@ -263,7 +263,10 @@ describe('multi-step refs', () => {
     const modelItems = el.getModel().modelItems;
 
     const mi4 = modelItems[4];
-    expect(mi4.observers.has(repeatitems[1])).to.be.true;
+    expect(mi4.observers.has(repeatitems[1])).to.equal(
+      true,
+      'The model item should have the repeat item as an observer',
+    );
     expect(mi4.path).to.equal('$default/AllowanceCharge[2]_1');
 
     const mi5 = modelItems[5];

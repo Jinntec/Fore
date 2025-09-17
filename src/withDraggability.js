@@ -1,7 +1,9 @@
 import getInScopeContext from './getInScopeContext.js';
 
 /**
- * @param {typeof import('./ForeElementMixin.js').default} superclass
+ * @template {typeof import('./ForeElementMixin.js').default} T
+ * @param {T} superclass
+ * @returns {T}
  */
 export const withDraggability = (superclass, isAlsoDraggable) =>
   /**
@@ -16,10 +18,6 @@ export const withDraggability = (superclass, isAlsoDraggable) =>
           type: Boolean,
         },
       };
-    }
-
-    constructor() {
-      super();
     }
 
     connectedCallback() {

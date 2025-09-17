@@ -2,10 +2,9 @@ import { Fore } from '../fore.js';
 import { evaluateXPath } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 import { XPathUtil } from '../xpath-util.js';
-import ForeElementMixin from '../ForeElementMixin.js';
 import { withDraggability } from '../withDraggability.js';
 import { getPath } from '../xpath-path.js';
-import { UIElement } from './UIElement.js';
+import { RepeatBase } from './repeat-base.js';
 
 /**
  * `fx-repeat`
@@ -22,7 +21,7 @@ import { UIElement } from './UIElement.js';
  *
  * todo: it should be seriously be considered to extend FxContainer instead but needs refactoring first.
  */
-export class FxRepeatAttributes extends withDraggability(UIElement, false) {
+export class FxRepeatAttributes extends withDraggability(RepeatBase, false) {
   static get properties() {
     return {
       ...super.properties,
@@ -103,6 +102,7 @@ export class FxRepeatAttributes extends withDraggability(UIElement, false) {
   }
 
   async connectedCallback() {
+    super.connectedCallback();
     // console.log('connectedCallback',this);
     // this.display = window.getComputedStyle(this, null).getPropertyValue("display");
     this.ref = this.getAttribute('ref');
@@ -198,16 +198,6 @@ export class FxRepeatAttributes extends withDraggability(UIElement, false) {
     return inited;
   }
 
-  setIndex(index) {
-    // console.log('new repeat index ', index);
-    this.index = index;
-    const rItems = this.querySelectorAll(':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item');
-    this.applyIndex(rItems[this.index - 1]);
-
-    // trying to do without
-    // this.getOwnerForm().refresh({ reason: 'index-function', elementLocalnamesWithChanges: [] });
-  }
-
   _getRef() {
     return this.getAttribute('ref');
   }
@@ -271,23 +261,9 @@ export class FxRepeatAttributes extends withDraggability(UIElement, false) {
       for (let position = repeatItemCount + 1; position <= contextSize; position += 1) {
         // add new repeatitem
 
-        const clonedTemplate = this._clone();
+        const clonedTemplate = this._createNewRepeatItem(position);
         if (!clonedTemplate) return;
 
-        // ### cloned templates are always appended to the binding element - the one having the data-ref
-        const bindingElement = this.querySelector('[data-ref]');
-        bindingElement.appendChild(clonedTemplate);
-        clonedTemplate.classList.add('fx-repeatitem');
-        clonedTemplate.setAttribute('index', position);
-
-        clonedTemplate.addEventListener('click', this._dispatchIndexChange);
-        // this.addEventListener('focusin', this._handleFocus);
-        clonedTemplate.addEventListener('focusin', this._dispatchIndexChange);
-
-        // this._initVariables(clonedTemplate);
-
-        // newItem.nodeset = this.nodeset[position - 1];
-        // newItem.index = position;
         this.getOwnerForm().someInstanceDataStructureChanged = true;
       }
     }
@@ -397,10 +373,35 @@ export class FxRepeatAttributes extends withDraggability(UIElement, false) {
     })(newRepeatItem);
   }
 
-  _clone() {
+  /**
+   * @override
+   *
+   * @param {number} insertionIndex - the one-based index of where to insert the new node
+   *
+   * @returns {HTMLElement}
+   */
+  _createNewRepeatItem(insertionIndex, _node) {
     this.template = this.shadowRoot.querySelector('template');
-    if (!this.template) return;
-    return this.template.content.firstElementChild.cloneNode(true);
+    if (!this.template) return null;
+    const newNode = /** @type {HTMLElement} */ (
+      this.template.content.firstElementChild.cloneNode(true)
+    );
+
+    // ### cloned templates are always appended to the binding element - the one having the data-ref
+    const bindingElement = this.querySelector('[data-ref]');
+
+    const repeatItems = bindingElement.querySelectorAll('.fx-repeatitem');
+
+    const beforeNode = repeatItems[insertionIndex - 1] ?? null; // Null appends by default
+    bindingElement.insertBefore(newNode, beforeNode);
+    newNode.classList.add('fx-repeatitem');
+    newNode.setAttribute('index', `${insertionIndex}`);
+
+    newNode.addEventListener('click', this._dispatchIndexChange);
+    // this.addEventListener('focusin', this._handleFocus);
+    newNode.addEventListener('focusin', this._dispatchIndexChange);
+
+    return newNode;
   }
 
   _removeIndexMarker() {
