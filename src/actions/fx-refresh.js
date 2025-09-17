@@ -22,7 +22,7 @@ class FxRefresh extends AbstractAction {
 
     if (this.hasAttribute('self')) {
       console.log(`### <<<<< refresh() self ${this} >>>>>`);
-      const control = XPathUtil.getClosest('fx-control', this);
+      const control = XPathUtil.getClosest('fx-control, fx-output, fx-upload', this);
       if (control) {
         control.refresh(true);
         return;
