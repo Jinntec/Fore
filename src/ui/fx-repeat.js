@@ -10,7 +10,6 @@ import { UIElement } from './UIElement.js';
 import { getPath } from '../xpath-path.js';
 import { FxModel } from '../fx-model.js';
 import { FxBind } from '../fx-bind.js';
-import { RepeatBase } from './repeat-base.js';
 
 // import {DependencyNotifyingDomFacade} from '../DependencyNotifyingDomFacade';
 
@@ -28,8 +27,9 @@ import { RepeatBase } from './repeat-base.js';
  * @demo demo/todo.html
  *
  * todo: it should be seriously be considered to extend FxContainer instead but needs refactoring first.
+ * @extends {ForeElementMixin}
  */
-export class FxRepeat extends withDraggability(RepeatBase, false) {
+export class FxRepeat extends withDraggability(UIElement, false) {
   static get properties() {
     return {
       ...super.properties,
@@ -71,7 +71,6 @@ export class FxRepeat extends withDraggability(RepeatBase, false) {
     this.opNum = 0; // global number of operations
   }
 
-  /*
   get repeatSize() {
     return this.querySelectorAll(':scope > fx-repeatitem').length;
   }
@@ -80,21 +79,21 @@ export class FxRepeat extends withDraggability(RepeatBase, false) {
     this.size = size;
   }
 
-*/
-
-  /**
-   * @override
-   */
   setIndex(index) {
     // console.log('new repeat index ', index);
     this.index = index;
-    const rItems = this.querySelectorAll(
-      ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
-    );
+    const rItems = this.querySelectorAll(':scope > fx-repeatitem');
     this.applyIndex(rItems[this.index - 1]);
 
     // trying to do without
     // this.getOwnerForm().refresh({ reason: 'index-function', elementLocalnamesWithChanges: [] });
+  }
+
+  applyIndex(repeatItem) {
+    this._removeIndexMarker();
+    if (repeatItem) {
+      repeatItem.setAttribute('repeat-index', '');
+    }
   }
 
   get index() {
@@ -122,6 +121,97 @@ export class FxRepeat extends withDraggability(RepeatBase, false) {
       this.setIndex(item.index);
     });
 
+    // Listen for insertion events
+    this.getOwnerForm().addEventListener('insert', event => {
+      const { detail } = event;
+      console.log('insert catched', detail);
+
+      // Step 1: Refresh/re-evaluate the nodeset
+      const oldNodesetLength = this.nodeset.length;
+      this._evalNodeset();
+      const newNodesetLength = this.nodeset.length;
+      if (oldNodesetLength === newNodesetLength) {
+        return;
+      }
+
+      /**
+       * @type {number}
+       */
+      //      const insertionIndex = detail.index;
+      /**
+       * The newly inserted node. TODO: handle multiple?
+       * @type {Node}
+       */
+      const insertedNode = detail.insertedNodes;
+      const insertionIndex = this.nodeset.indexOf(insertedNode) + 1;
+      // Step 2: Get current repeat items and create a new item
+      /**
+       * @type {import('./fx-repeatitem.js').FxRepeatitem[]}
+       */
+      const repeatItems = Array.from(
+        this.querySelectorAll(
+          ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
+        ),
+      );
+
+      // todo: search fx-bind elements with same nodeset as this repeat - if present update modelItem instead of creating one
+      const newRepeatItem = this._createNewRepeatItem();
+
+      // Step 3: Insert the new repeatItem at the correct position
+      const beforeNode = repeatItems[insertionIndex - 1] ?? null; // Null appends by default
+      this.insertBefore(newRepeatItem, beforeNode);
+      newRepeatItem.index = insertionIndex;
+
+      // Step 4: Assign the inserted nodeset to the new `repeatItem`
+      newRepeatItem.nodeset = detail.insertedNodes;
+      // this.setAttribute('index', detail.index);
+      // this.applyIndex(newRepeatItem);
+
+      // Update all the indices following here
+      for (let i = insertionIndex - 1; i < repeatItems.length; ++i) {
+        const sibling = repeatItems[i];
+        // TODO: handle the next ones
+        sibling.index += 1;
+      }
+
+      this.setIndex(insertionIndex); // sets attribute + applies repeat-index + refresh
+
+      // Generate the parent `modelItem` for the new repeat item
+      this.opNum++;
+      const parentModelItem = FxBind.createModelItem(
+        this.ref,
+        detail.insertedNodes,
+        newRepeatItem,
+        this.opNum,
+      );
+      newRepeatItem.modelItem = parentModelItem;
+
+      this.getModel().registerModelItem(parentModelItem);
+
+      // Step 5: Create modelItems recursively for child elements
+      this._createModelItemsRecursively(newRepeatItem, parentModelItem);
+
+      // Step 6: Notify and refresh the UI
+      this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh();
+      this.getOwnerForm().addToBatchedNotifications(newRepeatItem);
+    });
+
+    this.handleDeleteHandler = event => {
+      console.log('delete catched', event);
+      const { detail } = event;
+      if (!detail || !detail.deletedNodes) {
+        return;
+      }
+
+      // Remove corresponding repeat items for deleted nodes
+      detail.deletedNodes.forEach(node => {
+        this.handleDelete(node);
+        //        this.removeRepeatItemForNode(node);
+      });
+      this.getOwnerForm().addToBatchedNotifications(this);
+    };
+    this.getOwnerForm().addEventListener('deleted', this.handleDeleteHandler);
+
     // if (this.getOwnerForm().lazyRefresh) {
     /**
      * @type {MutationRecord[]}
@@ -135,7 +225,7 @@ export class FxRepeat extends withDraggability(RepeatBase, false) {
           debouncedOnMutations = null;
           const records = bufferedMutationRecords;
           bufferedMutationRecords = [];
-          const shouldRefresh = false;
+          let shouldRefresh = false;
           for (const mutation of records) {
             if (mutation.type === 'childList') {
               const added = mutation.addedNodes[0];
@@ -157,18 +247,18 @@ export class FxRepeat extends withDraggability(RepeatBase, false) {
                 // this.handleDelete(deleted);
               }
               /*
-                if (!this.getOwnerForm().initialRun) {
-                  shouldRefresh = true;
-                }
-  */
+              if (!this.getOwnerForm().initialRun) {
+                shouldRefresh = true;
+              }
+*/
             }
           }
 
           /*
-            if (shouldRefresh) {
-              this.refresh();
-            }
-  */
+          if (shouldRefresh) {
+            this.refresh();
+          }
+*/
         });
       }
     });
@@ -178,33 +268,32 @@ export class FxRepeat extends withDraggability(RepeatBase, false) {
     this.getOwnerForm().registerLazyElement(this);
 
     const style = `
-        :host{
-        }
-         .fade-out-bottom {
-            -webkit-animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-            animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-        }
-        .fade-out-bottom {
-            -webkit-animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-            animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-        }
-     `;
+      :host{
+      }
+       .fade-out-bottom {
+          -webkit-animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+          animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+      }
+      .fade-out-bottom {
+          -webkit-animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+          animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+      }
+   `;
     const html = `
-            <slot name="header"></slot>
-            <slot></slot>
-            <slot name="footer"></slot>
-          `;
+          <slot name="header"></slot>
+          <slot></slot>
+          <slot name="footer"></slot>
+        `;
     this.shadowRoot.innerHTML = `
-              <style>
-                  ${style}
-              </style>
-              ${html}
-          `;
+            <style>
+                ${style}
+            </style>
+            ${html}
+        `;
 
     // this.init();
   }
 
-  /*
   _createModelItemsRecursively(parentNode, parentModelItem) {
     const parentWithDewey = parentModelItem?.path || null; // e.g. $default/AllowanceCharge[2]_1
     const parentBase = parentWithDewey ? parentWithDewey.replace(/_\d+$/, '') : null; // e.g. $default/AllowanceCharge[2]
@@ -278,7 +367,6 @@ export class FxRepeat extends withDraggability(RepeatBase, false) {
       if (!isWidgetEl) this._createModelItemsRecursively(child, nextParentMI);
     });
   }
-*/
 
   /**
    * Removes the repeat item corresponding to a deleted node.
@@ -335,13 +423,12 @@ export class FxRepeat extends withDraggability(RepeatBase, false) {
   }
 */
 
-  /*
   handleDelete(deleted) {
     console.log('handleDelete', deleted);
     // grab the current repeat items (tweak selector if yours differs)
-    /!**
+    /**
      * @type {import('./fx-repeatitem.js').FxRepeatitem[]}
-     *!/
+     */
     const items = Array.from(
       this.querySelectorAll(
         ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
@@ -361,15 +448,12 @@ export class FxRepeat extends withDraggability(RepeatBase, false) {
     // Make the next item the 'current'
     this.setIndex(indexToRemove + 1);
   }
-*/
 
   /**
    * @returns {import('./fx-repeatitem.js').FxRepeatitem}
    */
-  _createNewRepeatItem(insertionIndex, node) {
-    const newItem =
-      /** @type {import('./fx-repeatitem.js').FxRepeatitem} **/
-      (document.createElement('fx-repeatitem'));
+  _createNewRepeatItem() {
+    const newItem = document.createElement('fx-repeatitem');
 
     if (this.isDraggable) {
       newItem.setAttribute('draggable', 'true');
@@ -377,32 +461,6 @@ export class FxRepeat extends withDraggability(RepeatBase, false) {
     }
     const clone = this._clone();
     newItem.appendChild(clone);
-    /**
-     * @type {import('./fx-repeatitem.js').FxRepeatitem[]}
-     */
-    const repeatItems = Array.from(
-      this.querySelectorAll(
-        ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
-      ),
-    );
-
-    const beforeNode = repeatItems[insertionIndex - 1] ?? null; // Null appends by default
-    this.insertBefore(newItem, beforeNode);
-    newItem.index = insertionIndex;
-
-    // Step 3: Insert the new repeatItem at the correct position
-
-    // Step 4: Assign the inserted nodeset to the new `repeatItem`
-    newItem.nodeset = node;
-    // this.setAttribute('index', detail.index);
-    // this.applyIndex(newRepeatItem);
-
-    // Update all the indices following here
-    for (let i = insertionIndex - 1; i < repeatItems.length; ++i) {
-      const sibling = repeatItems[i];
-      // TODO: handle the next ones
-      sibling.index += 1;
-    }
 
     return newItem;
   }
@@ -422,11 +480,10 @@ export class FxRepeat extends withDraggability(RepeatBase, false) {
     this.inited = true;
   }
 
-  /*
-  /!**
+  /**
    * repeat has no own modelItems
    * @private
-   *!/
+   */
   _evalNodeset() {
     // const inscope = this.getInScopeContext();
     const inscope = getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
@@ -441,14 +498,14 @@ export class FxRepeat extends withDraggability(RepeatBase, false) {
       });
     }
 
-    /!*
+    /*
               this.touchedPaths = new Set();
               const instance = XPathUtil.resolveInstance(this, this.ref);
               const depTrackDomfacade = new DependencyNotifyingDomFacade((node) => {
                   this.touchedPaths.add(XPathUtil.getPath(node, instance));
               });
               const rawNodeset = evaluateXPath(this.ref, inscope, this, {}, {}, depTrackDomfacade );
-        *!/
+        */
     const rawNodeset = evaluateXPath(this.ref, inscope, this);
 
     // console.log('Touched!', this.ref, [...this.touchedPaths].join(', '));
@@ -459,9 +516,7 @@ export class FxRepeat extends withDraggability(RepeatBase, false) {
     }
     this.nodeset = rawNodeset;
   }
-*/
 
-  /*
   async refresh(force) {
     console.log('🔄 fx-repeat.refresh on', this.id);
 
@@ -546,9 +601,7 @@ export class FxRepeat extends withDraggability(RepeatBase, false) {
     // this.repeatCount = contextSize;
     // console.log('repeatCount', this.repeatCount);
   }
-*/
 
-  /*
   // eslint-disable-next-line class-methods-use-this
   _fadeOut(el) {
     el.style.opacity = 1;
@@ -581,9 +634,7 @@ export class FxRepeat extends withDraggability(RepeatBase, false) {
       // }, 40);
     })();
   }
-*/
 
-  /*
   _initTemplate() {
     this.template = this.querySelector('template');
     // console.log('### init template for repeat ', this.id, this.template);
@@ -606,9 +657,7 @@ export class FxRepeat extends withDraggability(RepeatBase, false) {
 
     this.shadowRoot.appendChild(this.template);
   }
-*/
 
-  /*
   _initRepeatItems() {
     this.nodeset.forEach((item, index) => {
       const repeatItem = this._createNewRepeatItem();
@@ -635,9 +684,7 @@ export class FxRepeat extends withDraggability(RepeatBase, false) {
       this._initVariables(repeatItem);
     });
   }
-*/
 
-  /*
   clearTextValues(node) {
     if (!node) return;
 
@@ -658,9 +705,7 @@ export class FxRepeat extends withDraggability(RepeatBase, false) {
       this.clearTextValues(child);
     }
   }
-*/
 
-  /*
   _initVariables(newRepeatItem) {
     const inScopeVariables = new Map(this.inScopeVariables);
     newRepeatItem.setInScopeVariables(inScopeVariables);
@@ -673,9 +718,7 @@ export class FxRepeat extends withDraggability(RepeatBase, false) {
       }
     })(newRepeatItem);
   }
-*/
 
-  /*
   _clone() {
     // const content = this.template.content.cloneNode(true);
     this.template = this.shadowRoot.querySelector('template');
@@ -688,15 +731,12 @@ export class FxRepeat extends withDraggability(RepeatBase, false) {
       item.removeAttribute('repeat-index');
     });
   }
-*/
 
-  /*
   setInScopeVariables(inScopeVariables) {
     // Repeats are interesting: the variables should be scoped per repeat item, they should not be
     // able to see the variables in adjacent repeat items!
     this.inScopeVariables = new Map(inScopeVariables);
   }
-*/
 }
 
 if (!customElements.get('fx-repeat')) {
