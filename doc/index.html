@@ -67,12 +67,12 @@
             </div>
             <demo-snippet>
                 <template>
-                    <fx-fore>
-                        <button>
-                            Say Hello
-                            <fx-message event="click">Hello &hearts;</fx-message>
-                        </button>
-                    </fx-fore>
+<fx-fore>
+    <button>
+        Say Hello
+        <fx-message event="click">Hello &hearts;</fx-message>
+    </button>
+</fx-fore>
                 </template>
             </demo-snippet>
         </section>
@@ -88,52 +88,52 @@
             </div>
             <demo-snippet>
                 <template>
-                    <fx-fore>
-                        <!-- ### start the loop with a second delay between executions ### -->
-                        <fx-action event="ready" while="true()" delay="1000">
-                            <!-- ### update the Time and trigger recalculation ### -->
-                            <fx-setvalue ref="time" value="now()"></fx-setvalue>
-                        </fx-action>
+<fx-fore>
+    <!-- ### start the loop with a second delay between executions ### -->
+    <fx-action event="ready" while="true()" delay="1000">
+        <!-- ### update the Time and trigger recalculation ### -->
+        <fx-setvalue ref="time" value="now()"></fx-setvalue>
+    </fx-action>
 
-                        <fx-model>
-                            <!-- ### data-container ### -->
-                            <fx-instance>
-                                <data>
-                                    <time>12:30:00</time>
-                                    <hour>0</hour>
-                                    <minute>0</minute>
-                                    <second>0</second>
-                                    <h-deg></h-deg>
-                                    <min-deg>0</min-deg>
-                                    <s-deg></s-deg>
-                                </data>
-                            </fx-instance>
+    <fx-model>
+        <!-- ### data-container ### -->
+        <fx-instance>
+            <data>
+                <time>12:30:00</time>
+                <hour>0</hour>
+                <minute>0</minute>
+                <second>0</second>
+                <h-deg></h-deg>
+                <min-deg>0</min-deg>
+                <s-deg></s-deg>
+            </data>
+        </fx-instance>
 
-                            <!-- ### bindings calculating the hours, minutes and seconds and rotation degrees ### -->
-                            <fx-bind ref="hour" calculate="hours-from-time(xs:time(../time))"></fx-bind>
-                            <fx-bind ref="minute" calculate="minutes-from-time(xs:time(../time))"></fx-bind>
-                            <fx-bind ref="h-deg" calculate="(../hour + ../minute div 60) * 30"></fx-bind>
-                            <fx-bind ref="min-deg" calculate="../minute * 6"></fx-bind>
-                            <fx-bind ref="second" calculate="seconds-from-time(xs:time(../time))"></fx-bind>
-                            <fx-bind ref="s-deg" calculate="../second * 6"></fx-bind>
+        <!-- ### bindings calculating the hours, minutes and seconds and rotation degrees ### -->
+        <fx-bind ref="hour" calculate="hours-from-time(xs:time(../time))"></fx-bind>
+        <fx-bind ref="minute" calculate="minutes-from-time(xs:time(../time))"></fx-bind>
+        <fx-bind ref="h-deg" calculate="(../hour + ../minute div 60) * 30"></fx-bind>
+        <fx-bind ref="min-deg" calculate="../minute * 6"></fx-bind>
+        <fx-bind ref="second" calculate="seconds-from-time(xs:time(../time))"></fx-bind>
+        <fx-bind ref="s-deg" calculate="../second * 6"></fx-bind>
 
-                            <!-- ### a custom JavaScript utility function to return a formatted Date ### -->
-                            <fx-function signature="now() as xs:string" type="text/javascript">
-                                const now = new Date();
-                                return `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
-                            </fx-function>
+        <!-- ### a custom JavaScript utility function to return a formatted Date ### -->
+        <fx-function signature="now() as xs:string" type="text/javascript">
+            const now = new Date();
+            return `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+        </fx-function>
 
-                        </fx-model>
-                        <!-- ### Template Expressions in {} to output the bound data ### -->
-                        <div class="clock">
-                            <div class="circle" style="transform:rotate({s-deg}deg);"></div>
-                            <div class="brand">Fore</div>
-                            <span class="three-nine"></span>
-                            <div class="display-time">{time}</div>
-                            <div style="transform:rotate({h-deg}deg);" class="hour"></div>
-                            <div style="transform:rotate({min-deg}deg);" class="minute"></div>
-                        </div>
-                    </fx-fore>
+    </fx-model>
+    <!-- ### Template Expressions in {} to output the bound data ### -->
+    <div class="clock">
+        <div class="circle" style="transform:rotate({s-deg}deg);"></div>
+        <div class="brand">Fore</div>
+        <span class="three-nine"></span>
+        <div class="display-time">{time}</div>
+        <div style="transform:rotate({h-deg}deg);" class="hour"></div>
+        <div style="transform:rotate({min-deg}deg);" class="minute"></div>
+    </div>
+</fx-fore>
                 </template>
             </demo-snippet>
         </section>
