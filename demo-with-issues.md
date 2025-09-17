@@ -5,12 +5,13 @@
 * repeat-attributes-3.html
 * repeat-attributes-5.html
 * repeat-attributes-8.html (delete not working)
-* selects.html - updating improved but still not 100% reliable esp. when countries are selected and continent changes again
 
 
 * fx-lens does not play with demo-snippet-vanilla yet
 
 ## fixed 
+### selects.html - updating silly error in demo using 'australia' instead of 'australasia'
+
 ### fx-output markdown should update
 has an explicit refresh to outputting md but seems acceptable for now
 
