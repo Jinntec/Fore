@@ -225,46 +225,21 @@ export class FxRepeat extends withDraggability(UIElement, false) {
           debouncedOnMutations = null;
           const records = bufferedMutationRecords;
           bufferedMutationRecords = [];
-          let shouldRefresh = false;
+          const shouldRefresh = false;
           for (const mutation of records) {
             if (mutation.type === 'childList') {
               const added = mutation.addedNodes[0];
               if (added) {
                 const instance = XPathUtil.resolveInstance(this, this.ref);
                 const path = getPath(added, instance);
-                // this.handleInsert(added);
-                //                // console.log('path mutated', path);
-                // this.dispatch('path-mutated',{'path':path,'nodeset':this.nodeset,'index': this.index});
-                // this.index = index;
-                // const prev = mutations[0].previousSibling.previousElementSibling;
-                // const index = prev.index();
-                // this.applyIndex(this.index -1);
-
                 Fore.dispatch(this, 'path-mutated', { path, index: this.index });
               }
-              const deleted = mutation.removedNodes[0];
-              if (deleted) {
-                // this.handleDelete(deleted);
-              }
-              /*
-              if (!this.getOwnerForm().initialRun) {
-                shouldRefresh = true;
-              }
-*/
             }
           }
-
-          /*
-          if (shouldRefresh) {
-            this.refresh();
-          }
-*/
         });
       }
     });
 
-    // console.log('mutations', mutations);
-    // }
     this.getOwnerForm().registerLazyElement(this);
 
     const style = `
@@ -321,14 +296,14 @@ export class FxRepeat extends withDraggability(UIElement, false) {
         : parentBaseNorm;
 
       // If already suffixed for this parent, nothing to do
-      if (mi.path.startsWith(parentBaseInChildStyle + '_')) return;
+      if (mi.path.startsWith(`${parentBaseInChildStyle}_`)) return;
 
       // Inject _op immediately after the parent base segment
-      mi.path = parentBaseInChildStyle + `_${op}` + mi.path.slice(parentBaseInChildStyle.length);
+      mi.path = `${parentBaseInChildStyle}_${op}${mi.path.slice(parentBaseInChildStyle.length)}`;
     };
 
     Array.from(parentNode.children).forEach(child => {
-      let nextParentMI = parentModelItem;
+      const nextParentMI = parentModelItem;
 
       // Skip native/embedded widgets that may carry a 'ref' but are UI only
       const isWidgetEl =
@@ -442,11 +417,21 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       return;
     }
     const itemToRemove = items[indexToRemove];
-
     itemToRemove.remove();
 
-    // Make the next item the 'current'
-    this.setIndex(indexToRemove + 1);
+    // If the list is now empty, clear selection (0). Adjust if you prefer 1-based only.
+    const newLength = this.querySelectorAll(
+      ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
+    ).length;
+
+    let nextIndex = indexToRemove + 1; // 1-based index at the deleted slot
+    if (newLength === 0) {
+      nextIndex = 0; // nothing left; clear selection
+    } else if (nextIndex > newLength) {
+      nextIndex = newLength; // deleted the last one; move to new last
+    }
+
+    this.setIndex(nextIndex);
   }
 
   /**
