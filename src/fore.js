@@ -17,7 +17,7 @@ export class Fore {
 
   static REQUIRED_DEFAULT = false;
 
-  static RELEVANT_DEFAULT = true;
+  static RELEVANT_DEFAULT = true
 
   static CONSTRAINT_DEFAULT = true;
 
@@ -328,7 +328,7 @@ export class Fore {
               continue;
             }
             if (force === true) {
-              console.log('🔄 refreshing ', element);
+              // console.log('🔄 refreshing ', element);
               // Unconditional force refresh
               bound.refresh(force);
 

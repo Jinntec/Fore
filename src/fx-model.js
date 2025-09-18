@@ -242,7 +242,7 @@ export class FxModel extends HTMLElement {
 
     console.log(`🔷🔷 recalculate() '${this.fore.id}'`);
 
-    console.log('changed nodes ', this.changed);
+    // console.log('changed nodes ', this.changed);
     this.computes = 0;
 
     this.subgraph = new DepGraph(false);

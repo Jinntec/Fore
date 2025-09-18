@@ -1,11 +1,16 @@
 /* eslint-disable no-unused-expressions */
 import {
-  html, fixture, fixtureSync, expect, elementUpdated, oneEvent,
+  html, fixture, fixtureSync, expect, elementUpdated, oneEvent, fixtureCleanup
 } from '@open-wc/testing';
 
 import '../index.js';
 
-describe.skip('data-ref Tests', () => {
+afterEach(() => {
+  // Cleanup after each test
+  fixtureCleanup();
+});
+
+describe('data-ref Tests', () => {
   it('data-ref is creating modelitems and rolling out table', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
@@ -142,12 +147,11 @@ describe.skip('data-ref Tests', () => {
     expect(repeatitems[0].hasAttribute('repeat-index')).to.be.true;
 
     repeatitems[1].click();
-    // await oneEvent(el, 'refresh-done');
     expect(repeatitems[1].hasAttribute('repeat-index')).to.be.true;
     expect(repeat.getAttribute('index')).to.equal('2');
   });
 
-  it('appends an item to the table', async () => {
+  it.skip('appends an item to the table', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
@@ -248,9 +252,9 @@ describe.skip('data-ref Tests', () => {
     let repeatitems = Array.from(el.querySelectorAll('.fx-repeatitem'));
     const buttons = Array.from(el.querySelectorAll('button'));
 
+    const done = oneEvent(el, 'refresh-done');
     buttons[0].click(); // append an item
-
-    await oneEvent(el, 'refresh-done');
+    await done;
 
     const repeat = el.querySelector('fx-repeat-attributes');
     expect(repeat).to.exist;
@@ -260,7 +264,7 @@ describe.skip('data-ref Tests', () => {
     expect(repeatitems[3].hasAttribute('repeat-index')).to.be.true;
   });
 
-  it('deletes an item from the table', async () => {
+  it.skip('deletes an item from the table', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
@@ -356,19 +360,21 @@ describe.skip('data-ref Tests', () => {
         </fx-trigger>
       </fx-fore>
     `);
-    let repeatitems = Array.from(el.querySelectorAll('tr'));
+    await oneEvent(el, 'ready');
+let repeatitems = Array.from(el.querySelectorAll('.fx-repeatitem'));
     const buttons = Array.from(el.querySelectorAll('button'));
+    const done = oneEvent(el, 'refresh-done');
     buttons[1].click(); // delete
 
-    await oneEvent(el, 'refresh-done');
+    await done;
     const repeat = el.querySelector('fx-repeat-attributes');
     expect(repeat.getAttribute('index')).to.equal('2');
-    repeatitems = Array.from(el.querySelectorAll('tr'));
+    repeatitems = Array.from(el.querySelectorAll('.fx-repeatitem'));
     expect(repeatitems[3].hasAttribute('repeat-index')).to.be.true;
 
   });
 
-  it('inserts an item as second', async () => {
+  it.skip('inserts an item as second', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
@@ -464,11 +470,14 @@ describe.skip('data-ref Tests', () => {
         </fx-trigger>
       </fx-fore>
     `);
+    await oneEvent(el, 'ready');
+
     let repeatitems = Array.from(el.querySelectorAll('.fx-repeatitem'));
     const buttons = Array.from(el.querySelectorAll('button'));
+    const done = oneEvent(el, 'refresh-done');
     buttons[2].click(); // delete
 
-    await oneEvent(el, 'refresh-done');
+    await done;
     const repeat = el.querySelector('fx-repeat-attributes');
     expect(repeat.index).to.equal(2);
 
@@ -476,7 +485,7 @@ describe.skip('data-ref Tests', () => {
     expect(repeatitems[1].hasAttribute('repeat-index')).to.be.true;
 
   });
-  it('deletes row with repeat', async () => {
+  it.skip('deletes row with repeat', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
@@ -568,9 +577,10 @@ describe.skip('data-ref Tests', () => {
     await oneEvent(el, 'ready');
     let repeatitems = Array.from(el.querySelectorAll('.fx-repeatitem'));
     const buttons = Array.from(el.querySelectorAll('button'));
+    const done = oneEvent(el, 'refresh-done');
     buttons[1].click(); // delete second row
 
-    await oneEvent(el, 'refresh-done');
+    await done;
     const repeat = el.querySelector('fx-repeat-attributes');
     expect(repeat.index).to.equal(2);
 

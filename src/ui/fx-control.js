@@ -582,7 +582,7 @@ export default class FxControl extends XfAbstractControl {
    * @private
    */
   _handleBoundWidget(widget, force = false) {
-    console.log('_handleBoundWidget', widget);
+    // console.log('_handleBoundWidget', widget);
     if (this.boundInitialized && this.static) return;
 
     const ref = widget.hasAttribute('ref')

@@ -258,7 +258,6 @@ export class FxInsert extends AbstractAction {
         detail: { action: this, event: this.event, path },
       }),
     );
-    console.log('insert', index);
     Fore.dispatch(inst, 'insert', {
       insertedNodes: originSequenceClone,
       insertedParent: insertLocationNode.parentNode,
@@ -284,7 +283,6 @@ export class FxInsert extends AbstractAction {
     );
 
     this.needsUpdate = true;
-    console.log('Changed!', xpath);
     return [xpath];
   }
 

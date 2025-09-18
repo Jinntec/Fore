@@ -619,8 +619,8 @@ export class FxFore extends HTMLElement {
       }
     }
     this.isRefreshing = false;
-    console.log('### <<<<< refresh() done - modelItems >>>>>', this.getModel().modelItems);
-    console.log('### <<<<< refresh() done - modelItems >>>>>', this.getModel().nonrelevant);
+    console.log(`### <<<<< refresh() done ${this.id} - modelItems >>>>>`, this.getModel().modelItems);
+    // console.log('### <<<<< refresh() done - modelItems >>>>>', this.getModel().nonrelevant);
   }
 
   /**
@@ -1078,7 +1078,6 @@ export class FxFore extends HTMLElement {
     // console.log('### modelItems: ', this.getModel().modelItems);
     Fore.dispatch(this, 'ready', {});
     // console.log('dataChanged', FxModel.dataChanged);
-    console.timeEnd('init');
 
     this.addEventListener('dragstart', this._handleDragStart);
     //	this.addEventListener('dragend', this._handleDragEnd);

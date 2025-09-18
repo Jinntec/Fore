@@ -164,8 +164,6 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
       // Step 4: Assign the inserted nodeset to the new `repeatItem`
       newRepeatItem.nodeset = detail.insertedNodes;
-      // this.setAttribute('index', detail.index);
-      // this.applyIndex(newRepeatItem);
 
       // Update all the indices following here
       for (let i = insertionIndex - 1; i < repeatItems.length; ++i) {

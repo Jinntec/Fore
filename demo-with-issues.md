@@ -2,10 +2,10 @@
 
 ## open
 * shared-instances.html (insert behavior when adding to child)
-* repeat-attributes-3.html
+* repeat-attributes-3.html (delete index still not always right - should go to item after deleted one if any otherwise last)
 * repeat-attributes-5.html
-* repeat-attributes-8.html (delete not working)
-
+* repeat-attributes-8.html (delete causes console.error
+* dataref (skipped) tests not working except the first - already tried everything but not luck
 
 * fx-lens does not play with demo-snippet-vanilla yet
 
