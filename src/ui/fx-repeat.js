@@ -362,42 +362,6 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     this.nodeset.splice(index, 1);
   }
 
-  /* old version with mutation observers
-  async handleInsert(added) {
-    console.log('handleInsert', added);
-    this._evalNodeset();
-
-    const items = Array.from(
-      this.querySelectorAll(':scope > fx-repeatitem, :scope > .repeat-item'),
-    );
-
-    // search fx-bind elements with same nodeset as this repeat - if present update modelItem instead of creating one
-    const newRepeatItem = this._createNewRepeatItem();
-    // insert so the new item becomes position `pos`
-    const beforeNode = items[this.index - 1] || null; // null appends
-    this.insertBefore(newRepeatItem, beforeNode);
-    newRepeatItem.nodeset = added;
-    this.setAttribute('index', this.index);
-    this.applyIndex(newRepeatItem);
-
-    const newModelItem = FxModel.lazyCreateModelItem(
-      this.getModel(),
-      this.ref,
-      added,
-      newRepeatItem,
-    );
-
-    newModelItem.path += '_1';
-    console.log('newModelItem', newModelItem);
-
-    newRepeatItem.modelItem = newModelItem;
-    this.getModel().registerModelItem(newModelItem);
-
-    this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh();
-    this.getOwnerForm().addToBatchedNotifications(newRepeatItem);
-  }
-*/
-
   handleDelete(deleted) {
     console.log('handleDelete', deleted);
     // grab the current repeat items (tweak selector if yours differs)
@@ -475,13 +439,6 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     // console.log('##### inscope ', inscope);
     // console.log('##### ref ', this.ref);
     // now we got a nodeset and attach MutationObserver to it
-
-    if (this.mutationObserver && inscope.nodeName) {
-      this.mutationObserver.observe(inscope, {
-        childList: true,
-        subtree: true,
-      });
-    }
 
     /*
               this.touchedPaths = new Set();
