@@ -65,6 +65,7 @@ export class FxRepeatAttributes extends withDraggability(RepeatBase, false) {
     this.attachShadow({ mode: 'open', delegatesFocus: true });
   }
 
+/*
   get repeatSize() {
     return this.querySelectorAll(':scope > .fx-repeatitem').length;
   }
@@ -72,22 +73,56 @@ export class FxRepeatAttributes extends withDraggability(RepeatBase, false) {
   set repeatSize(size) {
     super.repeatSize = size;
   }
+*/
 
-  setIndex(index) {
-    // console.log('new repeat index ', index);
-    this.index = index;
-    const refd = this.querySelector('[data-ref]');
-    const rItems = refd.querySelectorAll(':scope > *');
-    this.applyIndex(rItems[this.index - 1]);
+  async init() {
+    // ### there must be a single 'template' child
+
+    const inited = new Promise(resolve => {
+      // console.log('##### repeat-attributes init ', this.id);
+      // if(!this.inited) this.init();
+      // does not use this.evalInContext as it is expecting a nodeset instead of single node
+      this._evalNodeset();
+      // console.log('##### ',this.id, this.nodeset);
+
+      this._initTemplate();
+      // this._initRepeatItems();
+
+      this.setAttribute('index', this.index);
+      this.inited = true;
+      resolve('done');
+    });
+
+    return inited;
   }
 
+  setIndex(index) {
+    const refd = this.querySelector('[data-ref]');
+    const rItems = refd ? refd.querySelectorAll(':scope > .fx-repeatitem') : [];
+    const size = rItems.length;
+
+    const clamped = size === 0 ? 0 : Math.max(1, Math.min(index, size));
+    this.index = clamped;
+
+    if (size > 0) {
+      this.applyIndex(rItems[this.index - 1]);
+    } else {
+      this._removeIndexMarker(); // nothing selected
+    }
+
+    this.setAttribute('index', String(this.index));
+  }
+
+/*
   applyIndex(repeatItem) {
     this._removeIndexMarker();
     if (repeatItem) {
       repeatItem.setAttribute('repeat-index', '');
     }
   }
+*/
 
+/*
   get index() {
     return parseInt(this.getAttribute('index'), 10);
   }
@@ -95,6 +130,7 @@ export class FxRepeatAttributes extends withDraggability(RepeatBase, false) {
   set index(idx) {
     this.setAttribute('index', idx);
   }
+*/
 
   _getRepeatedItems() {
     const refd = this.querySelector('[data-ref]');
@@ -113,7 +149,8 @@ export class FxRepeatAttributes extends withDraggability(RepeatBase, false) {
       const { item } = e.detail;
       const repeatedItems = this._getRepeatedItems();
       const idx = Array.from(repeatedItems).indexOf(item);
-      this.applyIndex(repeatedItems[idx]);
+      this.setIndex(idx + 1);
+      // this.applyIndex(repeatedItems[idx]);
       this.index = idx + 1;
     });
     // todo: review - this is just used by append action - event consolidation ?
@@ -122,15 +159,7 @@ export class FxRepeatAttributes extends withDraggability(RepeatBase, false) {
       if (!e.target === this) return;
       const { index } = e.detail;
       this.index = Number(index);
-      this.applyIndex(this.children[index - 1]);
     });
-    /*
-    document.addEventListener('insert', e => {
-      const nodes = e.detail.insertedNodes;
-      this.index = e.detail.position;
-      console.log('insert catched', nodes, this.index);
-    });
-*/
 
     // if (this.getOwnerForm().lazyRefresh) {
     this.mutationObserver = new MutationObserver(mutations => {
@@ -395,7 +424,7 @@ export class FxRepeatAttributes extends withDraggability(RepeatBase, false) {
     const beforeNode = repeatItems[insertionIndex - 1] ?? null; // Null appends by default
     bindingElement.insertBefore(newNode, beforeNode);
     newNode.classList.add('fx-repeatitem');
-    newNode.setAttribute('index', `${insertionIndex}`);
+    // newNode.setAttribute('index', `${insertionIndex}`);
 
     newNode.addEventListener('click', this._dispatchIndexChange);
     // this.addEventListener('focusin', this._handleFocus);

@@ -156,7 +156,7 @@ export class RepeatBase extends withDraggability(UIElement, false) {
         return;
       }
 
-      this._handleInsert(detail.insertedNodes);
+      this._insertHandler(detail.insertedNodes);
     };
 
     this.getOwnerForm().addEventListener('insert', this.handleInsert);
@@ -170,7 +170,7 @@ export class RepeatBase extends withDraggability(UIElement, false) {
 
       // Remove corresponding repeat items for deleted nodes
       detail.deletedNodes.forEach(node => {
-        this._handleDelete(node);
+        this._deleteHandler(node);
         //        this.removeRepeatItemForNode(node);
       });
       this.getOwnerForm().addToBatchedNotifications(this);
@@ -187,7 +187,7 @@ export class RepeatBase extends withDraggability(UIElement, false) {
    *
    * @param {Node} node
    */
-  _handleInsert(node) {
+  _insertHandler(node) {
     /**
      * @type {number}
      */
@@ -195,8 +195,6 @@ export class RepeatBase extends withDraggability(UIElement, false) {
     // Step 2: Get current repeat items and create a new item
     // todo: search fx-bind elements with same nodeset as this repeat - if present update modelItem instead of creating one
     const newRepeatItem = this._createNewRepeatItem(insertionIndex, node);
-
-    this.setIndex(insertionIndex); // sets attribute + applies repeat-index + refresh
 
     // Generate the parent `modelItem` for the new repeat item
     this.opNum++;
@@ -228,7 +226,9 @@ export class RepeatBase extends withDraggability(UIElement, false) {
    *
    * @returns {HTMLElement}
    */
-  _createNewRepeatItem(index, node) {}
+  _createNewRepeatItem(index, node) {
+    throw new Error('Not implemented');
+  }
 
   setInScopeVariables(inScopeVariables) {
     // Repeats are interesting: the variables should be scoped per repeat item, they should not be
@@ -323,7 +323,7 @@ export class RepeatBase extends withDraggability(UIElement, false) {
     });
   }
 
-  _handleDelete(deleted) {
+  _deleteHandler(deleted) {
     console.log('handleDelete', deleted);
     // grab the current repeat items (tweak selector if yours differs)
     /**
