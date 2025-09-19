@@ -619,7 +619,10 @@ export class FxFore extends HTMLElement {
       }
     }
     this.isRefreshing = false;
-    console.log(`### <<<<< refresh() done ${this.id} - modelItems >>>>>`, this.getModel().modelItems);
+    console.log(
+      `### <<<<< refresh() done ${this.id} - modelItems >>>>>`,
+      this.getModel().modelItems,
+    );
     // console.log('### <<<<< refresh() done - modelItems >>>>>', this.getModel().nonrelevant);
   }
 
@@ -686,9 +689,14 @@ export class FxFore extends HTMLElement {
       this.batchedNotifications.forEach(entry => {
         console.log('batched update', entry);
         if (entry && typeof entry.refresh === 'function') {
-          // Entry is a ForeElementMixin
+          // Entry is a Ui Element
           // Force refresh for this whole subtree
-          entry.refresh(true);
+          const uiElement = /** @type {import('./ui/UIElement.js').UIElement} */ (entry);
+          if (!uiElement.ownerDocument.contains(uiElement)) {
+            // Something already removed this ui element. Skip.
+            return;
+          }
+          uiElement.refresh(true);
         }
         const nonrelevant = Array.from(this.querySelectorAll('[nonrelevant]'));
         // loop nonrelevant elements

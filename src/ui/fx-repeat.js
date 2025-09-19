@@ -122,7 +122,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     });
 
     // Listen for insertion events
-    this.getOwnerForm().addEventListener('insert', event => {
+    this.handleInsertHandler = event => {
       const { detail } = event;
       console.log('insert catched', detail);
 
@@ -192,7 +192,8 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       // Step 6: Notify and refresh the UI
       this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh();
       this.getOwnerForm().addToBatchedNotifications(newRepeatItem);
-    });
+    };
+    this.getOwnerForm().addEventListener('insert', this.handleInsertHandler);
 
     this.handleDeleteHandler = event => {
       console.log('delete catched', event);
@@ -265,6 +266,11 @@ export class FxRepeat extends withDraggability(UIElement, false) {
         `;
 
     // this.init();
+  }
+
+  disconnectedCallback() {
+    this.getOwnerForm().removeEventListener('deleted', this.handleDeleteHandler);
+    this.getOwnerForm().removeEventListener('insert', this.handleInsertHandler);
   }
 
   _createModelItemsRecursively(parentNode, parentModelItem) {

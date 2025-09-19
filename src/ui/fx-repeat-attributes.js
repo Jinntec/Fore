@@ -63,9 +63,23 @@ export class FxRepeatAttributes extends withDraggability(RepeatBase, false) {
     this.index = 1;
     this.repeatSize = 0;
     this.attachShadow({ mode: 'open', delegatesFocus: true });
+    /**
+     * @type {Map<Element, Node>} A lookup from a repeat item to the node it has associated
+     */
+    this._contextItemByRepeatItem = new Map();
   }
 
-/*
+  /**
+   * Get the context node for the given repeat item
+   *
+   * @param {Element} repeatItem
+   * @returns {Node} The node (if any) that is the active item for this repeat item
+   */
+  getContextForRepeatItem(repeatItem) {
+    return this._contextItemByRepeatItem.get(repeatItem);
+  }
+
+  /*
   get repeatSize() {
     return this.querySelectorAll(':scope > .fx-repeatitem').length;
   }
@@ -96,6 +110,16 @@ export class FxRepeatAttributes extends withDraggability(RepeatBase, false) {
     return inited;
   }
 
+  _deleteHandler(deleted) {
+    super._deleteHandler(deleted);
+    const refd = this.querySelector('[data-ref]');
+    const rItems = refd ? refd.querySelectorAll(':scope > .fx-repeatitem') : [];
+
+    for (let i = 0; i < Math.min(this.nodeset.length, rItems.length); ++i) {
+      this._contextItemByRepeatItem.set(rItems[i], this.nodeset[i]);
+    }
+  }
+
   setIndex(index) {
     const refd = this.querySelector('[data-ref]');
     const rItems = refd ? refd.querySelectorAll(':scope > .fx-repeatitem') : [];
@@ -113,7 +137,7 @@ export class FxRepeatAttributes extends withDraggability(RepeatBase, false) {
     this.setAttribute('index', String(this.index));
   }
 
-/*
+  /*
   applyIndex(repeatItem) {
     this._removeIndexMarker();
     if (repeatItem) {
@@ -122,7 +146,7 @@ export class FxRepeatAttributes extends withDraggability(RepeatBase, false) {
   }
 */
 
-/*
+  /*
   get index() {
     return parseInt(this.getAttribute('index'), 10);
   }
@@ -279,6 +303,7 @@ export class FxRepeatAttributes extends withDraggability(RepeatBase, false) {
         // remove repeatitem
         const itemToRemove = repeatItems[position - 1];
         itemToRemove.parentNode.removeChild(itemToRemove);
+        this._contextItemByRepeatItem.delete(itemToRemove);
         this.getOwnerForm().unRegisterLazyElement(itemToRemove);
         // this._fadeOut(itemToRemove);
         // Fore.fadeOutElement(itemToRemove)
@@ -290,7 +315,7 @@ export class FxRepeatAttributes extends withDraggability(RepeatBase, false) {
       for (let position = repeatItemCount + 1; position <= contextSize; position += 1) {
         // add new repeatitem
 
-        const clonedTemplate = this._createNewRepeatItem(position);
+        const clonedTemplate = this._createNewRepeatItem(position, this.nodeset[position - 1]);
         if (!clonedTemplate) return;
 
         this.getOwnerForm().someInstanceDataStructureChanged = true;
@@ -308,6 +333,8 @@ export class FxRepeatAttributes extends withDraggability(RepeatBase, false) {
       if (item.nodeset !== this.nodeset[position]) {
         item.nodeset = this.nodeset[position];
       }
+
+      this._contextItemByRepeatItem.set(item, this.nodeset[position]);
     }
 
     // Fore.refreshChildren(clone,true);
@@ -406,10 +433,11 @@ export class FxRepeatAttributes extends withDraggability(RepeatBase, false) {
    * @override
    *
    * @param {number} insertionIndex - the one-based index of where to insert the new node
+   * @param {Node} node - The node related to this new repeat item
    *
    * @returns {HTMLElement}
    */
-  _createNewRepeatItem(insertionIndex, _node) {
+  _createNewRepeatItem(insertionIndex, node) {
     this.template = this.shadowRoot.querySelector('template');
     if (!this.template) return null;
     const newNode = /** @type {HTMLElement} */ (
@@ -429,6 +457,8 @@ export class FxRepeatAttributes extends withDraggability(RepeatBase, false) {
     newNode.addEventListener('click', this._dispatchIndexChange);
     // this.addEventListener('focusin', this._handleFocus);
     newNode.addEventListener('focusin', this._dispatchIndexChange);
+
+    this._contextItemByRepeatItem.set(newNode, node);
 
     return newNode;
   }
