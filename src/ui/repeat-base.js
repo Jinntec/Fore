@@ -177,6 +177,7 @@ export class RepeatBase extends withDraggability(UIElement, false) {
     };
     this.getOwnerForm().addEventListener('deleted', this.handleDelete);
   }
+
   disconnectedCallback() {
     this.getOwnerForm().removeEventListener('deleted', this.handleDelete);
     this.getOwnerForm().removeEventListener('insert', this.handleInsert);
@@ -211,11 +212,7 @@ export class RepeatBase extends withDraggability(UIElement, false) {
     // Step 6: Notify and refresh the UI
     this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh();
 
-    this.getOwnerForm().addToBatchedNotifications({
-      refresh: force => {
-        Fore.refreshChildren(newRepeatItem, force);
-      },
-    });
+    this.getOwnerForm().addToBatchedNotifications(newRepeatItem);
   }
 
   /**
@@ -323,17 +320,25 @@ export class RepeatBase extends withDraggability(UIElement, false) {
     });
   }
 
+  getRepeatItems() {
+    return Array.from(this.querySelectorAll(':scope > fx-repeatitem'));
+  }
+
   _deleteHandler(deleted) {
     console.log('handleDelete', deleted);
     // grab the current repeat items (tweak selector if yours differs)
     /**
      * @type {import('./fx-repeatitem.js').FxRepeatitem[]}
      */
+    const items = this.getRepeatItems();
+
+    /*
     const items = Array.from(
       this.querySelectorAll(
-        ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
+        ':scope > fx-repeatitem, :scope > .fx-repeatitem',
       ),
     );
+*/
 
     this._evalNodeset();
 

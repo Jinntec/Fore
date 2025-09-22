@@ -688,6 +688,10 @@ export class FxFore extends HTMLElement {
       // Process all batched notifications
       this.batchedNotifications.forEach(entry => {
         console.log('batched update', entry);
+        // handle repeatitems created via data-ref
+        if(entry.classList && entry.classList.contains('fx-repeatitem')){
+          Fore.refreshChildren(entry, true);
+        }
         if (entry && typeof entry.refresh === 'function') {
           // Entry is a Ui Element
           // Force refresh for this whole subtree

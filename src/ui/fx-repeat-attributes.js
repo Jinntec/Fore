@@ -251,6 +251,10 @@ export class FxRepeatAttributes extends withDraggability(RepeatBase, false) {
     return inited;
   }
 
+  getRepeatItems(){
+    return Array.from(this.querySelectorAll(':scope [data-ref] > .fx-repeatitem'));
+  }
+
   _getRef() {
     return this.getAttribute('ref');
   }
