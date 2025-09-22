@@ -1,14 +1,16 @@
 # Broken or flaky demos:
 
 ## open
-* shared-instances.html (insert behavior when adding to child)
-* repeat-attributes-3.html (delete index still not always right - should go to item after deleted one if any otherwise last)
-* repeat-attributes-5.html
-* dataref (skipped) tests not working except the first - already tried everything but not luck
 
-* fx-lens does not play with demo-snippet-vanilla yet
+(* fx-lens does not play with demo-snippet-vanilla yet)
 
 ## fixed
+### shared-instances.html (insert behavior when adding to child)
+largely resolved but still requires some hard refreshes. Could be 
+improved. Further template expression in sibling repeat is not 
+updating immediately after insert but with next refresh but can be considered
+a minor issue.
+
 ### selects.html - updating silly error in demo using 'australia' instead of 'australasia'
 
 ### fx-output markdown should update

@@ -33,10 +33,20 @@ class FxRefresh extends AbstractAction {
       this.getOwnerForm().forceRefresh();
       return;
     }
+    if(this.hasAttribute('selector')){
+      const target = document.querySelector(this.getAttribute('selector'));
+      if (target && Fore.isUiElement(target.nodeName) && typeof target.refresh === 'function') {
+        target.refresh(true);
+      }
+      return;
+    }
     if (this.hasAttribute('control')) {
       const targetId = this.getAttribute('control');
       console.log(`### <<<<< refresh() control '${targetId}' >>>>>`);
-      const ctrl = resolveId(targetId, this);
+      let ctrl = resolveId(targetId, this);
+      if(!ctrl){
+        ctrl = document.querySelector(`#${targetId}`);
+      }
       if (ctrl && Fore.isUiElement(ctrl.nodeName) && typeof ctrl.refresh === 'function') {
         ctrl.refresh(true);
       }
