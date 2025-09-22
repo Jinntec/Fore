@@ -17,6 +17,10 @@ describe('repeat-attributes-3.html', () => {
 		// should now have one more item
 		cy.get('fx-repeat-attributes .fx-repeatitem').should('have.length', 4);
 
+		// container exposes 1-based index and should still be 1 (first row selected)
+		cy.get('fx-repeat-attributes').should('have.attr', 'index', '4');
+		cy.get('fx-repeat-attributes .fx-repeatitem').eq(3).should('have.attr', 'repeat-index');
+
 		// assert the newly appended (last) row has cells m,n,o,p,q,r
 		const expected = ['m','n','o','p','q','r'];
 
@@ -56,6 +60,9 @@ describe('repeat-attributes-3.html', () => {
 		cy.contains('button', 'insert before second').click();
 		cy.get('fx-repeat-attributes .fx-repeatitem').should('have.length', 4);
 		cy.get('fx-repeat-attributes').should('have.attr', 'index', '2');
+
+		cy.get('fx-repeat-attributes .fx-repeatitem').eq(1).should('have.attr', 'repeat-index');
+
 		cy.get('fx-repeat-attributes fx-output').should('have.text', '');
 	});
 
@@ -64,6 +71,8 @@ describe('repeat-attributes-3.html', () => {
 		cy.contains('button', 'insert after second with values').click();
 		cy.get('fx-repeat-attributes .fx-repeatitem').should('have.length', 4);
 		cy.get('fx-repeat-attributes').should('have.attr', 'index', '3');
+		cy.get('fx-repeat-attributes .fx-repeatitem').eq(2).should('have.attr', 'repeat-index');
+
 		const expected = ['m','n','o','p','q','r'];
 
 		cy.get('fx-repeat-attributes .fx-repeatitem')

@@ -46,7 +46,7 @@
         <fx-model>
           <fx-instance>
             <data>
-              <bound>a</bound>
+              <bound></bound>
               <item>
                 <field name="a">a</field>
                 <field name="b">b</field>
@@ -78,7 +78,7 @@
         <h1>Building a dynamic datalist</h1>
         <p>To actually see the dynamic list delete the bound value from the control and hit space or click arrow.</p>
         <fx-control ref="bound">
-          <input list="datalist">
+          <input list="datalist" class="widget">
           <datalist data-ref="//field" id="datalist">
             <template>
               <option>{.}</option>

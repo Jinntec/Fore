@@ -1363,21 +1363,6 @@ export class FxFore extends HTMLElement {
     const repeats = this.querySelectorAll('[data-ref]');
     if (repeats) {
       Array.from(repeats).forEach(item => {
-        if (item.closest('fx-control')) return;
-        /*
-                        const parentRepeat = item.closest('fx-repeat');
-                        if(parentRepeat){
-                            this.dispatchEvent(
-                                new CustomEvent('log', {
-                                    composed: false,
-                                    bubbles: true,
-                                    cancelable:true,
-                                    detail: { id:this.id, message: `nesting elements with data-ref attributes within fx-repeat is not supported by now`, level:'Error'},
-                                }),
-                            );
-                        }
-        */
-
         const table = item.parentNode.closest('table');
         let host;
         if (table) {
