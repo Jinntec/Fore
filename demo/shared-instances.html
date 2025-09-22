@@ -135,7 +135,7 @@
                     </div>
                     <div class="repeat">
                         <fx-fore id="child-b">
-
+                            <!-- this does a complete refresh of the parent -->
                             <fx-dispatch name="refresh" targetid="todo" event="value-changed"></fx-dispatch>
 
                             <h3>Second nested Fore (<span>{instance('todos')/todos/todo => count()}</span>)</h3>
@@ -146,7 +146,7 @@
                                     </fx-control>
                                 </template>
                             </fx-repeat>
-                            <fx-trigger>
+                            <fx-trigger id="addinner">
                                 <button>+</button>
                                 <fx-insert ref="instance('todos')/todos/todo"></fx-insert>
                             </fx-trigger>

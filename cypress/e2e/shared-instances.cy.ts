@@ -73,4 +73,22 @@ describe('shared instances', () => {
 
 	})
 
+
+	it('propagates changes after child insert and edit', () => {
+		cy.get('#addinner')
+			.click()
+
+		cy.get('#todo #child-b fx-repeatitem:nth-child(5) fx-control .widget')
+			.should('have.value', '');
+
+		// change parent
+		cy.get('#todo #child-b fx-repeatitem:nth-child(5) fx-control .widget')
+			.type('chill ma')
+			.should('have.value','chill ma')
+
+		cy.get('#outer fx-repeatitem:nth-child(5) fx-control .widget')
+			.should('have.value', 'chill ma');
+
+	})
+
 });

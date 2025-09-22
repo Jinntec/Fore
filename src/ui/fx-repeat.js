@@ -71,43 +71,6 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     this.opNum = 0; // global number of operations
   }
 
-  get repeatSize() {
-    return this.querySelectorAll(':scope > fx-repeatitem').length;
-  }
-
-  set repeatSize(size) {
-    this.size = size;
-  }
-
-  setIndex(index) {
-    // console.log('new repeat index ', index);
-    this.index = index;
-    const rItems = this.querySelectorAll(':scope > fx-repeatitem');
-    this.applyIndex(rItems[this.index - 1]);
-
-    // trying to do without
-    // this.getOwnerForm().refresh({ reason: 'index-function', elementLocalnamesWithChanges: [] });
-  }
-
-  applyIndex(repeatItem) {
-    this._removeIndexMarker();
-    if (repeatItem) {
-      repeatItem.setAttribute('repeat-index', '');
-    }
-  }
-
-  get index() {
-    return parseInt(this.getAttribute('index'), 10);
-  }
-
-  set index(idx) {
-    this.setAttribute('index', idx);
-  }
-
-  _getRef() {
-    return this.getAttribute('ref');
-  }
-
   connectedCallback() {
     super.connectedCallback();
     // console.log('connectedCallback',this);
@@ -124,6 +87,10 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     // Listen for insertion events
     this.handleInsertHandler = event => {
       const { detail } = event;
+      const myForeId = this.getOwnerForm().id;
+      if(myForeId !== detail.foreId){
+        return;
+      }
       console.log('insert catched', detail);
 
       // Step 1: Refresh/re-evaluate the nodeset
@@ -188,13 +155,10 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
       // Step 5: Create modelItems recursively for child elements
       this._createModelItemsRecursively(newRepeatItem, parentModelItem);
-
       // Step 6: Notify and refresh the UI
       this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh();
       this.getOwnerForm().addToBatchedNotifications(newRepeatItem);
     };
-    this.getOwnerForm().addEventListener('insert', this.handleInsertHandler);
-
     this.handleDeleteHandler = event => {
       console.log('delete catched', event);
       const { detail } = event;
@@ -209,7 +173,9 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       });
       this.getOwnerForm().addToBatchedNotifications(this);
     };
-    this.getOwnerForm().addEventListener('deleted', this.handleDeleteHandler);
+    // inside connectedCallback()
+    document.addEventListener('insert', this.handleInsertHandler, true);
+    document.addEventListener('deleted', this.handleDeleteHandler, true);
 
     // if (this.getOwnerForm().lazyRefresh) {
     /**
@@ -269,8 +235,45 @@ export class FxRepeat extends withDraggability(UIElement, false) {
   }
 
   disconnectedCallback() {
-    this.getOwnerForm().removeEventListener('deleted', this.handleDeleteHandler);
-    this.getOwnerForm().removeEventListener('insert', this.handleInsertHandler);
+    document.removeEventListener('deleted', this.handleDeleteHandler, true);
+    document.removeEventListener('insert', this.handleInsertHandler, true);
+  }
+
+  get repeatSize() {
+    return this.querySelectorAll(':scope > fx-repeatitem').length;
+  }
+
+  set repeatSize(size) {
+    this.size = size;
+  }
+
+  setIndex(index) {
+    // console.log('new repeat index ', index);
+    this.index = index;
+    const rItems = this.querySelectorAll(':scope > fx-repeatitem');
+    this.applyIndex(rItems[this.index - 1]);
+
+    // trying to do without
+    // this.getOwnerForm().refresh({ reason: 'index-function', elementLocalnamesWithChanges: [] });
+  }
+
+  applyIndex(repeatItem) {
+    this._removeIndexMarker();
+    if (repeatItem) {
+      repeatItem.setAttribute('repeat-index', '');
+    }
+  }
+
+  get index() {
+    return parseInt(this.getAttribute('index'), 10);
+  }
+
+  set index(idx) {
+    this.setAttribute('index', idx);
+  }
+
+  _getRef() {
+    return this.getAttribute('ref');
   }
 
   _createModelItemsRecursively(parentNode, parentModelItem) {
