@@ -230,7 +230,7 @@ export class Fore {
   }
 
   static get UI_ELEMENTS() {
-    return [
+    return new Set([
       'FX-ALERT',
       'FX-CONTROL',
       'FX-DIALOG',
@@ -252,11 +252,7 @@ export class Fore {
       'FX-TRIGGER',
       'FX-UPLOAD',
       'FX-VAR',
-    ];
-  }
-
-  static get MODEL_ELEMENTS() {
-    return ['FX-BIND', 'FX-FUNCTION', 'FX-MODEL', 'FX-INSTANCE', 'FX-SUBMISSION'];
+    ]);
   }
 
   /**
@@ -264,12 +260,13 @@ export class Fore {
    * @returns {boolean}
    */
   static isUiElement(elementName) {
-    const found = Fore.UI_ELEMENTS.includes(elementName);
-    if (found) {
-      // console.log('_isUiElement ', found);
-    }
-    return Fore.UI_ELEMENTS.includes(elementName);
+    return Fore.UI_ELEMENTS.has(elementName);
   }
+
+  static get MODEL_ELEMENTS() {
+    return ['FX-BIND', 'FX-FUNCTION', 'FX-MODEL', 'FX-INSTANCE', 'FX-SUBMISSION'];
+  }
+
 
   static async initUI(startElement) {
     const inited = new Promise(resolve => {
