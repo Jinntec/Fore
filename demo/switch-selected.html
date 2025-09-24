@@ -1,0 +1,52 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>fx-switch events</title>
+    <style>
+      fx-output{
+          display: block;
+      }
+    </style>
+    <link href="../../resources/fore.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="wrapper">
+  <fx-fore>
+    <fx-model>
+      <fx-instance>
+        <data>
+          <page1></page1>
+          <page2></page2>
+        </data>
+      </fx-instance>
+    </fx-model>
+    <fx-trigger id="t-one" label="page 1">
+      <button>toggle page 2</button>
+      <fx-toggle case="two"></fx-toggle>
+    </fx-trigger>
+
+    <fx-switch>
+      <fx-case id="one" name="page1">
+        <fx-setvalue ref="page1" event="select">selected</fx-setvalue>
+        <fx-setvalue ref="page1" event="deselect">deselected</fx-setvalue>
+      </fx-case>
+      <fx-case id="two" name="page2">
+        <fx-setvalue ref="page2" event="select">selected</fx-setvalue>
+      </fx-case>
+      <fx-case id="three" name="page3">
+      </fx-case>
+    </fx-switch>
+    <fx-output ref="page1">
+      <label slot="label">page 1 is </label>
+    </fx-output>
+    <fx-output ref="page2">
+      <label slot="label">page 2 is</label>
+    </fx-output>
+  </fx-fore>
+</div>
+<script type="module" src="./demo.js"></script>
+<script type="module" src="../tools/fx-lens.js"></script>
+</body>
+</html>
