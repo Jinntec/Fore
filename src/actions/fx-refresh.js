@@ -30,7 +30,7 @@ class FxRefresh extends AbstractAction {
     }
     if (this.hasAttribute('force')) {
       console.log(`### <<<<< refresh() force ${this} >>>>>`);
-      this.getOwnerForm().forceRefresh();
+      this.getOwnerForm().refresh(true);
       return;
     }
     if(this.hasAttribute('selector')){
