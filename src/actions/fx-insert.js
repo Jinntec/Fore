@@ -247,7 +247,7 @@ export class FxInsert extends AbstractAction {
     // console.log('<<<<<<< resolved instance', inst);
     // Note: the parent to insert under is always the parent of the inserted node. The 'context' is not always the parent if the sequence is empty, or the position is different
     // const xpath = XPathUtil.getPath(originSequenceClone.parentNode, instanceId);
-    const xpath = getPath(insertLocationNode.parentNode, instanceId);
+    const xpath = getPath(insertLocationNode, instanceId);
 
     const path = Fore.getDomNodeIndexString(originSequenceClone);
     this.dispatchEvent(
@@ -267,6 +267,7 @@ export class FxInsert extends AbstractAction {
       instanceId,
       foreId: fore.id,
       index,
+      xpath,
     });
 
     // todo: this actually should dispatch to respective instance

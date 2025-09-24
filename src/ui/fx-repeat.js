@@ -88,9 +88,12 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     this.handleInsertHandler = event => {
       const { detail } = event;
       const myForeId = this.getOwnerForm().id;
-      if(myForeId !== detail.foreId){
+      if (myForeId !== detail.foreId) {
         return;
       }
+      // todo: early out if this.ref does not match the ref of the inserted node. Avoid re-evaluating the nodeset
+      // if (this.ref !== detail.ref) return;
+
       console.log('insert catched', detail);
 
       // Step 1: Refresh/re-evaluate the nodeset
@@ -128,6 +131,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       const beforeNode = repeatItems[insertionIndex - 1] ?? null; // Null appends by default
       this.insertBefore(newRepeatItem, beforeNode);
       newRepeatItem.index = insertionIndex;
+      this._initVariables(newRepeatItem);
 
       // Step 4: Assign the inserted nodeset to the new `repeatItem`
       newRepeatItem.nodeset = detail.insertedNodes;
