@@ -386,22 +386,7 @@ export class FxFore extends HTMLElement {
     }
   }
 
-  /**
-   * Add a model item to the refresh list
-   *
-   * @param {import('./modelitem.js').ModelItem} modelItem
-   * @returns {void}
-   */
-  /*
-  addToRefresh(modelItem) {
-    const found = this.toRefresh.find(mi => mi.path === modelItem.path);
-    if (!found) {
-      this.toRefresh.push(modelItem);
-    }
-  }
-*/
-
-  /**
+    /**
    * Signal something happened with an element with the given local name. This will be used in the
    * next (non-forceful) refresh to detect whether a component (usually a repeat) should update
    *
@@ -498,32 +483,6 @@ export class FxFore extends HTMLElement {
   }
 
   /**
-   * refreshes the whole UI by visiting each bound element (having a 'ref' attribute) and applying the state of
-   * the bound modelItem to the bound element.
-   *
-   *
-   * force - boolean - if true will refresh all children disregarding toRefresh array
-   *
-   */
-  async forceRefresh() {
-    console.time('refresh');
-    console.group('### forced refresh', this);
-
-    Fore.refreshChildren(this, true);
-    this._updateTemplateExpressions();
-    this._scanForNewTemplateExpressionsNextRefresh = false; // reset
-    this._processTemplateExpressions();
-
-    // console.log(`### <<<<< refresh-done ${this.id} >>>>>`);
-
-    Fore.dispatch(this, 'refresh-done', {});
-
-    // console.groupEnd();
-    // console.timeEnd('refresh');
-  }
-
-  // async refresh(force, changedPaths) {
-  /**
    * @param {(boolean|{reason:'index-function'})} [force]fx-fore
    */
   async refresh(force) {
@@ -558,19 +517,6 @@ export class FxFore extends HTMLElement {
       await this._processBatchedNotifications();
     }
 
-    /*
-        if (!force && !this.initialRun) {
-          console.log('### batched refresh()', this.batchedNotifications);
-          this.refreshChanged();
-        } else {
-          if (this.inited) {
-            console.log(`### <<<<< refresh() on '${this.id}' >>>>>`);
-
-            Fore.refreshChildren(this, force);
-          }
-        }
-    */
-
     // ### refresh template expressions
     if (force === true || this.initialRun || this._scanForNewTemplateExpressionsNextRefresh) {
       this._updateTemplateExpressions();
@@ -588,84 +534,37 @@ export class FxFore extends HTMLElement {
     console.info(
       `%c ✅ refresh-done on #${this.id}`,
       'background:darkorange; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+      this.getModel().modelItems
     );
 
     Fore.dispatch(this, 'refresh-done', {});
 
-    // this.isRefreshing = true;
-    // this.parentNode.closest('fx-fore')?.refresh(false, changedPaths);
-
     const subFores = Array.from(this.querySelectorAll('fx-fore'));
     /*
-            calling the parent to refresh causes errors and inconsistent state. Also it is questionable
-            if a child should actually interact with its parent in this way.
+        calling the parent to refresh causes errors and inconsistent state. Also it is questionable
+        if a child should actually interact with its parent in this way.
 
-            This only affects the refreshing NOT the data mutation itself which is happening as expected.
+        This only affects the refreshing NOT the data mutation itself which is happening as expected.
 
-            Current solution is that a child that wants the parent to refresh must do so by adding an additional
-            event handler that dispatches an event upwards and having a handler in the parent to refresh itself.
+        Current solution is that a child that wants the parent to refresh must do so by adding an additional
+        event handler that dispatches an event upwards and having a handler in the parent to refresh itself.
 
-            So refreshed propagate downwards but not upwards which is at least an option to consider.
+        So refreshed propagate downwards but not upwards which is at least an option to consider.
 
-            if(this.parentNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE){
-                // await this.parentNode.closest('fx-fore')?.refresh(false);
-            }
+        if(this.parentNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE){
+            // await this.parentNode.closest('fx-fore')?.refresh(false);
+        }
     */
     for (const subFore of subFores) {
       // subFore.refresh(false, changedPaths);
       if (subFore.ready) {
         // Do an unconditional hard refresh: there might be changes that are relevant
+        // todo: investigate impact of observer architecture - do we really want to refresh all subfore elements?
         await subFore.refresh(true);
       }
     }
     this.isRefreshing = false;
-    console.log(
-      `### <<<<< refresh() done ${this.id} - modelItems >>>>>`,
-      this.getModel().modelItems,
-    );
-    // console.log('### <<<<< refresh() done - modelItems >>>>>', this.getModel().nonrelevant);
   }
-
-  /**
-   * Refreshes UI controls based on changed ModelItems
-   * This method is being refactored to use the observer pattern
-   * @param {boolean} force - Whether to force a refresh
-   */
-  /*
-  refreshChanged() {
-    console.log('toRefresh length:', this.toRefresh.length);
-
-    // Create a copy of the array to avoid modification during iteration
-    const itemsToRefresh = [...this.toRefresh];
-
-    // Clear the array before processing to prevent potential circular updates
-    this.toRefresh = [];
-
-    // The ModelItems in toRefresh will notify their observers directly
-    // This is kept for backward compatibility
-    itemsToRefresh.forEach(modelItem => {
-      // Notify observers (which will call update() on them)
-      modelItem.notify();
-
-      // Check if other ModelItems depend on this one through the dependency graph
-      const { mainGraph } = this.getModel();
-      if (mainGraph && mainGraph.hasNode(modelItem.path)) {
-        const deps = this.getModel().mainGraph.dependentsOf(modelItem.path, false);
-
-        // Notify dependent ModelItems
-        if (deps.length !== 0) {
-          deps.forEach(dep => {
-            const basePath = XPathUtil.getBasePath(dep);
-            const modelItemOfDep = this.getModel().modelItems.find(mip => mip.path === basePath);
-            if (modelItemOfDep) {
-              modelItemOfDep.notify();
-            }
-          });
-        }
-      }
-    });
-  }
-*/
 
   /**
    * Add a ModelItem to the batch of notifications to be processed at the end of the refresh phase
@@ -673,7 +572,7 @@ export class FxFore extends HTMLElement {
    */
   addToBatchedNotifications(item) {
     if (!this.batchedNotifications.has(item)) {
-      console.log('adding to batched notifications', item);
+      // console.log('adding to batched notifications', item);
       this.batchedNotifications.add(item);
     }
   }
@@ -687,7 +586,7 @@ export class FxFore extends HTMLElement {
 
       // Process all batched notifications
       this.batchedNotifications.forEach(entry => {
-        console.log('batched update', entry);
+        // console.log('batched update', entry);
         // handle repeatitems created via data-ref
         if(entry.classList && entry.classList.contains('fx-repeatitem')){
           Fore.refreshChildren(entry, true);
@@ -700,7 +599,7 @@ export class FxFore extends HTMLElement {
             // Something already removed this ui element. Skip.
             return;
           }
-          uiElement.refresh(true);
+            uiElement.refresh(true);
         }
         const nonrelevant = Array.from(this.querySelectorAll('[nonrelevant]'));
         // loop nonrelevant elements
@@ -716,7 +615,7 @@ export class FxFore extends HTMLElement {
           entry.observers.forEach(observer => {
             console.log('🔍 processing observer', observer);
             if (typeof observer.update === 'function') {
-              console.log('updating observer', observer);
+              // console.log('updating observer', observer);
               observer.update(entry);
             }
           });
@@ -750,8 +649,8 @@ export class FxFore extends HTMLElement {
     // console.log('######### storedTemplateExpressions', this.storedTemplateExpressions.length);
 
     /*
-                storing expressions and their nodes for re-evaluation
-                 */
+    storing expressions and their nodes for re-evaluation
+    */
     Array.from(tmplExpressions).forEach(node => {
       const ele = node.nodeType === Node.ATTRIBUTE_NODE ? node.ownerElement : node.parentNode;
       if (ele.closest('fx-fore') !== this) {
@@ -776,6 +675,7 @@ export class FxFore extends HTMLElement {
   }
 
   _processTemplateExpressions() {
+    console.log('processing template expressions ', this.storedTemplateExpressionByNode);
     for (const node of Array.from(this.storedTemplateExpressionByNode.keys())) {
       if (node.nodeType === Node.ATTRIBUTE_NODE) {
         // Attribute nodes are not contained by the document, but their owner elements are!
@@ -989,45 +889,6 @@ export class FxFore extends HTMLElement {
     return parent;
   }
 
-  /*
-            _createStep(){
-
-            }
-          */
-
-  /*
-            _generateInstance(start, parent) {
-              if (start.hasAttribute('ref')) {
-                const ref = start.getAttribute('ref');
-
-                if(ref.includes('/')){
-                  console.log('complex path to create ', ref);
-                  const steps = ref.split('/');
-                  steps.forEach(step => {
-                    console.log('step ', step);
-
-                  });
-                }
-
-                // const generated = document.createElement(ref);
-                const generated = parent.ownerDocument.createElement(ref);
-                if (start.children.length === 0) {
-                  generated.textContent = start.textContent;
-                }
-                parent.appendChild(generated);
-                parent = generated;
-              }
-
-              if (start.hasChildNodes()) {
-                const list = start.children;
-                for (let i = 0; i < list.length; i += 1) {
-                  this._generateInstance(list[i], parent);
-                }
-              }
-              return parent;
-            }
-          */
-
   /**
    * Start the initialization of the UI by
    *
@@ -1054,12 +915,12 @@ export class FxFore extends HTMLElement {
     await this._lazyCreateInstance();
 
     /*
-            const options = {
-              root: null,
-              rootMargin: '0px',
-              threshold: 0.3,
-            };
-        */
+          const options = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.3,
+          };
+      */
 
     // First refresh should be forced
     if (this.createNodes) {
