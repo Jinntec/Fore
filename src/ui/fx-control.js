@@ -600,11 +600,11 @@ export default class FxControl extends XfAbstractControl {
       const nodeset = evaluateXPath(ref, inscope, this, domFacade);
 
       const contextNode = Array.isArray(inscope) ? inscope[0] : inscope;
-      console.log('Extracting model', this.getModel());
-      console.log('Extracting model inited', this.getModel().inited);
+      // console.log('Extracting model', this.getModel());
+      // console.log('Extracting model inited', this.getModel().inited);
       const model = this.getModel();
       if (!contextNode) return;
-      console.log('Extracting predicate deps from ref:', ref);
+      // console.log('Extracting predicate deps from ref:', ref);
       extractPredicateDependencies(
         ref,
         model,
