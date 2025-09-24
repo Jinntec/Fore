@@ -567,6 +567,9 @@ export class FxModel extends HTMLElement {
         found = shared.find(found => found.id === id);
       }
     }
+    if(!found){
+      found = document.querySelector(`fx-instance[id="${id}"]`);
+    }
     if (found) {
       return found;
     }

@@ -260,12 +260,177 @@ export class FxFore extends HTMLElement {
     this.setAttribute('role', 'form'); // set aria role
   }
 
+  /**
+   * Resolve elements from the `depends-on` attribute.
+   * Supports comma-separated CSS selectors and the special value "closest".
+   */
+  _resolveDependencies() {
+    const raw = this.getAttribute('depends-on');
+    if (!raw) return [];
+    const sels = raw.split(',').map(s => s.trim()).filter(Boolean);
+
+    const roots = [this.getRootNode?.() ?? document, document];
+    const out = [];
+
+    for (const sel of sels) {
+      let el = null;
+
+      if (sel === 'closest') {
+        el = this.closest('fx-fore');
+      } else {
+        for (const r of roots) {
+          if (r && 'querySelector' in r) {
+            el = r.querySelector(sel);
+            if (el) break;
+          }
+        }
+      }
+      if (el) out.push(el);
+    }
+    return out;
+  }
+
+  /**
+   * Wait until all dependencies are ready (i.e., they set `ready = true`
+   * and dispatch the `ready` event).
+   */
+// REPLACE your _whenDependenciesReady with this version
+  _whenDependenciesReady() {
+    const raw = this.getAttribute('depends-on');
+    if (!raw) return Promise.resolve();
+
+    const sels = raw.split(',').map(s => s.trim()).filter(Boolean);
+    const roots = [this.getRootNode?.() ?? document, document];
+
+    const query = (sel) => {
+      for (const r of roots) {
+        if (r && 'querySelector' in r) {
+          const el = r.querySelector(sel);
+          if (el) return el;
+        }
+      }
+      return null;
+    };
+
+    const isReadyNow = (sel) => {
+      if (sel === 'closest') {
+        const outer = this.closest('fx-fore');
+        return !!(outer && outer.ready === true);
+      }
+      const el = query(sel);
+      return !!(el && el.ready === true);
+    };
+
+    const waitOne = (sel) => new Promise((resolve) => {
+      // fast path
+      if (isReadyNow(sel)) return resolve();
+
+      // robust path: listen at the document/root so replacement doesn't matter
+      const onReady = (ev) => {
+        const t = ev.target;
+        if (sel === 'closest') {
+          // outer fore becoming ready anywhere above us
+          if (t?.tagName === 'FX-FORE' && t.contains(this)) {
+            cleanup(); resolve();
+          }
+        } else if (t?.matches?.(sel)) {
+          cleanup(); resolve();
+        }
+      };
+
+      const root = document; // capture at doc to catch composed events
+      const cleanup = () => root.removeEventListener('ready', onReady, true);
+
+      root.addEventListener('ready', onReady, true);
+
+      // also re-check on DOM changes in case a ready fore is inserted without firing (paranoia)
+      const mo = new MutationObserver(() => {
+        if (isReadyNow(sel)) {
+          mo.disconnect(); cleanup(); resolve();
+        }
+      });
+      mo.observe(document.documentElement, { childList: true, subtree: true });
+    });
+
+    return Promise.all(sels.map(waitOne));
+  }
+
+  _onSlotChange = async (ev) => {
+    // 1) Capture the slot element BEFORE any await
+    const slotEl = ev.currentTarget;
+    if (!(slotEl instanceof HTMLSlotElement)) return;
+
+    // avoid double init
+    if (this.inited) return;
+
+    // 2) Wait for dependencies if needed
+    if (this.hasAttribute('depends-on')) {
+      try {
+        await this._whenDependenciesReady();
+      } catch (e) {
+        console.warn('depends-on wait failed', e);
+        return;
+      }
+    }
+
+    // 3) Bail if we got disconnected/replaced while waiting
+    if (!this.isConnected) return;
+
+    // 4) Safely read assigned content
+    const getAssignedElements = () => {
+      if (typeof slotEl.assignedElements === 'function') {
+        return slotEl.assignedElements({ flatten: true });
+      }
+      // Fallback for odd engines/polyfills
+      return (slotEl.assignedNodes({ flatten: true }) || [])
+        .filter(n => n.nodeType === Node.ELEMENT_NODE);
+    };
+
+    // SAFE: slotEl is the actual event source, not a fresh query
+    const children = slotEl.assignedElements({ flatten: true });
+
+    let modelElement = children.find(
+      modelElem => modelElem.nodeName.toUpperCase() === 'FX-MODEL',
+    );
+    if (!modelElement) {
+      const generatedModel = document.createElement('fx-model');
+      this.appendChild(generatedModel);
+      modelElement = generatedModel;
+      // We are going to get a new slotchange event immediately, because we changed a slot.
+      // so cancel this one.
+      return;
+    }
+    if (!modelElement.inited) {
+      console.info(
+        `%cFore running ... ${this.id ? '#' + this.id : ''}`,
+        'background:#64b5f6; color:white; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+      );
+
+      const variables = new Map();
+      (function registerVariables(node) {
+        for (const child of node.children) {
+          if ('setInScopeVariables' in child) {
+            child.setInScopeVariables(variables);
+          }
+          registerVariables(child);
+        }
+      })(this);
+
+      await modelElement.modelConstruct();
+      this._handleModelConstructDone();
+    }
+    this.model = modelElement;
+
+    this._createRepeatsFromAttributes();
+    this.inited = true;
+  }
+
   connectedCallback() {
     this.style.visibility = 'hidden';
     console.time('init');
     this.strict = !!this.hasAttribute('strict');
     /*
-            document.addEventListener('ready', (e) =>{
+            document.re('ready', (e) =>{
               if(e.target !== this){
                 // e.preventDefault();
                 console.log('>>> e', e);
@@ -305,7 +470,15 @@ export class FxFore extends HTMLElement {
     this._injectDevtools();
 
     const slot = this.shadowRoot.querySelector('slot#default');
+
+    // const slot = this.shadowRoot?.querySelector('slot') || this.querySelector('slot');
+    // if (slot) slot.addEventListener('slotchange', this._onSlotChange);
+
     slot.addEventListener('slotchange', async event => {
+      // NEW: if we depend on another <fx-fore>, wait for it
+      if (this.hasAttribute('depends-on')) {
+        await this._whenDependenciesReady();
+      }
       // preliminary addition for auto-conversion of non-prefixed element into prefixed elements. See fore.js
       // console.log(`### <<<<< slotchange on '${this.id}' >>>>>`);
       if (this.inited) return;
@@ -424,6 +597,9 @@ export class FxFore extends HTMLElement {
    */
   async _loadFromSrc() {
     // console.log('########## loading Fore from ', this.src, '##########');
+    if (this.hasAttribute('depends-on')) {
+      await this._whenDependenciesReady();
+    }
     await Fore.loadForeFromSrc(this, this.src, 'fx-fore');
   }
 
@@ -564,6 +740,8 @@ export class FxFore extends HTMLElement {
       }
     }
     this.isRefreshing = false;
+    // Clear the batch
+    // this.batchedNotifications.clear();
   }
 
   /**
@@ -572,7 +750,7 @@ export class FxFore extends HTMLElement {
    */
   addToBatchedNotifications(item) {
     if (!this.batchedNotifications.has(item)) {
-      // console.log('adding to batched notifications', item);
+      console.log('adding to batched notifications', item);
       this.batchedNotifications.add(item);
     }
   }
