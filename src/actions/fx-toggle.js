@@ -32,7 +32,7 @@ class FxToggle extends AbstractAction {
       const fxSwitch = caseElement.parentNode;
       fxSwitch.toggle(caseElement);
     }
-    this.needsUpdate = true;
+    // this.needsUpdate = true;
   }
 }
 
