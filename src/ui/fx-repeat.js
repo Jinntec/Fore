@@ -672,10 +672,28 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     })(newRepeatItem);
   }
 
+  /*
   _clone() {
     // const content = this.template.content.cloneNode(true);
     this.template = this.shadowRoot.querySelector('template');
     const content = this.template.content.cloneNode(true);
+    return document.importNode(content, true);
+  }
+*/
+
+  _clone() {
+    // Prefer the cached template set in _initTemplate; fall back to either DOM.
+    const tpl =
+      this.template ||
+      (this.shadowRoot && this.shadowRoot.querySelector('template')) ||
+      this.querySelector('template');
+
+    if (!tpl) {
+      console.error(`[fx-repeat] ${this.id || ''}: no <template> found when cloning`);
+      return document.createDocumentFragment();
+    }
+
+    const content = tpl.content.cloneNode(true);
     return document.importNode(content, true);
   }
 
