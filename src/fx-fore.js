@@ -261,11 +261,11 @@ export class FxFore extends HTMLElement {
   }
 
   /**
-   * Resolve elements from the `depends-on` attribute.
+   * Resolve elements from the `wait-for` attribute.
    * Supports comma-separated CSS selectors and the special value "closest".
    */
   _resolveDependencies() {
-    const raw = this.getAttribute('depends-on');
+    const raw = this.getAttribute('wait-for');
     if (!raw) return [];
     const sels = raw.split(',').map(s => s.trim()).filter(Boolean);
 
@@ -294,9 +294,8 @@ export class FxFore extends HTMLElement {
    * Wait until all dependencies are ready (i.e., they set `ready = true`
    * and dispatch the `ready` event).
    */
-// REPLACE your _whenDependenciesReady with this version
   _whenDependenciesReady() {
-    const raw = this.getAttribute('depends-on');
+    const raw = this.getAttribute('wait-for');
     if (!raw) return Promise.resolve();
 
     const sels = raw.split(',').map(s => s.trim()).filter(Boolean);
@@ -364,17 +363,21 @@ export class FxFore extends HTMLElement {
     if (this.inited) return;
 
     // 2) Wait for dependencies if needed
-    if (this.hasAttribute('depends-on')) {
+    if (this.hasAttribute('wait-for')) {
       try {
         await this._whenDependenciesReady();
       } catch (e) {
-        console.warn('depends-on wait failed', e);
+        console.warn('wait-for failed', e);
         return;
       }
     }
 
     // 3) Bail if we got disconnected/replaced while waiting
     if (!this.isConnected) return;
+
+    if (this.ignoreExpressions) {
+      this.ignoredNodes = Array.from(this.querySelectorAll(this.ignoreExpressions));
+    }
 
     // 4) Safely read assigned content
     const getAssignedElements = () => {
@@ -469,65 +472,11 @@ export class FxFore extends HTMLElement {
 
     this._injectDevtools();
 
-    const slot = this.shadowRoot.querySelector('slot#default');
+    // const slot = this.shadowRoot.querySelector('slot#default');
 
-    // const slot = this.shadowRoot?.querySelector('slot') || this.querySelector('slot');
-    // if (slot) slot.addEventListener('slotchange', this._onSlotChange);
+    const slot = this.shadowRoot?.querySelector('slot') || this.querySelector('slot');
+    if (slot) slot.addEventListener('slotchange', this._onSlotChange);
 
-    slot.addEventListener('slotchange', async event => {
-      // NEW: if we depend on another <fx-fore>, wait for it
-      if (this.hasAttribute('depends-on')) {
-        await this._whenDependenciesReady();
-      }
-      // preliminary addition for auto-conversion of non-prefixed element into prefixed elements. See fore.js
-      // console.log(`### <<<<< slotchange on '${this.id}' >>>>>`);
-      if (this.inited) return;
-      if (this.hasAttribute('convert')) {
-        this.replaceWith(Fore.copyDom(this));
-        // Fore.copyDom(this);
-        return;
-      }
-
-      if (this.ignoreExpressions) {
-        this.ignoredNodes = Array.from(this.querySelectorAll(this.ignoreExpressions));
-      }
-
-      const children = event.target.assignedElements();
-      let modelElement = children.find(
-        modelElem => modelElem.nodeName.toUpperCase() === 'FX-MODEL',
-      );
-      if (!modelElement) {
-        const generatedModel = document.createElement('fx-model');
-        this.appendChild(generatedModel);
-        modelElement = generatedModel;
-        // We are going to get a new slotchange event immediately, because we changed a slot.
-        // so cancel this one.
-        return;
-      }
-      if (!modelElement.inited) {
-        console.info(
-          `%cFore running ... ${this.id ? '#' + this.id : ''}`,
-          'background:#64b5f6; color:white; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
-        );
-
-        const variables = new Map();
-        (function registerVariables(node) {
-          for (const child of node.children) {
-            if ('setInScopeVariables' in child) {
-              child.setInScopeVariables(variables);
-            }
-            registerVariables(child);
-          }
-        })(this);
-
-        await modelElement.modelConstruct();
-        this._handleModelConstructDone();
-      }
-      this.model = modelElement;
-
-      this._createRepeatsFromAttributes();
-      this.inited = true;
-    });
     this.addEventListener('path-mutated', () => {
       this.someInstanceDataStructureChanged = true;
     });
@@ -597,7 +546,7 @@ export class FxFore extends HTMLElement {
    */
   async _loadFromSrc() {
     // console.log('########## loading Fore from ', this.src, '##########');
-    if (this.hasAttribute('depends-on')) {
+    if (this.hasAttribute('wait-for')) {
       await this._whenDependenciesReady();
     }
     await Fore.loadForeFromSrc(this, this.src, 'fx-fore');
@@ -735,7 +684,7 @@ export class FxFore extends HTMLElement {
       // subFore.refresh(false, changedPaths);
       if (subFore.ready) {
         // Do an unconditional hard refresh: there might be changes that are relevant
-        // todo: investigate impact of observer architecture - do we really want to refresh all subfore elements?
+        // todo: investigate impact of observer architecture - do we really want to refresh all subfore elements with a hard refresh?
         await subFore.refresh(true);
       }
     }
@@ -750,7 +699,7 @@ export class FxFore extends HTMLElement {
    */
   addToBatchedNotifications(item) {
     if (!this.batchedNotifications.has(item)) {
-      console.log('adding to batched notifications', item);
+      // console.log('adding to batched notifications', item);
       this.batchedNotifications.add(item);
     }
   }
@@ -760,7 +709,7 @@ export class FxFore extends HTMLElement {
    */
   _processBatchedNotifications() {
     if (this.batchedNotifications.size > 0) {
-      console.log(`🔍 Processing ${this.batchedNotifications.size} batched notifications`);
+      // console.log(`🔍 Processing ${this.batchedNotifications.size} batched notifications`);
 
       // Process all batched notifications
       this.batchedNotifications.forEach(entry => {
@@ -791,7 +740,7 @@ export class FxFore extends HTMLElement {
         if (entry.observers) {
           // Item is a model item
           entry.observers.forEach(observer => {
-            console.log('🔍 processing observer', observer);
+            // console.log('🔍 processing observer', observer);
             if (typeof observer.update === 'function') {
               // console.log('updating observer', observer);
               observer.update(entry);
@@ -917,10 +866,11 @@ export class FxFore extends HTMLElement {
         : this.getModel().getDefaultInstance();
 
       try {
-        return evaluateXPathToString(naked, inscope, node, null, inst);
+        const result = evaluateXPathToString(naked, inscope, node, null, inst);
+        // console.log(`template expression result for ${naked}=${result}`);
+        return result;
       } catch (error) {
         console.warn('ignoring unparseable expr', error);
-
         return match;
       }
     });

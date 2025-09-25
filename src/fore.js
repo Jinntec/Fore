@@ -324,11 +324,15 @@ export class Fore {
             if (!force) {
               continue;
             }
+/*
+            if(element.nodeName === 'FX-CASE') {
+              console.log('hey - got a case', element);
+            }
+*/
             if (force === true) {
               // console.log('🔄 refreshing ', element);
               // Unconditional force refresh
               bound.refresh(force);
-
               continue;
             }
             if (typeof force !== 'object') {

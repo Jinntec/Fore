@@ -130,7 +130,7 @@ export class ModelItem {
    */
   notify() {
     // Only log in debug mode or reduce verbosity to prevent console flooding
-    console.log('[ModelItem] notifying observers for path:', this);
+    // console.log('[ModelItem] notifying observers for path:', this);
 
     // Add to batched notifications. TODO: is the else needed?
     if (this.fore) {
