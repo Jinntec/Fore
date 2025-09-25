@@ -1,0 +1,139 @@
+<!DOCTYPE HTML>
+<html xmlns:func="generator-functions">
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+  <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport">
+  <title></title>
+  <link href="../../resources/fore.css" rel="stylesheet">
+  <link href="../../resources/vars.css" rel="stylesheet">
+  <link href="../../resources/toastify.css" rel="stylesheet">
+  <link href="../../resources/demo.css" rel="stylesheet">
+  <link href="default.css" rel="stylesheet">
+  <script type="module">
+    // import '../../dist/fore-dev.js';
+    /*
+    Alternative to above import:
+    to run from local clone of Fore uncomment the next line and run 'npm start' in Fore homedir.
+    */
+    import '../demo.js';
+    import '../../tools/fx-lens.js';
+  </script>
+</head>
+<body>
+<header>
+  <h1>Auto-create XML structure with create-nodes</h1>
+</header>
+<main>
+  <!--
+    <demo-snippet>
+      <template>
+  -->
+  <fx-fore create-nodes="create-nodes"
+           id="fx-invoice"
+           xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+           xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+    <fx-model>
+      <fx-instance src="test/ubl-empty.xml"></fx-instance>
+      <!--          <fx-instance src="test/ubl1.xml"></fx-instance>-->
+      <!--          <fx-instance id="untdid-5189" src="codelists/xml/UNTDID-5189-3.xml"></fx-instance>-->
+      <fx-instance id="untdid-5305" src="codelists/xml/UNTDID-5305-3.xml"></fx-instance>
+    </fx-model>
+
+    <fx-group id="outer" ref=".">
+      <section class="repeat-container" id="BG-20">
+        <header>DOCUMENT LEVEL ALLOWANCES
+          <fx-trigger>
+            <button>add</button>
+            <fx-insert origin="#r-BG-20" ref="cac:AllowanceCharge"></fx-insert>
+          </fx-trigger>
+        </header>
+        <fx-repeat id="r-BG-20" ref="cac:AllowanceCharge">
+          <template>
+            <fx-control id="BT-95" ref="cac:TaxCategory/cbc:ID">
+              <label for="BT-95">Document level allowance VAT category code</label>
+              <select class="widget" id="BT-95" ref="instance('untdid-5305')//Row" selection="open">
+                <template>
+                  <option title="{Value[3]/SimpleValue}" value="{Value[1]/SimpleValue}">{Value[2]/SimpleValue}</option>
+                </template>
+              </select>
+            </fx-control>
+            <fx-control id="BT-96" ref="cac:TaxCategory/cbc:Percent">
+              <label for="BT-96">Document level allowance VAT rate</label>
+              <input type="number"></fx-control>
+            <fx-trigger>
+              <button>delete</button>
+              <fx-delete ref="."></fx-delete>
+            </fx-trigger>
+          </template>
+        </fx-repeat>
+        <section class="repeat-container" id="BG-17">
+          <header>CREDIT TRANSFER
+            <fx-trigger>
+              <button>add</button>
+              <fx-insert origin="#r-BG-17" ref="cac:PayeeFinancialAccount"></fx-insert>
+            </fx-trigger>
+          </header>
+          <fx-repeat id="r-BG-17" ref="cac:PayeeFinancialAccount">
+            <template>
+              <fx-control id="BT-84" ref="cbc:ID"><label for="BT-84">Payment account identifier</label><input
+                type="text"></fx-control>
+              <fx-control id="BT-85" ref="cbc:Name"><label for="BT-85">Payment account name</label><textarea
+                class="widget"></textarea></fx-control>
+              <fx-control id="BT-86" ref="cac:FinancialInstitutionBranch/cbc:ID"><label for="BT-86">Payment service
+                provider identifier</label><input type="text"></fx-control>
+              <fx-trigger>
+                <button>delete</button>
+                <fx-delete ref="."></fx-delete>
+              </fx-trigger>
+            </template>
+          </fx-repeat>
+        </section>
+        <section class="repeat-container" id="BG-23">
+          <header>VAT BREAKDOWN
+            <fx-trigger>
+              <button>add</button>
+              <fx-insert origin="#r-BG-23" ref="cac:TaxTotal/cac:TaxSubtotal"></fx-insert>
+            </fx-trigger>
+          </header>
+          <fx-repeat id="r-BG-23" ref="cac:TaxTotal/cac:TaxSubtotal">
+            <template>
+              <fx-control id="BT-116" ref="cbc:TaxableAmount"><label for="BT-116">VAT category taxable
+                amount</label><input type="number"></fx-control>
+              <fx-control id="BT-117" ref="cbc:TaxAmount"><label for="BT-117">VAT category tax amount</label><input
+                type="number"></fx-control>
+              <fx-control id="BT-118" ref="cac:TaxCategory/cbc:ID"><label for="BT-118">VAT category code</label><select
+                class="widget" id="BT-118" ref="instance('untdid-5305')//Row" selection="open">
+                <template>
+                  <option title="{Value[3]/SimpleValue}" value="{Value[1]/SimpleValue}">{Value[2]/SimpleValue}</option>
+                </template>
+              </select></fx-control>
+              <fx-control id="BT-119" ref="cac:TaxCategory/cbc:Percent"><label for="BT-119">VAT category
+                rate</label><input type="number"></fx-control>
+              <fx-control id="BT-120" ref="cac:TaxCategory/cbc:TaxExemptionReason"><label for="BT-120">VAT exemption
+                reason text</label><textarea class="widget"></textarea></fx-control>
+<!--
+              <fx-control id="BT-121" ref="cac:TaxCategory/cbc:TaxExemptionReasonCode"><label for="BT-121">VAT exemption
+                reason code</label><select class="widget" id="BT-121" ref="instance('vatex')//Row" selection="open">
+                <template>
+                  <option title="{Value[3]/SimpleValue}" value="{Value[1]/SimpleValue}">{Value[2]/SimpleValue}</option>
+                </template>
+              </select></fx-control>
+-->
+              <fx-trigger>
+                <button>delete</button>
+                <fx-delete ref="."></fx-delete>
+              </fx-trigger>
+            </template>
+          </fx-repeat>
+        </section>
+
+      </section>
+    </fx-group>
+  </fx-fore>
+  <!--
+      </template>
+    </demo-snippet>
+  -->
+</main>
+</body>
+</html>
