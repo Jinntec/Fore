@@ -133,6 +133,48 @@ describe('fx-control with select tests', () => {
     expect(select.children[3].nodeName).to.equal('OPTION');
     expect(select.children[3].textContent).to.equal('option3');
   });
+
+  it('ignores whitespace around the template expression in options', async () => {
+    const el = await fixture(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <item>foobar</item>
+            </data>
+          </fx-instance>
+          <fx-instance id="second">
+            <data>
+              <option>option1</option>
+              <option>option2</option>
+              <option>option3</option>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <fx-control ref="item">
+          <select class="widget" ref="instance('second')/option">
+            <template>
+              <option
+                value="
+      {.}
+   "
+              >
+                {.}
+              </option>
+            </template>
+          </select>
+        </fx-control>
+      </fx-fore>
+    `);
+
+    // await oneEvent(el, 'refresh-done');
+
+    const select = el.querySelector('.widget');
+    expect(
+      Array.from(select.querySelectorAll('option')).map(child => child.textContent),
+    ).to.deep.equal(['option1', 'option2', 'option3']);
+  });
+
   it('is creates a select with 4 options with selection=open', async () => {
     const el = await fixture(html`
       <fx-fore>
