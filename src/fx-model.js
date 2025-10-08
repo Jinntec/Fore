@@ -454,7 +454,7 @@ export class FxModel extends HTMLElement {
             modelItem.required = compute;
             // this.formElement.addToRefresh(modelItem); // let fore know that modelItem needs refresh
             modelItem.notify(); // Notify observers directly
-            if (!modelItem.node.textContent) {
+            if (modelItem.required && !modelItem.node.textContent) {
               /*
               console.log(
                 'node is required but has no value ',
