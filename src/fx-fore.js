@@ -549,7 +549,11 @@ export class FxFore extends HTMLElement {
     if (this.hasAttribute('wait-for')) {
       await this._whenDependenciesReady();
     }
-    await Fore.loadForeFromSrc(this, this.src, 'fx-fore');
+    if(this.hasAttribute('selector')){
+      await Fore.loadForeFromSrc(this, this.src, this.getAttribute('selector'));
+    }else{
+      await Fore.loadForeFromSrc(this, this.src, 'fx-fore');
+    }
   }
 
   /**
