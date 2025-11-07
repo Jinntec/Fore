@@ -450,6 +450,13 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     // console.log('##### inscope ', inscope);
     // console.log('##### ref ', this.ref);
     // now we got a nodeset and attach MutationObserver to it
+    if (!inscope) return;
+    if (this.mutationObserver && inscope.nodeName) {
+      this.mutationObserver.observe(inscope, {
+        childList: true,
+        subtree: true,
+      });
+    }
 
     /*
               this.touchedPaths = new Set();
