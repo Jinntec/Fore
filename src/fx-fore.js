@@ -1010,7 +1010,7 @@ export class FxFore extends HTMLElement {
    */
   initData(root = this) {
     // const created = new Promise(resolve => {
-    // console.log('INIT');
+    console.log('INIT');
     // const boundControls = Array.from(root.querySelectorAll('[ref]:not(fx-model *),fx-repeatitem'));
 
     const boundControls = Array.from(
@@ -1044,9 +1044,9 @@ export class FxFore extends HTMLElement {
 
       // Previous control can either be an ancestor of us, or a previous node, which can be a sibling, or a child of a sibling.
       // First: parent
-      if (previousControl.contains(bound)) {
+      if (previousControl && previousControl.contains(bound)) {
         // Parent is here.
-        // console.log('insert into', control,previousControl);
+        // console.log('insert into', bound,previousControl);
         // console.log('insert into nodeset', control.nodeset);
         const parentNodeset = previousControl.nodeset;
         // console.log('parentNodeset', parentNodeset);
