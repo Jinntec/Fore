@@ -1,4 +1,4 @@
-import './jinn-codemirror-bundle.js';
+// import './jinn-codemirror-bundle.js';
 
 /**
  * lists out all live instances in html 'details' and 'summary' elements.
@@ -6,109 +6,107 @@ import './jinn-codemirror-bundle.js';
  *
  */
 export class FxLens extends HTMLElement {
-    constructor() {
-        super();
-        this.attachShadow({mode: 'open'});
-    }
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+  }
 
-    connectedCallback() {
-
-        this.mode = 'xml';
-        this.isResizing = false;
-        this.lastX = 0;
-
-        /**
-         * we need to wait for DOM to be ready before taking action.
-         */
-        document.addEventListener('DOMContentLoaded', () => {
-            this.fores = Array.from(document.querySelectorAll('fx-fore'));
-            this.render();
-
-            document.addEventListener('ready',(ev)=>{
-                const fores = Array.from(document.querySelectorAll('fx-fore'));
-            });
-            this.fores.forEach(fore => {
-
-                fore.addEventListener('ready', () => {
-                    this.render();
-                });
-
-                fore.addEventListener('value-changed',(ev)=>{
-                    // console.log('+++++++++++++++++++++++++++++++value-changed')
-                    this.update();
-                    const targetId = `${ev.detail.foreId}#${ev.detail.instanceId}`;
-                    const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
-                    // console.log('value-changed on ',`${ev.detail.foreId}#${ev.detail.instanceId}`);
-                    // this.flashEffect(targetSummary);
-                    ev.preventDefault();
-                });
-                fore.addEventListener('deleted',(ev)=>{
-                    this.update();
-                    const targetId = `${ev.detail.foreId}#${ev.detail.instanceId}`;
-                    const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
-                    this.flashEffect(targetSummary);
-                });
-                fore.addEventListener('insert',(ev)=>{
-                    console.log('+++++++++++++++++++++++++++++++insert')
-                    this.update();
-                    const targetId = `${ev.detail.foreId}#${ev.detail.instanceId}`;
-                    const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
-                    this.flashEffect(targetSummary);
-                });
-                fore.addEventListener('index-changed',(ev)=>{
-                    console.log('+++++++++++++++++++++++++++++++index-changed')
-                    this.update();
-                    const targetId = `${ev.detail.foreId}#${ev.detail.instanceId}`;
-                    const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
-                    this.flashEffect(targetSummary);
-                });
-                fore.addEventListener('submit',(ev)=>{
-                    console.log('+++++++++++++++++++++++++++++++submit')
-                    this.update();
-                    const targetId = `${ev.detail.foreId}#${ev.detail.instanceId}`;
-                    const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
-                    this.flashEffect(targetSummary);
-                });
-                fore.addEventListener('submit-done',(ev)=>{
-                    console.log('+++++++++++++++++++++++++++++++submit-done')
-                    this.update();
-                    const targetId = `${ev.detail.foreId}#${ev.detail.instanceId}`;
-                    const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
-                    this.flashEffect(targetSummary);
-                });
-                fore.addEventListener('submit-error',(ev)=>{
-                    console.log('+++++++++++++++++++++++++++++++submit-error')
-                    this.update();
-                    const targetId = `${ev.detail.foreId}#${ev.detail.instanceId}`;
-                    const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
-                    this.flashEffect(targetSummary);
-                });
-            });
-            this.lastWidth = this.offsetWidth;
-        });
-
-    }
-    flashEffect(element) {
-        // Add a glow effect
-        if(!element) return;
-        element.style.background = 'rgba(55,55,255,0.1)';
-
-        // Remove the effect after 1 second
-        setTimeout(() => {
-            element.style.background = 'ghostwhite';
-        }, 1000);
-    }
+  connectedCallback() {
+    this.mode = 'xml';
+    this.isResizing = false;
+    this.lastX = 0;
 
     /**
-     * render
-     * @param style
-     * @returns {Promise<void>}
+     * we need to wait for DOM to be ready before taking action.
      */
-    // async render(style) {
-    async render() {
-        // console.log('render')
-        this.shadowRoot.innerHTML = '';
-        const style = `
+    document.addEventListener('DOMContentLoaded', () => {
+      this.fores = Array.from(document.querySelectorAll('fx-fore'));
+      this.render();
+
+      document.addEventListener('ready', ev => {
+        const fores = Array.from(document.querySelectorAll('fx-fore'));
+      });
+      this.fores.forEach(fore => {
+        fore.addEventListener('ready', () => {
+          this.render();
+        });
+
+        fore.addEventListener('value-changed', ev => {
+          // console.log('+++++++++++++++++++++++++++++++value-changed')
+          this.update();
+          const targetId = `${ev.detail.foreId}#${ev.detail.instanceId}`;
+          const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
+          // console.log('value-changed on ',`${ev.detail.foreId}#${ev.detail.instanceId}`);
+          // this.flashEffect(targetSummary);
+          ev.preventDefault();
+        });
+        fore.addEventListener('deleted', ev => {
+          this.update();
+          const targetId = `${ev.detail.foreId}#${ev.detail.instanceId}`;
+          const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
+          this.flashEffect(targetSummary);
+        });
+        fore.addEventListener('insert', ev => {
+          console.log('+++++++++++++++++++++++++++++++insert');
+          this.update();
+          const targetId = `${ev.detail.foreId}#${ev.detail.instanceId}`;
+          const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
+          this.flashEffect(targetSummary);
+        });
+        fore.addEventListener('index-changed', ev => {
+          console.log('+++++++++++++++++++++++++++++++index-changed');
+          this.update();
+          const targetId = `${ev.detail.foreId}#${ev.detail.instanceId}`;
+          const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
+          this.flashEffect(targetSummary);
+        });
+        fore.addEventListener('submit', ev => {
+          console.log('+++++++++++++++++++++++++++++++submit');
+          this.update();
+          const targetId = `${ev.detail.foreId}#${ev.detail.instanceId}`;
+          const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
+          this.flashEffect(targetSummary);
+        });
+        fore.addEventListener('submit-done', ev => {
+          console.log('+++++++++++++++++++++++++++++++submit-done');
+          this.update();
+          const targetId = `${ev.detail.foreId}#${ev.detail.instanceId}`;
+          const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
+          this.flashEffect(targetSummary);
+        });
+        fore.addEventListener('submit-error', ev => {
+          console.log('+++++++++++++++++++++++++++++++submit-error');
+          this.update();
+          const targetId = `${ev.detail.foreId}#${ev.detail.instanceId}`;
+          const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
+          this.flashEffect(targetSummary);
+        });
+      });
+      this.lastWidth = this.offsetWidth;
+    });
+  }
+
+  flashEffect(element) {
+    // Add a glow effect
+    if (!element) return;
+    element.style.background = 'rgba(55,55,255,0.1)';
+
+    // Remove the effect after 1 second
+    setTimeout(() => {
+      element.style.background = 'ghostwhite';
+    }, 1000);
+  }
+
+  /**
+   * render
+   * @param style
+   * @returns {Promise<void>}
+   */
+  // async render(style) {
+  async render() {
+    // console.log('render')
+    this.shadowRoot.innerHTML = '';
+    const style = `
           :host {
             position:fixed;
             display: block;
@@ -139,6 +137,10 @@ export class FxLens extends HTMLElement {
             margin:0;
             width:calc(100% - 17px);
             position:relative;
+          }
+          summary{
+            color:black;
+            background-color:ghostwhite;
           }
           .main{
             padding-left:var(--inspector-handle-width);
@@ -221,10 +223,10 @@ export class FxLens extends HTMLElement {
           }
         `;
 
-        const fores = Array.from(document.querySelectorAll('fx-fore'));
-        const instances = Array.from(document.querySelectorAll('fx-instance'));
-        const openPanels = JSON.parse(localStorage.getItem('lens-panels') || '[]');
-        this.shadowRoot.innerHTML = `
+    const fores = Array.from(document.querySelectorAll('fx-fore'));
+    const instances = Array.from(document.querySelectorAll('fx-instance'));
+    const openPanels = JSON.parse(localStorage.getItem('lens-panels') || '[]');
+    this.shadowRoot.innerHTML = `
         <style>
             ${style}
         </style>
@@ -232,136 +234,130 @@ export class FxLens extends HTMLElement {
               <div class="resizer"></div>  
               <summary class="handle"><a href="#" id="reset" title="reset panel state to defaults">&#x2715;</a></summary>
               <div>
-                ${instances.map((instance,index) => {
+                ${instances
+                  .map((instance, index) => {
                     const foreId = instance.closest('fx-fore').id;
-                    return `<details  id="d${index}" class="instance"><summary data-id="${foreId}#${instance.id}">${foreId}#${instance.id}</summary><jinn-codemirror mode="${instance.type}"></jinn-codemirror></details>`
-                }).join('')}
+                    return `<details  id="d${index}" class="instance"><summary data-id="${foreId}#${instance.id}">${foreId}#${instance.id}</summary><jinn-codemirror mode="${instance.type}"></jinn-codemirror></details>`;
+                  })
+                  .join('')}
               </div>
           </details>
         `;
 
-        const lensWidth = localStorage.getItem('lens-width');
-        if(lensWidth){
-            this.style.width = `${lensWidth}px`;
-        }
-
-        const main = this.shadowRoot.querySelector('.main');
-        const opened = localStorage.getItem('lens-open');
-        if(opened){
-            if(opened === 'true'){
-                main.setAttribute('open','open');
-            }else{
-                main.removeAttribute('open');
-                this.removeAttribute('open');
-                this.removeAttribute('style');
-            }
-        }else{
-            main.setAttribute('open','open');
-        }
-
-        for (let i = 0; i < instances.length; i++) {
-            const editors = Array.from(this.shadowRoot.querySelectorAll('jinn-codemirror'));
-            editors[i].value = instances[i].instanceData;
-        }
-
-        const handle = this.shadowRoot.querySelector('.handle');
-        handle.addEventListener('click', e => {
-            if (this.hasAttribute('open')) {
-                this.removeAttribute('open');
-                this.removeAttribute('style');
-                localStorage.setItem('lens-open','false');
-            } else {
-                this.setAttribute('open', 'open');
-                if(lensWidth){
-                    this.style.width = `${lensWidth}px`;
-                }
-                localStorage.setItem('lens-open','true');
-                this.render();
-            }
-        });
-
-        const reset = this.shadowRoot.querySelector('.handle a');
-        reset.addEventListener('click',(event)=>{
-            event.preventDefault();
-            event.stopPropagation();
-            localStorage.removeItem('lens-width');
-            localStorage.removeItem('lens-open');
-            localStorage.removeItem('lens-panels');
-        });
-
-        const sections = this.shadowRoot.querySelectorAll('summary');
-        Array.from(sections).forEach(sec => {
-            sec.addEventListener('click', (ev) => {
-
-                const details = ev.target.parentNode;
-                const id = details.id;
-                const panes = JSON.parse(localStorage.getItem('lens-panels') || '[]');
-                if(!details.hasAttribute('open')){
-                    if(!panes.includes(id)){
-                        panes.push(id);
-                        localStorage.setItem('lens-panels', JSON.stringify(panes));
-                    }
-                }else{
-                    if(panes.includes(id)){
-                        const idx = panes.indexOf(id);
-                        panes.splice(idx,1);
-                        localStorage.setItem('lens-panels',JSON.stringify(panes))
-                    }
-                }
-            })
-        });
-        const detailSections = this.shadowRoot.querySelectorAll('details.instance');
-        Array.from(detailSections).forEach(sect => {
-            if(openPanels.includes(sect.id)){
-                sect.setAttribute('open','open');
-            }else{
-                sect.removeAttribute('open');
-            }
-        });
-
-        // resizing handler
-        this.resizer = this.shadowRoot.querySelector('.resizer');
-        this.resizer.addEventListener('mousedown', event => {
-            this.isResizing = true;
-            this.lastX = event.clientX;
-            this.lastWidth = this.offsetWidth;
-
-        });
-
-        document.addEventListener('mousemove', event => {
-            event.preventDefault();
-            event.stopPropagation();
-            if (!this.isResizing) return;
-            const delta =  event.clientX - this.lastX;
-            // console.log('_resizePanel',delta);
-            this.style.width = `${this.lastWidth - delta}px`;
-
-        });
-        document.addEventListener('mouseup', event => {
-            event.preventDefault();
-            event.stopPropagation();
-            this.isResizing = false;
-            this.lastX = event.clientX;
-            this.lastWidth = this.offsetWidth;
-            if(this.hasAttribute('open')){
-                localStorage.setItem('lens-width',this.lastWidth);
-            }
-        });
-
+    const lensWidth = localStorage.getItem('lens-width');
+    if (lensWidth) {
+      this.style.width = `${lensWidth}px`;
     }
 
-    update() {
-        const instances = Array.from(document.querySelectorAll('fx-instance'));
-        const editors = Array.from(this.shadowRoot.querySelectorAll('jinn-codemirror'));
-
-        for (let i = 0; i < instances.length; i++) {
-            editors[i].value = instances[i].instanceData;
-        }
+    const main = this.shadowRoot.querySelector('.main');
+    const opened = localStorage.getItem('lens-open');
+    if (opened) {
+      if (opened === 'true') {
+        main.setAttribute('open', 'open');
+      } else {
+        main.removeAttribute('open');
+        this.removeAttribute('open');
+        this.removeAttribute('style');
+      }
+    } else {
+      main.setAttribute('open', 'open');
     }
 
+    for (let i = 0; i < instances.length; i++) {
+      const editors = Array.from(this.shadowRoot.querySelectorAll('jinn-codemirror'));
+      editors[i].value = instances[i].instanceData;
+    }
 
+    const handle = this.shadowRoot.querySelector('.handle');
+    handle.addEventListener('click', e => {
+      if (this.hasAttribute('open')) {
+        this.removeAttribute('open');
+        this.removeAttribute('style');
+        localStorage.setItem('lens-open', 'false');
+      } else {
+        this.setAttribute('open', 'open');
+        if (lensWidth) {
+          this.style.width = `${lensWidth}px`;
+        }
+        localStorage.setItem('lens-open', 'true');
+        this.render();
+      }
+    });
+
+    const reset = this.shadowRoot.querySelector('.handle a');
+    reset.addEventListener('click', event => {
+      event.preventDefault();
+      event.stopPropagation();
+      localStorage.removeItem('lens-width');
+      localStorage.removeItem('lens-open');
+      localStorage.removeItem('lens-panels');
+    });
+
+    const sections = this.shadowRoot.querySelectorAll('summary');
+    Array.from(sections).forEach(sec => {
+      sec.addEventListener('click', ev => {
+        const details = ev.target.parentNode;
+        const { id } = details;
+        const panes = JSON.parse(localStorage.getItem('lens-panels') || '[]');
+        if (!details.hasAttribute('open')) {
+          if (!panes.includes(id)) {
+            panes.push(id);
+            localStorage.setItem('lens-panels', JSON.stringify(panes));
+          }
+        } else if (panes.includes(id)) {
+          const idx = panes.indexOf(id);
+          panes.splice(idx, 1);
+          localStorage.setItem('lens-panels', JSON.stringify(panes));
+        }
+      });
+    });
+    const detailSections = this.shadowRoot.querySelectorAll('details.instance');
+    Array.from(detailSections).forEach(sect => {
+      if (openPanels.includes(sect.id)) {
+        sect.setAttribute('open', 'open');
+      } else {
+        sect.removeAttribute('open');
+      }
+    });
+
+    // resizing handler
+    this.resizer = this.shadowRoot.querySelector('.resizer');
+    this.resizer.addEventListener('mousedown', event => {
+      this.isResizing = true;
+      this.lastX = event.clientX;
+      this.lastWidth = this.offsetWidth;
+    });
+
+    document.addEventListener('mousemove', event => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (!this.isResizing) return;
+      const delta = event.clientX - this.lastX;
+      // console.log('_resizePanel',delta);
+      this.style.width = `${this.lastWidth - delta}px`;
+    });
+    document.addEventListener('mouseup', event => {
+      event.preventDefault();
+      event.stopPropagation();
+      this.isResizing = false;
+      this.lastX = event.clientX;
+      this.lastWidth = this.offsetWidth;
+      if (this.hasAttribute('open')) {
+        localStorage.setItem('lens-width', this.lastWidth);
+      }
+    });
+  }
+
+  update() {
+    const instances = Array.from(document.querySelectorAll('fx-instance'));
+    const editors = Array.from(this.shadowRoot.querySelectorAll('jinn-codemirror'));
+
+    for (let i = 0; i < instances.length; i++) {
+      editors[i].value = instances[i].instanceData;
+    }
+  }
 }
 
 if (!customElements.get('fx-lens')) {
-    customElements.define('fx-lens', FxLens);
+  customElements.define('fx-lens', FxLens);
 }
