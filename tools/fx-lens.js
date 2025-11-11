@@ -1,4 +1,4 @@
-import './jinn-codemirror-bundle.js';
+// import './jinn-codemirror-bundle.js';
 
 /**
  * lists out all live instances in html 'details' and 'summary' elements.
@@ -47,35 +47,35 @@ export class FxLens extends HTMLElement {
           this.flashEffect(targetSummary);
         });
         fore.addEventListener('insert', ev => {
-          // console.log('+++++++++++++++++++++++++++++++insert');
+          console.log('+++++++++++++++++++++++++++++++insert');
           this.update();
           const targetId = `${ev.detail.foreId}#${ev.detail.instanceId}`;
           const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
           this.flashEffect(targetSummary);
         });
         fore.addEventListener('index-changed', ev => {
-          // console.log('+++++++++++++++++++++++++++++++index-changed');
+          console.log('+++++++++++++++++++++++++++++++index-changed');
           this.update();
           const targetId = `${ev.detail.foreId}#${ev.detail.instanceId}`;
           const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
           this.flashEffect(targetSummary);
         });
         fore.addEventListener('submit', ev => {
-          // console.log('+++++++++++++++++++++++++++++++submit');
+          console.log('+++++++++++++++++++++++++++++++submit');
           this.update();
           const targetId = `${ev.detail.foreId}#${ev.detail.instanceId}`;
           const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
           this.flashEffect(targetSummary);
         });
         fore.addEventListener('submit-done', ev => {
-          // console.log('+++++++++++++++++++++++++++++++submit-done');
+          console.log('+++++++++++++++++++++++++++++++submit-done');
           this.update();
           const targetId = `${ev.detail.foreId}#${ev.detail.instanceId}`;
           const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
           this.flashEffect(targetSummary);
         });
         fore.addEventListener('submit-error', ev => {
-          // console.log('+++++++++++++++++++++++++++++++submit-error');
+          console.log('+++++++++++++++++++++++++++++++submit-error');
           this.update();
           const targetId = `${ev.detail.foreId}#${ev.detail.instanceId}`;
           const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
@@ -123,7 +123,7 @@ export class FxLens extends HTMLElement {
             min-width:var(--inspector-handle-width);
             box-shadow:-2px -2px 8px rgba(0,0,0,0.3);
           }
-            
+
           :host:has(.handle:hover){
             box-shadow:-2px -2px 8px rgba(0,0,0,0.6);
           }
@@ -138,6 +138,10 @@ export class FxLens extends HTMLElement {
             width:calc(100% - 17px);
             position:relative;
           }
+          summary{
+            color:black;
+            background-color:ghostwhite;
+          }
           .main{
             padding-left:var(--inspector-handle-width);
             color:var(--inspector-color);
@@ -145,7 +149,7 @@ export class FxLens extends HTMLElement {
             height:100vh;
             background:ghostwhite);
             overflow:hidden;
-            
+
           }
           .main > div{
             overflow:auto;
@@ -189,7 +193,7 @@ export class FxLens extends HTMLElement {
             justify-content:center;
             position:absolute;
             z-index:850;
-            
+
            }
           .fore-section summary{
             cursor:pointer;
@@ -227,13 +231,13 @@ export class FxLens extends HTMLElement {
             ${style}
         </style>
           <details class="main" open>
-              <div class="resizer"></div>  
+              <div class="resizer"></div>
               <summary class="handle"><a href="#" id="reset" title="reset panel state to defaults">&#x2715;</a></summary>
               <div>
                 ${instances
                   .map((instance, index) => {
                     const foreId = instance.closest('fx-fore').id;
-                    return `<details  id="d${index}" class="instance"><summary data-id="${foreId}#${instance.id}">${foreId}#${instance.id}</summary><jinn-codemirror id="${foreId}#${instance.id}" mode="${instance.type}"></jinn-codemirror></details>`;
+                    return `<details  id="d${index}" class="instance"><summary data-id="${foreId}#${instance.id}">${foreId}#${instance.id}</summary><jinn-codemirror mode="${instance.type}"></jinn-codemirror></details>`;
                   })
                   .join('')}
               </div>
@@ -398,17 +402,6 @@ export class FxLens extends HTMLElement {
       console.warn('[fx-lens] update(): failed, but safely ignored:', err);
     }
   }
-
-  /*
-  update() {
-    const instances = Array.from(document.querySelectorAll('fx-instance'));
-    const editors = Array.from(this.shadowRoot.querySelectorAll('jinn-codemirror'));
-
-    for (let i = 0; i < instances.length; i++) {
-      editors[i].value = instances[i].instanceData;
-    }
-  }
-*/
 }
 
 if (!customElements.get('fx-lens')) {

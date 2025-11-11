@@ -1108,7 +1108,7 @@ export class FxFore extends HTMLElement {
     if (root.matches('fx-repeatitem')) {
       boundControls.unshift(root);
     }
-    // console.log('_initD', boundControls);
+    console.log('_initD', boundControls);
     for (let i = 0; i < boundControls.length; i++) {
       const bound = boundControls[i];
 
@@ -1121,10 +1121,10 @@ export class FxFore extends HTMLElement {
       }
       let ownerDoc;
       if (bound.nodeset !== null) {
-        // console.log('Node exists', control.nodeset);
+        console.log('Node exists', bound.nodeset);
         continue;
       }
-      // console.log('Node does not exists', control.ref);
+      console.log('Node does not exists', bound.ref);
 
       // We need to create that node!
       const previousControl = boundControls[i - 1];
@@ -1133,8 +1133,8 @@ export class FxFore extends HTMLElement {
       // First: parent
       if (previousControl && previousControl.contains(bound)) {
         // Parent is here.
-        // console.log('insert into', bound,previousControl);
-        // console.log('insert into nodeset', control.nodeset);
+        console.log('insert into', bound,previousControl);
+        console.log('insert into nodeset', bound.nodeset);
         const parentNodeset = previousControl.nodeset;
         // console.log('parentNodeset', parentNodeset);
 
