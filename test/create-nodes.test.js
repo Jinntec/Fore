@@ -30,6 +30,33 @@ describe('create-nodes', () => {
     );
   });
 
+  it('ignores "." expressions since they are not steps in our case', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore create-nodes>
+        <fx-model id="model1">
+          <fx-instance>
+            <data>
+              <greeting>Hello!</greeting>
+            </data>
+          </fx-instance>
+          <fx-group ref=".">
+            <fx-control ref="greeting"></fx-control>
+            <fx-control ref="./new-greeting/."></fx-control>
+          </fx-group>
+        </fx-model>
+      </fx-fore>
+    `);
+
+    //      await elementUpdated(el);
+    await oneEvent(el, 'ready');
+
+    const inst = document.querySelector('fx-instance');
+
+    expect(inst.instanceData.documentElement.innerHTML.replaceAll(/\s/g, '')).to.equal(
+      '<greeting>Hello!</greeting><new-greeting/>',
+    );
+  });
+
   it('works for a complex case', async () => {
     const el = await fixtureSync(html`
       <fx-fore create-nodes>
