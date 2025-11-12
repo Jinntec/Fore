@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes"
+      name="viewport"
+    />
+    <title>template</title>
+    <link href="../resources/fore.css" rel="stylesheet" />
+  </head>
+  <body>
+    <demo-snippet>
+      <template>
+        <fx-fore create-nodes>
+          <fx-model>
+            <fx-instance>
+              <data>
+                <root>
+                  <foo>FOO</foo>
+                  <bar>BAR</bar>
+                </root>
+              </data>
+            </fx-instance>
+          </fx-model>
+
+          <fx-group ref="root">
+            <fx-control ref="foo">
+              <label>I'm here from the get-go</label>
+            </fx-control>
+            <fx-control ref="baz">
+              <label>Not there initially, but will be created!</label>
+            </fx-control>
+            <fx-control ref="bar">
+              <label>I'm here from the get-go</label>
+            </fx-control>
+            <fx-control ref="new-element[@role='special']">
+              <label
+                >Not there initially, but will be created! With the attribute set to "{@role}"
+                ~~</label
+              >
+            </fx-control>
+            <fx-control ref="newest-element[@role='special']/extra-special[@specialness='extreme']">
+              <label
+                >Not there initially, but will be created! With the attribute, and a child! The
+                attributes are set to {ancestor-or-self::*/@*/(name() || "=" || .)} ~~</label
+              >
+            </fx-control>
+            <fx-group ref="a/very/deep[@path='here']">
+              <fx-control ref="and/now[@i='map']/to/@anAttribute"
+                ><label>And this nests ina group, and addresses an attribute!</label></fx-control
+              >
+            </fx-group>
+          </fx-group>
+        </fx-fore>
+      </template>
+    </demo-snippet>
+    <script type="module" src="./demo.js"></script>
+  </body>
+</html>
