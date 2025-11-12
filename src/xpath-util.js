@@ -1,4 +1,5 @@
 import * as fx from 'fontoxpath';
+import { createNamespaceResolver } from './xpath-evaluation';
 
 export class XPathUtil {
   /**
@@ -46,6 +47,8 @@ export class XPathUtil {
    * @return {*}
    */
   static createNodesFromXPath(xpath, doc, fore) {
+    const resolveNamespace = createNamespaceResolver(xpath, fore);
+
     if (!doc) {
       doc = document.implementation.createDocument(null, null, null); // Create a new XML document if not provided
     }
@@ -88,7 +91,7 @@ export class XPathUtil {
         const { name, predicates } = result.groups;
         // Handle namespaces if present
         const [prefix, localName] = name.includes(':') ? name.split(':') : [null, name];
-        const namespace = prefix ? XPathUtil.lookupNamespace(fore, prefix) : null;
+        const namespace = resolveNamespace(prefix);
 
         const newElement = namespace
           ? doc.createElementNS(namespace, localName)
