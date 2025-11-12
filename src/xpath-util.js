@@ -65,23 +65,50 @@ export class XPathUtil {
         }
         currentNode.setAttribute(attrName, '');
       } else {
+        // We are a predicate selector! Handle it
+        // This regex matches strings like:
+        // - listBibl
+        // - tei:listBibl
+        // - listBibl[@type="foo"]
+        // - listBibl[@type="foo"][@class="bar"]
+        // It will also match strings like
+        // - listBibl[ancestor-or-self::foo]
+        // which will be filtered out later.
+
+        const result = part.match(/^(?<name>[\w:-]+)(?<predicates>(\[[^]*\])*)$/);
+        if (!result) {
+          throw new Error(
+            `No element could be made from the XPath step ${part}. It must be of these forms: 'localName', 'prefix:name', 'name[@attr="value"]' et cetera.`,
+          );
+        }
+        const { name, predicates } = result.groups;
         // Handle namespaces if present
-        const [prefix, localName] = part.includes(':') ? part.split(':') : [null, part];
+        const [prefix, localName] = name.includes(':') ? name.split(':') : [null, name];
         const namespace = prefix ? XPathUtil.lookupNamespace(fore, prefix) : null;
 
         const newElement = namespace
-          ? doc.createElementNS(namespace, part)
+          ? doc.createElementNS(namespace, localName)
           : doc.createElement(localName);
 
-        if (!rootNode) {
-          rootNode = newElement; // Set as the root node
+        if (predicates) {
+          const predicateExtractionRegex =
+            /(\[@(?<name>[\w:-]*)\s?=\s?["'](?<value>[^"']*)['"]\])+/g;
+          const parsedPredicates = predicates
+            .matchAll(predicateExtractionRegex)
+            .map(match => ({ attrName: match.groups.name, value: match.groups.value }));
+          for (const { attrName, value } of parsedPredicates) {
+            newElement.setAttribute(attrName, value);
+          }
         } else {
-          currentNode.appendChild(newElement);
+          if (!rootNode) {
+            rootNode = newElement; // Set as the root node
+          } else {
+            currentNode.appendChild(newElement);
+          }
+          currentNode = newElement;
         }
-        currentNode = newElement;
       }
     }
-
     if (!rootNode) {
       throw new Error('Invalid XPath; no root element could be created.');
     }
