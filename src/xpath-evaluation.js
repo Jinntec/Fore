@@ -242,7 +242,7 @@ function findInstanceReferences(xpathQuery) {
  * @param  {HTMLElement} formElement
  * @returns {NamespaceResolver} The namespace resolver for this context
  */
-function createNamespaceResolver(xpathQuery, formElement) {
+export function createNamespaceResolver(xpathQuery, formElement) {
   const cachedResolver = getCachedNamespaceResolver(xpathQuery, formElement);
   if (cachedResolver) {
     return cachedResolver;
