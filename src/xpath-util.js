@@ -56,6 +56,10 @@ export class XPathUtil {
 
     for (const part of parts) {
       if (!part) continue; // Skip empty parts (e.g., leading slashes)
+      if (part === '.') {
+        // A '.' does not introduce new elements
+        continue;
+      }
 
       // Handle attributes
       if (part.startsWith('@')) {
