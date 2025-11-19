@@ -41,6 +41,9 @@ export class FxModel extends HTMLElement {
     this.fore = {};
   }
 
+  /**
+   * @returns {import('./fx-fore.js').FxFore}
+   */
   get formElement() {
     return this.parentElement;
   }
