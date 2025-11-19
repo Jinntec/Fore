@@ -177,7 +177,7 @@ export class AbstractAction extends ForeElementMixin {
       }
     } else {
       this.targetElement = this.parentNode;
-      if(!this.targetElement || this.targetElement.nodeType !== Node.ELEMENT_NODE) return;
+      if (!this.targetElement || this.targetElement.nodeType !== Node.ELEMENT_NODE) return;
       this.targetElement.addEventListener(this.event, e => this.execute(e), {
         capture: this.phase === 'capture',
       });
@@ -194,7 +194,7 @@ export class AbstractAction extends ForeElementMixin {
       await Fore.dispatch(this, 'error', {
         origin: this,
         message: 'Action execution failed',
-        expr: XPathUtil.getDocPath(this),
+        expr: error,
         level: 'Error',
       });
       // Return false to indicate failure. Any loops must be canceled
@@ -406,7 +406,7 @@ export class AbstractAction extends ForeElementMixin {
     this.actionPerformed();
     if (FxFore.outermostHandler === this) {
       console.log(
-        `%cfinalizing outermost Action on ${this.getOwnerForm().id}`,
+        `%cfinalizing outermost Action on ${this.getOwnerForm()?.id}`,
         'background:darkblue; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
         this,
       );
