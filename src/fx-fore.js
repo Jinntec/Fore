@@ -12,6 +12,7 @@ import getInScopeContext from './getInScopeContext.js';
 import { XPathUtil } from './xpath-util.js';
 import { FxRepeatAttributes } from './ui/fx-repeat-attributes.js';
 import { ModelItem } from './modelitem.js';
+import { FxBind } from './fx-bind.js';
 
 /**
  * Makes the dirty state of the form.
@@ -111,7 +112,10 @@ export class FxFore extends HTMLElement {
     super();
     this.version = '[VI]Version: {version} - built on {date}[/VI]';
 
-    this.model = {};
+    /**
+     * @type {import('./fx-model.js').FxModel}
+     */
+    this.model = null;
     this.inited = false;
     // this.addEventListener('model-construct-done', this._handleModelConstructDone);
     // todo: refactoring - these should rather go into connectedcallback
@@ -1092,6 +1096,75 @@ export class FxFore extends HTMLElement {
   }
 
   /**
+   * @summary
+   * Find the reference node (the future previous sibling) for a newly created element.
+   *
+   * @description This works in two passes: if there is a bind available for both the parent and the
+   * child, it determines where to insert based on those binds: after an element matching the previous bind in document order, before the next sibling of that one cause `insertBefore` is easier .
+   *
+   * For example, take this structure:
+   * ```html
+   * <fx-bind ref="root">
+   *   <fx-bind ref="a" />
+   *   <fx-bind ref="b" />
+   *   <fx-bind ref="c" />
+   * </fx-bind>
+   * ```
+   * Inserting a `<b/>`, it will be inserted before a `<c/>`, or at the end. Whatever comes after the `<a/>`.
+   *
+   * If there are no binds, the previous bound element will be used to determine the location.
+   * @private
+   *
+   * @param {Element} newElement - The newly created element
+   * @param {ParentNode} parentElement - The parent under which the element will be inserted
+   * @param {import('./ForeElementMixin.js').default} previousControl - The previous control. Will
+   * be used to determine a fallback to snert the element under if there are no binds for the parent
+   * @param {import('./ForeElementMixin.js').default} boundControl - The control for which the element is created
+   * element.
+   *
+   * @returns {ChildNode}
+   */
+  _findReferenceNodeForNewElement(newElement, parentElement, previousControl, boundControl) {
+    const bindForElement = this.model.getModelItem(parentElement)?.bind;
+    if (!bindForElement) {
+      // Parent is unbound. No clue what to do with this. Insert based on previous control
+      let referenceNode = previousControl?.getModelItem()?.node;
+      // We know which node to insert this new element to, but it might be a descendant of a child
+      // of the actual parent. Walk up until we have a reference under our parent
+      while (referenceNode?.parentNode && referenceNode?.parentNode !== parentElement) {
+        referenceNode = referenceNode.parentNode;
+      }
+      return referenceNode;
+    }
+
+    // Temporarily insert the new element under the parent to see which XPath will match
+    try {
+      parentElement.appendChild(newElement);
+
+      const bindForElement = this.model.getBindForElement(newElement);
+      if (bindForElement) {
+        /**
+         * @type {FxBind}
+         */
+        const previousBind = bindForElement.previousElementSibling;
+        if (previousBind) {
+          return previousBind.nodeset.find(node => parentElement.contains(node));
+        }
+      }
+    } finally {
+      newElement.remove();
+    }
+    // No clue. Insert based on previous control.
+    // We know which node to insert this new element to, but it might be a descendant of a child
+    // of the actual parent. Walk up until we have a reference under our parent
+    let referenceNode = previousControl?.getModelItem()?.node;
+    while (referenceNode?.parentNode && referenceNode?.parentNode !== parentElement) {
+      referenceNode = referenceNode.parentNode;
+    }
+    return referenceNode;
+  }
+
+  /**
    * @param  {HTMLElement}  root The root of the data initialization. fx-repeat overrides this when it makes new repeat items
    *
    */
@@ -1100,6 +1173,9 @@ export class FxFore extends HTMLElement {
     console.log('INIT');
     // const boundControls = Array.from(root.querySelectorAll('[ref]:not(fx-model *),fx-repeatitem'));
 
+    /**
+     * @type {import('./ForeElementMixin.js').default[]}
+     */
     const boundControls = Array.from(
       root.querySelectorAll(
         'fx-control[ref],fx-upload[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref]',
@@ -1108,7 +1184,7 @@ export class FxFore extends HTMLElement {
     if (root.matches('fx-repeatitem')) {
       boundControls.unshift(root);
     }
-    console.log('_initD', boundControls);
+    console.log('_initData', boundControls);
     for (let i = 0; i < boundControls.length; i++) {
       const bound = boundControls[i];
 
@@ -1119,7 +1195,6 @@ export class FxFore extends HTMLElement {
         // Repeat items are dumb. They do not respond to evalInContext
         bound.evalInContext();
       }
-      let ownerDoc;
       if (bound.nodeset !== null) {
         console.log('Node exists', bound.nodeset);
         continue;
@@ -1133,8 +1208,11 @@ export class FxFore extends HTMLElement {
       // First: parent
       if (previousControl && previousControl.contains(bound)) {
         // Parent is here.
-        console.log('insert into', bound,previousControl);
+        console.log('insert into', bound, previousControl);
         console.log('insert into nodeset', bound.nodeset);
+        /**
+         * @type {ParentNode}
+         */
         const parentNodeset = previousControl.nodeset;
         // console.log('parentNodeset', parentNodeset);
 
@@ -1148,9 +1226,20 @@ export class FxFore extends HTMLElement {
 
         const newElement = this._createNodes(ref, parentNodeset);
 
-        // Plonk it in at the start!
-        parentNodeset.insertBefore(newElement, parentNodeset.firstChild);
+        const referenceNode = this._findReferenceNodeForNewElement(
+          newElement,
+          parentNodeset,
+          null,
+          bound,
+        );
+        if (referenceNode) {
+          referenceNode.after(newElement);
+        } else {
+          parentNodeset.prepend(newElement);
+        }
         bound.evalInContext();
+        bound.getModelItem().bind?.evalInContext();
+
         // console.log('CREATED child', newElement);
         // console.log('new control evaluated to ', control.nodeset);
         // Done!
@@ -1185,22 +1274,29 @@ export class FxFore extends HTMLElement {
       // todo: review: should this not just be inscopeContext?
       const parentNodeset = ourParent.nodeset;
       const ref = bound.ref;
-      let referenceNodeset = siblingControl.nodeset;
-      const newElement = this._createNodes(ref, parentNodeset);
 
-      // We know which node to insert this new element to, but it might be a descendant of a child of the actual parent. Walk up until we have a reference under our parent
-      while (referenceNodeset?.parentNode && referenceNodeset?.parentNode !== parentNodeset) {
-        referenceNodeset = referenceNodeset.parentNode;
+      const newElement = this._createNodes(ref, parentNodeset);
+      let referenceNode = this._findReferenceNodeForNewElement(
+        newElement,
+        parentNodeset,
+        siblingControl,
+        bound,
+      );
+
+      if (referenceNode) {
+        referenceNode.after(newElement);
+      } else {
+        parentNodeset.prepend(newElement);
       }
 
-      // Insert before the next sibling our our logical previous sibling
-      parentNodeset.insertBefore(newElement, referenceNodeset.nextElementSibling);
       /*
             console.log('control inscope', control.getInScopeContext());
             console.log('control ref', control.ref);
             console.log('control new element parent', newElement.parentNode.nodeName);
-*/
+      */
+
       bound.evalInContext();
+      bound.getModelItem().bind?.evalInContext();
       // console.log('new control evaluated to ', control.nodeset);
       // console.log('CREATED sibling', newElement);
     }

@@ -22,6 +22,14 @@
                 </root>
               </data>
             </fx-instance>
+
+            <fx-bind ref="root">
+              <fx-bind ref="foo"></fx-bind>
+              <fx-bind ref="baz"></fx-bind>
+              <fx-bind ref="between-baz-and-bar"></fx-bind>
+              <fx-bind ref="bar"></fx-bind>
+              <fx-bind ref="new-element"></fx-bind>
+            </fx-bind>
           </fx-model>
 
           <fx-group ref="root">
@@ -36,14 +44,16 @@
             </fx-control>
             <fx-control ref="new-element[@role='special']">
               <label
-                >Not there initially, but will be created! With the attribute set to "{@role}"
-                ~~</label
+                >Not there initially, but will be created! With the attribute set to
+                "<code>{@role}</code>"</label
+              >
               >
             </fx-control>
             <fx-control ref="newest-element[@role='special']/extra-special[@specialness='extreme']">
               <label
                 >Not there initially, but will be created! With the attribute, and a child! The
-                attributes are set to {ancestor-or-self::*/@*/(name() || "=" || .)} ~~</label
+                attributes are set to
+                <code>{ancestor-or-self::*/@*/(name() || "=" || .)}</code></label
               >
             </fx-control>
             <fx-group ref="a/very/deep[@path='here']">
@@ -51,6 +61,16 @@
                 ><label>And this nests ina group, and addresses an attribute!</label></fx-control
               >
             </fx-group>
+            <fx-control ref="between-baz-and-bar"
+              ><label
+                >I should be between baz and bar in the XML. My previous sibling is
+                <code>{(preceding-sibling::*[1]/("&lt;" || name() || "/&gt;"), "absent")[1]}</code>
+                and my following sibling is
+                <code
+                  >{(following-sibling::*[1]/("&lt;" || name() || "/&gt;"), "absent")[1]}</code
+                ></label
+              ></fx-control
+            >
           </fx-group>
         </fx-fore>
       </template>
