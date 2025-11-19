@@ -37,6 +37,9 @@ export class FxBind extends ForeElementMixin {
 
   constructor() {
     super();
+    /**
+     * @type {Node[]}
+     */
     this.nodeset = [];
     this.model = {};
     this.contextNode = {};

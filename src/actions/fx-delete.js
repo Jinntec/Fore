@@ -1,10 +1,8 @@
-import * as fx from 'fontoxpath';
 import { AbstractAction } from './abstract-action.js';
 import { Fore } from '../fore.js';
-import { evaluateXPathToNodes, evaluateXPathToString } from '../xpath-evaluation.js';
+import { evaluateXPathToNodes } from '../xpath-evaluation.js';
 import { XPathUtil } from '../xpath-util.js';
 import getInScopeContext from '../getInScopeContext.js';
-import { getPath } from '../xpath-path';
 
 /**
  * `fx-delete`
