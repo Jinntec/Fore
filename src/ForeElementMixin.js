@@ -103,7 +103,6 @@ export default class ForeElementMixin extends HTMLElement {
     let currentElement = this;
     while (currentElement && currentElement.parentNode) {
       // console.log('current ', currentElement);
-
       if (currentElement.nodeName.toUpperCase() === 'FX-FORE') {
         return currentElement;
       }
@@ -283,23 +282,21 @@ export default class ForeElementMixin extends HTMLElement {
           existed.node = targetNode;
         }
       }
-    }
-
-    if (!existed) {
-      const lazyCreatedModelItem = FxModel.lazyCreateModelItem(
-        this.getModel(),
-        this.ref,
-        this.nodeset,
-        this,
-      );
-      this.modelItem = lazyCreatedModelItem;
-      return lazyCreatedModelItem;
+      if (!existed) {
+        const lazyCreatedModelItem = FxModel.lazyCreateModelItem(
+          this.getModel(),
+          this.ref,
+          this.nodeset,
+          this,
+        );
+        this.modelItem = lazyCreatedModelItem;
+        return lazyCreatedModelItem;
+      }
     }
     this.modelItem = existed;
 
     return existed;
   }
-
   /**
    * Returns the effective value for the element.
    * a: look for 'value' attribute and if present evaluate it and return the resulting value
