@@ -76,6 +76,10 @@ export class FxModel extends HTMLElement {
    * @param {ChildNode | Attr} elementOrAttribute - the element or attribute to resolve
    */
   getBindForElement(elementOrAttribute) {
+    if (typeof elementOrAttribute !== 'object' || !('nodeType' in elementOrAttribute)) {
+      // We only do binds over nodes. Not JSON.
+      return null;
+    }
     let bindForParent;
     const parent =
       elementOrAttribute.nodeType === elementOrAttribute.ATTRIBUTE_NODE
