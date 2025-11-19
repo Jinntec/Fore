@@ -2,7 +2,7 @@ import { DepGraph } from './dep_graph.js';
 import { Fore } from './fore.js';
 import './fx-instance.js';
 import { ModelItem } from './modelitem.js';
-import { evaluateXPath, evaluateXPathToBoolean } from './xpath-evaluation.js';
+import { evaluateXPath, evaluateXPathToBoolean, evaluateXPathToNodes } from './xpath-evaluation.js';
 import { XPathUtil } from './xpath-util.js';
 
 /**
@@ -38,6 +38,11 @@ export class FxModel extends HTMLElement {
     this.attachShadow({ mode: 'open' });
     this.computes = 0;
     this.fore = {};
+
+    /**
+     * @type {import('./fx-bind.js').FxBind[]}
+     */
+    this.binds = [];
   }
 
   get formElement() {
@@ -66,6 +71,41 @@ export class FxModel extends HTMLElement {
   }
 
   /**
+   * Get the correct fx-bind for this element. Assumes the refs of all binds are always downwards.
+   *
+   * @param {ChildNode | Attr} elementOrAttribute - the element or attribute to resolve
+   */
+  getBindForElement(elementOrAttribute) {
+    let bindForParent;
+    const parent =
+      elementOrAttribute.nodeType === elementOrAttribute.ATTRIBUTE_NODE
+        ? elementOrAttribute.ownerElement
+        : elementOrAttribute.parentElement;
+    if (!parent?.parentElement) {
+      // The root. Search from here
+      bindForParent = this;
+    } else {
+      bindForParent = this.getBindForElement(parent);
+    }
+    if (!bindForParent) {
+      return null;
+    }
+
+    /**
+     * @type {import('./fx-bind.js').FxBind[]}
+     */
+    const childBinds = Array.from(bindForParent.children).filter(c => c.nodeName === 'FX-BIND');
+    for (const childBind of childBinds) {
+      const ref = childBind.ref;
+      const matches = evaluateXPathToNodes(ref, parent, childBind);
+      if (matches.includes(elementOrAttribute)) {
+        return childBind;
+      }
+    }
+    return null;
+  }
+
+  /**
    * @param {FxModel}           model        The model to create a model item for
    * @param {string}            ref          The XPath ref that led to this model item
    * @param {Node}              node         The node the XPath led to
@@ -86,7 +126,7 @@ export class FxModel extends HTMLElement {
         Fore.CONSTRAINT_DEFAULT,
         Fore.TYPE_DEFAULT,
         null,
-        this,
+        null,
         instanceId,
       );
 
@@ -124,7 +164,7 @@ export class FxModel extends HTMLElement {
       Fore.CONSTRAINT_DEFAULT,
       Fore.TYPE_DEFAULT,
       targetNode,
-      this,
+      model.getBindForElement(targetNode),
       instanceId,
     );
 

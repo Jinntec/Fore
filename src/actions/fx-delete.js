@@ -4,6 +4,7 @@ import { Fore } from '../fore.js';
 import { evaluateXPathToNodes, evaluateXPathToString } from '../xpath-evaluation.js';
 import { XPathUtil } from '../xpath-util.js';
 import getInScopeContext from '../getInScopeContext.js';
+import { FxModel } from '../fx-model.js';
 
 /**
  * `fx-delete`
@@ -86,7 +87,12 @@ class FxDelete extends AbstractAction {
     if (node.nodeType === Node.DOCUMENT_FRAGMENT_NODE) return;
     if (node.parentNode === null) return;
 
-    const mi = this.getModelItem();
+    // We are considering multiple nodes here. For each of them, verify they are not readonly by
+    // getting their model item (or creating it just in time)
+    const mi =
+      this.getModel().getModelItem(node) ??
+      FxModel.lazyCreateModelItem(this.getModel(), this.ref, node, this);
+
     if (mi.readonly) return;
 
     parent.removeChild(node);
