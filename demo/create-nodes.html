@@ -43,38 +43,31 @@
               <label>I'm here from the get-go</label>
             </fx-control>
             <fx-control ref="new-element[@role='special']">
-              <label
-                >Not there initially, but will be created! With the attribute set to
-                "<code>{@role}</code>"</label
-              >
-              >
+              <label>Not there initially, but will be created! With the attribute set to
+                "<code>{@role}</code>"</label>
             </fx-control>
             <fx-control ref="newest-element[@role='special']/extra-special[@specialness='extreme']">
-              <label
-                >Not there initially, but will be created! With the attribute, and a child! The
+              <label>Not there initially, but will be created! With the attribute, and a child! The
                 attributes are set to
-                <code>{ancestor-or-self::*/@*/(name() || "=" || .)}</code></label
-              >
+                <code>{ancestor-or-self::*/@*/(name() || "=" || .)}</code></label>
             </fx-control>
             <fx-group ref="a/very/deep[@path='here']">
-              <fx-control ref="and/now[@i='map']/to/@anAttribute"
-                ><label>And this nests ina group, and addresses an attribute!</label></fx-control
-              >
+              <fx-control ref="and/now[@i='map']/to/@anAttribute">
+                <label>And this nests ina group, and addresses an attribute!</label>
+              </fx-control>
             </fx-group>
-            <fx-control ref="between-baz-and-bar"
-              ><label
-                >I should be between baz and bar in the XML. My previous sibling is
+            <fx-control ref="between-baz-and-bar">
+              <label>I should be between baz and bar in the XML. My previous sibling is
                 <code>{(preceding-sibling::*[1]/("&lt;" || name() || "/&gt;"), "absent")[1]}</code>
                 and my following sibling is
-                <code
-                  >{(following-sibling::*[1]/("&lt;" || name() || "/&gt;"), "absent")[1]}</code
-                ></label
-              ></fx-control
-            >
+                <code>{(following-sibling::*[1]/("&lt;" || name() || "/&gt;"), "absent")[1]}</code>
+              </label>
+            </fx-control>
           </fx-group>
         </fx-fore>
       </template>
     </demo-snippet>
     <script type="module" src="./demo.js"></script>
+    <script type="module" src="../tools/fx-lens.js"></script>
   </body>
 </html>
