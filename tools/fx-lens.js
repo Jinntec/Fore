@@ -1,4 +1,4 @@
-// import './jinn-codemirror-bundle.js';
+import './jinn-codemirror-bundle.js';
 
 /**
  * lists out all live instances in html 'details' and 'summary' elements.
@@ -28,7 +28,7 @@ export class FxLens extends HTMLElement {
       });
       this.fores.forEach(fore => {
         fore.addEventListener('ready', () => {
-          this.render();
+        this.render();
         });
 
         fore.addEventListener('value-changed', ev => {
