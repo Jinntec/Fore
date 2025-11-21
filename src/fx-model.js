@@ -45,6 +45,9 @@ export class FxModel extends HTMLElement {
     this.binds = [];
   }
 
+  /**
+   * @returns {import('./fx-fore.js').FxFore}
+   */
   get formElement() {
     return this.parentElement;
   }
@@ -80,6 +83,9 @@ export class FxModel extends HTMLElement {
       // We only do binds over nodes. Not JSON.
       return null;
     }
+    /**
+     * @type {import('./fx-bind.js').FxBind | FxModel}
+     */
     let bindForParent;
     const parent =
       elementOrAttribute.nodeType === elementOrAttribute.ATTRIBUTE_NODE
@@ -272,6 +278,9 @@ export class FxModel extends HTMLElement {
     binds.forEach(bind => {
       bind.init(this);
     });
+
+    // initData should be running here as well.
+    this.formElement.initData();
 
     console.log('mainGraph', this.mainGraph);
     console.log('rebuild mainGraph calc order', this.mainGraph.overallOrder());

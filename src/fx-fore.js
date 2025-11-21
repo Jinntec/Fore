@@ -2,16 +2,10 @@ import { Fore } from './fore.js';
 import './fx-instance.js';
 import { FxModel } from './fx-model.js';
 import '@jinntec/jinn-toast';
-import {
-  evaluateXPathToBoolean,
-  evaluateXPathToNodes,
-  evaluateXPathToFirstNode,
-  evaluateXPathToString,
-} from './xpath-evaluation.js';
+import { evaluateXPathToNodes, evaluateXPathToString } from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
 import { XPathUtil } from './xpath-util.js';
 import { FxRepeatAttributes } from './ui/fx-repeat-attributes.js';
-import { ModelItem } from './modelitem.js';
 import { FxBind } from './fx-bind.js';
 
 /**
@@ -326,6 +320,7 @@ export class FxFore extends HTMLElement {
         // so cancel this one.
         return;
       }
+      this.model = modelElement;
       if (!modelElement.inited) {
         console.info(
           `%cFore is processing fx-fore#${this.id}`,
@@ -345,7 +340,6 @@ export class FxFore extends HTMLElement {
         await modelElement.modelConstruct();
         this._handleModelConstructDone();
       }
-      this.model = modelElement;
 
       this._createRepeatsFromAttributes();
       this.inited = true;
@@ -1032,12 +1026,10 @@ export class FxFore extends HTMLElement {
    * @param {ParentNode} parentElement - The parent under which the element will be inserted
    * @param {import('./ForeElementMixin.js').default} previousControl - The previous control. Will
    * be used to determine a fallback to snert the element under if there are no binds for the parent
-   * @param {import('./ForeElementMixin.js').default} boundControl - The control for which the element is created
-   * element.
    *
    * @returns {ChildNode}
    */
-  _findReferenceNodeForNewElement(newElement, parentElement, previousControl, boundControl) {
+  _findReferenceNodeForNewElement(newElement, parentElement, previousControl) {
     const bindForElement = this.model.getModelItem(parentElement)?.bind;
     if (!bindForElement) {
       // Parent is unbound. No clue what to do with this. Insert based on previous control
@@ -1046,6 +1038,9 @@ export class FxFore extends HTMLElement {
       // of the actual parent. Walk up until we have a reference under our parent
       while (referenceNode?.parentNode && referenceNode?.parentNode !== parentElement) {
         referenceNode = referenceNode.parentNode;
+      }
+      if (referenceNode?.nodeType === Node.ATTRIBUTE_NODE) {
+        return null;
       }
       return referenceNode;
     }
@@ -1061,7 +1056,7 @@ export class FxFore extends HTMLElement {
          */
         const previousBind = bindForElement.previousElementSibling;
         if (previousBind) {
-          return previousBind.nodeset.find(node => parentElement.contains(node));
+          return previousBind.nodeset.find(node => parentElement.contains(node)) || null;
         }
       }
     } finally {
@@ -1074,7 +1069,9 @@ export class FxFore extends HTMLElement {
     while (referenceNode?.parentNode && referenceNode?.parentNode !== parentElement) {
       referenceNode = referenceNode.parentNode;
     }
-    return referenceNode;
+    if (referenceNode?.nodeType === Node.ATTRIBUTE_NODE) {
+      return null;
+    }
   }
 
   /**
@@ -1094,7 +1091,7 @@ export class FxFore extends HTMLElement {
         'fx-control[ref],fx-upload[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref]',
       ),
     );
-    if (root.matches('fx-repeatitem')) {
+    if (root.matches && root.matches('fx-repeatitem')) {
       boundControls.unshift(root);
     }
     console.log('_initData', boundControls);
@@ -1132,23 +1129,22 @@ export class FxFore extends HTMLElement {
         // const parentModelItemNode = parentModelItem.node;
         const ref = bound.ref;
         // const newElement = parentModelItemNode.ownerDocument.createElement(ref);
-        if (parentNodeset.querySelector(`[ref="${ref}"]`)) {
-          console.log(`Node with ref "${ref}" already exists.`);
-          continue;
-        }
+        // if (parentNodeset.querySelector(`[ref="${ref}"]`)) {
+        //   console.log(`Node with ref "${ref}" already exists.`);
+        //   continue;
+        // }
 
-        const newElement = this._createNodes(ref, parentNodeset);
+        const newNode = this._createNodes(ref, parentNodeset);
 
-        const referenceNode = this._findReferenceNodeForNewElement(
-          newElement,
-          parentNodeset,
-          null,
-          bound,
-        );
-        if (referenceNode) {
-          referenceNode.after(newElement);
+        if (newNode.nodeType === Node.ATTRIBUTE_NODE) {
+          parentNodeset.setAttributeNode(newNode);
         } else {
-          parentNodeset.prepend(newElement);
+          const referenceNode = this._findReferenceNodeForNewElement(newNode, parentNodeset, null);
+          if (referenceNode) {
+            referenceNode.after(newNode);
+          } else {
+            parentNodeset.prepend(newNode);
+          }
         }
         bound.evalInContext();
         bound.getModelItem().bind?.evalInContext();
@@ -1188,18 +1184,21 @@ export class FxFore extends HTMLElement {
       const parentNodeset = ourParent.nodeset;
       const ref = bound.ref;
 
-      const newElement = this._createNodes(ref, parentNodeset);
-      let referenceNode = this._findReferenceNodeForNewElement(
-        newElement,
-        parentNodeset,
-        siblingControl,
-        bound,
-      );
-
-      if (referenceNode) {
-        referenceNode.after(newElement);
+      const newNode = this._createNodes(ref, parentNodeset);
+      if (newNode.nodeType === Node.ATTRIBUTE_NODE) {
+        parentNodeset.setAttributeNode(newNode);
       } else {
-        parentNodeset.prepend(newElement);
+        let referenceNode = this._findReferenceNodeForNewElement(
+          newNode,
+          parentNodeset,
+          siblingControl,
+        );
+
+        if (referenceNode) {
+          referenceNode.after(newNode);
+        } else {
+          parentNodeset.prepend(newNode);
+        }
       }
 
       /*
@@ -1210,6 +1209,10 @@ export class FxFore extends HTMLElement {
 
       bound.evalInContext();
       bound.getModelItem().bind?.evalInContext();
+
+      if (!bound.nodeset) {
+        throw new Error('Creating annode failed');
+      }
       // console.log('new control evaluated to ', control.nodeset);
       // console.log('CREATED sibling', newElement);
     }

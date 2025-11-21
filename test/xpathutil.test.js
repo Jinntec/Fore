@@ -1,6 +1,4 @@
-import {
-  html, fixtureSync, expect, oneEvent,
-} from '@open-wc/testing';
+import { html, fixtureSync, expect, oneEvent } from '@open-wc/testing';
 
 import { XPathUtil } from '../src/xpath-util.js';
 
@@ -56,5 +54,30 @@ describe('XPathUtil Tests', () => {
     expect(XPathUtil.getParentBindingElement(inner)).to.equal(outer);
     const action = el.querySelector('fx-setvalue');
     expect(XPathUtil.getParentBindingElement(action)).to.equal(inner);
+  });
+
+  describe('createNodesFromXPath', () => {
+    const document = new window.DOMParser().parseFromString('<xml/>', 'text/xml');
+    it(`works for "listBibl[@type='transmission']/bibl"`, () => {
+      const el = fixtureSync(html`
+        <fx-fore>
+          <fx-model>
+            <fx-instance>
+              <data>
+                <counter>0</counter>
+              </data>
+            </fx-instance>
+          </fx-model>
+        </fx-fore>
+      `);
+
+      const node = XPathUtil.createNodesFromXPath(
+        `listBibl[@type='transmission']/bibl`,
+        document,
+        el,
+      );
+
+      expect(node.outerHTML).to.equal('<listBibl type="transmission"><bibl/></listBibl>');
+    });
   });
 });
