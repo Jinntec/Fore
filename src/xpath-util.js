@@ -42,9 +42,9 @@ export class XPathUtil {
    * supports multiple steps
    *
    * @param xpath
-   * @param doc
+   * @param doc {XMLDocument}
    * @param fore
-   * @return {*}
+   * @return {Node|Attr}
    */
   static createNodesFromXPath(xpath, doc, fore) {
     const resolveNamespace = createNamespaceResolver(xpath, fore);
@@ -53,7 +53,34 @@ export class XPathUtil {
       doc = document.implementation.createDocument(null, null, null); // Create a new XML document if not provided
     }
 
-    const parts = xpath.split('/');
+    const parts = [];
+    let scratch = '';
+    let isInPredicate = false;
+    for (const char of xpath.split('')) {
+      if (!isInPredicate) {
+        // We are not in a predicate, the slash will terminate our step.
+        if (char === '/') {
+          parts.push(scratch);
+          scratch = '';
+          continue;
+        }
+
+        scratch += char;
+        if (char === '[') {
+          isInPredicate = true;
+        }
+        continue;
+      }
+      // We are in a predicate! So the only interesting token is ']', which means we're out of one.
+      scratch += char;
+
+      if (char === ']') {
+        isInPredicate = false;
+      }
+    }
+    // Flush the last step
+    parts.push(scratch);
+
     let rootNode = null;
     let currentNode = null;
 
@@ -68,7 +95,7 @@ export class XPathUtil {
       if (part.startsWith('@')) {
         const attrName = part.slice(1); // Strip '@'
         if (!currentNode) {
-          throw new Error('Cannot create an attribute without a parent element.');
+          return doc.createAttribute(attrName, '');
         }
         currentNode.setAttribute(attrName, '');
       } else {
@@ -232,7 +259,10 @@ export class XPathUtil {
       (start.parentNode.nodeType !== Node.DOCUMENT_NODE ||
         start.parentNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE)
     ) {
-      return this.getClosest('[ref],fx-repeatitem', start.parentNode);
+      return this.getClosest(
+        'fx-control[ref],fx-upload[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref],fx-repeatitem',
+        start.parentNode,
+      );
     }
     return null;
   }

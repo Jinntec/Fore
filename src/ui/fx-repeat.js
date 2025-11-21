@@ -73,6 +73,8 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
   connectedCallback() {
     super.connectedCallback();
+    this.template = this.querySelector('template');
+
     // console.log('connectedCallback',this);
     // this.display = window.getComputedStyle(this, null).getPropertyValue("display");
     this.ref = this.getAttribute('ref');
@@ -596,7 +598,6 @@ export class FxRepeat extends withDraggability(UIElement, false) {
   }
 
   _initTemplate() {
-    this.template = this.querySelector('template');
     // console.log('### init template for repeat ', this.id, this.template);
     // todo: this.dropTarget not needed?
     this.dropTarget = this.template.getAttribute('drop-target');

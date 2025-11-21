@@ -86,6 +86,9 @@ export class FxModel extends HTMLElement {
       // We only do binds over nodes. Not JSON.
       return null;
     }
+    /**
+     * @type {import('./fx-bind.js').FxBind | FxModel}
+     */
     let bindForParent;
     const parent =
       elementOrAttribute.nodeType === elementOrAttribute.ATTRIBUTE_NODE
@@ -280,8 +283,11 @@ export class FxModel extends HTMLElement {
       bind.init(this);
     });
 
-    // console.log('mainGraph', this.mainGraph);
-    // console.log('rebuild mainGraph calc order', this.mainGraph.overallOrder());
+    // initData should be running here as well.
+    this.formElement.initData();
+
+    console.log('mainGraph', this.mainGraph);
+    console.log('rebuild mainGraph calc order', this.mainGraph.overallOrder());
 
     // this.dispatchEvent(new CustomEvent('rebuild-done', {detail: {maingraph: this.mainGraph}}));
     Fore.dispatch(this, 'rebuild-done', { maingraph: this.mainGraph });
