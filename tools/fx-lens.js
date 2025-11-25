@@ -123,7 +123,7 @@ export class FxLens extends HTMLElement {
             min-width:var(--inspector-handle-width);
             box-shadow:-2px -2px 8px rgba(0,0,0,0.3);
           }
-            
+
           :host:has(.handle:hover){
             box-shadow:-2px -2px 8px rgba(0,0,0,0.6);
           }
@@ -149,7 +149,7 @@ export class FxLens extends HTMLElement {
             height:100vh;
             background:ghostwhite);
             overflow:hidden;
-            
+
           }
           .main > div{
             overflow:auto;
@@ -193,7 +193,7 @@ export class FxLens extends HTMLElement {
             justify-content:center;
             position:absolute;
             z-index:850;
-            
+
            }
           .fore-section summary{
             cursor:pointer;
@@ -231,18 +231,9 @@ export class FxLens extends HTMLElement {
             ${style}
         </style>
           <details class="main" open>
-              <div class="resizer"></div>  
+              <div class="resizer"></div>
               <summary class="handle"><a href="#" id="reset" title="reset panel state to defaults">&#x2715;</a></summary>
-              <div>
-                ${instances
-                  .map((instance, index) => {
-                    const foreId = instance.closest('fx-fore').id;
-                    return `<details  id="d${index}" class="instance"><summary data-id="${foreId}#${instance.id}">${foreId}#${instance.id}</summary><jinn-codemirror mode="${instance.type}"></jinn-codemirror></details>`;
-                  })
-                  .join('')}
-              </div>
-          </details>
-        `;
+              <div id="codemirrors">${this.renderCodeMirrors(instances)}</div></details>`;
 
     const lensWidth = localStorage.getItem('lens-width');
     if (lensWidth) {
@@ -348,12 +339,27 @@ export class FxLens extends HTMLElement {
     });
   }
 
+  renderCodeMirrors(instances) {
+    return instances
+      .map((instance, index) => {
+        const foreId = instance.closest('fx-fore').id;
+        return `<details  id="d${index}" class="instance"><summary data-id="${foreId}#${instance.id}">${foreId}#${instance.id}</summary><jinn-codemirror mode="${instance.type}"></jinn-codemirror></details>`;
+      })
+      .join('');
+  }
+
   update() {
     const instances = Array.from(document.querySelectorAll('fx-instance'));
     const editors = Array.from(this.shadowRoot.querySelectorAll('jinn-codemirror'));
 
-    for (let i = 0; i < instances.length; i++) {
-      editors[i].value = instances[i].instanceData;
+    if (instances.length !== editors.length) {
+      // We got an extra instance at run-time. Might have been loaded in a fx-fore with a src
+      // attribute set
+      this.shadowRoot.querySelector('#codemirrors').innerHTML = this.renderCodeMirrors(instances);
+    } else {
+      for (let i = 0; i < instances.length; i++) {
+        editors[i].value = instances[i].instanceData;
+      }
     }
   }
 }
