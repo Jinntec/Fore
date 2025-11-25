@@ -28,7 +28,7 @@ export class FxLens extends HTMLElement {
       });
       this.fores.forEach(fore => {
         fore.addEventListener('ready', () => {
-        this.render();
+          this.render();
         });
 
         fore.addEventListener('value-changed', ev => {
@@ -233,16 +233,7 @@ export class FxLens extends HTMLElement {
           <details class="main" open>
               <div class="resizer"></div>
               <summary class="handle"><a href="#" id="reset" title="reset panel state to defaults">&#x2715;</a></summary>
-              <div>
-                ${instances
-                  .map((instance, index) => {
-                    const foreId = instance.closest('fx-fore').id;
-                    return `<details  id="d${index}" class="instance"><summary data-id="${foreId}#${instance.id}">${foreId}#${instance.id}</summary><jinn-codemirror mode="${instance.type}"></jinn-codemirror></details>`;
-                  })
-                  .join('')}
-              </div>
-          </details>
-        `;
+              <div id="codemirrors">${this.renderCodeMirrors(instances)}</div></details>`;
 
     const lensWidth = localStorage.getItem('lens-width');
     if (lensWidth) {
@@ -348,6 +339,15 @@ export class FxLens extends HTMLElement {
     });
   }
 
+  renderCodeMirrors(instances) {
+    return instances
+      .map((instance, index) => {
+        const foreId = instance.closest('fx-fore').id;
+        return `<details  id="d${index}" class="instance"><summary data-id="${foreId}#${instance.id}">${foreId}#${instance.id}</summary><jinn-codemirror mode="${instance.type}"></jinn-codemirror></details>`;
+      })
+      .join('');
+  }
+
   update() {
     try {
       if (!this.shadowRoot) return;
@@ -356,46 +356,52 @@ export class FxLens extends HTMLElement {
       const editors = Array.from(this.shadowRoot.querySelectorAll('jinn-codemirror'));
       if (!instances.length || !editors.length) return;
 
-      const editorsById = new Map(editors.map(ed => [ed.id || '', ed]));
+      if (instances.length !== editors.length) {
+        // We got an extra instance at run-time. Might have been loaded in a fx-fore with a src
+        // attribute set
+        this.shadowRoot.querySelector('#codemirrors').innerHTML = this.renderCodeMirrors(instances);
+      } else {
+        const editorsById = new Map(editors.map(ed => [ed.id || '', ed]));
 
-      const isXmlNode = v =>
-        v && typeof v === 'object' && (v.nodeType === 1 || v.nodeType === 9 || v.nodeType === 11); // Element, Document, DocFragment
-      const xmlSer = new XMLSerializer();
+        const isXmlNode = v =>
+          v && typeof v === 'object' && (v.nodeType === 1 || v.nodeType === 9 || v.nodeType === 11); // Element, Document, DocFragment
+        const xmlSer = new XMLSerializer();
 
-      for (let i = 0; i < instances.length; i++) {
-        try {
-          const inst = instances[i];
-          const foreId = inst.closest('fx-fore')?.id || '';
-          const instId = inst.getAttribute('id') || 'default';
-          const key = `${foreId}#${instId}`;
+        for (let i = 0; i < instances.length; i++) {
+          try {
+            const inst = instances[i];
+            const foreId = inst.closest('fx-fore')?.id || '';
+            const instId = inst.getAttribute('id') || 'default';
+            const key = `${foreId}#${instId}`;
 
-          const editor = editorsById.get(key) || editors[i];
-          if (!editor) continue;
+            const editor = editorsById.get(key) || editors[i];
+            if (!editor) continue;
 
-          const raw = inst.instanceData;
-          let value = '';
+            const raw = inst.instanceData;
+            let value = '';
 
-          if (raw == null) {
-            value = '';
-          } else if (typeof raw === 'string') {
-            value = raw;
-          } else if (isXmlNode(raw)) {
-            // Serialize XML Documents/Elements/Fragments
-            value = xmlSer.serializeToString(raw);
-          } else if (typeof raw === 'object') {
-            // Pretty JSON for objects/arrays
-            try {
-              value = JSON.stringify(raw, null, 2);
-            } catch {
+            if (raw == null) {
+              value = '';
+            } else if (typeof raw === 'string') {
+              value = raw;
+            } else if (isXmlNode(raw)) {
+              // Serialize XML Documents/Elements/Fragments
+              value = xmlSer.serializeToString(raw);
+            } else if (typeof raw === 'object') {
+              // Pretty JSON for objects/arrays
+              try {
+                value = JSON.stringify(raw, null, 2);
+              } catch {
+                value = String(raw);
+              }
+            } else {
               value = String(raw);
             }
-          } else {
-            value = String(raw);
-          }
 
-          editor.value = value;
-        } catch (rowErr) {
-          console.warn('[fx-lens] update(): skipped one instance due to error:', rowErr);
+            editor.value = value;
+          } catch (rowErr) {
+            console.warn('[fx-lens] update(): skipped one instance due to error:', rowErr);
+          }
         }
       }
     } catch (err) {
