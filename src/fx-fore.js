@@ -1105,7 +1105,7 @@ export class FxFore extends HTMLElement {
         // Repeat items are dumb. They do not respond to evalInContext
         bound.evalInContext();
       }
-      if (bound.nodeset !== null) {
+      if (bound.nodeset !== null && !(Array.isArray(bound.nodeset) && bound.nodeset.length > 0)) {
         console.log('Node exists', bound.nodeset);
         continue;
       }
@@ -1135,7 +1135,10 @@ export class FxFore extends HTMLElement {
         // }
 
         const newNode = this._createNodes(ref, parentNodeset);
-
+        if (!newNode) {
+          // We could not make the node for some reason. Maybe it's something like `instance('XXX')`?
+          continue;
+        }
         if (newNode.nodeType === Node.ATTRIBUTE_NODE) {
           parentNodeset.setAttributeNode(newNode);
         } else {
@@ -1229,7 +1232,11 @@ export class FxFore extends HTMLElement {
             return existingNode;
         }
     console.log(`creating new node for ref: ${ref}`);
-*/
+    */
+    if (/instance\([^\)]*\)/.test(ref)) {
+      // This is an absolute path for some instance. Not supporteed for now
+      return null;
+    }
     let newElement;
     if (ref.includes('/')) {
       // multi-step ref expressions

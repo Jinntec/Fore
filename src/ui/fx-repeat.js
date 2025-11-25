@@ -318,6 +318,9 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
       if (item.nodeset !== this.nodeset[position]) {
         item.nodeset = this.nodeset[position];
+        if (this.getOwnerForm().createNodes) {
+          this.getOwnerForm().initData(item);
+        }
       }
     }
 
