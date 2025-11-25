@@ -283,8 +283,11 @@ export class FxModel extends HTMLElement {
       bind.init(this);
     });
 
-    // initData should be running here as well.
-    this.formElement.initData();
+    if (this.formElement.createNodes) {
+      // initData should be running here as well: we just got a whole new instance that may be
+      // incomplete
+      this.formElement.initData();
+    }
 
     console.log('mainGraph', this.mainGraph);
     console.log('rebuild mainGraph calc order', this.mainGraph.overallOrder());
