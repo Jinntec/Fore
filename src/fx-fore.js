@@ -1137,6 +1137,7 @@ export class FxFore extends HTMLElement {
         referenceNode = referenceNode.parentNode;
       }
       if (referenceNode?.nodeType === Node.ATTRIBUTE_NODE) {
+        // Insert the new node at the start: the previous control was an attribute
         return null;
       }
       return referenceNode;
@@ -1148,27 +1149,58 @@ export class FxFore extends HTMLElement {
 
       const bindForElement = this.model.getBindForElement(newElement);
       if (bindForElement) {
+        // There is a bind for this element! Insert the new element after the last element that
+        // matched in the preceding fx-bind
+
+        /*
+         * Assumes a bind structure like this:
+         *
+         * ```xml
+         *  <fx-bind ref="root">
+         *   <fx-bind ref="a" />
+         *   <fx-bind ref="b" />
+         *  </fx-bind>
+         * ```
+         *
+         * It will then attempt to keep all `b` elements after all `a` elements.
+         */
+
         /**
          * @type {FxBind}
          */
         const previousBind = bindForElement.previousElementSibling;
         if (previousBind) {
-          return previousBind.nodeset.find(node => parentElement.contains(node)) || null;
+          /**
+           * @type ChildNode[]}
+           */
+          const nodeset = previousBind.nodeset;
+          const lastMatchingSibling = nodeset.reverse().find(node => parentElement.contains(node));
+          if (lastMatchingSibling) {
+            return lastMatchingSibling;
+          }
+          // Otherwise, just default to appending... If this runs multiple times for multiple nodes
+          // it's unexpected to always prepend and get the order of children reversed from the UI.
+
+          // Do not fall back on the UI here, just keep it predictable if binds are in play
+          return parentElement.lastElementChild;
         }
       }
     } finally {
       newElement.remove();
     }
-    // No clue. Insert based on previous control.
-    // We know which node to insert this new element to, but it might be a descendant of a child
-    // of the actual parent. Walk up until we have a reference under our parent
+    // No clue.  Insert based on previous control.  We know which node to insert this new element
+    // into, but it might be a descendant of a child of the actual parent. Walk up until we have a
+    // reference under our parent
     let referenceNode = previousControl?.getModelItem()?.node;
     while (referenceNode?.parentNode && referenceNode?.parentNode !== parentElement) {
       referenceNode = referenceNode.parentNode;
     }
     if (referenceNode?.nodeType === Node.ATTRIBUTE_NODE) {
+      // Insert the new node at the start: the previous control was an attribute
       return null;
     }
+    // Insert after the previous control
+    return referenceNode;
   }
 
   /**
