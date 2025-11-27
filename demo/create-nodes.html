@@ -1,73 +1,119 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes"
-      name="viewport"
-    />
-    <title>template</title>
-    <link href="../resources/fore.css" rel="stylesheet" />
-  </head>
-  <body>
-    <demo-snippet>
-      <template>
-        <fx-fore create-nodes>
-          <fx-model>
-            <fx-instance>
-              <data>
-                <root>
-                  <foo>FOO</foo>
-                  <bar>BAR</bar>
-                </root>
-              </data>
-            </fx-instance>
+<head>
+  <meta charset="utf-8" />
+  <meta
+    content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes"
+    name="viewport"
+  />
+  <title>template</title>
+  <link href="../resources/fore.css" rel="stylesheet" />
+^  <link href="../resources/demo.css" rel="stylesheet" />
+  <style>
+    label{
+        white-space: wrap;
+    }
+  </style>
+</head>
+<body>
+<div class="wrapper">
+  <h1>Create nodes</h1>
+  <p>In <code>create-nodes</code> mode the complete datastructure is created by using the
+    binding expressions (<code>ref</code> attributes) used throughout a <code>fx-fore</code> element.</p>
+  <p>
+    To activate <code>create-nodes</code> mode add the attribute to the <code>fx-fore</code> element.
+    The processor will create
+    nodes for all elements that are not present in the loaded data. This mode is useful if you want to show
+    controls for all possible elements of a dataset, even if they are not present in a given set (optional nodes).</p>
 
-            <fx-bind ref="root">
-              <fx-bind ref="foo"></fx-bind>
-              <fx-bind ref="baz"></fx-bind>
-              <fx-bind ref="between-baz-and-bar"></fx-bind>
-              <fx-bind ref="bar"></fx-bind>
-              <fx-bind ref="new-element"></fx-bind>
-            </fx-bind>
-          </fx-model>
+  <p>A complete and complex datastructure can be created this way without requiring a template or reference
+  document.</p>
+  <h2>Using user interface</h2>
 
-          <fx-group ref="root">
-            <fx-control ref="foo">
-              <label>I'm here from the get-go</label>
-            </fx-control>
-            <fx-control ref="baz">
-              <label>Not there initially, but will be created!</label>
-            </fx-control>
-            <fx-control ref="bar">
-              <label>I'm here from the get-go</label>
-            </fx-control>
-            <fx-control ref="new-element[@role='special']">
-              <label>Not there initially, but will be created! With the attribute set to
-                "<code>{@role}</code>"</label>
-            </fx-control>
-            <fx-control ref="newest-element[@role='special']/extra-special[@specialness='extreme']">
-              <label>Not there initially, but will be created! With the attribute, and a child! The
-                attributes are set to
-                <code>{ancestor-or-self::*/@*/(name() || "=" || .)}</code></label>
-            </fx-control>
-            <fx-group ref="a/very/deep[@path='here']">
-              <fx-control ref="and/now[@i='map']/to/@anAttribute">
-                <label>And this nests ina group, and addresses an attribute!</label>
-              </fx-control>
-            </fx-group>
-            <fx-control ref="between-baz-and-bar">
-              <label>I should be between baz and bar in the XML. My previous sibling is
-                <code>{(preceding-sibling::*[1]/("&lt;" || name() || "/&gt;"), "absent")[1]}</code>
-                and my following sibling is
-                <code>{(following-sibling::*[1]/("&lt;" || name() || "/&gt;"), "absent")[1]}</code>
-              </label>
+  <p>If your Fore element does not specify <code>fx-bind</code> elements, the
+  resulting datastructure follows the order and structure of all binding expressions found
+  in the user interface of the page (everything except the <code>fx-model</code>).</p>
+
+  <p>This is often already fine and you're good to go. If however you need to control the order
+  of nodes for some reason see next section.</p>
+
+  <h2>Using <code>fx-bind</code> to control order</h2>
+  <p>If you strictly need to control the order of elements in the data and the user interface
+    uses a different order of display, you can use <code>fx-bind</code> elements.
+  </p>
+
+  <p>For the <code>new-element</code> binding below this means that without the <code>fx-bind</code>
+  it would be the first child of <code>root</code> as it occurs first in the user interface. With the <code>fx-bind</code> it is forced behind <code>bar</code>.</p>
+
+  <p>This way the exact shape of the datastructure can be controlled. The general rule: if a
+  <code>fx-bind</code> for the path exists it will be used to control the data order, otherwise
+  the UI binding order applies.</p>
+
+  <demo-snippet>
+    <template>
+      <fx-fore create-nodes>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <root>
+                <foo>FOO</foo>
+                <bar>BAR</bar>
+              </root>
+            </data>
+          </fx-instance>
+
+          <fx-bind ref="root">
+            <fx-bind ref="foo"></fx-bind>
+            <fx-bind ref="baz"></fx-bind>
+            <fx-bind ref="between-baz-and-bar"></fx-bind>
+            <fx-bind ref="bar"></fx-bind>
+            <fx-bind ref="new-element"></fx-bind>
+          </fx-bind>
+        </fx-model>
+
+        <fx-group ref="root">
+          <fx-control ref="new-element[@role='special']">
+            <label>I'm new - let me show first with special attribute!
+              "<code>{@role}</code>"</label>
+          </fx-control>
+
+          <fx-control ref="foo">
+            <label>I'm here from the get-go</label>
+          </fx-control>
+          <fx-control ref="baz">
+            <label>Not there initially, but will be created!</label>
+          </fx-control>
+          <fx-control ref="bar">
+            <label>I'm here from the get-go</label>
+          </fx-control>
+
+<!-- uncomment this if you want to play further games ...
+          <fx-control ref="newest-element[@role='special']/extra-special[@specialness='extreme']">
+            <label>Not there initially, but will be created! With the attribute, and a child! The
+              attributes are set to
+              <code>{ancestor-or-self::*/@*/(name() || "=" || .)}</code></label>
+          </fx-control>
+          <fx-group ref="a/very/deep[@path='here']">
+            <fx-control ref="and/now[@i='map']/to/@anAttribute">
+              <label>And this nests ina group, and addresses an attribute!</label>
             </fx-control>
           </fx-group>
-        </fx-fore>
-      </template>
-    </demo-snippet>
-    <script type="module" src="./demo.js"></script>
-    <script type="module" src="../tools/fx-lens.js"></script>
-  </body>
+          <fx-control ref="between-baz-and-bar">
+            <label>I should be between baz and bar in the XML. My previous sibling is
+              <code>{(preceding-sibling::*[1]/("&lt;" || name() || "/&gt;"), "absent")[1]}</code>
+              and my following sibling is
+              <code>{(following-sibling::*[1]/("&lt;" || name() || "/&gt;"), "absent")[1]}</code>
+            </label>
+          </fx-control>
+-->
+
+        </fx-group>
+      </fx-fore>
+    </template>
+  </demo-snippet>
+  <fx-lens></fx-lens>
+</div>
+<script src="./demo.js" type="module"></script>
+<script src="../tools/fx-lens.js" type="module"></script>
+</body>
 </html>
