@@ -1289,7 +1289,7 @@ export class FxFore extends HTMLElement {
       // console.log('previousControl', previousControl);
       // console.log('control', control);
       // Is previousControl a sibling or a descendant of a logical sibling? Keep looking backwards until we share parents!
-      const ourParent = XPathUtil.getParentBindingElement(bound);
+      let ourParent = XPathUtil.getParentBindingElement(bound);
       // console.log('ourParent', ourParent);
       let siblingControl = null;
       /*
@@ -1309,11 +1309,20 @@ export class FxFore extends HTMLElement {
         }
       }
       if (!siblingControl) {
-        throw new Error('Unexpected! there must be a sibling right?');
+        console.log('No sibling found for', bound);
       }
       // console.log('sibling', siblingControl);
       // todo: review: should this not just be inscopeContext?
-      const parentNodeset = ourParent.nodeset;
+      let parentNodeset;
+      if(!ourParent || !ourParent.nodeset){
+          /*
+          if we lost context somehow just always assume default context and append to that
+          instead of bailing out.
+           */
+          parentNodeset = root.getModel().getDefaultContext();
+      } else {
+        parentNodeset = ourParent.nodeset;
+      }
       const ref = bound.ref;
 
       const newNode = this._createNodes(ref, parentNodeset);
@@ -1327,7 +1336,12 @@ export class FxFore extends HTMLElement {
         );
 
         if (referenceNode) {
-          referenceNode.after(newNode);
+          // console.log('insert after', referenceNode,newNode);
+          if(referenceNode.nodeType === Node.DOCUMENT_NODE){
+            referenceNode.firstElementChild.append(newNode);
+           }else{
+            referenceNode.after(newNode);
+          }
         } else {
           parentNodeset.prepend(newNode);
         }
