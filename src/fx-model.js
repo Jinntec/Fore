@@ -2,15 +2,15 @@ import { DepGraph } from './dep_graph.js';
 import { Fore } from './fore.js';
 import './fx-instance.js';
 import { ModelItem } from './modelitem.js';
-import { evaluateXPath, evaluateXPathToBoolean } from './xpath-evaluation.js';
 import { getPath } from './xpath-path.js';
+import { evaluateXPath, evaluateXPathToBoolean, evaluateXPathToNodes } from './xpath-evaluation.js';
 import { XPathUtil } from './xpath-util.js';
 
 /**
- * The model of this Fore scope. It holds all the intances, binding, submissions and custom functions that
- * as required.
+ * The model of this Fore scope. It holds all the intances, binding, submissions and custom
+ * functions that as required.
  *
- * The model is updatin by executing rebuild (as needed), recalculate and revalidate in turn.
+ * The model is updated by executing rebuild (as needed), recalculate and revalidate in turn.
  *
  * After the cycle is run all modelItems have updated their stete to reflect latest computations.
  *
@@ -39,8 +39,16 @@ export class FxModel extends HTMLElement {
     this.attachShadow({ mode: 'open' });
     this.computes = 0;
     this.fore = {};
+
+    /**
+     * @type {import('./fx-bind.js').FxBind[]}
+     */
+    this.binds = [];
   }
 
+  /**
+   * @returns {import('./fx-fore.js').FxFore}
+   */
   get formElement() {
     return this.parentElement;
   }
@@ -67,18 +75,62 @@ export class FxModel extends HTMLElement {
   }
 
   /**
+   * Get the correct fx-bind for this element. Assumes the refs of all binds are always downwards.
+   *
+   * @param {ChildNode | Attr} elementOrAttribute - the element or attribute to resolve
+   *
+   * @returns {import('./fx-bind.js').FxBind | null}
+   */
+  getBindForElement(elementOrAttribute) {
+    if (typeof elementOrAttribute !== 'object' || !('nodeType' in elementOrAttribute)) {
+      // We only do binds over nodes. Not JSON.
+      return null;
+    }
+    /**
+     * @type {import('./fx-bind.js').FxBind | FxModel}
+     */
+    let bindForParent;
+    const parent =
+      elementOrAttribute.nodeType === elementOrAttribute.ATTRIBUTE_NODE
+        ? elementOrAttribute.ownerElement
+        : elementOrAttribute.parentNode;
+    if (!parent?.parentElement) {
+      // The root. Search from here
+      bindForParent = this;
+    } else {
+      bindForParent = this.getBindForElement(parent);
+    }
+    if (!bindForParent) {
+      return null;
+    }
+
+    /**
+     * @type {import('./fx-bind.js').FxBind[]}
+     */
+    const childBinds = Array.from(bindForParent.children).filter(c => c.nodeName === 'FX-BIND');
+    for (const childBind of childBinds) {
+      const ref = childBind.ref;
+      const matches = evaluateXPathToNodes(ref, parent, childBind);
+      if (matches.includes(elementOrAttribute)) {
+        return childBind;
+      }
+    }
+    return null;
+  }
+
+  /**
    * Lazily create a ModelItem for nodes not explicitly bound via fx-bind
-   * @param {FxModel} model
-   * @param {string} ref
-   * @param {Node|Node[]} nodeset
-   * @param {Element} foreElement
+   * @param {FxModel}           model        The model to create a model item for
+   * @param {string}            ref          The XPath ref that led to this model item
+   * @param {Node}              node         The node the XPath led to
+   * @param {ForeElementMixin)}  formElement  The form element making this model. Used to resolve variables against
    * @returns {ModelItem}
    */
   static lazyCreateModelItem(model, ref, node, formElement) {
     const instanceId = XPathUtil.resolveInstance(formElement, ref);
-    const fore = model.parentNode;
+    const fore = model.formElement;
 
-    if (model.parentNode?.createNodes && (node === null || node === undefined)) {
+    if (fore?.createNodes && (node === null || node === undefined)) {
       const mi = new ModelItem(undefined, ref, null, null, instanceId, fore);
       mi.isSynthetic = true;
       model.registerModelItem(mi);
@@ -106,8 +158,17 @@ export class FxModel extends HTMLElement {
       }
     }
 
-    const mi = new ModelItem(path, ref, targetNode, null, instanceId, fore);
+    const mi = new ModelItem(
+      path,
+      ref,
+      targetNode,
+      model.getBindForElement(targetNode),
+      instanceId,
+      fore,
+    );
     mi.isSynthetic = true;
+
+    // console.log('new ModelItem is instanceof ModelItem ', mi instanceof ModelItem);
     model.registerModelItem(mi);
     return mi;
   }
@@ -188,19 +249,24 @@ export class FxModel extends HTMLElement {
   }
 
   /**
+   * (Recursively) remove the model item of a node.
    * @param {Node} node - The node for which to remove the model item
    */
   removeModelItem(node) {
     const index = this.modelItems.findIndex(mi => mi.node === node);
-    if (index === -1) {
-      // Strange already gone. Should not hapen
-      return;
+    // The model item is not always there. Might be the case if a node is 'skipped' during rendering. All paths jump over it.
+    // It may still have descendants that can have model items
+    if (index !== -1) {
+      this.modelItems.splice(index, 1);
     }
-    this.modelItems.splice(index, 1);
+
+    for (const child of Array.from(node.childNodes)) {
+      this.removeModelItem(child);
+    }
   }
 
   rebuild() {
-    // console.log(`### <<<<< rebuild() '${this.fore.id}' >>>>>`);
+    console.log(`🔷   rebuild() '${this.fore.id}'`);
 
     this.mainGraph = new DepGraph(false); // do: should be moved down below binds.length check but causes errors in tests.
     this.modelItems = [];
@@ -217,12 +283,18 @@ export class FxModel extends HTMLElement {
       bind.init(this);
     });
 
+    if (this.formElement.createNodes) {
+      // initData should be running here as well: we just got a whole new instance that may be
+      // incomplete
+      this.formElement.initData();
+    }
+
     console.log('mainGraph', this.mainGraph);
     console.log('rebuild mainGraph calc order', this.mainGraph.overallOrder());
 
     // this.dispatchEvent(new CustomEvent('rebuild-done', {detail: {maingraph: this.mainGraph}}));
     Fore.dispatch(this, 'rebuild-done', { maingraph: this.mainGraph });
-    console.log('mainGraph', this.mainGraph);
+    // console.log('mainGraph', this.mainGraph);
   }
 
   /**
@@ -230,14 +302,14 @@ export class FxModel extends HTMLElement {
    *
    * todo: use 'changed' flag on modelItems to determine subgraph for recalculation. Flag already exists but is not used.
    */
-  recalculate() {
+  async recalculate() {
     if (!this.mainGraph) {
       return;
     }
 
-    console.log(`🔷 ### <<<<< recalculate() '${this.fore.id}' >>>>>`);
+    console.log(`🔷🔷 recalculate() '${this.fore.id}'`);
 
-    console.log('changed nodes ', this.changed);
+    // console.log('changed nodes ', this.changed);
     this.computes = 0;
 
     this.subgraph = new DepGraph(false);
@@ -366,6 +438,7 @@ export class FxModel extends HTMLElement {
           modelItem.readonly = true; // calculated nodes are always readonly
           modelItem.notify(); // Notify observers directly
         } else if (property !== 'constraint' && property !== 'type') {
+          /*
           console.log(
             'recalculating path ',
             path,
@@ -374,11 +447,13 @@ export class FxModel extends HTMLElement {
             'modelitem value',
             modelItem.node.textContent,
           );
+*/
           // ### re-compute the Boolean value of all facets expect 'constraint' and 'type' which are handled in revalidate()
           if (expr) {
             const compute = evaluateXPathToBoolean(expr, modelItem.node, this);
             modelItem[property] = compute;
-            modelItem.notify(); // Notify observers directly
+            // modelItem.notify(); // Notify observers directly
+            this.fore.addToBatchedNotifications(modelItem);
             /*
                                     console.log(
                                       `recalculating path ${path} - Expr:'${expr}' computed`,
@@ -411,7 +486,7 @@ export class FxModel extends HTMLElement {
   revalidate() {
     if (this.modelItems.length === 0) return true;
 
-    console.log(`🔷 ### <<<<< revalidate() '${this.fore.id}' >>>>>`);
+    console.log(`🔷🔷🔷 revalidate() '${this.fore.id}'`);
 
     // reset submission validation
     // this.parentNode.classList.remove('submit-validation-failed')
@@ -446,7 +521,7 @@ export class FxModel extends HTMLElement {
             modelItem.required = compute;
             // this.formElement.addToRefresh(modelItem); // let fore know that modelItem needs refresh
             modelItem.notify(); // Notify observers directly
-            if (!modelItem.node.textContent) {
+            if (modelItem.required && !modelItem.node.textContent) {
               /*
               console.log(
                 'node is required but has no value ',
@@ -524,6 +599,9 @@ export class FxModel extends HTMLElement {
     return this.instances[0].getInstanceData();
   }
 
+  /**
+   * @returns {import('./fx-instance.js').FxInstance}
+   */
   getInstance(id) {
     // console.log('getInstance ', id);
     // console.log('instances ', this.instances);
@@ -537,10 +615,6 @@ export class FxModel extends HTMLElement {
     if (!found) {
       const instArray = Array.from(this.instances);
       found = instArray.find(inst => inst.id === id);
-      const parentFore =
-        this.fore.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE
-          ? this.fore.parentNode.host.closest('fx-fore')
-          : this.fore.parentNode.closest('fx-fore');
     }
     // ### lookup in parent Fore if present
     if (!found) {
@@ -555,6 +629,10 @@ export class FxModel extends HTMLElement {
         const shared = parentInstances.filter(shared => shared.hasAttribute('shared'));
         found = shared.find(found => found.id === id);
       }
+    }
+    // search for shared instances in the whole document
+    if (!found) {
+      found = document.querySelector(`fx-instance[id="${id}"][shared]`);
     }
     if (found) {
       return found;

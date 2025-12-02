@@ -1,11 +1,13 @@
 import ForeElementMixin from '../ForeElementMixin.js';
 import { Fore } from '../fore.js';
-import { evaluateXPath, evaluateXPathToBoolean } from '../xpath-evaluation';
+import { evaluateXPath, evaluateXPathToBoolean, resolveId } from '../xpath-evaluation';
 import { DependencyNotifyingDomFacade } from '../DependencyNotifyingDomFacade';
 
 export class UIElement extends ForeElementMixin {
   constructor() {
     super();
+
+    this._removeEventListeners = [];
   }
 
   connectedCallback() {
@@ -19,12 +21,35 @@ export class UIElement extends ForeElementMixin {
       });
       this.addTrashIcon();
     }
+
+    const ref = this.getAttribute('ref');
+    // TODO: make this smarter, handling multiple index functions etc
+    if (ref && ref.includes('index(')) {
+      const repeatId = ref.match(/index\(['"](?<repeatId>[^'"]*)['"]\)/)?.groups?.repeatId;
+      if (repeatId) {
+        /**
+         * @type {import('./fx-repeat.js').FxRepeat}
+         */
+        const repeat = resolveId(repeatId, this, 'fx-repeat');
+        const onRepeatItemChanged = () => {
+          this.getOwnerForm().addToBatchedNotifications(this);
+        };
+        repeat.addEventListener('item-changed', onRepeatItemChanged);
+        this._removeEventListeners.push(() =>
+          repeat.removeEventListener('item-changed', onRepeatItemChanged),
+        );
+      }
+    }
   }
 
   disconnectedCallback() {
     if (this.modelItem && typeof this.modelItem.removeObserver === 'function') {
       console.log(`[UIElement] Removing observer for ref="${this.ref}"`);
       this.modelItem.removeObserver(this);
+    }
+
+    for (const removeEventListener of this._removeEventListeners) {
+      removeEventListener();
     }
   }
   /*
@@ -80,11 +105,11 @@ export class UIElement extends ForeElementMixin {
       modelItem.observers = new Set();
     }
     if (modelItem.observers.has(this)) {
-      console.log(`[UIElement] Observer already registered for ref="${this.ref}"`);
+      // console.log(`[UIElement] Observer already registered for ref="${this.ref}"`);
       return;
     }
     modelItem.addObserver(this);
-    console.log(`[UIElement] attaching observer for ref="${this.ref}"`, this);
+    // console.log(`[UIElement] attaching observer for ref="${this.ref}"`, this);
 
     // if (typeof this.update === 'function') {
     //   this.update(modelItem);
@@ -97,7 +122,7 @@ export class UIElement extends ForeElementMixin {
    */
   update(modelItem) {
     if (this.isBound()) {
-      console.log('[UIElement] update()', modelItem);
+      // console.log('[UIElement] update()', modelItem);
       // this.getOwnerForm().addToBatchedNotifications(modelItem);
       this.refresh();
     }
@@ -107,8 +132,12 @@ export class UIElement extends ForeElementMixin {
   //   throw new Error('You have to implement the method init!');
   // }
 
-  async refresh() {
+  async refresh(force) {
     console.log(`🔄 [UIElement] refresh() called for ref="${this.ref}"`);
+  }
+
+  async refreshChildren(force) {
+    await Fore.refreshChildren(this, force);
   }
 
   activate() {

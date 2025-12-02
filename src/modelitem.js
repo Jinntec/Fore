@@ -20,11 +20,6 @@ export class ModelItem {
   /**
    * @param {string} path - Calculated normalized path expression linking to data
    * @param {string} ref - Relative binding expression
-   * @param {boolean} readonly - Signals readonly/readwrite state
-   * @param {boolean} relevant - Signals relevant/non-relevant state
-   * @param {boolean} required - Signals required/optional state
-   * @param {boolean} constraint - Signals valid/invalid state
-   * @param {string} type - Data type expression
    * @param {Node} node - The node the 'ref' expression is referring to
    * @param {import('./fx-bind').FxBind} bind - The fx-bind element having created this ModelItem
    * @param {string} instance - The fx-instance id having created this ModelItem
@@ -98,6 +93,7 @@ export class ModelItem {
    * @param {Object} observer - The observer to add
    */
   addObserver(observer) {
+    // console.log('[ModelItem] adding observer:', observer);
     this.observers.add(observer);
 
     // For backward compatibility with boundControls
@@ -129,7 +125,7 @@ export class ModelItem {
    */
   notify() {
     // Only log in debug mode or reduce verbosity to prevent console flooding
-    console.log('[ModelItem] notifying observers for path:', this);
+    // console.log('[ModelItem] notifying observers for path:', this);
 
     // Add to batched notifications. TODO: is the else needed?
     if (this.fore) {

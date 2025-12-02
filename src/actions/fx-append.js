@@ -1,11 +1,10 @@
 import { AbstractAction } from './abstract-action.js';
 import { Fore } from '../fore.js';
 import { resolveId } from '../xpath-evaluation.js';
+import { XPathUtil } from '../xpath-util.js';
 
 /**
  * `fx-append` appends an entry to a repeat.
- *
- *
  *
  * @deprecated - will be replaced with `fx-insert`
  * @fires index-changed - fired after new item is appended
@@ -105,6 +104,9 @@ class FxAppend extends AbstractAction {
 
     // const rootNode = document.createElement(repeat.ref);
     // const rootNode = inscope.ownerDocument.createElement(repeat.ref);
+    /**
+     * @type {Element}
+     */
     const rootNode = inscope.ownerDocument.createElement(repeat.ref);
 
     // const data = this._dataFromRefs(rootNode, templ.content)
@@ -113,6 +115,23 @@ class FxAppend extends AbstractAction {
     inscope.appendChild(data);
     parentForm.signalChangeToElement(inscope.localName);
     parentForm.signalChangeToElement(data.localName);
+
+    const instanceId = XPathUtil.resolveInstance(this, this.ref);
+    const inst = this.getModel().getInstance(instanceId);
+
+    const fore = this.getOwnerForm();
+
+    Fore.dispatch(inst, 'insert', {
+      insertedNodes: data,
+      insertedParent: inscope,
+      ref: this.ref,
+      location: data.previousSibling,
+      position: 'after',
+      instanceId: inst.id,
+      foreId: fore.id,
+      index: Array.from(inscope.children).indexOf(data),
+    });
+
     // console.log('appended new item ', data);
     // return data;
   }

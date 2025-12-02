@@ -1,5 +1,10 @@
 import getInScopeContext from './getInScopeContext.js';
 
+/**
+ * @template {typeof import('./ForeElementMixin.js').default} T
+ * @param {T} superclass
+ * @returns {T}
+ */
 export const withDraggability = (superclass, isAlsoDraggable) =>
   /**
    * Adds draggability to generic components.
@@ -15,11 +20,9 @@ export const withDraggability = (superclass, isAlsoDraggable) =>
       };
     }
 
-    constructor() {
-      super();
-    }
-
     connectedCallback() {
+      super.connectedCallback();
+
       this.drop = event => this._drop(event);
       this.addEventListener('drop', this.drop);
       this.dragOver = event => this._dragOver(event);
@@ -175,9 +178,7 @@ export const withDraggability = (superclass, isAlsoDraggable) =>
 			}
 */
         event.preventDefault();
-        this.getOwnerForm()
-          .getModel()
-          .updateModel();
+        this.getOwnerForm().getModel().updateModel();
         this.getOwnerForm().refresh(true);
         return;
       }
@@ -217,9 +218,7 @@ export const withDraggability = (superclass, isAlsoDraggable) =>
 
       // Note: full refresh needed since multiple model items may be affected.
       // TODO: Leverage the changedPaths trick
-      this.getOwnerForm()
-        .getModel()
-        .updateModel();
+      this.getOwnerForm().getModel().updateModel();
       this.getOwnerForm().refresh(true);
     }
   };

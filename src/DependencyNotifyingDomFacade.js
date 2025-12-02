@@ -65,12 +65,12 @@ export class DependencyNotifyingDomFacade {
    */
   getData(node) {
     if (node.nodeType === Node.ATTRIBUTE_NODE) {
-      console.log('[DomFacade] getData on attribute:', node);
+      // console.log('[DomFacade] getData on attribute:', node);
       this._onNodeTouched(node);
       return node.value;
     }
     // Text node
-    console.log('[DomFacade] getData on text node parent:', node.parentNode);
+    // console.log('[DomFacade] getData on text node parent:', node.parentNode);
     this._onNodeTouched(node.parentNode);
     return node.data;
   }

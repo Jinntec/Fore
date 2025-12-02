@@ -74,79 +74,80 @@
     <demo-snippet>
         <template>
 
-            <fx-fore>
-                <fx-model id="model1">
-                    <fx-instance>
-                        <data>
-                            <selected></selected>
-                            <continent></continent>
-                        </data>
-                    </fx-instance>
+<fx-fore>
+    <fx-model id="model1">
+        <fx-instance>
+            <data>
+                <selected></selected>
+                <continent></continent>
+            </data>
+        </fx-instance>
 
-                    <fx-instance id="countries" src="countries.xml"></fx-instance>
-                </fx-model>
-                <fx-group>
+        <fx-instance id="countries" src="countries.xml"></fx-instance>
+    </fx-model>
+    <fx-group>
 
-                    <p></p>
+        <p></p>
 
-                    <div class="grid">
-                        <div class="wrapit">
-                            <fx-control id="continent" ref="continent" update-event="change">
-                                <label>Continent</label>
-                                <select class="widget">
-                                    <option value=""></option>
-                                    <option value="asia">Asia</option>
-                                    <option value="africa">Africa</option>
-                                    <option value="antarctica">Antarctica</option>
-                                    <option value="australasia">Australia</option>
-                                    <option value="europe">Europe</option>
-                                    <option value="north america">North America</option>
-                                    <option value="central america">Central America</option>
-                                    <option value="south america">South America</option>
-                                </select>
-                            </fx-control>
-                            <br>
-                            Selected Continent:
-                            <fx-output ref="continent"></fx-output>
-                        </div>
+        <div class="grid">
+            <div class="wrapit">
+                <fx-control id="continent" ref="continent" update-event="change">
+                    <label>Continent</label>
+                    <select class="widget">
+                        <option value=""></option>
+                        <option value="asia">Asia</option>
+                        <option value="africa">Africa</option>
+                        <option value="antarctica">Antarctica</option>
+                        <option value="australasia">Australia</option>
+                        <option value="europe">Europe</option>
+                        <option value="north america">North America</option>
+                        <option value="central america">Central America</option>
+                        <option value="south america">South America</option>
+                    </select>
+                </fx-control>
+                <br>
+                Selected Continent:
+                <fx-output ref="continent"></fx-output>
+            </div>
 
-                        <div class="wrapit">
+            <div class="wrapit">
 
-                            <fx-control ref="selected" update-event="change">
-                                <label>Country</label>
-                                <select class="widget"
-                                        ref="instance('countries')//country[@continent = instance('default')/continent]"
-                                        selection="open">
-                                    <template>
-                                        <option value="{@code}">{.}</option>
-                                    </template>
-                                </select>
-                                <!-- # refresh ourselves whenever 'continent' control changes -->
-<!--                                <fx-refresh event="value-changed" target="continent" self></fx-refresh>-->
-                            </fx-control>
-                            <br>
-                            Country code is:
-                            <fx-output ref="selected"></fx-output>
-                        </div>
-                    </div>
+                <fx-control ref="selected" update-event="change">
+                    <label>Country</label>
+                    <select class="widget"
+                            ref="instance('countries')//country[@continent = instance('default')/continent]"
+                            selection="open">
+                        <template>
+                            <option value="{@code}">{.}</option>
+                        </template>
+                    </select>
+                    <!-- ### refresh ourselves whenever 'continent' control changes -->
+                    <!-- ### refresh ourselves whenever 'continent' control changes -->
+                    <!-- ### refresh ourselves whenever 'continent' control changes -->
+                    <fx-refresh event="value-changed" target="continent" self></fx-refresh>
+                </fx-control>
+                <br>
+                Country code is:
+                <fx-output ref="selected"></fx-output>
+            </div>
+        </div>
+    </fx-group>
+</fx-fore>
 
-                    <!--                    <fx-output ref="instance('default')" mediatype="xml"></fx-output>-->
-                </fx-group>
-            </fx-fore>
         </template>
     </demo-snippet>
     <p>the country list is not show here as its quite long but it loaded from an external instance.</p>
 
     <p>It is structered like this:</p>
 
-    <demo-snippet>
+    <demo-snippet open>
         <template>
-            <countries>
-                <country code='af' handle='afghanistan' continent='asia' iso='4'>Afghanistan</country>
-                <country code='al' handle='albania' continent='europe' iso='8'>Albania</country>
-                <country code='dz' handle='algeria' continent='africa' iso='12'>Algeria</country>
-                <country>...</country>
-            </countries>
+<countries>
+    <country code='af' handle='afghanistan' continent='asia' iso='4'>Afghanistan</country>
+    <country code='al' handle='albania' continent='europe' iso='8'>Albania</country>
+    <country code='dz' handle='algeria' continent='africa' iso='12'>Algeria</country>
+    <country>...</country>
+</countries>
         </template>
     </demo-snippet>
     <!--

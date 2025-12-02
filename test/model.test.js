@@ -1,7 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import {
-  html, oneEvent, fixtureSync, expect,
-} from '@open-wc/testing';
+import { html, oneEvent, fixtureSync, expect } from '@open-wc/testing';
 
 import '../index.js';
 
@@ -176,10 +174,30 @@ describe('model tests', () => {
               <z>0</z>
             </data>
           </fx-instance>
-          <fx-bind ref="c" calculate="number(../a) * number(../b)" constraint="number(.) <= 100" readonly="true()"></fx-bind>
-          <fx-bind ref="d" calculate="number(../a) + number(../b)" constraint="number(.) <= 20" readonly="true()"></fx-bind>
-          <fx-bind ref="e" calculate="number(../a) + 5" constraint="number(.) <= 10" readonly="true()"></fx-bind>
-          <fx-bind ref="y" calculate="number(../x) + 5" readonly="true()" constraint="number(.) <= 10"></fx-bind>
+          <fx-bind
+            ref="c"
+            calculate="number(../a) * number(../b)"
+            constraint="number(.) <= 100"
+            readonly="true()"
+          ></fx-bind>
+          <fx-bind
+            ref="d"
+            calculate="number(../a) + number(../b)"
+            constraint="number(.) <= 20"
+            readonly="true()"
+          ></fx-bind>
+          <fx-bind
+            ref="e"
+            calculate="number(../a) + 5"
+            constraint="number(.) <= 10"
+            readonly="true()"
+          ></fx-bind>
+          <fx-bind
+            ref="y"
+            calculate="number(../x) + 5"
+            readonly="true()"
+            constraint="number(.) <= 10"
+          ></fx-bind>
         </fx-model>
         <fx-control ref="a" update-event="input">
           <label>a</label>
@@ -469,9 +487,7 @@ describe('model tests', () => {
           <fx-bind ref="transform" calculate="string-length(../string) * 10"></fx-bind>
         </fx-model>
         <fx-group>
-          <h1 style="transform-origin:50% 50%; transform:rotate({rotate}deg)">
-            Dynamic CSS
-          </h1>
+          <h1 style="transform-origin:50% 50%; transform:rotate({rotate}deg)">Dynamic CSS</h1>
           <p>Change the range control and see what happens.</p>
           <fx-control ref="rotate" update-event="change">
             <input type="range" step="10" min="0" max="360" />
@@ -506,8 +522,33 @@ describe('model tests', () => {
     expect(control.getAttribute('style')).to.equal('transform:translate(0px);');
     control.setValue(10);
     // control.blur();
+    await oneEvent(el, 'refresh-done');
+
     expect(control.modelItem.value).to.equal('10');
 
     expect(control.getAttribute('style')).to.equal('transform:translate(20px);');
+  });
+
+  it('correctly interprets optional facets', async () => {
+    const el = fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <element></element>
+            </data>
+          </fx-instance>
+          <fx-bind ref="element" required="false()"></fx-bind>
+        </fx-model>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'ready');
+
+    const model = el.querySelector('fx-model');
+    const modelItem = model.modelItems[0];
+    expect(modelItem, 'There should be a model item').to.be.ok;
+    expect(modelItem.required, 'The item is not required').to.be.false;
+    expect(model.revalidate(), 'A revalidate should not give any issues').to.be.true;
   });
 });

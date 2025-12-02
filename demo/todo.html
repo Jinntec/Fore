@@ -160,30 +160,14 @@
                         </data>
                     </fx-instance>
 
-                    <fx-bind ref="task">
-                        <fx-bind ref="./text()" required="true()"></fx-bind>
-                        <fx-bind ref="@complete" type="xs:boolean"></fx-bind>
-                        <fx-bind ref="@due" type="xs:date"></fx-bind>
-                    </fx-bind>
                 </fx-model>
 
                 <h1>A simple repeat</h1>
                 <h2>Todo List</h2>
 
-                <div class="repeat-header">
-                    <div>Task</div>
-                    <div>Due</div>
-                    <div>Complete</div>
-                </div>
-                <fx-repeat focus-on-create="task" id="todos" id="r-todos" ref="task">
+                <fx-repeat id="todos" ref="task">
                     <template>
-                        <fx-control id="task" class="{@complete}" ref="."></fx-control>
-                        <fx-control ref="@due">
-                            <input class="widget" type="date">
-                        </fx-control>
-                        <fx-control ref="@complete">
-                            <input class="widget" type="checkbox">
-                        </fx-control>
+                        <fx-control id="task" ref="."></fx-control>
                         <fx-trigger>
                             <button>delete</button>
                             <fx-delete ref="."></fx-delete>
@@ -191,11 +175,10 @@
                     </template>
 
                 </fx-repeat>
-                <fx-message event="index-changed" target="todos">index changed</fx-message>
 
                 <fx-trigger>
                     <button>append</button>
-                    <fx-append ref="task" repeat="todos"></fx-append>
+                    <fx-insert ref="task"></fx-insert>
                 </fx-trigger>
             </fx-fore>
         </template>

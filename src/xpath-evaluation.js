@@ -242,7 +242,7 @@ function findInstanceReferences(xpathQuery) {
  * @param  {HTMLElement} formElement
  * @returns {NamespaceResolver} The namespace resolver for this context
  */
-function createNamespaceResolver(xpathQuery, formElement) {
+export function createNamespaceResolver(xpathQuery, formElement) {
   const cachedResolver = getCachedNamespaceResolver(xpathQuery, formElement);
   if (cachedResolver) {
     return cachedResolver;
@@ -450,6 +450,8 @@ function getVariablesInScope(formElement) {
  * @param  {import('./ForeElementMixin.js').default} formElement  The form element associated to the XPath
  * @param  {Object} variables  Any variables to pass to the XPath
  * @param  {Object} options  Any options to pass to the XPath
+ *
+ * @returns {any[]}
  */
 /*
 export function evaluateXPath(xpath, contextNode, formElement, variables = {}, options={}, domFacade = null) {

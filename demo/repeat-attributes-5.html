@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport" />
+  <title>Repeats via attributes</title>
+  <link href="../resources/fore.css" rel="stylesheet">
+  <link href="../resources/demo.css" rel="stylesheet">
+
+  <style>
+      fx-repeatitem {
+          display: block;
+      }
+
+      [repeat-index] {
+          background: lightblue;
+      }
+
+      th, td {
+          border: thin solid;
+          padding: 0.5rem;
+      }
+
+      th {
+          font-weight: 700;
+          background: aqua;
+      }
+
+      [readonly] {
+          background: transparent;
+      }
+
+      fx-repeat-attributes {
+          width: 100%;
+      }
+  </style>
+</head>
+<body>
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+
+<div class="wrapper">
+  <demo-snippet>
+    <template>
+
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <bound></bound>
+              <item>
+                <field name="a">a</field>
+                <field name="b">b</field>
+                <field name="c">c</field>
+                <field name="d">d</field>
+                <field name="e">e</field>
+                <field name="f">f</field>
+              </item>
+              <item>
+                <field name="a">g</field>
+                <field name="b">h</field>
+                <field name="c">i</field>
+                <field name="d">j</field>
+                <field name="e">k</field>
+                <field name="f">l</field>
+              </item>
+              <item>
+                <field name="a">m</field>
+                <field name="b">n</field>
+                <field name="c">o</field>
+                <field name="d">p</field>
+                <field name="e">q</field>
+                <field name="f">r</field>
+              </item>
+            </data>
+          </fx-instance>
+        </fx-model>
+
+        <h1>Building a dynamic datalist</h1>
+        <p>To actually see the dynamic list delete the bound value from the control and hit space or click arrow.</p>
+        <fx-control ref="bound">
+          <input list="datalist" class="widget">
+          <datalist data-ref="//field" id="datalist">
+            <template>
+              <option>{.}</option>
+            </template>
+          </datalist>
+        </fx-control>
+      </fx-fore>
+    </template>
+  </demo-snippet>
+
+</div>
+
+<script src="./demo.js" type="module"></script>
+</body>
+</html>

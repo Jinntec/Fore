@@ -48,7 +48,7 @@ class FxSwitch extends FxContainer {
 
   async refresh(force) {
     super.refresh(force);
-    // console.log('refresh on switch ');
+    console.log('🔄 fx-switch refresh', force);
     if (this.cases.length === 0) {
       this.cases = Array.from(this.querySelectorAll(':scope > fx-case'));
     }

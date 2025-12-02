@@ -58,57 +58,57 @@
 <div class="wrapper">
 
 
-    <fx-fore>
-        <fx-model>
-
-            <fx-instance>
-                <data>
-                    <listitem>orange</listitem>
-                    <fruit value="apple">Apple</fruit>
-                    <fruit value="orange">Orange</fruit>
-                    <fruit value="strawberry">Strawberry</fruit>
-                    <single>val</single>
-                </data>
-            </fx-instance>
-
-        </fx-model>
         <demo-snippet>
             <template>
-                <fx-group>
+<fx-fore>
+    <fx-model>
 
-                    <h1>Checkbox group</h1>
+        <fx-instance>
+            <data>
+                <listitem>orange</listitem>
+                <fruit value="apple">Apple</fruit>
+                <fruit value="orange">Orange</fruit>
+                <fruit value="strawberry">Strawberry</fruit>
+                <single>val</single>
+            </data>
+        </fx-instance>
 
-                    <p>Use <code><a href="https://jinntec.github.io/fore-docs/elements/ui/items/" target="_blank">fx-items</a></code> to build a group of checkboxes</p>
-                    <fx-control ref="listitem">
-                        <fx-items ref="instance('default')//fruit" class="widget">
-                            <template>
-                                <span class="fx-checkbox">
-                                    <input id="check" name="fruit" type="checkbox" value="{@value}">
-                                    <label>{.}</label>
-                                </span>
-                            </template>
-                        </fx-items>
-                    </fx-control>
+    </fx-model>
+<fx-group>
 
-                    <p>Selected value is: {listitem}</p>
+    <h1>Checkbox group</h1>
 
-                    <fx-control ref="listitem">
-                        <fx-items ref="instance('default')/single" class="widget">
-                            <template>
-                                <span class="fx-checkbox">
-                                    <input id="check" name="fruit" type="checkbox" value="{.}">
-                                    <label>{.}</label>
-                                </span>
-                            </template>
-                        </fx-items>
-                    </fx-control>
+    <p>Use <code><a href="https://jinntec.github.io/fore-docs/elements/ui/items/" target="_blank">fx-items</a></code> to build a group of checkboxes</p>
+    <fx-control ref="listitem">
+        <fx-items ref="instance('default')//fruit" class="widget">
+            <template>
+                <span class="fx-checkbox">
+                    <input id="check" name="fruit" type="checkbox" value="{@value}">
+                    <label>{.}</label>
+                </span>
+            </template>
+        </fx-items>
+    </fx-control>
+
+    <p>Selected value is: {listitem}</p>
+
+    <fx-control ref="listitem">
+        <fx-items ref="instance('default')/single" class="widget">
+            <template>
+                <span class="fx-checkbox">
+                    <input id="check" name="fruit" type="checkbox" value="{.}">
+                    <label>{.}</label>
+                </span>
+            </template>
+        </fx-items>
+    </fx-control>
 
 <pre>
-                {log('default')}</pre>
-                </fx-group>
+{log('default')}</pre>
+</fx-group>
+</fx-fore>
             </template>
         </demo-snippet>
-    </fx-fore>
 </div>
 
 <script type="module" src="./demo.js"></script>

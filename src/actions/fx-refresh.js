@@ -22,23 +22,33 @@ class FxRefresh extends AbstractAction {
 
     if (this.hasAttribute('self')) {
       console.log(`### <<<<< refresh() self ${this} >>>>>`);
-      const control = XPathUtil.getClosest('fx-control', this);
+      const control = XPathUtil.getClosest('fx-control, fx-output, fx-upload', this);
       if (control) {
-        control.refresh();
+        control.refresh(true);
         return;
       }
     }
     if (this.hasAttribute('force')) {
       console.log(`### <<<<< refresh() force ${this} >>>>>`);
-      this.getOwnerForm().forceRefresh();
+      this.getOwnerForm().refresh(true);
+      return;
+    }
+    if(this.hasAttribute('selector')){
+      const target = document.querySelector(this.getAttribute('selector'));
+      if (target && Fore.isUiElement(target.nodeName) && typeof target.refresh === 'function') {
+        target.refresh(true);
+      }
       return;
     }
     if (this.hasAttribute('control')) {
       const targetId = this.getAttribute('control');
       console.log(`### <<<<< refresh() control '${targetId}' >>>>>`);
-      const ctrl = resolveId(targetId, this);
+      let ctrl = resolveId(targetId, this);
+      if(!ctrl){
+        ctrl = document.querySelector(`#${targetId}`);
+      }
       if (ctrl && Fore.isUiElement(ctrl.nodeName) && typeof ctrl.refresh === 'function') {
-        ctrl.refresh();
+        ctrl.refresh(true);
       }
       return;
     }

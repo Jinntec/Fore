@@ -7,16 +7,16 @@
     <link href="../../resources/fore.css" rel="stylesheet">
     <link href="../../resources/vars.css" rel="stylesheet">
     <link href="../../resources/toastify.css" rel="stylesheet">
-    <link href="../demo.css" rel="stylesheet">
+  <link href="../../resources/demo.css" rel="stylesheet">
     <link href="default.css" rel="stylesheet">
     <script type="module">
-        // import '../../dist/fore-dev.js';
+        // import '../../dist/fore.js';
         /*
         Alternative to above import:
         to run from local clone of Fore uncomment the next line and run 'npm start' in Fore homedir.
         */
-        import '../demo.js';
-        import '../../tools/fx-lens.js';
+        import '../../index.js';
+        // import '../../tools/fx-lens.js';
     </script>
 </head>
 <body>
@@ -24,8 +24,6 @@
     <h1>Auto-create XML structure with create-nodes</h1>
 </header>
 <main>
-  <demo-snippet>
-    <template>
       <fx-fore xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
                create-nodes="create-nodes" id="fx-invoice">
@@ -80,7 +78,8 @@
               <option value="{Value[1]/SimpleValue}" title="{Value[3]/SimpleValue}">{Value[2]/SimpleValue}
               </option>
             </template>
-          </select></fx-control>
+          </select>
+          </fx-control>
           <fx-control id="BT-5" ref="cbc:DocumentCurrencyCode"><label for="BT-5">Invoice currency code</label><select
             id="BT-5" class="widget" ref="instance('iso-4217')//Row" selection="open">
             <template>
@@ -250,16 +249,18 @@
               <fx-control id="BT-73" ref="cbc:StartDate"><label for="BT-73">Invoicing period start date</label><input type="date"></fx-control>
               <fx-control id="BT-74" ref="cbc:EndDate"><label for="BT-74">Invoicing period end date</label><input type="date"></fx-control>
             </fx-group>
-            <fx-group id="BG-15" ref="cac:DeliveryLocation/cac:Address">
-              <header>DELIVER TO ADDRESS</header>
-              <fx-control id="BT-75" ref="cbc:StreetName"><label for="BT-75">Deliver to address line 1</label><textarea class="widget"></textarea></fx-control>
-              <fx-control id="BT-76" ref="cbc:AdditionalStreetName"><label for="BT-76">Deliver to address line 2</label><textarea class="widget"></textarea></fx-control>
-              <fx-control id="BT-165" ref="cac:AddressLine/cbc:Line"><label for="BT-165">Deliver to address line 3</label><textarea class="widget"></textarea></fx-control>
-              <fx-control id="BT-77" ref="cbc:CityName"><label for="BT-77">Deliver to city</label><textarea class="widget"></textarea></fx-control>
-              <fx-control id="BT-78" ref="cbc:PostalZone"><label for="BT-78">Deliver to post code</label><textarea class="widget"></textarea></fx-control>
-              <fx-control id="BT-79" ref="cbc:CountrySubentity"><label for="BT-79">Deliver to country subdivision</label><textarea class="widget"></textarea></fx-control>
-              <fx-control id="BT-80" ref="cac:Country/cbc:IdentificationCode"><label for="BT-80">Deliver to country code</label><select id="BT-80" class="widget" ref="instance('iso-3166-1')//Row" selection="open"><template>
-                <option value="{Value[1]/SimpleValue}" title="{Value[3]/SimpleValue}">{Value[2]/SimpleValue}</option></template></select></fx-control>
+            <fx-group id="BG-15" ref="cac:DeliveryLocation">
+              <fx-group ref="cac:Address"></fx-group>
+                <header>DELIVER TO ADDRESS</header>
+                <fx-control id="BT-75" ref="cbc:StreetName"><label for="BT-75">Deliver to address line 1</label><textarea class="widget"></textarea></fx-control>
+                <fx-control id="BT-76" ref="cbc:AdditionalStreetName"><label for="BT-76">Deliver to address line 2</label><textarea class="widget"></textarea></fx-control>
+                <fx-control id="BT-165" ref="cac:AddressLine/cbc:Line"><label for="BT-165">Deliver to address line 3</label><textarea class="widget"></textarea></fx-control>
+                <fx-control id="BT-77" ref="cbc:CityName"><label for="BT-77">Deliver to city</label><textarea class="widget"></textarea></fx-control>
+                <fx-control id="BT-78" ref="cbc:PostalZone"><label for="BT-78">Deliver to post code</label><textarea class="widget"></textarea></fx-control>
+                <fx-control id="BT-79" ref="cbc:CountrySubentity"><label for="BT-79">Deliver to country subdivision</label><textarea class="widget"></textarea></fx-control>
+                <fx-control id="BT-80" ref="cac:Country/cbc:IdentificationCode"><label for="BT-80">Deliver to country code</label><select id="BT-80" class="widget" ref="instance('iso-3166-1')//Row" selection="open"><template>
+                  <option value="{Value[1]/SimpleValue}" title="{Value[3]/SimpleValue}">{Value[2]/SimpleValue}</option></template></select></fx-control>
+              </fx-group>
             </fx-group>
           </fx-group>
           <fx-group id="BG-16" ref="cac:PaymentMeans">
@@ -463,8 +464,6 @@
           </section>
         </fx-group>
       </fx-fore>
-    </template>
-  </demo-snippet>
 </main>
 </body>
 </html>

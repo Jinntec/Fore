@@ -83,6 +83,7 @@ export default class FxSetvalue extends AbstractAction {
   dispatchExecute() {}
 
   setValue(modelItem, newVal) {
+    console.log('setValue', modelItem, newVal);
     const item = modelItem;
     if (!item) return;
 

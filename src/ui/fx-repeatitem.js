@@ -33,6 +33,8 @@ export class FxRepeatitem extends withDraggability(UIElement, true) {
     this.attachShadow({ mode: 'open', delegatesFocus: true });
 
     this.dropTarget = null;
+    // TODO: rename to position?
+    this.index = -1;
   }
 
   connectedCallback() {
@@ -73,7 +75,7 @@ export class FxRepeatitem extends withDraggability(UIElement, true) {
       }
     */
 
-  _dispatchIndexChange() {
+  async _dispatchIndexChange() {
     /**
      * @type {import('./fx-repeat.js').FxRepeat}
      */
@@ -82,33 +84,31 @@ export class FxRepeatitem extends withDraggability(UIElement, true) {
       // The index did not really change if it did not change :wink:
       return;
     }
-    this.dispatchEvent(
+    await this.dispatchEvent(
       new CustomEvent('item-changed', {
         composed: false,
         bubbles: true,
         detail: { item: this, index: this.index },
       }),
     );
+
+    // Refresh after all of the listeners for that item-changed have had their turn to update!
+    this.getOwnerForm().refresh();
   }
 
-  refresh(force) {
-    this.modelItem = this.getModelItem();
-    console.log('repeatitem modelitem', this.modelItem);
-    // this.attachObserver();
-    // ### register ourselves as boundControl
-    if (!this.modelItem.boundControls.includes(this)) {
-      this.modelItem.boundControls.push(this);
+  async refresh(force = false) {
+    // this.modelItem = this.getModelItem();
+    this.attachObserver();
+    // console.log('🔄 repeatitem modelitem', this.getModelItem());
 
-      if (this.modelItem && !this.modelItem.relevant) {
-        this.removeAttribute('relevant');
-        this.setAttribute('nonrelevant', '');
-      } else {
-        this.removeAttribute('nonrelevant');
-        this.setAttribute('relevant', '');
-      }
+    if (this.modelItem && !this.modelItem.relevant) {
+      this.removeAttribute('relevant');
+      this.setAttribute('nonrelevant', '');
+    } else {
+      this.removeAttribute('nonrelevant');
+      this.setAttribute('relevant', '');
     }
-    // Always recurse for these refreshes, especially when forced
-    Fore.refreshChildren(this, force);
+    await Fore.refreshChildren(this, force);
   }
 }
 

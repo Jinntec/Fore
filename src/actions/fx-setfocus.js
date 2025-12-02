@@ -39,14 +39,6 @@ export class FxSetfocus extends AbstractAction {
       return;
     }
 
-    // ### focus action is itself hosted within a repeat
-    const parentIItem = targetElement.closest('fx-repeatitem');
-    if (parentIItem) {
-      targetElement = parentIItem.querySelector(selector);
-      this._focus(targetElement);
-      // return;
-    }
-
     // ### the target element is hosted within a repeat
     const repeatitem = targetElement.closest('fx-repeatitem, .fx-repeatitem');
     if (repeatitem) {
@@ -54,7 +46,18 @@ export class FxSetfocus extends AbstractAction {
       // get the active repeatitem (only for fx-repeat for now - todo: support repeat attributes
       const repeat = repeatitem.parentNode;
       targetElement = repeat.querySelector(`[repeat-index] ${selector}`);
+      this._focus(targetElement);
     }
+
+    // ### focus action is itself hosted within a repeat
+    /*
+    const parentIItem = targetElement.closest('fx-repeatitem');
+    if (parentIItem) {
+      targetElement = parentIItem.querySelector(selector);
+      this._focus(targetElement);
+      // return;
+    }
+*/
 
     this._focus(targetElement);
     if (this.hasAttribute('select')) {

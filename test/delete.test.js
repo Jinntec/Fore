@@ -55,9 +55,12 @@ describe('delete Tests', () => {
     expect(repeat).to.exist;
 
     const rItems = repeat.querySelectorAll('fx-repeatitem');
-    expect(rItems.length).to.equal(3);
-    expect(rItems[2].hasAttribute('repeat-index')).to.be.true;
-    expect(repeat.getAttribute('index')).to.equal('3');
+    expect(rItems.length).to.equal(3, 'One of the items should be removed');
+    expect(Array.from(rItems).map(item => item.hasAttribute('repeat-index'))).to.deep.equal(
+      [false, false, true],
+      'Only the last item should have the repeat-index attribute set',
+    );
+    expect(repeat.getAttribute('index')).to.equal('3', 'The index should be updated');
   });
 
   it('does not delete readonly item', async () => {
@@ -101,7 +104,7 @@ describe('delete Tests', () => {
     `);
 
     await oneEvent(el, 'refresh-done');
-    expect(el.getModel().modelItems.length).to.equal(6);
+    expect(el.getModel().modelItems.length).to.equal(6, 'There should be 6 model items');
 
     // hits the first button which is the delete button here
     const button = el.querySelector('fx-trigger');
@@ -111,9 +114,12 @@ describe('delete Tests', () => {
     expect(repeat).to.exist;
 
     const rItems = repeat.querySelectorAll('fx-repeatitem');
-    expect(rItems.length).to.equal(2);
-    expect(rItems[0].hasAttribute('repeat-index')).to.be.true;
-    expect(el.getModel().modelItems.length).to.equal(6);
+    expect(rItems.length).to.equal(2, 'There should still be a two children: the delete failed');
+    expect(rItems[0].hasAttribute('repeat-index')).to.equal(
+      true,
+      'The first item should still be active',
+    );
+    expect(el.getModel().modelItems.length).to.equal(6, 'There should still be 6 model items');
   });
 
   it('deletes a set of nodes', async () => {

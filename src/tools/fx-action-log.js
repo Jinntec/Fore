@@ -31,7 +31,7 @@ export class FxActionLog extends HTMLElement {
       }
       a[alt]:hover::after {
         content:attr(alt);
-        position:absolute; 
+        position:absolute;
         left:0;
         bottom:-0.5em;
         border:thin solid;
@@ -57,9 +57,9 @@ export class FxActionLog extends HTMLElement {
       .value{
         display:inline-block;
         width:60%;
-        
+
       }
-      
+
       .buttons{
         position:absolute;
         top:0;
@@ -108,9 +108,9 @@ export class FxActionLog extends HTMLElement {
         margin:0;
         border-bottom:2px solid #ddd;
       }
-      
+
       .info:hover{
-        outline:3px solid lightblue;       
+        outline:3px solid lightblue;
         transition:height 0.4s;
       }
 
@@ -119,7 +119,7 @@ export class FxActionLog extends HTMLElement {
         padding: 0.5em 0 0 2em;
         border-left:3px solid red;
       }
-     
+
       .event-name{
         display:inline-block;
       }
@@ -172,7 +172,7 @@ export class FxActionLog extends HTMLElement {
       .nested .event-name{
         display:none;
       }
-      
+
       .setvalue .value{
         background:lightyellow;
       }
@@ -186,7 +186,7 @@ export class FxActionLog extends HTMLElement {
         margin-top:2rem;
         background:rgba(250, 250, 250, 0.9);
       }
-      
+
       .outer-details > header{
         position:absolute;
         top:-1px;
@@ -225,7 +225,7 @@ export class FxActionLog extends HTMLElement {
 
     const html = `
       <section open class="outer-details">
-        <header>Log 
+        <header>Log
             <span class="buttons">
                 <button id="del"" title="empty log - Ctrl+d">
                     <svg viewBox="0 0 24 24" style="width:24px;height:24px;" preserveAspectRatio="xMidYMid meet" focusable="true"><g><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zm2.46-7.12l1.41-1.41L12 12.59l2.12-2.12 1.41 1.41L13.41 14l2.12 2.12-1.41 1.41L12 15.41l-2.12 2.12-1.41-1.41L10.59 14l-2.13-2.12zM15.5 4l-1-1h-5l-1 1H5v2h14V4z"></path></g></svg></a>
@@ -521,7 +521,7 @@ export class FxActionLog extends HTMLElement {
    */
   _logDetails(e) {
     const eventType = e.type;
-    const path = getDocPath(e.target);
+    const path = XPathUtil.getPath(e.target, '');
     // console.log('>>>> _logDetails', path);
     const cut = path.substring(path.indexOf('/fx-fore'), path.length);
     const xpath = `/${cut}`;
@@ -570,7 +570,7 @@ export class FxActionLog extends HTMLElement {
                 <fx-log-item event-name="${eventType}"
                              xpath="${xpath}"
                              short-name="${e.target.nodeName.toLowerCase()}">
-                             
+
                     <section class="details">
                       ${this._listEventDetails(e)}
                     </section>
@@ -590,14 +590,14 @@ export class FxActionLog extends HTMLElement {
         eventName = e.target.currentEvent
           ? e.target.currentEvent.type
           : e.detail.event
-          ? e.detail.event
-          : '';
+            ? e.detail.event
+            : '';
 
         return `
                 <fx-log-item event-name="${eventName}"
                              xpath="${xpath}"
                              short-name="ACTION"
-                              data-path="${e.detail.path}" 
+                              data-path="${e.detail.path}"
                               class="action">
                     <section class="details">
                       <header>Attributes</header>
@@ -609,10 +609,10 @@ export class FxActionLog extends HTMLElement {
                         <span class="value">${item.nodeValue}</span>
                       `,
                         )
-                        .join('')}                 
+                        .join('')}
                       </section>
                     </section>
-                </fx-log-item>  
+                </fx-log-item>
             `;
       // break;
       case 'FX-MESSAGE':
@@ -647,8 +647,8 @@ export class FxActionLog extends HTMLElement {
                             <span class="value">${item.nodeValue}</span>
                           `,
                             )
-                            .join('')}                 
-                          </section>  
+                            .join('')}
+                          </section>
                         </section>
                </fx-log-item>
                 `;
@@ -660,8 +660,8 @@ export class FxActionLog extends HTMLElement {
           e.target.nodeName === 'FX-CONTROL'
             ? e.target.updateEvent
             : e.detail.event
-            ? e.detail.event
-            : '';
+              ? e.detail.event
+              : '';
         return `
                 <fx-log-item short-name="SETVALUE"
                              short-info="${instPath}"
@@ -679,13 +679,13 @@ export class FxActionLog extends HTMLElement {
         eventName = e.target.currentEvent
           ? e.target.currentEvent.type
           : e.detail.event
-          ? e.detail.event
-          : '';
+            ? e.detail.event
+            : '';
         return `
-                    <fx-log-item event-name="${eventName}" 
+                    <fx-log-item event-name="${eventName}"
                                 short-name="${e.target.nodeName}"
                                 xpath="${xpath}"
-                                data-path="${e.detail.path}" 
+                                data-path="${e.detail.path}"
                                 class="action">
                           <section class="details">
                           </section>

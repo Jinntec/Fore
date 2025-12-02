@@ -8,6 +8,8 @@ import { XPathUtil } from '../xpath-util.js';
 import { withDraggability } from '../withDraggability.js';
 import { UIElement } from './UIElement.js';
 import { getPath } from '../xpath-path.js';
+import { FxModel } from '../fx-model.js';
+import { FxBind } from '../fx-bind.js';
 
 // import {DependencyNotifyingDomFacade} from '../DependencyNotifyingDomFacade';
 
@@ -66,46 +68,13 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     this.index = 1;
     this.repeatSize = 0;
     this.attachShadow({ mode: 'open', delegatesFocus: true });
-  }
-
-  get repeatSize() {
-    return this.querySelectorAll(':scope > fx-repeatitem').length;
-  }
-
-  set repeatSize(size) {
-    this.size = size;
-  }
-
-  setIndex(index) {
-    // console.log('new repeat index ', index);
-    this.index = index;
-    const rItems = this.querySelectorAll(':scope > fx-repeatitem');
-    this.applyIndex(rItems[this.index - 1]);
-
-    this.getOwnerForm().refresh({ reason: 'index-function', elementLocalnamesWithChanges: [] });
-  }
-
-  applyIndex(repeatItem) {
-    this._removeIndexMarker();
-    if (repeatItem) {
-      repeatItem.setAttribute('repeat-index', '');
-    }
-  }
-
-  get index() {
-    return parseInt(this.getAttribute('index'), 10);
-  }
-
-  set index(idx) {
-    this.setAttribute('index', idx);
-  }
-
-  _getRef() {
-    return this.getAttribute('ref');
+    this.opNum = 0; // global number of operations
   }
 
   connectedCallback() {
     super.connectedCallback();
+    this.template = this.querySelector('template');
+
     // console.log('connectedCallback',this);
     // this.display = window.getComputedStyle(this, null).getPropertyValue("display");
     this.ref = this.getAttribute('ref');
@@ -116,23 +85,103 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       const { item } = e.detail;
       this.setIndex(item.index);
     });
-    // todo: review - this is just used by append action - event consolidation ?
-    document.addEventListener('index-changed', e => {
-      e.stopPropagation();
-      if (!e.target === this) return;
-      // const { item } = e.detail;
-      // const idx = Array.from(this.children).indexOf(item);
-      const { index } = e.detail;
-      this.index = parseInt(index, 10);
-      this.applyIndex(this.children[index - 1]);
-    });
-    /*
-        document.addEventListener('insert', e => {
-          const nodes = e.detail.insertedNodes;
-          this.index = e.detail.position;
-          console.log('insert catched', nodes, this.index);
-        });
-    */
+
+    // Listen for insertion events
+    this.handleInsertHandler = event => {
+      const { detail } = event;
+      const myForeId = this.getOwnerForm().id;
+      if (myForeId !== detail.foreId) {
+        return;
+      }
+      // todo: early out if this.ref does not match the ref of the inserted node. Avoid re-evaluating the nodeset
+      // if (this.ref !== detail.ref) return;
+
+      console.log('insert catched', detail);
+
+      // Step 1: Refresh/re-evaluate the nodeset
+      const oldNodesetLength = this.nodeset.length;
+      this._evalNodeset();
+      const newNodesetLength = this.nodeset.length;
+      if (oldNodesetLength === newNodesetLength) {
+        return;
+      }
+
+      /**
+       * @type {number}
+       */
+      //      const insertionIndex = detail.index;
+      /**
+       * The newly inserted node. TODO: handle multiple?
+       * @type {Node}
+       */
+      const insertedNode = detail.insertedNodes;
+      const insertionIndex = this.nodeset.indexOf(insertedNode) + 1;
+      // Step 2: Get current repeat items and create a new item
+      /**
+       * @type {import('./fx-repeatitem.js').FxRepeatitem[]}
+       */
+      const repeatItems = Array.from(
+        this.querySelectorAll(
+          ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
+        ),
+      );
+
+      // todo: search fx-bind elements with same nodeset as this repeat - if present update modelItem instead of creating one
+      const newRepeatItem = this._createNewRepeatItem();
+
+      // Step 3: Insert the new repeatItem at the correct position
+      const beforeNode = repeatItems[insertionIndex - 1] ?? null; // Null appends by default
+      this.insertBefore(newRepeatItem, beforeNode);
+      newRepeatItem.index = insertionIndex;
+      this._initVariables(newRepeatItem);
+
+      // Step 4: Assign the inserted nodeset to the new `repeatItem`
+      newRepeatItem.nodeset = detail.insertedNodes;
+
+      // Update all the indices following here
+      for (let i = insertionIndex - 1; i < repeatItems.length; ++i) {
+        const sibling = repeatItems[i];
+        // TODO: handle the next ones
+        sibling.index += 1;
+      }
+
+      this.setIndex(insertionIndex); // sets attribute + applies repeat-index + refresh
+
+      // Generate the parent `modelItem` for the new repeat item
+      this.opNum++;
+      const parentModelItem = FxBind.createModelItem(
+        this.ref,
+        detail.insertedNodes,
+        newRepeatItem,
+        this.opNum,
+      );
+      newRepeatItem.modelItem = parentModelItem;
+
+      this.getModel().registerModelItem(parentModelItem);
+
+      // Step 5: Create modelItems recursively for child elements
+      this._createModelItemsRecursively(newRepeatItem, parentModelItem);
+      // Step 6: Notify and refresh the UI
+      this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh();
+      this.getOwnerForm().addToBatchedNotifications(newRepeatItem);
+    };
+    this.handleDeleteHandler = event => {
+      console.log('delete catched', event);
+      const { detail } = event;
+      if (!detail || !detail.deletedNodes) {
+        return;
+      }
+
+      // Remove corresponding repeat items for deleted nodes
+      detail.deletedNodes.forEach(node => {
+        this.handleDelete(node);
+        //        this.removeRepeatItemForNode(node);
+      });
+      this.getOwnerForm().addToBatchedNotifications(this);
+    };
+    // inside connectedCallback()
+    document.addEventListener('insert', this.handleInsertHandler, true);
+    document.addEventListener('deleted', this.handleDeleteHandler, true);
 
     // if (this.getOwnerForm().lazyRefresh) {
     /**
@@ -147,36 +196,21 @@ export class FxRepeat extends withDraggability(UIElement, false) {
           debouncedOnMutations = null;
           const records = bufferedMutationRecords;
           bufferedMutationRecords = [];
-          let shouldRefresh = false;
+          const shouldRefresh = false;
           for (const mutation of records) {
             if (mutation.type === 'childList') {
               const added = mutation.addedNodes[0];
               if (added) {
                 const instance = XPathUtil.resolveInstance(this, this.ref);
                 const path = getPath(added, instance);
-                // console.log('path mutated', path);
-                // this.dispatch('path-mutated',{'path':path,'nodeset':this.nodeset,'index': this.index});
-                // this.index = index;
-                // const prev = mutations[0].previousSibling.previousElementSibling;
-                // const index = prev.index();
-                // this.applyIndex(this.index -1);
-
                 Fore.dispatch(this, 'path-mutated', { path, index: this.index });
               }
-              if (!this.getOwnerForm().initialRun) {
-                shouldRefresh = true;
-              }
             }
-          }
-          if (shouldRefresh) {
-            this.refresh();
           }
         });
       }
     });
 
-    // console.log('mutations', mutations);
-    // }
     this.getOwnerForm().registerLazyElement(this);
 
     const style = `
@@ -204,6 +238,177 @@ export class FxRepeat extends withDraggability(UIElement, false) {
         `;
 
     // this.init();
+  }
+
+  disconnectedCallback() {
+    document.removeEventListener('deleted', this.handleDeleteHandler, true);
+    document.removeEventListener('insert', this.handleInsertHandler, true);
+  }
+
+  get repeatSize() {
+    return this.querySelectorAll(':scope > fx-repeatitem').length;
+  }
+
+  set repeatSize(size) {
+    this.size = size;
+  }
+
+  setIndex(index) {
+    // console.log('new repeat index ', index);
+    this.index = index;
+    const rItems = this.querySelectorAll(':scope > fx-repeatitem');
+    this.applyIndex(rItems[this.index - 1]);
+
+    // trying to do without
+    // this.getOwnerForm().refresh({ reason: 'index-function', elementLocalnamesWithChanges: [] });
+  }
+
+  applyIndex(repeatItem) {
+    this._removeIndexMarker();
+    if (repeatItem) {
+      repeatItem.setAttribute('repeat-index', '');
+    }
+  }
+
+  get index() {
+    return parseInt(this.getAttribute('index'), 10);
+  }
+
+  set index(idx) {
+    this.setAttribute('index', idx);
+  }
+
+  _getRef() {
+    return this.getAttribute('ref');
+  }
+
+  _createModelItemsRecursively(parentNode, parentModelItem) {
+    const parentWithDewey = parentModelItem?.path || null; // e.g. $default/AllowanceCharge[2]_1
+    const parentBase = parentWithDewey ? parentWithDewey.replace(/_\d+$/, '') : null; // e.g. $default/AllowanceCharge[2]
+
+    // Robust Dewey rewrite that tolerates $inst vs instance('inst') forms
+    const __applyDeweyRewrite = mi => {
+      if (!mi || typeof mi.path !== 'string' || !parentModelItem?.path) return;
+
+      const pWith = parentModelItem.path; // e.g. $default/AllowanceCharge[2]_1  or  instance('default')/AllowanceCharge[2]_1
+      const opMatch = pWith.match(/_(\d+)$/);
+      if (!opMatch) return;
+      const op = opMatch[1];
+
+      // Normalize to $name/ and strip _n on parent; normalize child for prefix test only
+      const toDollar = s => s.replace(/^instance\('([^']+)'\)\//, (_m, g1) => `$${g1}/`);
+      const parentBaseNorm = toDollar(pWith).replace(/_\d+$/, ''); // $default/AllowanceCharge[2]
+      const childNorm = toDollar(mi.path);
+
+      if (!childNorm.startsWith(parentBaseNorm)) return; // unrelated subtree
+
+      // Preserve original style of child's instance prefix
+      const childUsesInstanceFn = /^instance\('/.test(mi.path);
+      const parentBaseInChildStyle = childUsesInstanceFn
+        ? parentBaseNorm.replace(/^\$([A-Za-z0-9_-]+)\//, `instance('$1')/`)
+        : parentBaseNorm;
+
+      // If already suffixed for this parent, nothing to do
+      if (mi.path.startsWith(`${parentBaseInChildStyle}_`)) return;
+
+      // Inject _op immediately after the parent base segment
+      mi.path = `${parentBaseInChildStyle}_${op}${mi.path.slice(parentBaseInChildStyle.length)}`;
+    };
+
+    Array.from(parentNode.children).forEach(child => {
+      const nextParentMI = parentModelItem;
+
+      // Skip native/embedded widgets that may carry a 'ref' but are UI only
+      const isWidgetEl =
+        child &&
+        ((child.classList && child.classList.contains('widget')) ||
+          (typeof Fore !== 'undefined' && Fore.isWidget && Fore.isWidget(child)) ||
+          (child.tagName &&
+            ['INPUT', 'SELECT', 'TEXTAREA', 'OPTION', 'DATALIST'].includes(child.tagName)));
+
+      if (!isWidgetEl && child.hasAttribute('ref')) {
+        const ref = child.getAttribute('ref').trim();
+        if (ref && ref !== '.') {
+          // Evaluate the FULL ref once — this yields the terminal (last) node(s)
+          let node = evaluateXPath(ref, parentModelItem.node, this);
+          if (Array.isArray(node)) node = node[0];
+
+          if (node) {
+            let modelItem = this.getModel().getModelItem(node);
+            if (!modelItem) {
+              // Create a ModelItem only for the final node; children never get their own opNum
+              modelItem = FxBind.createModelItem(ref, node, child, null);
+              modelItem.parentModelItem = parentModelItem;
+              this.getModel().registerModelItem(modelItem);
+            }
+
+            // Always apply Dewey rewrite (handles both $inst and instance('inst') forms)
+            __applyDeweyRewrite(modelItem);
+
+            child.nodeset = node;
+            if (child.attachObserver) child.attachObserver();
+          }
+        }
+      }
+
+      // Recurse into non-widget subtrees
+      if (!isWidgetEl) this._createModelItemsRecursively(child, nextParentMI);
+    });
+  }
+
+  /**
+   * Removes the repeat item corresponding to a deleted node.
+   * Cleans up its observers and notifies the parent form.
+   * @param {Node} node - The deleted node
+   */
+  removeRepeatItemForNode(node) {
+    const index = this.nodeset.indexOf(node);
+    if (index === -1) return;
+
+    const repeatItem = this.querySelector(`fx-repeatitem:nth-of-type(${index + 1})`);
+    if (repeatItem) {
+      this.removeChild(repeatItem);
+      this.getOwnerForm().addToBatchedNotifications(this);
+    }
+
+    // Remove the node from the nodeset
+    this.nodeset.splice(index, 1);
+  }
+
+  handleDelete(deleted) {
+    console.log('handleDelete', deleted);
+    // grab the current repeat items (tweak selector if yours differs)
+    /**
+     * @type {import('./fx-repeatitem.js').FxRepeatitem[]}
+     */
+    const items = Array.from(
+      this.querySelectorAll(
+        ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
+      ),
+    );
+
+    this._evalNodeset();
+
+    const indexToRemove = items.findIndex(item => item.nodeset === deleted);
+    if (indexToRemove === -1) {
+      return;
+    }
+    const itemToRemove = items[indexToRemove];
+    itemToRemove.remove();
+
+    // If the list is now empty, clear selection (0). Adjust if you prefer 1-based only.
+    const newLength = this.querySelectorAll(
+      ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
+    ).length;
+
+    let nextIndex = indexToRemove + 1; // 1-based index at the deleted slot
+    if (newLength === 0) {
+      nextIndex = 0; // nothing left; clear selection
+    } else if (nextIndex > newLength) {
+      nextIndex = newLength; // deleted the last one; move to new last
+    }
+
+    this.setIndex(nextIndex);
   }
 
   /**
@@ -247,7 +452,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     // console.log('##### inscope ', inscope);
     // console.log('##### ref ', this.ref);
     // now we got a nodeset and attach MutationObserver to it
-
+    if (!inscope) return;
     if (this.mutationObserver && inscope.nodeName) {
       this.mutationObserver.observe(inscope, {
         childList: true,
@@ -281,13 +486,6 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     // console.time('repeat-refresh', this);
     this._evalNodeset();
 
-    // ### register ourselves as boundControl
-    /*
-            const modelItem = this.getModelItem();
-            if (!modelItem.boundControls.includes(this)) {
-              modelItem.boundControls.push(this);
-            }
-        */
     // console.log('repeat refresh nodeset ', this.nodeset);
     // console.log('repeatCount', this.repeatCount);
 
@@ -345,10 +543,13 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
       if (item.nodeset !== this.nodeset[position]) {
         item.nodeset = this.nodeset[position];
+        if (this.getOwnerForm().createNodes) {
+          this.getOwnerForm().initData(item);
+        }
       }
     }
 
-    // Fore.refreshChildren(clone,true);
+    // Fore.refreshChildren(clone, true);
     const fore = this.getOwnerForm();
     // if (!fore.lazyRefresh || force) {
     if (!fore.lazyRefresh || force) {
@@ -400,7 +601,6 @@ export class FxRepeat extends withDraggability(UIElement, false) {
   }
 
   _initTemplate() {
-    this.template = this.querySelector('template');
     // console.log('### init template for repeat ', this.id, this.template);
     // todo: this.dropTarget not needed?
     this.dropTarget = this.template.getAttribute('drop-target');
@@ -448,6 +648,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       this._initVariables(repeatItem);
     });
   }
+
   clearTextValues(node) {
     if (!node) return;
 
@@ -482,10 +683,28 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     })(newRepeatItem);
   }
 
+  /*
   _clone() {
     // const content = this.template.content.cloneNode(true);
     this.template = this.shadowRoot.querySelector('template');
     const content = this.template.content.cloneNode(true);
+    return document.importNode(content, true);
+  }
+*/
+
+  _clone() {
+    // Prefer the cached template set in _initTemplate; fall back to either DOM.
+    const tpl =
+      this.template ||
+      (this.shadowRoot && this.shadowRoot.querySelector('template')) ||
+      this.querySelector('template');
+
+    if (!tpl) {
+      console.error(`[fx-repeat] ${this.id || ''}: no <template> found when cloning`);
+      return document.createDocumentFragment();
+    }
+
+    const content = tpl.content.cloneNode(true);
     return document.importNode(content, true);
   }
 

@@ -1,7 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import {
-  html, fixtureSync, expect, elementUpdated, oneEvent,
-} from '@open-wc/testing';
+import { html, fixtureSync, expect, elementUpdated, oneEvent } from '@open-wc/testing';
 
 import '../index.js';
 import * as fx from 'fontoxpath';
@@ -156,12 +154,14 @@ describe('control tests', () => {
               <b>Aa</b>
             </data>
           </fx-instance>
-          <fx-bind ref="b" constraint="string-length(.) = 1"
-                   alert="string must be exactly one character long"></fx-bind>
+          <fx-bind
+            ref="b"
+            constraint="string-length(.) = 1"
+            alert="string must be exactly one character long"
+          ></fx-bind>
         </fx-model>
 
-        <fx-control id="ctrl" label="B-label" ref="b">
-        </fx-control>
+        <fx-control id="ctrl" label="B-label" ref="b"> </fx-control>
       </fx-fore>
     `);
 
@@ -433,7 +433,7 @@ describe('control tests', () => {
     expect(item).to.exist;
     expect(item.hasAttribute('attr2')).to.be.true;
     expect(item.hasAttribute('attr3')).to.be.true;
-  })
+  });
 
   it('handles radio buttons with fx-items', async () => {
     const el = await fixtureSync(html`
@@ -453,7 +453,7 @@ describe('control tests', () => {
               <input type="radio" id="first" name="radio-input" value="first" />
               <label for="first">first radio</label>
 
-              <input type="radio" id="second" name="radio-input" value="second"/>
+              <input type="radio" id="second" name="radio-input" value="second" />
               <label for="second">second radio</label>
 
               <input type="radio" id="third" name="radio-input" value="third" />
@@ -466,7 +466,7 @@ describe('control tests', () => {
       </fx-fore>
     `);
 
-    const { detail } = await oneEvent(el, 'refresh-done');
+    await oneEvent(el, 'ready');
 
     const second = el.querySelector('#second');
     expect(second.checked).to.be.true;
@@ -476,11 +476,10 @@ describe('control tests', () => {
 
     const third = el.querySelector('#third');
     third.click();
+    await oneEvent(el, 'refresh-done');
 
     expect(third.checked).to.be.true;
     expect(span.innerHTML).to.equal('radio:third');
-
-
   });
 
   /*

@@ -25,39 +25,37 @@
     <p>Try removing chars from input one by one...</p>
     <demo-snippet>
         <template>
-            <style>
-                .static {
-                    font-size: 20px;
-                    padding: 10px;
-                }
-                .Hello {
-                    background: lime;
-                }
-                .Uni{
-                    background: yellow;
-                }
-                .Universe {
-                    border: 6px solid red;
-                    font-style: italic;
-                }
-            </style>
+<style>
+    .static {
+        font-size: 20px;
+        padding: 10px;
+    }
+    .Hello {
+        background: lime;
+    }
+    .Uni{
+        background: yellow;
+    }
+    .Universe {
+        border: 6px solid red;
+        font-style: italic;
+    }
+</style>
 
-            <fx-fore>
-                <fx-model>
-                    <fx-instance>
-                        <data>
-                            <greeting>Hello Universe</greeting>
-                        </data>
-                    </fx-instance>
-                </fx-model>
+<fx-fore>
+    <fx-model>
+        <fx-instance>
+            <data>
+                <greeting>Hello Universe</greeting>
+            </data>
+        </fx-instance>
+    </fx-model>
 
-                <div class="static {greeting}">Greeting: {greeting}</div>
-                <fx-control ref="greeting" update-event="input">
-                    <label>Hey!</label>
-                </fx-control>
-
-
-            </fx-fore>
+    <div class="static {greeting}">Greeting: {greeting}</div>
+    <fx-control ref="greeting" update-event="input">
+        <label>Hey!</label>
+    </fx-control>
+</fx-fore>
         </template>
     </demo-snippet>
 

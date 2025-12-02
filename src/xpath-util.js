@@ -1,4 +1,5 @@
 import * as fx from 'fontoxpath';
+import { createNamespaceResolver } from './xpath-evaluation';
 
 export class XPathUtil {
   /**
@@ -41,38 +42,98 @@ export class XPathUtil {
    * supports multiple steps
    *
    * @param xpath
-   * @param doc
+   * @param doc {XMLDocument}
    * @param fore
-   * @return {*}
+   * @return {Node|Attr}
    */
   static createNodesFromXPath(xpath, doc, fore) {
+    const resolveNamespace = createNamespaceResolver(xpath, fore);
+
     if (!doc) {
       doc = document.implementation.createDocument(null, null, null); // Create a new XML document if not provided
     }
 
-    const parts = xpath.split('/');
+    const parts = [];
+    let scratch = '';
+    let isInPredicate = false;
+    for (const char of xpath.split('')) {
+      if (!isInPredicate) {
+        // We are not in a predicate, the slash will terminate our step.
+        if (char === '/') {
+          parts.push(scratch);
+          scratch = '';
+          continue;
+        }
+
+        scratch += char;
+        if (char === '[') {
+          isInPredicate = true;
+        }
+        continue;
+      }
+      // We are in a predicate! So the only interesting token is ']', which means we're out of one.
+      scratch += char;
+
+      if (char === ']') {
+        isInPredicate = false;
+      }
+    }
+    // Flush the last step
+    parts.push(scratch);
+
     let rootNode = null;
     let currentNode = null;
 
     for (const part of parts) {
       if (!part) continue; // Skip empty parts (e.g., leading slashes)
+      if (part === '.') {
+        // A '.' does not introduce new elements
+        continue;
+      }
 
       // Handle attributes
       if (part.startsWith('@')) {
         const attrName = part.slice(1); // Strip '@'
         if (!currentNode) {
-          throw new Error('Cannot create an attribute without a parent element.');
+          return doc.createAttribute(attrName, '');
         }
         currentNode.setAttribute(attrName, '');
       } else {
+        // We are a predicate selector! Handle it
+        // This regex matches strings like:
+        // - listBibl
+        // - tei:listBibl
+        // - listBibl[@type="foo"]
+        // - listBibl[@type="foo"][@class="bar"]
+        // It will also match strings like
+        // - listBibl[ancestor-or-self::foo]
+        // which will be filtered out later.
+
+        const result = part.match(/^(?<name>[\w:-]+)(?<predicates>(\[[^]*\])*)$/);
+        if (!result) {
+          throw new Error(
+            `No element could be made from the XPath step ${part}. It must be of these forms: 'localName', 'prefix:name', 'name[@attr="value"]' et cetera.`,
+          );
+        }
+        const { name, predicates } = result.groups;
         // Handle namespaces if present
-        const [prefix, localName] = part.includes(':') ? part.split(':') : [null, part];
-        const namespace = prefix ? XPathUtil.lookupNamespace(fore, prefix) : null;
+        const [prefix, localName] = name.includes(':') ? name.split(':') : [null, name];
+        const namespace = resolveNamespace(prefix);
 
         const newElement = namespace
-          ? doc.createElementNS(namespace, part)
+          ? doc.createElementNS(namespace, localName)
           : doc.createElement(localName);
 
+        if (predicates) {
+          const predicateExtractionRegex =
+            /(\[@(?<name>[\w:-]*)\s?=\s?["'](?<value>[^"']*)['"]\])+/g;
+          const parsedPredicates = predicates
+            .matchAll(predicateExtractionRegex)
+            .map(match => ({ attrName: match.groups.name, value: match.groups.value }));
+          for (const { attrName, value } of parsedPredicates) {
+            newElement.setAttribute(attrName, value);
+          }
+        }
         if (!rootNode) {
           rootNode = newElement; // Set as the root node
         } else {
@@ -81,7 +142,6 @@ export class XPathUtil {
         currentNode = newElement;
       }
     }
-
     if (!rootNode) {
       throw new Error('Invalid XPath; no root element could be created.');
     }
@@ -198,7 +258,10 @@ export class XPathUtil {
       (start.parentNode.nodeType !== Node.DOCUMENT_NODE ||
         start.parentNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE)
     ) {
-      return this.getClosest('[ref],fx-repeatitem', start.parentNode);
+      return this.getClosest(
+        'fx-control[ref],fx-upload[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref],fx-repeatitem',
+        start.parentNode,
+      );
     }
     return null;
   }

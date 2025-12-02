@@ -128,38 +128,40 @@
 
     <h3>Markdown</h3>
     <p>This works with the help of drawdown.js which needs to be imported in the page.</p>
-    <p>It uses a custom function to do the actual conversion.</p>
+    <p>It uses a custom function to do the actual conversion and debounce to update every 300Millis</p>
 
     <demo-snippet>
         <template>
-            <fx-fore>
-                <fx-model>
-                    <fx-instance>
-                        <data>
-                            <md-page>
+<fx-fore>
+    <fx-model>
+        <fx-instance>
+            <data>
+                <md-page>
 # this is my nice md page
 
 this is a paragraph
 
 ## another heading
-                            </md-page>
-                        </data>
-                    </fx-instance>
+                </md-page>
+            </data>
+        </fx-instance>
 
-                    <fx-function signature="markdown($input as xs:string?) as xs:string"
-                                 type="text/javascript">
-                        const source = $input;
-                        const converted = markdown(source);
-                        return converted;
-                    </fx-function>
-                </fx-model>
-                <div class="side-by-side">
-                    <fx-control ref="instance()/md-page" debounce="300" update-event="input">
-                        <textarea class="widget"></textarea>
-                    </fx-control>
-                    <fx-output value="markdown(md-page/text())" mediatype="markdown"></fx-output>
-                </div>
-            </fx-fore>
+        <fx-function signature="markdown($input as xs:string?) as xs:string"
+                     type="text/javascript">
+            const source = $input;
+            const converted = markdown(source);
+            return converted;
+        </fx-function>
+    </fx-model>
+    <div class="side-by-side">
+        <fx-control id="textarea" ref="instance()/md-page" debounce="300" update-event="input">
+            <textarea class="widget"></textarea>
+        </fx-control>
+        <fx-output value="markdown(md-page/text())" mediatype="markdown">
+            <fx-refresh event="value-changed" target="textarea" self></fx-refresh>
+        </fx-output>
+    </div>
+</fx-fore>
         </template>
     </demo-snippet>
 

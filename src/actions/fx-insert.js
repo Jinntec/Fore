@@ -145,7 +145,13 @@ export class FxInsert extends AbstractAction {
     const originSequenceClone = this._cloneOriginSequence(inscope, targetSequence);
     if (!originSequenceClone) return; // if no origin back out without effect
 
+    /**
+     * @type {Node}
+     */
     let insertLocationNode;
+    /**
+     * @type {number}
+     */
     let index;
 
     // if the targetSequence is empty but we got an originSequence use inscope as context and ignore 'at' and 'position'
@@ -241,7 +247,7 @@ export class FxInsert extends AbstractAction {
     // console.log('<<<<<<< resolved instance', inst);
     // Note: the parent to insert under is always the parent of the inserted node. The 'context' is not always the parent if the sequence is empty, or the position is different
     // const xpath = XPathUtil.getPath(originSequenceClone.parentNode, instanceId);
-    const xpath = getPath(insertLocationNode.parentNode, instanceId);
+    const xpath = getPath(insertLocationNode, instanceId);
 
     const path = Fore.getDomNodeIndexString(originSequenceClone);
     this.dispatchEvent(
@@ -252,13 +258,16 @@ export class FxInsert extends AbstractAction {
         detail: { action: this, event: this.event, path },
       }),
     );
-
     Fore.dispatch(inst, 'insert', {
-      'inserted-nodes': originSequenceClone,
-      'insert-location-node': insertLocationNode,
+      insertedNodes: originSequenceClone,
+      insertedParent: insertLocationNode.parentNode,
+      ref: this.ref,
+      location: insertLocationNode,
       position: this.position,
       instanceId,
       foreId: fore.id,
+      index,
+      xpath,
     });
 
     // todo: this actually should dispatch to respective instance
@@ -275,7 +284,6 @@ export class FxInsert extends AbstractAction {
     );
 
     this.needsUpdate = true;
-    console.log('Changed!', xpath);
     return [xpath];
   }
 
@@ -292,7 +300,7 @@ export class FxInsert extends AbstractAction {
 
   actionPerformed(changedPaths) {
     // ### make sure the necessary modelItems will get created
-    this.getModel().rebuild();
+    // this.getModel().rebuild();
     super.actionPerformed();
   }
 

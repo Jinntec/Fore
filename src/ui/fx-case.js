@@ -70,7 +70,7 @@ export class FxCase extends FxContainer {
         // calls. Save all important state first.
         const { parentNode } = this;
         const replacement = await this._loadFromSrc();
-        if(!replacement){
+        if (!replacement) {
           Fore.dispatch(this, 'error', {
             detail: {
               message: `HTML page couldn't be loaded`,
@@ -81,9 +81,21 @@ export class FxCase extends FxContainer {
         await parentNode.replaceCase(this, replacement);
       }
       const model = ownerForm.getModel();
-      model.updateModel();
-      ownerForm.refresh(true);
+      ownerForm.addToBatchedNotifications(this);
+      ownerForm.refresh(false);
     });
+    this.addEventListener('deselect', (event) => {
+      const ownerForm = this.getOwnerForm();
+      ownerForm.addToBatchedNotifications(event.target);
+    });
+  }
+
+  async refresh(force) {
+    console.log(`🔄 fx-case ${this.id} refresh`, force);
+    await super.refresh(force);
+    if (!this.isBound()) {
+      Fore.refreshChildren(this, force);
+    }
   }
 
   /**

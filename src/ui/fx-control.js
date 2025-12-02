@@ -241,6 +241,7 @@ export default class FxControl extends XfAbstractControl {
    * @param val the new value to be set
    */
   setValue(val) {
+    console.log('Control.setValue', val, 'on', this);
     const modelitem = this.getModelItem();
 
     if (this.getAttribute('class')) {
@@ -545,15 +546,15 @@ export default class FxControl extends XfAbstractControl {
     return this.querySelector('template');
   }
 
-  async refresh(force) {
-    // console.log('fx-control refresh', this);
+  async refresh(force = false) {
+    console.log('🔄 fx-control refresh', this);
     super.refresh(force);
     // console.log('refresh template', this.template);
     // const {widget} = this;
 
     // ### if we find a ref on control we have a 'select' control of some kind
     const widget = this.getWidget();
-    this._handleBoundWidget(widget);
+    this._handleBoundWidget(widget, force);
     this._handleDataAttributeBinding();
     Fore.refreshChildren(this, force);
   }
@@ -568,7 +569,7 @@ export default class FxControl extends XfAbstractControl {
     if (dataRefd && dataRefd.closest('fx-control') === this) {
       this.boundList = dataRefd;
       const ref = dataRefd.getAttribute('data-ref');
-      this._handleBoundWidget(dataRefd);
+      this._handleBoundWidget(dataRefd, true); //todo: revisit !!! observer
     }
   }
 
@@ -580,7 +581,8 @@ export default class FxControl extends XfAbstractControl {
    * @param widget the widget to handle
    * @private
    */
-  _handleBoundWidget(widget) {
+  _handleBoundWidget(widget, force = false) {
+    // console.log('_handleBoundWidget', widget);
     if (this.boundInitialized && this.static) return;
 
     const ref = widget.hasAttribute('ref')
@@ -598,11 +600,11 @@ export default class FxControl extends XfAbstractControl {
       const nodeset = evaluateXPath(ref, inscope, this, domFacade);
 
       const contextNode = Array.isArray(inscope) ? inscope[0] : inscope;
-      console.log('Extracting model', this.getModel());
-      console.log('Extracting model inited', this.getModel().inited);
+      // console.log('Extracting model', this.getModel());
+      // console.log('Extracting model inited', this.getModel().inited);
       const model = this.getModel();
       if (!contextNode) return;
-      console.log('Extracting predicate deps from ref:', ref);
+      // console.log('Extracting predicate deps from ref:', ref);
       extractPredicateDependencies(
         ref,
         model,
@@ -617,7 +619,8 @@ export default class FxControl extends XfAbstractControl {
       const { template } = this;
       if (template) {
         // ### clear items
-        if (!this.boundInitialized) {
+        // if (force === true || !this.boundInitialized) {
+        if (force === true) {
           const { children } = widget;
           Array.from(children).forEach(child => {
             if (child.nodeName.toLowerCase() !== 'template') {
@@ -706,8 +709,14 @@ export default class FxControl extends XfAbstractControl {
     //  ### <<< needs rework
   }
 
+  /**
+   *
+   * @param {string} optionLabel
+   * @param {Node} node
+   * @param {HTMLElement} newEntry
+   */
   evalLabel(optionLabel, node, newEntry) {
-    const labelExpr = optionLabel.substring(1, optionLabel.length - 1);
+    const labelExpr = optionLabel.trim().substring(1, optionLabel.length - 1);
     if (!labelExpr) return;
 
     const label = evaluateXPathToString(labelExpr, node, this);

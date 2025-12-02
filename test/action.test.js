@@ -505,4 +505,51 @@ describe('action Tests', () => {
     const secondControl = secondDiv.querySelector('fx-output');
     expect(secondControl.value).to.equal('15');
   });
+
+  it('resets data to initial state', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <!-- inline xml instance -->
+          <fx-instance>
+            <data>
+              <value></value>
+            </data>
+          </fx-instance>
+          <fx-instance id="json" type="json">{"value":""}</fx-instance>
+        </fx-model>
+
+        <section>
+          <fx-trigger id="change">
+            <button>Change default instance</button>
+            <fx-setvalue ref="value">Changed value</fx-setvalue>
+          </fx-trigger>
+
+          <fx-output ref="value">
+            <label slot="label">Default instance value</label>
+          </fx-output>
+
+          <fx-trigger id="reset">
+            <button>Reset</button>
+            <fx-reset instance="default"></fx-reset>
+          </fx-trigger>
+        </section>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'ready');
+    const output = el.querySelector('fx-output');
+    expect(output.value).to.equal('');
+
+    const btn1 = el.querySelector('#change button');
+    btn1.click();
+    await oneEvent(el, 'refresh-done');
+    expect(output.value).to.equal('Changed value');
+
+    const btn2 = el.querySelector('#reset button');
+    btn2.click();
+    await oneEvent(el, 'refresh-done');
+
+    expect(output.value).to.equal('');
+  });
 });

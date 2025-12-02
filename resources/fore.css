@@ -12,10 +12,6 @@
         --inspector-handle-width: 30px;
     }
 
-    [unresolved] {
-        display: none;
-    }
-
     [disabled] {
         pointer-events: none;
         cursor: default;
