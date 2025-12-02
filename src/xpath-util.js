@@ -133,14 +133,13 @@ export class XPathUtil {
           for (const { attrName, value } of parsedPredicates) {
             newElement.setAttribute(attrName, value);
           }
-        } else {
-          if (!rootNode) {
-            rootNode = newElement; // Set as the root node
-          } else {
-            currentNode.appendChild(newElement);
-          }
-          currentNode = newElement;
         }
+        if (!rootNode) {
+          rootNode = newElement; // Set as the root node
+        } else {
+          currentNode.appendChild(newElement);
+        }
+        currentNode = newElement;
       }
     }
     if (!rootNode) {
