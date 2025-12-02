@@ -32,7 +32,6 @@ export default [
       }),
       strip(),
       minifyHTML(),
-      terser(),
     ],
   }
 ];
