@@ -1,0 +1,2001 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gc:CodeList xmlns:gc="http://docs.oasis-open.org/codelist/ns/genericode/1.0/"
+             xmlns:xoev-cl-3="http://xoev.de/schemata/genericode/3"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <Annotation>
+      <Description>
+         <xoev-cl-3:nameKurz>UNTDID 7161</xoev-cl-3:nameKurz>
+         <xoev-cl-3:beschreibung-codeliste>Die Codeliste basiert auf der Codeliste 7161 (Special service description code) des United Trade Data Interchange Directory (UNTDID). Sie ist konform zur DIN EN16931-1:2017 und zu dem darauf basierenden Standard XRechnung. Des Weiteren enthält sie alle Einträge, die für die Nutzung im Kontext des Standards XBestellung benötigt werden.</xoev-cl-3:beschreibung-codeliste>
+         <xoev-cl-3:herausgebernameKurz>KoSIT</xoev-cl-3:herausgebernameKurz>
+         <xoev-cl-3:beschreibung-versionCodeliste>Die Konformität zur Datengrundlage in der Version D20a wurde überprüft.</xoev-cl-3:beschreibung-versionCodeliste>
+         <xoev-cl-3:datumGueltigkeitAb>2019-07-10</xoev-cl-3:datumGueltigkeitAb>
+         <xoev-cl-3:versionCodelistenHandbuch>1.1</xoev-cl-3:versionCodelistenHandbuch>
+         <xoev-cl-3:aenderungZurVorversion>Die Konformität zur Datengrundlage in der Version D20a wurde überprüft. Es gibt keine neuen Inhalte. Die Methodik der Codeliste wurde auf das Codelistenhandbuch in der Version 1.1 aktualisiert.</xoev-cl-3:aenderungZurVorversion>
+      </Description>
+   </Annotation>
+   <Identification>
+      <ShortName>UNTDID.7161</ShortName>
+      <LongName>UNTDID 7161 Special service description code</LongName>
+      <Version>3</Version>
+      <CanonicalUri>urn:xoev-de:kosit:codeliste:untdid.7161</CanonicalUri>
+      <CanonicalVersionUri>urn:xoev-de:kosit:codeliste:untdid.7161_3</CanonicalVersionUri>
+      <Agency>
+         <LongName>Koordinierungsstelle für IT-Standards</LongName>
+      </Agency>
+   </Identification>
+   <ColumnSet>
+      <Column Id="code" Use="required">
+         <ShortName>code</ShortName>
+         <LongName>Code</LongName>
+         <Data Type="string"/>
+      </Column>
+      <Column Id="name" Use="optional">
+         <ShortName>name</ShortName>
+         <LongName>Name</LongName>
+         <Data Type="string"/>
+      </Column>
+      <Column Id="description" Use="optional">
+         <ShortName>description</ShortName>
+         <LongName>Description</LongName>
+         <Data Type="string"/>
+      </Column>
+      <Key Id="codeKey">
+         <Annotation>
+            <AppInfo>
+               <xoev-cl-3:empfohleneCodeSpalte/>
+            </AppInfo>
+         </Annotation>
+         <ShortName>codeKey</ShortName>
+         <ColumnRef Ref="code"/>
+      </Key>
+   </ColumnSet>
+   <SimpleCodeList>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Advertising</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing advertising.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Telecommunication</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing telecommunication activities and/or faclities.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Technical modification</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of making technical modifications to a product.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Job-order production</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of producing to order.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAE</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Outlays</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing money for outlays on behalf of a trading partner.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Off-premises</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing services outside the premises of the provider.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Additional processing</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing additional processing.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Attesting</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of certifying validity.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAS</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Acceptance</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of accepting goods or services.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Rush delivery</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service to provide a rush delivery.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAV</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Special construction</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing special construction.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAY</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Airport facilities</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing airport facilities.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AAZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Concession</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service allowing a party to use another party's facilities.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Compulsory storage</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service provided to hold a compulsory inventory.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Fuel removal</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Remove or off-load fuel from vehicle, vessel or craft.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Into plane</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Service of delivering goods to an aircraft from local storage.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Overtime</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing labour beyond the established limit of working hours.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Tooling</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing specific tooling.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABK</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Miscellaneous</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Miscellaneous services.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Additional packaging</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing additional packaging.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Dunnage</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing additional padding materials required to secure and protect a cargo within a shipping container.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Containerisation</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of packing items into a container.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABS</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Carton packing</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of packing items into a carton.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Hessian wrapped</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of hessian wrapping.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ABU</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Polyethylene wrap packing</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of packing in polyethylene wrapping.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ACF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Miscellaneous treatment</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Miscellaneous treatment service.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ACG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Enamelling treatment</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing enamelling treatment.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ACH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Heat treatment</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of treating with heat.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ACI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Plating treatment</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing plating treatment.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ACJ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Painting</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of painting.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ACK</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Polishing</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of polishing.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ACL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Priming</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of priming.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ACM</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Preservation treatment</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of preservation treatment.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ACS</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Fitting</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Fitting service.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Consolidation</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of consolidating multiple consignments into one shipment.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADE</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bill of lading</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing a bill of lading document.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADJ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Airbag</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of surrounding a product with an air bag.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADK</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Transfer</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of transferring.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Slipsheet</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of securing a stack of products on a slipsheet.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADM</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Binding</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Binding service.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Repair or replacement of broken returnable package</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of repairing or replacing a broken returnable package.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADO</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Efficient logistics</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A code indicating efficient logistics services.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADP</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Merchandising</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A code indicating that merchandising services are in operation.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADQ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Product mix</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A code indicating that product mixing services are in operation.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Other services</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A code indicating that other non-specific services are in operation.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Pick-up</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of picking up or collection of goods.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADW</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Chronic illness</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The special services provided due to chronic illness.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADY</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>New product introduction</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A service provided by a buyer when introducing a new product from a suppliers range to the range traded by the buyer.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ADZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Direct delivery</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Direct delivery service.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Diversion</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of diverting deliverables.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Disconnect</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service is a disconnection.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Distribution</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Distribution service.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AED</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Handling of hazardous cargo</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A service for handling hazardous cargo.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Rents and leases</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of renting and/or leasing.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Location differential</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Delivery to a different location than previously contracted.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Aircraft refueling</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Fuel being put into the aircraft.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEJ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Fuel shipped into storage</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Fuel being shipped into a storage system.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEK</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Cash on delivery</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The provision of a cash on delivery (COD) service.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Small order processing service</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A service related to the processing of small orders.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEM</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Clerical or administrative services</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The provision of clerical or administrative services.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Guarantee</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing a guarantee.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEO</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Collection and recycling</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of collection and recycling products.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEP</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Copyright fee collection</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of collecting copyright fees.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AES</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Veterinary inspection service</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing veterinary inspection.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AET</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Pensioner service</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Special service when the subject is a pensioner.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEU</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Medicine free pass holder</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Special service when the subject holds a medicine free pass.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEV</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Environmental protection service</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The provision of an environmental protection service.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEW</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Environmental clean-up service</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The provision of an environmental clean-up service.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEX</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>National cheque processing service outside account area</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Service of processing a national cheque outside the ordering customer's bank trading area.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEY</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>National payment service outside account area</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Service of processing a national payment to a beneficiary holding an account outside the trading area of the ordering customer's bank.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AEZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>National payment service within account area</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Service of processing a national payment to a beneficiary holding an account within the trading area of the ordering customer's bank.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AJ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Adjustments</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of making adjustments.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AU</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Authentication</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of authenticating.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Cataloguing</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The provision of cataloguing services.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CAB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Cartage</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Movement of goods by heavy duty cart or vehicle.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CAD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Certification</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of certifying.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CAE</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Certificate of conformance</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing a certificate of conformance.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CAF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Certificate of origin</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing a certificate of origin.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CAI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Cutting</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of cutting.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CAJ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Consular service</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service provided by consulates.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CAK</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Customer collection</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of collecting goods by the customer.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CAL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Payroll payment service</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Provision of a payroll payment service.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CAM</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Cash transportation</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Provision of a cash transportation service.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CAN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Home banking service</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Provision of a home banking service.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CAO</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bilateral agreement service</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Provision of a service as specified in a bilateral special agreement.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CAP</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Insurance brokerage service</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Provision of an insurance brokerage service.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CAQ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Cheque generation</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Provision of a cheque generation service.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CAR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Preferential merchandising location</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Service of assigning a preferential location for merchandising.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CAS</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Crane</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing a crane.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CAT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Special colour service</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Providing a colour which is different from the default colour.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CAU</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Sorting</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The provision of sorting services.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CAV</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Battery collection and recycling</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of collecting and recycling batteries.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CAW</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Product take back fee</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The fee the consumer must pay the manufacturer to take back the product.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CAX</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Quality control released</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Informs the stockholder it is free to distribute the quality controlled passed goods.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CAY</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Quality control held</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Instructs the stockholder to withhold distribution of the goods until the manufacturer has completed a quality control assessment.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CAZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Quality control embargo</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Instructs the stockholder to withhold distribution of goods which have failed quality control tests.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Car loading</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Car loading service.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Cleaning</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Cleaning service.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CS</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Cigarette stamping</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing cigarette stamping.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>CT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Count and recount</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of doing a count and recount.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>DAB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Layout/design</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing layout/design.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>DAC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Assortment allowance</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Allowance given when a specific part of a suppliers assortment is purchased by the buyer.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>DAD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Driver assigned unloading</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of unloading by the driver.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>DAF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Debtor bound</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A special allowance or charge applicable to a specific debtor.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>DAG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Dealer allowance</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>An allowance offered by a party dealing a certain brand or brands of products.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>DAH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Allowance transferable to the consumer</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>An allowance given by the manufacturer which should be transfered to the consumer.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>DAI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Growth of business</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>An allowance or charge related to the growth of business over a pre-determined period of time.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>DAJ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Introduction allowance</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>An allowance related to the introduction of a new product to the range of products traded by a retailer.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>DAK</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Multi-buy promotion</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A code indicating special conditions related to a multi-buy promotion.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>DAL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Partnership</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>An allowance or charge related to the establishment and on-going maintenance of a partnership.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>DAM</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Return handling</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>An allowance or change related to the handling of returns.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>DAN</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Minimum order not fulfilled charge</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Charge levied because the minimum order quantity could not be fulfilled.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>DAO</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Point of sales threshold allowance</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Allowance for reaching or exceeding an agreed sales threshold at the point of sales.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>DAP</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Wholesaling discount</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A special discount related to the purchase of products through a wholesaler.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>DAQ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Documentary credits transfer commission</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Fee for the transfer of transferable documentary credits.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>DL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Delivery</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing delivery.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>EG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Engraving</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing engraving.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>EP</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Expediting</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of expediting.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ER</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Exchange rate guarantee</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of guaranteeing exchange rate.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>FAA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Fabrication</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing fabrication.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>FAB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Freight equalization</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of load balancing.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>FAC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Freight extraordinary handling</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing freight's extraordinary handling.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>FC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Freight service</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of moving goods, by whatever means, from one place to another.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>FH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Filling/handling</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing filling/handling.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>FI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Financing</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing financing.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>GAA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Grinding</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of grinding.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>HAA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Hose</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing a hose.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>HD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Handling</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Handling service.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>HH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Hoisting and hauling</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of hoisting and hauling.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>IAA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Installation</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of installing.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>IAB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Installation and warranty</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of installing and providing warranty.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ID</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Inside delivery</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing delivery inside.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>IF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Inspection</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of inspection.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>IR</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Installation and training</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing installation and training.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>IS</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Invoicing</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing an invoice.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>KO</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Koshering</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of preparing food in accordance with Jewish law.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>L1</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Carrier count</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of counting by the carrier.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>LA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Labelling</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Labelling service.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>LAA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Labour</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service to provide required labour.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>LAB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Repair and return</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of repairing and returning.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>LF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Legalisation</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of legalising.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>MAE</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Mounting</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of mounting.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>MI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Mail invoice</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of mailing an invoice.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ML</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Mail invoice to each location</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of mailing an invoice to each location.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>NAA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Non-returnable containers</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing non-returnable containers.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>OA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Outside cable connectors</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing outside cable connectors.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>PA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Invoice with shipment</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of including the invoice with the shipment.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>PAA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Phosphatizing (steel treatment)</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of phosphatizing the steel.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>PC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Packing</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of packing.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>PL</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Palletizing</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of palletizing.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>RAB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Repacking</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of repacking.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>RAC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Repair</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of repairing.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>RAD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Returnable container</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing returnable containers.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>RAF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Restocking</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of restocking.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>RE</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Re-delivery</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of re-delivering.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>RF</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Refurbishing</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of refurbishing.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>RH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Rail wagon hire</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing rail wagons for hire.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>RV</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Loading</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of loading goods.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>SA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Salvaging</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of salvaging.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>SAA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Shipping and handling</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of shipping and handling.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>SAD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Special packaging</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of special packaging.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>SAE</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Stamping</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of stamping.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>SAI</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Consignee unload</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of unloading by the consignee.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>SG</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Shrink-wrap</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of shrink-wrapping.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>SH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Special handling</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of special handling.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>SM</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Special finish</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing a special finish.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>SU</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Set-up</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of setting-up.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>TAB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Tank renting</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing tanks for hire.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>TAC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Testing</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of testing.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>TT</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Transportation - third party billing</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing third party billing for transportation.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>TV</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Transportation by vendor</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing transportation by the vendor.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>V1</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Drop yard</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of delivering goods at the yard.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>V2</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Drop dock</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of delivering goods at the dock.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>WH</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Warehousing</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of storing and handling of goods in a warehouse.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>XAA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Combine all same day shipment</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of combining all shipments for the same day.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>YY</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Split pick-up</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The service of providing split pick-up.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>ZZZ</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Mutually defined</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A code assigned within a code list to be used on an interim basis and as defined among trading partners until a precise code can be assigned to the code list.</SimpleValue>
+         </Value>
+      </Row>
+   </SimpleCodeList>
+</gc:CodeList>

@@ -41,6 +41,12 @@ export class FxReset extends AbstractAction {
     data.reset();
     this.needsUpdate = true;
   }
+
+  actionPerformed() {
+    this.getModel().updateModel();
+    this.getOwnerForm().refresh(true);
+    this.dispatchActionPerformed();
+  }
 }
 
 if (!customElements.get('fx-reset')) {

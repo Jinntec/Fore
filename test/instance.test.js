@@ -1,11 +1,9 @@
 /* eslint-disable no-unused-expressions */
-import {
-  html, oneEvent, fixtureSync, expect,
-} from '@open-wc/testing';
+import { html, oneEvent, fixtureSync, expect } from '@open-wc/testing';
 
 import '../src/fx-instance.js';
 import { Fore } from '../src/fore.js';
-import { XPathUtil } from '../src/xpath-util';
+import { getPath } from '../src/xpath-path.js';
 
 describe('instance Tests', () => {
   it('has "default" as id', async () => {
@@ -50,7 +48,7 @@ describe('instance Tests', () => {
     expect(result).to.exist;
     expect(result.nodeType).to.equal(Node.ELEMENT_NODE);
     expect(result.nodeName).to.equal('foobar');
-    expect(XPathUtil.getPath(result, 'default')).to.equal('$default/foobar[1]');
+    expect(getPath(result, 'default')).to.equal('$default/foobar[1]');
   });
 
   it('provides default evaluation context', async () => {
@@ -67,7 +65,7 @@ describe('instance Tests', () => {
     expect(context).to.exist;
     expect(context.nodeType).to.equal(Node.ELEMENT_NODE);
     expect(context.nodeName).to.equal('data');
-    expect(XPathUtil.getPath(context, 'default')).to.equal('$default/data[1]');
+    expect(getPath(context, 'default')).to.equal('$default/data[1]');
   });
 
   it('does NOT copy a "body" element from inline data', async () => {
@@ -91,22 +89,22 @@ describe('instance Tests', () => {
 
     const root = doc.documentElement;
     expect(root.nodeName).to.equal('data');
-    expect(XPathUtil.getPath(root, 'default')).to.equal('$default/data[1]');
+    expect(getPath(root, 'default')).to.equal('$default/data[1]');
 
     console.log('root children ', root.children);
     let n = root.firstElementChild;
     expect(n.nodeName).to.equal('arm');
 
-    expect(XPathUtil.getPath(n, 'default')).to.equal('$default/arm[1]');
+    expect(getPath(n, 'default')).to.equal('$default/arm[1]');
 
     n = n.firstElementChild;
     expect(n.nodeName).to.equal('hand');
 
     n = n.firstElementChild;
     expect(n.nodeName).to.equal('finger');
-    expect(XPathUtil.getPath(n, 'default')).to.equal('$default/arm[1]/hand[1]/finger[1]');
+    expect(getPath(n, 'default')).to.equal('$default/arm[1]/hand[1]/finger[1]');
     expect(n.textContent).to.equal('middle');
-    expect(XPathUtil.getPath(n, 'default')).to.equal('$default/arm[1]/hand[1]/finger[1]');
+    expect(getPath(n, 'default')).to.equal('$default/arm[1]/hand[1]/finger[1]');
   });
 
   it('resolves instances with the instance() function', async () => {
@@ -137,8 +135,8 @@ describe('instance Tests', () => {
     expect(instances[0].id).to.equal('default');
     expect(instances[1].id).to.equal('second');
 
-    expect(XPathUtil.getPath(instances[0].getDefaultContext(), 'default')).to.equal('$default/data[1]');
-    expect(XPathUtil.getPath(instances[1].getDefaultContext(), 'second')).to.equal('$second/data[1]');
+    expect(getPath(instances[0].getDefaultContext(), 'default')).to.equal('$default/data[1]');
+    expect(getPath(instances[1].getDefaultContext(), 'second')).to.equal('$second/data[1]');
 
     const model = el.querySelector('fx-model');
     const { modelItems } = model;
@@ -389,7 +387,6 @@ describe('instance Tests', () => {
 
           <div id="inner">{value}</div>
           <div id="anotherinner">{instance('another')/value}</div>
-
         </fx-fore>
       </fx-fore>
     `);
@@ -418,10 +415,8 @@ describe('instance Tests', () => {
           </fx-instance>
         </fx-model>
 
-        <div id="one">{text}
-          {instance()/text}
-          {instance('default')/text}
-          {instance('def')/text}
+        <div id="one">
+          {text} {instance()/text} {instance('default')/text} {instance('def')/text}
         </div>
         <fx-fore>
           <fx-model>
@@ -432,12 +427,9 @@ describe('instance Tests', () => {
             </fx-instance>
           </fx-model>
           <div id="two">
-            {text}
-            {instance()/text}
-            {instance('default')/text}
+            {text} {instance()/text} {instance('default')/text}
           </div>
         </fx-fore>
-
       </fx-fore>
     `);
 

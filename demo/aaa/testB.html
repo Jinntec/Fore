@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+  <title>ffff</title>
+
+  <link href="../../resources/demo.css" rel="stylesheet">
+
+</head>
+<body>
+<div class="wrapper">
+  <fx-fore id="inner">
+    <fx-model>
+      <fx-instance>
+        <data>
+          <test>in</test>
+        </data>
+      </fx-instance>
+    </fx-model>
+    <!--  <p>TestB.html</p>-->
+    <fx-control ref="test" update-event="input">
+      <label>inner</label>
+      <fx-return ref="test" event="value-changed"></fx-return>
+    </fx-control>
+  </fx-fore>
+
+</div>
+
+
+<script type="module" src="../demo.js"></script>
+</body>
+</html>

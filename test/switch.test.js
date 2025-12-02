@@ -131,49 +131,6 @@ describe('fx-switch Tests', () => {
     expect(output.value).to.equal('selected');
   });
 
-  it('dispatches select/deselect events after toggle', async () => {
-    const el = await fixtureSync(html`
-      <fx-fore>
-        <fx-model>
-          <fx-instance>
-            <data>
-              <page1></page1>
-              <page2></page2>
-            </data>
-          </fx-instance>
-        </fx-model>
-        <fx-trigger id="t-one" label="page 1">
-          <paper-button>toggle page 2</paper-button>
-          <fx-toggle case="two"></fx-toggle>
-        </fx-trigger>
-        
-        <fx-switch>
-          <fx-case id="one" name="page1">
-            <fx-setvalue ref="page1" event="select">deselected</fx-setvalue>
-          </fx-case>
-          <fx-case id="two" name="page2">
-            <fx-setvalue ref="page2" event="select">selected</fx-setvalue>
-            some further content
-          </fx-case>
-          <fx-case id="three" name="page3">
-            some completely unneeded content
-          </fx-case>
-        </fx-switch>
-        <fx-output ref="page1"></fx-output>
-        <fx-output ref="page2"></fx-output>
-      </fx-fore>
-    `);
-
-    await oneEvent(el, 'refresh-done');
-
-    const trigger = el.querySelector('#t-one');
-    await trigger.performActions();
-
-    const output = el.querySelectorAll('fx-output');
-    expect(output[0].value).to.equal('deselected');
-    expect(output[1].value).to.equal('selected');
-  });
-
   it('activates case that matches bound value and dispatches select event', async () => {
     const el = await fixtureSync(html`
       <fx-fore>

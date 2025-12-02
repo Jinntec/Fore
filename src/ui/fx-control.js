@@ -3,12 +3,15 @@ import {
   evaluateXPath,
   evaluateXPathToString,
   evaluateXPathToFirstNode,
+  evaluateXPathToBoolean,
 } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 import { Fore } from '../fore.js';
 import { ModelItem } from '../modelitem.js';
 import { debounce } from '../events.js';
 import { FxModel } from '../fx-model.js';
+import { DependencyNotifyingDomFacade } from '../DependencyNotifyingDomFacade';
+import { extractPredicateDependencies } from '../extract-predicate-deps.js';
 
 const WIDGETCLASS = 'widget';
 
@@ -56,7 +59,7 @@ export default class FxControl extends XfAbstractControl {
     };
   }
 
-  _getValueFromHtmlDom() {
+  _getValueOfWidget() {
     if (this.valueProp === 'selectedOptions') {
       // We have multiple! Just return that as space-separated for now
       return [...this.widget.selectedOptions].map(option => option.value).join(' ');
@@ -76,10 +79,25 @@ export default class FxControl extends XfAbstractControl {
       : 'blur';
     this.label = this.hasAttribute('label') ? this.getAttribute('label') : null;
     const style = `
-            :host{
-                display:inline-block;
-            }
-        `;
+      :host {
+        display: flex;
+        align-items: center;
+        gap: 0.4em;
+        position: relative;
+      }
+      .trash {
+        position: absolute;
+        right:0;
+        top:0;
+        cursor: pointer;
+        color: #888;
+        font-size: 0.65rem;
+        align-self: center;
+      }
+      .trash:hover {
+        color: red;
+      }
+      `;
 
     this.credentials = this.hasAttribute('credentials')
       ? this.getAttribute('credentials')
@@ -136,7 +154,7 @@ export default class FxControl extends XfAbstractControl {
           // console.info('handling Event:', event.type, listenOn);
           // Cancel the default action, if needed
           event.preventDefault();
-          this.setValue(this._getValueFromHtmlDom());
+          this.setValue(this._getValueOfWidget());
         }
       });
       this.updateEvent = 'blur'; // needs to be registered too
@@ -149,19 +167,19 @@ export default class FxControl extends XfAbstractControl {
           () => {
             // console.log('eventlistener ', this.updateEvent);
             // console.info('handling Event:', event.type, listenOn);
-            this.setValue(this._getValueFromHtmlDom());
+            this.setValue(this._getValueOfWidget());
           },
           this.debounceDelay,
         ),
       );
     } else {
       listenOn.addEventListener(this.updateEvent, event => {
-        this.setValue(this._getValueFromHtmlDom());
+        this.setValue(this._getValueOfWidget());
       });
       listenOn.addEventListener(
         'blur',
         event => {
-          this.setValue(this._getValueFromHtmlDom());
+          this.setValue(this._getValueOfWidget());
         },
         { once: true },
       );
@@ -185,7 +203,22 @@ export default class FxControl extends XfAbstractControl {
     this.template = this.querySelector('template');
     this.boundInitialized = false;
     this.static = !!this.widget.hasAttribute('static');
-    // console.log('template',this.template);
+    super.connectedCallback();
+  }
+
+  /**
+   * activates a control that uses 'on-demand' attribute
+   */
+  activate() {
+    console.log('fx-control.activate() called');
+    this.removeAttribute('on-demand');
+    this.style.display = '';
+    this.refresh(true);
+    Fore.dispatch(this, 'show-control', {});
+    // Focus the widget after the control becomes visible
+    requestAnimationFrame(() => {
+      this.getWidget()?.focus();
+    });
   }
 
   _debounce(func, timeout = 300) {
@@ -208,6 +241,7 @@ export default class FxControl extends XfAbstractControl {
    * @param val the new value to be set
    */
   setValue(val) {
+    console.log('Control.setValue', val, 'on', this);
     const modelitem = this.getModelItem();
 
     if (this.getAttribute('class')) {
@@ -235,11 +269,13 @@ export default class FxControl extends XfAbstractControl {
     const setval = this.shadowRoot.getElementById('setvalue');
     setval.setValue(modelitem, val);
 
+    /*
     if (this.modelItem instanceof ModelItem && !this.modelItem?.boundControls.includes(this)) {
       this.modelItem.boundControls.push(this);
     }
+*/
 
-    setval.actionPerformed();
+    setval.actionPerformed(false);
     // this.visited = true;
   }
 
@@ -257,12 +293,17 @@ export default class FxControl extends XfAbstractControl {
       });
     }
     // this.getOwnerForm().refresh();
+    const body = this.closest('body');
+    const outerfore = body.querySelector('fx-fore');
+    outerfore.refresh(true);
   }
 
   renderHTML(ref) {
+    const showTrash = this.hasAttribute('on-demand');
+    const showIcon = this.closest('[show-icon]');
     return `
             ${this.label ? `${this.label}` : ''}
-            <slot></slot>
+              <slot></slot>
             ${
               this.hasAttribute('as') && this.getAttribute('as') === 'node'
                 ? '<fx-replace id="replace" ref=".">'
@@ -311,6 +352,13 @@ export default class FxControl extends XfAbstractControl {
    */
   async updateWidgetValue() {
     // this._getValueFromHtmlDom() = this.value;
+    if (this.value) {
+      // Fire and forget this: the value is set right away anyway
+      this.setAttribute('has-value', '');
+      Fore.dispatch(this, 'show-control');
+    } else {
+      this.removeAttribute('has-value');
+    }
 
     let { widget } = this;
     if (!widget) {
@@ -457,6 +505,8 @@ export default class FxControl extends XfAbstractControl {
           imported.model = imported.querySelector('fx-model');
           imported.model.updateModel();
 
+          // Ensure initialRun is true for the first refresh
+          imported.initialRun = true;
           imported.refresh(true);
         },
         { once: true },
@@ -496,15 +546,15 @@ export default class FxControl extends XfAbstractControl {
     return this.querySelector('template');
   }
 
-  async refresh(force) {
-    // console.log('fx-control refresh', this);
+  async refresh(force = false) {
+    console.log('🔄 fx-control refresh', this);
     super.refresh(force);
     // console.log('refresh template', this.template);
     // const {widget} = this;
 
     // ### if we find a ref on control we have a 'select' control of some kind
     const widget = this.getWidget();
-    this._handleBoundWidget(widget);
+    this._handleBoundWidget(widget, force);
     this._handleDataAttributeBinding();
     Fore.refreshChildren(this, force);
   }
@@ -519,7 +569,7 @@ export default class FxControl extends XfAbstractControl {
     if (dataRefd && dataRefd.closest('fx-control') === this) {
       this.boundList = dataRefd;
       const ref = dataRefd.getAttribute('data-ref');
-      this._handleBoundWidget(dataRefd);
+      this._handleBoundWidget(dataRefd, true); //todo: revisit !!! observer
     }
   }
 
@@ -531,7 +581,8 @@ export default class FxControl extends XfAbstractControl {
    * @param widget the widget to handle
    * @private
    */
-  _handleBoundWidget(widget) {
+  _handleBoundWidget(widget, force = false) {
+    // console.log('_handleBoundWidget', widget);
     if (this.boundInitialized && this.static) return;
 
     const ref = widget.hasAttribute('ref')
@@ -542,15 +593,24 @@ export default class FxControl extends XfAbstractControl {
       // ### eval nodeset for list control
       const inscope = getInScopeContext(this, ref);
       // const nodeset = evaluateXPathToNodes(ref, inscope, this);
-      const nodeset = evaluateXPath(ref, inscope, this);
 
-      // ### clear items
-      const { children } = widget;
-      Array.from(children).forEach(child => {
-        if (child.nodeName.toLowerCase() !== 'template') {
-          child.parentNode.removeChild(child);
-        }
-      });
+      const touchedNodes = new Set();
+      const domFacade = new DependencyNotifyingDomFacade(node => touchedNodes.add(node));
+
+      const nodeset = evaluateXPath(ref, inscope, this, domFacade);
+
+      const contextNode = Array.isArray(inscope) ? inscope[0] : inscope;
+      // console.log('Extracting model', this.getModel());
+      // console.log('Extracting model inited', this.getModel().inited);
+      const model = this.getModel();
+      if (!contextNode) return;
+      // console.log('Extracting predicate deps from ref:', ref);
+      extractPredicateDependencies(
+        ref,
+        model,
+        mi => mi.addObserver(this),
+        node => model.getModelItem(node),
+      );
 
       // ### bail out when nodeset is array and empty
       if (Array.isArray(nodeset) && nodeset.length === 0) return;
@@ -558,6 +618,19 @@ export default class FxControl extends XfAbstractControl {
       // ### build the items
       const { template } = this;
       if (template) {
+        // ### clear items
+        // if (force === true || !this.boundInitialized) {
+        if (force === true) {
+          const { children } = widget;
+          Array.from(children).forEach(child => {
+            if (child.nodeName.toLowerCase() !== 'template') {
+              child.parentNode.removeChild(child);
+            }
+          });
+        } else {
+          return;
+        }
+
         // ### handle 'selection'  open and insert an empty option in that case
         if (
           this.widget.nodeName === 'SELECT' &&
@@ -609,30 +682,41 @@ export default class FxControl extends XfAbstractControl {
   updateEntry(newEntry, node) {
     // ### >>> todo: needs rework this code is heavily assuming a select control with 'value' attribute - not generic at all yet.
 
-    // if (this.widget.nodeName !== 'SELECT') return;
-    const valueAttribute = this._getValueAttribute(newEntry);
+    const valueAttribute = newEntry.getAttribute('value');
     if (!valueAttribute) {
       // Fore.dispatch(this,'warn',{message:'no value attribute specified for template entry.'});
       return;
     }
 
-    const valueExpr = valueAttribute.value;
+    const valueExpr = valueAttribute;
     const cutted = valueExpr.substring(1, valueExpr.length - 1);
-    const evaluated = evaluateXPathToString(cutted, node, newEntry);
-    valueAttribute.value = evaluated;
+    const evaluated = evaluateXPathToString(cutted, node, this);
+    newEntry.setAttribute('value', evaluated);
 
     if (this.value === evaluated) {
       newEntry.setAttribute('selected', 'selected');
     }
 
+    if (newEntry.hasAttribute('title')) {
+      let titleExpr = newEntry.getAttribute('title');
+      titleExpr = titleExpr.substring(1, titleExpr.length - 1);
+      const evaluated = evaluateXPathToString(titleExpr, node, newEntry);
+      newEntry.setAttribute('title', evaluated);
+    }
     // ### set label
-    const optionLabel = newEntry.textContent;
+    const optionLabel = newEntry.textContent.trim();
     this.evalLabel(optionLabel, node, newEntry);
     //  ### <<< needs rework
   }
 
+  /**
+   *
+   * @param {string} optionLabel
+   * @param {Node} node
+   * @param {HTMLElement} newEntry
+   */
   evalLabel(optionLabel, node, newEntry) {
-    const labelExpr = optionLabel.substring(1, optionLabel.length - 1);
+    const labelExpr = optionLabel.trim().substring(1, optionLabel.length - 1);
     if (!labelExpr) return;
 
     const label = evaluateXPathToString(labelExpr, node, this);

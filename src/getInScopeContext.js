@@ -69,6 +69,7 @@ function _getInitialContext(node, ref) {
 export default function getInScopeContext(node, ref) {
   // console.log('getInScopeContext', ref, node);
 
+  //todo: check for multi-step pathes
   const parentElement = _getElement(node);
   // console.log('getInScopeContext parent', parentElement);
 
@@ -110,14 +111,13 @@ export default function getInScopeContext(node, ref) {
   const repeatItemFromAttrs = parentElement.closest('.fx-repeatitem');
 
   if (repeatItemFromAttrs) {
-    // ### determine correct inscopecontext by determining the index of the repeatitem in its parent list and
-    // ### using that as an index on the repeat nodeset
-    const parent = repeatItemFromAttrs.parentNode;
-    const index = Array.from(parent.children).indexOf(repeatItemFromAttrs);
-
-    // ### fetching nodeset from fx-repeat-attributes element
-    const repeatFromAttributes = XPathUtil.getClosest('fx-repeat-attributes', parentElement);
-    return repeatFromAttributes.nodeset[index];
+    // Determine the context by using the cache present on the fx-repeat-attributes. Do not attempt
+    // to use the index here, it might change when deleting / inserting items
+    const repeatFromAttributes =
+      /** @type {import('./ui/fx-repeat-attributes.js').FxRepeatAttributes} */ (
+        XPathUtil.getClosest('fx-repeat-attributes', parentElement)
+      );
+    return repeatFromAttributes.getContextForRepeatItem(repeatItemFromAttrs);
   }
 
   if (parentElement.hasAttribute('context')) {

@@ -1,12 +1,12 @@
 import '../fx-model.js';
-import ForeElementMixin from '../ForeElementMixin.js';
+import { UIElement } from './UIElement.js';
 
 /**
  * `fx-container` -
  * is a general class for container elements.
  *
  */
-export class FxContainer extends ForeElementMixin {
+export class FxContainer extends UIElement {
   static get properties() {
     return {
       ...super.properties,
@@ -24,6 +24,8 @@ export class FxContainer extends ForeElementMixin {
   }
 
   connectedCallback() {
+    super.connectedCallback();
+
     this.src = this.hasAttribute('src') ? this.getAttribute('src') : null;
     const style = `
         :host {
@@ -41,7 +43,7 @@ export class FxContainer extends ForeElementMixin {
             </style>
             ${html}
     `;
-    if(this.ref !== ''){
+    if (this.ref !== '') {
       this.getOwnerForm().registerLazyElement(this);
     }
 
@@ -76,8 +78,13 @@ export class FxContainer extends ForeElementMixin {
     if (this.isBound()) {
       this.evalInContext();
       this.modelItem = this.getModelItem();
+      /*
       if (this.modelItem && !this.modelItem.boundControls.includes(this)) {
         this.modelItem.boundControls.push(this);
+      }
+*/
+      if (this.modelItem) {
+        this.attachObserver();
       }
       this.handleModelItemProperties();
     }

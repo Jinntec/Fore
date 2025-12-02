@@ -18,7 +18,6 @@ const WIDGETCLASS = 'widget';
  * @customElement
  */
 
-
 export default class FxUpload extends XfAbstractControl {
   constructor() {
     super();
@@ -41,9 +40,8 @@ export default class FxUpload extends XfAbstractControl {
     };
   }
   connectedCallback() {
-
     this.updateEvent = 'change';
-    this.accept = this.hasAttribute('accept') ? this.getAttribute('accept'):'';
+    this.accept = this.hasAttribute('accept') ? this.getAttribute('accept') : '';
     this.label = this.hasAttribute('label') ? this.getAttribute('label') : null;
     const style = `
             :host{
@@ -75,16 +73,16 @@ export default class FxUpload extends XfAbstractControl {
     // ### convenience marker event
     if (this.debounceDelay) {
       listenOn.addEventListener(
-          this.updateEvent,
-          debounce(
-              this,
-              () => {
-                // console.log('eventlistener ', this.updateEvent);
-                // console.info('handling Event:', event.type, listenOn);
-                this._importUploadedContent();
-              },
-              this.debounceDelay,
-          ),
+        this.updateEvent,
+        debounce(
+          this,
+          () => {
+            // console.log('eventlistener ', this.updateEvent);
+            // console.info('handling Event:', event.type, listenOn);
+            this._importUploadedContent();
+          },
+          this.debounceDelay,
+        ),
       );
     } else {
       listenOn.addEventListener(this.updateEvent, async event => {
@@ -94,31 +92,34 @@ export default class FxUpload extends XfAbstractControl {
     this.boundInitialized = false;
     this.fileNameExpr = this.getAttribute('filename');
     this.mimetypeExpr = this.getAttribute('mimetype');
-
   }
 
   async _importUploadedContent(event) {
-    console.log('_importUploadedContent',event);
+    console.log('_importUploadedContent', event);
     const file = event.target.files[0];
 
     this.evalInContext();
     // update file ref
-    const fileNode = evaluateXPathToFirstNode(this.fileNameExpr,this.nodeset,this.getOwnerForm());
-    if(fileNode){
+    const fileNode = evaluateXPathToFirstNode(this.fileNameExpr, this.nodeset, this.getOwnerForm());
+    if (fileNode) {
       this.fileName = fileNode.nodeValue = file.name;
     }
     this.mimetype = file.type;
 
     // update mediatype
-    const mimetypeNode = evaluateXPathToFirstNode(this.mimetypeExpr,this.nodeset, this.getOwnerForm());
-    if(mimetypeNode){
+    const mimetypeNode = evaluateXPathToFirstNode(
+      this.mimetypeExpr,
+      this.nodeset,
+      this.getOwnerForm(),
+    );
+    if (mimetypeNode) {
       mimetypeNode.nodeValue = this.mimetype;
     }
 
     let content = await this._readFile(file);
     // const setval = this.shadowRoot.getElementById('setvalue');
-    console.log('content',content);
-    if(file.type.endsWith('xml')){
+    console.log('content', content);
+    if (file.type.endsWith('xml')) {
       const uploadedXML = new DOMParser().parseFromString(content, 'application/xml');
       content = uploadedXML.firstElementChild;
     }
@@ -132,29 +133,26 @@ export default class FxUpload extends XfAbstractControl {
       const reader = new FileReader();
 
       // Determine how to read the file based on MIME type
-      const isTextFile = file.type.startsWith("text/");
-      const readMethod = isTextFile ? "readAsText" : "readAsDataURL";
+      const isTextFile = file.type.startsWith('text/');
+      const readMethod = isTextFile ? 'readAsText' : 'readAsDataURL';
 
       reader.onload = () => {
         const result = reader.result;
         // If it's a binary file, return only the Base64 content without the MIME prefix
         if (!isTextFile) {
-          const base64Content = result.split(",")[1]; // Remove MIME prefix
+          const base64Content = result.split(',')[1]; // Remove MIME prefix
           resolve(base64Content);
         } else {
           resolve(result); // Return plain text
         }
       };
 
-      reader.onerror = () => reject(new Error("Error reading file"));
+      reader.onerror = () => reject(new Error('Error reading file'));
 
       // Start reading the file
       reader[readMethod](file);
     });
   }
-
-
-
 
   /**
    * updates the model with a new value by executing it's `<fx-setvalue>` action.
@@ -165,15 +163,15 @@ export default class FxUpload extends XfAbstractControl {
    * @param val the new value to be set
    */
   setValue(val) {
-    this.value=val;
+    this.value = val;
     const modelitem = this.getModelItem();
 
-    if(this.mimetype.endsWith('xml')){
+    if (this.mimetype.endsWith('xml')) {
       this.nodeset.textContent = '';
-      this.nodeset.append(document.importNode(val,true));
-    }else{
+      this.nodeset.append(document.importNode(val, true));
+    } else {
       modelitem.value = val;
-      if(this.mimetype.startsWith('text/')){
+      if (this.mimetype.startsWith('text/')) {
         const cdata = this.nodeset.ownerDocument.createCDATASection(val);
         this.nodeset.textContent = '';
         this.nodeset.append(cdata);
@@ -182,7 +180,6 @@ export default class FxUpload extends XfAbstractControl {
         this.nodeset.append(val);
       }
     }
-
 
     if (this.getAttribute('class')) {
       this.classList.add('visited');
@@ -198,23 +195,24 @@ export default class FxUpload extends XfAbstractControl {
     // const setval = this.shadowRoot.getElementById('setvalue');
     // setval.setValue(modelitem, val);
 
+    /* deprecated
     if (this.modelItem instanceof ModelItem && !this.modelItem?.boundControls.includes(this)) {
       this.modelItem.boundControls.push(this);
     }
+*/
     const model = this.getModel();
     Fore.dispatch(this, 'value-changed', {
       path: this.modelItem.path,
       value: this.modelItem.value,
-      oldvalue: "",
-      instanceId:this.modelItem.instanceId,
-      foreId:this.getOwnerForm().id
+      oldvalue: '',
+      instanceId: this.modelItem.instanceId,
+      foreId: this.getOwnerForm().id,
     });
     this.getModel().updateModel();
     this.getOwnerForm().refresh(true);
 
     // console.log('data', this.getOwnerForm().getModel().getDefaultInstanceData());
   }
-
 
   renderHTML(ref) {
     return `
@@ -266,8 +264,6 @@ export default class FxUpload extends XfAbstractControl {
     // ### if we find a ref on control we have a 'select' control of some kind
     Fore.refreshChildren(this, force);
   }
-
-
 
   evalLabel(optionLabel, node, newEntry) {
     const labelExpr = optionLabel.substring(1, optionLabel.length - 1);

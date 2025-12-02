@@ -48,10 +48,12 @@
         <template>
             <fx-fore>
                 <fx-model>
-                    <fx-instance>
+                    <fx-instance id="data">
                         <data>
                             <greeting>Hello World!</greeting>
                             <prop></prop>
+                            <special-characters>é Γ 😻 ! , # 你好 مَرْحَبًا</special-characters>
+                            <filename>saved.xml</filename>
                         </data>
                     </fx-instance>
 
@@ -120,6 +122,11 @@
                         <fx-message event="submit-error" value="event('error')"></fx-message>
                     </fx-submission>
 
+                    <fx-submission id="submission10"
+                                   method="post"
+                                   url="#echo"
+                                   replace="download"
+                                   ></fx-submission>
                 </fx-model>
                 <fx-group collapse="true">
 
@@ -175,6 +182,16 @@
                         <fx-send submission="submission4"></fx-send>
                     </fx-trigger>
 
+                    <h2>replace='download'</h2>
+
+                    <p>The <code>target</code> attribute is mandatory in this case and is an XPath here pointing to filename ('saved.xml')</code></p>
+                    <p>In this example the <code>fx-send</code> action sets the target dynamically. You can also specifiy it statically
+                    on the <code>fx-submission</code> element directly.</p>
+                    <fx-trigger>
+                        <button data-cy="download">replace=download</button>
+                        <fx-send submission="submission10" target="{filename}"></fx-send>
+                    </fx-trigger>
+
 
                     <h2>replace=target</h2>
                     <p>Replaces some HTML at target position. target is a CSS selector pointing to the wanted element.</p>
@@ -185,6 +202,7 @@
                     </fx-trigger>
 
                     <h1 id="target"></h1>
+
                     <h2>replace=redirect</h2>
                     <p>expects a URL returned as simple string and redirect to that.</p>
 

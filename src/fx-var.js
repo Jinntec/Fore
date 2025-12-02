@@ -45,6 +45,11 @@ export class FxVariable extends ForeElementMixin {
     // Clone the preceding variables to make sure we are not going to get access to variables we
     // should not get access to
     this.inScopeVariables = new Map(inScopeVariables);
+
+    // Set precedingVariables based on inScopeVariables
+    this.precedingVariables = Array.from(inScopeVariables.entries()).map(([name, variable]) => {
+      return { name, value: variable.value };
+    });
   }
 }
 if (!customElements.get('fx-var')) {

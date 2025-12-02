@@ -1,5 +1,5 @@
 1; /* eslint-disable no-unused-expressions */
-import { html, oneEvent, fixtureSync, expect, elementUpdated } from '@open-wc/testing';
+import { html, oneEvent, fixtureSync, expect, elementUpdated, fixture } from '@open-wc/testing';
 
 import '../index.js';
 import { FxModel } from '../src/fx-model.js';
@@ -541,6 +541,21 @@ describe('repeat Tests', () => {
     expect(rItems.length).to.equal(2);
     console.log('ritems ', rItems);
     expect(rItems[1].hasAttribute('repeat-index')).to.be.true;
+  });
+
+  it('can insert and remove an item using fx-delete', async () => {
+    const el = await fixture(
+      html`<fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data> </data>
+          </fx-instance>
+        </fx-model>
+        <fx-repeat ref="1 to 10">
+          <template> {.} </template>
+        </fx-repeat>
+      </fx-fore>`,
+    );
   });
 
   it('handles atomic value', async () => {

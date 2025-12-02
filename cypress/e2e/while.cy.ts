@@ -25,6 +25,7 @@ describe('while demo spec', () => {
 	});
 
 	it('notify user 10 times', () => {
+		cy.get('#counter').should('have.text', '0')
 		cy.get('[data-cy="start"]')
 			.click()
 		cy.get('.toastify')

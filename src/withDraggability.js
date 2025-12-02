@@ -1,5 +1,10 @@
 import getInScopeContext from './getInScopeContext.js';
 
+/**
+ * @template {typeof import('./ForeElementMixin.js').default} T
+ * @param {T} superclass
+ * @returns {T}
+ */
 export const withDraggability = (superclass, isAlsoDraggable) =>
   /**
    * Adds draggability to generic components.
@@ -15,11 +20,9 @@ export const withDraggability = (superclass, isAlsoDraggable) =>
       };
     }
 
-    constructor() {
-      super();
-    }
-
     connectedCallback() {
+      super.connectedCallback();
+
       this.drop = event => this._drop(event);
       this.addEventListener('drop', this.drop);
       this.dragOver = event => this._dragOver(event);
@@ -82,6 +85,7 @@ export const withDraggability = (superclass, isAlsoDraggable) =>
 
     _dragEnd(event) {
       const item = this.getOwnerForm().draggedItem;
+      if (!item) return;
       if (item.getAttribute('drop-action') === 'copy') {
         item.remove();
       }

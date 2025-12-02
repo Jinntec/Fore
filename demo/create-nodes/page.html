@@ -1,265 +1,469 @@
 <!DOCTYPE HTML>
 <html xmlns:func="generator-functions">
 <head>
-   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-   <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport">
-   <title></title>
-   <link href="../../resources/fore.css" rel="stylesheet">
-   <link href="../../resources/vars.css" rel="stylesheet">
-   <link href="../../resources/toastify.css" rel="stylesheet">
-   <link href="default.css" rel="stylesheet"><script type="module">
-   //import '../src/scripts/fore-dev.js';
-   import 'http://localhost:8090/index.js';
-</script></head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport">
+    <title></title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+    <link href="../../resources/vars.css" rel="stylesheet">
+    <link href="../../resources/toastify.css" rel="stylesheet">
+  <link href="../../resources/demo.css" rel="stylesheet">
+    <link href="default.css" rel="stylesheet">
+    <script type="module">
+        // import '../../dist/fore.js';
+        /*
+        Alternative to above import:
+        to run from local clone of Fore uncomment the next line and run 'npm start' in Fore homedir.
+        */
+        import '../../index.js';
+        // import '../../tools/fx-lens.js';
+    </script>
+</head>
 <body>
+<header>
+    <h1>Auto-create XML structure with create-nodes</h1>
+</header>
 <main>
-   <fx-fore xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
-            create-nodes="create-nodes" id="fx-invoice">
-      <fx-var name="invoice" value="instance('invoice')"></fx-var>
-      <fx-model>
-         <fx-instance id="invoice" src="04.03a-INVOICE_ubl.xml"></fx-instance>
-      </fx-model>
-      <fx-group ref=".">
-         <fx-group>
-            <fx-control ref="cbc:ID"><label for="BT-1">Invoice number</label><input id="BT-1"></fx-control>
-            <fx-control ref="cbc:IssueDate"><label for="BT-2">Invoice issue date</label><input id="BT-2"></fx-control>
-            <fx-control ref="cbc:InvoiceTypeCode"><label for="BT-3">Invoice type code</label><input id="BT-3"></fx-control>
-            <fx-control ref="cbc:DocumentCurrencyCode"><label for="BT-5">Invoice currency code</label><input id="BT-5"></fx-control>
-            <fx-control ref="cbc:TaxCurrencyCode"><label for="BT-6">VAT accounting currency code</label><input id="BT-6"></fx-control>
-            <fx-control ref="cbc:TaxPointDate"><label for="BT-7">Value added tax point date</label><input id="BT-7"></fx-control>
-            <fx-control ref="cac:InvoicePeriod/cbc:DescriptionCode"><label for="BT-8">Value added tax point date code</label><input id="BT-8"></fx-control>
-            <fx-control ref="cbc:DueDate"><label for="BT-9">Payment due date</label><input id="BT-9"></fx-control>
-            <fx-control ref="cbc:BuyerReference"><label for="BT-10">Buyer reference</label><input id="BT-10"></fx-control>
-            <fx-control ref="cac:ProjectReference/cbc:ID"><label for="BT-11">Project reference</label><input id="BT-11"></fx-control>
-            <fx-control ref="cac:ContractDocumentReference/cbc:ID"><label for="BT-12">Contract reference</label><input id="BT-12"></fx-control>
-            <fx-control ref="cac:OrderReference/cbc:ID"><label for="BT-13">Purchase order reference</label><input id="BT-13"></fx-control>
-            <fx-control ref="cac:OrderReference/cbc:SalesOrderID"><label for="BT-14">Sales order reference</label><input id="BT-14"></fx-control>
-            <fx-control ref="cac:ReceiptDocumentReference/cbc:ID"><label for="BT-15">Receiving advice reference</label><input id="BT-15"></fx-control>
-            <fx-control ref="cac:DespatchDocumentReference/cbc:ID"><label for="BT-16">Despatch advice reference</label><input id="BT-16"></fx-control>
-            <fx-control ref="cac:OriginatorDocumentReference/cbc:ID"><label for="BT-17">Tender or lot reference</label><input id="BT-17"></fx-control>
-            <fx-control ref="cac:AdditionalDocumentReference/cbc:ID/@schemeID"><label for="BT-18">Invoiced object identifier</label><input id="BT-18"></fx-control>
-            <fx-control ref="cbc:AccountingCost"><label for="BT-19">Buyer accounting reference</label><input id="BT-19"></fx-control>
-            <fx-control ref="cac:PaymentTerms/cbc:Note"><label for="BT-20">Payment terms</label><input id="BT-20"></fx-control>
-            <fx-group>
-               <header>PROCESS CONTROL</header>
-               <fx-control ref="bc:ProfileID"><label for="BT-23">Business process type</label><input id="BT-23"></fx-control>
-               <fx-control ref="bc:CustomizationID"><label for="BT-24">Specification identifier</label><input id="BT-24"></fx-control>
+      <fx-fore xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+               create-nodes="create-nodes" id="fx-invoice">
+        <fx-var name="invoice" value="instance('default')"></fx-var>
+        <fx-action event="ready" if="string-length(string-join(//cac:BillingReference)) = 0">
+          <fx-delete ref="//cac:BillingReference"></fx-delete>
+        </fx-action>
+        <fx-model>
+          <fx-instance src="test/ubl-empty.xml"></fx-instance>
+          <fx-instance id="iso-3166-1" src="codelists/xml/Country-Codes-7.xml"></fx-instance>
+          <fx-instance id="iso-4217" src="codelists/xml/Currency-Codes-3.xml"></fx-instance>
+          <fx-instance id="rec-20" src="codelists/xml/UN_ECE_Recommendation_N_20_3.xml"></fx-instance>
+          <fx-instance id="rec-21" src="codelists/xml/UN_ECE_Recommendation_N_21_3.xml"></fx-instance>
+          <fx-instance id="untdid-1001" src="codelists/xml/1001.xml"></fx-instance>
+          <fx-instance id="untdid-2005" src="codelists/xml/2005.xml"></fx-instance>
+          <fx-instance id="untdid-4461" src="codelists/xml/UNTDID-4461-3.xml"></fx-instance>
+          <fx-instance id="untdid-5189" src="codelists/xml/UNTDID-5305-3.xml"></fx-instance>
+          <fx-instance id="untdid-5305" src="codelists/xml/UNTDID-5305-3.xml"></fx-instance>
+          <fx-instance id="untdid-7161" src="codelists/xml/UNTDID-7161-3.xml"></fx-instance>
+          <fx-instance id="vatex" src="codelists/xml/VATEX-2019-12-11T08_43Z-yAZ.xml"></fx-instance>
+          <fx-instance id="vars">
+            <data></data>
+          </fx-instance>
+        </fx-model>
+
+        <p>By setting <code>create-nodes</code> on the <code>fx-fore</code> element,
+          Fore will create missing nodes in the XML structure from the binding expressions
+          in the UI. Hierarchy and namespaces will be respected.</p>
+
+        <p>The most commmon use case are XML documents that contain only parts of the
+        possible data. When loading such documents the structure needs to be completed
+        to allow entry of optional data.</p>
+
+        <p>In this example an empty UBL document will be loaded - once the UI starts up it
+        will examine if the referenced node is present and if not create it. </p>
+
+        <p>If you examine this example with <a href="?lens">Lens</a> you will see a full-blown
+        UBL document with elements in 2 namespaces all created from the <code>ref</code> attributes
+        on Controls, Groups and Repeats.</p>
+
+        <p class="note">This is an extremely heavy-weighted example with long data lists
+        to fill options lists. It's also used for streamlining, performance-testing</p>
+        <fx-group id="outer" ref=".">
+          <fx-control id="BT-1" ref="cbc:ID"><label for="BT-1">Invoice number</label><input type="text"></fx-control>
+          <fx-control id="BT-2" ref="cbc:IssueDate"><label for="BT-2">Invoice issue date</label><input type="date">
+          </fx-control>
+          <fx-control id="BT-3" ref="cbc:InvoiceTypeCode"><label for="BT-3">Invoice type code</label><select id="BT-3"
+                                                                                                             class="widget"
+                                                                                                             ref="instance('untdid-1001')//Row"
+                                                                                                             selection="open">
+            <template>
+              <option value="{Value[1]/SimpleValue}" title="{Value[3]/SimpleValue}">{Value[2]/SimpleValue}
+              </option>
+            </template>
+          </select>
+          </fx-control>
+          <fx-control id="BT-5" ref="cbc:DocumentCurrencyCode"><label for="BT-5">Invoice currency code</label><select
+            id="BT-5" class="widget" ref="instance('iso-4217')//Row" selection="open">
+            <template>
+              <option value="{Value[1]/SimpleValue}" title="{Value[3]/SimpleValue}">{Value[2]/SimpleValue}
+              </option>
+            </template>
+          </select></fx-control>
+          <fx-control id="BT-6" ref="cbc:TaxCurrencyCode"><label for="BT-6">VAT accounting currency
+            code</label><select id="BT-6" class="widget" ref="instance('iso-4217')//Row" selection="open">
+            <template>
+              <option value="{Value[1]/SimpleValue}" title="{Value[3]/SimpleValue}">{Value[2]/SimpleValue}
+              </option>
+            </template>
+          </select></fx-control>
+          <fx-control id="BT-7" ref="cbc:TaxPointDate"><label for="BT-7">Value added tax point date</label><input
+            type="date"></fx-control>
+          <fx-control id="BT-8" ref="cac:InvoicePeriod/cbc:DescriptionCode"><label for="BT-8">Value added tax point
+            date code</label><select id="BT-8" class="widget" ref="instance('untdid-2005')//Row" selection="open">
+            <template>
+              <option value="{Value[1]/SimpleValue}" title="{Value[3]/SimpleValue}">{Value[2]/SimpleValue}
+              </option>
+            </template>
+          </select></fx-control>
+          <fx-control id="BT-9" ref="cbc:DueDate"><label for="BT-9">Payment due date</label><input type="date">
+          </fx-control>
+          <fx-control id="BT-10" ref="cbc:BuyerReference"><label for="BT-10">Buyer reference</label><textarea
+            class="widget"></textarea></fx-control>
+          <fx-control id="BT-11" ref="cac:ProjectReference/cbc:ID"><label for="BT-11">Project reference</label><input
+            type="text"></fx-control>
+          <fx-control id="BT-12" ref="cac:ContractDocumentReference/cbc:ID"><label for="BT-12">Contract
+            reference</label><input type="text"></fx-control>
+          <fx-control id="BT-13" ref="cac:OrderReference/cbc:ID"><label for="BT-13">Purchase order
+            reference</label><input type="text"></fx-control>
+          <fx-control id="BT-14" ref="cac:OrderReference/cbc:SalesOrderID"><label for="BT-14">Sales order
+            reference</label><input type="text"></fx-control>
+          <fx-control id="BT-15" ref="cac:ReceiptDocumentReference/cbc:ID"><label for="BT-15">Receiving advice
+            reference</label><input type="text"></fx-control>
+          <fx-control id="BT-16" ref="cac:DespatchDocumentReference/cbc:ID"><label for="BT-16">Despatch advice
+            reference</label><input type="text"></fx-control>
+          <fx-control id="BT-17" ref="cac:OriginatorDocumentReference/cbc:ID"><label for="BT-17">Tender or lot
+            reference</label><input type="text"></fx-control>
+          <fx-control id="BT-18" ref="cac:AdditionalDocumentReference/cbc:ID/@schemeID"><label for="BT-18">Invoiced
+            object identifier</label><input type="text"></fx-control>
+          <fx-control id="BT-19" ref="cbc:AccountingCost"><label for="BT-19">Buyer accounting
+            reference</label><textarea class="widget"></textarea></fx-control>
+          <fx-control id="BT-20" ref="cac:PaymentTerms/cbc:Note"><label for="BT-20">Payment terms</label><textarea
+            class="widget"></textarea></fx-control>
+          <fx-group id="BG-2" ref=".">
+            <header>PROCESS CONTROL</header>
+            <fx-control id="BT-23" ref="bc:ProfileID"><label for="BT-23">Business process type</label><textarea
+              class="widget"></textarea></fx-control>
+            <fx-control id="BT-24" ref="bc:CustomizationID"><label for="BT-24">Specification
+              identifier</label><input type="text"></fx-control>
+          </fx-group>
+          <section id="BG-3" class="repeat-container">
+            <header>PRECEDING INVOICE REFERENCE
+              <fx-trigger>
+                <button>add</button>
+                <fx-insert origin="#r-BG-3"></fx-insert>
+              </fx-trigger>
+            </header>
+<!--            <fx-var name="localcount" value="count(//cac:BillingReference/cac:InvoiceDocumentReference)"></fx-var>-->
+<!--
+            <fx-repeat id="r-BG-3" ref="cac:BillingReference"
+                       class="entries-{$localcount}">
+-->
+            <fx-repeat id="r-BG-3" ref="cac:BillingReference">
+              <template>
+                <fx-group ref="cac:InvoiceDocumentReference">
+                  <fx-control id="BT-25" ref="cbc:ID"><label for="BT-25">Preceding Invoice reference</label><input
+                    type="text"></fx-control>
+                  <fx-control id="BT-26" ref="cbc:IssueDate"><label for="BT-26">Preceding Invoice issue
+                    date</label><input type="date"></fx-control>
+                </fx-group>
+                <fx-trigger>
+                  <button>delete</button>
+                  <fx-delete ref="."></fx-delete>
+                </fx-trigger>
+
+              </template>
+            </fx-repeat>
+          </section>
+
+          <fx-group id="BG-4" ref="cac:AccountingSupplierParty">
+            <header>SELLER</header>
+            <fx-control id="BT-27" ref="cac:Party/cac:PartyLegalEntity/cbc:RegistrationName"><label for="BT-27">Seller name</label><textarea class="widget"></textarea></fx-control>
+            <fx-control id="BT-28" ref="cac:Party/cac:PartyName/cbc:Name"><label for="BT-28">Seller trading name</label><textarea class="widget"></textarea></fx-control>
+            <fx-control id="BT-29" ref="cac:Party/cac:PartyIdentification/cbc:ID/@schemeID"><label for="BT-29">Seller identifier</label><input type="text"></fx-control>
+            <fx-control id="BT-30" ref="cac:Party/cac:PartyLegalEntity/cbc:CompanyID/@schemeID"><label for="BT-30">Seller legal registration identifier</label><input type="text"></fx-control>
+            <fx-control id="BT-31" ref="cac:Party/cac:PartyTaxScheme/cbc:CompanyID"><label for="BT-31">Seller VAT identifier</label><input type="text"></fx-control>
+            <fx-control id="BT-32" ref="cac:Party/cac:PartyTaxScheme/cbc:CompanyID"><label for="BT-32">Seller tax registration identifier</label><input type="text"></fx-control>
+            <fx-control id="BT-33" ref="cac:Party/cac:PartyLegalEntity/cbc:CompanyLegalForm"><label for="BT-33">Seller additional legal information</label><textarea class="widget"></textarea></fx-control>
+            <fx-control id="BT-34" ref="cac:Party/cbc:EndpointID/@schemeID"><label for="BT-34">Seller electronic address</label><input type="text"></fx-control>
+            <fx-group id="BG-5" ref="cac:Party/cac:PostalAddress">
+              <header>SELLER POSTAL ADDRESS</header>
+              <fx-control id="BT-35" ref="cbc:StreetName"><label for="BT-35">Seller address line 1</label><textarea class="widget"></textarea></fx-control>
+              <fx-control id="BT-36" ref="cbc:AdditionalStreetName"><label for="BT-36">Seller address line 2</label><textarea class="widget"></textarea></fx-control>
+              <fx-control id="BT-162" ref="cac:AddressLine/cbc:Line"><label for="BT-162">Seller address line 3</label><textarea class="widget"></textarea></fx-control>
+              <fx-control id="BT-37" ref="cbc:CityName"><label for="BT-37">Seller city</label><textarea class="widget"></textarea></fx-control>
+              <fx-control id="BT-38" ref="cbc:PostalZone"><label for="BT-38">Seller post code</label><textarea class="widget"></textarea></fx-control>
+              <fx-control id="BT-39" ref="cbc:CountrySubentity"><label for="BT-39">Seller country subdivision</label><textarea class="widget"></textarea></fx-control>
+              <fx-control id="BT-40" ref="cac:Country/cbc:IdentificationCode"><label for="BT-40">Seller country code</label><select id="BT-40" class="widget" ref="instance('iso-3166-1')//Row" selection="open"><template>
+                <option value="{Value[1]/SimpleValue}" title="{Value[3]/SimpleValue}">{Value[2]/SimpleValue}</option></template></select></fx-control>
             </fx-group>
-            <fx-repeat ref="cac:BillingReference/cac:InvoiceDocumentReference"><template>
-               <fx-control ref="cbc:ID"><label for="BT-25">Preceding Invoice reference</label><input id="BT-25"></fx-control>
-               <fx-control ref="cbc:IssueDate"><label for="BT-26">Preceding Invoice issue date</label><input id="BT-26"></fx-control></template></fx-repeat>
-            <fx-group ref="cac:AccountingSupplierParty">
-               <header>SELLER</header>
-               <fx-control ref="cac:Party/cac:PartyLegalEntity/cbc:RegistrationName"><label for="BT-27">Seller name</label><input id="BT-27"></fx-control>
-               <fx-control ref="cac:Party/cac:PartyName/cbc:Name"><label for="BT-28">Seller trading name</label><input id="BT-28"></fx-control>
-               <fx-control ref="cac:Party/cac:PartyIdentification/cbc:ID/@schemeID"><label for="BT-29">Seller identifier</label><input id="BT-29"></fx-control>
-               <fx-control ref="cac:Party/cac:PartyLegalEntity/cbc:CompanyID/@schemeID"><label for="BT-30">Seller legal registration identifier</label><input id="BT-30"></fx-control>
-               <fx-control ref="cac:Party/cac:PartyTaxScheme/cbc:CompanyID"><label for="BT-31">Seller VAT identifier</label><input id="BT-31"></fx-control>
-               <fx-control ref="cac:Party/cac:PartyTaxScheme/cbc:CompanyID"><label for="BT-32">Seller tax registration identifier</label><input id="BT-32"></fx-control>
-               <fx-control ref="cac:Party/cac:PartyLegalEntity/cbc:CompanyLegalForm"><label for="BT-33">Seller additional legal information</label><input id="BT-33"></fx-control>
-               <fx-control ref="cac:Party/cbc:EndpointID/@schemeID"><label for="BT-34">Seller electronic address</label><input id="BT-34"></fx-control>
-               <fx-group ref="cac:Party/cac:PostalAddress">
-                  <header>SELLER POSTAL ADDRESS</header>
-                  <fx-control ref="cbc:StreetName"><label for="BT-35">Seller address line 1</label><input id="BT-35"></fx-control>
-                  <fx-control ref="cbc:AdditionalStreetName"><label for="BT-36">Seller address line 2</label><input id="BT-36"></fx-control>
-                  <fx-control ref="cac:AddressLine/cbc:Line"><label for="BT-162">Seller address line 3</label><input id="BT-162"></fx-control>
-                  <fx-control ref="cbc:CityName"><label for="BT-37">Seller city</label><input id="BT-37"></fx-control>
-                  <fx-control ref="cbc:PostalZone"><label for="BT-38">Seller post code</label><input id="BT-38"></fx-control>
-                  <fx-control ref="cbc:CountrySubentity"><label for="BT-39">Seller country subdivision</label><input id="BT-39"></fx-control>
-                  <fx-control ref="cac:Country/cbc:IdentificationCode"><label for="BT-40">Seller country code</label><input id="BT-40"></fx-control>
-               </fx-group>
-               <fx-group ref="cac:Party/cac:Contact">
-                  <header>SELLER CONTACT</header>
-                  <fx-control ref="cbc:Name"><label for="BT-41">Seller contact point</label><input id="BT-41"></fx-control>
-                  <fx-control ref="cbc:Telephone"><label for="BT-42">Seller contact telephone number</label><input id="BT-42"></fx-control>
-                  <fx-control ref="cbc:ElectronicMail"><label for="BT-43">Seller contact email address</label><input id="BT-43"></fx-control>
-               </fx-group>
+            <fx-group id="BG-6" ref="cac:Party/cac:Contact">
+              <header>SELLER CONTACT</header>
+              <fx-control id="BT-41" ref="cbc:Name"><label for="BT-41">Seller contact point</label><textarea class="widget"></textarea></fx-control>
+              <fx-control id="BT-42" ref="cbc:Telephone"><label for="BT-42">Seller contact telephone number</label><textarea class="widget"></textarea></fx-control>
+              <fx-control id="BT-43" ref="cbc:ElectronicMail"><label for="BT-43">Seller contact email address</label><textarea class="widget"></textarea></fx-control>
             </fx-group>
-            <fx-group ref="cac:AccountingCustomerParty">
-               <header>BUYER</header>
-               <fx-control ref="cac:Party/cac:PartyLegalEntity/cbc:RegistrationName"><label for="BT-44">Buyer name</label><input id="BT-44"></fx-control>
-               <fx-control ref="cac:Party/cac:PartyName/cbc:Name"><label for="BT-45">Buyer trading name</label><input id="BT-45"></fx-control>
-               <fx-control ref="cac:Party/cac:PartyIdentification/cbc:ID/@schemeID"><label for="BT-46">Buyer identifier</label><input id="BT-46"></fx-control>
-               <fx-control ref="cac:Party/cac:PartyLegalEntity/cbc:CompanyID/@schemeID"><label for="BT-47">Buyer legal registration identifier</label><input id="BT-47"></fx-control>
-               <fx-control ref="cac:Party/cac:PartyTaxScheme/cbc:CompanyID"><label for="BT-48">Buyer VAT identifier</label><input id="BT-48"></fx-control>
-               <fx-control ref="cac:Party/cbc:EndpointID/@schemeID"><label for="BT-49">Buyer electronic address</label><input id="BT-49"></fx-control>
-               <fx-group ref="cac:Party/cac:PostalAddress">
-                  <header>BUYER POSTAL ADDRESS</header>
-                  <fx-control ref="cbc:StreetName"><label for="BT-50">Buyer address line 1</label><input id="BT-50"></fx-control>
-                  <fx-control ref="cbc:AdditionalStreetName"><label for="BT-51">Buyer address line 2</label><input id="BT-51"></fx-control>
-                  <fx-control ref="cac:AddressLine/cbc:Line"><label for="BT-163">Buyer address line 3</label><input id="BT-163"></fx-control>
-                  <fx-control ref="cbc:CityName"><label for="BT-52">Buyer city</label><input id="BT-52"></fx-control>
-                  <fx-control ref="cbc:PostalZone"><label for="BT-53">Buyer post code</label><input id="BT-53"></fx-control>
-                  <fx-control ref="cbc:CountrySubentity"><label for="BT-54">Buyer country subdivision</label><input id="BT-54"></fx-control>
-                  <fx-control ref="cac:Country/cbc:IdentificationCode"><label for="BT-55">Buyer country code</label><input id="BT-55"></fx-control>
-               </fx-group>
-               <fx-group ref="cac:Party/cac:Contact">
-                  <header>BUYER CONTACT</header>
-                  <fx-control ref="cbc:Name"><label for="BT-56">Buyer contact point</label><input id="BT-56"></fx-control>
-                  <fx-control ref="cbc:Telephone"><label for="BT-57">Buyer contact telephone number</label><input id="BT-57"></fx-control>
-                  <fx-control ref="cbc:ElectronicMail"><label for="BT-58">Buyer contact email address</label><input id="BT-58"></fx-control>
-               </fx-group>
+          </fx-group>
+          <fx-group id="BG-7" ref="cac:AccountingCustomerParty">
+            <header>BUYER</header>
+            <fx-control id="BT-44" ref="cac:Party/cac:PartyLegalEntity/cbc:RegistrationName"><label for="BT-44">Buyer name</label><textarea class="widget"></textarea></fx-control>
+            <fx-control id="BT-45" ref="cac:Party/cac:PartyName/cbc:Name"><label for="BT-45">Buyer trading name</label><textarea class="widget"></textarea></fx-control>
+            <fx-control id="BT-46" ref="cac:Party/cac:PartyIdentification/cbc:ID/@schemeID"><label for="BT-46">Buyer identifier</label><input type="text"></fx-control>
+            <fx-control id="BT-47" ref="cac:Party/cac:PartyLegalEntity/cbc:CompanyID/@schemeID"><label for="BT-47">Buyer legal registration identifier</label><input type="text"></fx-control>
+            <fx-control id="BT-48" ref="cac:Party/cac:PartyTaxScheme/cbc:CompanyID"><label for="BT-48">Buyer VAT identifier</label><input type="text"></fx-control>
+            <fx-control id="BT-49" ref="cac:Party/cbc:EndpointID/@schemeID"><label for="BT-49">Buyer electronic address</label><input type="text"></fx-control>
+            <fx-group id="BG-8" ref="cac:Party/cac:PostalAddress">
+              <header>BUYER POSTAL ADDRESS</header>
+              <fx-control id="BT-50" ref="cbc:StreetName"><label for="BT-50">Buyer address line 1</label><textarea class="widget"></textarea></fx-control>
+              <fx-control id="BT-51" ref="cbc:AdditionalStreetName"><label for="BT-51">Buyer address line 2</label><textarea class="widget"></textarea></fx-control>
+              <fx-control id="BT-163" ref="cac:AddressLine/cbc:Line"><label for="BT-163">Buyer address line 3</label><textarea class="widget"></textarea></fx-control>
+              <fx-control id="BT-52" ref="cbc:CityName"><label for="BT-52">Buyer city</label><textarea class="widget"></textarea></fx-control>
+              <fx-control id="BT-53" ref="cbc:PostalZone"><label for="BT-53">Buyer post code</label><textarea class="widget"></textarea></fx-control>
+              <fx-control id="BT-54" ref="cbc:CountrySubentity"><label for="BT-54">Buyer country subdivision</label><textarea class="widget"></textarea></fx-control>
+              <fx-control id="BT-55" ref="cac:Country/cbc:IdentificationCode"><label for="BT-55">Buyer country code</label><select id="BT-55" class="widget" ref="instance('iso-3166-1')//Row" selection="open"><template>
+                <option value="{Value[1]/SimpleValue}" title="{Value[3]/SimpleValue}">{Value[2]/SimpleValue}</option></template></select></fx-control>
             </fx-group>
-            <fx-group ref="cac:PayeeParty">
-               <header>PAYEE</header>
-               <fx-control ref="cac:PartyName/cbc:Name"><label for="BT-59">Payee name</label><input id="BT-59"></fx-control>
-               <fx-control ref="cac:PartyIdentification/cbc:ID/@schemeID"><label for="BT-60">Payee identifier</label><input id="BT-60"></fx-control>
-               <fx-control ref="cac:PartyLegalEntity/cbc:CompanyID/@schemeID"><label for="BT-61">Payee legal registration identifier</label><input id="BT-61"></fx-control>
+            <fx-group id="BG-9" ref="cac:Party/cac:Contact">
+              <header>BUYER CONTACT</header>
+              <fx-control id="BT-56" ref="cbc:Name"><label for="BT-56">Buyer contact point</label><textarea class="widget"></textarea></fx-control>
+              <fx-control id="BT-57" ref="cbc:Telephone"><label for="BT-57">Buyer contact telephone number</label><textarea class="widget"></textarea></fx-control>
+              <fx-control id="BT-58" ref="cbc:ElectronicMail"><label for="BT-58">Buyer contact email address</label><textarea class="widget"></textarea></fx-control>
             </fx-group>
-            <fx-group ref="cac:TaxRepresentativeParty">
-               <header>SELLER TAX REPRESENTATIVE PARTY</header>
-               <fx-control ref="cac:PartyName/cbc:Name"><label for="BT-62">Seller tax representative name</label><input id="BT-62"></fx-control>
-               <fx-control ref="cac:PartyTaxScheme/cbc:CompanyID"><label for="BT-63">Seller tax representative VAT identifier</label><input id="BT-63"></fx-control>
-               <fx-group ref="cac:PostalAddress">
-                  <header>SELLER TAX REPRESENTATIVE POSTAL ADDRESS</header>
-                  <fx-control ref="cbc:StreetName"><label for="BT-64">Tax representative address line 1</label><input id="BT-64"></fx-control>
-                  <fx-control ref="cbc:AdditionalStreetName"><label for="BT-65">Tax representative address line 2</label><input id="BT-65"></fx-control>
-                  <fx-control ref="cac:AddressLine/cbc:Line"><label for="BT-164">Tax representative address line 3</label><input id="BT-164"></fx-control>
-                  <fx-control ref="cbc:CityName"><label for="BT-66">Tax representative city</label><input id="BT-66"></fx-control>
-                  <fx-control ref="cbc:PostalZone"><label for="BT-67">Tax representative post code</label><input id="BT-67"></fx-control>
-                  <fx-control ref="cbc:CountrySubentity"><label for="BT-68">Tax representative country subdivision</label><input id="BT-68"></fx-control>
-                  <fx-control ref="cac:Country/cbc:IdentificationCode"><label for="BT-69">Tax representative country code</label><input id="BT-69"></fx-control>
-               </fx-group>
+          </fx-group>
+          <fx-group id="BG-10" ref="cac:PayeeParty">
+            <header>PAYEE</header>
+            <fx-control id="BT-59" ref="cac:PartyName/cbc:Name"><label for="BT-59">Payee name</label><textarea class="widget"></textarea></fx-control>
+            <fx-control id="BT-60" ref="cac:PartyIdentification/cbc:ID/@schemeID"><label for="BT-60">Payee identifier</label><input type="text"></fx-control>
+            <fx-control id="BT-61" ref="cac:PartyLegalEntity/cbc:CompanyID/@schemeID"><label for="BT-61">Payee legal registration identifier</label><input type="text"></fx-control>
+          </fx-group>
+          <fx-group id="BG-11" ref="cac:TaxRepresentativeParty">
+            <header>SELLER TAX REPRESENTATIVE PARTY</header>
+            <fx-control id="BT-62" ref="cac:PartyName/cbc:Name"><label for="BT-62">Seller tax representative name</label><textarea class="widget"></textarea></fx-control>
+            <fx-control id="BT-63" ref="cac:PartyTaxScheme/cbc:CompanyID"><label for="BT-63">Seller tax representative VAT identifier</label><input type="text"></fx-control>
+            <fx-group id="BG-12" ref="cac:PostalAddress">
+              <header>SELLER TAX REPRESENTATIVE POSTAL ADDRESS</header>
+              <fx-control id="BT-64" ref="cbc:StreetName"><label for="BT-64">Tax representative address line 1</label><textarea class="widget"></textarea></fx-control>
+              <fx-control id="BT-65" ref="cbc:AdditionalStreetName"><label for="BT-65">Tax representative address line 2</label><textarea class="widget"></textarea></fx-control>
+              <fx-control id="BT-164" ref="cac:AddressLine/cbc:Line"><label for="BT-164">Tax representative address line 3</label><textarea class="widget"></textarea></fx-control>
+              <fx-control id="BT-66" ref="cbc:CityName"><label for="BT-66">Tax representative city</label><textarea class="widget"></textarea></fx-control>
+              <fx-control id="BT-67" ref="cbc:PostalZone"><label for="BT-67">Tax representative post code</label><textarea class="widget"></textarea></fx-control>
+              <fx-control id="BT-68" ref="cbc:CountrySubentity"><label for="BT-68">Tax representative country subdivision</label><textarea class="widget"></textarea></fx-control>
+              <fx-control id="BT-69" ref="cac:Country/cbc:IdentificationCode"><label for="BT-69">Tax representative country code</label><select id="BT-69" class="widget" ref="instance('iso-3166-1')//Row" selection="open"><template>
+                <option value="{Value[1]/SimpleValue}" title="{Value[3]/SimpleValue}">{Value[2]/SimpleValue}</option></template></select></fx-control>
             </fx-group>
-            <fx-group ref="cac:Delivery">
-               <header>DELIVERY INFORMATION</header>
-               <fx-control ref="cac:DeliveryParty/cac:PartyName/cbc:Name"><label for="BT-70">Deliver to party name</label><input id="BT-70"></fx-control>
-               <fx-control ref="cac:DeliveryLocation/cbc:ID/@schemeID"><label for="BT-71">Deliver to location identifier</label><input id="BT-71"></fx-control>
-               <fx-control ref="cbc:ActualDeliveryDate"><label for="BT-72">Actual delivery date</label><input id="BT-72"></fx-control>
-               <fx-group>
-                  <header>INVOICING PERIOD</header>
-                  <fx-control ref="cbc:StartDate"><label for="BT-73">Invoicing period start date</label><input id="BT-73"></fx-control>
-                  <fx-control ref="cbc:EndDate"><label for="BT-74">Invoicing period end date</label><input id="BT-74"></fx-control>
-               </fx-group>
-               <fx-group ref="cac:DeliveryLocation/cac:Address">
-                  <header>DELIVER TO ADDRESS</header>
-                  <fx-control ref="cbc:StreetName"><label for="BT-75">Deliver to address line 1</label><input id="BT-75"></fx-control>
-                  <fx-control ref="cbc:AdditionalStreetName"><label for="BT-76">Deliver to address line 2</label><input id="BT-76"></fx-control>
-                  <fx-control ref="cac:AddressLine/cbc:Line"><label for="BT-165">Deliver to address line 3</label><input id="BT-165"></fx-control>
-                  <fx-control ref="cbc:CityName"><label for="BT-77">Deliver to city</label><input id="BT-77"></fx-control>
-                  <fx-control ref="cbc:PostalZone"><label for="BT-78">Deliver to post code</label><input id="BT-78"></fx-control>
-                  <fx-control ref="cbc:CountrySubentity"><label for="BT-79">Deliver to country subdivision</label><input id="BT-79"></fx-control>
-                  <fx-control ref="cac:Country/cbc:IdentificationCode"><label for="BT-80">Deliver to country code</label><input id="BT-80"></fx-control>
-               </fx-group>
+          </fx-group>
+          <fx-group id="BG-13" ref="cac:Delivery">
+            <header>DELIVERY INFORMATION</header>
+            <fx-control id="BT-70" ref="cac:DeliveryParty/cac:PartyName/cbc:Name"><label for="BT-70">Deliver to party name</label><textarea class="widget"></textarea></fx-control>
+            <fx-control id="BT-71" ref="cac:DeliveryLocation/cbc:ID/@schemeID"><label for="BT-71">Deliver to location identifier</label><input type="text"></fx-control>
+            <fx-control id="BT-72" ref="cbc:ActualDeliveryDate"><label for="BT-72">Actual delivery date</label><input type="date"></fx-control>
+            <fx-group id="BG-14" ref=".">
+              <header>INVOICING PERIOD</header>
+              <fx-control id="BT-73" ref="cbc:StartDate"><label for="BT-73">Invoicing period start date</label><input type="date"></fx-control>
+              <fx-control id="BT-74" ref="cbc:EndDate"><label for="BT-74">Invoicing period end date</label><input type="date"></fx-control>
             </fx-group>
-            <fx-group ref="cac:PaymentMeans">
-               <header>PAYMENT INSTRUCTIONS</header>
-               <fx-control ref="cbc:PaymentMeansCode"><label for="BT-81">Payment means type code</label><input id="BT-81"></fx-control>
-               <fx-control ref="cbc:PaymentMeansCode/@Name"><label for="BT-82">Payment means text</label><input id="BT-82"></fx-control>
-               <fx-control ref="cbc:PaymentID"><label for="BT-83">Remittance information</label><input id="BT-83"></fx-control>
-               <fx-repeat ref="cac:PayeeFinancialAccount"><template>
-                  <fx-control ref="cbc:ID"><label for="BT-84">Payment account identifier</label><input id="BT-84"></fx-control>
-                  <fx-control ref="cbc:Name"><label for="BT-85">Payment account name</label><input id="BT-85"></fx-control>
-                  <fx-control ref="cac:FinancialInstitutionBranch/cbc:ID"><label for="BT-86">Payment service provider identifier</label><input id="BT-86"></fx-control></template></fx-repeat>
-               <fx-group ref="cac:CardAccount">
-                  <header>PAYMENT CARD INFORMATION</header>
-                  <fx-control ref="cbc:PrimaryAccountNumberID"><label for="BT-87">Payment card primary account number</label><input id="BT-87"></fx-control>
-                  <fx-control ref="cbc:HolderName"><label for="BT-88">Payment card holder name</label><input id="BT-88"></fx-control>
-               </fx-group>
-               <fx-group ref="cac:PaymentMandate">
-                  <header>DIRECT DEBIT</header>
-                  <fx-control ref="cbc:ID"><label for="BT-89">Mandate reference identifier</label><input id="BT-89"></fx-control>
-				  <!-- Why does this not have a ref? -->
-                  <!-- <fx-control><label for="BT-90">Bank assigned creditor identifier</label><input id="BT-90"></fx-control> -->
-                  <fx-control ref="cac:PayerFinancialAccount/cbc:ID"><label for="BT-91">Debited account identifier</label><input id="BT-91"></fx-control>
-               </fx-group>
+            <fx-group id="BG-15" ref="cac:DeliveryLocation">
+              <fx-group ref="cac:Address"></fx-group>
+                <header>DELIVER TO ADDRESS</header>
+                <fx-control id="BT-75" ref="cbc:StreetName"><label for="BT-75">Deliver to address line 1</label><textarea class="widget"></textarea></fx-control>
+                <fx-control id="BT-76" ref="cbc:AdditionalStreetName"><label for="BT-76">Deliver to address line 2</label><textarea class="widget"></textarea></fx-control>
+                <fx-control id="BT-165" ref="cac:AddressLine/cbc:Line"><label for="BT-165">Deliver to address line 3</label><textarea class="widget"></textarea></fx-control>
+                <fx-control id="BT-77" ref="cbc:CityName"><label for="BT-77">Deliver to city</label><textarea class="widget"></textarea></fx-control>
+                <fx-control id="BT-78" ref="cbc:PostalZone"><label for="BT-78">Deliver to post code</label><textarea class="widget"></textarea></fx-control>
+                <fx-control id="BT-79" ref="cbc:CountrySubentity"><label for="BT-79">Deliver to country subdivision</label><textarea class="widget"></textarea></fx-control>
+                <fx-control id="BT-80" ref="cac:Country/cbc:IdentificationCode"><label for="BT-80">Deliver to country code</label><select id="BT-80" class="widget" ref="instance('iso-3166-1')//Row" selection="open"><template>
+                  <option value="{Value[1]/SimpleValue}" title="{Value[3]/SimpleValue}">{Value[2]/SimpleValue}</option></template></select></fx-control>
+              </fx-group>
             </fx-group>
-            <fx-repeat ref="cac:AllowanceCharge"><template>
-               <fx-control ref="cbc:Amount"><label for="BT-92">Document level allowance amount</label><input id="BT-92"></fx-control>
-               <fx-control ref="cbc:BaseAmount"><label for="BT-93">Document level allowance base amount</label><input id="BT-93"></fx-control>
-               <fx-control ref="cbc:MultiplierFactorNumeric"><label for="BT-94">Document level allowance percentage</label><input id="BT-94"></fx-control>
-               <fx-control ref="cac:TaxCategory/cbc:ID"><label for="BT-95">Document level allowance VAT category code</label><input id="BT-95"></fx-control>
-               <fx-control ref="cac:TaxCategory/cbc:Percent"><label for="BT-96">Document level allowance VAT rate</label><input id="BT-96"></fx-control>
-               <fx-control ref="cbc:AllowanceChargeReason"><label for="BT-97">Document level allowance reason</label><input id="BT-97"></fx-control>
-               <fx-control ref="cbc:AllowanceChargeReasonCode"><label for="BT-98">Document level allowance reason code</label><input id="BT-98"></fx-control></template></fx-repeat>
-            <fx-repeat ref="cac:AllowanceCharge"><template>
-               <fx-control ref="cbc:Amount"><label for="BT-99">Document level charge amount</label><input id="BT-99"></fx-control>
-               <fx-control ref="cbc:BaseAmount"><label for="BT-100">Document level charge base amount</label><input id="BT-100"></fx-control>
-               <fx-control ref="cbc:MultiplierFactorNumeric"><label for="BT-101">Document level charge percentage</label><input id="BT-101"></fx-control>
-               <fx-control ref="cac:TaxCategory/cbc:ID"><label for="BT-102">Document level charge VAT category code</label><input id="BT-102"></fx-control>
-               <fx-control ref="cac:TaxCategory/cbc:Percent"><label for="BT-103">Document level charge VAT rate</label><input id="BT-103"></fx-control>
-               <fx-control ref="cbc:AllowanceChargeReason"><label for="BT-104">Document level charge reason</label><input id="BT-104"></fx-control>
-               <fx-control ref="cbc:AllowanceChargeReasonCode"><label for="BT-105">Document level charge reason code</label><input id="BT-105"></fx-control></template></fx-repeat>
-            <fx-group ref="cac:LegalMonetaryTotal">
-               <header>DOCUMENT TOTALS</header>
-               <fx-control ref="cbc:LineExtensionAmount"><label for="BT-106">Sum of Invoice line net amount</label><input id="BT-106"></fx-control>
-               <fx-control ref="cbc:AllowanceTotalAmount"><label for="BT-107">Sum of allowances on document level</label><input id="BT-107"></fx-control>
-               <fx-control ref="cbc:ChargeTotalAmount"><label for="BT-108">Sum of charges on document level</label><input id="BT-108"></fx-control>
-               <fx-control ref="cbc:TaxExclusiveAmount"><label for="BT-109">Invoice total amount without VAT</label><input id="BT-109"></fx-control>
-               <!-- <fx-control><label for="BT-110">Invoice total VAT amount</label><input id="BT-110"></fx-control> -->
-               <!-- <fx-control><label for="BT-111">Invoice total VAT amount in accounting currency</label><input id="BT-111"></fx-control> -->
-               <fx-control ref="cbc:TaxInclusiveAmount"><label for="BT-112">Invoice total amount with VAT</label><input id="BT-112"></fx-control>
-               <fx-control ref="cbc:PrepaidAmount"><label for="BT-113">Paid amount</label><input id="BT-113"></fx-control>
-               <fx-control ref="cbc:PayableRoundingAmount"><label for="BT-114">Rounding amount</label><input id="BT-114"></fx-control>
-               <fx-control ref="cbc:PayableAmount"><label for="BT-115">Amount due for payment</label><input id="BT-115"></fx-control>
+          </fx-group>
+          <fx-group id="BG-16" ref="cac:PaymentMeans">
+            <header>PAYMENT INSTRUCTIONS</header>
+            <fx-control id="BT-81" ref="cbc:PaymentMeansCode"><label for="BT-81">Payment means type code</label><select id="BT-81" class="widget" ref="instance('untdid-4461')//Row" selection="open"><template>
+              <option value="{Value[1]/SimpleValue}" title="{Value[3]/SimpleValue}">{Value[2]/SimpleValue}</option></template></select></fx-control>
+            <fx-control id="BT-82" ref="cbc:PaymentMeansCode/@Name"><label for="BT-82">Payment means text</label><textarea class="widget"></textarea></fx-control>
+            <fx-control id="BT-83" ref="cbc:PaymentID"><label for="BT-83">Remittance information</label><textarea class="widget"></textarea></fx-control>
+            <section id="BG-17" class="repeat-container">
+              <header>CREDIT TRANSFER
+                <fx-trigger><button>add</button><fx-insert ref="cac:PayeeFinancialAccount" origin="#r-BG-17"></fx-insert>
+                </fx-trigger>
+              </header>
+              <fx-repeat id="r-BG-17" ref="cac:PayeeFinancialAccount"><template>
+                <fx-control id="BT-84" ref="cbc:ID"><label for="BT-84">Payment account identifier</label><input type="text"></fx-control>
+                <fx-control id="BT-85" ref="cbc:Name"><label for="BT-85">Payment account name</label><textarea class="widget"></textarea></fx-control>
+                <fx-control id="BT-86" ref="cac:FinancialInstitutionBranch/cbc:ID"><label for="BT-86">Payment service provider identifier</label><input type="text"></fx-control>
+                <fx-trigger><button>delete</button><fx-delete ref="."></fx-delete>
+                </fx-trigger></template></fx-repeat>
+            </section>
+            <fx-group id="BG-18" ref="cac:CardAccount">
+              <header>PAYMENT CARD INFORMATION</header>
+              <fx-control id="BT-87" ref="cbc:PrimaryAccountNumberID"><label for="BT-87">Payment card primary account number</label><textarea class="widget"></textarea></fx-control>
+              <fx-control id="BT-88" ref="cbc:HolderName"><label for="BT-88">Payment card holder name</label><textarea class="widget"></textarea></fx-control>
             </fx-group>
-            <fx-repeat ref="cac:TaxTotal/cac:TaxSubtotal"><template>
-               <fx-control ref="cbc:TaxableAmount"><label for="BT-116">VAT category taxable amount</label><input id="BT-116"></fx-control>
-               <fx-control ref="cbc:TaxAmount"><label for="BT-117">VAT category tax amount</label><input id="BT-117"></fx-control>
-               <fx-control ref="cac:TaxCategory/cbc:ID"><label for="BT-118">VAT category code</label><input id="BT-118"></fx-control>
-               <fx-control ref="cac:TaxCategory/cbc:Percent"><label for="BT-119">VAT category rate</label><input id="BT-119"></fx-control>
-               <fx-control ref="cac:TaxCategory/cbc:TaxExemptionReason"><label for="BT-120">VAT exemption reason text</label><input id="BT-120"></fx-control>
-               <fx-control ref="cac:TaxCategory/cbc:TaxExemptionReasonCode"><label for="BT-121">VAT exemption reason code</label><input id="BT-121"></fx-control></template></fx-repeat>
-            <fx-repeat ref="cac:AdditionalDocumentReference"><template>
-               <fx-control ref="cbc:ID"><label for="BT-122">Supporting document reference</label><input id="BT-122"></fx-control>
-               <fx-control ref="cbc:DocumentDescription"><label for="BT-123">Supporting document description</label><input id="BT-123"></fx-control>
-               <fx-control ref="cac:Attachment/cac:ExternalReference/cbc:URI"><label for="BT-124">External document location</label><input id="BT-124"></fx-control>
-               <fx-control ref="cac:Attachment/cbc:EmbeddedDocumentBinaryObject/@mimeCode"><label for="BT-125">Attached document</label><input id="BT-125"></fx-control></template></fx-repeat>
-            <fx-repeat ref="cac:InvoiceLine"><template>
-               <fx-control ref="cbc:ID"><label for="BT-126">Invoice line identifier</label><input id="BT-126"></fx-control>
-               <fx-control ref="cbc:Note"><label for="BT-127">Invoice line note</label><input id="BT-127"></fx-control>
-               <fx-control ref="cac:DocumentReference/cbc:ID/@schemeID"><label for="BT-128">Invoice line object identifier</label><input id="BT-128"></fx-control>
-               <fx-control ref="cbc:InvoicedQuantity"><label for="BT-129">Invoiced quantity</label><input id="BT-129"></fx-control>
-               <fx-control ref="cbc:InvoicedQuantity/@unitCode"><label for="BT-130">Invoiced quantity unit of measure code</label><input id="BT-130"></fx-control>
-               <fx-control ref="cbc:LineExtensionAmount"><label for="BT-131">Invoice line net amount</label><input id="BT-131"></fx-control>
-               <fx-control ref="cac:OrderLineReference/cbc:LineID"><label for="BT-132">Referenced purchase order line reference</label><input id="BT-132"></fx-control>
-               <fx-control ref="cbc:AccountingCost"><label for="BT-133">Invoice line Buyer accounting reference</label><input id="BT-133"></fx-control>
-               <fx-group ref="cac:InvoicePeriod">
-                  <header>INVOICE LINE PERIOD</header>
-                  <fx-control ref="cbc:StartDate"><label for="BT-134">Invoice line period start date</label><input id="BT-134"></fx-control>
-                  <fx-control ref="cbc:EndDate"><label for="BT-135">Invoice line period end date</label><input id="BT-135"></fx-control>
-               </fx-group>
-               <fx-repeat ref="cac:AllowanceCharge"><template>
-                  <fx-control ref="cbc:Amount"><label for="BT-136">Invoice line allowance amount</label><input id="BT-136"></fx-control>
-                  <fx-control ref="cbc:BaseAmount"><label for="BT-137">Invoice line allowance base amount</label><input id="BT-137"></fx-control>
-                  <fx-control ref="cbc:MultiplierFactorNumeric"><label for="BT-138">Invoice line allowance percentage</label><input id="BT-138"></fx-control>
-                  <fx-control ref="cbc:AllowanceChargeReason"><label for="BT-139">Invoice line allowance reason</label><input id="BT-139"></fx-control>
-                  <fx-control ref="cbc:AllowanceChargeReasonCode"><label for="BT-140">Invoice line allowance reason code</label><input id="BT-140"></fx-control></template></fx-repeat>
-               <fx-repeat ref="cac:AllowanceCharge"><template>
-                  <fx-control ref="cbc:Amount"><label for="BT-141">Invoice line charge amount</label><input id="BT-141"></fx-control>
-                  <fx-control ref="cbc:BaseAmount"><label for="BT-142">Invoice line charge base amount</label><input id="BT-142"></fx-control>
-                  <fx-control ref="cbc:MultiplierFactorNumeric"><label for="BT-143">Invoice line charge percentage</label><input id="BT-143"></fx-control>
-                  <fx-control ref="cbc:AllowanceChargeReason"><label for="BT-144">Invoice line charge reason</label><input id="BT-144"></fx-control>
-                  <fx-control ref="cbc:AllowanceChargeReasonCode"><label for="BT-145">Invoice line charge reason code</label><input id="BT-145"></fx-control></template></fx-repeat>
-               <fx-group ref="cac:Price">
-                  <header>PRICE DETAILS</header>
-                  <fx-control ref="cbc:PriceAmount"><label for="BT-146">Item net price</label><input id="BT-146"></fx-control>
-                  <fx-control ref="cac:AllowanceCharge/cbc:Amount"><label for="BT-147">Item price discount</label><input id="BT-147"></fx-control>
-                  <fx-control ref="cac:AllowanceCharge/cbc:BaseAmount"><label for="BT-148">Item gross price</label><input id="BT-148"></fx-control>
-                  <fx-control ref="cbc:BaseQuantity"><label for="BT-149">Item price base quantity</label><input id="BT-149"></fx-control>
-                  <fx-control ref="cbc:BaseQuantity/@unitCode"><label for="BT-150">Item price base quantity unit of measure code</label><input id="BT-150"></fx-control>
-               </fx-group>
-               <fx-group ref="cac:Item/cac:ClassifiedTaxCategory">
-                  <header>LINE VAT INFORMATION</header>
-                  <fx-control ref="cbc:ID"><label for="BT-151">Invoiced item VAT category code</label><input id="BT-151"></fx-control>
-                  <fx-control ref="cbc:Percent"><label for="BT-152">Invoiced item VAT rate</label><input id="BT-152"></fx-control>
-               </fx-group>
-               <fx-group ref="cac:Item">
-                  <header>ITEM INFORMATION</header>
-                  <fx-control ref="cbc:Name"><label for="BT-153">Item name</label><input id="BT-153"></fx-control>
-                  <fx-control ref="cbc:Description"><label for="BT-154">Item description</label><input id="BT-154"></fx-control>
-                  <fx-control ref="cac:SellersItemIdentification/cbc:ID"><label for="BT-155">Item Sellers identifier</label><input id="BT-155"></fx-control>
-                  <fx-control ref="cac:BuyersItemIdentification/cbc:ID"><label for="BT-156">Item Buyers identifier</label><input id="BT-156"></fx-control>
-                  <fx-control ref="cac:StandardItemIdentification/cbc:ID/@schemeID"><label for="BT-157">Item standard identifier</label><input id="BT-157"></fx-control>
-                  <fx-control ref="cac:CommodityClassification/cbc:ItemClassificationCode/@listID"><label for="BT-158">Item classification identifier</label><input id="BT-158"></fx-control>
-                  <fx-control ref="cac:OriginCountry/cbc:IdentificationCode"><label for="BT-159">Item country of origin</label><input id="BT-159"></fx-control>
-                  <fx-repeat ref="cac:AdditionalItemProperty"><template>
-                     <fx-control ref="cbc:Name"><label for="BT-160">Item attribute name</label><input id="BT-160"></fx-control>
-                     <fx-control ref="cbc:Value"><label for="BT-161">Item attribute value</label><input id="BT-161"></fx-control></template></fx-repeat>
-               </fx-group></template></fx-repeat>
-         </fx-group>
-      </fx-group>
-   </fx-fore>
+            <fx-group id="BG-19" ref="cac:PaymentMandate">
+              <header>DIRECT DEBIT</header>
+              <fx-control id="BT-89" ref="cbc:ID"><label for="BT-89">Mandate reference identifier</label><input type="text"></fx-control>
+              <fx-control id="BT-90"><label for="BT-90">Bank assigned creditor identifier</label><input type="text"></fx-control>
+              <fx-control id="BT-91" ref="cac:PayerFinancialAccount/cbc:ID"><label for="BT-91">Debited account identifier</label><input type="text"></fx-control>
+            </fx-group>
+          </fx-group>
+          <section id="BG-20" class="repeat-container">
+            <header>DOCUMENT LEVEL ALLOWANCES
+              <fx-trigger><button>add</button><fx-insert ref="cac:AllowanceCharge" origin="#r-BG-20"></fx-insert>
+              </fx-trigger>
+            </header>
+            <fx-repeat id="r-BG-20" ref="cac:AllowanceCharge"><template>
+              <fx-control id="BT-92" ref="cbc:Amount"><label for="BT-92">Document level allowance amount</label><input type="number"></fx-control>
+              <fx-control id="BT-93" ref="cbc:BaseAmount"><label for="BT-93">Document level allowance base amount</label><input type="number"></fx-control>
+              <fx-control id="BT-94" ref="cbc:MultiplierFactorNumeric"><label for="BT-94">Document level allowance percentage</label><input type="number"></fx-control>
+              <fx-control id="BT-95" ref="cac:TaxCategory/cbc:ID"><label for="BT-95">Document level allowance VAT category code</label><select id="BT-95" class="widget" ref="instance('untdid-5305')//Row" selection="open"><template>
+                <option value="{Value[1]/SimpleValue}" title="{Value[3]/SimpleValue}">{Value[2]/SimpleValue}</option></template></select></fx-control>
+              <fx-control id="BT-96" ref="cac:TaxCategory/cbc:Percent"><label for="BT-96">Document level allowance VAT rate</label><input type="number"></fx-control>
+              <fx-control id="BT-97" ref="cbc:AllowanceChargeReason"><label for="BT-97">Document level allowance reason</label><textarea class="widget"></textarea></fx-control>
+              <fx-control id="BT-98" ref="cbc:AllowanceChargeReasonCode"><label for="BT-98">Document level allowance reason code</label><select id="BT-98" class="widget" ref="instance('untdid-5189')//Row" selection="open"><template>
+                <option value="{Value[1]/SimpleValue}" title="{Value[3]/SimpleValue}">{Value[2]/SimpleValue}</option></template></select></fx-control>
+              <fx-trigger><button>delete</button><fx-delete ref="."></fx-delete>
+              </fx-trigger></template></fx-repeat>
+          </section>
+          <section id="BG-21" class="repeat-container">
+            <header>DOCUMENT LEVEL CHARGES
+              <fx-trigger><button>add</button><fx-insert ref="cac:AllowanceCharge" origin="#r-BG-21"></fx-insert>
+              </fx-trigger>
+            </header>
+            <fx-repeat id="r-BG-21" ref="cac:AllowanceCharge"><template>
+              <fx-control id="BT-99" ref="cbc:Amount"><label for="BT-99">Document level charge amount</label><input type="number"></fx-control>
+              <fx-control id="BT-100" ref="cbc:BaseAmount"><label for="BT-100">Document level charge base amount</label><input type="number"></fx-control>
+              <fx-control id="BT-101" ref="cbc:MultiplierFactorNumeric"><label for="BT-101">Document level charge percentage</label><input type="number"></fx-control>
+              <fx-control id="BT-102" ref="cac:TaxCategory/cbc:ID"><label for="BT-102">Document level charge VAT category code</label><select id="BT-102" class="widget" ref="instance('untdid-5305')//Row" selection="open"><template>
+                <option value="{Value[1]/SimpleValue}" title="{Value[3]/SimpleValue}">{Value[2]/SimpleValue}</option></template></select></fx-control>
+              <fx-control id="BT-103" ref="cac:TaxCategory/cbc:Percent"><label for="BT-103">Document level charge VAT rate</label><input type="number"></fx-control>
+              <fx-control id="BT-104" ref="cbc:AllowanceChargeReason"><label for="BT-104">Document level charge reason</label><textarea class="widget"></textarea></fx-control>
+              <fx-control id="BT-105" ref="cbc:AllowanceChargeReasonCode"><label for="BT-105">Document level charge reason code</label><select id="BT-105" class="widget" ref="instance('untdid-7161')//Row" selection="open"><template>
+                <option value="{Value[1]/SimpleValue}" title="{Value[3]/SimpleValue}">{Value[2]/SimpleValue}</option></template></select></fx-control>
+              <fx-trigger><button>delete</button><fx-delete ref="."></fx-delete>
+              </fx-trigger></template></fx-repeat>
+          </section>
+          <fx-group id="BG-22" ref="cac:LegalMonetaryTotal">
+            <header>DOCUMENT TOTALS</header>
+            <fx-control id="BT-106" ref="cbc:LineExtensionAmount"><label for="BT-106">Sum of Invoice line net amount</label><input type="number"></fx-control>
+            <fx-control id="BT-107" ref="cbc:AllowanceTotalAmount"><label for="BT-107">Sum of allowances on document level</label><input type="number"></fx-control>
+            <fx-control id="BT-108" ref="cbc:ChargeTotalAmount"><label for="BT-108">Sum of charges on document level</label><input type="number"></fx-control>
+            <fx-control id="BT-109" ref="cbc:TaxExclusiveAmount"><label for="BT-109">Invoice total amount without VAT</label><input type="number"></fx-control>
+            <fx-control id="BT-110"><label for="BT-110">Invoice total VAT amount</label><input type="number"></fx-control>
+            <fx-control id="BT-111"><label for="BT-111">Invoice total VAT amount in accounting currency</label><input type="number"></fx-control>
+            <fx-control id="BT-112" ref="cbc:TaxInclusiveAmount"><label for="BT-112">Invoice total amount with VAT</label><input type="number"></fx-control>
+            <fx-control id="BT-113" ref="cbc:PrepaidAmount"><label for="BT-113">Paid amount</label><input type="number"></fx-control>
+            <fx-control id="BT-114" ref="cbc:PayableRoundingAmount"><label for="BT-114">Rounding amount</label><input type="number"></fx-control>
+            <fx-control id="BT-115" ref="cbc:PayableAmount"><label for="BT-115">Amount due for payment</label><input type="number"></fx-control>
+          </fx-group>
+          <section id="BG-23" class="repeat-container">
+            <header>VAT BREAKDOWN
+              <fx-trigger><button>add</button><fx-insert ref="cac:TaxTotal/cac:TaxSubtotal" origin="#r-BG-23"></fx-insert>
+              </fx-trigger>
+            </header>
+            <fx-repeat id="r-BG-23" ref="cac:TaxTotal/cac:TaxSubtotal"><template>
+              <fx-control id="BT-116" ref="cbc:TaxableAmount"><label for="BT-116">VAT category taxable amount</label><input type="number"></fx-control>
+              <fx-control id="BT-117" ref="cbc:TaxAmount"><label for="BT-117">VAT category tax amount</label><input type="number"></fx-control>
+              <fx-control id="BT-118" ref="cac:TaxCategory/cbc:ID"><label for="BT-118">VAT category code</label><select id="BT-118" class="widget" ref="instance('untdid-5305')//Row" selection="open"><template>
+                <option value="{Value[1]/SimpleValue}" title="{Value[3]/SimpleValue}">{Value[2]/SimpleValue}</option></template></select></fx-control>
+              <fx-control id="BT-119" ref="cac:TaxCategory/cbc:Percent"><label for="BT-119">VAT category rate</label><input type="number"></fx-control>
+              <fx-control id="BT-120" ref="cac:TaxCategory/cbc:TaxExemptionReason"><label for="BT-120">VAT exemption reason text</label><textarea class="widget"></textarea></fx-control>
+              <fx-control id="BT-121" ref="cac:TaxCategory/cbc:TaxExemptionReasonCode"><label for="BT-121">VAT exemption reason code</label><select id="BT-121" class="widget" ref="instance('vatex')//Row" selection="open"><template>
+                <option value="{Value[1]/SimpleValue}" title="{Value[3]/SimpleValue}">{Value[2]/SimpleValue}</option></template></select></fx-control>
+              <fx-trigger><button>delete</button><fx-delete ref="."></fx-delete>
+              </fx-trigger></template></fx-repeat>
+          </section>
+          <section id="BG-24" class="repeat-container">
+            <header>ADDITIONAL SUPPORTING DOCUMENTS
+              <fx-trigger><button>add</button><fx-insert ref="cac:AdditionalDocumentReference" origin="#r-BG-24"></fx-insert>
+              </fx-trigger>
+            </header>
+            <fx-repeat id="r-BG-24" ref="cac:AdditionalDocumentReference"><template>
+              <fx-control id="BT-122" ref="cbc:ID"><label for="BT-122">Supporting document reference</label><input type="text"></fx-control>
+              <fx-control id="BT-123" ref="cbc:DocumentDescription"><label for="BT-123">Supporting document description</label><textarea class="widget"></textarea></fx-control>
+              <fx-control id="BT-124" ref="cac:Attachment/cac:ExternalReference/cbc:URI"><label for="BT-124">External document location</label><textarea class="widget"></textarea></fx-control>
+              <fx-upload id="BT-125" mimetype="@mimecode" filename="@filename" ref="cac:Attachment/cbc:EmbeddedDocumentBinaryObject/@mimeCode"></fx-upload>
+              <fx-trigger><button>delete</button><fx-delete ref="."></fx-delete>
+              </fx-trigger></template></fx-repeat>
+          </section>
+          <section id="BG-25" class="repeat-container">
+            <header>INVOICE LINE
+              <fx-trigger><button>add</button><fx-insert ref="cac:InvoiceLine" origin="#r-BG-25"></fx-insert>
+              </fx-trigger>
+            </header>
+            <fx-repeat id="r-BG-25" ref="cac:InvoiceLine"><template>
+              <fx-control id="BT-126" ref="cbc:ID"><label for="BT-126">Invoice line identifier</label><input type="text"></fx-control>
+              <fx-control id="BT-127" ref="cbc:Note"><label for="BT-127">Invoice line note</label><textarea class="widget"></textarea></fx-control>
+              <fx-control id="BT-128" ref="cac:DocumentReference/cbc:ID/@schemeID"><label for="BT-128">Invoice line object identifier</label><input type="text"></fx-control>
+              <fx-control id="BT-129" ref="cbc:InvoicedQuantity"><label for="BT-129">Invoiced quantity</label><input type="number"></fx-control>
+              <fx-control id="BT-130" ref="cbc:InvoicedQuantity/@unitCode"><label for="BT-130">Invoiced quantity unit of measure code</label><select id="BT-130" class="widget" ref="instance('rec-20')//Row" selection="open"><template>
+                <option value="{Value[1]/SimpleValue}" title="{Value[3]/SimpleValue}">{Value[2]/SimpleValue}</option></template></select></fx-control>
+              <fx-control id="BT-131" ref="cbc:LineExtensionAmount"><label for="BT-131">Invoice line net amount</label><input type="number"></fx-control>
+              <fx-control id="BT-132" ref="cac:OrderLineReference/cbc:LineID"><label for="BT-132">Referenced purchase order line reference</label><input type="text"></fx-control>
+              <fx-control id="BT-133" ref="cbc:AccountingCost"><label for="BT-133">Invoice line Buyer accounting reference</label><textarea class="widget"></textarea></fx-control>
+              <fx-group id="BG-26" ref="cac:InvoicePeriod">
+                <header>INVOICE LINE PERIOD</header>
+                <fx-control id="BT-134" ref="cbc:StartDate"><label for="BT-134">Invoice line period start date</label><input type="date"></fx-control>
+                <fx-control id="BT-135" ref="cbc:EndDate"><label for="BT-135">Invoice line period end date</label><input type="date"></fx-control>
+              </fx-group>
+              <section id="BG-27" class="repeat-container">
+                <header>INVOICE LINE ALLOWANCES
+                  <fx-trigger><button>add</button><fx-insert ref="cac:AllowanceCharge" origin="#r-BG-27"></fx-insert>
+                  </fx-trigger>
+                </header>
+                <fx-repeat id="r-BG-27" ref="cac:AllowanceCharge"><template>
+                  <fx-control id="BT-136" ref="cbc:Amount"><label for="BT-136">Invoice line allowance amount</label><input type="number"></fx-control>
+                  <fx-control id="BT-137" ref="cbc:BaseAmount"><label for="BT-137">Invoice line allowance base amount</label><input type="number"></fx-control>
+                  <fx-control id="BT-138" ref="cbc:MultiplierFactorNumeric"><label for="BT-138">Invoice line allowance percentage</label><input type="number"></fx-control>
+                  <fx-control id="BT-139" ref="cbc:AllowanceChargeReason"><label for="BT-139">Invoice line allowance reason</label><textarea class="widget"></textarea></fx-control>
+                  <fx-control id="BT-140" ref="cbc:AllowanceChargeReasonCode"><label for="BT-140">Invoice line allowance reason code</label><select id="BT-140" class="widget" ref="instance('untdid-5189')//Row" selection="open"><template>
+                    <option value="{Value[1]/SimpleValue}" title="{Value[3]/SimpleValue}">{Value[2]/SimpleValue}</option></template></select></fx-control>
+                  <fx-trigger><button>delete</button><fx-delete ref="."></fx-delete>
+                  </fx-trigger></template></fx-repeat>
+              </section>
+              <section id="BG-28" class="repeat-container">
+                <header>INVOICE LINE CHARGES
+                  <fx-trigger><button>add</button><fx-insert ref="cac:AllowanceCharge" origin="#r-BG-28"></fx-insert>
+                  </fx-trigger>
+                </header>
+                <fx-repeat id="r-BG-28" ref="cac:AllowanceCharge"><template>
+                  <fx-control id="BT-141" ref="cbc:Amount"><label for="BT-141">Invoice line charge amount</label><input type="number"></fx-control>
+                  <fx-control id="BT-142" ref="cbc:BaseAmount"><label for="BT-142">Invoice line charge base amount</label><input type="number"></fx-control>
+                  <fx-control id="BT-143" ref="cbc:MultiplierFactorNumeric"><label for="BT-143">Invoice line charge percentage</label><input type="number"></fx-control>
+                  <fx-control id="BT-144" ref="cbc:AllowanceChargeReason"><label for="BT-144">Invoice line charge reason</label><textarea class="widget"></textarea></fx-control>
+                  <fx-control id="BT-145" ref="cbc:AllowanceChargeReasonCode"><label for="BT-145">Invoice line charge reason code</label><select id="BT-145" class="widget" ref="instance('untdid-7161')//Row" selection="open"><template>
+                    <option value="{Value[1]/SimpleValue}" title="{Value[3]/SimpleValue}">{Value[2]/SimpleValue}</option></template></select></fx-control>
+                  <fx-trigger><button>delete</button><fx-delete ref="."></fx-delete>
+                  </fx-trigger></template></fx-repeat>
+              </section>
+              <fx-group id="BG-29" ref="cac:Price">
+                <header>PRICE DETAILS</header>
+                <fx-control id="BT-146" ref="cbc:PriceAmount"><label for="BT-146">Item net price</label><input type="number"></fx-control>
+                <fx-control id="BT-147" ref="cac:AllowanceCharge/cbc:Amount"><label for="BT-147">Item price discount</label><input type="number"></fx-control>
+                <fx-control id="BT-148" ref="cac:AllowanceCharge/cbc:BaseAmount"><label for="BT-148">Item gross price</label><input type="number"></fx-control>
+                <fx-control id="BT-149" ref="cbc:BaseQuantity"><label for="BT-149">Item price base quantity</label><input type="number"></fx-control>
+                <fx-control id="BT-150" ref="cbc:BaseQuantity/@unitCode"><label for="BT-150">Item price base quantity unit of measure code</label><select id="BT-150" class="widget" ref="instance('rec-20')//Row" selection="open"><template>
+                  <option value="{Value[1]/SimpleValue}" title="{Value[3]/SimpleValue}">{Value[2]/SimpleValue}</option></template></select></fx-control>
+              </fx-group>
+              <fx-group id="BG-30" ref="cac:Item/cac:ClassifiedTaxCategory">
+                <header>LINE VAT INFORMATION</header>
+                <fx-control id="BT-151" ref="cbc:ID"><label for="BT-151">Invoiced item VAT category code</label><select id="BT-151" class="widget" ref="instance('untdid-5305')//Row" selection="open"><template>
+                  <option value="{Value[1]/SimpleValue}" title="{Value[3]/SimpleValue}">{Value[2]/SimpleValue}</option></template></select></fx-control>
+                <fx-control id="BT-152" ref="cbc:Percent"><label for="BT-152">Invoiced item VAT rate</label><input type="number"></fx-control>
+              </fx-group>
+              <fx-group id="BG-31" ref="cac:Item">
+                <header>ITEM INFORMATION</header>
+                <fx-control id="BT-153" ref="cbc:Name"><label for="BT-153">Item name</label><textarea class="widget"></textarea></fx-control>
+                <fx-control id="BT-154" ref="cbc:Description"><label for="BT-154">Item description</label><textarea class="widget"></textarea></fx-control>
+                <fx-control id="BT-155" ref="cac:SellersItemIdentification/cbc:ID"><label for="BT-155">Item Sellers identifier</label><input type="text"></fx-control>
+                <fx-control id="BT-156" ref="cac:BuyersItemIdentification/cbc:ID"><label for="BT-156">Item Buyers identifier</label><input type="text"></fx-control>
+                <fx-control id="BT-157" ref="cac:StandardItemIdentification/cbc:ID/@schemeID"><label for="BT-157">Item standard identifier</label><input type="text"></fx-control>
+                <fx-control id="BT-158" ref="cac:CommodityClassification/cbc:ItemClassificationCode/@listID"><label for="BT-158">Item classification identifier</label><input type="text"></fx-control>
+                <fx-control id="BT-159" ref="cac:OriginCountry/cbc:IdentificationCode"><label for="BT-159">Item country of origin</label><select id="BT-159" class="widget" ref="instance('iso-3166-1')//Row" selection="open"><template>
+                  <option value="{Value[1]/SimpleValue}" title="{Value[3]/SimpleValue}">{Value[2]/SimpleValue}</option></template></select></fx-control>
+                <section id="BG-32" class="repeat-container">
+                  <header>ITEM ATTRIBUTES
+                    <fx-trigger><button>add</button><fx-insert ref="cac:AdditionalItemProperty" origin="#r-BG-32"></fx-insert>
+                    </fx-trigger>
+                  </header>
+                  <fx-repeat id="r-BG-32" ref="cac:AdditionalItemProperty"><template>
+                    <fx-control id="BT-160" ref="cbc:Name"><label for="BT-160">Item attribute name</label><textarea class="widget"></textarea></fx-control>
+                    <fx-control id="BT-161" ref="cbc:Value"><label for="BT-161">Item attribute value</label><textarea class="widget"></textarea></fx-control>
+                    <fx-trigger><button>delete</button><fx-delete ref="."></fx-delete>
+                    </fx-trigger></template></fx-repeat>
+                </section>
+              </fx-group>
+              <fx-trigger><button>delete</button><fx-delete ref="."></fx-delete>
+              </fx-trigger></template></fx-repeat>
+          </section>
+        </fx-group>
+      </fx-fore>
 </main>
 </body>
 </html>

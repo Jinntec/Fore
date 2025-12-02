@@ -1,0 +1,13 @@
+@startuml
+participant "sync :prc-data" as sync << app >>
+participant "prc-connector" as connector << app >>
+participant "DSpace" as dspace << System >>
+
+loop for each handle in sitemap
+    loop for each extension in record
+        connector -> dspace: get DSpace record(char): DSpace metadata
+        connector -> dspace: getBinary(char): Binary
+        connector -> sync: storeBinaryData(Binary)
+    end
+end
+@enduml

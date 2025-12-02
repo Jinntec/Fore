@@ -32,7 +32,6 @@ import './src/tools/fx-devtools.js';
 import './src/tools/fx-dom-inspector.js';
 import './src/lab/fore-component.js';
 import './src/tools/fx-json-instance.js';
-import './tools/fx-lens.js';
 import './src/ui/fx-upload.js';
 // import './src/tools/fx-minimap.js';
 
@@ -64,6 +63,9 @@ import './src/actions/fx-call.js';
 import './src/actions/fx-setattribute.js';
 import './src/actions/fx-construct-done.js';
 import './src/actions/fx-unmodified.js';
+import './src/ui/fx-control-menu.js';
 
 import './src/functions/fx-function.js';
 import './src/functions/fx-functionlib.js';
+
+export default {};

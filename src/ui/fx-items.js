@@ -60,11 +60,13 @@ export class FxItems extends FxControl {
       e.preventDefault;
       e.stopPropagation();
       const items = this.querySelectorAll('[value]');
+      /*
       let target;
       if (e.target.nodeName === 'LABEL') {
         target = resolveId(e.target.getAttribute('for'), this);
         target.checked = !target.checked;
       }
+*/
 
       let val = '';
       Array.from(items).forEach(item => {
@@ -145,12 +147,16 @@ export class FxItems extends FxControl {
       evaluated = node[cutted];
     }
 
-    // adding space around value to allow matching of 'words'
-    const spaced = ` ${evaluated} `;
-    const valAttr = ` ${this.getAttribute('value')} `;
     input.value = evaluated;
     input.setAttribute('id', id);
-    if (valAttr.indexOf(spaced) !== -1) {
+    // Normalize the current value (remove newlines, tabs, excessive spaces)
+    const currentValue = (this.getAttribute('value') || '').replace(/\s+/g, ' ').trim();
+    const valueList = currentValue.split(/\s+/); // Split on whitespace
+
+    // Check if the value is in the space-separated list of values
+    // const currentValue = this.getAttribute('value') || '';
+    // const valueList = currentValue.split(/\s+/);
+    if (valueList.includes(evaluated)) {
       input.checked = true;
     }
   }

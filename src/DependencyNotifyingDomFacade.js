@@ -24,6 +24,7 @@ export class DependencyNotifyingDomFacade {
    */
   // eslint-disable-next-line class-methods-use-this
   getAllAttributes(node) {
+    this._onNodeTouched(node); // <== Important!
     return Array.from(node.attributes);
   }
 
@@ -35,7 +36,10 @@ export class DependencyNotifyingDomFacade {
    */
   // eslint-disable-next-line class-methods-use-this
   getAttribute(node, attributeName) {
-    return node.getAttribute(attributeName);
+    const attr = node.getAttributeNode(attributeName);
+    console.log('[DomFacade] getAttribute touched:', attr);
+    if (attr) this._onNodeTouched(attr);
+    return attr?.value ?? null;
   }
 
   /**
@@ -61,10 +65,12 @@ export class DependencyNotifyingDomFacade {
    */
   getData(node) {
     if (node.nodeType === Node.ATTRIBUTE_NODE) {
+      // console.log('[DomFacade] getData on attribute:', node);
       this._onNodeTouched(node);
       return node.value;
     }
     // Text node
+    // console.log('[DomFacade] getData on text node parent:', node.parentNode);
     this._onNodeTouched(node.parentNode);
     return node.data;
   }
@@ -95,14 +101,12 @@ export class DependencyNotifyingDomFacade {
    */
   // eslint-disable-next-line class-methods-use-this
   getLastChild(node, bucket) {
-    const matchingNodes = node
-      .getChildNodes()
-      .filter(childNode => !bucket || getBucketsForNode(childNode).includes(bucket));
-    const matchNode = matchingNodes[matchingNodes.length - 1];
-    if (matchNode) {
-      return matchNode;
-    }
-    return null;
+    const children = Array.from(node.childNodes).filter(
+      child => !bucket || getBucketsForNode(child).includes(bucket),
+    );
+    const last = children[children.length - 1];
+    if (last) this._onNodeTouched(last);
+    return last || null;
   }
 
   /**
@@ -133,7 +137,16 @@ export class DependencyNotifyingDomFacade {
    */
   // eslint-disable-next-line class-methods-use-this
   getParentNode(node) {
-    return node.parentNode;
+    const parent = node.parentNode;
+    /*
+    if (
+      parent &&
+      (parent.nodeType === Node.ELEMENT_NODE || parent.nodeType === Node.ATTRIBUTE_NODE)
+    ) {
+      this._onNodeTouched(parent);
+    }
+*/
+    return parent;
   }
 
   /**
@@ -145,17 +158,10 @@ export class DependencyNotifyingDomFacade {
    */
   // eslint-disable-next-line class-methods-use-this
   getPreviousSibling(node, bucket) {
-    for (
-      let { previousSibling } = node;
-      previousSibling;
-      previousSibling = previousSibling.previousSibling
-    ) {
-      if (bucket && !getBucketsForNode(previousSibling).includes(bucket)) {
-        // eslint-disable-next-line no-continue
-        continue;
-      }
-
-      return previousSibling;
+    for (let sibling = node.previousSibling; sibling; sibling = sibling.previousSibling) {
+      if (bucket && !getBucketsForNode(sibling).includes(bucket)) continue;
+      this._onNodeTouched(sibling);
+      return sibling;
     }
     return null;
   }

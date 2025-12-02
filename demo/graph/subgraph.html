@@ -28,8 +28,8 @@
         }
 
 
-        header {
-            height:300px;
+        .header {
+            padding: 1rem;
         }
 
         .invalid input {
@@ -110,6 +110,12 @@
             margin:0;
             padding:0;
         }
+        part::.demo{
+            padding: 0;
+        }
+        demo-snippet::part(demo){
+            padding: 0;
+        }
         demo-snippet p{
             color:black;
         }
@@ -125,7 +131,7 @@
             background: var(--paper-blue-grey-50);
         }
         p{
-            color:var(--paper-blue-grey-50);
+            /*color:var(--paper-blue-grey-50);*/
         }
         [readonly]{
             background: transparent;
@@ -144,16 +150,22 @@
 <!--<div class="wrapper">-->
 
     <div class="header">
+        <h1>Dependency Graph calculation</h1>
+        <p>Fore tracks dependencies between binding within a graph that processes
+        only affected nodes.</p>
+        <p>A couple of bindings produce the graph on this page</p>
+        <p>The upper graph is the full graph after initialization.</p>
+        <p>The second graph is the subgraph being recalculated when values change.</p>
         <demo-snippet>
             <template>
-                <p>A couple of bindings produce the graph on this page</p>
-                <fx-bind ref="c" calculate="number(../a) * number(../b)" constraint="number(.) <= 100" readonly="true()"></fx-bind>
-                <fx-bind ref="d" calculate="number(../a) + number(../b)" constraint="number(.) <= 20" readonly="true()"></fx-bind>
-                <fx-bind ref="e" calculate="number(../a) + 5" constraint="number(.) <= 10" readonly="true()"></fx-bind>
 
-                <fx-bind ref="y" calculate="number(../x) + 5" required="number(.) <= 10" relevant="number(../a) <= 12"></fx-bind>
-                <fx-bind ref="z" calculate="number(../y) + 5" constraint="number(.) <= 30" readonly="false()"></fx-bind>
-                <fx-bind ref="q" readonly="number(../a) > 100"></fx-bind>
+<fx-bind ref="c" calculate="number(../a) * number(../b)" constraint="number(.) <= 100" readonly="true()"></fx-bind>
+<fx-bind ref="d" calculate="number(../a) + number(../b)" constraint="number(.) <= 20" readonly="true()"></fx-bind>
+<fx-bind ref="e" calculate="number(../a) + 5" constraint="number(.) <= 10" readonly="true()"></fx-bind>
+
+<fx-bind ref="y" calculate="number(../x) + 5" required="number(.) <= 10" relevant="number(../a) <= 12"></fx-bind>
+<fx-bind ref="z" calculate="number(../y) + 5" constraint="number(.) <= 30" readonly="false()"></fx-bind>
+<fx-bind ref="q" readonly="number(../a) > 100"></fx-bind>
             </template>
         </demo-snippet>
 
@@ -205,24 +217,24 @@
 
                 </fx-model>
                 <fx-control ref="a" update-event="input">
-                    <label>a</label>
+                    <label>a - Change me</label>
                     <input type="number">
                 </fx-control>
                 <fx-control ref="b" update-event="input">
-                    <label>b</label>
+                    <label>b - change me</label>
                     <input type="number">
                 </fx-control>
 
                 <fx-group>
                     <div>some controls depending on the 'a' and 'b' controls</div>
                     <fx-control ref="c">
-                        <label>c = a * b (should be <= 100)</label>
+                        <label>c = a * b (should be &lt;= 100)</label>
                     </fx-control>
                     <fx-control ref="d">
-                        <label>d = a + b (should be <= 20)</label>
+                        <label>d = a + b (should be &lt;= 20)</label>
                     </fx-control>
                     <fx-control ref="e">
-                        <label>e = a + 5 (should be < 10)</label>
+                        <label>e = a + 5 (should be &lt; 10)</label>
                     </fx-control>
                 </fx-group>
 
@@ -233,7 +245,7 @@
                         <input type="number">
                     </fx-control>
                     <fx-control ref="y">
-                        <label>y = ../x + 5.0 <= 10.0</label>
+                        <label>y = ../x + 5.0 &lt;= 10.0</label>
                     </fx-control>
                     <fx-control ref="z">
                         <label>z</label>

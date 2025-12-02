@@ -7,24 +7,28 @@
     <link rel="stylesheet" href="../resources/fore.css">
     <link rel="stylesheet" href="todo.css">
     <script type="module" src="./demo.js"></script>
+    <script type="module" src="../tools/fx-lens.js"></script>
 </head>
 <body unresolved="unresolved">
 <fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
 
     <div class="wrapper">
         <fx-fore id="todo">
-            <fx-send submission="load" event="model-construct-done"></fx-send>
-            <fx-setvalue ref="instance('helper')/changed" event="value-changed">true</fx-setvalue>
 
             <fx-model id="record">
                 <fx-instance>
                     <data>
+                      <task complete="false" due="">a</task>
+                      <task complete="false" due="">b</task>
+
                         <show-completed>false</show-completed>
                     </data>
                 </fx-instance>
+<!--
                 <fx-bind ref="task" relevant="../show-completed='true' or ./@complete='false'">
                     <fx-bind ref="./text()" required="true()"></fx-bind>
                 </fx-bind>
+-->
                 <fx-submission id="save"
                                url="localStore:todos"
                                method="post"
@@ -86,9 +90,6 @@
             <fx-repeat id="r-task" ref="task">
                 <template>
                     <div data-cy="task-{count(preceding-sibling::task)}">
-                        <fx-action event="value-changed">
-                            <fx-send submission="save"></fx-send>
-                        </fx-action>
 
                         <fx-control id="completeCtrl" ref="@complete" value-prop="checked" update-event="input">
                             <input class="widget" type="checkbox">

@@ -27,7 +27,7 @@
 
     <p>Gets a string value from localStorage</p>
     <fx-function
-            signature="set-localstore-value($key as xs:string) as xs:string"
+            signature="get-localstore-value($key as xs:string) as xs:string"
             type="text/javascript">
         const val =  localStorage.getItem($key);
         return val ? val:'';

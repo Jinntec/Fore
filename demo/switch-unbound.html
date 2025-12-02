@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Switch</title>
+
+    <link href="../resources/demo.css" rel="stylesheet">
+
+
+    <style>
+        :host{
+            display:none;
+        }
+        .dynamic {
+            background: #76ff03;
+        }
+
+        /*
+                fx-model{
+                    display: none;
+                }
+        */
+        /*
+        .toggle:nth-child(1){
+            background: lightblue;
+        }
+        .toggle:nth-child(2){
+            background: #ffca28;
+        }
+        .toggle:nth-child(3){
+            background: #aeea00;
+        }
+        */
+        fx-case {
+            width: 600px;
+            height: 400px;
+            background: lightblue;
+            padding: 10px;
+        }
+        .second fx-case{
+            background: black;
+        }
+        .second fx-case h2{
+            color:white;
+        }
+
+        fx-trigger {
+            display: inline-block;
+        }
+
+        [unresolved] {
+            display: none;
+        }
+
+        #two {
+            background: #ffca28;
+        }
+
+        #three {
+            background: #aeea00;
+        }
+        fx-control{
+            display: block;
+        }
+        fx-output{
+            display: block;
+        }
+    </style>
+</head>
+<body unresolved="unresolved">
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+
+<div class="wrapper">
+
+    <h1>Switch</h1>
+    <h2><code>Unbound fx-switch</code> with toggle</h2>
+    <p>
+        <code><a href="https://jinntec.github.io/fore-docs/elements/ui/case/" target="_blank">fx-case</a></code> child elements can be switched by an explicit <code><a href="https://jinntec.github.io/fore-docs/elements/actions/toggle/" target="_blank">fx-toggle</a></code> action which take the <code>ID</code> of an
+        <code><a href="https://jinntec.github.io/fore-docs/elements/ui/case/" target="_blank">fx-case</a></code> element.
+    </p>
+
+<!--
+    <demo-snippet>
+        <template>
+-->
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <item1>a bound item</item1>
+                            <item2>a bound item</item2>
+                            <item3>a bound item</item3>
+                            <selected></selected>
+                            <deselected></deselected>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+<!--                <div>Tab '{selected}' is selected</div>-->
+                <fx-output ref="selected">
+                    <label slot="label">Selected: </label>
+                </fx-output>
+
+                <fx-output ref="deselected">
+                    <label slot="label">Deselected: </label>
+                </fx-output>
+
+                <fx-trigger>
+                    <button>set it!</button>
+                    <fx-setvalue ref="selected">manual</fx-setvalue>
+                </fx-trigger>
+                <fx-trigger class="toggle" label="page 1">
+                    <paper-button>toggle page 1</paper-button>
+                    <fx-toggle case="one"></fx-toggle>
+                </fx-trigger>
+
+                <fx-trigger id="page2btn" class="toggle" label="page 2" raised="raised">
+                    <paper-button>toggle page 2</paper-button>
+                    <fx-toggle case="two"></fx-toggle>
+                </fx-trigger>
+
+                <fx-trigger id="page3btn" class="toggle" label="page 3" raised="raised">
+                    <paper-button>toggle page 3</paper-button>
+                    <fx-toggle case="three"></fx-toggle>
+                </fx-trigger>
+
+
+                <fx-switch>
+
+                    <fx-case id="one">
+                        <fx-message event="select">Tab one selected</fx-message>
+                        <fx-setvalue ref="selected" event="select">Tab one selected</fx-setvalue>
+                        <fx-message event="deselect">Tab one deselected</fx-message>
+                        <fx-setvalue ref="deselected" event="select">Tab one deselected</fx-setvalue>
+
+                        some exclusive content
+<!--
+                        <fx-control ref="item1">
+                            <label>Item1</label>
+                        </fx-control>
+-->
+                    </fx-case>
+                    <fx-case id="two">
+                        <fx-message event="select">Tab two selected</fx-message>
+                        <fx-message event="deselect">Tab two deselected</fx-message>
+                        some further content
+<!--
+                        <fx-control ref="item2">
+                            <label>Item1</label>
+                        </fx-control>
+-->
+                    </fx-case>
+                    <fx-case id="three">
+                        <fx-action event="select">
+                            <fx-message>Tab three selected</fx-message>
+                            <fx-setfocus control="c3"></fx-setfocus>
+                        </fx-action>
+
+                        <fx-message event="deselect">Tab three deselected</fx-message>
+
+                        some completely unneeded content
+                        <fx-control id="c3" ref="item3">
+                            <label>Item1</label>
+                        </fx-control>
+                    </fx-case>
+                </fx-switch>
+            </fx-fore>
+<!--
+        </template>
+    </demo-snippet>
+-->
+</div>
+
+
+<script type="module" src="./demo.js"></script>
+<script type="module" src="../tools/fx-lens.js"></script>
+</body>
+</html>

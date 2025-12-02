@@ -1,0 +1,23 @@
+<fx-fore id="child">
+
+    <fx-model>
+        <!-- child instance only contains the nodes of interest and not full instance data
+        as in parent form but structure needs to match that of the parent instance. -->
+        <fx-instance id="foo">
+            <data>
+                <greeting>foobar</greeting>
+            </data>
+        </fx-instance>
+    </fx-model>
+    <h2>inside childs fx-fore</h2>
+
+    <fx-control ref="greeting" class="widget">
+        <label>greeting</label>
+        <fx-action event="value-changed">
+            <fx-message>value changed in child</fx-message>
+            <fx-return ref="."></fx-return>
+        </fx-action>
+    </fx-control>
+
+</fx-fore>
+

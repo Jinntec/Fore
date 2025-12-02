@@ -3,6 +3,7 @@ import '../fx-model.js';
 import { AbstractAction } from './abstract-action.js';
 import { evaluateXPath } from '../xpath-evaluation.js';
 import { Fore } from '../fore.js';
+import getInScopeContext from '../getInScopeContext.js';
 
 /**
  * `fx-setvalue`
@@ -45,7 +46,19 @@ export default class FxSetvalue extends AbstractAction {
     super.perform();
     let { value } = this;
     if (this.valueAttr !== null) {
-      [value] = evaluateXPath(this.valueAttr, this.nodeset, this, this.detail);
+      const inscopeContext = getInScopeContext(this, this.valueAttr);
+      /*
+      todo: review @martin - shouldn't we always return a string value?
+      this comes down to the question if setvalue should only allow setting of strings
+      which i tend to agree. Can't remember a case where i wanted to set an attribute
+      or element (for json wouldn't make much sense either) - for cases like that
+      fx-replace would be more appropriate.
+
+      This is of practical relevance cause currently forces to append 'text()' to value expressions
+      or getting unexpected results.
+      */
+
+      [value] = evaluateXPath(this.valueAttr, inscopeContext, this, this.detail);
     } else if (this.textContent !== '') {
       value = this.textContent;
     } else {
@@ -54,7 +67,10 @@ export default class FxSetvalue extends AbstractAction {
     if (value?.nodeType && value.nodeType === Node.ATTRIBUTE_NODE) {
       value = value.nodeValue;
     }
+
+    // Get the ModelItem without re-evaluating the context
     const mi = this.getModelItem();
+
     this.setValue(mi, value);
     // todo: check this again - logically needsUpate should be set but makes tests fail
     //  this.needsUpdate = true;
@@ -67,6 +83,7 @@ export default class FxSetvalue extends AbstractAction {
   dispatchExecute() {}
 
   setValue(modelItem, newVal) {
+    console.log('setValue', modelItem, newVal);
     const item = modelItem;
     if (!item) return;
 
@@ -97,7 +114,7 @@ export default class FxSetvalue extends AbstractAction {
         if (newVal.nodeType === Node.ATTRIBUTE_NODE) {
           item.value = newVal.getValue();
         }
-        if(newVal.nodeType === Node.TEXT_NODE){
+        if (newVal.nodeType === Node.TEXT_NODE) {
           item.value = newVal.textContent;
         }
       } else {
@@ -106,6 +123,7 @@ export default class FxSetvalue extends AbstractAction {
       }
       this.getModel().changed.push(modelItem);
       this.needsUpdate = true;
+      modelItem.notify();
     }
   }
 }

@@ -1,0 +1,6 @@
+<ViewDefinition>
+    <switch>
+        <case id="view1">
+        </case>
+    </switch>
+</ViewDefinition>

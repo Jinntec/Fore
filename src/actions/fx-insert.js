@@ -7,6 +7,7 @@ import {
 } from '../xpath-evaluation.js';
 import { XPathUtil } from '../xpath-util';
 import { Fore } from '../fore.js';
+import { getPath } from '../xpath-path.js';
 
 /**
  * `fx-insert`
@@ -60,31 +61,6 @@ export class FxInsert extends AbstractAction {
     this.keepValues = !!this.hasAttribute('keep-values');
   }
 
-  _getOriginSequence(inscope, targetSequence) {
-    let originSequence;
-    if (this.origin) {
-      // ### if there's an origin attribute use it
-      let originTarget;
-      try {
-        originTarget = evaluateXPathToFirstNode(this.origin, inscope, this);
-        if (Array.isArray(originTarget) && originTarget.length === 0) {
-          console.warn('invalid origin for this insert action - ignoring...', this);
-          originSequence = null;
-        }
-        originSequence = originTarget;
-      } catch (error) {
-        console.warn('invalid origin for this insert action - ignoring...', this);
-      }
-    } else if (targetSequence) {
-      // ### use last item of targetSequence
-      originSequence = targetSequence;
-      if (originSequence && !this.keepValues) {
-        this._clear(originSequence);
-      }
-    }
-    return originSequence;
-  }
-
   _cloneOriginSequence(inscope, targetSequence) {
     let originSequenceClone;
     if (this.origin) {
@@ -96,13 +72,25 @@ export class FxInsert extends AbstractAction {
          */
         // this.setInScopeVariables(this.detail);
 
-        // originTarget = evaluateXPathToFirstNode(this.origin, inscope, this);
-        originTarget = evaluateXPathToFirstNode(this.origin, inscope, this);
-        if (Array.isArray(originTarget) && originTarget.length === 0) {
-          console.warn('invalid origin for this insert action - ignoring...', this);
-          originSequenceClone = null;
+        /*
+        if in 'create-nodes' mode and origin targets a repeat, the repeat
+        we use the already during initData() created nodeset as a template for insertion
+         */
+        if (this.origin.startsWith('#') && this.getOwnerForm().createNodes) {
+          const repeat = this.getOwnerForm().querySelector(this.origin);
+          originSequenceClone = repeat.createdNodeset.cloneNode(true);
+          if (!originSequenceClone) {
+            console.error(`createdNodeset for repeat ${this.origin} does not exist`);
+          }
+        } else {
+          // originTarget = evaluateXPathToFirstNode(this.origin, inscope, this);
+          originTarget = evaluateXPathToFirstNode(this.origin, inscope, this);
+          if (Array.isArray(originTarget) && originTarget.length === 0) {
+            console.warn('invalid origin for this insert action - ignoring...', this);
+            originSequenceClone = null;
+          }
+          originSequenceClone = originTarget.cloneNode(true);
         }
-        originSequenceClone = originTarget.cloneNode(true);
       } catch (error) {
         console.warn('invalid origin for this insert action - ignoring...', this);
       }
@@ -136,13 +124,11 @@ export class FxInsert extends AbstractAction {
     let targetSequence = [];
     const inscopeContext = getInScopeContext(this);
 
+    const fore = this.getOwnerForm();
+
     // ### 'context' attribute takes precedence over 'ref'
     if (this.hasAttribute('context')) {
-      [context] = evaluateXPathToNodes(
-        this.getAttribute('context'),
-        inscopeContext,
-        this.getOwnerForm(),
-      );
+      [context] = evaluateXPathToNodes(this.getAttribute('context'), inscopeContext, this);
       inscope = inscopeContext;
     }
 
@@ -154,10 +140,18 @@ export class FxInsert extends AbstractAction {
         targetSequence = evaluateXPathToNodes(this.ref, inscope, this);
       }
     }
+    // const originSequenceClone = this._cloneOriginSequence(inscope, targetSequence);
+
     const originSequenceClone = this._cloneOriginSequence(inscope, targetSequence);
     if (!originSequenceClone) return; // if no origin back out without effect
 
+    /**
+     * @type {Node}
+     */
     let insertLocationNode;
+    /**
+     * @type {number}
+     */
     let index;
 
     // if the targetSequence is empty but we got an originSequence use inscope as context and ignore 'at' and 'position'
@@ -165,12 +159,22 @@ export class FxInsert extends AbstractAction {
       if (context) {
         insertLocationNode = context;
         context.appendChild(originSequenceClone);
+        fore.signalChangeToElement(insertLocationNode.localName);
+        fore.signalChangeToElement(originSequenceClone.localName);
         index = 1;
       } else {
-        // No context. We can insert into the `inscope`.
-        insertLocationNode = inscope;
-        inscope.appendChild(originSequenceClone);
-        index = 1;
+        // No context but creating nodes from UI
+        if (!inscope && this.getOwnerForm().createNodes) {
+          const repeat = this.getOwnerForm().querySelector(this.origin);
+          inscope = getInScopeContext(repeat, repeat.ref);
+          insertLocationNode = inscope;
+          inscope.appendChild(originSequenceClone);
+          index = inscope.length - 1;
+        } else {
+          insertLocationNode = inscope;
+          inscope.appendChild(originSequenceClone);
+          index = 1;
+        }
       }
     } else {
       /* ### insert at position given by 'at' or use the last item in the targetSequence ### */
@@ -205,6 +209,8 @@ export class FxInsert extends AbstractAction {
       if (this.position && this.position === 'before') {
         // this.at -= 1;
         insertLocationNode.parentNode.insertBefore(originSequenceClone, insertLocationNode);
+        fore.signalChangeToElement(insertLocationNode.parentNode);
+        fore.signalChangeToElement(originSequenceClone.localName);
       }
 
       if (this.position && this.position === 'after') {
@@ -214,11 +220,17 @@ export class FxInsert extends AbstractAction {
         if (this.hasAttribute('context') && this.hasAttribute('ref')) {
           // index=1;
           inscope.append(originSequenceClone);
+          fore.signalChangeToElement(insertLocationNode);
+          fore.signalChangeToElement(originSequenceClone.localName);
         } else if (this.hasAttribute('context')) {
           index = 1;
           insertLocationNode.prepend(originSequenceClone);
+          fore.signalChangeToElement(insertLocationNode);
+          fore.signalChangeToElement(originSequenceClone.localName);
         } else {
           insertLocationNode.insertAdjacentElement('afterend', originSequenceClone);
+          fore.signalChangeToElement(insertLocationNode);
+          fore.signalChangeToElement(originSequenceClone.localName);
         }
       }
     }
@@ -235,7 +247,7 @@ export class FxInsert extends AbstractAction {
     // console.log('<<<<<<< resolved instance', inst);
     // Note: the parent to insert under is always the parent of the inserted node. The 'context' is not always the parent if the sequence is empty, or the position is different
     // const xpath = XPathUtil.getPath(originSequenceClone.parentNode, instanceId);
-    const xpath = XPathUtil.getPath(insertLocationNode.parentNode, instanceId);
+    const xpath = getPath(insertLocationNode, instanceId);
 
     const path = Fore.getDomNodeIndexString(originSequenceClone);
     this.dispatchEvent(
@@ -246,13 +258,16 @@ export class FxInsert extends AbstractAction {
         detail: { action: this, event: this.event, path },
       }),
     );
-
     Fore.dispatch(inst, 'insert', {
-      'inserted-nodes': originSequenceClone,
-      'insert-location-node': insertLocationNode,
+      insertedNodes: originSequenceClone,
+      insertedParent: insertLocationNode.parentNode,
+      ref: this.ref,
+      location: insertLocationNode,
       position: this.position,
-      instanceId:instanceId,
-      foreId:this.getOwnerForm().id
+      instanceId,
+      foreId: fore.id,
+      index,
+      xpath,
     });
 
     // todo: this actually should dispatch to respective instance
@@ -269,7 +284,6 @@ export class FxInsert extends AbstractAction {
     );
 
     this.needsUpdate = true;
-    console.log('Changed!', xpath);
     return [xpath];
   }
 
@@ -286,7 +300,7 @@ export class FxInsert extends AbstractAction {
 
   actionPerformed(changedPaths) {
     // ### make sure the necessary modelItems will get created
-    this.getModel().rebuild();
+    // this.getModel().rebuild();
     super.actionPerformed();
   }
 

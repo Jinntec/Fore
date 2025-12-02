@@ -48,7 +48,7 @@ class FxSwitch extends FxContainer {
 
   async refresh(force) {
     super.refresh(force);
-    // console.log('refresh on switch ');
+    console.log('🔄 fx-switch refresh', force);
     if (this.cases.length === 0) {
       this.cases = Array.from(this.querySelectorAll(':scope > fx-case'));
     }
@@ -65,7 +65,7 @@ class FxSwitch extends FxContainer {
   }
 
   _dispatchEvents() {
-    if(this.selectedCase === this.formerCase) return;
+    if (this.selectedCase === this.formerCase) return;
     if (this.formerCase && this.formerCase !== this.selectedCase) {
       Fore.dispatch(this.formerCase, 'deselect', {});
     }
@@ -75,7 +75,7 @@ class FxSwitch extends FxContainer {
   }
 
   _resetVisited() {
-    if(this.visitedResetted) return;
+    if (this.visitedResetted) return;
 
     const visited = this.selectedCase.querySelectorAll('.visited');
     Array.from(visited).forEach(v => {
@@ -95,6 +95,8 @@ class FxSwitch extends FxContainer {
         this.toggle(caseElem);
       }
     });
+
+    this.attachObserver();
   }
 
   /**

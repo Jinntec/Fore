@@ -8,6 +8,7 @@ import {
 import getInScopeContext from './getInScopeContext.js';
 import { Fore } from './fore.js';
 import DependentXPathQueries from './DependentXPathQueries.js';
+import { getPath } from './xpath-path.js';
 
 /**
  * Mixin containing all general functions that are shared by all Fore element classes.
@@ -63,8 +64,18 @@ export default class ForeElementMixin extends HTMLElement {
      */
     this.inScopeVariables = new Map();
 
-    this._dependencies = new DependentXPathQueries();
-    this._dependencies.setParentDependencies(this.parent?.closest('[ref]')?._dependencies);
+    this.dependencies = new DependentXPathQueries();
+    this.ownerForm = null;
+  }
+
+  connectedCallback() {
+    if (this.parentElement) {
+      this.dependencies.setParentDependencies(this.parentElement?.closest('[ref]')?.dependencies);
+    }
+
+    // The fx-model linked to here won't ever change
+    this.model = this.getModel();
+    this.ownerForm = this.getOwnerForm();
   }
 
   /**
@@ -86,10 +97,12 @@ export default class ForeElementMixin extends HTMLElement {
    * @returns {import('./fx-fore.js').FxFore} The fx-fore element associated with this form node
    */
   getOwnerForm() {
+    if (this.ownerForm) {
+      return this.ownerForm;
+    }
     let currentElement = this;
     while (currentElement && currentElement.parentNode) {
       // console.log('current ', currentElement);
-
       if (currentElement.nodeName.toUpperCase() === 'FX-FORE') {
         return currentElement;
       }
@@ -100,14 +113,14 @@ export default class ForeElementMixin extends HTMLElement {
         currentElement = currentElement.parentNode;
       }
     }
-    return currentElement;
+    return null;
   }
 
   /**
    * evaluation of fx-bind and UiElements differ in details so that each class needs it's own implementation.
    */
   evalInContext() {
-    this._dependencies.resetDependencies();
+    this.dependencies.resetDependencies();
     // const inscopeContext = this.getInScopeContext();
     const model = this.getModel();
     if (!model) {
@@ -119,7 +132,7 @@ export default class ForeElementMixin extends HTMLElement {
     }
     if (this.hasAttribute('ref')) {
       inscopeContext = getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
-      this._dependencies.addXPath(this.ref);
+      this.dependencies.addXPath(this.ref);
     }
     if (!inscopeContext && this.getModel().instances.length !== 0) {
       // ### always fall back to default context with there's neither a 'context' or 'ref' present
@@ -132,16 +145,16 @@ export default class ForeElementMixin extends HTMLElement {
       this.nodeset = inscopeContext;
     } else if (Array.isArray(inscopeContext)) {
       /*
-			inscopeContext.forEach(n => {
-			  if (XPathUtil.isSelfReference(this.ref)) {
-				this.nodeset = inscopeContext;
-			  } else {
-				const localResult = evaluateXPathToFirstNode(this.ref, n, this);
-				// console.log('local result: ', localResult);
-				this.nodeset.push(localResult);
-			  }
-			});
-	*/
+      inscopeContext.forEach(n => {
+        if (XPathUtil.isSelfReference(this.ref)) {
+        this.nodeset = inscopeContext;
+        } else {
+        const localResult = evaluateXPathToFirstNode(this.ref, n, this);
+        // console.log('local result: ', localResult);
+        this.nodeset.push(localResult);
+        }
+      });
+  */
       // this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext[0], this);
       this.nodeset = evaluateXPath(this.ref, inscopeContext[0], this);
     } else {
@@ -230,6 +243,9 @@ export default class ForeElementMixin extends HTMLElement {
    * @returns {import('./modelitem.js').ModelItem}
    */
   getModelItem() {
+    if (!this.getModel()) return;
+
+    // First try to find by node reference
     const mi = this.getModel().getModelItem(this.nodeset);
     if (mi) {
       this.modelItem = mi;
@@ -248,21 +264,39 @@ export default class ForeElementMixin extends HTMLElement {
       existed = this.nodeset ? this.getModel().getModelItem(this.nodeset) : null;
     }
 
-    if (!existed) {
-      const lazyCreatedModelItem = FxModel.lazyCreateModelItem(
-        this.getModel(),
-        this.ref,
-        this.nodeset,
-        this,
-      );
-      this.modelItem = lazyCreatedModelItem;
-      return lazyCreatedModelItem;
+    // If we couldn't find by node reference, try to find by path
+    if (!existed && this.nodeset) {
+      // Get the path for the current nodeset
+      const instanceId = XPathUtil.resolveInstance(this, this.ref);
+      let targetNode =
+        this.nodeset.nodeType === Node.TEXT_NODE ? this.nodeset.parentNode : this.nodeset;
+
+      if (targetNode?.nodeType) {
+        const path = getPath(targetNode, instanceId);
+
+        // Try to find a ModelItem with this path
+        existed = this.getModel().modelItems.find(item => item.path === path);
+
+        if (existed) {
+          // Update the node reference in the existing ModelItem
+          existed.node = targetNode;
+        }
+      }
+      if (!existed) {
+        const lazyCreatedModelItem = FxModel.lazyCreateModelItem(
+          this.getModel(),
+          this.ref,
+          this.nodeset,
+          this,
+        );
+        this.modelItem = lazyCreatedModelItem;
+        return lazyCreatedModelItem;
+      }
     }
     this.modelItem = existed;
 
     return existed;
   }
-
   /**
    * Returns the effective value for the element.
    * a: look for 'value' attribute and if present evaluate it and return the resulting value

@@ -2,16 +2,11 @@ import { Fore } from './fore.js';
 import './fx-instance.js';
 import { FxModel } from './fx-model.js';
 import '@jinntec/jinn-toast';
-import {
-  evaluateXPathToBoolean,
-  evaluateXPathToNodes,
-  evaluateXPathToFirstNode,
-  evaluateXPathToString,
-} from './xpath-evaluation.js';
+import { evaluateXPathToNodes, evaluateXPathToString } from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
 import { XPathUtil } from './xpath-util.js';
 import { FxRepeatAttributes } from './ui/fx-repeat-attributes.js';
-import { ModelItem } from './modelitem.js';
+import { FxBind } from './fx-bind.js';
 
 /**
  * Makes the dirty state of the form.
@@ -111,7 +106,10 @@ export class FxFore extends HTMLElement {
     super();
     this.version = '[VI]Version: {version} - built on {date}[/VI]';
 
-    this.model = {};
+    /**
+     * @type {import('./fx-model.js').FxModel}
+     */
+    this.model = null;
     this.inited = false;
     // this.addEventListener('model-construct-done', this._handleModelConstructDone);
     // todo: refactoring - these should rather go into connectedcallback
@@ -135,6 +133,15 @@ export class FxFore extends HTMLElement {
 
     this.dirtyState = dirtyStates.CLEAN;
     this.showConfirmation = false;
+
+    // Batching for observer notifications during refresh
+    this.isRefreshPhase = false;
+    /**
+     * The model items that will be updated next refresh
+     *
+     * @type {Set<ModelItem|import('./ui/UIElement.js').UIElement}
+     */
+    this.batchedNotifications = new Set();
 
     const style = `
             :host {
@@ -247,14 +254,199 @@ export class FxFore extends HTMLElement {
     // this.mergePartial = this.hasAttribute('merge-partial')? true:false;
     this.mergePartial = false;
     this.createNodes = this.hasAttribute('create-nodes') ? true : false;
+    this._localNamesWithChanges = new Set();
+    this.setAttribute('role', 'form'); // set aria role
   }
 
+  /**
+   * Resolve elements from the `wait-for` attribute.
+   * Supports comma-separated CSS selectors and the special value "closest".
+   */
+  _resolveDependencies() {
+    const raw = this.getAttribute('wait-for');
+    if (!raw) return [];
+    const sels = raw
+      .split(',')
+      .map(s => s.trim())
+      .filter(Boolean);
+
+    const roots = [this.getRootNode?.() ?? document, document];
+    const out = [];
+
+    for (const sel of sels) {
+      let el = null;
+
+      if (sel === 'closest') {
+        el = this.closest('fx-fore');
+      } else {
+        for (const r of roots) {
+          if (r && 'querySelector' in r) {
+            el = r.querySelector(sel);
+            if (el) break;
+          }
+        }
+      }
+      if (el) out.push(el);
+    }
+    return out;
+  }
+
+  /**
+   * Wait until all dependencies are ready (i.e., they set `ready = true`
+   * and dispatch the `ready` event).
+   */
+  _whenDependenciesReady() {
+    const raw = this.getAttribute('wait-for');
+    if (!raw) return Promise.resolve();
+
+    const sels = raw
+      .split(',')
+      .map(s => s.trim())
+      .filter(Boolean);
+    const roots = [this.getRootNode?.() ?? document, document];
+
+    const query = sel => {
+      for (const r of roots) {
+        if (r && 'querySelector' in r) {
+          const el = r.querySelector(sel);
+          if (el) return el;
+        }
+      }
+      return null;
+    };
+
+    const isReadyNow = sel => {
+      if (sel === 'closest') {
+        const outer = this.closest('fx-fore');
+        return !!(outer && outer.ready === true);
+      }
+      const el = query(sel);
+      return !!(el && el.ready === true);
+    };
+
+    const waitOne = sel =>
+      new Promise(resolve => {
+        // fast path
+        if (isReadyNow(sel)) return resolve();
+
+        // robust path: listen at the document/root so replacement doesn't matter
+        const onReady = ev => {
+          const t = ev.target;
+          if (sel === 'closest') {
+            // outer fore becoming ready anywhere above us
+            if (t?.tagName === 'FX-FORE' && t.contains(this)) {
+              cleanup();
+              resolve();
+            }
+          } else if (t?.matches?.(sel)) {
+            cleanup();
+            resolve();
+          }
+        };
+
+        const root = document; // capture at doc to catch composed events
+        const cleanup = () => root.removeEventListener('ready', onReady, true);
+
+        root.addEventListener('ready', onReady, true);
+
+        // also re-check on DOM changes in case a ready fore is inserted without firing (paranoia)
+        const mo = new MutationObserver(() => {
+          if (isReadyNow(sel)) {
+            mo.disconnect();
+            cleanup();
+            resolve();
+          }
+        });
+        mo.observe(document.documentElement, { childList: true, subtree: true });
+      });
+
+    return Promise.all(sels.map(waitOne));
+  }
+
+  _onSlotChange = async ev => {
+    // 1) Capture the slot element BEFORE any await
+    const slotEl = ev.currentTarget;
+    if (!(slotEl instanceof HTMLSlotElement)) return;
+
+    // avoid double init
+    if (this.inited) return;
+
+    // 2) Wait for dependencies if needed
+    if (this.hasAttribute('wait-for')) {
+      try {
+        await this._whenDependenciesReady();
+      } catch (e) {
+        console.warn('wait-for failed', e);
+        return;
+      }
+    }
+
+    // 3) Bail if we got disconnected/replaced while waiting
+    if (!this.isConnected) return;
+
+    if (this.ignoreExpressions) {
+      this.ignoredNodes = Array.from(this.querySelectorAll(this.ignoreExpressions));
+    }
+
+    // 4) Safely read assigned content
+    const getAssignedElements = () => {
+      if (typeof slotEl.assignedElements === 'function') {
+        return slotEl.assignedElements({ flatten: true });
+      }
+      // Fallback for odd engines/polyfills
+      return (slotEl.assignedNodes({ flatten: true }) || []).filter(
+        n => n.nodeType === Node.ELEMENT_NODE,
+      );
+    };
+
+    // SAFE: slotEl is the actual event source, not a fresh query
+    const children = slotEl.assignedElements({ flatten: true });
+
+    let modelElement = children.find(modelElem => modelElem.nodeName.toUpperCase() === 'FX-MODEL');
+    if (!modelElement) {
+      const generatedModel = document.createElement('fx-model');
+      this.appendChild(generatedModel);
+      modelElement = generatedModel;
+      // We are going to get a new slotchange event immediately, because we changed a slot.
+      // so cancel this one.
+      return;
+    }
+    if (!modelElement.inited) {
+      console.info(
+        `%cFore running ... ${this.id ? '#' + this.id : ''}`,
+        'background:#64b5f6; color:white; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+      );
+
+      const variables = new Map();
+      (function registerVariables(node) {
+        for (const child of node.children) {
+          if ('setInScopeVariables' in child) {
+            child.setInScopeVariables(variables);
+          }
+          registerVariables(child);
+        }
+      })(this);
+
+      await modelElement.modelConstruct();
+      this._handleModelConstructDone();
+    }
+
+    this._createRepeatsFromAttributes();
+    this.inited = true;
+  };
+
   connectedCallback() {
+    const modelElement = Array.from(this.children).find(
+      modelElem => modelElem.nodeName.toUpperCase() === 'FX-MODEL',
+    );
+
+    this.model = modelElement;
+
     this.style.visibility = 'hidden';
     console.time('init');
     this.strict = !!this.hasAttribute('strict');
     /*
-            document.addEventListener('ready', (e) =>{
+            document.re('ready', (e) =>{
               if(e.target !== this){
                 // e.preventDefault();
                 console.log('>>> e', e);
@@ -293,57 +485,11 @@ export class FxFore extends HTMLElement {
 
     this._injectDevtools();
 
-    const slot = this.shadowRoot.querySelector('slot#default');
-    slot.addEventListener('slotchange', async event => {
-      // preliminary addition for auto-conversion of non-prefixed element into prefixed elements. See fore.js
-      // console.log(`### <<<<< slotchange on '${this.id}' >>>>>`);
-      if (this.inited) return;
-      if (this.hasAttribute('convert')) {
-        this.replaceWith(Fore.copyDom(this));
-        // Fore.copyDom(this);
-        return;
-      }
+    // const slot = this.shadowRoot.querySelector('slot#default');
 
-      if (this.ignoreExpressions) {
-        this.ignoredNodes = Array.from(this.querySelectorAll(this.ignoreExpressions));
-      }
+    const slot = this.shadowRoot?.querySelector('slot') || this.querySelector('slot');
+    if (slot) slot.addEventListener('slotchange', this._onSlotChange);
 
-      const children = event.target.assignedElements();
-      let modelElement = children.find(
-        modelElem => modelElem.nodeName.toUpperCase() === 'FX-MODEL',
-      );
-      if (!modelElement) {
-        const generatedModel = document.createElement('fx-model');
-        this.appendChild(generatedModel);
-        modelElement = generatedModel;
-        // We are going to get a new slotchange event immediately, because we changed a slot.
-        // so cancel this one.
-        return;
-      }
-      if (!modelElement.inited) {
-        console.info(
-          `%cFore is processing fx-fore#${this.id}`,
-          'background:#64b5f6; color:white; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
-        );
-
-        const variables = new Map();
-        (function registerVariables(node) {
-          for (const child of node.children) {
-            if ('setInScopeVariables' in child) {
-              child.setInScopeVariables(variables);
-            }
-            registerVariables(child);
-          }
-        })(this);
-
-        await modelElement.modelConstruct();
-        this._handleModelConstructDone();
-      }
-      this.model = modelElement;
-
-      this._createRepeatsFromAttributes();
-      this.inited = true;
-    });
     this.addEventListener('path-mutated', () => {
       this.someInstanceDataStructureChanged = true;
     });
@@ -376,16 +522,13 @@ export class FxFore extends HTMLElement {
   }
 
   /**
-   * Add a model item to the refresh list
+   * Signal something happened with an element with the given local name. This will be used in the
+   * next (non-forceful) refresh to detect whether a component (usually a repeat) should update
    *
-   * @param {import('./modelitem.js').ModelItem} modelItem
-   * @returns {void}
+   * @param {string} localNameOfElement
    */
-  addToRefresh(modelItem) {
-    const found = this.toRefresh.find(mi => mi.path === modelItem.path);
-    if (!found) {
-      this.toRefresh.push(modelItem);
-    }
+  signalChangeToElement(localNameOfElement) {
+    this._localNamesWithChanges.add(localNameOfElement);
   }
 
   /**
@@ -416,7 +559,14 @@ export class FxFore extends HTMLElement {
    */
   async _loadFromSrc() {
     // console.log('########## loading Fore from ', this.src, '##########');
-    await Fore.loadForeFromSrc(this, this.src, 'fx-fore');
+    if (this.hasAttribute('wait-for')) {
+      await this._whenDependenciesReady();
+    }
+    if(this.hasAttribute('selector')){
+      await Fore.loadForeFromSrc(this, this.src, this.getAttribute('selector'));
+    }else{
+      await Fore.loadForeFromSrc(this, this.src, 'fx-fore');
+    }
   }
 
   /**
@@ -432,6 +582,8 @@ export class FxFore extends HTMLElement {
       const { target } = entry;
 
       const fore = Fore.getFore(target);
+      // Skip if this is the initial run of the fore element
+      // This check prevents issues with nested fx-fore elements loaded via fx-control
       if (fore.initialRun) return;
 
       if (entry.isIntersecting) {
@@ -473,178 +625,150 @@ export class FxFore extends HTMLElement {
   }
 
   /**
-   * refreshes the whole UI by visiting each bound element (having a 'ref' attribute) and applying the state of
-   * the bound modelItem to the bound element.
-   *
-   *
-   * force - boolean - if true will refresh all children disregarding toRefresh array
-   *
-   */
-  async forceRefresh() {
-    // console.time('refresh');
-    // console.group('### forced refresh', this);
-
-    Fore.refreshChildren(this, true);
-    this._updateTemplateExpressions();
-    this._scanForNewTemplateExpressionsNextRefresh = false; // reset
-    this._processTemplateExpressions();
-
-    // console.log(`### <<<<< refresh-done ${this.id} >>>>>`);
-
-    Fore.dispatch(this, 'refresh-done', {});
-
-    // console.groupEnd();
-    // console.timeEnd('refresh');
-  }
-
-  // async refresh(force, changedPaths) {
-  /**
    * @param {(boolean|{reason:'index-function'})} [force]fx-fore
    */
   async refresh(force) {
-    /*
-
-                    if (!changedPaths) {
-                        changedPaths = this.toRefresh.map(item => item.path);
-                    } else {
-                        this.toRefresh.push(
-                            ...changedPaths
-                                .map(
-                                    path =>
-                                    this.getModel()
-                                        .modelItems
-                                        .find(item => item.path === path)
-                                )
-                                .filter(Boolean)
-                        );
-
-                        for(const changedPath of changedPaths) {
-                            for (const repeat of this.querySelectorAll('fx-repeat')) {
-                                if (repeat.closest('fx-fore') !== this) {
-                                    continue;
-                                }
-
-                                if (repeat.touchedPaths && repeat.touchedPaths.has(changedPath)) {
-                                    // Make a temporary model-item-like structure for this
-                                    this.toRefresh.push({
-                                        path: changedPath,
-                                        boundControls: [repeat]
-                                    });
-
-                                    console.log('Found a repeat to update!!!', repeat)
-                                }
-                            }
-                        }
-            }
-            */
     if (this.isRefreshing) {
       return;
     }
+
+    /*
+    if (force !== true && this._localNamesWithChanges.size > 0) {
+      force = {
+        ...(force || { reason: undefined }),
+        elementLocalnamesWithChanges: Array.from(this._localNamesWithChanges),
+      };
+      this._localNamesWithChanges.clear();
+    }
+*/
+
     this.isRefreshing = true;
-    // console.log(`### <<<<< refresh() on '${this.id}' >>>>>`);
+    this.isRefreshPhase = true;
 
     // refresh () {
     // ### refresh Fore UI elements
     // if (!this.initialRun && this.toRefresh.length !== 0) {
-    if (!force && !this.initialRun && this.toRefresh.length !== 0) {
-      // console.log('toRefresh', this.toRefresh);
-      let needsRefresh = false;
-
-      // ### after recalculation the changed modelItems are copied to 'toRefresh' array for processing
-      this.toRefresh.forEach(modelItem => {
-        // check if modelItem has boundControls - if so, call refresh() for each of them
-        const controlsToRefresh = modelItem.boundControls;
-        if (controlsToRefresh) {
-          controlsToRefresh.forEach(ctrl => {
-            ctrl.refresh(force);
-          });
-        }
-
-        // ### check if other controls depend on current modelItem
-        const { mainGraph } = this.getModel();
-        if (mainGraph && mainGraph.hasNode(modelItem.path)) {
-          const deps = this.getModel().mainGraph.dependentsOf(modelItem.path, false);
-          // ### iterate dependant modelItems and refresh all their boundControls
-          if (deps.length !== 0) {
-            deps.forEach(dep => {
-              // ### if changed modelItem has a 'facet' path we use the basePath that is the locationPath without facet name
-              const basePath = XPathUtil.getBasePath(dep);
-              const modelItemOfDep = this.getModel().modelItems.find(mip => mip.path === basePath);
-              // ### refresh all boundControls
-              modelItemOfDep.boundControls.forEach(control => {
-                control.refresh(force);
-              });
-            });
-            needsRefresh = true;
-          }
-        }
-      });
-      this.toRefresh = [];
-      /*
-                  if (!needsRefresh) {
-                      console.log('no dependants to refresh');
-                  }
-      */
+    // if (!this.initialRun && this.toRefresh.length !== 0) {
+    // if (!force && !this.initialRun && this.toRefresh.length !== 0) {
+    if (force === true || this.initialRun) {
+      console.log('🔄 🔴🔴🔴 ### full refresh() on ', this);
+      Fore.refreshChildren(this, force);
     } else {
-      // ### resetting visited state for controls to refresh
-      /*
-                  const visited = this.parentNode.querySelectorAll('.visited');
-                  Array.from(visited).forEach(v =>{
-                      v.classList.remove('visited');
-                  });
-      */
-
-      if (this.inited) {
-        Fore.refreshChildren(this, force);
-      }
-      // console.timeEnd('refreshChildren');
+      // Process all batched no tifications at the end of the refresh phase
+      console.log('🔄 🎯  ### processing batched notifications');
+      await this._processBatchedNotifications();
     }
 
     // ### refresh template expressions
-    if (this.initialRun || this._scanForNewTemplateExpressionsNextRefresh) {
+    if (force === true || this.initialRun || this._scanForNewTemplateExpressionsNextRefresh) {
       this._updateTemplateExpressions();
       this._scanForNewTemplateExpressionsNextRefresh = false; // reset
     }
 
     this._processTemplateExpressions();
 
+    this.isRefreshPhase = false;
+
     // console.log('### <<<<< dispatching refresh-done - end of UI update cycle >>>>>');
     // this.dispatchEvent(new CustomEvent('refresh-done'));
-    // this.initialRun = false;
+    this.initialRun = false;
     this.style.visibility = 'visible';
     console.info(
-      `%crefresh-done on #${this.id}`,
+      `%c ✅ refresh-done on #${this.id}`,
       'background:darkorange; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+      this.getModel().modelItems,
     );
 
     Fore.dispatch(this, 'refresh-done', {});
 
-    // this.isRefreshing = true;
-    // this.parentNode.closest('fx-fore')?.refresh(false, changedPaths);
-
     const subFores = Array.from(this.querySelectorAll('fx-fore'));
     /*
-            calling the parent to refresh causes errors and inconsistent state. Also it is questionable
-            if a child should actually interact with its parent in this way.
+        calling the parent to refresh causes errors and inconsistent state. Also it is questionable
+        if a child should actually interact with its parent in this way.
 
-            This only affects the refreshing NOT the data mutation itself which is happening as expected.
+        This only affects the refreshing NOT the data mutation itself which is happening as expected.
 
-            Current solution is that a child that wants the parent to refresh must do so by adding an additional
-            event handler that dispatches an event upwards and having a handler in the parent to refresh itself.
+        Current solution is that a child that wants the parent to refresh must do so by adding an additional
+        event handler that dispatches an event upwards and having a handler in the parent to refresh itself.
 
-            So refreshed propagate downwards but not upwards which is at least an option to consider.
+        So refreshed propagate downwards but not upwards which is at least an option to consider.
 
-            if(this.parentNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE){
-                // await this.parentNode.closest('fx-fore')?.refresh(false);
-            }
+        if(this.parentNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE){
+            // await this.parentNode.closest('fx-fore')?.refresh(false);
+        }
     */
     for (const subFore of subFores) {
       // subFore.refresh(false, changedPaths);
       if (subFore.ready) {
-        await subFore.refresh(force);
+        // Do an unconditional hard refresh: there might be changes that are relevant
+        // todo: investigate impact of observer architecture - do we really want to refresh all subfore elements with a hard refresh?
+        await subFore.refresh(true);
       }
     }
     this.isRefreshing = false;
+    // Clear the batch
+    // this.batchedNotifications.clear();
+  }
+
+  /**
+   * Add a ModelItem to the batch of notifications to be processed at the end of the refresh phase
+   * @param {ModelItem | import('./ui/UIElement.js').UIElement} item - The ModelItem or UI Element to add to the batch
+   */
+  addToBatchedNotifications(item) {
+    if (!this.batchedNotifications.has(item)) {
+      // console.log('adding to batched notifications', item);
+      this.batchedNotifications.add(item);
+    }
+  }
+
+  /**
+   * Process all batched notifications at the end of the refresh phase
+   */
+  _processBatchedNotifications() {
+    if (this.batchedNotifications.size > 0) {
+      // console.log(`🔍 Processing ${this.batchedNotifications.size} batched notifications`);
+
+      // Process all batched notifications
+      this.batchedNotifications.forEach(entry => {
+        // console.log('batched update', entry);
+        // handle repeatitems created via data-ref
+        if (entry.classList && entry.classList.contains('fx-repeatitem')) {
+          Fore.refreshChildren(entry, true);
+        }
+        if (entry && typeof entry.refresh === 'function') {
+          // Entry is a Ui Element
+          // Force refresh for this whole subtree
+          const uiElement = /** @type {import('./ui/UIElement.js').UIElement} */ (entry);
+          if (!uiElement.ownerDocument.contains(uiElement)) {
+            // Something already removed this ui element. Skip.
+            return;
+          }
+          uiElement.refresh(true);
+        }
+        const nonrelevant = Array.from(this.querySelectorAll('[nonrelevant]'));
+        // loop nonrelevant elements
+        if (nonrelevant) {
+          nonrelevant.forEach(entry => {
+            if (entry.refresh) {
+              entry.refresh();
+            }
+          });
+        }
+        if (entry.observers) {
+          // Item is a model item
+          entry.observers.forEach(observer => {
+            // console.log('🔍 processing observer', observer);
+            if (typeof observer.update === 'function') {
+              // console.log('updating observer', observer);
+              observer.update(entry);
+            }
+          });
+        }
+      });
+
+      // Clear the batch
+      this.batchedNotifications.clear();
+    }
   }
 
   /**
@@ -657,7 +781,7 @@ export class FxFore extends HTMLElement {
    */
   _updateTemplateExpressions() {
     const search =
-      "(descendant-or-self::*!(text(), @*))[contains(., '{')][substring-after(., '{') => contains('}')][not(ancestor-or-self::fx-model)]";
+      "(descendant-or-self::*!(text(), @*))[contains(., '{')][substring-after(., '{') => contains('}')][not(ancestor-or-self::*[self::fx-model or self::fx-function])]";
 
     const tmplExpressions = evaluateXPathToNodes(search, this, this);
     // console.log('template expressions found ', tmplExpressions);
@@ -669,8 +793,8 @@ export class FxFore extends HTMLElement {
     // console.log('######### storedTemplateExpressions', this.storedTemplateExpressions.length);
 
     /*
-                storing expressions and their nodes for re-evaluation
-                 */
+    storing expressions and their nodes for re-evaluation
+    */
     Array.from(tmplExpressions).forEach(node => {
       const ele = node.nodeType === Node.ATTRIBUTE_NODE ? node.ownerElement : node.parentNode;
       if (ele.closest('fx-fore') !== this) {
@@ -695,6 +819,7 @@ export class FxFore extends HTMLElement {
   }
 
   _processTemplateExpressions() {
+    console.log('processing template expressions ', this.storedTemplateExpressionByNode);
     for (const node of Array.from(this.storedTemplateExpressionByNode.keys())) {
       if (node.nodeType === Node.ATTRIBUTE_NODE) {
         // Attribute nodes are not contained by the document, but their owner elements are!
@@ -758,10 +883,11 @@ export class FxFore extends HTMLElement {
         : this.getModel().getDefaultInstance();
 
       try {
-        return evaluateXPathToString(naked, inscope, node, null, inst);
+        const result = evaluateXPathToString(naked, inscope, node, null, inst);
+        // console.log(`template expression result for ${naked}=${result}`);
+        return result;
       } catch (error) {
         console.warn('ignoring unparseable expr', error);
-
         return match;
       }
     });
@@ -908,45 +1034,6 @@ export class FxFore extends HTMLElement {
     return parent;
   }
 
-  /*
-            _createStep(){
-
-            }
-          */
-
-  /*
-            _generateInstance(start, parent) {
-              if (start.hasAttribute('ref')) {
-                const ref = start.getAttribute('ref');
-
-                if(ref.includes('/')){
-                  console.log('complex path to create ', ref);
-                  const steps = ref.split('/');
-                  steps.forEach(step => {
-                    console.log('step ', step);
-
-                  });
-                }
-
-                // const generated = document.createElement(ref);
-                const generated = parent.ownerDocument.createElement(ref);
-                if (start.children.length === 0) {
-                  generated.textContent = start.textContent;
-                }
-                parent.appendChild(generated);
-                parent = generated;
-              }
-
-              if (start.hasChildNodes()) {
-                const list = start.children;
-                for (let i = 0; i < list.length; i += 1) {
-                  this._generateInstance(list[i], parent);
-                }
-              }
-              return parent;
-            }
-          */
-
   /**
    * Start the initialization of the UI by
    *
@@ -958,29 +1045,39 @@ export class FxFore extends HTMLElement {
    * @private
    */
   async _initUI() {
-    // console.log('### _initUI()');
     console.info(
       `%cinitUI #${this.id}`,
       'background:lightblue; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
     );
 
-    if (!this.initialRun) return;
+    const parentFore = this.closest('fx-fore');
+    if (parentFore) {
+      this.initialRun = false;
+    } else {
+      if (!this.initialRun) return;
+    }
     this.classList.add('initialRun');
     await this._lazyCreateInstance();
 
     /*
-            const options = {
-              root: null,
-              rootMargin: '0px',
-              threshold: 0.3,
-            };
-        */
+          const options = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.3,
+          };
+      */
 
     // First refresh should be forced
     if (this.createNodes) {
       this.initData();
+      const binds = this.getModel().querySelector('fx-bind');
+      if (binds) {
+        this.getModel().updateModel();
+      }
     }
+    // await this.forceRefresh();
     await this.refresh(true);
+    // await Fore.initUI(this);
 
     // this.style.display='block'
     this.classList.add('fx-ready');
@@ -990,8 +1087,8 @@ export class FxFore extends HTMLElement {
     this.initialRun = false;
     // console.log('### >>>>> dispatching ready >>>>>', this);
     console.info(
-      `%c #${this.id} is ready`,
-      'background:lightblue; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+      `%c ✅ ${this.id ? '#' + this.id : 'Fore'} is ready`,
+      'background:lightgreen; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
     );
 
     // console.log(`### <<<<< ${this.id} ready >>>>>`);
@@ -999,7 +1096,6 @@ export class FxFore extends HTMLElement {
     // console.log('### modelItems: ', this.getModel().modelItems);
     Fore.dispatch(this, 'ready', {});
     // console.log('dataChanged', FxModel.dataChanged);
-    console.timeEnd('init');
 
     this.addEventListener('dragstart', this._handleDragStart);
     //	this.addEventListener('dragend', this._handleDragEnd);
@@ -1013,56 +1109,188 @@ export class FxFore extends HTMLElement {
   }
 
   /**
+   * @summary
+   * Find the reference node (the future previous sibling) for a newly created element.
+   *
+   * @description This works in two passes: if there is a bind available for both the parent and the
+   * child, it determines where to insert based on those binds: after an element matching the previous bind in document order, before the next sibling of that one cause `insertBefore` is easier .
+   *
+   * For example, take this structure:
+   * ```html
+   * <fx-bind ref="root">
+   *   <fx-bind ref="a" />
+   *   <fx-bind ref="b" />
+   *   <fx-bind ref="c" />
+   * </fx-bind>
+   * ```
+   * Inserting a `<b/>`, it will be inserted before a `<c/>`, or at the end. Whatever comes after the `<a/>`.
+   *
+   * If there are no binds, the previous bound element will be used to determine the location.
+   * @private
+   *
+   * @param {Element} newElement - The newly created element
+   * @param {ParentNode} parentElement - The parent under which the element will be inserted
+   * @param {import('./ForeElementMixin.js').default} previousControl - The previous control. Will
+   * be used to determine a fallback to snert the element under if there are no binds for the parent
+   *
+   * @returns {ChildNode}
+   */
+  _findReferenceNodeForNewElement(newElement, parentElement, previousControl) {
+    const bindForElement = this.model.getModelItem(parentElement)?.bind;
+    if (!bindForElement) {
+      // Parent is unbound. No clue what to do with this. Insert based on previous control
+      let referenceNode = previousControl?.getModelItem()?.node;
+      // We know which node to insert this new element to, but it might be a descendant of a child
+      // of the actual parent. Walk up until we have a reference under our parent
+      while (referenceNode?.parentNode && referenceNode?.parentNode !== parentElement) {
+        referenceNode = referenceNode.parentNode;
+      }
+      if (referenceNode?.nodeType === Node.ATTRIBUTE_NODE) {
+        // Insert the new node at the start: the previous control was an attribute
+        return null;
+      }
+      return referenceNode;
+    }
+
+    // Temporarily insert the new element under the parent to see which XPath will match
+    try {
+      parentElement.appendChild(newElement);
+
+      const bindForElement = this.model.getBindForElement(newElement);
+      if (bindForElement) {
+        // There is a bind for this element! Insert the new element after the last element that
+        // matched in the preceding fx-bind
+
+        /*
+         * Assumes a bind structure like this:
+         *
+         * ```xml
+         *  <fx-bind ref="root">
+         *   <fx-bind ref="a" />
+         *   <fx-bind ref="b" />
+         *  </fx-bind>
+         * ```
+         *
+         * It will then attempt to keep all `b` elements after all `a` elements.
+         */
+
+        /**
+         * @type {FxBind}
+         */
+        const previousBind = bindForElement.previousElementSibling;
+        if (previousBind) {
+          /**
+           * @type ChildNode[]}
+           */
+          const nodeset = previousBind.nodeset;
+          const lastMatchingSibling = nodeset.reverse().find(node => parentElement.contains(node));
+          if (lastMatchingSibling) {
+            return lastMatchingSibling;
+          }
+          // Otherwise, just default to appending... If this runs multiple times for multiple nodes
+          // it's unexpected to always prepend and get the order of children reversed from the UI.
+
+          // Do not fall back on the UI here, just keep it predictable if binds are in play
+          return parentElement.lastElementChild;
+        }
+      }
+    } finally {
+      newElement.remove();
+    }
+    // No clue.  Insert based on previous control.  We know which node to insert this new element
+    // into, but it might be a descendant of a child of the actual parent. Walk up until we have a
+    // reference under our parent
+    let referenceNode = previousControl?.getModelItem()?.node;
+    while (referenceNode?.parentNode && referenceNode?.parentNode !== parentElement) {
+      referenceNode = referenceNode.parentNode;
+    }
+    if (referenceNode?.nodeType === Node.ATTRIBUTE_NODE) {
+      // Insert the new node at the start: the previous control was an attribute
+      return null;
+    }
+    // Insert after the previous control
+    return referenceNode;
+  }
+
+  /**
    * @param  {HTMLElement}  root The root of the data initialization. fx-repeat overrides this when it makes new repeat items
    *
    */
   initData(root = this) {
     // const created = new Promise(resolve => {
     console.log('INIT');
-    const boundControls = Array.from(root.querySelectorAll('[ref]:not(fx-model *),fx-repeatitem'));
-    if (root.matches('fx-repeatitem')) {
+    // const boundControls = Array.from(root.querySelectorAll('[ref]:not(fx-model *),fx-repeatitem'));
+
+    /**
+     * @type {import('./ForeElementMixin.js').default[]}
+     */
+    const boundControls = Array.from(
+      root.querySelectorAll(
+        'fx-control[ref],fx-upload[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref]',
+      ),
+    );
+    if (root.matches && root.matches('fx-repeatitem')) {
       boundControls.unshift(root);
     }
-    // console.log('_initD', boundControls);
+    console.log('_initData', boundControls);
     for (let i = 0; i < boundControls.length; i++) {
-      const control = boundControls[i];
-      if (!control.matches('fx-repeatitem')) {
+      const bound = boundControls[i];
+
+      /*
+      ignore bound elements that are enclosed with a control like <select> or <fx-items> and repeated items
+       */
+      if (!bound.matches('fx-repeatitem') && !bound.parentNode.closest('fx-control')) {
         // Repeat items are dumb. They do not respond to evalInContext
-        control.evalInContext();
+        bound.evalInContext();
       }
-      let ownerDoc;
-      if (control.nodeset !== null) {
-        // console.log('Node exists', control.nodeset);
+      if (bound.nodeset !== null && !(Array.isArray(bound.nodeset) && bound.nodeset.length > 0)) {
+        console.log('Node exists', bound.nodeset);
         continue;
       }
-      // console.log('Node does not exists', control.ref);
+      console.log('Node does not exists', bound.ref);
 
       // We need to create that node!
       const previousControl = boundControls[i - 1];
 
       // Previous control can either be an ancestor of us, or a previous node, which can be a sibling, or a child of a sibling.
       // First: parent
-      if (previousControl.contains(control)) {
+      if (previousControl && previousControl.contains(bound)) {
         // Parent is here.
-        // console.log('insert into', control,previousControl);
-        // console.log('insert into nodeset', control.nodeset);
+        console.log('insert into', bound, previousControl);
+        console.log('insert into nodeset', bound.nodeset);
+        /**
+         * @type {ParentNode}
+         */
         const parentNodeset = previousControl.nodeset;
         // console.log('parentNodeset', parentNodeset);
 
         // const parentModelItemNode = parentModelItem.node;
-        const ref = control.ref;
+        const ref = bound.ref;
         // const newElement = parentModelItemNode.ownerDocument.createElement(ref);
-        if (parentNodeset.querySelector(`[ref="${ref}"]`)) {
-          console.log(`Node with ref "${ref}" already exists.`);
+        // if (parentNodeset.querySelector(`[ref="${ref}"]`)) {
+        //   console.log(`Node with ref "${ref}" already exists.`);
+        //   continue;
+        // }
+
+        const newNode = this._createNodes(ref, parentNodeset);
+        if (!newNode) {
+          // We could not make the node for some reason. Maybe it's something like `instance('XXX')`?
           continue;
         }
+        if (newNode.nodeType === Node.ATTRIBUTE_NODE) {
+          parentNodeset.setAttributeNode(newNode);
+        } else {
+          const referenceNode = this._findReferenceNodeForNewElement(newNode, parentNodeset, null);
+          if (referenceNode) {
+            referenceNode.after(newNode);
+          } else {
+            parentNodeset.prepend(newNode);
+          }
+        }
+        bound.evalInContext();
+        bound.getModelItem().bind?.evalInContext();
 
-        const newElement = this._createNodes(ref, parentNodeset);
-
-        // Plonk it in at the start!
-        parentNodeset.insertBefore(newElement, parentNodeset.firstChild);
-        control.evalInContext();
-        console.log('CREATED child', newElement);
+        // console.log('CREATED child', newElement);
         // console.log('new control evaluated to ', control.nodeset);
         // Done!
         continue;
@@ -1070,7 +1298,7 @@ export class FxFore extends HTMLElement {
       // console.log('previousControl', previousControl);
       // console.log('control', control);
       // Is previousControl a sibling or a descendant of a logical sibling? Keep looking backwards until we share parents!
-      const ourParent = XPathUtil.getParentBindingElement(control);
+      let ourParent = XPathUtil.getParentBindingElement(bound);
       // console.log('ourParent', ourParent);
       let siblingControl = null;
       /*
@@ -1090,29 +1318,58 @@ export class FxFore extends HTMLElement {
         }
       }
       if (!siblingControl) {
-        throw new Error('Unexpected! there must be a sibling right?');
+        console.log('No sibling found for', bound);
       }
       // console.log('sibling', siblingControl);
-      const parentNodeset = ourParent.nodeset;
-      const ref = control.ref;
-      let referenceNodeset = siblingControl.nodeset;
-      const newElement = this._createNodes(ref, parentNodeset);
+      // todo: review: should this not just be inscopeContext?
+      let parentNodeset;
+      if (!ourParent || !ourParent.nodeset) {
+        /*
+          if we lost context somehow just always assume default context and append to that
+          instead of bailing out.
+           */
+        parentNodeset = root.getModel().getDefaultContext();
+      } else {
+        parentNodeset = ourParent.nodeset;
+      }
+      const ref = bound.ref;
 
-      // We know which node to insert this new element to, but it might be a descendant of a child of the actual parent. Walk up until we have a reference under our parent
-      while (referenceNodeset?.parentNode && referenceNodeset?.parentNode !== parentNodeset) {
-        referenceNodeset = referenceNodeset.parentNode;
+      const newNode = this._createNodes(ref, parentNodeset);
+      if (newNode.nodeType === Node.ATTRIBUTE_NODE) {
+        parentNodeset.setAttributeNode(newNode);
+      } else {
+        let referenceNode = this._findReferenceNodeForNewElement(
+          newNode,
+          parentNodeset,
+          siblingControl,
+        );
+
+        if (referenceNode) {
+          // console.log('insert after', referenceNode,newNode);
+          if (referenceNode.nodeType === Node.DOCUMENT_NODE) {
+            referenceNode.firstElementChild.append(newNode);
+          } else {
+            referenceNode.after(newNode);
+          }
+        } else {
+          parentNodeset.prepend(newNode);
+        }
       }
 
-      // Insert before the next sibling our our logical previous sibling
-      parentNodeset.insertBefore(newElement, referenceNodeset.nextElementSibling);
       /*
             console.log('control inscope', control.getInScopeContext());
             console.log('control ref', control.ref);
             console.log('control new element parent', newElement.parentNode.nodeName);
-*/
-      control.evalInContext();
+      */
+
+      bound.evalInContext();
+      bound.getModelItem().bind?.evalInContext();
+
+      if (!bound.nodeset) {
+        throw new Error('Creating annode failed');
+      }
       // console.log('new control evaluated to ', control.nodeset);
-      console.log('CREATED sibling', newElement);
+      // console.log('CREATED sibling', newElement);
     }
     // console.log('DATA', this.getModel().getDefaultContext());
   }
@@ -1126,16 +1383,20 @@ export class FxFore extends HTMLElement {
             console.log(`Node already exists for ref: ${ref}`);
             return existingNode;
         }
-*/
     console.log(`creating new node for ref: ${ref}`);
+    */
+    if (/instance\([^\)]*\)/.test(ref)) {
+      // This is an absolute path for some instance. Not supporteed for now
+      return null;
+    }
     let newElement;
     if (ref.includes('/')) {
       // multi-step ref expressions
-      newElement = XPathUtil.createElementFromXPath(ref, referenceNode.ownerDocument, this);
+      newElement = XPathUtil.createNodesFromXPath(ref, referenceNode.ownerDocument, this);
       // console.log('new subtree', newElement);
       return newElement;
     } else {
-      return XPathUtil.createElementFromXPath(ref, referenceNode.ownerDocument, this);
+      return XPathUtil.createNodesFromXPath(ref, referenceNode.ownerDocument, this);
     }
   }
 
@@ -1262,21 +1523,6 @@ export class FxFore extends HTMLElement {
     const repeats = this.querySelectorAll('[data-ref]');
     if (repeats) {
       Array.from(repeats).forEach(item => {
-        if (item.closest('fx-control')) return;
-        /*
-                        const parentRepeat = item.closest('fx-repeat');
-                        if(parentRepeat){
-                            this.dispatchEvent(
-                                new CustomEvent('log', {
-                                    composed: false,
-                                    bubbles: true,
-                                    cancelable:true,
-                                    detail: { id:this.id, message: `nesting elements with data-ref attributes within fx-repeat is not supported by now`, level:'Error'},
-                                }),
-                            );
-                        }
-        */
-
         const table = item.parentNode.closest('table');
         let host;
         if (table) {

@@ -1,9 +1,9 @@
 import '../fx-model.js';
-import ForeElementMixin from '../ForeElementMixin.js';
 import { ModelItem } from '../modelitem.js';
 import { Fore } from '../fore.js';
 import getInScopeContext from '../getInScopeContext.js';
 import { evaluateXPathToFirstNode } from '../xpath-evaluation.js';
+import { UIElement } from './UIElement.js';
 
 function isDifferent(oldNodeValue, oldControlValue, newControlValue) {
   if (oldNodeValue === null) {
@@ -13,7 +13,7 @@ function isDifferent(oldNodeValue, oldControlValue, newControlValue) {
   if the oldControlValue is null we know the widget is used for the first time and is not considered
   a value change.
   */
-  if(oldControlValue === null) return false;
+  if (oldControlValue === null) return false;
 
   if (newControlValue && oldControlValue && newControlValue.nodeType && oldControlValue.nodeType) {
     return newControlValue.outerHTML !== oldControlValue.outerHTML;
@@ -31,7 +31,7 @@ function isDifferent(oldNodeValue, oldControlValue, newControlValue) {
  * is a general base class for control elements.
  *
  */
-export default class AbstractControl extends ForeElementMixin {
+export default class AbstractControl extends UIElement {
   constructor() {
     super();
     this.value = null;
@@ -41,6 +41,7 @@ export default class AbstractControl extends ForeElementMixin {
     this.widget = null;
     this.visited = false;
     this.force = false;
+    this.ondemand = false;
     // this.attachShadow({ mode: 'open' });
   }
 
@@ -54,10 +55,12 @@ export default class AbstractControl extends ForeElementMixin {
    */
   async refresh(force) {
     if (force) this.force = true;
-    // console.log('### AbstractControl.refresh on : ', this);
 
     // Save the old value of this control. this may be the stringified version, contrast to the node in `nodeset`
     const oldValue = this.value;
+
+    // if (this.ondemand && !this.value) return;
+    // console.log('### AbstractControl.refresh on : ', this);
 
     // if(this.repeated) return
     if (this.isNotBound()) return;
@@ -122,6 +125,7 @@ export default class AbstractControl extends ForeElementMixin {
       if (this.modelItem instanceof ModelItem) {
         // console.log('### XfAbstractControl.refresh modelItem : ', this.modelItem);
 
+        this.attachObserver();
         if (this.hasAttribute('as') && this.getAttribute('as') === 'node') {
           // console.log('as', this.nodeset);
           // this.modelItem.value = this.nodeset;
@@ -153,9 +157,11 @@ export default class AbstractControl extends ForeElementMixin {
         /*
         this is another case that highlights the fact that an init() function might make sense in general.
          */
+        /*
         if (!this.modelItem.boundControls.includes(this)) {
           this.modelItem.boundControls.push(this);
         }
+*/
 
         // console.log('>>>>>>>> abstract refresh ', this.control);
         // this.control[this.valueProp] = this.value;
@@ -170,14 +176,14 @@ export default class AbstractControl extends ForeElementMixin {
         // if oldVal is null we haven't received a concrete value yet
 
         if (!(this.localName === 'fx-control' || this.localName === 'fx-upload')) return;
-        if (isDifferent(this.oldVal,  oldValue, this.value)) {
+        if (isDifferent(this.oldVal, oldValue, this.value)) {
           const model = this.getModel();
           Fore.dispatch(this, 'value-changed', {
             path: this.modelItem.path,
             value: this.modelItem.value,
             oldvalue: oldValue,
-            instanceId:this.modelItem.instanceId,
-            foreId:this.getOwnerForm().id
+            instanceId: this.modelItem.instanceId,
+            foreId: this.getOwnerForm().id,
           });
         }
       }
@@ -315,9 +321,11 @@ export default class AbstractControl extends ForeElementMixin {
         // if (alert) alert.style.display = 'none';
         this._dispatchEvent('valid');
         this.setAttribute('valid', '');
+        this.getWidget().setAttribute('aria-invalid', 'false');
         this.removeAttribute('invalid');
       } else {
         this.setAttribute('invalid', '');
+        this.getWidget().setAttribute('aria-invalid', 'true');
         this.removeAttribute('valid');
         // ### constraint is invalid - handle alerts
         /*

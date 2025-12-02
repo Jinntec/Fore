@@ -27,12 +27,13 @@ class FxLoad extends AbstractAction {
     super();
     this.attachShadow({ mode: 'open' });
     this.url = '';
+    this.replace=false;
   }
 
   connectedCallback() {
     super.connectedCallback();
     this.attachTo = this.hasAttribute('attach-to') ? this.getAttribute('attach-to') : '_self';
-
+    this.replace = this.hasAttribute('replace') ? true : false;
     // Add a 'doneEvent' to block the action chain untill the event fired on the element we're
     // loading something into.
     this.awaitEvent = this.hasAttribute('await') ? this.getAttribute('await') : '';
@@ -88,7 +89,11 @@ class FxLoad extends AbstractAction {
             resolved.removeEventListener(this.awaitEvent, eventListener);
           };
 
-          resolved.appendChild(content);
+          if(this.replace){
+            this.parentNode.replaceChild(content,resolved);
+          }else{
+            resolved.appendChild(content);
+          }
           resolved.addEventListener(this.awaitEvent, eventListener);
 
           await waitForEvent;

@@ -17,7 +17,7 @@ export class Fore {
 
   static REQUIRED_DEFAULT = false;
 
-  static RELEVANT_DEFAULT = true;
+  static RELEVANT_DEFAULT = true
 
   static CONSTRAINT_DEFAULT = true;
 
@@ -230,7 +230,7 @@ export class Fore {
   }
 
   static get UI_ELEMENTS() {
-    return [
+    return new Set([
       'FX-ALERT',
       'FX-CONTROL',
       'FX-DIALOG',
@@ -252,11 +252,7 @@ export class Fore {
       'FX-TRIGGER',
       'FX-UPLOAD',
       'FX-VAR',
-    ];
-  }
-
-  static get MODEL_ELEMENTS() {
-    return ['FX-BIND', 'FX-FUNCTION', 'FX-MODEL', 'FX-INSTANCE', 'FX-SUBMISSION'];
+    ]);
   }
 
   /**
@@ -264,18 +260,35 @@ export class Fore {
    * @returns {boolean}
    */
   static isUiElement(elementName) {
-    const found = Fore.UI_ELEMENTS.includes(elementName);
-    if (found) {
-      // console.log('_isUiElement ', found);
-    }
-    return Fore.UI_ELEMENTS.includes(elementName);
+    return Fore.UI_ELEMENTS.has(elementName);
   }
 
+  static get MODEL_ELEMENTS() {
+    return ['FX-BIND', 'FX-FUNCTION', 'FX-MODEL', 'FX-INSTANCE', 'FX-SUBMISSION'];
+  }
+
+
+  static async initUI(startElement) {
+    const inited = new Promise(resolve => {
+      const { children } = startElement;
+      if (children) {
+        for (const element of Array.from(children)) {
+          if (element.nodeName.toUpperCase() === 'FX-FORE') {
+            break;
+          }
+          if (Fore.isUiElement(element.nodeName) && typeof element.refresh === 'function') {
+            element.init();
+          }
+        }
+      }
+      resolve('done');
+    });
+  }
   /**
    * recursively refreshes all UI Elements.
    *
    * @param {HTMLElement} startElement
-   * @param {(boolean|{reason:'index-function'})} force Whether to do a forced refresh. Forced
+   * @param {(boolean|{reason:'index-function', elementLocalnamesWithChanges: string[]})} force Whether to do a forced refresh. Forced
    * refreshes are very bad for performance, try to limit them. If the forced refresh is because index functions may change, it is better to pass the reason
    * @returns {Promise<void>}
    */
@@ -300,30 +313,56 @@ export class Fore {
       const { children } = startElement;
       if (children) {
         for (const element of Array.from(children)) {
-            if (element.nodeName.toUpperCase() === 'FX-FORE') {
-              break;
+          if (element.nodeName.toUpperCase() === 'FX-FORE') {
+            break;
+          }
+          if (Fore.isUiElement(element.nodeName) && typeof element.refresh === 'function') {
+            /**
+             * @type {import('./ForeElementMixin.js').default}
+             */
+            const bound = element;
+            if (!force) {
+              continue;
             }
-            if (Fore.isUiElement(element.nodeName) && typeof element.refresh === 'function') {
-                /**
-                 * @type {import('./ForeElementMixin.js').default}
-                 */
-                if (
-                    force &&
-                    typeof force === 'object' &&
-                    force.reason === 'index-function' &&
-                    element._dependencies.isInvalidatedByIndexFunction()
-                ) {
-                    element.refresh(force);
-                    continue;
-                } else if (force === true) {
-                    element.refresh(force);
-                }
-                // console.log('refreshing', element, element?.ref);
-                // console.log('refreshing ',element);
-            } else if (!(element.inert === true) ) {
-                // testing for inert catches model and action elements and should just leave updateable html elements
-                Fore.refreshChildren(element, force);
+/*
+            if(element.nodeName === 'FX-CASE') {
+              console.log('hey - got a case', element);
             }
+*/
+            if (force === true) {
+              // console.log('🔄 refreshing ', element);
+              // Unconditional force refresh
+              bound.refresh(force);
+              continue;
+            }
+            if (typeof force !== 'object') {
+              continue;
+            }
+            /*
+            if (
+              force.reason === 'index-function' &&
+              bound.dependencies.isInvalidatedByIndexFunction()
+            ) {
+              console.log('🔄 refreshing ', element);
+
+              bound.refresh(force);
+              continue;
+            }
+
+            if (
+              bound.dependencies.isInvalidatedByChildlistChanges(force.elementLocalnamesWithChanges)
+            ) {
+              console.log('🔄 refreshing ', element);
+
+              bound.refresh(force);
+              continue;
+            }
+*/
+          }
+          if (!(element.inert === true)) {
+            // testing for inert catches model and action elements and should just leave updateable html elements
+            Fore.refreshChildren(element, force);
+          }
         }
       }
       resolve('done');
@@ -525,7 +564,10 @@ export class Fore {
     const reg = /(>)(<)(\/*)/g;
     const wsexp = / *(.*) +\n/g;
     const contexp = /(<.+>)(.+\n)/g;
-    xml = xml.replace(reg, '$1\n$2$3').replace(wsexp, '$1\n').replace(contexp, '$1\n$2');
+    xml = xml
+      .replace(reg, '$1\n$2$3')
+      .replace(wsexp, '$1\n')
+      .replace(contexp, '$1\n$2');
     let formatted = '';
     const lines = xml.split('\n');
     let indent = 0;

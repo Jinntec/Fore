@@ -2,8 +2,9 @@ import { Fore } from '../fore.js';
 import { evaluateXPath } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 import { XPathUtil } from '../xpath-util.js';
-import ForeElementMixin from '../ForeElementMixin.js';
 import { withDraggability } from '../withDraggability.js';
+import { getPath } from '../xpath-path.js';
+import { RepeatBase } from './repeat-base.js';
 
 /**
  * `fx-repeat`
@@ -20,7 +21,7 @@ import { withDraggability } from '../withDraggability.js';
  *
  * todo: it should be seriously be considered to extend FxContainer instead but needs refactoring first.
  */
-export class FxRepeatAttributes extends withDraggability(ForeElementMixin, false) {
+export class FxRepeatAttributes extends withDraggability(RepeatBase, false) {
   static get properties() {
     return {
       ...super.properties,
@@ -62,8 +63,23 @@ export class FxRepeatAttributes extends withDraggability(ForeElementMixin, false
     this.index = 1;
     this.repeatSize = 0;
     this.attachShadow({ mode: 'open', delegatesFocus: true });
+    /**
+     * @type {Map<Element, Node>} A lookup from a repeat item to the node it has associated
+     */
+    this._contextItemByRepeatItem = new Map();
   }
 
+  /**
+   * Get the context node for the given repeat item
+   *
+   * @param {Element} repeatItem
+   * @returns {Node} The node (if any) that is the active item for this repeat item
+   */
+  getContextForRepeatItem(repeatItem) {
+    return this._contextItemByRepeatItem.get(repeatItem);
+  }
+
+  /*
   get repeatSize() {
     return this.querySelectorAll(':scope > .fx-repeatitem').length;
   }
@@ -71,22 +87,66 @@ export class FxRepeatAttributes extends withDraggability(ForeElementMixin, false
   set repeatSize(size) {
     super.repeatSize = size;
   }
+*/
 
-  setIndex(index) {
-    // console.log('new repeat index ', index);
-    this.index = index;
-    const refd = this.querySelector('[data-ref]');
-    const rItems = refd.querySelectorAll(':scope > *');
-    this.applyIndex(rItems[this.index - 1]);
+  async init() {
+    // ### there must be a single 'template' child
+
+    const inited = new Promise(resolve => {
+      // console.log('##### repeat-attributes init ', this.id);
+      // if(!this.inited) this.init();
+      // does not use this.evalInContext as it is expecting a nodeset instead of single node
+      this._evalNodeset();
+      // console.log('##### ',this.id, this.nodeset);
+
+      this._initTemplate();
+      // this._initRepeatItems();
+
+      this.setAttribute('index', this.index);
+      this.inited = true;
+      resolve('done');
+    });
+
+    return inited;
   }
 
+  _deleteHandler(deleted) {
+    super._deleteHandler(deleted);
+    const refd = this.querySelector('[data-ref]');
+    const rItems = refd ? refd.querySelectorAll(':scope > .fx-repeatitem') : [];
+
+    for (let i = 0; i < Math.min(this.nodeset.length, rItems.length); ++i) {
+      this._contextItemByRepeatItem.set(rItems[i], this.nodeset[i]);
+    }
+  }
+
+  setIndex(index) {
+    const refd = this.querySelector('[data-ref]');
+    const rItems = refd ? refd.querySelectorAll(':scope > .fx-repeatitem') : [];
+    const size = rItems.length;
+
+    const clamped = size === 0 ? 0 : Math.max(1, Math.min(index, size));
+    this.index = clamped;
+
+    if (size > 0) {
+      this.applyIndex(rItems[this.index - 1]);
+    } else {
+      this._removeIndexMarker(); // nothing selected
+    }
+
+    this.setAttribute('index', String(this.index));
+  }
+
+  /*
   applyIndex(repeatItem) {
     this._removeIndexMarker();
     if (repeatItem) {
       repeatItem.setAttribute('repeat-index', '');
     }
   }
+*/
 
+  /*
   get index() {
     return parseInt(this.getAttribute('index'), 10);
   }
@@ -94,6 +154,7 @@ export class FxRepeatAttributes extends withDraggability(ForeElementMixin, false
   set index(idx) {
     this.setAttribute('index', idx);
   }
+*/
 
   _getRepeatedItems() {
     const refd = this.querySelector('[data-ref]');
@@ -101,6 +162,7 @@ export class FxRepeatAttributes extends withDraggability(ForeElementMixin, false
   }
 
   async connectedCallback() {
+    super.connectedCallback();
     // console.log('connectedCallback',this);
     // this.display = window.getComputedStyle(this, null).getPropertyValue("display");
     this.ref = this.getAttribute('ref');
@@ -111,7 +173,8 @@ export class FxRepeatAttributes extends withDraggability(ForeElementMixin, false
       const { item } = e.detail;
       const repeatedItems = this._getRepeatedItems();
       const idx = Array.from(repeatedItems).indexOf(item);
-      this.applyIndex(repeatedItems[idx]);
+      this.setIndex(idx + 1);
+      // this.applyIndex(repeatedItems[idx]);
       this.index = idx + 1;
     });
     // todo: review - this is just used by append action - event consolidation ?
@@ -120,15 +183,7 @@ export class FxRepeatAttributes extends withDraggability(ForeElementMixin, false
       if (!e.target === this) return;
       const { index } = e.detail;
       this.index = Number(index);
-      this.applyIndex(this.children[index - 1]);
     });
-    /*
-    document.addEventListener('insert', e => {
-      const nodes = e.detail.insertedNodes;
-      this.index = e.detail.position;
-      console.log('insert catched', nodes, this.index);
-    });
-*/
 
     // if (this.getOwnerForm().lazyRefresh) {
     this.mutationObserver = new MutationObserver(mutations => {
@@ -136,7 +191,7 @@ export class FxRepeatAttributes extends withDraggability(ForeElementMixin, false
         const added = mutations[0].addedNodes[0];
         if (added) {
           const instance = XPathUtil.resolveInstance(this, this.ref);
-          const path = XPathUtil.getPath(added, instance);
+          const path = getPath(added, instance);
           // this.dispatch('path-mutated',{'path':path,'nodeset':this.nodeset,'index': this.index});
           // this.index = index;
           // const prev = mutations[0].previousSibling.previousElementSibling;
@@ -196,6 +251,10 @@ export class FxRepeatAttributes extends withDraggability(ForeElementMixin, false
     return inited;
   }
 
+  getRepeatItems() {
+    return Array.from(this.querySelectorAll(':scope [data-ref] > .fx-repeatitem'));
+  }
+
   _getRef() {
     return this.getAttribute('ref');
   }
@@ -248,6 +307,7 @@ export class FxRepeatAttributes extends withDraggability(ForeElementMixin, false
         // remove repeatitem
         const itemToRemove = repeatItems[position - 1];
         itemToRemove.parentNode.removeChild(itemToRemove);
+        this._contextItemByRepeatItem.delete(itemToRemove);
         this.getOwnerForm().unRegisterLazyElement(itemToRemove);
         // this._fadeOut(itemToRemove);
         // Fore.fadeOutElement(itemToRemove)
@@ -259,29 +319,15 @@ export class FxRepeatAttributes extends withDraggability(ForeElementMixin, false
       for (let position = repeatItemCount + 1; position <= contextSize; position += 1) {
         // add new repeatitem
 
-        const clonedTemplate = this._clone();
+        const clonedTemplate = this._createNewRepeatItem(position, this.nodeset[position - 1]);
         if (!clonedTemplate) return;
 
-        // ### cloned templates are always appended to the binding element - the one having the data-ref
-        const bindingElement = this.querySelector('[data-ref]');
-        bindingElement.appendChild(clonedTemplate);
-        clonedTemplate.classList.add('fx-repeatitem');
-        clonedTemplate.setAttribute('index', position);
-
-        clonedTemplate.addEventListener('click', this._dispatchIndexChange);
-        // this.addEventListener('focusin', this._handleFocus);
-        clonedTemplate.addEventListener('focusin', this._dispatchIndexChange);
-
-        // this._initVariables(clonedTemplate);
-
-        // newItem.nodeset = this.nodeset[position - 1];
-        // newItem.index = position;
         this.getOwnerForm().someInstanceDataStructureChanged = true;
       }
     }
 
     // ### update nodeset of repeatitems
-    repeatItems = this.querySelectorAll(':scope > .fx-repeatitem');
+    repeatItems = this.querySelectorAll('.fx-repeatitem');
     repeatItemCount = repeatItems.length;
 
     for (let position = 0; position < repeatItemCount; position += 1) {
@@ -291,6 +337,8 @@ export class FxRepeatAttributes extends withDraggability(ForeElementMixin, false
       if (item.nodeset !== this.nodeset[position]) {
         item.nodeset = this.nodeset[position];
       }
+
+      this._contextItemByRepeatItem.set(item, this.nodeset[position]);
     }
 
     // Fore.refreshChildren(clone,true);
@@ -385,10 +433,38 @@ export class FxRepeatAttributes extends withDraggability(ForeElementMixin, false
     })(newRepeatItem);
   }
 
-  _clone() {
+  /**
+   * @override
+   *
+   * @param {number} insertionIndex - the one-based index of where to insert the new node
+   * @param {Node} node - The node related to this new repeat item
+   *
+   * @returns {HTMLElement}
+   */
+  _createNewRepeatItem(insertionIndex, node) {
     this.template = this.shadowRoot.querySelector('template');
-    if (!this.template) return;
-    return this.template.content.firstElementChild.cloneNode(true);
+    if (!this.template) return null;
+    const newNode = /** @type {HTMLElement} */ (
+      this.template.content.firstElementChild.cloneNode(true)
+    );
+
+    // ### cloned templates are always appended to the binding element - the one having the data-ref
+    const bindingElement = this.querySelector('[data-ref]');
+
+    const repeatItems = bindingElement.querySelectorAll('.fx-repeatitem');
+
+    const beforeNode = repeatItems[insertionIndex - 1] ?? null; // Null appends by default
+    bindingElement.insertBefore(newNode, beforeNode);
+    newNode.classList.add('fx-repeatitem');
+    // newNode.setAttribute('index', `${insertionIndex}`);
+
+    newNode.addEventListener('click', this._dispatchIndexChange);
+    // this.addEventListener('focusin', this._handleFocus);
+    newNode.addEventListener('focusin', this._dispatchIndexChange);
+
+    this._contextItemByRepeatItem.set(newNode, node);
+
+    return newNode;
   }
 
   _removeIndexMarker() {

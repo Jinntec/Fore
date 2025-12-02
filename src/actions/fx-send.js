@@ -1,7 +1,7 @@
 import '../fx-model.js';
 import '../fx-submission.js';
 import { AbstractAction } from './abstract-action.js';
-import { XPathUtil } from '../xpath-util.js';
+import { getDocPath } from '../xpath-path.js';
 
 /**
  * `fx-send` - finds and activates a `fx-submission` or a `fx-connection` element.
@@ -44,7 +44,7 @@ class FxSend extends AbstractAction {
               id: this.id,
               origin: this,
               message: `<fx-connection id="${this.connection}"> not found`,
-              expr: XPathUtil.getDocPath(this),
+              expr: getDocPath(this),
               level: 'Error',
             },
           }),
@@ -66,7 +66,7 @@ class FxSend extends AbstractAction {
             id: this.id,
             origin: this,
             message: `<fx-submission id="${this.submission}"> not found`,
-            expr: XPathUtil.getDocPath(this),
+            expr: getDocPath(this),
             level: 'Error',
           },
         }),
@@ -87,10 +87,13 @@ class FxSend extends AbstractAction {
     }
 
     await submission.submit();
-            if(submission.replace === 'instance'){
-              this.getModel().updateModel();
-              this.getOwnerForm().refresh();
-            }
+    if (submission.replace === 'instance') {
+      this.getModel().updateModel();
+      // todo: this bypasses observers...
+      this.getOwnerForm().refresh(true); //whole instance changes - full refresh necessary
+      // this.getOwnerForm().addToBatchedNotifications(this.getOwnerForm());
+      // this.needsUpdate = true;
+    }
     // if not of type fx-submission signal error
   }
 

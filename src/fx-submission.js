@@ -83,10 +83,7 @@ export class FxSubmission extends ForeElementMixin {
   }
 
   async _submit() {
-    console.info(
-        `%csubmitting #${this.id}`,
-        'background:yellow; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
-    );
+    console.info(`🚀 #${this.id}`);
 
     this.evalInContext();
     const model = this.getModel();
@@ -100,7 +97,7 @@ export class FxSubmission extends ForeElementMixin {
         this.getOwnerForm().classList.add('submit-validation-failed');
         // ### allow alerts to pop up
         // this.dispatch('submit-error', {});
-        Fore.dispatch(this, 'submit-error', {});
+        Fore.dispatch(this, 'submit-error', { status: 0, message: 'validation failed' });
         this.getModel().parentNode.refresh(true);
         return;
       }
@@ -166,8 +163,12 @@ export class FxSubmission extends ForeElementMixin {
 
     // if (resolvedUrl === '#echo') {
     if (resolvedUrl.startsWith('#echo')) {
-      const data = this._parse(serialized, instance);
-      this._handleResponse(data);
+      if (this.replace === 'download') {
+        this._handleResponse(serialized, resolvedUrl, 'application/xml');
+      } else {
+        const data = this._parse(serialized, instance);
+        this._handleResponse(data, resolvedUrl, 'application/xml');
+      }
       // this.dispatch('submit-done', {});
       console.log('### <<<<< submit-done >>>>>');
       Fore.dispatch(this, 'submit-done', {});
@@ -183,6 +184,7 @@ export class FxSubmission extends ForeElementMixin {
         const serialized = localStorage.getItem(key);
         if (!serialized) {
           Fore.dispatch(this, 'submit-error', {
+            status: 400,
             message: `Error reading key ${key} from localstorage`,
           });
           this.parameters.clear();
@@ -237,22 +239,29 @@ export class FxSubmission extends ForeElementMixin {
       if (!response.ok || response.status > 400) {
         // this.dispatch('submit-error', { message: `Error while submitting ${this.id}` });
         console.info(
-            `%csubmit-error #${this.id}`,
-            'background:red; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+          `%csubmit-error #${this.id}`,
+          'background:red; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
         );
 
-        Fore.dispatch(this, 'submit-error', { message: `Error while submitting ${this.id}` });
+        Fore.dispatch(this, 'submit-error', {
+          status: response.status,
+          message: `Error during submit ${this.id}`,
+        });
         return;
       }
 
-      const contentType = response.headers.get('content-type').toLowerCase();
+      const contentType = response.headers
+        .get('content-type')
+        .split(';')[0]
+        .trim()
+        .toLowerCase();
       if (contentType.startsWith('text/')) {
         const text = await response.text();
         this._handleResponse(text, resolvedUrl, contentType);
-      } else if (contentType.startsWith('application/json')) {
+      } else if (contentType.endsWith('/json') || contentType.endsWith('+json')) {
         const json = await response.json();
         this._handleResponse(json, resolvedUrl, contentType);
-      } else if (contentType.startsWith('application/xml')) {
+      } else if (contentType.endsWith('/xml') || contentType.endsWith('+xml')) {
         const text = await response.text();
         const xml = new DOMParser().parseFromString(text, 'application/xml');
         this._handleResponse(xml, resolvedUrl, contentType);
@@ -264,15 +273,14 @@ export class FxSubmission extends ForeElementMixin {
       // this.dispatch('submit-done', {});
       // console.log(`### <<<<< ${this.id} submit-done >>>>>`);
       Fore.dispatch(this, 'submit-done', {});
-/*
+      /*
       console.info(
           `%csubmit-done #${this.id}`,
           'background:green; color:white; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
       );
 */
-
     } catch (error) {
-      Fore.dispatch(this, 'submit-error', { error: error.message });
+      Fore.dispatch(this, 'submit-error', { status: 500, error: error.message });
     } finally {
       this.parameters.clear();
       const download = document.querySelector('[download]');
@@ -372,49 +380,30 @@ export class FxSubmission extends ForeElementMixin {
 
     const targetInstance = this._getTargetInstance();
 
-    /*
-        if(this.replace === 'merge'){
-            if(targetInstance.type !== 'xml') {
-                Fore.dispatch(this, "warn", {'message': 'merging of instances only work for type xml'});
-            }
-            if (targetInstance && targetInstance.type === 'xml') {
-                targetInstance.partialInstance = data;
-                // const resultDoc = new DOMParser(`${data.nodeName}`, 'application/xml');
-                // console.log('resultDoc', resultDoc)
-                const merged = Fore.combine(targetInstance.instanceData.firstElementChild, data.firstElementChild, this,null);
-                console.log('merged', merged);
-
-                targetInstance.instanceData = merged;
-                console.log('merging partial instance',targetInstance.partialInstance)
-                this.model.updateModel();
-                this.getOwnerForm().refresh(true);
-            }
-        }
-*/
-
     if (this.replace === 'instance') {
       if (targetInstance) {
         if (this.targetref) {
-
           const [theTarget] = evaluateXPath(
-              this.targetref,
-              targetInstance.instanceData.firstElementChild,
-              this,
+            this.targetref,
+            targetInstance.instanceData.firstElementChild,
+            this,
           );
           console.log('theTarget', theTarget);
-          if(this.responseMediatype === 'application/xml' || this.responseMediatype === 'text/html'){
+          if (
+            this.responseMediatype === 'application/xml' ||
+            this.responseMediatype === 'text/html'
+          ) {
             const clone = data.firstElementChild;
             const parent = theTarget.parentNode;
             parent.replaceChild(clone, theTarget);
             console.log('finally ', parent);
           }
-          if(this.responseMediatype.startsWith('text/')){
+          if (this.responseMediatype.startsWith('text/')) {
             theTarget.textContent = data;
           }
-          if(this.responseMediatype === 'application/json'){
-            console.warn('targetref is not supported for application/json responses')
+          if (this.responseMediatype === 'application/json') {
+            console.warn('targetref is not supported for application/json responses');
           }
-
         } else if (this.into) {
           const [theTarget] = evaluateXPath(
             this.into,
@@ -446,12 +435,16 @@ export class FxSubmission extends ForeElementMixin {
 
     if (this.replace === 'download') {
       const target = this._getProperty('target');
+      if (!target) {
+        throw new Error(`${this.id} needs to specify "target" attribute`);
+      }
       const downloadLink = document.createElement('a');
       downloadLink.setAttribute('download', target);
-      downloadLink.setAttribute('href', `data:${contentType},${data}`);
+      downloadLink.setAttribute('href', `data:${contentType},${encodeURIComponent(data)}`);
       document.body.appendChild(downloadLink);
       downloadLink.click();
     }
+
     if (this.replace === 'all') {
       const target = this._getProperty('target');
       if (target && target === '_blank') {
@@ -471,11 +464,10 @@ export class FxSubmission extends ForeElementMixin {
       const target = this._getProperty('target');
       const targetNode = document.querySelector(target);
       if (targetNode) {
-
-        if(contentType.startsWith('text/html')){
+        if (contentType.startsWith('text/html')) {
           targetNode.innerHTML = data;
         }
-        if(this.responseMediatype.startsWith('image/svg')){
+        if (this.responseMediatype.startsWith('image/svg')) {
           const parser = new DOMParser();
           const svgDoc = parser.parseFromString(data, 'image/svg+xml');
 
@@ -493,10 +485,11 @@ export class FxSubmission extends ForeElementMixin {
     }
   }
 
+  /*
   _handleError() {
     // this.dispatch('submit-error', {});
     Fore.dispatch(this, 'submit-error', {});
-    /*
+    /!*
                     console.log('ERRRORRRRR');
                     this.dispatchEvent(
                         new CustomEvent('submit-error', {
@@ -505,8 +498,9 @@ export class FxSubmission extends ForeElementMixin {
                             detail: {},
                         }),
                     );
-            */
+            *!/
   }
+*/
 
   /*
     mergeNodes(node1, node2) {

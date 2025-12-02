@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport" />
+
+  <title>on demand controls</title>
+
+  <!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+  <link href="../../resources/demo.css" rel="stylesheet">
+<style>
+  fx-control{
+      padding: 0.25rem 0;
+  }
+  #menu button{
+      background: #76ff03;
+  }
+  fx-control-menu:hover{
+      background: lightgray;
+  }
+  fx-group{
+      padding:0;
+      margin:0;
+  }
+  .trash{
+      font-size: 0.75rem;
+      z-index: 10;
+      top:0;
+      right:0;
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <h1>On demand controls with <code>fx-control-menu</code></h1>
+
+  <p>In some situations you may want to give the user the option of adding fields or displaying
+    them just on demand.</p>
+
+  <p><code>fx-control-menu</code> is a component displaying a simple button
+    to access a popup list of controls that are available but not currently displayed.</p>
+
+  <p><code>fx-control-menu</code> looks up all child elements with a 'on-demand' attribute
+  starting from the selected element.</p>
+
+  <p>By choosing a item the user can make that control visible.</p>
+
+  <p class="note">
+    Why having 'on-demand' when we have the <code>relevant</code> facet? - the logic of the
+    relevance of data might differ from the input logic. With 'on-demand' it's easier to pass
+    control to users for a single field.
+  </p>
+  <p class="note">
+    IMPORTANT: fx-control-menu in conjunction with 'on-demand' just shows/hides controls - it has
+    no effect on constraints or relevance of controls.
+  </p>
+  <demo-snippet>
+    <template>
+      <fx-fore id="example1">
+        <fx-model>
+          <fx-instance>
+            <data>
+              <greetings>Greetings to all my babies!</greetings>
+              <ondemand>i should be here only when asked</ondemand>
+              <ondemand2><!--another optional one--></ondemand2>
+              <empty></empty>
+              <item1></item1>
+              <item2></item2>
+            </data>
+          </fx-instance>
+        </fx-model>
+
+
+        <fx-group id="outer">
+          <fx-control ref="greetings">
+            <label>Greetings</label>
+          </fx-control>
+          <fx-control ref="empty">
+            <label>empty value</label>
+          </fx-control>
+          <fx-control ref="ondemand" on-demand="true">
+            <label>On demand</label>
+            <fx-message event="hide-control">discarded</fx-message>
+          </fx-control>
+          <fx-control ref="ondemand2" on-demand="true">
+            <label>optional field</label>
+          </fx-control>
+          <fx-group show-icon on-demand="true" aria-label="section">
+            <fx-control ref="item1">
+              <label>a whole on demand section</label>
+            </fx-control>
+            <fx-control ref="item2">
+              <label>a whole on demand section</label>
+            </fx-control>
+          </fx-group>
+        </fx-group>
+
+        <fx-control-menu id="menu" select="#outer">
+          <button>+</button>
+        </fx-control-menu>
+
+      </fx-fore>
+    </template>
+  </demo-snippet>
+
+  <h2>mode 'hide-on-empty' and  <code>show-icon</code></h2>
+  <p>If you want your form to hide all empty controls
+  you can use <code>mode="hide-on-empty"</code>. This will hide all controls that have
+  no widget value.</p>
+
+  <p>This example also uses <code>show-icon</code> attribute on the ancestor <code>fx-group</code>.
+  When this attribute is found on a control or an ancestor a trask icon will be displayed
+  to remove the added field from view.</p>
+
+  <h3><code>show-control</code> and <code>hide-control</code></h3>
+
+  <p>Each control getting activated will fire a <code>show-control</code> event.
+  Each control getting deactivated will fire a <code>hide-control</code> event.</p>
+  <demo-snippet>
+    <template>
+      <fx-fore id="example2">
+        <fx-model>
+          <fx-instance>
+            <data>
+              <greetings>Greetings to all my babies!</greetings>
+              <ondemand>i should be here only when asked</ondemand>
+              <ondemand2>another optional one</ondemand2>
+              <empty></empty>
+            </data>
+          </fx-instance>
+        </fx-model>
+
+
+        <fx-group id="outer2" show-icon="true">
+          <fx-control ref="greetings">
+            <label>Greetings</label>
+          </fx-control>
+          <fx-control id="empty" ref="empty">
+            <label>empty value</label>
+            <fx-message event="hide-control">discarded empty value</fx-message>
+            <fx-message event="show-control">show empty control</fx-message>
+          </fx-control>
+          <fx-control ref="ondemand" on-demand="true">
+            <label>On demand</label>
+          </fx-control>
+          <fx-control ref="ondemand2" on-demand="true" >
+            <label>optional field</label>
+          </fx-control>
+        </fx-group>
+
+        <fx-control-menu id="menu2" select="#outer2" mode="hide-on-empty">
+          <button>+</button>
+        </fx-control-menu>
+
+      </fx-fore>
+    </template>
+  </demo-snippet>
+
+
+</div>
+<script type="module" src="../demo.js"></script>
+<!--
+<script>
+    const tmpl = document.getElementById('foo').content.cloneNode(true);
+    document.body.appendChild(tmpl);
+</script>
+-->
+</body>
+</html>

@@ -1,7 +1,6 @@
-import * as fx from 'fontoxpath';
 import { AbstractAction } from './abstract-action.js';
 import { Fore } from '../fore.js';
-import { evaluateXPathToNodes, evaluateXPathToString } from '../xpath-evaluation.js';
+import { evaluateXPathToNodes } from '../xpath-evaluation.js';
 import { XPathUtil } from '../xpath-util.js';
 import getInScopeContext from '../getInScopeContext.js';
 
@@ -52,40 +51,78 @@ class FxDelete extends AbstractAction {
       }),
     );
 
+    const fore = this.getOwnerForm();
+
     let parent;
+
+    const removedNodes = [];
     if (Array.isArray(nodesToDelete)) {
-      if (nodesToDelete.length === 0) return;
+      if (nodesToDelete.length === 0) {
+        return;
+      }
       parent = nodesToDelete[0].parentNode;
+
       nodesToDelete.forEach(item => {
-        this._deleteNode(parent, item);
+        if (this._deleteNode(parent, item)) {
+          fore.signalChangeToElement(item.localName);
+          removedNodes.push(item);
+        }
       });
+      if (removedNodes.length) {
+        fore.signalChangeToElement(parent.localName);
+      }
     } else {
       parent = nodesToDelete.parentNode;
-      this._deleteNode(parent, nodesToDelete);
+      if (this._deleteNode(parent, nodesToDelete)) {
+        fore.signalChangeToElement(parent.localName);
+
+        fore.signalChangeToElement(nodesToDelete.localName);
+        removedNodes.push(nodesToDelete);
+      }
     }
-    const foreId = this.getOwnerForm().id;
-    await Fore.dispatch(instance, 'deleted', { ref: path, deletedNodes: nodesToDelete , instanceId:instanceId, foreId:foreId});
-    this.needsUpdate = true;
-  }
 
-  _deleteNode(parent, node) {
-    if (parent.nodeType === Node.DOCUMENT_NODE) return;
-    if (node.nodeType === Node.DOCUMENT_NODE) return;
-    if (node.nodeType === Node.DOCUMENT_FRAGMENT_NODE) return;
-    if (node.parentNode === null) return;
-
-    const mi = this.getModelItem();
-    if (mi.readonly) return;
-
-    parent.removeChild(node);
+    if (removedNodes.length) {
+      await Fore.dispatch(instance, 'deleted', {
+        ref: path,
+        deletedNodes: removedNodes,
+        instanceId,
+        parent,
+        foreId: fore.id,
+      });
+      this.needsUpdate = true;
+    }
   }
 
   /**
-   * overwriting as we need to perform additional rebuild()
+   * Delete a node (if allowed). Does not hold for JSON
+   *
+   * @param {ParentNode}  parent - The parent of the node to remove
+   * @param {ChildNode}   node   - The child to remove
+   *
+   * @returns {boolean} Whether the delete is allowed and succeeded
    */
-  actionPerformed() {
-    this.getModel().rebuild();
-    super.actionPerformed();
+  _deleteNode(parent, node) {
+    if (
+      parent.nodeType === Node.DOCUMENT_NODE ||
+      node.nodeType === Node.DOCUMENT_NODE ||
+      node.nodeType === Node.DOCUMENT_FRAGMENT_NODE ||
+      node.parentNode === null
+    ) {
+      return false;
+    }
+
+    const mi = this.getModel().getModelItem(node);
+    // Note that the model item can be absent, For elements that had no controls on them.
+    // In that case, allow removals
+    if (mi?.readonly) {
+      return false;
+    }
+
+    parent.removeChild(node);
+
+    this.getModel().removeModelItem(node);
+
+    return true;
   }
 }
 

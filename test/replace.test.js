@@ -1,6 +1,4 @@
-import {
-  html, fixtureSync, expect, oneEvent,
-} from '@open-wc/testing';
+import { html, fixtureSync, expect, oneEvent } from '@open-wc/testing';
 
 import '../index.js';
 import * as fx from 'fontoxpath';
@@ -98,5 +96,49 @@ describe('replace Tests', () => {
     console.log('replaced', replaced);
     console.log('replaced inst', inst);
     expect(replaced).to.equal('foo');
+  });
+
+  it('updates after replace', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="model1">
+          <fx-instance id="default">
+            <data>
+              <value>A</value>
+            </data>
+          </fx-instance>
+          <fx-instance id="template">
+            <data>
+              <list>
+                <value>A</value>
+                <value>B</value>
+                <value>C</value>
+              </list>
+            </data>
+          </fx-instance>
+        </fx-model>
+
+        <fx-trigger id="trigger">
+          <button>replace</button>
+          <fx-replace ref="value" with="instance('template')/list"></fx-replace>
+        </fx-trigger>
+        <fx-repeat ref="list/value">
+          <template>
+            Item: {.}
+          </template>
+        </fx-repeat>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'ready');
+    let repeatItems = el.querySelectorAll('fx-repeatitem');
+    expect(repeatItems.length).to.equal(0);
+
+    const btn = el.querySelector('button');
+    btn.click();
+    await oneEvent(el, 'refresh-done');
+
+    repeatItems = el.querySelectorAll('fx-repeatitem');
+    expect(repeatItems.length).to.equal(3);
   });
 });

@@ -2,6 +2,7 @@
 import '../fx-model.js';
 import { AbstractAction } from './abstract-action.js';
 import { evaluateXPathToFirstNode } from '../xpath-evaluation.js';
+import { FxBind } from '../fx-bind.js';
 
 /**
  * `fx-replace` - replaces the node referred to with 'ref' with node referred to with 'with' attribute.
@@ -44,8 +45,9 @@ export default class FxReplace extends AbstractAction {
   }
 
   actionPerformed() {
-    this.getModel().rebuild();
-    super.actionPerformed();
+    this.getModel().updateModel();
+    this.getOwnerForm().refresh(true); //todo: optimize and update only the affected subtree
+    this.dispatchActionPerformed();
   }
 
   replace(toReplace, replaceWith) {
@@ -63,7 +65,20 @@ export default class FxReplace extends AbstractAction {
       const cloned = replaceWith.cloneNode(true);
       toReplace.replaceWith(cloned);
     }
-    // const modelitem = this.getModelItem();
+    // todo: add selective update and create and notify modelItem for toReplace and replaceWith
+    /*
+    let replaceWithModelItem = this.getModel().getModelItem(replaceWith);
+    if (!replaceWithModelItem) {
+      const replaceWithModelItem = FxBind.createModelItem(
+        this.getAttribute('with'),
+        replaceWith,
+        this,
+        null,
+      );
+      this.getModel().registerModelItem(replaceWithModelItem);
+      this.getOwnerForm().addToBatchedNotifications(replaceWithModelItem);
+    }
+*/
     // this.getModel().changed.push(modelitem);
     this.needsUpdate = true;
   }
