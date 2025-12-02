@@ -251,7 +251,7 @@ export class FxRepeatAttributes extends withDraggability(RepeatBase, false) {
     return inited;
   }
 
-  getRepeatItems(){
+  getRepeatItems() {
     return Array.from(this.querySelectorAll(':scope [data-ref] > .fx-repeatitem'));
   }
 
@@ -327,7 +327,7 @@ export class FxRepeatAttributes extends withDraggability(RepeatBase, false) {
     }
 
     // ### update nodeset of repeatitems
-    repeatItems = this.querySelectorAll(':scope > .fx-repeatitem');
+    repeatItems = this.querySelectorAll('.fx-repeatitem');
     repeatItemCount = repeatItems.length;
 
     for (let position = 0; position < repeatItemCount; position += 1) {

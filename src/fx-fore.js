@@ -430,13 +430,18 @@ export class FxFore extends HTMLElement {
       await modelElement.modelConstruct();
       this._handleModelConstructDone();
     }
-    this.model = modelElement;
 
     this._createRepeatsFromAttributes();
     this.inited = true;
   };
 
   connectedCallback() {
+    const modelElement = Array.from(this.children).find(
+      modelElem => modelElem.nodeName.toUpperCase() === 'FX-MODEL',
+    );
+
+    this.model = modelElement;
+
     this.style.visibility = 'hidden';
     console.time('init');
     this.strict = !!this.hasAttribute('strict');
@@ -1314,12 +1319,12 @@ export class FxFore extends HTMLElement {
       // console.log('sibling', siblingControl);
       // todo: review: should this not just be inscopeContext?
       let parentNodeset;
-      if(!ourParent || !ourParent.nodeset){
-          /*
+      if (!ourParent || !ourParent.nodeset) {
+        /*
           if we lost context somehow just always assume default context and append to that
           instead of bailing out.
            */
-          parentNodeset = root.getModel().getDefaultContext();
+        parentNodeset = root.getModel().getDefaultContext();
       } else {
         parentNodeset = ourParent.nodeset;
       }
@@ -1337,9 +1342,9 @@ export class FxFore extends HTMLElement {
 
         if (referenceNode) {
           // console.log('insert after', referenceNode,newNode);
-          if(referenceNode.nodeType === Node.DOCUMENT_NODE){
+          if (referenceNode.nodeType === Node.DOCUMENT_NODE) {
             referenceNode.firstElementChild.append(newNode);
-           }else{
+          } else {
             referenceNode.after(newNode);
           }
         } else {
