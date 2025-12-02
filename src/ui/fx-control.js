@@ -3,11 +3,9 @@ import {
   evaluateXPath,
   evaluateXPathToString,
   evaluateXPathToFirstNode,
-  evaluateXPathToBoolean,
 } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 import { Fore } from '../fore.js';
-import { ModelItem } from '../modelitem.js';
 import { debounce } from '../events.js';
 import { FxModel } from '../fx-model.js';
 import { DependencyNotifyingDomFacade } from '../DependencyNotifyingDomFacade';
@@ -257,10 +255,9 @@ export default class FxControl extends XfAbstractControl {
 
     if (this.getAttribute('as') === 'node') {
       const replace = this.shadowRoot.getElementById('replace');
-      const widgetValue = this.getWidget()[this.valueProp];
-      replace.replace(this.nodeset, widgetValue);
-      if (modelitem && widgetValue && widgetValue !== modelitem.value) {
-        modelitem.value = widgetValue;
+      replace.replace(this.nodeset, val);
+      if (modelitem && val && val !== modelitem.value) {
+        modelitem.value = val;
         FxModel.dataChanged = true;
         replace.actionPerformed();
       }
