@@ -8,11 +8,7 @@ async function handleResponse(fxInstance, response) {
     alert(`response status:  ${status} - failed to load data for '${fxInstance.src}' - stopping.`);
     throw new Error(`failed to load data - status: ${status}`);
   }
-  let responseContentType = response.headers
-    .get('content-type')
-    .split(';')[0]
-    .trim()
-    .toLowerCase();
+  let responseContentType = response.headers.get('content-type').split(';')[0].trim().toLowerCase();
   // console.log('********** responseContentType *********', responseContentType);
   if (responseContentType.startsWith('text/html')) {
     // const htmlResponse = response.text();
@@ -212,7 +208,7 @@ export class FxInstance extends HTMLElement {
     }
     if (this.type === 'json') {
       this.instanceData = {};
-      this.originalInstance = [...this.instanceData];
+      this.originalInstance = { ...this.instanceData };
     }
     if (this.type === 'text') {
       this.instanceData = this.innerText;

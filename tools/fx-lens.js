@@ -47,35 +47,35 @@ export class FxLens extends HTMLElement {
           this.flashEffect(targetSummary);
         });
         fore.addEventListener('insert', ev => {
-          // console.log('+++++++++++++++++++++++++++++++insert');
+          console.log('+++++++++++++++++++++++++++++++insert');
           this.update();
           const targetId = `${ev.detail.foreId}#${ev.detail.instanceId}`;
           const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
           this.flashEffect(targetSummary);
         });
         fore.addEventListener('index-changed', ev => {
-          // console.log('+++++++++++++++++++++++++++++++index-changed');
+          console.log('+++++++++++++++++++++++++++++++index-changed');
           this.update();
           const targetId = `${ev.detail.foreId}#${ev.detail.instanceId}`;
           const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
           this.flashEffect(targetSummary);
         });
         fore.addEventListener('submit', ev => {
-          // console.log('+++++++++++++++++++++++++++++++submit');
+          console.log('+++++++++++++++++++++++++++++++submit');
           this.update();
           const targetId = `${ev.detail.foreId}#${ev.detail.instanceId}`;
           const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
           this.flashEffect(targetSummary);
         });
         fore.addEventListener('submit-done', ev => {
-          // console.log('+++++++++++++++++++++++++++++++submit-done');
+          console.log('+++++++++++++++++++++++++++++++submit-done');
           this.update();
           const targetId = `${ev.detail.foreId}#${ev.detail.instanceId}`;
           const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
           this.flashEffect(targetSummary);
         });
         fore.addEventListener('submit-error', ev => {
-          // console.log('+++++++++++++++++++++++++++++++submit-error');
+          console.log('+++++++++++++++++++++++++++++++submit-error');
           this.update();
           const targetId = `${ev.detail.foreId}#${ev.detail.instanceId}`;
           const targetSummary = this.shadowRoot.querySelector(`summary[data-id="${targetId}"]`);
@@ -123,7 +123,7 @@ export class FxLens extends HTMLElement {
             min-width:var(--inspector-handle-width);
             box-shadow:-2px -2px 8px rgba(0,0,0,0.3);
           }
-            
+
           :host:has(.handle:hover){
             box-shadow:-2px -2px 8px rgba(0,0,0,0.6);
           }
@@ -138,6 +138,10 @@ export class FxLens extends HTMLElement {
             width:calc(100% - 17px);
             position:relative;
           }
+          summary{
+            color:black;
+            background-color:ghostwhite;
+          }
           .main{
             padding-left:var(--inspector-handle-width);
             color:var(--inspector-color);
@@ -145,7 +149,7 @@ export class FxLens extends HTMLElement {
             height:100vh;
             background:ghostwhite);
             overflow:hidden;
-            
+
           }
           .main > div{
             overflow:auto;
@@ -189,7 +193,7 @@ export class FxLens extends HTMLElement {
             justify-content:center;
             position:absolute;
             z-index:850;
-            
+
            }
           .fore-section summary{
             cursor:pointer;
@@ -227,18 +231,9 @@ export class FxLens extends HTMLElement {
             ${style}
         </style>
           <details class="main" open>
-              <div class="resizer"></div>  
+              <div class="resizer"></div>
               <summary class="handle"><a href="#" id="reset" title="reset panel state to defaults">&#x2715;</a></summary>
-              <div>
-                ${instances
-                  .map((instance, index) => {
-                    const foreId = instance.closest('fx-fore').id;
-                    return `<details  id="d${index}" class="instance"><summary data-id="${foreId}#${instance.id}">${foreId}#${instance.id}</summary><jinn-codemirror id="${foreId}#${instance.id}" mode="${instance.type}"></jinn-codemirror></details>`;
-                  })
-                  .join('')}
-              </div>
-          </details>
-        `;
+              <div id="codemirrors">${this.renderCodeMirrors(instances)}</div></details>`;
 
     const lensWidth = localStorage.getItem('lens-width');
     if (lensWidth) {
@@ -344,6 +339,15 @@ export class FxLens extends HTMLElement {
     });
   }
 
+  renderCodeMirrors(instances) {
+    return instances
+      .map((instance, index) => {
+        const foreId = instance.closest('fx-fore').id;
+        return `<details  id="d${index}" class="instance"><summary data-id="${foreId}#${instance.id}">${foreId}#${instance.id}</summary><jinn-codemirror mode="${instance.type}"></jinn-codemirror></details>`;
+      })
+      .join('');
+  }
+
   update() {
     try {
       if (!this.shadowRoot) return;
@@ -352,63 +356,58 @@ export class FxLens extends HTMLElement {
       const editors = Array.from(this.shadowRoot.querySelectorAll('jinn-codemirror'));
       if (!instances.length || !editors.length) return;
 
-      const editorsById = new Map(editors.map(ed => [ed.id || '', ed]));
+      if (instances.length !== editors.length) {
+        // We got an extra instance at run-time. Might have been loaded in a fx-fore with a src
+        // attribute set
+        this.shadowRoot.querySelector('#codemirrors').innerHTML = this.renderCodeMirrors(instances);
+      } else {
+        const editorsById = new Map(editors.map(ed => [ed.id || '', ed]));
 
-      const isXmlNode = v =>
-        v && typeof v === 'object' && (v.nodeType === 1 || v.nodeType === 9 || v.nodeType === 11); // Element, Document, DocFragment
-      const xmlSer = new XMLSerializer();
+        const isXmlNode = v =>
+          v && typeof v === 'object' && (v.nodeType === 1 || v.nodeType === 9 || v.nodeType === 11); // Element, Document, DocFragment
+        const xmlSer = new XMLSerializer();
 
-      for (let i = 0; i < instances.length; i++) {
-        try {
-          const inst = instances[i];
-          const foreId = inst.closest('fx-fore')?.id || '';
-          const instId = inst.getAttribute('id') || 'default';
-          const key = `${foreId}#${instId}`;
+        for (let i = 0; i < instances.length; i++) {
+          try {
+            const inst = instances[i];
+            const foreId = inst.closest('fx-fore')?.id || '';
+            const instId = inst.getAttribute('id') || 'default';
+            const key = `${foreId}#${instId}`;
 
-          const editor = editorsById.get(key) || editors[i];
-          if (!editor) continue;
+            const editor = editorsById.get(key) || editors[i];
+            if (!editor) continue;
 
-          const raw = inst.instanceData;
-          let value = '';
+            const raw = inst.instanceData;
+            let value = '';
 
-          if (raw == null) {
-            value = '';
-          } else if (typeof raw === 'string') {
-            value = raw;
-          } else if (isXmlNode(raw)) {
-            // Serialize XML Documents/Elements/Fragments
-            value = xmlSer.serializeToString(raw);
-          } else if (typeof raw === 'object') {
-            // Pretty JSON for objects/arrays
-            try {
-              value = JSON.stringify(raw, null, 2);
-            } catch {
+            if (raw == null) {
+              value = '';
+            } else if (typeof raw === 'string') {
+              value = raw;
+            } else if (isXmlNode(raw)) {
+              // Serialize XML Documents/Elements/Fragments
+              value = xmlSer.serializeToString(raw);
+            } else if (typeof raw === 'object') {
+              // Pretty JSON for objects/arrays
+              try {
+                value = JSON.stringify(raw, null, 2);
+              } catch {
+                value = String(raw);
+              }
+            } else {
               value = String(raw);
             }
-          } else {
-            value = String(raw);
-          }
 
-          editor.value = value;
-        } catch (rowErr) {
-          console.warn('[fx-lens] update(): skipped one instance due to error:', rowErr);
+            editor.value = value;
+          } catch (rowErr) {
+            console.warn('[fx-lens] update(): skipped one instance due to error:', rowErr);
+          }
         }
       }
     } catch (err) {
       console.warn('[fx-lens] update(): failed, but safely ignored:', err);
     }
   }
-
-  /*
-  update() {
-    const instances = Array.from(document.querySelectorAll('fx-instance'));
-    const editors = Array.from(this.shadowRoot.querySelectorAll('jinn-codemirror'));
-
-    for (let i = 0; i < instances.length; i++) {
-      editors[i].value = instances[i].instanceData;
-    }
-  }
-*/
 }
 
 if (!customElements.get('fx-lens')) {

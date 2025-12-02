@@ -73,6 +73,8 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
   connectedCallback() {
     super.connectedCallback();
+    this.template = this.querySelector('template');
+
     // console.log('connectedCallback',this);
     // this.display = window.getComputedStyle(this, null).getPropertyValue("display");
     this.ref = this.getAttribute('ref');
@@ -450,6 +452,13 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     // console.log('##### inscope ', inscope);
     // console.log('##### ref ', this.ref);
     // now we got a nodeset and attach MutationObserver to it
+    if (!inscope) return;
+    if (this.mutationObserver && inscope.nodeName) {
+      this.mutationObserver.observe(inscope, {
+        childList: true,
+        subtree: true,
+      });
+    }
 
     /*
               this.touchedPaths = new Set();
@@ -534,6 +543,9 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
       if (item.nodeset !== this.nodeset[position]) {
         item.nodeset = this.nodeset[position];
+        if (this.getOwnerForm().createNodes) {
+          this.getOwnerForm().initData(item);
+        }
       }
     }
 
@@ -589,7 +601,6 @@ export class FxRepeat extends withDraggability(UIElement, false) {
   }
 
   _initTemplate() {
-    this.template = this.querySelector('template');
     // console.log('### init template for repeat ', this.id, this.template);
     // todo: this.dropTarget not needed?
     this.dropTarget = this.template.getAttribute('drop-target');

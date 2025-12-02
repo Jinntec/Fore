@@ -2,15 +2,15 @@ import { DepGraph } from './dep_graph.js';
 import { Fore } from './fore.js';
 import './fx-instance.js';
 import { ModelItem } from './modelitem.js';
-import { evaluateXPath, evaluateXPathToBoolean } from './xpath-evaluation.js';
 import { getPath } from './xpath-path.js';
+import { evaluateXPath, evaluateXPathToBoolean, evaluateXPathToNodes } from './xpath-evaluation.js';
 import { XPathUtil } from './xpath-util.js';
 
 /**
- * The model of this Fore scope. It holds all the intances, binding, submissions and custom functions that
- * as required.
+ * The model of this Fore scope. It holds all the intances, binding, submissions and custom
+ * functions that as required.
  *
- * The model is updatin by executing rebuild (as needed), recalculate and revalidate in turn.
+ * The model is updated by executing rebuild (as needed), recalculate and revalidate in turn.
  *
  * After the cycle is run all modelItems have updated their stete to reflect latest computations.
  *
@@ -39,8 +39,16 @@ export class FxModel extends HTMLElement {
     this.attachShadow({ mode: 'open' });
     this.computes = 0;
     this.fore = {};
+
+    /**
+     * @type {import('./fx-bind.js').FxBind[]}
+     */
+    this.binds = [];
   }
 
+  /**
+   * @returns {import('./fx-fore.js').FxFore}
+   */
   get formElement() {
     return this.parentElement;
   }
@@ -67,18 +75,62 @@ export class FxModel extends HTMLElement {
   }
 
   /**
+   * Get the correct fx-bind for this element. Assumes the refs of all binds are always downwards.
+   *
+   * @param {ChildNode | Attr} elementOrAttribute - the element or attribute to resolve
+   *
+   * @returns {import('./fx-bind.js').FxBind | null}
+   */
+  getBindForElement(elementOrAttribute) {
+    if (typeof elementOrAttribute !== 'object' || !('nodeType' in elementOrAttribute)) {
+      // We only do binds over nodes. Not JSON.
+      return null;
+    }
+    /**
+     * @type {import('./fx-bind.js').FxBind | FxModel}
+     */
+    let bindForParent;
+    const parent =
+      elementOrAttribute.nodeType === elementOrAttribute.ATTRIBUTE_NODE
+        ? elementOrAttribute.ownerElement
+        : elementOrAttribute.parentNode;
+    if (!parent?.parentElement) {
+      // The root. Search from here
+      bindForParent = this;
+    } else {
+      bindForParent = this.getBindForElement(parent);
+    }
+    if (!bindForParent) {
+      return null;
+    }
+
+    /**
+     * @type {import('./fx-bind.js').FxBind[]}
+     */
+    const childBinds = Array.from(bindForParent.children).filter(c => c.nodeName === 'FX-BIND');
+    for (const childBind of childBinds) {
+      const ref = childBind.ref;
+      const matches = evaluateXPathToNodes(ref, parent, childBind);
+      if (matches.includes(elementOrAttribute)) {
+        return childBind;
+      }
+    }
+    return null;
+  }
+
+  /**
    * Lazily create a ModelItem for nodes not explicitly bound via fx-bind
-   * @param {FxModel} model
-   * @param {string} ref
-   * @param {Node|Node[]} nodeset
-   * @param {Element} foreElement
+   * @param {FxModel}           model        The model to create a model item for
+   * @param {string}            ref          The XPath ref that led to this model item
+   * @param {Node}              node         The node the XPath led to
+   * @param {ForeElementMixin)}  formElement  The form element making this model. Used to resolve variables against
    * @returns {ModelItem}
    */
   static lazyCreateModelItem(model, ref, node, formElement) {
     const instanceId = XPathUtil.resolveInstance(formElement, ref);
-    const fore = model.parentNode;
+    const fore = model.formElement;
 
-    if (model.parentNode?.createNodes && (node === null || node === undefined)) {
+    if (fore?.createNodes && (node === null || node === undefined)) {
       const mi = new ModelItem(undefined, ref, null, null, instanceId, fore);
       mi.isSynthetic = true;
       model.registerModelItem(mi);
@@ -106,8 +158,17 @@ export class FxModel extends HTMLElement {
       }
     }
 
-    const mi = new ModelItem(path, ref, targetNode, null, instanceId, fore);
+    const mi = new ModelItem(
+      path,
+      ref,
+      targetNode,
+      model.getBindForElement(targetNode),
+      instanceId,
+      fore,
+    );
     mi.isSynthetic = true;
+
+    // console.log('new ModelItem is instanceof ModelItem ', mi instanceof ModelItem);
     model.registerModelItem(mi);
     return mi;
   }
@@ -222,8 +283,14 @@ export class FxModel extends HTMLElement {
       bind.init(this);
     });
 
-    // console.log('mainGraph', this.mainGraph);
-    // console.log('rebuild mainGraph calc order', this.mainGraph.overallOrder());
+    if (this.formElement.createNodes) {
+      // initData should be running here as well: we just got a whole new instance that may be
+      // incomplete
+      this.formElement.initData();
+    }
+
+    console.log('mainGraph', this.mainGraph);
+    console.log('rebuild mainGraph calc order', this.mainGraph.overallOrder());
 
     // this.dispatchEvent(new CustomEvent('rebuild-done', {detail: {maingraph: this.mainGraph}}));
     Fore.dispatch(this, 'rebuild-done', { maingraph: this.mainGraph });
