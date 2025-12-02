@@ -120,7 +120,7 @@ class DemoSnippet extends HTMLElement {
 
       // Clone & optionally activate scripts
       const frag = tpl.content.cloneNode(true);
-^^^      if (this.hasAttribute('run-scripts')) this.activateScripts(frag);
+      if (this.hasAttribute('run-scripts')) this.activateScripts(frag);
 
       // Stamp into LIGHT DOM so page CSS applies
       const wrapper = document.createElement('div');
