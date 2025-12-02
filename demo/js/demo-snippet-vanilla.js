@@ -120,7 +120,7 @@ class DemoSnippet extends HTMLElement {
 
       // Clone & optionally activate scripts
       const frag = tpl.content.cloneNode(true);
-      if (this.hasAttribute('run-scripts')) this.#activateScripts(frag);
+      if (this.hasAttribute('run-scripts')) this.activateScripts(frag);
 
       // Stamp into LIGHT DOM so page CSS applies
       const wrapper = document.createElement('div');
@@ -131,7 +131,7 @@ class DemoSnippet extends HTMLElement {
       else this.appendChild(wrapper);
 
       // Render source code
-      const raw = this.#serializeTemplate(tpl);
+      const raw = this.serializeTemplate(tpl);
       this.$code.textContent = raw;
 
       // Fire dom-ready for compatibility
@@ -177,7 +177,7 @@ class DemoSnippet extends HTMLElement {
     const tpl = this.querySelector('template');
     const wrapper = document.createElement('div');
     wrapper.setAttribute('data-demo-stamped', '');
-    wrapper.innerHTML = `<em style="color:#b00020">${this.#escapeHTML(msg)}</em>`;
+    wrapper.innerHTML = `<em style="color:#b00020">${this.escapeHTML(msg)}</em>`;
     if (tpl && tpl.nextSibling) tpl.parentNode.insertBefore(wrapper, tpl.nextSibling);
     else this.appendChild(wrapper);
 
@@ -200,7 +200,7 @@ class DemoSnippet extends HTMLElement {
 
   // --- helpers ---
 
-  #activateScripts(root) {
+  activateScripts(root) {
     const scripts = root.querySelectorAll('script');
     scripts.forEach(old => {
       const s = document.createElement('script');
@@ -211,14 +211,14 @@ class DemoSnippet extends HTMLElement {
     });
   }
 
-  #serializeTemplate(tplEl) {
+  serializeTemplate(tplEl) {
     // Get a string of the template's child HTML
     const container = document.createElement('div');
     container.appendChild(tplEl.content.cloneNode(true));
     let html = container.innerHTML.trim();
 
     // Normalize whitespace: remove a common leading indent for readability
-    html = this.#stripCommonIndent(html);
+    html = this.stripCommonIndent(html);
 
     // Optionally emulate Polymer's demo-snippet behavior of removing empty attribute values
     html = html.replace(/=""/g, '');
@@ -226,7 +226,7 @@ class DemoSnippet extends HTMLElement {
     return html;
   }
 
-  #stripCommonIndent(str) {
+  stripCommonIndent(str) {
     const lines = str.split(/\r?\n/);
     const nonEmpty = lines.filter(l => l.trim().length);
     const indents = nonEmpty.map(l => l.match(/^\s*/)?.[0].length || 0);
@@ -234,7 +234,7 @@ class DemoSnippet extends HTMLElement {
     return lines.map(l => l.slice(min)).join('\n');
   }
 
-  #escapeHTML(str) {
+  escapeHTML(str) {
     return str
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
