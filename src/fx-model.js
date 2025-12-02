@@ -367,8 +367,8 @@ export class FxModel extends HTMLElement {
         const expr = modelItem.bind[property];
         if (property === 'calculate') {
           const compute = evaluateXPath(expr, modelItem.node, this);
-            modelItem.value = compute;
-            modelItem.readonly = true; // calculated nodes are always readonly
+          modelItem.value = compute;
+          modelItem.readonly = true; // calculated nodes are always readonly
           modelItem.notify(); // Notify observers directly
         } else if (property !== 'constraint' && property !== 'type') {
           /*
@@ -384,7 +384,7 @@ export class FxModel extends HTMLElement {
           // ### re-compute the Boolean value of all facets expect 'constraint' and 'type' which are handled in revalidate()
           if (expr) {
             const compute = evaluateXPathToBoolean(expr, modelItem.node, this);
-              modelItem[property] = compute;
+            modelItem[property] = compute;
             // modelItem.notify(); // Notify observers directly
             this.fore.addToBatchedNotifications(modelItem);
             /*
@@ -436,13 +436,13 @@ export class FxModel extends HTMLElement {
           const constraint = bind.getAttribute('constraint');
           if (constraint && modelItem.node) {
             const compute = evaluateXPathToBoolean(constraint, modelItem.node, this);
-              // console.log('modelItem validity computed: ', compute);
-              modelItem.constraint = compute;
-              // this.formElement.addToRefresh(modelItem); // let fore know that modelItem needs refresh
-              modelItem.notify(); // Notify observers directly
-              if (!compute) {
-                console.log('validation failed on modelitem ', modelItem);
-                valid = false;
+            // console.log('modelItem validity computed: ', compute);
+            modelItem.constraint = compute;
+            // this.formElement.addToRefresh(modelItem); // let fore know that modelItem needs refresh
+            modelItem.notify(); // Notify observers directly
+            if (!compute) {
+              console.log('validation failed on modelitem ', modelItem);
+              valid = false;
             }
           }
         }
@@ -454,7 +454,7 @@ export class FxModel extends HTMLElement {
             modelItem.required = compute;
             // this.formElement.addToRefresh(modelItem); // let fore know that modelItem needs refresh
             modelItem.notify(); // Notify observers directly
-            if (!modelItem.node.textContent) {
+            if (modelItem.required && !modelItem.node.textContent) {
               /*
               console.log(
                 'node is required but has no value ',
@@ -548,10 +548,6 @@ export class FxModel extends HTMLElement {
     if (!found) {
       const instArray = Array.from(this.instances);
       found = instArray.find(inst => inst.id === id);
-      const parentFore =
-        this.fore.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE
-          ? this.fore.parentNode.host.closest('fx-fore')
-          : this.fore.parentNode.closest('fx-fore');
     }
     // ### lookup in parent Fore if present
     if (!found) {
@@ -568,7 +564,7 @@ export class FxModel extends HTMLElement {
       }
     }
     // search for shared instances in the whole document
-    if(!found){
+    if (!found) {
       found = document.querySelector(`fx-instance[id="${id}"][shared]`);
     }
     if (found) {

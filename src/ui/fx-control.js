@@ -709,8 +709,14 @@ export default class FxControl extends XfAbstractControl {
     //  ### <<< needs rework
   }
 
+  /**
+   *
+   * @param {string} optionLabel
+   * @param {Node} node
+   * @param {HTMLElement} newEntry
+   */
   evalLabel(optionLabel, node, newEntry) {
-    const labelExpr = optionLabel.substring(1, optionLabel.length - 1);
+    const labelExpr = optionLabel.trim().substring(1, optionLabel.length - 1);
     if (!labelExpr) return;
 
     const label = evaluateXPathToString(labelExpr, node, this);
