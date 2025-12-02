@@ -7,10 +7,10 @@ import { evaluateXPath, evaluateXPathToBoolean, evaluateXPathToNodes } from './x
 import { XPathUtil } from './xpath-util.js';
 
 /**
- * The model of this Fore scope. It holds all the intances, binding, submissions and custom functions that
- * as required.
+ * The model of this Fore scope. It holds all the intances, binding, submissions and custom
+ * functions that as required.
  *
- * The model is updatin by executing rebuild (as needed), recalculate and revalidate in turn.
+ * The model is updated by executing rebuild (as needed), recalculate and revalidate in turn.
  *
  * After the cycle is run all modelItems have updated their stete to reflect latest computations.
  *
@@ -93,7 +93,7 @@ export class FxModel extends HTMLElement {
     const parent =
       elementOrAttribute.nodeType === elementOrAttribute.ATTRIBUTE_NODE
         ? elementOrAttribute.ownerElement
-        : elementOrAttribute.parentElement;
+        : elementOrAttribute.parentNode;
     if (!parent?.parentElement) {
       // The root. Search from here
       bindForParent = this;
