@@ -2,7 +2,6 @@ import { Fore } from '../fore.js';
 import XfAbstractControl from './abstract-control.js';
 import { evaluateXPath, evaluateXPathToStrings } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
-// import {markdown} from '../drawdown.js';
 
 /**
  * todo: review placing of value. should probably work with value attribute and not allow slotted content.
@@ -46,7 +45,7 @@ export class FxOutput extends XfAbstractControl {
 
     const outputHtml = `
             <slot name="label"></slot>
-            
+
             <span id="value">
                 <slot name="default"></slot>
             </span>
