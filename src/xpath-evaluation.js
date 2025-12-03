@@ -13,7 +13,6 @@ import {
 
 import { XPathUtil } from './xpath-util.js';
 import { prettifyXml } from './functions/common-function.js';
-import * as fx from 'fontoxpath';
 
 const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
 
@@ -489,6 +488,7 @@ export function evaluateXPath(xpath, contextNode, formElement, variables = {}, o
       { ...variablesInScope, ...variables },
       fxEvaluateXPath.ALL_RESULTS_TYPE,
       {
+        xmlSerializer: new XMLSerializer(),
         debug: true,
         currentContext: { formElement, variables },
         moduleImports: {
@@ -553,6 +553,7 @@ export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
       currentContext: { formElement },
       functionNameResolver,
       namespaceResolver,
+      xmlSerializer: new XMLSerializer(),
     });
     // console.log('evaluateXPathToFirstNode',xpath, result);
     return result;
@@ -570,6 +571,7 @@ export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
       }),
     );
   }
+  return null;
 }
 
 /**
@@ -592,6 +594,7 @@ export function evaluateXPathToNodes(xpath, contextNode, formElement) {
         xf: XFORMS_NAMESPACE_URI,
       },
       namespaceResolver,
+      xmlSerializer: new XMLSerializer(),
     });
     // console.log('evaluateXPathToNodes',xpath, result);
     return result;
@@ -631,6 +634,7 @@ export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
         xf: XFORMS_NAMESPACE_URI,
       },
       namespaceResolver,
+      xmlSerializer: new XMLSerializer(),
     });
   } catch (e) {
     formElement.dispatchEvent(
@@ -671,6 +675,7 @@ export function evaluateXPathToString(xpath, contextNode, formElement, domFacade
         xf: XFORMS_NAMESPACE_URI,
       },
       namespaceResolver,
+      xmlSerializer: new XMLSerializer(),
     });
   } catch (e) {
     formElement.dispatchEvent(
@@ -714,6 +719,7 @@ export function evaluateXPathToStrings(xpath, contextNode, formElement, domFacad
           xf: XFORMS_NAMESPACE_URI,
         },
         namespaceResolver,
+        xmlSerializer: new XMLSerializer(),
       },
     );
   } catch (e) {
@@ -755,6 +761,7 @@ export function evaluateXPathToNumber(xpath, contextNode, formElement, domFacade
         xf: XFORMS_NAMESPACE_URI,
       },
       namespaceResolver,
+      xmlSerializer: new XMLSerializer(),
     });
   } catch (e) {
     formElement.dispatchEvent(

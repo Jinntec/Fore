@@ -12,8 +12,9 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     />
-    <script type="module" src="../node_modules/@jinntec/jinntap/dist/jinn-tap.es.js"></script>
+    <script type="module" src="../node_modules/@jinntec/jinntap"></script>
     <link rel="stylesheet" href="../node_modules/@jinntec/jinntap/dist/editor-styles.css" />
+    <link rel="stylesheet" href="../node_modules/@jinntec/jinntap/dist/jinn-tap.css" />
     <title>A simple output</title>
 
     <link href="../resources/demo.css" rel="stylesheet" />
@@ -32,48 +33,59 @@
         background: orange;
         font-size: 2rem;
       }
+
+      .sidebar {
+        width: 33%;
+        align-self: normal;
+      }
+      #jinn-tap-control {
+        display: flex;
+        flex: row;
+      }
     </style>
   </head>
   <body>
     <div class="wrapper">
       <fore-corner href="../doc/demos.html" title="back to Demos"></fore-corner>
       <h1>Including Jinntap!</h1>
+      <main>
+        <demo-snippet>
+          <template>
+            <fx-fore ignore-expressions="script">
+              <fx-model>
+                <fx-instance
+                  xpath-default-namespace="http://www.tei-c.org/ns/1.0"
+                  src="tei/example.xml"
+                ></fx-instance>
+                <fx-submission
+                  id="reload"
+                  replace="instance"
+                  url="tei/example-2.xml"
+                  method="get"
+                ></fx-submission>
+              </fx-model>
+              <fx-control
+                ref="instance('default')"
+                as="text"
+                id="jinn-tap-control"
+                value-prop="xml"
+                update-event="content-change"
+                listen-on="jinn-tap"
+              >
+                <jinn-tap class="widget" sidebar=".sidebar"></jinn-tap>
+                <div class="sidebar"></div>
+              </fx-control>
 
-      <demo-snippet>
-        <template>
-          <fx-fore ignore-expressions="script" id="host">
-            <fx-model>
-              <fx-instance
-                xpath-default-namespace="http://www.tei-c.org/ns/1.0"
-                src="tei/example.xml"
-              ></fx-instance>
-            </fx-model>
-            <fx-control ref="instance('default')" as="node" update-event="">
-              <jinn-tap class="widget"></jinn-tap>
-              <script>
-                  const editor = document.querySelector('jinn-tap');
-                  const control = editor.parentNode;
+              <pre>{instance('default') => fn:serialize()}</pre>
 
-				document.getElementById('host').addEventListener('ready', (event) => {
-					debugger;
-					editor.xml = control.value.outerHTML;
-				});
-
-
-				editor.addEventListener('content-change', event => {
-					debugger;
-					const newValue = event.detail.xml;
-					const parsed = new DOMParser().parseFromString(newValue, 'text/xml')
-					control.setValue(parsed.documentElement);
-                });
-              </script>
-            </fx-control>
-            <pre>
-              <fx-output ref="instance('default')/text"></fx-output>
-              </pre>
-          </fx-fore>
-        </template>
-      </demo-snippet>
+              <fx-trigger>
+                <button>Reload document</button>
+                <fx-send submission="reload"></fx-send>
+              </fx-trigger>
+            </fx-fore>
+          </template>
+        </demo-snippet>
+      </main>
     </div>
 
     <script type="module" src="./demo.js"></script>

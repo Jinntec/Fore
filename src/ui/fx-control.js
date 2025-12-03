@@ -40,6 +40,11 @@ export default class FxControl extends XfAbstractControl {
     this.inited = false;
     this.nodeset = null;
     this.attachShadow({ mode: 'open' });
+
+    /**
+     * Flag that is raised while refreshing, to ignore any updates from the widget inside of us
+     */
+    this._isRefreshing = false;
   }
 
   static get properties() {
@@ -61,6 +66,13 @@ export default class FxControl extends XfAbstractControl {
     if (this.valueProp === 'selectedOptions') {
       // We have multiple! Just return that as space-separated for now
       return [...this.widget.selectedOptions].map(option => option.value).join(' ');
+    }
+    if (this.getAttribute('as') === 'text') {
+      // We are setting serialized XML here, so when roundtripping, parse it
+      const value = this.widget[this.valueProp];
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(value, 'application/xml');
+      return doc.documentElement;
     }
     return this.widget[this.valueProp];
   }
@@ -172,6 +184,10 @@ export default class FxControl extends XfAbstractControl {
       );
     } else {
       listenOn.addEventListener(this.updateEvent, event => {
+        if (this._isRefreshing) {
+          // We are refreshing. No use in updating
+          return;
+        }
         this.setValue(this._getValueOfWidget());
       });
       listenOn.addEventListener(
@@ -398,8 +414,11 @@ export default class FxControl extends XfAbstractControl {
       // ### when there's an `as=text` attribute serialize nodeset to prettified string
       if (as === 'text') {
         const serializer = new XMLSerializer();
-        const pretty = Fore.prettifyXml(serializer.serializeToString(this.nodeset));
-        widget.value = pretty;
+        const pretty = serializer.serializeToString(this.nodeset);
+        if (widget[this.valueProp] === pretty) {
+          return;
+        }
+        widget[this.valueProp] = pretty;
       }
       if (as === 'node' && this.nodeset !== widget.value) {
         // const oldVal = this.nodeset.innerHTML;
@@ -544,15 +563,20 @@ export default class FxControl extends XfAbstractControl {
   }
 
   async refresh(force = false) {
-    // console.log('🔄 fx-control refresh', this);
-    super.refresh(force);
-    // console.log('refresh template', this.template);
-    // const {widget} = this;
+    try {
+      this._isRefreshing = true;
+      // console.log('🔄 fx-control refresh', this);
+      super.refresh(force);
+      // console.log('refresh template', this.template);
+      // const {widget} = this;
 
-    // ### if we find a ref on control we have a 'select' control of some kind
-    const widget = this.getWidget();
-    this._handleBoundWidget(widget, force);
-    this._handleDataAttributeBinding();
+      // ### if we find a ref on control we have a 'select' control of some kind
+      const widget = this.getWidget();
+      this._handleBoundWidget(widget, force);
+      this._handleDataAttributeBinding();
+    } finally {
+      this._isRefreshing = false;
+    }
     Fore.refreshChildren(this, force);
   }
 
