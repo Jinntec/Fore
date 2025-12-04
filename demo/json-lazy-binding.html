@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+  <title>JSON Lazy Binding Test</title>
+  <link href="../resources/demo.css" rel="stylesheet">
+</head>
+<body>
+<div class="wrapper">
+  <h1>JSON Lazy Binding Test</h1>
+  <p>This test demonstrates binding to JSON values without explicit fx-bind elements.</p>
+
+  <fx-fore>
+    <fx-model id="model1">
+      <fx-instance id="test-json" type="json">
+        {
+          "person": {
+            "name": "John Doe",
+            "age": 30,
+            "address": {
+              "street": "123 Main St",
+              "city": "Anytown"
+            }
+          },
+          "items": [
+            {"id": 1, "name": "Item 1"},
+            {"id": 2, "name": "Item 2"},
+            {"id": 3, "name": "Item 3"}
+          ]
+        }
+      </fx-instance>
+    </fx-model>
+
+    <h2>Simple JSON Values</h2>
+    
+    <fx-control ref="?person?name">
+      <label>Name:</label>
+    </fx-control>
+    
+    <fx-control ref="?person?age">
+      <label>Age:</label>
+    </fx-control>
+    
+    <fx-control ref="?person?address?street">
+      <label>Street:</label>
+    </fx-control>
+    
+    <fx-control ref="?person?address?city">
+      <label>City:</label>
+    </fx-control>
+
+    <h2>Array Items</h2>
+    
+    <fx-repeat ref="?items">
+      <template>
+        <div style="margin-bottom: 10px; padding: 10px; border: 1px solid #ccc;">
+          <fx-control ref="?id">
+            <label>ID:</label>
+          </fx-control>
+          <fx-control ref="?name">
+            <label>Item Name:</label>
+          </fx-control>
+        </div>
+      </template>
+    </fx-repeat>
+  </fx-fore>
+</div>
+
+<script type="module" src="../demo/demo.js"></script>
+</body>
+</html>
