@@ -131,11 +131,11 @@ class FxLoad extends AbstractAction {
     }
     const resolvedUrl = this.evaluateAttributeTemplateExpression(this.url, this);
     if (this.attachTo === '_blank') {
-      window.open(this.url);
+      window.open(resolvedUrl);
     }
 
     if (this.attachTo === '_self') {
-      window.location.href = this.url;
+      window.location.href = resolvedUrl;
     }
 
     try {
