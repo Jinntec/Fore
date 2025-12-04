@@ -1,4 +1,4 @@
-/* Version: 2.7.0 - December 2, 2025 18:01:17 */
+/* Version: 2.7.1 - December 4, 2025 12:26:28 */
 /**
 @license
 Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
@@ -44366,7 +44366,7 @@ class FxFore extends HTMLElement {
       this._createRepeatsFromAttributes();
       this.inited = true;
     };
-    this.version = 'Version: 2.7.0 - built on December 2, 2025 18:01:17';
+    this.version = 'Version: 2.7.1 - built on December 4, 2025 12:26:28';
 
     /**
      * @type {import('./fx-model.js').FxModel}
@@ -55870,10 +55870,10 @@ class FxLoad extends AbstractAction {
     }
     const resolvedUrl = this.evaluateAttributeTemplateExpression(this.url, this);
     if (this.attachTo === '_blank') {
-      window.open(this.url);
+      window.open(resolvedUrl);
     }
     if (this.attachTo === '_self') {
-      window.location.href = this.url;
+      window.location.href = resolvedUrl;
     }
     try {
       const response = await fetch(resolvedUrl, {
