@@ -562,9 +562,9 @@ export class FxFore extends HTMLElement {
     if (this.hasAttribute('wait-for')) {
       await this._whenDependenciesReady();
     }
-    if(this.hasAttribute('selector')){
+    if (this.hasAttribute('selector')) {
       await Fore.loadForeFromSrc(this, this.src, this.getAttribute('selector'));
-    }else{
+    } else {
       await Fore.loadForeFromSrc(this, this.src, 'fx-fore');
     }
   }
@@ -1243,7 +1243,7 @@ export class FxFore extends HTMLElement {
         // Repeat items are dumb. They do not respond to evalInContext
         bound.evalInContext();
       }
-      if (bound.nodeset !== null && !(Array.isArray(bound.nodeset) && bound.nodeset.length > 0)) {
+      if (bound.nodeset !== null && !(Array.isArray(bound.nodeset) && bound.nodeset.length === 0)) {
         console.log('Node exists', bound.nodeset);
         continue;
       }
@@ -1288,7 +1288,10 @@ export class FxFore extends HTMLElement {
           }
         }
         bound.evalInContext();
-        bound.getModelItem().bind?.evalInContext();
+        if (bound.nodeName !== 'FX-REPEAT') {
+          // Do not try to get a bind for a nodeSET of a repeat. there are multiple.
+          bound.getModelItem().bind?.evalInContext();
+        }
 
         // console.log('CREATED child', newElement);
         // console.log('new control evaluated to ', control.nodeset);
@@ -1301,17 +1304,12 @@ export class FxFore extends HTMLElement {
       let ourParent = XPathUtil.getParentBindingElement(bound);
       // console.log('ourParent', ourParent);
       let siblingControl = null;
-      /*
-            for (let j = i - 1; j >= 0; --j) {
-                const potentialSibling = boundControls[j];
-                if (XPathUtil.getParentBindingElement(potentialSibling) === ourParent) {
-                    siblingControl = potentialSibling;
-                    break; // Exit once the sibling is found
-                }
-            }
-*/
+
       for (let j = i - 1; j > 0; --j) {
         const siblingOrDescendant = boundControls[j];
+        if (siblingOrDescendant.nodeset && !('nodeType' in siblingOrDescendant.nodeset)) {
+          continue;
+        }
         if (XPathUtil.getParentBindingElement(siblingOrDescendant) === ourParent) {
           siblingControl = siblingOrDescendant;
           break;
@@ -1335,6 +1333,11 @@ export class FxFore extends HTMLElement {
       const ref = bound.ref;
 
       const newNode = this._createNodes(ref, parentNodeset);
+      if (!newNode) {
+        // We could not make the node for some reason. Maybe it's something like `instance('XXX')`?
+        continue;
+      }
+
       if (newNode.nodeType === Node.ATTRIBUTE_NODE) {
         parentNodeset.setAttributeNode(newNode);
       } else {
