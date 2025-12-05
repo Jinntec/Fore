@@ -545,10 +545,12 @@ export class FxFore extends HTMLElement {
       'value-changed',
       () => {
         this.dirtyState = dirtyStates.DIRTY;
+        this.classList.toggle('fx-modified')
       },
       { once: true },
     );
     this.dirtyState = dirtyStates.CLEAN;
+    this.classList.remove('fx-modified');
   }
 
   /**
@@ -931,7 +933,7 @@ export class FxFore extends HTMLElement {
    * @private
    */
   _handleModelConstructDone() {
-    this.markAsClean();
+    // this.markAsClean();
 
     if (this.showConfirmation) {
       window.addEventListener('beforeunload', event => {
@@ -1096,6 +1098,7 @@ export class FxFore extends HTMLElement {
     // console.log('### modelItems: ', this.getModel().modelItems);
     Fore.dispatch(this, 'ready', {});
     // console.log('dataChanged', FxModel.dataChanged);
+    this.markAsClean();
 
     this.addEventListener('dragstart', this._handleDragStart);
     //	this.addEventListener('dragend', this._handleDragEnd);
@@ -1218,7 +1221,7 @@ export class FxFore extends HTMLElement {
    */
   initData(root = this) {
     // const created = new Promise(resolve => {
-    console.log('INIT');
+    // console.log('INIT');
     // const boundControls = Array.from(root.querySelectorAll('[ref]:not(fx-model *),fx-repeatitem'));
 
     /**
@@ -1244,10 +1247,10 @@ export class FxFore extends HTMLElement {
         bound.evalInContext();
       }
       if (bound.nodeset !== null && !(Array.isArray(bound.nodeset) && bound.nodeset.length === 0)) {
-        console.log('Node exists', bound.nodeset);
+        // console.log('Node exists', bound.nodeset);
         continue;
       }
-      console.log('Node does not exists', bound.ref);
+      // console.log('Node does not exists', bound.ref);
 
       // We need to create that node!
       const previousControl = boundControls[i - 1];
@@ -1256,8 +1259,8 @@ export class FxFore extends HTMLElement {
       // First: parent
       if (previousControl && previousControl.contains(bound)) {
         // Parent is here.
-        console.log('insert into', bound, previousControl);
-        console.log('insert into nodeset', bound.nodeset);
+        // console.log('insert into', bound, previousControl);
+        // console.log('insert into nodeset', bound.nodeset);
         /**
          * @type {ParentNode}
          */
