@@ -210,7 +210,7 @@ export default class FxControl extends XfAbstractControl {
    * activates a control that uses 'on-demand' attribute
    */
   activate() {
-    console.log('fx-control.activate() called');
+    // console.log('fx-control.activate() called');
     this.removeAttribute('on-demand');
     this.style.display = '';
     this.refresh(true);
@@ -241,7 +241,7 @@ export default class FxControl extends XfAbstractControl {
    * @param val the new value to be set
    */
   setValue(val) {
-    console.log('Control.setValue', val, 'on', this);
+    // console.log('Control.setValue', val, 'on', this);
     const modelitem = this.getModelItem();
 
     if (this.getAttribute('class')) {
@@ -547,7 +547,7 @@ export default class FxControl extends XfAbstractControl {
   }
 
   async refresh(force = false) {
-    console.log('🔄 fx-control refresh', this);
+    // console.log('🔄 fx-control refresh', this);
     super.refresh(force);
     // console.log('refresh template', this.template);
     // const {widget} = this;
