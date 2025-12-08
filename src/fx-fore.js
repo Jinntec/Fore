@@ -443,7 +443,7 @@ export class FxFore extends HTMLElement {
     this.model = modelElement;
 
     this.style.visibility = 'hidden';
-    console.time('init');
+    // console.time('init');
     this.strict = !!this.hasAttribute('strict');
     /*
             document.re('ready', (e) =>{
@@ -821,7 +821,7 @@ export class FxFore extends HTMLElement {
   }
 
   _processTemplateExpressions() {
-    console.log('processing template expressions ', this.storedTemplateExpressionByNode);
+    // console.log('processing template expressions ', this.storedTemplateExpressionByNode);
     for (const node of Array.from(this.storedTemplateExpressionByNode.keys())) {
       if (node.nodeType === Node.ATTRIBUTE_NODE) {
         // Attribute nodes are not contained by the document, but their owner elements are!
@@ -1319,7 +1319,7 @@ export class FxFore extends HTMLElement {
         }
       }
       if (!siblingControl) {
-        console.log('No sibling found for', bound);
+        // console.log('No sibling found for', bound);
       }
       // console.log('sibling', siblingControl);
       // todo: review: should this not just be inscopeContext?
@@ -1409,7 +1409,7 @@ export class FxFore extends HTMLElement {
   _handleDragStart(event) {
     const draggedItem = event.target.closest('[draggable="true"]');
     this.originalDraggedItem = draggedItem;
-    console.log('DRAG START', this);
+    // console.log('DRAG START', this);
     if (draggedItem.getAttribute('drop-action') === 'copy') {
       event.dataTransfer.dropEffect = 'copy';
       event.dataTransfer.effectAllowed = 'copy';
@@ -1424,7 +1424,7 @@ export class FxFore extends HTMLElement {
   }
 
   _handleDrop(event) {
-    console.log('DROP ON BODY', this);
+    // console.log('DROP ON BODY', this);
     if (!this.draggedItem) {
       return;
     }
