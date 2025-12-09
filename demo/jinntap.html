@@ -1,16 +1,16 @@
 <!doctype html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="utf-8" />
     <meta
-            content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes"
-            name="viewport"
+      content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes"
+      name="viewport"
     />
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
     <link
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     />
     <!-- Load the jinn-tap webcomponents -->
     <script type="module" src="./node_modules/@jinntec/jinntap"></script>
@@ -39,7 +39,7 @@
             width: 33%;
             align-self: normal;
         }
-        #jinn-tap-control {
+      .jinn-tap-container {
             display: flex;
             flex: row;
         }
@@ -61,51 +61,52 @@
             /*padding:0;*/
         }
     </style>
-</head>
-<body>
-<div class="wrapper">
-    <fore-corner href="../doc/demos.html" title="back to Demos"></fore-corner>
-    <h1>Including Jinntap!</h1>
-    <main>
+  </head>
+  <body>
+    <div class="wrapper">
+      <fore-corner href="../doc/demos.html" title="back to Demos"></fore-corner>
+      <h1>Including Jinntap!</h1>
+      <main>
         <demo-snippet>
-            <template>
-                <fx-fore ignore-expressions="script">
-                    <fx-model>
-                        <fx-instance
-                                xpath-default-namespace="http://www.tei-c.org/ns/1.0"
-                                src="tei/example.xml"
-                        ></fx-instance>
-                        <fx-submission
-                                id="reload"
-                                replace="instance"
-                                url="tei/example-2.xml"
-                                method="get"
-                        ></fx-submission>
-                    </fx-model>
-                    <fx-control
-                            ref="instance('default')"
-                as="xml"
-                            id="jinn-tap-control"
-                            value-prop="xml"
-                            update-event="content-change"
-                            listen-on="jinn-tap"
-                    >
-                        <jinn-tap class="widget" sidebar=".sidebar"></jinn-tap>
-                        <div class="sidebar"></div>
-                    </fx-control>
+          <template>
+            <fx-fore ignore-expressions="script">
+              <fx-model>
+                <fx-instance
+                  xpath-default-namespace="http://www.tei-c.org/ns/1.0"
+                  src="tei/example.xml"
+                ></fx-instance>
+                <fx-submission
+                  id="reload"
+                  replace="instance"
+                  url="tei/example-2.xml"
+                  method="get"
+                ></fx-submission>
+              </fx-model>
+              <div class="jinn-tap-container">
+                <fx-control
+                  ref="instance('default')"
+                  as="xml"
+                  value-prop="xml"
+                  update-event="content-change"
+                  listen-on="jinn-tap"
+                >
+                  <jinn-tap class="widget" sidebar=".sidebar"></jinn-tap>
+                </fx-control>
+                <!-- The sidebar should not be in the control -->
+                <div class="sidebar"></div>
+              </div>
+              <pre>{instance('default') => fn:serialize()}</pre>
 
-                    <pre>{instance('default') => fn:serialize()}</pre>
-
-                    <fx-trigger>
-                        <button>Reload document</button>
-                        <fx-send submission="reload"></fx-send>
-                    </fx-trigger>
-                </fx-fore>
-            </template>
+              <fx-trigger>
+                <button>Reload document</button>
+                <fx-send submission="reload"></fx-send>
+              </fx-trigger>
+            </fx-fore>
+          </template>
         </demo-snippet>
-    </main>
-</div>
+      </main>
+    </div>
 
-<script type="module" src="./demo.js"></script>
-</body>
+    <script type="module" src="./demo.js"></script>
+  </body>
 </html>
