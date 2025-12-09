@@ -12,28 +12,15 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     />
-    <script type="module" src="../node_modules/@jinntec/jinntap"></script>
-    <link rel="stylesheet" href="../node_modules/@jinntec/jinntap/dist/editor-styles.css" />
-    <link rel="stylesheet" href="../node_modules/@jinntec/jinntap/dist/jinn-tap.css" />
-    <title>A simple output</title>
+    <!-- Load the jinn-tap webcomponents -->
+    <script type="module" src="./node_modules/@jinntec/jinntap"></script>
+    <link rel="stylesheet" href="./node_modules/@jinntec/jinntap/dist/editor-styles.css" />
+    <link rel="stylesheet" href="./node_modules/@jinntec/jinntap/dist/jinn-tap.css" />
+    <title>Jinn-tap</title>
 
     <link href="../resources/demo.css" rel="stylesheet" />
 
     <style>
-      .dynamic {
-        background: #76ff03;
-      }
-      /*
-        fx-model{
-            display: none;
-        }
-*/
-      noscript {
-        padding: 1rem;
-        background: orange;
-        font-size: 2rem;
-      }
-
       .sidebar {
         width: 33%;
         align-self: normal;
@@ -66,7 +53,7 @@
               </fx-model>
               <fx-control
                 ref="instance('default')"
-                as="text"
+                as="xml"
                 id="jinn-tap-control"
                 value-prop="xml"
                 update-event="content-change"
