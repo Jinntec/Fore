@@ -25,7 +25,7 @@
         width: 33%;
         align-self: normal;
       }
-      #jinn-tap-control {
+      .jinn-tap-container {
         display: flex;
         flex: row;
       }
@@ -51,18 +51,19 @@
                   method="get"
                 ></fx-submission>
               </fx-model>
-              <fx-control
-                ref="instance('default')"
-                as="xml"
-                id="jinn-tap-control"
-                value-prop="xml"
-                update-event="content-change"
-                listen-on="jinn-tap"
-              >
-                <jinn-tap class="widget" sidebar=".sidebar"></jinn-tap>
+              <div class="jinn-tap-container">
+                <fx-control
+                  ref="instance('default')"
+                  as="xml"
+                  value-prop="xml"
+                  update-event="content-change"
+                  listen-on="jinn-tap"
+                >
+                  <jinn-tap class="widget" sidebar=".sidebar"></jinn-tap>
+                </fx-control>
+                <!-- The sidebar should not be in the control -->
                 <div class="sidebar"></div>
-              </fx-control>
-
+              </div>
               <pre>{instance('default') => fn:serialize()}</pre>
 
               <fx-trigger>
