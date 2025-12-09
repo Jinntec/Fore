@@ -67,7 +67,7 @@ export default class FxControl extends XfAbstractControl {
       // We have multiple! Just return that as space-separated for now
       return [...this.widget.selectedOptions].map(option => option.value).join(' ');
     }
-    if (this.getAttribute('as') === 'text') {
+    if (this.getAttribute('as') === 'xml') {
       // We are setting serialized XML here, so when roundtripping, parse it
       const value = this.widget[this.valueProp];
       const parser = new DOMParser();
@@ -411,8 +411,8 @@ export default class FxControl extends XfAbstractControl {
     if (this.hasAttribute('as')) {
       const as = this.getAttribute('as');
 
-      // ### when there's an `as=text` attribute serialize nodeset to prettified string
-      if (as === 'text') {
+      // ### when there's an `as="xml"` attribute serialize nodeset to prettified string
+      if (as === 'xml') {
         const serializer = new XMLSerializer();
         const pretty = serializer.serializeToString(this.nodeset);
         if (widget[this.valueProp] === pretty) {
