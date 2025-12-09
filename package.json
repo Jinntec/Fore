@@ -38,7 +38,6 @@
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.17.12",
     "@jinntec/jinn-codemirror": "^1.17.6",
-    "@jinntec/jinntap": "^1.27.2",
     "@open-wc/building-rollup": "^2.0.1",
     "@open-wc/eslint-config": "^7.0.0",
     "@open-wc/prettier-config": "^0.1.10",

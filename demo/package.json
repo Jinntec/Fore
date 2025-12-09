@@ -4,6 +4,7 @@
   "description": "Fore - Demos",
   "module": "./demo.js",
   "dependencies": {
+    "@jinntec/jinntap": "^1.27.2",
     "@polymer/iron-component-page": "^4.0.1",
     "@polymer/iron-demo-helpers": "^3.1.0",
     "@polymer/paper-button": "^3.0.1",
