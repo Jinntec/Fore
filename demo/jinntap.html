@@ -39,10 +39,17 @@
             width: 33%;
             align-self: normal;
         }
-      .jinn-tap-container {
+        .jinn-tap-aside .attribute-panel fieldset{
+          display:block;
+        }
+        .jinn-tap-container {
             display: flex;
             flex: row;
         }
+      .sidebar{
+        width:25%;
+      }
+
         summary{
             display:flex;
             align-items: center;
@@ -60,12 +67,25 @@
         input{
             /*padding:0;*/
         }
+        button{
+          span{
+            font-size:0.8rem;
+          }
+          svg{
+            width:24px;
+            height:24px;
+          }
+        }
     </style>
   </head>
   <body>
     <div class="wrapper">
       <fore-corner href="../doc/demos.html" title="back to Demos"></fore-corner>
-      <h1>Including Jinntap!</h1>
+      <h1>
+        <img src="../resources/images/jinntap-logo-128.png" alt="jinntap logo"/>
+        Using JinnTap as control</h1>
+      <p>JinnTap is a WYSIWYG editor that can be configured with a schema to support a specific language. </p>
+      <p>In this demo it's used to edit a TEI document.</p>
       <main>
         <demo-snippet>
           <template>
