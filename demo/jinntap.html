@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes"
+      name="viewport"
+    />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <!-- Load the jinn-tap webcomponents -->
+    <script type="module" src="./node_modules/@jinntec/jinntap"></script>
+    <link rel="stylesheet" href="./node_modules/@jinntec/jinntap/dist/editor-styles.css" />
+    <link rel="stylesheet" href="./node_modules/@jinntec/jinntap/dist/jinn-tap.css" />
+    <title>Jinn-tap</title>
+
+    <link href="../resources/demo.css" rel="stylesheet" />
+
+    <style>
+        .dynamic {
+            background: #76ff03;
+        }
+        /*
+          fx-model{
+              display: none;
+          }
+  */
+        noscript {
+            padding: 1rem;
+            background: orange;
+            font-size: 2rem;
+        }
+
+        .sidebar {
+            width: 33%;
+            align-self: normal;
+        }
+        .jinn-tap-aside .attribute-panel fieldset{
+          display:block;
+        }
+        .jinn-tap-container {
+            display: flex;
+            flex: row;
+        }
+      .sidebar{
+        width:25%;
+      }
+
+        summary{
+            display:flex;
+            align-items: center;
+        }
+        nav ul{
+            padding:0.5rem 0;
+            border-left:1px solid var(--google-grey-300);
+        }
+        .toolbar{
+            padding:0;
+        }
+        nav li{
+            padding:0 0.5rem;
+        }
+        input{
+            /*padding:0;*/
+        }
+        button{
+          span{
+            font-size:0.8rem;
+          }
+          svg{
+            width:24px;
+            height:24px;
+          }
+        }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <fore-corner href="../doc/demos.html" title="back to Demos"></fore-corner>
+      <h1>
+        <img src="../resources/images/jinntap-logo-128.png" alt="jinntap logo"/>
+        Using JinnTap as control</h1>
+      <p>JinnTap is a WYSIWYG editor that can be configured with a schema to support a specific language. </p>
+      <p>In this demo it's used to edit a TEI document.</p>
+      <main>
+        <demo-snippet>
+          <template>
+            <fx-fore ignore-expressions="script">
+              <fx-model>
+                <fx-instance
+                  xpath-default-namespace="http://www.tei-c.org/ns/1.0"
+                  src="tei/example.xml"
+                ></fx-instance>
+                <fx-submission
+                  id="reload"
+                  replace="instance"
+                  url="tei/example-2.xml"
+                  method="get"
+                ></fx-submission>
+              </fx-model>
+              <div class="jinn-tap-container">
+                <fx-control
+                  ref="instance('default')"
+                  as="xml"
+                  value-prop="xml"
+                  update-event="content-change"
+                  listen-on="jinn-tap"
+                >
+                  <jinn-tap class="widget" sidebar=".sidebar"></jinn-tap>
+                </fx-control>
+                <!-- The sidebar should not be in the control -->
+                <div class="sidebar"></div>
+              </div>
+              <pre>{instance('default') => fn:serialize()}</pre>
+
+              <fx-trigger>
+                <button>Reload document</button>
+                <fx-send submission="reload"></fx-send>
+              </fx-trigger>
+            </fx-fore>
+          </template>
+        </demo-snippet>
+      </main>
+    </div>
+
+    <script type="module" src="./demo.js"></script>
+  </body>
+</html>

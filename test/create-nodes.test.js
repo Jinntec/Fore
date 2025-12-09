@@ -226,4 +226,40 @@ describe('create-nodes', () => {
       </root> `.replaceAll(/\s/g, ''),
     );
   });
+
+  it('Does not panic when a repeat over strings is near the controls', async () => {
+    const el = fixtureSync(html`
+      <fx-fore create-nodes>
+        <fx-model>
+          <fx-instance src="/base/test/foobar.xml"> </fx-instance>
+
+          <fx-bind ref="root"></fx-bind>
+          <fx-bind ref="foo"></fx-bind>
+          <fx-bind ref="bar"></fx-bind>
+        </fx-model>
+
+        <fx-repeat ref="('a', 'b', 'c')">
+          <fx-output ref="."></fx-output>
+        </fx-repeat>
+
+        <fx-group ref=".">
+          <fx-control ref="baz"></fx-control>
+          <fx-control ref="foo"></fx-control>
+          <fx-control ref="bar"></fx-control>
+        </fx-group
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'ready');
+
+    const inst = document.querySelector('fx-instance');
+
+    expect(inst.instanceData.documentElement.outerHTML.replaceAll(/\s/g, '')).to.equal(
+      `<root>
+        <foo>FOO</foo>
+        <bar />
+        <baz>BAZ</baz>
+      </root> `.replaceAll(/\s/g, ''),
+    );
+  });
 });
