@@ -443,7 +443,7 @@ export class FxFore extends HTMLElement {
     this.model = modelElement;
 
     this.style.visibility = 'hidden';
-    console.time('init');
+    // console.time('init');
     this.strict = !!this.hasAttribute('strict');
     /*
             document.re('ready', (e) =>{
@@ -545,10 +545,12 @@ export class FxFore extends HTMLElement {
       'value-changed',
       () => {
         this.dirtyState = dirtyStates.DIRTY;
+        this.classList.toggle('fx-modified')
       },
       { once: true },
     );
     this.dirtyState = dirtyStates.CLEAN;
+    this.classList.remove('fx-modified');
   }
 
   /**
@@ -819,7 +821,7 @@ export class FxFore extends HTMLElement {
   }
 
   _processTemplateExpressions() {
-    console.log('processing template expressions ', this.storedTemplateExpressionByNode);
+    // console.log('processing template expressions ', this.storedTemplateExpressionByNode);
     for (const node of Array.from(this.storedTemplateExpressionByNode.keys())) {
       if (node.nodeType === Node.ATTRIBUTE_NODE) {
         // Attribute nodes are not contained by the document, but their owner elements are!
@@ -931,8 +933,6 @@ export class FxFore extends HTMLElement {
    * @private
    */
   _handleModelConstructDone() {
-    this.markAsClean();
-
     if (this.showConfirmation) {
       window.addEventListener('beforeunload', event => {
         if (this.dirtyState === dirtyStates.DIRTY) {
@@ -1096,6 +1096,7 @@ export class FxFore extends HTMLElement {
     // console.log('### modelItems: ', this.getModel().modelItems);
     Fore.dispatch(this, 'ready', {});
     // console.log('dataChanged', FxModel.dataChanged);
+    this.markAsClean();
 
     this.addEventListener('dragstart', this._handleDragStart);
     //	this.addEventListener('dragend', this._handleDragEnd);
@@ -1218,7 +1219,7 @@ export class FxFore extends HTMLElement {
    */
   initData(root = this) {
     // const created = new Promise(resolve => {
-    console.log('INIT');
+    // console.log('INIT');
     // const boundControls = Array.from(root.querySelectorAll('[ref]:not(fx-model *),fx-repeatitem'));
 
     /**
@@ -1243,11 +1244,11 @@ export class FxFore extends HTMLElement {
         // Repeat items are dumb. They do not respond to evalInContext
         bound.evalInContext();
       }
-      if (bound.nodeset !== null && !(Array.isArray(bound.nodeset) && bound.nodeset.length > 0)) {
-        console.log('Node exists', bound.nodeset);
+      if (bound.nodeset !== null && !(Array.isArray(bound.nodeset) && bound.nodeset.length === 0)) {
+        // console.log('Node exists', bound.nodeset);
         continue;
       }
-      console.log('Node does not exists', bound.ref);
+      // console.log('Node does not exists', bound.ref);
 
       // We need to create that node!
       const previousControl = boundControls[i - 1];
@@ -1256,8 +1257,8 @@ export class FxFore extends HTMLElement {
       // First: parent
       if (previousControl && previousControl.contains(bound)) {
         // Parent is here.
-        console.log('insert into', bound, previousControl);
-        console.log('insert into nodeset', bound.nodeset);
+        // console.log('insert into', bound, previousControl);
+        // console.log('insert into nodeset', bound.nodeset);
         /**
          * @type {ParentNode}
          */
@@ -1288,7 +1289,10 @@ export class FxFore extends HTMLElement {
           }
         }
         bound.evalInContext();
+        if (bound.nodeName !== 'FX-REPEAT') {
+          // Do not try to get a bind for a nodeSET of a repeat. there are multiple.
         bound.getModelItem().bind?.evalInContext();
+        }
 
         // console.log('CREATED child', newElement);
         // console.log('new control evaluated to ', control.nodeset);
@@ -1301,24 +1305,19 @@ export class FxFore extends HTMLElement {
       let ourParent = XPathUtil.getParentBindingElement(bound);
       // console.log('ourParent', ourParent);
       let siblingControl = null;
-      /*
-            for (let j = i - 1; j >= 0; --j) {
-                const potentialSibling = boundControls[j];
-                if (XPathUtil.getParentBindingElement(potentialSibling) === ourParent) {
-                    siblingControl = potentialSibling;
-                    break; // Exit once the sibling is found
-                }
-            }
-*/
+
       for (let j = i - 1; j > 0; --j) {
         const siblingOrDescendant = boundControls[j];
+        if (siblingOrDescendant.nodeset && !('nodeType' in siblingOrDescendant.nodeset)) {
+          continue;
+        }
         if (XPathUtil.getParentBindingElement(siblingOrDescendant) === ourParent) {
           siblingControl = siblingOrDescendant;
           break;
         }
       }
       if (!siblingControl) {
-        console.log('No sibling found for', bound);
+        // console.log('No sibling found for', bound);
       }
       // console.log('sibling', siblingControl);
       // todo: review: should this not just be inscopeContext?
@@ -1335,6 +1334,11 @@ export class FxFore extends HTMLElement {
       const ref = bound.ref;
 
       const newNode = this._createNodes(ref, parentNodeset);
+      if (!newNode) {
+        // We could not make the node for some reason. Maybe it's something like `instance('XXX')`?
+        continue;
+      }
+
       if (newNode.nodeType === Node.ATTRIBUTE_NODE) {
         parentNodeset.setAttributeNode(newNode);
       } else {
@@ -1403,7 +1407,7 @@ export class FxFore extends HTMLElement {
   _handleDragStart(event) {
     const draggedItem = event.target.closest('[draggable="true"]');
     this.originalDraggedItem = draggedItem;
-    console.log('DRAG START', this);
+    // console.log('DRAG START', this);
     if (draggedItem.getAttribute('drop-action') === 'copy') {
       event.dataTransfer.dropEffect = 'copy';
       event.dataTransfer.effectAllowed = 'copy';
@@ -1418,7 +1422,7 @@ export class FxFore extends HTMLElement {
   }
 
   _handleDrop(event) {
-    console.log('DROP ON BODY', this);
+    // console.log('DROP ON BODY', this);
     if (!this.draggedItem) {
       return;
     }

@@ -19,20 +19,41 @@
 
 <div class="wrapper">
     <h1>Repeating atomic values</h1>
+
     <demo-snippet>
         <template>
-            <fx-fore>
-                <fx-model>
-                    <fx-instance>
-                        <data></data>
-                    </fx-instance>
-                </fx-model>
-                <fx-repeat ref="1 to 10">
-                    <template>
-                        {.}
-                    </template>
-                </fx-repeat>
-            </fx-fore>
+<fx-fore>
+    <fx-model>
+        <fx-instance>
+            <data></data>
+        </fx-instance>
+    </fx-model>
+    <fx-repeat ref="1 to 10">
+        <template>
+            {.}
+        </template>
+    </fx-repeat>
+</fx-fore>
+        </template>
+    </demo-snippet>
+
+    <h2>Using <code>tokenize()</code></h2>
+    <demo-snippet open="true">
+        <template>
+<fx-fore id="tokenized" create-nodes>
+    <fx-model>
+        <fx-instance>
+            <data>
+                <item tokens="val1 val2 val3"></item>
+            </data>
+        </fx-instance>
+    </fx-model>
+    <fx-repeat ref="tokenize(item/@tokens)">
+        <template>
+            {.}
+        </template>
+    </fx-repeat>
+</fx-fore>
         </template>
     </demo-snippet>
 

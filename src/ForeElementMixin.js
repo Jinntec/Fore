@@ -160,11 +160,11 @@ export default class ForeElementMixin extends HTMLElement {
     } else {
       // this.nodeset = fx.evaluateXPathToFirstNode(this.ref, inscopeContext, null, {namespaceResolver: this.namespaceResolver});
       if (!inscopeContext) return;
-      const { nodeType } = inscopeContext;
-      if (nodeType && !XPathUtil.isAbsolutePath(this.ref)) {
-        this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext, this);
+      if (this.nodeName === 'FX-REPEAT') {
+        // Repeats are special: they have multiple nodes in their nodeset
+        this.nodeset = evaluateXPath(this.ref, inscopeContext, this);
       } else {
-        [this.nodeset] = evaluateXPath(this.ref, inscopeContext, this);
+        this.nodeset = evaluateXPath(this.ref, inscopeContext, this)[0] || null;
       }
     }
     // console.log('UiElement evaluated to nodeset: ', this.nodeset);
