@@ -636,7 +636,6 @@ export class FxRepeat extends withDraggability(UIElement, false) {
           // Do not try to d things with repeats that do not reason over nodes
           const repeatItemClone = repeatItem.nodeset.cloneNode(true);
           this.clearTextValues(repeatItemClone);
-
           // this.createdNodeset = repeatItem.nodeset.cloneNode(true);
           this.createdNodeset = repeatItemClone;
         }

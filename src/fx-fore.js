@@ -564,9 +564,9 @@ export class FxFore extends HTMLElement {
     if (this.hasAttribute('wait-for')) {
       await this._whenDependenciesReady();
     }
-    if (this.hasAttribute('selector')) {
+    if(this.hasAttribute('selector')){
       await Fore.loadForeFromSrc(this, this.src, this.getAttribute('selector'));
-    } else {
+    }else{
       await Fore.loadForeFromSrc(this, this.src, 'fx-fore');
     }
   }
@@ -933,8 +933,6 @@ export class FxFore extends HTMLElement {
    * @private
    */
   _handleModelConstructDone() {
-    // this.markAsClean();
-
     if (this.showConfirmation) {
       window.addEventListener('beforeunload', event => {
         if (this.dirtyState === dirtyStates.DIRTY) {
@@ -1293,7 +1291,7 @@ export class FxFore extends HTMLElement {
         bound.evalInContext();
         if (bound.nodeName !== 'FX-REPEAT') {
           // Do not try to get a bind for a nodeSET of a repeat. there are multiple.
-          bound.getModelItem().bind?.evalInContext();
+        bound.getModelItem().bind?.evalInContext();
         }
 
         // console.log('CREATED child', newElement);
