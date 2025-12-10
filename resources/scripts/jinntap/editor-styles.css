@@ -1,0 +1,395 @@
+tei-div,
+tei-p,
+tei-item,
+tei-head {
+    display: block;
+}
+
+tei-head {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.125;
+}
+
+tei-div > tei-head {
+    margin-top: 3rem;
+}
+
+.tiptap > tei-div:first-child > tei-head:first-child {
+    margin-top: 0;
+}
+
+tei-div > tei-div > tei-head {
+    font-style: italic;
+    font-size: 1.75rem;
+    line-height: 1.15;
+    margin-top: 2.625rem;
+}
+
+tei-div > tei-div > tei-div > tei-head {
+    font-size: 1.5rem;
+    line-height: 1.175;
+    margin-top: 2.25rem;
+}
+
+tei-div > tei-div > tei-div > tei-div > tei-head {
+    font-size: 1.25rem;
+    line-height: 1.2;
+    margin-top: 1.874rem;
+}
+
+tei-div > tei-div > tei-div > tei-div > tei-div > tei-head {
+    font-size: 1.125rem;
+    line-height: 1.25;
+    margin-top: 1.5rem;
+}
+
+tei-figure > tei-head {
+    font-size: 1rem;
+    line-height: 1.25;
+}
+
+tei-title[level='m'] {
+    font-style: italic;
+}
+
+tei-div {
+    border-right: 2px solid var(--tei-div-color-0);
+    margin-right: 2px;
+    padding-right: 4px;
+}
+
+tei-div > tei-div {
+    border-right: 2px solid var(--tei-div-color-1);
+}
+
+tei-div > tei-div > tei-div {
+    border-right: 2px solid var(--tei-div-color-2);
+}
+
+tei-div > tei-div {
+    border-right: 2px solid var(--tei-div-color-3);
+}
+
+tei-div > tei-div > tei-div {
+    border-right: 2px solid var(--tei-div-color-4);
+}
+
+tei-div > tei-div > tei-div > tei-div {
+    border-right: 2px solid var(--tei-div-color-5);
+}
+
+tei-p {
+    display: block;
+    margin: 0.5em 0;
+    position: relative;
+}
+
+[rend='center'] {
+    text-align: center;
+}
+
+[rend='right'] {
+    text-align: right;
+}
+
+[rend='justify'] {
+    text-align: justify;
+}
+
+tei-hi[rend='b'] {
+    font-weight: bold;
+}
+
+tei-hi[rend='i'] {
+    font-style: italic;
+}
+
+tei-hi[rend='u'] {
+    text-decoration: underline;
+}
+
+tei-hi[rend='code'] {
+    font-family: monospace;
+}
+
+tei-figure {
+    display: block;
+    margin: 1rem 0;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+tei-figure > img {
+    display: block;
+    margin: 0 auto;
+    cursor: pointer;
+}
+
+tei-figure > tei-figDesc {
+    display: block;
+    text-align: right;
+    font-size: 0.8rem;
+}
+
+tei-persname {
+    color: #a83410;
+}
+
+tei-placeName {
+    color: #e48500;
+}
+
+tei-orgName {
+    color: #f45d2c;
+}
+
+tei-term {
+    color: #9236a4;
+}
+
+tei-list,
+tei-listAnnotation {
+    display: block;
+    list-style-type: disc;
+    margin: 1em 0;
+    padding-left: 2em;
+}
+
+tei-list[rend='ordered'] {
+    list-style-type: decimal;
+}
+
+tei-list > tei-head {
+    font-size: 1.25rem;
+}
+
+tei-item,
+tei-note {
+    display: list-item;
+    list-style-position: outside;
+    margin: 0.5em 0;
+}
+
+tei-listAnnotation {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+tei-listAnnotation:empty::before {
+    display: none;
+}
+
+tei-opener,
+tei-closer,
+tei-signed,
+tei-dateline {
+    display: block;
+}
+
+tei-opener {
+    margin: .75rem 0 1rem 0;
+}
+
+tei-closer {
+    margin-top: 1rem;
+}
+
+tei-dateline {
+    text-align: right;
+}
+
+tei-listAnnotation::before {
+    padding: 1rem 0 0;
+    margin-top: 2rem;
+    border-top: 1px solid #ccc;
+    content: '';
+    display: block;
+    width: 220px;
+}
+
+tei-note {
+    padding-left: 2rem;
+}
+
+tei-note::before {
+    margin-left: -2rem;
+    float: left;
+}
+
+tei-note::before {
+    content: '?';
+    margin-right: 0.5rem;
+}
+tei-note[n]::before {
+    content: attr(n);
+    margin-right: 0.5rem;
+}
+
+tei-note[_reference]::before {
+    content: attr(_reference) '.';
+}
+
+tei-note:not([_reference]) {
+    color: #9e9e9e;
+}
+
+tei-anchor {
+    font-size: 0.85rem;
+    vertical-align: super;
+    cursor: pointer;
+    line-height: 1;
+}
+
+tei-anchor::before {
+    content: attr(_reference);
+}
+tei-anchor::after {
+    content: '\200B';
+}
+
+tei-abbr {
+    background-color: #9236a4;
+    color: white;
+}
+
+tei-expan {
+    background-color: #db90e8;
+    color: white;
+}
+
+tei-gap {
+    color: #9e9e9e;
+}
+
+tei-supplied {
+    text-decoration: underline dotted;
+    color: #9e9e9e;
+}
+
+tei-unclear {
+    color: #f06048;
+}
+
+tei-pb,
+tei-lb {
+    display: inline-block;
+    background-color: #ffa500;
+    font-size: 1rem;
+    font-weight: normal;
+    border-radius: 4px;
+    padding: 2px 6px;
+    cursor: pointer;
+}
+
+tr:has(td:first-child tei-pb) {
+    /* Position the pb widget relative to here */
+    position: relative;
+    border-top: 4px double #ffa500;
+
+    td:first-child tei-pb {
+        position: absolute;
+        /* Place this just next to the table, in the middle of the border line to not overlap any table content */
+        top: -1.5rem;
+        width: 2rem;
+        height: 2rem;
+        float: left;
+        left: -2rem;
+        display: inline-block;
+
+        /* Display this the same as an lb in normal content */
+        content: 'pb';
+        background-color: #ffa500;
+        font-size: 1rem;
+        font-weight: normal;
+        border-radius: 4px;
+        padding: 2px 6px;
+        cursor: pointer;
+    }
+}
+
+tei-lb {
+    display: inline;
+}
+
+tei-lb::after {
+    content: '\A';
+    white-space: pre;
+}
+
+tei-p.is-empty::before {
+    color: #adb5bd;
+    content: attr(data-placeholder);
+    position: absolute;
+    height: 0;
+    pointer-events: none;
+}
+
+a.reference::after {
+    content: '↗';
+    margin-left: 4px;
+    font-size: 0.75rem;
+    vertical-align: super;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    display: inline-block;
+    pointer-events: auto;
+    position: relative;
+    z-index: 1;
+}
+
+a.reference:hover::after {
+    color: #004499;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+tei-ref {
+    color: var(--pico-primary);
+    text-decoration: underline;
+}
+
+tei-quote{
+    &::before {
+        content: "“";
+        font-size: var(--s2);
+        position: absolute;
+    }
+    > * {
+        padding-left: 2rem
+    }
+}
+
+.ProseMirror-selectednode {
+    outline: 2px solid var(--pico-primary);
+}
+
+.table-menu {
+    .divider::before {
+        content: '';
+        height: 2rem;
+        border-left: 4px solid var(--pico-table-border-color);
+        border-radius: 2px;
+        display: block;
+    }
+}
+
+.selectedCell {
+    background-color: var(--pico-form-element-selected-background-color);
+}
+
+.debug *::after {
+    display: inline-block;
+    max-width: 7ch;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    border-radius: 4px;
+    margin-left: 2px;
+    padding: 2px 6px;
+    font-size: 0.65rem;
+    font-weight: normal;
+    color: white;
+    vertical-align: middle;
+}
