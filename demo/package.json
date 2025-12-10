@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Fore - Demos",
   "module": "./demo.js",
+  "scripts": {
+    "postinstall": "cp ./demo/node_modules/@jinntec/jinntap/dist/* resources/scripts/jinntap/"
+  },
+
   "dependencies": {
     "@jinntec/jinntap": "^1.27.2",
     "@polymer/iron-component-page": "^4.0.1",

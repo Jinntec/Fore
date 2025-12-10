@@ -1,4 +1,4 @@
-/* Version: 2.7.1 - December 4, 2025 12:26:28 */
+/* Version: 2.7.2 - December 10, 2025 11:39:51 */
 /**
 @license
 Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
@@ -21717,7 +21717,7 @@ var prsc = /*#__PURE__*/Object.freeze({
 });
 
 const fontoxpath = function (xspattern, prsc) {
-  const VERSION = '3.33.0';
+  const VERSION = '3.33.2';
   const fontoxpathGlobal = {};
   function aa(a, b) {
     if (!("0" !== a && "-0" !== a || "0" !== b && "-0" !== b)) return 0;
@@ -22915,7 +22915,7 @@ const fontoxpath = function (xspattern, prsc) {
       return this.prefix ? this.prefix + ":" + this.localName : this.localName;
     }
   };
-  function Ua(a, b) {
+  function Ta(a, b) {
     const c = a.value,
       d = b.map(e => null === e ? null : Ra(e));
     b = b.reduce((e, f, h) => {
@@ -23082,13 +23082,13 @@ const fontoxpath = function (xspattern, prsc) {
     b = b.node;
     return cb(b) ? (a = b.attributes.find(d => c === d.name)) ? a.value : null : (a = a.h.getAttribute(b, c)) ? a : null;
   }
-  function hb(a, b, c = null) {
+  function gb(a, b, c = null) {
     return a.getChildNodes(b.node, c).map((d, e) => db(d, b, e));
   }
-  function ib(a, b) {
+  function hb(a, b) {
     return a.getData(b.node);
   }
-  function jb(a, b, c = null) {
+  function ib(a, b, c = null) {
     const d = b.node;
     cb(d) ? a = d.childNodes[0] : ((c = a.h.getFirstChild(d, c)) && 10 === c.nodeType && (c = a.h.getNextSibling(c)), a = c);
     return a ? db(a, b, 0) : null;
@@ -23656,8 +23656,8 @@ const fontoxpath = function (xspattern, prsc) {
     const c = b.h;
     if (v(a.type, 53)) {
       const d = a.value;
-      if (2 === d.node.nodeType || 3 === d.node.nodeType) return w.create(g(ib(c, d), 19));
-      if (8 === d.node.nodeType || 7 === d.node.nodeType) return w.create(g(ib(c, d), 1));
+      if (2 === d.node.nodeType || 3 === d.node.nodeType) return w.create(g(hb(c, d), 19));
+      if (8 === d.node.nodeType || 7 === d.node.nodeType) return w.create(g(hb(c, d), 1));
       const e = [];
       (function k(h) {
         if (8 !== d.node.nodeType && 7 !== d.node.nodeType) {
@@ -24453,7 +24453,7 @@ const fontoxpath = function (xspattern, prsc) {
   }
   function nd(a, b, c) {
     var d = x(a, b, null);
-    a = hb(a, d, null);
+    a = gb(a, d, null);
     for (let e = 0, f = a.length; e < f; ++e) {
       d = a[e];
       if (md(d, b)) return -1;
@@ -24544,8 +24544,7 @@ const fontoxpath = function (xspattern, prsc) {
     for (c = []; d.length && a.length;) 0 > b(d[0], a[0]) ? c.push(d.shift()) : c.push(a.shift());
     return c.concat(d.concat(a));
   }
-  var wd = xspattern;
-  function xd(a, b) {
+  function wd(a, b) {
     if (v(a.type, 2)) {
       if (v(a.type, 6)) return 3 === b ? g(a.value, 3) : null;
       if (v(a.type, 4)) {
@@ -24556,7 +24555,7 @@ const fontoxpath = function (xspattern, prsc) {
     }
     return v(a.type, 20) && 1 === b ? g(a.value, 1) : null;
   }
-  function yd(a, b, c, d, e) {
+  function xd(a, b, c, d, e) {
     if (v(a.type, b.type)) return a;
     v(b.type, 46) && v(a.type, 53) && (a = pc(a, c).first());
     if (v(a.type, b.type) || 46 === b.type) return a;
@@ -24565,11 +24564,11 @@ const fontoxpath = function (xspattern, prsc) {
       if (!c) throw Error(`XPTY0004 Unable to convert ${e ? "return" : "argument"} of type ${Da[a.type]} to type ${Ha(b)} while calling ${d}`);
       return c;
     }
-    c = xd(a, b.type);
+    c = wd(a, b.type);
     if (!c) throw Error(`XPTY0004 Unable to cast ${e ? "return" : "argument"} of type ${Da[a.type]} to type ${Ha(b)} while calling ${d}`);
     return c;
   }
-  function zd(a) {
+  function yd(a) {
     switch (a) {
       case 2:
         return "*";
@@ -24581,26 +24580,37 @@ const fontoxpath = function (xspattern, prsc) {
         return "";
     }
   }
-  var Ad = (a, b, c, d, e) => 0 === a.g ? b.X({
-    default: () => b.map(f => yd(f, a, c, d, e)),
+  var zd = (a, b, c, d, e) => 0 === a.g ? b.X({
+    default: () => b.map(f => xd(f, a, c, d, e)),
     multiple: () => {
-      throw Error(`XPTY0004: Multiplicity of ${e ? "function return value" : "function argument"} of type ${Da[a.type]}${zd(a.g)} for ${d} is incorrect. Expected "?", but got "+".`);
+      throw Error(`XPTY0004: Multiplicity of ${e ? "function return value" : "function argument"} of type ${Da[a.type]}${yd(a.g)} for ${d} is incorrect. Expected "?", but got "+".`);
     }
   }) : 1 === a.g ? b.X({
     empty: () => {
-      throw Error(`XPTY0004: Multiplicity of ${e ? "function return value" : "function argument"} of type ${Da[a.type]}${zd(a.g)} for ${d} is incorrect. Expected "+", but got "empty-sequence()"`);
+      throw Error(`XPTY0004: Multiplicity of ${e ? "function return value" : "function argument"} of type ${Da[a.type]}${yd(a.g)} for ${d} is incorrect. Expected "+", but got "empty-sequence()"`);
     },
-    default: () => b.map(f => yd(f, a, c, d, e))
-  }) : 2 === a.g ? b.map(f => yd(f, a, c, d, e)) : b.X({
-    m: () => b.map(f => yd(f, a, c, d, e)),
+    default: () => b.map(f => xd(f, a, c, d, e))
+  }) : 2 === a.g ? b.map(f => xd(f, a, c, d, e)) : b.X({
+    m: () => b.map(f => xd(f, a, c, d, e)),
     default: () => {
-      throw Error(`XPTY0004: Multiplicity of ${e ? "function return value" : "function argument"} of type ${Da[a.type]}${zd(a.g)} for ${d} is incorrect. Expected exactly one`);
+      throw Error(`XPTY0004: Multiplicity of ${e ? "function return value" : "function argument"} of type ${Da[a.type]}${yd(a.g)} for ${d} is incorrect. Expected exactly one`);
     }
   });
-  function Bd(a, b) {
+  function Ad(a, b, c) {
+    return (d, e, f) => {
+      if (null === d.M) throw lc(`The function ${a} depends on dynamic context, which is absent.`);
+      const h = zd({
+        type: b,
+        g: 3
+      }, w.m(d.M), e, a, !1);
+      return c(d, e, f, h);
+    };
+  }
+  var Bd = xspattern;
+  function Cd(a, b) {
     return v(a, 5) ? g(b, 5) : v(a, 6) ? g(b, 6) : v(a, 3) ? g(b, 3) : g(b, 4);
   }
-  const Cd = [{
+  const Dd = [{
     la: "M",
     ja: 1E3
   }, {
@@ -24640,11 +24650,11 @@ const fontoxpath = function (xspattern, prsc) {
     la: "I",
     ja: 1
   }];
-  function Dd(a, b) {
+  function Ed(a, b) {
     const c = 0 > a;
     a = Math.abs(a);
     if (!a) return "-";
-    let d = Cd.reduce((e, f) => {
+    let d = Dd.reduce((e, f) => {
       const h = Math.floor(a / f.ja);
       a -= h * f.ja;
       return e + f.la.repeat(h);
@@ -24653,29 +24663,29 @@ const fontoxpath = function (xspattern, prsc) {
     c && (d = `-${d}`);
     return d;
   }
-  const Ed = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-  function Fd(a, b) {
+  const Fd = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+  function Gd(a, b) {
     const c = 0 > a;
     a = Math.abs(a);
     if (!a) return "-";
     let d = "",
       e;
-    for (; 0 < a;) e = (a - 1) % Ed.length, d = Ed[e] + d, a = (a - e) / Ed.length | 0;
+    for (; 0 < a;) e = (a - 1) % Fd.length, d = Fd[e] + d, a = (a - e) / Fd.length | 0;
     b && (d = d.toLowerCase());
     c && (d = `-${d}`);
     return d;
   }
-  function Gd(a, b, c = []) {
+  function Hd(a, b, c = []) {
     return Array.from({
       length: b
     }, (d, e) => e + a).filter(d => !c.includes(d));
   }
-  const Hd = Gd(1488, 27, [1498, 1501, 1503, 1507, 1509]),
-    Id = Gd(1575, 36, [1577, 1595, 1596, 1597, 1598, 1599, 1600, 1609]),
-    Jd = "\u0623\u0628\u062c\u062f\u0647\u0648\u0632\u062d\u0637\u064a\u0643\u0644\u0645\u0646\u0633\u0639\u0641\u0635\u0642\u0631\u0634\u062a\u062b\u062e\u0630\u0636\u0638\u063a".split(""),
-    Kd = [[1E3, "\u063a"], [900, "\u0638"], [800, "\u0636"], [700, "\u0630"], [600, "\u062e"], [500, "\u062b"], [400, "\u062a"], [300, "\u0634"], [200, "\u0631"], [100, "\u0642"], [90, "\u0635"], [80, "\u0641"], [70, "\u0639"], [60, "\u0633"], [50, "\u0646"], [40, "\u0645"], [30, "\u0644"], [20, "\u0643"], [10, "\u064a"], [9, "\u0637"], [8, "\u062d"], [7, "\u0632"], [6, "\u0648"], [5, "\u0647"], [4, "\u062f"], [3, "\u062c"], [2, "\u0628"], [1, "\u0623"]],
-    Ld = [[400, "\u05ea"], [300, "\u05e9"], [200, "\u05e8"], [100, "\u05e7"], [90, "\u05e6"], [80, "\u05e4"], [70, "\u05e2"], [60, "\u05e1"], [50, "\u05e0"], [40, "\u05de"], [30, "\u05dc"], [20, "\u05db"], [10, "\u05d9"], [9, "\u05d8"], [8, "\u05d7"], [7, "\u05d6"], [6, "\u05d5"], [5, "\u05d4"], [4, "\u05d3"], [3, "\u05d2"], [2, "\u05d1"], [1, "\u05d0"]];
-  function Md(a, b = []) {
+  const Id = Hd(1488, 27, [1498, 1501, 1503, 1507, 1509]),
+    Jd = Hd(1575, 36, [1577, 1595, 1596, 1597, 1598, 1599, 1600, 1609]),
+    Kd = "\u0623\u0628\u062c\u062f\u0647\u0648\u0632\u062d\u0637\u064a\u0643\u0644\u0645\u0646\u0633\u0639\u0641\u0635\u0642\u0631\u0634\u062a\u062b\u062e\u0630\u0636\u0638\u063a".split(""),
+    Ld = [[1E3, "\u063a"], [900, "\u0638"], [800, "\u0636"], [700, "\u0630"], [600, "\u062e"], [500, "\u062b"], [400, "\u062a"], [300, "\u0634"], [200, "\u0631"], [100, "\u0642"], [90, "\u0635"], [80, "\u0641"], [70, "\u0639"], [60, "\u0633"], [50, "\u0646"], [40, "\u0645"], [30, "\u0644"], [20, "\u0643"], [10, "\u064a"], [9, "\u0637"], [8, "\u062d"], [7, "\u0632"], [6, "\u0648"], [5, "\u0647"], [4, "\u062f"], [3, "\u062c"], [2, "\u0628"], [1, "\u0623"]],
+    Md = [[400, "\u05ea"], [300, "\u05e9"], [200, "\u05e8"], [100, "\u05e7"], [90, "\u05e6"], [80, "\u05e4"], [70, "\u05e2"], [60, "\u05e1"], [50, "\u05e0"], [40, "\u05de"], [30, "\u05dc"], [20, "\u05db"], [10, "\u05d9"], [9, "\u05d8"], [8, "\u05d7"], [7, "\u05d6"], [6, "\u05d5"], [5, "\u05d4"], [4, "\u05d3"], [3, "\u05d2"], [2, "\u05d1"], [1, "\u05d0"]];
+  function Nd(a, b = []) {
     var c = 25;
     b.sort((d, e) => d - e);
     c -= b.length;
@@ -24697,33 +24707,33 @@ const fontoxpath = function (xspattern, prsc) {
       return d;
     };
   }
-  const Nd = Md(945, [962]),
-    Od = Md(913, [930]);
-  function Pd(a) {
+  const Od = Nd(945, [962]),
+    Pd = Nd(913, [930]);
+  function Qd(a) {
     return new Intl.NumberFormat([], {
       numberingSystem: "arab",
       useGrouping: !1
     }).format(a);
   }
-  function Qd(a) {
+  function Rd(a) {
     return new Intl.NumberFormat([], {
       numberingSystem: "arabext",
       useGrouping: !1
     }).format(a);
   }
-  const Rd = new Map([["A", function (a) {
-    return Fd(a, !1);
+  const Sd = new Map([["A", function (a) {
+    return Gd(a, !1);
   }], ["a", function (a) {
-    return Fd(a, !0);
+    return Gd(a, !0);
   }], ["I", function (a) {
-    return Dd(a, !1);
+    return Ed(a, !1);
   }], ["i", function (a) {
-    return Dd(a, !0);
-  }], ["lowerGreek", Nd], ["\u03b1", Nd], ["upperGreek", Od], ["\u0391", Od], ["arabicAbjadi", function (a) {
+    return Ed(a, !0);
+  }], ["lowerGreek", Od], ["\u03b1", Od], ["upperGreek", Pd], ["\u0391", Pd], ["arabicAbjadi", function (a) {
     const b = 0 > a;
     a = Math.abs(a);
     if (!a) return "-";
-    a = Array(Math.floor((a - 1) / Jd.length) + 1).fill(Jd[(a - 1) % Jd.length]).join(String.fromCodePoint(8204));
+    a = Array(Math.floor((a - 1) / Kd.length) + 1).fill(Kd[(a - 1) % Kd.length]).join(String.fromCodePoint(8204));
     b && (a = `-${a}`);
     return a;
   }], ["arabicAbjadNumeral", function (a) {
@@ -24733,15 +24743,15 @@ const fontoxpath = function (xspattern, prsc) {
     var c = [],
       d = Math.floor(a / 1E3);
     a -= 1E3 * d;
-    if (1 === d) c.push(Kd[0][1]);else if (1 < d) {
-      for (const [f, h] of Kd) {
+    if (1 === d) c.push(Ld[0][1]);else if (1 < d) {
+      for (const [f, h] of Ld) {
         var e = f;
         const k = h;
         for (; d >= e;) c.push(k), d -= e;
       }
-      c.push(Kd[0][1]);
+      c.push(Ld[0][1]);
     }
-    for (const [f, h] of Kd) for (d = f, e = h; a >= d;) a -= d, c.push(e);
+    for (const [f, h] of Ld) for (d = f, e = h; a >= d;) a -= d, c.push(e);
     c = c.join("");
     b && (c = `-${c}`);
     return c;
@@ -24749,17 +24759,17 @@ const fontoxpath = function (xspattern, prsc) {
     const b = 0 > a;
     a = Math.abs(a);
     if (!a) return "-";
-    a = Array(Math.floor((a - 1) / Id.length) + 1).fill(String.fromCodePoint(Id[(a - 1) % Id.length])).join(String.fromCodePoint(8204));
+    a = Array(Math.floor((a - 1) / Jd.length) + 1).fill(String.fromCodePoint(Jd[(a - 1) % Jd.length])).join(String.fromCodePoint(8204));
     b && (a = `-${a}`);
     return a;
   }], ["hebrewAlefBet", function (a) {
     const b = 0 > a;
     a = Math.abs(a);
     if (!a) return "-";
-    var c = Math.floor((a - 1) / Hd.length);
+    var c = Math.floor((a - 1) / Id.length);
     const d = String.fromCodePoint(1514);
     c = Array(c).fill(d);
-    c.push(String.fromCodePoint(Hd[(a - 1) % Hd.length]));
+    c.push(String.fromCodePoint(Id[(a - 1) % Id.length]));
     a = c.join("");
     b && (a = `-${a}`);
     return a;
@@ -24771,15 +24781,15 @@ const fontoxpath = function (xspattern, prsc) {
       d = Math.floor(a / 400);
     a -= 400 * d;
     for (var e = 0; e < d; e++) c.push("\u05ea");
-    for (const [f, h] of Ld) for (d = f, e = h; a >= d;) a -= d, c.push(e);
+    for (const [f, h] of Md) for (d = f, e = h; a >= d;) a -= d, c.push(e);
     a = c.slice(-2).join("");
     "\u05d9\u05d4" === a && c.splice(-2, 2, "\u05d8", "\u05d5");
     "\u05d9\u05d5" === a && c.splice(-2, 2, "\u05d8", "\u05d6");
     c = c.join("");
     b && (c = `-${c}`);
     return c;
-  }], ["arabicIndicNumeral", Pd], ["\u0661", Pd], ["\u0662", Pd], ["\u0663", Pd], ["\u0664", Pd], ["\u0665", Pd], ["\u0666", Pd], ["\u0667", Pd], ["\u0668", Pd], ["\u0669", Pd], ["persianNumeral", Qd], ["\u06f1", Qd], ["\u06f2", Qd], ["\u06f3", Qd], ["\u06f4", Qd], ["\u06f5", Qd], ["\u06f6", Qd], ["\u06f7", Qd], ["\u06f8", Qd], ["\u06f9", Qd]]);
-  function Sd(a) {
+  }], ["arabicIndicNumeral", Qd], ["\u0661", Qd], ["\u0662", Qd], ["\u0663", Qd], ["\u0664", Qd], ["\u0665", Qd], ["\u0666", Qd], ["\u0667", Qd], ["\u0668", Qd], ["\u0669", Qd], ["persianNumeral", Rd], ["\u06f1", Rd], ["\u06f2", Rd], ["\u06f3", Rd], ["\u06f4", Rd], ["\u06f5", Rd], ["\u06f6", Rd], ["\u06f7", Rd], ["\u06f8", Rd], ["\u06f9", Rd]]);
+  function Td(a) {
     if (Math.floor(a) === a || isNaN(a)) return 0;
     a = /\d+(?:\.(\d*))?(?:[Ee](-)?(\d+))*/.exec(`${a}`);
     const b = a[1] ? a[1].length : 0;
@@ -24790,10 +24800,10 @@ const fontoxpath = function (xspattern, prsc) {
     }
     return b;
   }
-  function Td(a, b, c) {
+  function Ud(a, b, c) {
     return b && 0 === a * c % 1 % .5 ? 0 === Math.floor(a * c) % 2 ? Math.floor(a * c) / c : Math.ceil(a * c) / c : Math.round(a * c) / c;
   }
-  function Ud(a, b, c, d, e, f) {
+  function Vd(a, b, c, d, e, f) {
     let h = !1;
     return w.create({
       next: () => {
@@ -24804,10 +24814,10 @@ const fontoxpath = function (xspattern, prsc) {
         var l;
         f ? l = f.first().value : l = 0;
         h = !0;
-        if (Sd(k.value) < l) return q(k);
+        if (Td(k.value) < l) return q(k);
         const n = [5, 4, 3, 6].find(u => v(k.type, u)),
           t = jd(k, 4);
-        l = Td(t.value, a, Math.pow(10, l));
+        l = Ud(t.value, a, Math.pow(10, l));
         switch (n) {
           case 4:
             return q(g(l, 4));
@@ -24821,7 +24831,7 @@ const fontoxpath = function (xspattern, prsc) {
       }
     });
   }
-  const Vd = (a, b, c, d) => qc(d, b).X({
+  const Wd = (a, b, c, d) => qc(d, b).X({
     empty: () => w.m(g(NaN, 3)),
     m: () => {
       const e = id(d.first(), 3);
@@ -24831,12 +24841,12 @@ const fontoxpath = function (xspattern, prsc) {
       throw Error("fn:number may only be called with zero or one values");
     }
   });
-  function Wd(a) {
+  function Xd(a) {
     let b = 5381;
     for (let c = 0; c < a.length; ++c) b = 33 * b + a.charCodeAt(c), b %= Number.MAX_SAFE_INTEGER;
     return b;
   }
-  const Xd = (a, b, c, d = w.empty()) => {
+  const Yd = (a, b, c, d = w.empty()) => {
     function e(f) {
       const h = (k, l, n, t) => {
         if (t.F() || t.oa()) return t;
@@ -24887,10 +24897,10 @@ const fontoxpath = function (xspattern, prsc) {
         }))
       }]));
     }
-    b = d.F() ? gc(a) : gc(a, Wd(jd(d.first(), 1).value));
+    b = d.F() ? gc(a) : gc(a, Xd(jd(d.first(), 1).value));
     return e(b.rb);
   };
-  var Yd = [{
+  var Zd = [{
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "abs",
     j: [{
@@ -24901,7 +24911,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 2,
       g: 0
     },
-    callFunction: (a, b, c, d) => d.map(e => Bd(e.type, Math.abs(e.value)))
+    callFunction: (a, b, c, d) => d.map(e => Cd(e.type, Math.abs(e.value)))
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "format-integer",
@@ -24920,7 +24930,7 @@ const fontoxpath = function (xspattern, prsc) {
       a = d.first();
       e = e.first();
       if (d.F()) return w.m(g("", 1));
-      d = Rd.get(e.value);
+      d = Sd.get(e.value);
       e = a.value;
       return d ? (d = d(e), w.m(g(d, 1))) : w.m(g(e.toString(), 1));
     }
@@ -24935,7 +24945,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 2,
       g: 0
     },
-    callFunction: (a, b, c, d) => d.map(e => Bd(e.type, Math.ceil(e.value)))
+    callFunction: (a, b, c, d) => d.map(e => Cd(e.type, Math.ceil(e.value)))
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "floor",
@@ -24947,7 +24957,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 2,
       g: 0
     },
-    callFunction: (a, b, c, d) => d.map(e => Bd(e.type, Math.floor(e.value)))
+    callFunction: (a, b, c, d) => d.map(e => Cd(e.type, Math.floor(e.value)))
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "round",
@@ -24959,7 +24969,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 2,
       g: 0
     },
-    callFunction: Ud.bind(null, !1)
+    callFunction: Vd.bind(null, !1)
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "round",
@@ -24974,7 +24984,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 2,
       g: 0
     },
-    callFunction: Ud.bind(null, !1)
+    callFunction: Vd.bind(null, !1)
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "round-half-to-even",
@@ -24986,7 +24996,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 2,
       g: 0
     },
-    callFunction: Ud.bind(null, !0)
+    callFunction: Vd.bind(null, !0)
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "round-half-to-even",
@@ -25001,7 +25011,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 2,
       g: 0
     },
-    callFunction: Ud.bind(null, !0)
+    callFunction: Vd.bind(null, !0)
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "number",
@@ -25013,7 +25023,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 3,
       g: 3
     },
-    callFunction: Vd
+    callFunction: Wd
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "number",
@@ -25023,12 +25033,12 @@ const fontoxpath = function (xspattern, prsc) {
       g: 3
     },
     callFunction: (a, b, c) => {
-      const d = a.M && Ad({
+      const d = a.M && zd({
         type: 46,
         g: 0
       }, w.m(a.M), b, "fn:number", !1);
       if (!d) throw lc("fn:number needs an atomizable context item.");
-      return Vd(a, b, c, d);
+      return Wd(a, b, c, d);
     }
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
@@ -25038,7 +25048,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 61,
       g: 3
     },
-    callFunction: Xd
+    callFunction: Yd
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "random-number-generator",
@@ -25050,14 +25060,10 @@ const fontoxpath = function (xspattern, prsc) {
       type: 61,
       g: 3
     },
-    callFunction: Xd
+    callFunction: Yd
   }];
-  function Zd() {
+  function $d() {
     throw Error("FOCH0002: No collations are supported");
-  }
-  function $d(a, b, c, d) {
-    if (null === b.M) throw lc("The function which was called depends on dynamic context, which is absent.");
-    return a(b, c, d, w.m(b.M));
   }
   const ae = (a, b, c, d) => d.X({
       empty: () => w.m(g("", 1)),
@@ -25079,8 +25085,8 @@ const fontoxpath = function (xspattern, prsc) {
       return w.m(g(Array.from(a).length, 5));
     },
     ee = (a, b, c, d, e, f) => {
-      const h = Ud(!1, a, b, c, e, null),
-        k = null !== f ? Ud(!1, a, b, c, f, null) : null;
+      const h = Vd(!1, a, b, c, e, null),
+        k = null !== f ? Vd(!1, a, b, c, f, null) : null;
       let l = !1,
         n = null,
         t = null,
@@ -25164,7 +25170,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 5,
       g: 0
     },
-    callFunction: Zd
+    callFunction: $d
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "concat",
@@ -25200,7 +25206,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 0,
       g: 3
     },
-    callFunction: Zd
+    callFunction: $d
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "contains",
@@ -25257,7 +25263,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 0,
       g: 3
     },
-    callFunction: Zd
+    callFunction: $d
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "normalize-space",
@@ -25278,7 +25284,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 1,
       g: 3
     },
-    callFunction: $d.bind(null, (a, b, c, d) => he(a, b, c, ae(a, b, c, d)))
+    callFunction: Ad("normalize-space", 1, (a, b, c, d) => he(a, b, c, ae(a, b, c, d)))
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "starts-with",
@@ -25316,7 +25322,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 0,
       g: 3
     },
-    callFunction: Zd
+    callFunction: $d
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "string",
@@ -25337,7 +25343,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 1,
       g: 3
     },
-    callFunction: $d.bind(null, ae)
+    callFunction: Ad("string", 59, ae)
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "substring-before",
@@ -25486,7 +25492,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 5,
       g: 3
     },
-    callFunction: $d.bind(null, (a, b, c, d) => ce(a, b, c, ae(a, b, c, d)))
+    callFunction: Ad("string-length", 46, (a, b, c, d) => ce(a, b, c, ae(a, b, c, d)))
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "tokenize",
@@ -25660,7 +25666,7 @@ const fontoxpath = function (xspattern, prsc) {
       let k = ie.get(h);
       if (!k) {
         try {
-          k = (0, wd.compile)(h, {
+          k = (0, Bd.compile)(h, {
             language: "xpath"
           });
         } catch (l) {
@@ -25740,11 +25746,7 @@ const fontoxpath = function (xspattern, prsc) {
   }];
   const le = new WeakMap();
   let me = 0;
-  function ne(a, b, c, d, e) {
-    if (null === c.M) throw lc(`The function ${a} depends on dynamic context, which is absent.`);
-    return b(c, d, e, w.m(c.M));
-  }
-  const oe = (a, b, c, d) => A([d], ([e]) => {
+  const ne = (a, b, c, d) => A([d], ([e]) => {
       if (null === e) return w.empty();
       e = e.value;
       switch (e.node.nodeType) {
@@ -25757,12 +25759,12 @@ const fontoxpath = function (xspattern, prsc) {
           return w.empty();
       }
     }),
-    pe = (a, b, c, d) => d.X({
-      default: () => ae(a, b, c, oe(a, b, c, d)),
+    oe = (a, b, c, d) => d.X({
+      default: () => ae(a, b, c, ne(a, b, c, d)),
       empty: () => w.m(g("", 1))
     }),
-    qe = (a, b, c, d) => qc(d, b),
-    re = (a, b, c, d) => {
+    pe = (a, b, c, d) => qc(d, b),
+    qe = (a, b, c, d) => {
       if (d.F()) return w.m(g("", 1));
       if (!v(d.first().type, 53)) throw Error("XPTY0004: The context item must be a node.");
       c = d.first().value;
@@ -25773,16 +25775,16 @@ const fontoxpath = function (xspattern, prsc) {
       c = le.get(c);
       return b.call(a, g(c, 1));
     },
-    se = (a, b, c, d) => A([d], ([e]) => {
+    re = (a, b, c, d) => A([d], ([e]) => {
       e = e ? e.value : null;
-      return null !== e && jb(b.h, e, null) ? w.aa() : w.T();
+      return null !== e && ib(b.h, e, null) ? w.aa() : w.T();
     });
-  function te(a, b) {
+  function se(a, b) {
     a = a.toLowerCase();
     b = b.toLowerCase();
-    return a === b ? !0 : 5 > a.length || !a.startsWith(b) ? !1 : te(a.replace(/-[a-z0-9]+$/, ""), b);
+    return a === b ? !0 : 5 > a.length || !a.startsWith(b) ? !1 : se(a.replace(/-[a-z0-9]+$/, ""), b);
   }
-  const ue = (a, b, c, d, e) => {
+  const te = (a, b, c, d, e) => {
       b = b.h;
       if (d.F()) d = "";else if (v(d.first().type, 1)) d = d.first().value;else throw Error("XPTY0004: The first argument of lang must be a string.");
       if (e) e = e.first().value;else {
@@ -25793,7 +25795,7 @@ const fontoxpath = function (xspattern, prsc) {
       a: {
         for (a = d; e;) if (1 !== e.node.nodeType) e = x(b, e);else if (1 === e.node.nodeType) {
           if (d = fb(b, e, "xml:lang")) {
-            b = te(d, a) ? w.aa() : w.T();
+            b = se(d, a) ? w.aa() : w.T();
             break a;
           }
           e = x(b, e);
@@ -25802,7 +25804,7 @@ const fontoxpath = function (xspattern, prsc) {
       }
       return b;
     },
-    ve = (a, b, c, d) => A([d], ([e]) => {
+    ue = (a, b, c, d) => A([d], ([e]) => {
       function f(n) {
         let t = 0,
           u = n;
@@ -25833,12 +25835,12 @@ const fontoxpath = function (xspattern, prsc) {
       }
       return 9 === e.node.nodeType ? w.create(g(k || "/", 1)) : w.create(g("Q{http://www.w3.org/2005/xpath-functions}root()" + k, 1));
     }),
-    we = (a, b, c, d) => d.map(e => g(e.value.node.namespaceURI || "", 20)),
-    xe = (a, b, c, d) => d.X({
+    ve = (a, b, c, d) => d.map(e => g(e.value.node.namespaceURI || "", 20)),
+    we = (a, b, c, d) => d.X({
       default: () => d.map(e => 7 === e.value.node.nodeType ? g(e.value.node.target, 1) : g(e.value.node.localName || "", 1)),
       empty: () => w.m(g("", 1))
     });
-  function ye(a, b, c) {
+  function xe(a, b, c) {
     if (2 === b.node.nodeType) return md(b, c);
     for (; c;) {
       if (md(b, c)) return !0;
@@ -25847,18 +25849,18 @@ const fontoxpath = function (xspattern, prsc) {
     }
     return !1;
   }
-  const ze = (a, b, c, d) => d.map(e => {
+  const ye = (a, b, c, d) => d.map(e => {
     if (!v(e.type, 53)) throw Error("XPTY0004 Argument passed to fn:root() should be of the type node()");
     let f;
     for (e = e.value; e;) f = e, e = x(b.h, f, null);
     return rb(f);
   });
-  var Ae = [{
+  var ze = [{
     j: [{
       type: 53,
       g: 0
     }],
-    callFunction: pe,
+    callFunction: oe,
     localName: "name",
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     i: {
@@ -25867,7 +25869,7 @@ const fontoxpath = function (xspattern, prsc) {
     }
   }, {
     j: [],
-    callFunction: ne.bind(null, "name", pe),
+    callFunction: Ad("name", 53, oe),
     localName: "name",
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     i: {
@@ -25879,7 +25881,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 53,
       g: 3
     }],
-    callFunction: we,
+    callFunction: ve,
     localName: "namespace-uri",
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     i: {
@@ -25888,7 +25890,7 @@ const fontoxpath = function (xspattern, prsc) {
     }
   }, {
     j: [],
-    callFunction: ne.bind(null, "namespace-uri", we),
+    callFunction: Ad("namespace-uri", 53, ve),
     localName: "namespace-uri",
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     i: {
@@ -25904,7 +25906,7 @@ const fontoxpath = function (xspattern, prsc) {
       if (!e.length) return w.empty();
       e = td(b.h, e).reduceRight((f, h, k, l) => {
         if (k === l.length - 1) return f.push(h), f;
-        if (ye(b.h, h.value, f[0].value)) return f;
+        if (xe(b.h, h.value, f[0].value)) return f;
         f.unshift(h);
         return f;
       }, []);
@@ -25925,7 +25927,7 @@ const fontoxpath = function (xspattern, prsc) {
       if (!e.length) return w.empty();
       e = td(b.h, e).reduce((f, h, k) => {
         if (0 === k) return f.push(h), f;
-        if (ye(b.h, f[f.length - 1].value, h.value)) return f;
+        if (xe(b.h, f[f.length - 1].value, h.value)) return f;
         f.push(h);
         return f;
       }, []);
@@ -25942,7 +25944,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 53,
       g: 0
     }],
-    callFunction: se,
+    callFunction: re,
     localName: "has-children",
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     i: {
@@ -25951,7 +25953,7 @@ const fontoxpath = function (xspattern, prsc) {
     }
   }, {
     j: [],
-    callFunction: ne.bind(null, "has-children", se),
+    callFunction: Ad("has-children", 53, re),
     localName: "has-children",
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     i: {
@@ -25963,7 +25965,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 53,
       g: 0
     }],
-    callFunction: ve,
+    callFunction: ue,
     localName: "path",
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     i: {
@@ -25972,7 +25974,7 @@ const fontoxpath = function (xspattern, prsc) {
     }
   }, {
     j: [],
-    callFunction: ne.bind(null, "path", ve),
+    callFunction: Ad("path", 53, ue),
     localName: "path",
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     i: {
@@ -25984,7 +25986,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 53,
       g: 0
     }],
-    callFunction: oe,
+    callFunction: ne,
     localName: "node-name",
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     i: {
@@ -25993,7 +25995,7 @@ const fontoxpath = function (xspattern, prsc) {
     }
   }, {
     j: [],
-    callFunction: ne.bind(null, "node-name", oe),
+    callFunction: Ad("node-name", 53, ne),
     localName: "node-name",
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     i: {
@@ -26005,7 +26007,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 53,
       g: 0
     }],
-    callFunction: xe,
+    callFunction: we,
     localName: "local-name",
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     i: {
@@ -26014,7 +26016,7 @@ const fontoxpath = function (xspattern, prsc) {
     }
   }, {
     j: [],
-    callFunction: ne.bind(null, "local-name", xe),
+    callFunction: Ad("local-name", 53, we),
     localName: "local-name",
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     i: {
@@ -26026,7 +26028,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 53,
       g: 0
     }],
-    callFunction: ze,
+    callFunction: ye,
     localName: "root",
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     i: {
@@ -26035,7 +26037,7 @@ const fontoxpath = function (xspattern, prsc) {
     }
   }, {
     j: [],
-    callFunction: ne.bind(null, "root", ze),
+    callFunction: Ad("root", 53, ye),
     localName: "root",
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     i: {
@@ -26044,7 +26046,7 @@ const fontoxpath = function (xspattern, prsc) {
     }
   }, {
     j: [],
-    callFunction: ne.bind(null, "data", qe),
+    callFunction: Ad("data", 59, pe),
     localName: "data",
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     i: {
@@ -26056,7 +26058,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 59,
       g: 2
     }],
-    callFunction: qe,
+    callFunction: pe,
     localName: "data",
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     i: {
@@ -26068,7 +26070,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 1,
       g: 0
     }],
-    callFunction: ue,
+    callFunction: te,
     localName: "lang",
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     i: {
@@ -26083,7 +26085,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 53,
       g: 3
     }],
-    callFunction: ue,
+    callFunction: te,
     localName: "lang",
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     i: {
@@ -26092,7 +26094,7 @@ const fontoxpath = function (xspattern, prsc) {
     }
   }, {
     j: [],
-    callFunction: ne.bind(null, "generate-id", re),
+    callFunction: Ad("generate-id", 53, qe),
     localName: "generate-id",
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     i: {
@@ -26104,7 +26106,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 53,
       g: 0
     }],
-    callFunction: re,
+    callFunction: qe,
     localName: "generate-id",
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     i: {
@@ -26112,7 +26114,7 @@ const fontoxpath = function (xspattern, prsc) {
       g: 3
     }
   }];
-  function Be(a, b) {
+  function Ae(a, b) {
     let c = 0;
     const d = a.length;
     let e = !1,
@@ -26133,11 +26135,11 @@ const fontoxpath = function (xspattern, prsc) {
       }
     };
   }
-  function Ce(a) {
+  function Be(a) {
     a = a.node.nodeType;
     return 1 === a || 3 === a;
   }
-  function De(a, b) {
+  function Ce(a, b) {
     if ((v(a.type, 4) || v(a.type, 6)) && (v(b.type, 4) || v(b.type, 6))) {
       var c = jd(a, 6),
         d = jd(b, 6);
@@ -26145,14 +26147,14 @@ const fontoxpath = function (xspattern, prsc) {
     }
     return (v(a.type, 4) || v(a.type, 6) || v(a.type, 3)) && (v(b.type, 4) || v(b.type, 6) || v(b.type, 3)) ? (c = jd(a, 3), d = jd(b, 3), c.value === d.value || isNaN(a.value) && isNaN(b.value)) : v(a.type, 23) && v(b.type, 23) ? a.value.namespaceURI === b.value.namespaceURI && a.value.localName === b.value.localName : (v(a.type, 9) || v(a.type, 7) || v(a.type, 8) || v(a.type, 11) || v(a.type, 12) || v(a.type, 13) || v(a.type, 14) || v(a.type, 15)) && (v(b.type, 9) || v(b.type, 7) || v(b.type, 8) || v(b.type, 11) || v(b.type, 12) || v(b.type, 13) || v(b.type, 14) || v(b.type, 15)) ? Ob(a.value, b.value) : (v(a.type, 16) || v(a.type, 17) || v(a.type, 18)) && (v(b.type, 16) || v(b.type, 17) || v(b.type, 17)) ? vb(a.value, b.value) : a.value === b.value;
   }
-  function Ee(a, b, c) {
+  function De(a, b, c) {
     const [d, e] = [b, c].map(f => ({
       type: 1,
       value: f.reduce((h, k) => h += pc(k, a).first().value, "")
     }));
-    return q(De(d, e));
+    return q(Ce(d, e));
   }
-  function Fe(a, b, c, d) {
+  function Ee(a, b, c, d) {
     for (; a.value && v(a.value.type, 56);) {
       b.push(a.value);
       const e = lb(d, a.value.value);
@@ -26161,7 +26163,7 @@ const fontoxpath = function (xspattern, prsc) {
     }
     return a;
   }
-  function Ge(a, b, c, d, e) {
+  function Fe(a, b, c, d, e) {
     const f = b.h,
       h = d.value,
       k = e.value;
@@ -26173,14 +26175,14 @@ const fontoxpath = function (xspattern, prsc) {
       y = [];
     return {
       next: () => {
-        for (; !u;) if (l ||= h.next(0), l = Fe(l, z, h, f), n ||= k.next(0), n = Fe(n, y, k, f), z.length || y.length) {
-          var G = Ee(b, z, y);
+        for (; !u;) if (l ||= h.next(0), l = Ee(l, z, h, f), n ||= k.next(0), n = Ee(n, y, k, f), z.length || y.length) {
+          var G = De(b, z, y);
           z.length = 0;
           y.length = 0;
           if (!1 === G.value) return u = !0, G;
         } else {
           if (l.done || n.done) return u = !0, q(l.done === n.done);
-          t ||= He(a, b, c, l.value, n.value);
+          t ||= Ge(a, b, c, l.value, n.value);
           G = t.next(0);
           t = null;
           if (!1 === G.value) return u = !0, G;
@@ -26190,33 +26192,33 @@ const fontoxpath = function (xspattern, prsc) {
       }
     };
   }
+  function He(a, b, c, d, e) {
+    return d.h.length !== e.h.length ? kd(!1) : Ae(d.h, f => {
+      const h = e.h.find(k => Ce(k.key, f.key));
+      return h ? Fe(a, b, c, f.value(), h.value()) : kd(!1);
+    });
+  }
   function Ie(a, b, c, d, e) {
-    return d.h.length !== e.h.length ? kd(!1) : Be(d.h, f => {
-      const h = e.h.find(k => De(k.key, f.key));
-      return h ? Ge(a, b, c, f.value(), h.value()) : kd(!1);
+    return d.h.length !== e.h.length ? kd(!1) : Ae(d.h, (f, h) => {
+      h = e.h[h];
+      return Fe(a, b, c, f(), h());
     });
   }
   function Je(a, b, c, d, e) {
-    return d.h.length !== e.h.length ? kd(!1) : Be(d.h, (f, h) => {
-      h = e.h[h];
-      return Ge(a, b, c, f(), h());
-    });
-  }
-  function Ke(a, b, c, d, e) {
-    d = hb(b.h, d.value);
-    e = hb(b.h, e.value);
-    d = d.filter(f => Ce(f));
-    e = e.filter(f => Ce(f));
+    d = gb(b.h, d.value);
+    e = gb(b.h, e.value);
+    d = d.filter(f => Be(f));
+    e = e.filter(f => Be(f));
     d = w.create(d.map(f => rb(f)));
     e = w.create(e.map(f => rb(f)));
-    return Ge(a, b, c, d, e);
+    return Fe(a, b, c, d, e);
   }
-  function Le(a, b, c, d, e) {
-    const f = Ge(a, b, c, oe(a, b, c, w.m(d)), oe(a, b, c, w.m(e))),
-      h = Ke(a, b, c, d, e);
+  function Ke(a, b, c, d, e) {
+    const f = Fe(a, b, c, ne(a, b, c, w.m(d)), ne(a, b, c, w.m(e))),
+      h = Je(a, b, c, d, e);
     d = eb(b.h, d.value).filter(n => "http://www.w3.org/2000/xmlns/" !== n.node.namespaceURI).sort((n, t) => n.node.nodeName > t.node.nodeName ? 1 : -1).map(n => rb(n));
     e = eb(b.h, e.value).filter(n => "http://www.w3.org/2000/xmlns/" !== n.node.namespaceURI).sort((n, t) => n.node.nodeName > t.node.nodeName ? 1 : -1).map(n => rb(n));
-    const k = Ge(a, b, c, w.create(d), w.create(e));
+    const k = Fe(a, b, c, w.create(d), w.create(e));
     let l = !1;
     return {
       next: () => {
@@ -26231,29 +26233,29 @@ const fontoxpath = function (xspattern, prsc) {
       }
     };
   }
-  function Me(a, b, c, d, e) {
-    const f = Ge(a, b, c, oe(a, b, c, w.m(d)), oe(a, b, c, w.m(e)));
+  function Le(a, b, c, d, e) {
+    const f = Fe(a, b, c, ne(a, b, c, w.m(d)), ne(a, b, c, w.m(e)));
     let h = !1;
     return {
       next: () => {
         if (h) return p;
         const k = f.next(0);
-        return k.done || !1 !== k.value ? q(De(pc(d, b).first(), pc(e, b).first())) : (h = !0, k);
+        return k.done || !1 !== k.value ? q(Ce(pc(d, b).first(), pc(e, b).first())) : (h = !0, k);
       }
     };
   }
-  function He(a, b, c, d, e) {
-    if (v(d.type, 46) && v(e.type, 46)) return kd(De(d, e));
-    if (v(d.type, 61) && v(e.type, 61)) return Ie(a, b, c, d, e);
-    if (v(d.type, 62) && v(e.type, 62)) return Je(a, b, c, d, e);
+  function Ge(a, b, c, d, e) {
+    if (v(d.type, 46) && v(e.type, 46)) return kd(Ce(d, e));
+    if (v(d.type, 61) && v(e.type, 61)) return He(a, b, c, d, e);
+    if (v(d.type, 62) && v(e.type, 62)) return Ie(a, b, c, d, e);
     if (v(d.type, 53) && v(e.type, 53)) {
-      if (v(d.type, 55) && v(e.type, 55)) return Ke(a, b, c, d, e);
-      if (v(d.type, 54) && v(e.type, 54)) return Le(a, b, c, d, e);
-      if (v(d.type, 47) && v(e.type, 47) || v(d.type, 57) && v(e.type, 57) || v(d.type, 58) && v(e.type, 58)) return Me(a, b, c, d, e);
+      if (v(d.type, 55) && v(e.type, 55)) return Je(a, b, c, d, e);
+      if (v(d.type, 54) && v(e.type, 54)) return Ke(a, b, c, d, e);
+      if (v(d.type, 47) && v(e.type, 47) || v(d.type, 57) && v(e.type, 57) || v(d.type, 58) && v(e.type, 58)) return Le(a, b, c, d, e);
     }
     return kd(!1);
   }
-  var Ne = class extends cc {
+  var Me = class extends cc {
     constructor() {
       super({
         M: null,
@@ -26263,19 +26265,19 @@ const fontoxpath = function (xspattern, prsc) {
       });
     }
   };
-  var Oe = (a = "Can not execute an updating expression in a non-updating context.") => Error(`XUST0001: ${a}`),
-    Pe = a => Error(`XUTY0004: The attribute ${a.name}="${a.value}" follows a node that is not an attribute node.`),
-    Qe = () => Error("XUTY0005: The target of a insert expression with into must be a single element or document node."),
-    Re = () => Error("XUTY0006: The target of a insert expression with before or after must be a single element, text, comment, or processing instruction node."),
-    Se = () => Error("XUTY0008: The target of a replace expression must be a single element, attribute, text, comment, or processing instruction node."),
-    Te = () => Error("XUTY0012: The target of a rename expression must be a single element, attribute, or processing instruction node."),
-    Ue = a => Error(`XUDY0017: The target ${a.outerHTML} is used in more than one replace value of expression.`),
-    Ve = a => Error(`XUDY0021: Applying the updates will result in the XDM instance violating constraint: '${a}'`),
-    We = a => Error(`XUDY0023: The namespace binding ${a} is conflicting.`),
-    Xe = a => Error(`XUDY0024: The namespace binding ${a} is conflicting.`),
-    Ye = () => Error("XUDY0027: The target for an insert, replace, or rename expression expression should not be empty.");
+  var Ne = (a = "Can not execute an updating expression in a non-updating context.") => Error(`XUST0001: ${a}`),
+    Oe = a => Error(`XUTY0004: The attribute ${a.name}="${a.value}" follows a node that is not an attribute node.`),
+    Pe = () => Error("XUTY0005: The target of a insert expression with into must be a single element or document node."),
+    Qe = () => Error("XUTY0006: The target of a insert expression with before or after must be a single element, text, comment, or processing instruction node."),
+    Re = () => Error("XUTY0008: The target of a replace expression must be a single element, attribute, text, comment, or processing instruction node."),
+    Se = () => Error("XUTY0012: The target of a rename expression must be a single element, attribute, or processing instruction node."),
+    Te = a => Error(`XUDY0017: The target ${a.outerHTML} is used in more than one replace value of expression.`),
+    Ue = a => Error(`XUDY0021: Applying the updates will result in the XDM instance violating constraint: '${a}'`),
+    Ve = a => Error(`XUDY0023: The namespace binding ${a} is conflicting.`),
+    We = a => Error(`XUDY0024: The namespace binding ${a} is conflicting.`),
+    Xe = () => Error("XUDY0027: The target for an insert, replace, or rename expression expression should not be empty.");
   function C(a, b, c) {
-    b && null !== b.M ? a.B ? (null === a.ob && (a.ob = Ra(a.h(new Ne(), c).hb())), a = a.ob()) : a = a.h(b, c) : a = a.h(b, c);
+    b && null !== b.M ? a.B ? (null === a.ob && (a.ob = Ra(a.h(new Me(), c).hb())), a = a.ob()) : a = a.h(b, c) : a = a.h(b, c);
     return a;
   }
   var D = class {
@@ -26301,16 +26303,16 @@ const fontoxpath = function (xspattern, prsc) {
     }
     v(a) {
       this.Fa.forEach(b => b.v(a));
-      if (!this.Qb && this.Fa.some(b => b.I)) throw Oe();
+      if (!this.Qb && this.Fa.some(b => b.I)) throw Ne();
     }
   };
-  var Ze = class {
+  var Ye = class {
     constructor(a, b) {
       this.J = a;
       this.da = b;
     }
   };
-  var $e = class {
+  var Ze = class {
     constructor(a) {
       a && "object" === typeof a && "nodeType" in a && (a = a.ownerDocument || a, "function" === typeof a.createElementNS && "function" === typeof a.createProcessingInstruction && "function" === typeof a.createTextNode && "function" === typeof a.createComment && (this.h = a));
       this.h || (this.h = null);
@@ -26344,43 +26346,43 @@ const fontoxpath = function (xspattern, prsc) {
       return this.h.createTextNode(a);
     }
   };
-  function af(a, b, c, d) {
+  function $e(a, b, c, d) {
     return eb(d, a, `name-${b}`).some(e => e.node.localName === b && e.node.namespaceURI === c);
   }
-  var bf = (a, b, c, d) => {
+  var af = (a, b, c, d) => {
       const e = x(c, a).node,
         f = (a = lb(c, a)) ? a.node : null;
       b.forEach(h => {
         d.insertBefore(e, h.node, f);
       });
     },
-    cf = (a, b, c, d) => {
+    bf = (a, b, c, d) => {
       const e = x(c, a).node;
       b.forEach(f => {
         d.insertBefore(e, f.node, a.node);
       });
     },
-    df = (a, b, c, d) => {
-      const e = (c = jb(c, a)) ? c.node : null;
+    cf = (a, b, c, d) => {
+      const e = (c = ib(c, a)) ? c.node : null;
       b.forEach(f => {
         d.insertBefore(a.node, f.node, e);
       });
     },
-    ef = (a, b, c) => {
+    df = (a, b, c) => {
       b.forEach(d => {
         c.insertBefore(a.node, d.node, null);
       });
     },
-    ff = (a, b, c, d) => {
+    ef = (a, b, c, d) => {
       b.forEach(e => {
         const f = e.node.localName,
           h = e.node.namespaceURI;
-        if (af(a, f, h, c)) throw Ve(`An attribute ${h ? `Q{${h}}${f}` : f} already exists.`);
-        d.setAttributeNS(a.node, h, f, ib(c, e));
+        if ($e(a, f, h, c)) throw Ue(`An attribute ${h ? `Q{${h}}${f}` : f} already exists.`);
+        d.setAttributeNS(a.node, h, f, hb(c, e));
       });
     },
-    hf = (a, b, c, d, e) => {
-      d ||= new $e(a ? a.node : null);
+    gf = (a, b, c, d, e) => {
+      d ||= new Ze(a ? a.node : null);
       let f;
       switch (a.node.nodeType) {
         case 1:
@@ -26400,7 +26402,7 @@ const fontoxpath = function (xspattern, prsc) {
           break;
         case 2:
           b = d.createAttributeNS(b.namespaceURI, b.za());
-          b.value = ib(c, a);
+          b.value = hb(c, a);
           f = {
             node: b,
             G: null
@@ -26408,18 +26410,18 @@ const fontoxpath = function (xspattern, prsc) {
           break;
         case 7:
           f = {
-            node: d.createProcessingInstruction(b.za(), ib(c, a)),
+            node: d.createProcessingInstruction(b.za(), hb(c, a)),
             G: null
           };
       }
       if (!x(c, a)) throw Error("Not supported: renaming detached nodes.");
-      gf(a, [f], c, e);
+      ff(a, [f], c, e);
     },
-    jf = (a, b, c, d) => {
+    hf = (a, b, c, d) => {
       c.getChildNodes(a.node).forEach(e => d.removeChild(a.node, e));
       b && d.insertBefore(a.node, b.node, null);
     },
-    gf = (a, b, c, d) => {
+    ff = (a, b, c, d) => {
       const e = x(c, a);
       var f = a.node.nodeType;
       if (2 === f) {
@@ -26429,8 +26431,8 @@ const fontoxpath = function (xspattern, prsc) {
         b.forEach(k => {
           const l = k.node.localName,
             n = k.node.namespaceURI;
-          if (af(e, l, n, c)) throw Ve(`An attribute ${n ? `Q{${n}}${l}` : l} already exists.`);
-          d.setAttributeNS(h, n, l, ib(c, k));
+          if ($e(e, l, n, c)) throw Ue(`An attribute ${n ? `Q{${n}}${l}` : l} already exists.`);
+          d.setAttributeNS(h, n, l, hb(c, k));
         });
       }
       if (1 === f || 3 === f || 8 === f || 7 === f) {
@@ -26441,18 +26443,18 @@ const fontoxpath = function (xspattern, prsc) {
         });
       }
     };
-  var lf = (a, b, c, d) => {
-    kf(a, b);
+  var kf = (a, b, c, d) => {
+    jf(a, b);
     a.filter(e => -1 !== ["insertInto", "insertAttributes", "replaceValue", "rename"].indexOf(e.type)).forEach(e => {
       switch (e.type) {
         case "insertInto":
-          ef(e.target, e.content, d);
+          df(e.target, e.content, d);
           break;
         case "insertAttributes":
-          ff(e.target, e.content, b, d);
+          ef(e.target, e.content, b, d);
           break;
         case "rename":
-          hf(e.target, e.o, b, c, d);
+          gf(e.target, e.o, b, c, d);
           break;
         case "replaceValue":
           var f = e.target;
@@ -26466,23 +26468,23 @@ const fontoxpath = function (xspattern, prsc) {
     a.filter(e => -1 !== ["insertBefore", "insertAfter", "insertIntoAsFirst", "insertIntoAsLast"].indexOf(e.type)).forEach(e => {
       switch (e.type) {
         case "insertAfter":
-          bf(e.target, e.content, b, d);
+          af(e.target, e.content, b, d);
           break;
         case "insertBefore":
-          cf(e.target, e.content, b, d);
+          bf(e.target, e.content, b, d);
           break;
         case "insertIntoAsFirst":
-          df(e.target, e.content, b, d);
+          cf(e.target, e.content, b, d);
           break;
         case "insertIntoAsLast":
-          ef(e.target, e.content, d);
+          df(e.target, e.content, d);
       }
     });
     a.filter(e => "replaceNode" === e.type).forEach(e => {
-      gf(e.target, e.o, b, d);
+      ff(e.target, e.o, b, d);
     });
     a.filter(e => "replaceElementContent" === e.type).forEach(e => {
-      jf(e.target, e.text, b, d);
+      hf(e.target, e.text, b, d);
     });
     a.filter(e => "delete" === e.type).forEach(e => {
       e = e.target;
@@ -26491,7 +26493,7 @@ const fontoxpath = function (xspattern, prsc) {
     });
     if (a.some(e => "put" === e.type)) throw Error('Not implemented: the execution for pendingUpdate "put" is not yet implemented.');
   };
-  const kf = (a, b) => {
+  const jf = (a, b) => {
     function c(f, h) {
       const k = new Set();
       a.filter(l => l.type === f).map(l => l.target).forEach(l => {
@@ -26507,10 +26509,10 @@ const fontoxpath = function (xspattern, prsc) {
       throw Error(`XUDY0016: The target ${f.outerHTML} is used in more than one replace expression.`);
     });
     c("replaceValue", f => {
-      throw Ue(f);
+      throw Te(f);
     });
     c("replaceElementContent", f => {
-      throw Ue(f);
+      throw Te(f);
     });
     const d = new Map(),
       e = f => new Sa(f.node.prefix, f.node.namespaceURI, f.node.localName);
@@ -26532,12 +26534,12 @@ const fontoxpath = function (xspattern, prsc) {
       const h = {};
       f.forEach(k => {
         h[k.prefix] || (h[k.prefix] = k.namespaceURI);
-        if (h[k.prefix] !== k.namespaceURI) throw Xe(k.namespaceURI);
+        if (h[k.prefix] !== k.namespaceURI) throw We(k.namespaceURI);
       });
     });
   };
-  var mf = (a, ...b) => a.concat(...b.filter(Boolean));
-  function nf(a) {
+  var lf = (a, ...b) => a.concat(...b.filter(Boolean));
+  function mf(a) {
     return a.I ? (b, c) => a.s(b, c) : (b, c) => {
       const d = a.h(b, c);
       return {
@@ -26551,24 +26553,24 @@ const fontoxpath = function (xspattern, prsc) {
       };
     };
   }
-  var of = class extends D {
+  var nf = class extends D {
     constructor(a, b, c, d) {
       super(a, b, c, !0, d);
       this.I = !0;
     }
     h() {
-      throw Oe();
+      throw Ne();
     }
   };
-  function pf(a, b) {
+  function of(a, b) {
     a = a.next(0);
     b(a.value.da);
     return w.create(a.value.J);
   }
-  function qf(a) {
+  function pf(a) {
     a.Fa.some(b => b.I) && (a.I = !0);
   }
-  var rf = class extends of {
+  var qf = class extends nf {
     constructor(a, b, c, d) {
       super(a, b, c, d);
       this.I = this.Fa.some(e => e.I);
@@ -26580,7 +26582,7 @@ const fontoxpath = function (xspattern, prsc) {
       let c = [];
       const d = this.A(a, b, this.Fa.map(f => f.I ? h => {
         h = f.s(h, b);
-        return pf(h, k => c = mf(c, k));
+        return of(h, k => c = lf(c, k));
       } : h => f.h(h, b)));
       let e = !1;
       return {
@@ -26588,66 +26590,66 @@ const fontoxpath = function (xspattern, prsc) {
           if (e) return p;
           const f = d.O();
           e = !0;
-          return q(new Ze(f, c));
+          return q(new Ye(f, c));
         }
       };
     }
     v(a) {
       super.v(a);
-      qf(this);
+      pf(this);
     }
   };
-  const sf = ["external", "attribute", "nodeName", "nodeType", "universal"],
-    tf = sf.length;
-  function uf(a, b) {
-    for (let c = 0; c < tf; ++c) {
+  const rf = ["external", "attribute", "nodeName", "nodeType", "universal"],
+    sf = rf.length;
+  function tf(a, b) {
+    for (let c = 0; c < sf; ++c) {
       if (b.h[c] < a.h[c]) return 1;
       if (b.h[c] > a.h[c]) return -1;
     }
     return 0;
   }
-  var vf = class {
+  var uf = class {
     constructor(a) {
-      this.h = sf.map(b => a[b] || 0);
-      if (Object.keys(a).some(b => !sf.includes(b))) throw Error("Invalid specificity kind passed");
+      this.h = rf.map(b => a[b] || 0);
+      if (Object.keys(a).some(b => !rf.includes(b))) throw Error("Invalid specificity kind passed");
     }
     add(a) {
-      const b = sf.reduce((c, d, e) => {
+      const b = rf.reduce((c, d, e) => {
         c[d] = this.h[e] + a.h[e];
         return c;
       }, Object.create(null));
-      return new vf(b);
+      return new uf(b);
     }
   };
-  const wf = () => mc("Expected base expression of a function call to evaluate to a sequence of single function item");
-  function xf(a, b, c, d) {
+  const vf = () => mc("Expected base expression of a function call to evaluate to a sequence of single function item");
+  function wf(a, b, c, d) {
     const e = [];
     for (let f = 0; f < b.length; ++f) {
       if (null === b[f]) {
         e.push(null);
         continue;
       }
-      const h = Ad(a[f], b[f], c, d, !1);
+      const h = zd(a[f], b[f], c, d, !1);
       e.push(h);
     }
     return e;
   }
-  function Df(a, b) {
+  function Cf(a, b) {
     if (!v(a.type, 60)) throw mc("Expected base expression to evaluate to a function item");
-    if (a.v !== b) throw wf();
+    if (a.v !== b) throw vf();
     return a;
   }
-  function Ef(a, b, c, d, e, f, h) {
+  function Df(a, b, c, d, e, f, h) {
     let k = 0;
     e = e.map(l => l ? null : f[k++](c));
-    e = xf(a.o, e, d, a.D);
-    if (0 <= e.indexOf(null)) return Ua(a, e);
+    e = wf(a.o, e, d, a.D);
+    if (0 <= e.indexOf(null)) return Ta(a, e);
     b = b.apply(void 0, [c, d, h, ...e]);
-    return Ad(a.s, b, d, a.D, !0);
+    return zd(a.s, b, d, a.D, !0);
   }
-  var Gf = class extends rf {
+  var Ff = class extends qf {
     constructor(a, b, c) {
-      super(new vf({
+      super(new uf({
         external: 1
       }), [a].concat(b.filter(d => !!d)), {
         R: "unsorted",
@@ -26664,10 +26666,10 @@ const fontoxpath = function (xspattern, prsc) {
     s(a, b) {
       if (!this.l || !this.l.I) return super.s(a, b);
       let c = [];
-      const d = Ef(this.l, (f, h, k, ...l) => pf(this.l.value(f, h, k, ...l), n => {
-        c = mf(c, n);
-      }), a, b, this.P, this.La.map(f => () => f.I ? pf(f.s(a, b), h => {
-        c = mf(c, h);
+      const d = Df(this.l, (f, h, k, ...l) => of(this.l.value(f, h, k, ...l), n => {
+        c = lf(c, n);
+      }), a, b, this.P, this.La.map(f => () => f.I ? of(f.s(a, b), h => {
+        c = lf(c, h);
       }) : C(f, a, b)), this.L);
       let e = !1;
       return {
@@ -26683,31 +26685,31 @@ const fontoxpath = function (xspattern, prsc) {
       };
     }
     A(a, b, [c, ...d]) {
-      if (this.l) return Ef(this.l, (f, h, k, ...l) => this.l.value(f, h, k, ...l), a, b, this.P, d, this.L);
+      if (this.l) return Df(this.l, (f, h, k, ...l) => this.l.value(f, h, k, ...l), a, b, this.P, d, this.L);
       const e = c(a);
       return e.X({
         default: () => {
-          throw wf();
+          throw vf();
         },
         m: () => e.N(([f]) => {
-          f = Df(f, this.ma);
+          f = Cf(f, this.ma);
           if (f.I) throw Error("XUDY0038: The function returned by the PrimaryExpr of a dynamic function invocation can not be an updating function");
-          return Ef(f, f.value, a, b, this.P, d, this.L);
+          return Df(f, f.value, a, b, this.P, d, this.L);
         })
       });
     }
     v(a) {
-      this.L = Ff(a);
+      this.L = Ef(a);
       super.v(a);
       if (this.ya.B) {
         a = C(this.ya, null, null);
-        if (!a.oa()) throw wf();
-        this.l = Df(a.first(), this.ma);
+        if (!a.oa()) throw vf();
+        this.l = Cf(a.first(), this.ma);
         this.l.I && (this.I = !0);
       }
     }
   };
-  const Hf = (a, b, c, d, e, f) => A([d, e, f], ([h, k, l]) => {
+  const Gf = (a, b, c, d, e, f) => A([d, e, f], ([h, k, l]) => {
       k = k.value;
       l = l.value;
       if (k > h.h.length || 0 >= k) throw Error("FOAY0001: subarray start out of bounds.");
@@ -26715,7 +26717,7 @@ const fontoxpath = function (xspattern, prsc) {
       if (k + l > h.h.length + 1) throw Error("FOAY0001: subarray start + length out of bounds.");
       return w.m(new pb(h.h.slice(k - 1, l + k - 1)));
     }),
-    If = (a, b, c, d, e) => A([d], ([f]) => e.N(h => {
+    Hf = (a, b, c, d, e) => A([d], ([f]) => e.N(h => {
       h = h.map(l => l.value).sort((l, n) => n - l).filter((l, n, t) => t[n - 1] !== l);
       const k = f.h.concat();
       for (let l = 0, n = h.length; l < n; ++l) {
@@ -26725,16 +26727,16 @@ const fontoxpath = function (xspattern, prsc) {
       }
       return w.m(new pb(k));
     })),
-    Jf = a => v(a, 1) || v(a, 20) || v(a, 19),
-    Kf = (a, b, c, d, e) => 0 === d.length ? 0 !== e.length : 0 !== e.length && He(a, b, c, d[0], e[0]).next(0).value ? Kf(a, b, c, d.slice(1), e.slice(1)) : d[0].value !== d[0].value ? !0 : Jf(d[0].type) && 0 !== e.length && Jf(e[0].type) ? d[0].value < e[0].value : 0 === e.length ? !1 : d[0].value < e[0].value,
-    Lf = (a, b, c, d) => {
-      d.sort((e, f) => Ge(a, b, c, w.create(e), w.create(f)).next(0).value ? 0 : Kf(a, b, c, e, f) ? -1 : 1);
+    If = a => v(a, 1) || v(a, 20) || v(a, 19),
+    Jf = (a, b, c, d, e) => 0 === d.length ? 0 !== e.length : 0 !== e.length && Ge(a, b, c, d[0], e[0]).next(0).value ? Jf(a, b, c, d.slice(1), e.slice(1)) : d[0].value !== d[0].value ? !0 : If(d[0].type) && 0 !== e.length && If(e[0].type) ? d[0].value < e[0].value : 0 === e.length ? !1 : d[0].value < e[0].value,
+    Kf = (a, b, c, d) => {
+      d.sort((e, f) => Fe(a, b, c, w.create(e), w.create(f)).next(0).value ? 0 : Jf(a, b, c, e, f) ? -1 : 1);
       return w.m(new pb(d.map(e => () => w.create(e))));
     };
-  function Mf(a) {
-    return v(a.type, 62) ? jc(a.h.map(b => b().N(c => jc(c.map(Mf))))) : w.m(a);
+  function Lf(a) {
+    return v(a.type, 62) ? jc(a.h.map(b => b().N(c => jc(c.map(Lf))))) : w.m(a);
   }
-  var Nf = [{
+  var Mf = [{
     namespaceURI: "http://www.w3.org/2005/xpath-functions/array",
     localName: "size",
     j: [{
@@ -26817,7 +26819,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 62,
       g: 3
     },
-    callFunction: Hf
+    callFunction: Gf
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions/array",
     localName: "subarray",
@@ -26834,7 +26836,7 @@ const fontoxpath = function (xspattern, prsc) {
     },
     callFunction(a, b, c, d, e) {
       const f = w.m(g(d.first().value.length - e.first().value + 1, 5));
-      return Hf(a, b, c, d, e, f);
+      return Gf(a, b, c, d, e, f);
     }
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions/array",
@@ -26850,7 +26852,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 62,
       g: 3
     },
-    callFunction: If
+    callFunction: Hf
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions/array",
     localName: "insert-before",
@@ -26901,7 +26903,7 @@ const fontoxpath = function (xspattern, prsc) {
       g: 2
     },
     callFunction(a, b, c, d) {
-      return If(a, b, c, d, w.m(g(1, 5)));
+      return Hf(a, b, c, d, w.m(g(1, 5)));
     }
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions/array",
@@ -26946,7 +26948,7 @@ const fontoxpath = function (xspattern, prsc) {
     },
     callFunction: (a, b, c, d, e) => A([d, e], ([f, h]) => {
       if (1 !== h.v) throw mc("The callback passed into array:for-each has a wrong arity.");
-      f = f.h.map(k => Ra(h.value.call(void 0, a, b, c, xf(h.o, [k()], b, "array:for-each")[0])));
+      f = f.h.map(k => Ra(h.value.call(void 0, a, b, c, wf(h.o, [k()], b, "array:for-each")[0])));
       return w.m(new pb(f));
     })
   }, {
@@ -26966,7 +26968,7 @@ const fontoxpath = function (xspattern, prsc) {
     callFunction: (a, b, c, d, e) => A([d, e], ([f, h]) => {
       if (1 !== h.v) throw mc("The callback passed into array:filter has a wrong arity.");
       const k = f.h.map(t => {
-          t = xf(h.o, [t()], b, "array:filter")[0];
+          t = wf(h.o, [t()], b, "array:filter")[0];
           const u = h.value;
           return u(a, b, c, t);
         }),
@@ -27005,7 +27007,7 @@ const fontoxpath = function (xspattern, prsc) {
     callFunction: (a, b, c, d, e, f) => A([d, f], ([h, k]) => {
       if (2 !== k.v) throw mc("The callback passed into array:fold-left has a wrong arity.");
       return h.h.reduce((l, n) => {
-        n = xf(k.o, [n()], b, "array:fold-left")[0];
+        n = wf(k.o, [n()], b, "array:fold-left")[0];
         return k.value.call(void 0, a, b, c, l, n);
       }, e);
     })
@@ -27029,7 +27031,7 @@ const fontoxpath = function (xspattern, prsc) {
     callFunction: (a, b, c, d, e, f) => A([d, f], ([h, k]) => {
       if (2 !== k.v) throw mc("The callback passed into array:fold-right has a wrong arity.");
       return h.h.reduceRight((l, n) => {
-        n = xf(k.o, [n()], b, "array:fold-right")[0];
+        n = wf(k.o, [n()], b, "array:fold-right")[0];
         return k.value.call(void 0, a, b, c, l, n);
       }, e);
     })
@@ -27054,7 +27056,7 @@ const fontoxpath = function (xspattern, prsc) {
       if (2 !== l.v) throw mc("The callback passed into array:for-each-pair has a wrong arity.");
       const n = [];
       for (let t = 0, u = Math.min(h.h.length, k.h.length); t < u; ++t) {
-        const [z, y] = xf(l.o, [h.h[t](), k.h[t]()], b, "array:for-each-pair");
+        const [z, y] = wf(l.o, [h.h[t](), k.h[t]()], b, "array:for-each-pair");
         n[t] = Ra(l.value.call(void 0, a, b, c, z, y));
       }
       return w.m(new pb(n));
@@ -27072,7 +27074,7 @@ const fontoxpath = function (xspattern, prsc) {
     },
     callFunction: (a, b, c, d) => A([d], ([e]) => {
       e = e.h.map(f => f().O());
-      return Lf(a, b, c, e);
+      return Kf(a, b, c, e);
     })
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions/array",
@@ -27085,12 +27087,12 @@ const fontoxpath = function (xspattern, prsc) {
       type: 59,
       g: 2
     },
-    callFunction: (a, b, c, d) => d.N(e => jc(e.map(Mf)))
+    callFunction: (a, b, c, d) => d.N(e => jc(e.map(Lf)))
   }];
   function E(a, b, c, d, e) {
     return e.F() ? e : w.m(jd(e.first(), a));
   }
-  var Of = [{
+  var Nf = [{
     namespaceURI: "http://www.w3.org/2001/XMLSchema",
     localName: "untypedAtomic",
     j: [{
@@ -27691,17 +27693,17 @@ const fontoxpath = function (xspattern, prsc) {
     },
     callFunction: E.bind(null, 10)
   }];
-  const Pf = (a, b, c, d) => d.F() ? d : w.m(g(d.first().value.getYear(), 5)),
-    Qf = (a, b, c, d) => d.F() ? d : w.m(g(d.first().value.getMonth(), 5)),
-    Rf = (a, b, c, d) => d.F() ? d : w.m(g(d.first().value.getDay(), 5)),
-    Sf = (a, b, c, d) => d.F() ? d : w.m(g(d.first().value.getHours(), 5)),
-    Tf = (a, b, c, d) => d.F() ? d : w.m(g(d.first().value.getMinutes(), 5)),
-    Uf = (a, b, c, d) => {
+  const Of = (a, b, c, d) => d.F() ? d : w.m(g(d.first().value.getYear(), 5)),
+    Pf = (a, b, c, d) => d.F() ? d : w.m(g(d.first().value.getMonth(), 5)),
+    Qf = (a, b, c, d) => d.F() ? d : w.m(g(d.first().value.getDay(), 5)),
+    Rf = (a, b, c, d) => d.F() ? d : w.m(g(d.first().value.getHours(), 5)),
+    Sf = (a, b, c, d) => d.F() ? d : w.m(g(d.first().value.getMinutes(), 5)),
+    Tf = (a, b, c, d) => {
       d.F() || (a = w, b = a.m, d = d.first().value, d = b.call(a, g(d.D + d.qa, 4)));
       return d;
     },
-    Vf = (a, b, c, d) => d.F() ? d : (a = d.first().value.Y) ? w.m(g(a, 17)) : w.empty();
-  var Wf = [{
+    Uf = (a, b, c, d) => d.F() ? d : (a = d.first().value.Y) ? w.m(g(a, 17)) : w.empty();
+  var Vf = [{
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "dateTime",
     j: [{
@@ -27738,7 +27740,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 5,
       g: 0
     },
-    callFunction: Pf
+    callFunction: Of
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "month-from-dateTime",
@@ -27750,7 +27752,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 5,
       g: 0
     },
-    callFunction: Qf
+    callFunction: Pf
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "day-from-dateTime",
@@ -27762,7 +27764,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 5,
       g: 0
     },
-    callFunction: Rf
+    callFunction: Qf
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "hours-from-dateTime",
@@ -27774,7 +27776,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 5,
       g: 0
     },
-    callFunction: Sf
+    callFunction: Rf
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "minutes-from-dateTime",
@@ -27786,7 +27788,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 5,
       g: 0
     },
-    callFunction: Tf
+    callFunction: Sf
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "seconds-from-dateTime",
@@ -27798,7 +27800,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 4,
       g: 0
     },
-    callFunction: Uf
+    callFunction: Tf
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "timezone-from-dateTime",
@@ -27810,7 +27812,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 17,
       g: 0
     },
-    callFunction: Vf
+    callFunction: Uf
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "year-from-date",
@@ -27822,7 +27824,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 5,
       g: 0
     },
-    callFunction: Pf
+    callFunction: Of
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "month-from-date",
@@ -27834,7 +27836,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 5,
       g: 0
     },
-    callFunction: Qf
+    callFunction: Pf
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "day-from-date",
@@ -27846,7 +27848,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 5,
       g: 0
     },
-    callFunction: Rf
+    callFunction: Qf
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "timezone-from-date",
@@ -27858,7 +27860,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 17,
       g: 0
     },
-    callFunction: Vf
+    callFunction: Uf
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "hours-from-time",
@@ -27870,7 +27872,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 5,
       g: 0
     },
-    callFunction: Sf
+    callFunction: Rf
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "minutes-from-time",
@@ -27882,7 +27884,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 5,
       g: 0
     },
-    callFunction: Tf
+    callFunction: Sf
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "seconds-from-time",
@@ -27894,7 +27896,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 4,
       g: 0
     },
-    callFunction: Uf
+    callFunction: Tf
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "timezone-from-time",
@@ -27906,9 +27908,9 @@ const fontoxpath = function (xspattern, prsc) {
       type: 17,
       g: 0
     },
-    callFunction: Vf
+    callFunction: Uf
   }];
-  function Xf(a, b) {
+  function Wf(a, b) {
     const c = b.h,
       d = b.Ja,
       e = b.Ma;
@@ -27916,78 +27918,78 @@ const fontoxpath = function (xspattern, prsc) {
       case 1:
         const h = d.createElementNS(a.node.namespaceURI, a.node.nodeName);
         c.getAllAttributes(a.node).forEach(k => e.setAttributeNS(h, k.namespaceURI, k.nodeName, k.value));
-        for (var f of hb(c, a)) a = Xf(f, b), e.insertBefore(h, a.node, null);
+        for (var f of gb(c, a)) a = Wf(f, b), e.insertBefore(h, a.node, null);
         return {
           node: h,
           G: null
         };
       case 2:
-        return b = d.createAttributeNS(a.node.namespaceURI, a.node.nodeName), b.value = ib(c, a), {
+        return b = d.createAttributeNS(a.node.namespaceURI, a.node.nodeName), b.value = hb(c, a), {
           node: b,
           G: null
         };
       case 4:
         return {
-          node: d.createCDATASection(ib(c, a)),
+          node: d.createCDATASection(hb(c, a)),
           G: null
         };
       case 8:
         return {
-          node: d.createComment(ib(c, a)),
+          node: d.createComment(hb(c, a)),
           G: null
         };
       case 9:
         f = d.createDocument();
-        for (const k of hb(c, a)) a = Xf(k, b), e.insertBefore(f, a.node, null);
+        for (const k of gb(c, a)) a = Wf(k, b), e.insertBefore(f, a.node, null);
         return {
           node: f,
           G: null
         };
       case 7:
         return {
-          node: d.createProcessingInstruction(a.node.target, ib(c, a)),
+          node: d.createProcessingInstruction(a.node.target, hb(c, a)),
           G: null
         };
       case 3:
         return {
-          node: d.createTextNode(ib(c, a)),
+          node: d.createTextNode(hb(c, a)),
           G: null
         };
     }
   }
-  function Yf(a, b) {
+  function Xf(a, b) {
     const c = b.Ma;
     var d = b.Ja;
     const e = b.h;
     if (cb(a.node)) switch (a.node.nodeType) {
       case 2:
-        return d = d.createAttributeNS(a.node.namespaceURI, a.node.nodeName), d.value = ib(e, a), d;
+        return d = d.createAttributeNS(a.node.namespaceURI, a.node.nodeName), d.value = hb(e, a), d;
       case 8:
-        return d.createComment(ib(e, a));
+        return d.createComment(hb(e, a));
       case 1:
         const f = a.node.prefix,
           h = a.node.localName,
           k = d.createElementNS(a.node.namespaceURI, f ? f + ":" + h : h);
-        hb(e, a).forEach(l => {
-          l = Yf(l, b);
+        gb(e, a).forEach(l => {
+          l = Xf(l, b);
           c.insertBefore(k, l, null);
         });
         eb(e, a).forEach(l => {
-          c.setAttributeNS(k, l.node.namespaceURI, l.node.nodeName, ib(e, l));
+          c.setAttributeNS(k, l.node.namespaceURI, l.node.nodeName, hb(e, l));
         });
         k.normalize();
         return k;
       case 7:
-        return d.createProcessingInstruction(a.node.target, ib(e, a));
+        return d.createProcessingInstruction(a.node.target, hb(e, a));
       case 3:
-        return d.createTextNode(ib(e, a));
-    } else return Xf(a, b).node;
+        return d.createTextNode(hb(e, a));
+    } else return Wf(a, b).node;
   }
-  function Zf(a, b, c) {
+  function Yf(a, b, c) {
     let d = a;
     for (a = x(c, d); null !== a;) {
       if (2 === d.node.nodeType) b.push(d.node.nodeName);else {
-        const e = hb(c, a);
+        const e = gb(c, a);
         b.push(e.findIndex(f => md(f, d)));
       }
       d = a;
@@ -27995,45 +27997,45 @@ const fontoxpath = function (xspattern, prsc) {
     }
     return d;
   }
-  function $f(a, b, c) {
+  function Zf(a, b, c) {
     for (; 0 < b.length;) {
       const d = b.pop();
-      "string" === typeof d ? a = eb(c, a).find(e => e.node.nodeName === d) : a = hb(c, a)[d];
+      "string" === typeof d ? a = eb(c, a).find(e => e.node.nodeName === d) : a = gb(c, a)[d];
     }
     return a.node;
   }
-  function ag(a, b, c) {
+  function $f(a, b, c) {
     var d = a.node;
     if (!(cb(d) || c || a.G)) return d;
     d = b.v;
     const e = [];
-    if (c) return Yf(a, b);
-    a = Zf(a, e, b.h);
+    if (c) return Xf(a, b);
+    a = Yf(a, e, b.h);
     c = d.get(a.node);
     c || (c = {
-      node: Yf(a, b),
+      node: Xf(a, b),
       G: null
     }, d.set(a.node, c));
-    return $f(c, e, b.h);
+    return Zf(c, e, b.h);
   }
-  const bg = (a, b, c, d, e) => d.N(f => {
+  const ag = (a, b, c, d, e) => d.N(f => {
     var h;
     let k = "";
     for (let l = 0; l < f.length; l++) {
       const n = f[l],
-        t = b.Ua && v(n.type, 53) ? b.Ua.serializeToString(ag(n.value, b, !1)) : null === (h = qc(w.m(n), b).map(u => jd(u, 1)).first()) || void 0 === h ? void 0 : h.value;
+        t = b.Ua && v(n.type, 53) ? b.Ua.serializeToString($f(n.value, b, !1)) : null === (h = qc(w.m(n), b).map(u => jd(u, 1)).first()) || void 0 === h ? void 0 : h.value;
       t && (k += `{type: ${Da[n.type]}, value: ${t}}\n`);
     }
     void 0 !== e && (k += e.first().value);
     b.jb.trace(k);
     return w.create(f);
   });
-  var cg = [{
+  var bg = [{
     j: [{
       type: 59,
       g: 2
     }],
-    callFunction: bg,
+    callFunction: ag,
     localName: "trace",
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     i: {
@@ -28048,7 +28050,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 1,
       g: 3
     }],
-    callFunction: bg,
+    callFunction: ag,
     localName: "trace",
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     i: {
@@ -28056,13 +28058,13 @@ const fontoxpath = function (xspattern, prsc) {
       g: 2
     }
   }];
-  const dg = (a, b, c, d, e) => {
+  const cg = (a, b, c, d, e) => {
     a = void 0 === d || d.F() ? new Sa("err", "http://www.w3.org/2005/xqt-errors", "FOER0000") : d.first().value;
     b = "";
     void 0 === e || e.F() || (b = `: ${e.first().value}`);
     throw Error(`${a.localName}${b}`);
   };
-  var eg = [{
+  var dg = [{
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "error",
     j: [],
@@ -28070,7 +28072,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 63,
       g: 3
     },
-    callFunction: dg
+    callFunction: cg
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "error",
@@ -28082,7 +28084,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 63,
       g: 3
     },
-    callFunction: dg
+    callFunction: cg
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "error",
@@ -28097,7 +28099,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 63,
       g: 3
     },
-    callFunction: dg
+    callFunction: cg
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "error",
@@ -28119,10 +28121,10 @@ const fontoxpath = function (xspattern, prsc) {
       throw Error("Not implemented: Using an error object in error is not supported");
     }
   }];
-  function fg(a) {
+  function eg(a) {
     return "string" === typeof a ? a : (a = new Za().getChildNodes(a).find(b => 8 === b.nodeType)) ? a.data : "some expression";
   }
-  var gg = class extends Error {
+  var fg = class extends Error {
     constructor(a, b) {
       super(a);
       this.position = {
@@ -28139,10 +28141,10 @@ const fontoxpath = function (xspattern, prsc) {
       };
     }
   };
-  function hg(a, b) {
+  function gg(a, b) {
     if (b instanceof Error) throw b;
-    "string" !== typeof a && (a = fg(a));
-    const c = ig(b);
+    "string" !== typeof a && (a = eg(a));
+    const c = hg(b);
     a = a.replace(/\r/g, "").split("\n");
     const d = Math.floor(Math.log10(Math.min(c.end.line + 2, a.length))) + 1;
     a = a.reduce((e, f, h) => {
@@ -28158,11 +28160,11 @@ const fontoxpath = function (xspattern, prsc) {
       }
       return e;
     }, []);
-    b = jg(b).join("\n");
-    throw new gg(a.join("\n") + "\n\n" + b, c);
+    b = ig(b).join("\n");
+    throw new fg(a.join("\n") + "\n\n" + b, c);
   }
-  const kg = Object.create(null);
-  function lg(a, b) {
+  const jg = Object.create(null);
+  function kg(a, b) {
     const c = new Map();
     for (let d = 0; d < a.length + 1; ++d) c.set(d, new Map());
     return function h(e, f) {
@@ -28176,15 +28178,15 @@ const fontoxpath = function (xspattern, prsc) {
       return k;
     }(a.length, b.length);
   }
-  function mg(a) {
-    const b = kg[a] ? kg[a] : Object.keys(kg).map(c => ({
+  function lg(a) {
+    const b = jg[a] ? jg[a] : Object.keys(jg).map(c => ({
       name: c,
-      sb: lg(a, c.slice(c.lastIndexOf(":") + 1))
-    })).sort((c, d) => c.sb - d.sb).slice(0, 5).filter(c => c.sb < a.length / 2).reduce((c, d) => c.concat(kg[d.name]), []).slice(0, 5);
+      sb: kg(a, c.slice(c.lastIndexOf(":") + 1))
+    })).sort((c, d) => c.sb - d.sb).slice(0, 5).filter(c => c.sb < a.length / 2).reduce((c, d) => c.concat(jg[d.name]), []).slice(0, 5);
     return b.length ? b.map(c => `"Q{${c.namespaceURI}}${c.localName} (${c.j.map(d => 4 === d ? "..." : Ha(d)).join(", ")})"`).reduce((c, d, e, f) => 0 === e ? c + d : c + ((e !== f.length - 1 ? ", " : " or ") + d), "Did you mean ") + "?" : "No similar functions found.";
   }
-  function ng(a, b, c) {
-    var d = kg[a + ":" + b];
+  function mg(a, b, c) {
+    var d = jg[a + ":" + b];
     return d ? (d = d.find(e => e.j.some(f => 4 === f) ? e.j.length - 1 <= c : e.j.length === c)) ? {
       j: d.j,
       arity: c,
@@ -28195,9 +28197,9 @@ const fontoxpath = function (xspattern, prsc) {
       i: d.i
     } : null : null;
   }
-  function og(a, b, c, d, e) {
-    kg[a + ":" + b] || (kg[a + ":" + b] = []);
-    kg[a + ":" + b].push({
+  function ng(a, b, c, d, e) {
+    jg[a + ":" + b] || (jg[a + ":" + b] = []);
+    jg[a + ":" + b].push({
       j: c,
       arity: c.length,
       callFunction: e,
@@ -28207,7 +28209,7 @@ const fontoxpath = function (xspattern, prsc) {
       i: d
     });
   }
-  var pg = {
+  var og = {
     xml: "http://www.w3.org/XML/1998/namespace",
     xs: "http://www.w3.org/2001/XMLSchema",
     fn: "http://www.w3.org/2005/xpath-functions",
@@ -28217,7 +28219,7 @@ const fontoxpath = function (xspattern, prsc) {
     fontoxpath: "http://fontoxml.com/fontoxpath",
     local: "http://www.w3.org/2005/xquery-local-functions"
   };
-  var qg = class {
+  var pg = class {
     constructor(a, b, c, d) {
       this.Da = [Object.create(null)];
       this.Ea = Object.create(null);
@@ -28234,7 +28236,7 @@ const fontoxpath = function (xspattern, prsc) {
       this.D = [];
     }
     va(a, b, c) {
-      return ng(a, b, c);
+      return mg(a, b, c);
     }
     eb(a, b) {
       if (a) return null;
@@ -28247,7 +28249,7 @@ const fontoxpath = function (xspattern, prsc) {
     Sa(a, b) {
       const c = this.l(a, b);
       if (c) this.D.push({
-        cc: a,
+        dc: a,
         arity: b,
         Db: c
       });else if ("" === a.prefix) {
@@ -28263,7 +28265,7 @@ const fontoxpath = function (xspattern, prsc) {
     }
     $(a, b = !0) {
       if (!b) return null;
-      if (pg[a]) return pg[a];
+      if (og[a]) return og[a];
       b = this.s(a);
       this.h[a] || (this.h[a] = {
         namespaceURI: b,
@@ -28272,59 +28274,59 @@ const fontoxpath = function (xspattern, prsc) {
       return void 0 !== b || a ? b : null;
     }
   };
-  var rg = (a, b) => {
-      a = 2 === a.node.nodeType ? `${a.node.nodeName}="${ib(b, a)}"` : a.node.outerHTML;
+  var qg = (a, b) => {
+      a = 2 === a.node.nodeType ? `${a.node.nodeName}="${hb(b, a)}"` : a.node.outerHTML;
       return Error(`XQTY0024: The node ${a} follows a node that is not an attribute node or a namespace node.`);
     },
-    sg = a => Error(`XQDY0044: The node name "${a.za()}" is invalid for a computed attribute constructor.`),
-    tg = () => Error("XQST0045: Functions and variables may not be declared in one of the reserved namespace URIs."),
-    ug = (a, b) => Error(`XQST0049: The function or variable "Q{${a}}${b}" is declared more than once.`),
-    vg = () => Error("XQST0060: Functions declared in a module or as an external function must reside in a namespace."),
-    wg = () => Error("XQST0066: A Prolog may contain at most one default function namespace declaration."),
-    xg = () => Error("XQST0070: The prefixes xml and xmlns may not be used in a namespace declaration or be bound to another namespaceURI."),
-    yg = a => Error(`XQDY0074: The value "${a}" of a name expressions cannot be converted to an expanded QName.`),
-    zg = a => Error(`XPST0081: The prefix "${a}" could not be resolved`);
-  function Ag(a, b) {
+    rg = a => Error(`XQDY0044: The node name "${a.za()}" is invalid for a computed attribute constructor.`),
+    sg = () => Error("XQST0045: Functions and variables may not be declared in one of the reserved namespace URIs."),
+    tg = (a, b) => Error(`XQST0049: The function or variable "Q{${a}}${b}" is declared more than once.`),
+    ug = () => Error("XQST0060: Functions declared in a module or as an external function must reside in a namespace."),
+    vg = () => Error("XQST0066: A Prolog may contain at most one default function namespace declaration."),
+    wg = () => Error("XQST0070: The prefixes xml and xmlns may not be used in a namespace declaration or be bound to another namespaceURI."),
+    xg = a => Error(`XQDY0074: The value "${a}" of a name expressions cannot be converted to an expanded QName.`),
+    yg = a => Error(`XPST0081: The prefix "${a}" could not be resolved`);
+  function zg(a, b) {
     return `Q{${a || ""}}${b}`;
   }
-  function Bg(a, b) {
+  function Ag(a, b) {
     for (let c = a.length - 1; 0 <= c; --c) if (b in a[c]) return a[c][b];
   }
-  function Ff(a) {
-    const b = new Cg(a.o);
+  function Ef(a) {
+    const b = new Bg(a.o);
     for (let c = 0; c < a.h + 1; ++c) b.D = [Object.assign(Object.create(null), b.D[0], a.D[c])], b.Da = [Object.assign(Object.create(null), b.Da[0], a.Da[c])], b.l = Object.assign(Object.create(null), a.l), b.Ea = a.Ea, b.v = a.v;
     return b;
   }
-  function Dg(a) {
+  function Cg(a) {
     a.s++;
     a.h++;
     a.D[a.h] = Object.create(null);
     a.Da[a.h] = Object.create(null);
   }
-  function Eg(a, b, c) {
-    return (a = a.Ea[Ag(b, c)]) ? a : null;
+  function Dg(a, b, c) {
+    return (a = a.Ea[zg(b, c)]) ? a : null;
   }
-  function Fg(a, b, c, d, e) {
-    d = Ag(b, c) + "~" + d;
-    if (a.l[d]) throw ug(b, c);
+  function Eg(a, b, c, d, e) {
+    d = zg(b, c) + "~" + d;
+    if (a.l[d]) throw tg(b, c);
     a.l[d] = e;
   }
-  function Gg(a, b, c) {
+  function Fg(a, b, c) {
     a.D[a.h][b] = c;
   }
-  function Hg(a, b, c) {
-    b = Ag(b || "", c);
+  function Gg(a, b, c) {
+    b = zg(b || "", c);
     return a.Da[a.h][b] = `${b}[${a.s}]`;
   }
-  function Ig(a, b, c, d) {
-    a.Ea[`${Ag(b || "", c)}[${a.s}]`] = d;
+  function Hg(a, b, c, d) {
+    a.Ea[`${zg(b || "", c)}[${a.s}]`] = d;
   }
-  function Jg(a) {
+  function Ig(a) {
     a.D.length = a.h;
     a.Da.length = a.h;
     a.h--;
   }
-  var Cg = class {
+  var Bg = class {
     constructor(a) {
       this.o = a;
       this.s = this.h = 0;
@@ -28335,11 +28337,11 @@ const fontoxpath = function (xspattern, prsc) {
       this.Da = a && a.Da;
     }
     va(a, b, c, d = !1) {
-      const e = this.l[Ag(a, b) + "~" + c];
+      const e = this.l[zg(a, b) + "~" + c];
       return !e || d && e.wb ? null === this.o ? null : this.o.va(a, b, c, d) : e;
     }
     eb(a, b) {
-      const c = Bg(this.Da, Ag(a, b));
+      const c = Ag(this.Da, zg(a, b));
       return c ? c : null === this.o ? null : this.o.eb(a, b);
     }
     Sa(a, b) {
@@ -28354,7 +28356,7 @@ const fontoxpath = function (xspattern, prsc) {
       } : null === this.o ? null : this.o.Sa(a, b);
     }
     $(a, b = !0) {
-      const c = Bg(this.D, a || "");
+      const c = Ag(this.D, a || "");
       return void 0 === c ? null === this.o ? void 0 : this.o.$(a || "", b) : c;
     }
   };
@@ -28387,14 +28389,14 @@ const fontoxpath = function (xspattern, prsc) {
     }
     return c;
   }
-  function Kg(a) {
+  function Jg(a) {
     return {
       localName: H(a),
       namespaceURI: I(a, "URI"),
       prefix: I(a, "prefix")
     };
   }
-  function Lg(a) {
+  function Kg(a) {
     const b = F(a, "typeDeclaration");
     if (!b || F(b, "voidSequenceType")) return {
       type: 59,
@@ -28462,7 +28464,7 @@ const fontoxpath = function (xspattern, prsc) {
       a.splice(1, 0, d);
     } else a[1][b] = c;
   }
-  function Mg(a) {
+  function Lg(a) {
     const b = {
       type: 62,
       g: 3
@@ -28470,7 +28472,7 @@ const fontoxpath = function (xspattern, prsc) {
     L(a, "type", b);
     return b;
   }
-  function Ng(a, b) {
+  function Mg(a, b) {
     if (!b || !b.ga) return {
       type: 59,
       g: 2
@@ -28480,7 +28482,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 59,
       g: 2
     };
-    var d = Kg(c);
+    var d = Jg(c);
     c = d.localName;
     const e = d.prefix;
     d = K(F(a, "arguments"), "*");
@@ -28503,7 +28505,7 @@ const fontoxpath = function (xspattern, prsc) {
   function M(a, b, c) {
     return (a << 20) + (b << 12) + (c.charCodeAt(0) << 8) + c.charCodeAt(1);
   }
-  var Og = {
+  var Ng = {
       [M(2, 2, "idivOp")]: 5,
       [M(16, 16, "addOp")]: 16,
       [M(16, 16, "subtractOp")]: 16,
@@ -28541,7 +28543,7 @@ const fontoxpath = function (xspattern, prsc) {
       [M(8, 17, "addOp")]: 8,
       [M(8, 17, "subtractOp")]: 8
     },
-    Pg = {
+    Og = {
       [M(2, 2, "addOp")]: (a, b) => a + b,
       [M(2, 2, "subtractOp")]: (a, b) => a - b,
       [M(2, 2, "multiplyOp")]: (a, b) => a * b,
@@ -28607,11 +28609,11 @@ const fontoxpath = function (xspattern, prsc) {
       [M(8, 17, "addOp")]: Qb,
       [M(8, 17, "subtractOp")]: Rb
     };
-  function Qg(a, b) {
+  function Pg(a, b) {
     return v(a, 5) && v(b, 5) ? 5 : v(a, 4) && v(b, 4) ? 4 : v(a, 6) && v(b, 6) ? 6 : 3;
   }
-  const Rg = [2, 16, 17, 9, 7, 8];
-  function Sg(a, b, c) {
+  const Qg = [2, 16, 17, 9, 7, 8];
+  function Rg(a, b, c) {
     function d(l, n) {
       return {
         U: e ? e(l) : l,
@@ -28622,14 +28624,14 @@ const fontoxpath = function (xspattern, prsc) {
       f = null;
     v(b, 19) && (e = l => jd(l, 3), b = 3);
     v(c, 19) && (f = l => jd(l, 3), c = 3);
-    const h = Rg.filter(l => v(b, l)),
-      k = Rg.filter(l => v(c, l));
+    const h = Qg.filter(l => v(b, l)),
+      k = Qg.filter(l => v(c, l));
     if (h.includes(2) && k.includes(2)) {
-      const l = Pg[M(2, 2, a)];
-      let n = Og[M(2, 2, a)];
-      n ||= Qg(b, c);
+      const l = Og[M(2, 2, a)];
+      let n = Ng[M(2, 2, a)];
+      n ||= Pg(b, c);
       "divOp" === a && 5 === n && (n = 4);
-      return "idivOp" === a ? Tg(d, l)[0] : (t, u) => {
+      return "idivOp" === a ? Sg(d, l)[0] : (t, u) => {
         const {
           U: z,
           V: y
@@ -28638,8 +28640,8 @@ const fontoxpath = function (xspattern, prsc) {
       };
     }
     for (const l of h) for (const n of k) {
-      const t = Pg[M(l, n, a)],
-        u = Og[M(l, n, a)];
+      const t = Og[M(l, n, a)],
+        u = Ng[M(l, n, a)];
       if (t && void 0 !== u) return (z, y) => {
         const {
           U: G,
@@ -28649,7 +28651,7 @@ const fontoxpath = function (xspattern, prsc) {
       };
     }
   }
-  function Ug(a, b, c) {
+  function Tg(a, b, c) {
     function d(n, t) {
       return {
         U: f ? f(n) : n,
@@ -28662,17 +28664,17 @@ const fontoxpath = function (xspattern, prsc) {
       h = null;
     v(b, 19) && (f = n => jd(n, 3), b = 3);
     v(c, 19) && (h = n => jd(n, 3), c = 3);
-    var k = Rg.filter(n => v(b, n));
-    e = Rg.filter(n => v(c, n));
+    var k = Qg.filter(n => v(b, n));
+    e = Qg.filter(n => v(c, n));
     if (k.includes(2) && e.includes(2)) {
-      var l = Og[M(2, 2, a)];
-      void 0 === l && (l = Qg(b, c));
+      var l = Ng[M(2, 2, a)];
+      void 0 === l && (l = Pg(b, c));
       "divOp" === a && 5 === l && (l = 4);
-      return "idivOp" === a ? Tg(d, (n, t) => Math.trunc(n / t))[1] : l;
+      return "idivOp" === a ? Sg(d, (n, t) => Math.trunc(n / t))[1] : l;
     }
-    for (l of k) for (const n of e) if (k = Og[M(l, n, a)], void 0 !== k) return k;
+    for (l of k) for (const n of e) if (k = Ng[M(l, n, a)], void 0 !== k) return k;
   }
-  function Tg(a, b) {
+  function Sg(a, b) {
     return [(c, d) => {
       const {
         U: e,
@@ -28683,8 +28685,8 @@ const fontoxpath = function (xspattern, prsc) {
       return Number.isFinite(e.value) && !Number.isFinite(f.value) ? g(0, 5) : g(b(e.value, f.value), 5);
     }, 5];
   }
-  const Vg = Object.create(null);
-  var Wg = class extends D {
+  const Ug = Object.create(null);
+  var Vg = class extends D {
     constructor(a, b, c, d, e) {
       super(b.o.add(c.o), [b, c], {
         B: !1
@@ -28705,36 +28707,36 @@ const fontoxpath = function (xspattern, prsc) {
         var h = d.type,
           k = this.l;
         const l = `${f}~${h}~${k}`;
-        let n = Vg[l];
-        n ||= Vg[l] = Sg(k, f, h);
+        let n = Ug[l];
+        n ||= Ug[l] = Rg(k, f, h);
         f = n;
         if (!f) throw Error(`XPTY0004: ${this.l} not available for types ${Da[e.type]} and ${Da[d.type]}`);
         return w.m(f(e, d));
       }));
     }
   };
-  function Xg(a, b) {
+  function Wg(a, b) {
     var c = O;
     let d = !1;
     for (var e = 1; e < a.length; e++) switch (a[e][0]) {
       case "letClause":
-        Yg(b);
+        Xg(b);
         var f = a[e],
           h = b,
           k = c,
           l = J(f, ["letClauseItem", "typedVariableBinding", "varName"]);
-        l = Kg(l);
+        l = Jg(l);
         f = J(f, ["letClauseItem", "letExpr"]);
         k = k(f[1], h);
-        Zg(h, l.localName, k);
+        Yg(h, l.localName, k);
         break;
       case "forClause":
         d = !0;
-        Yg(b);
-        $g(a[e], b, c);
+        Xg(b);
+        Zg(a[e], b, c);
         break;
       case "whereClause":
-        Yg(b);
+        Xg(b);
         h = a[e];
         c(h, b);
         L(h, "type", {
@@ -28743,7 +28745,7 @@ const fontoxpath = function (xspattern, prsc) {
         });
         break;
       case "orderByClause":
-        Yg(b);
+        Xg(b);
         break;
       case "returnClause":
         e = a[e];
@@ -28778,20 +28780,20 @@ const fontoxpath = function (xspattern, prsc) {
     }
     if (0 < b.h) b.h--, b.o.pop(), b.v.pop();else throw Error("Variable scope out of bound");
   }
-  function $g(a, b, c) {
-    const d = Kg(J(a, ["forClauseItem", "typedVariableBinding", "varName"]));
-    if (a = J(a, ["forClauseItem", "forExpr", "sequenceExpr"])) a = K(a, "*").map(e => c(e, b)), a.includes(void 0) || a.includes(null) || (a = ah(a), 1 === a.length && Zg(b, d.localName, a[0]));
+  function Zg(a, b, c) {
+    const d = Jg(J(a, ["forClauseItem", "typedVariableBinding", "varName"]));
+    if (a = J(a, ["forClauseItem", "forExpr", "sequenceExpr"])) a = K(a, "*").map(e => c(e, b)), a.includes(void 0) || a.includes(null) || (a = $g(a), 1 === a.length && Yg(b, d.localName, a[0]));
   }
-  function ah(a) {
+  function $g(a) {
     return a.filter((b, c, d) => d.findIndex(e => e.type === b.type && e.g === b.g) === c);
   }
-  function bh(a, b) {
+  function ah(a, b) {
     if (!b || !b.ga) return {
       type: 59,
       g: 2
     };
     const c = F(a, "functionName");
-    var d = Kg(c);
+    var d = Jg(c);
     let e = d.localName;
     var f = d.prefix;
     let h = d.namespaceURI;
@@ -28818,7 +28820,7 @@ const fontoxpath = function (xspattern, prsc) {
     59 !== b.i.type && L(a, "type", b.i);
     return b.i;
   }
-  function ch(a) {
+  function bh(a) {
     const b = {
       type: 61,
       g: 3
@@ -28826,13 +28828,13 @@ const fontoxpath = function (xspattern, prsc) {
     L(a, "type", b);
     return b;
   }
-  function dh(a, b) {
+  function ch(a, b) {
     if (!b || !b.ga) return {
       type: 59,
       g: 2
     };
     const c = F(a, "functionName");
-    var d = Kg(c);
+    var d = Jg(c);
     let e = d.localName;
     var f = d.namespaceURI;
     const h = d.prefix;
@@ -28858,7 +28860,7 @@ const fontoxpath = function (xspattern, prsc) {
     59 !== b.i.type && 63 !== b.i.type && L(a, "type", b.i);
     return b.i;
   }
-  function eh(a, b) {
+  function dh(a, b) {
     var c = K(a, "stepExpr");
     if (!c) return {
       type: 59,
@@ -28908,7 +28910,7 @@ const fontoxpath = function (xspattern, prsc) {
             }
             break;
           case "nameTest":
-            e = Kg(l);
+            e = Jg(l);
             if (null !== e.namespaceURI) break;
             if ("attribute" === k && !e.prefix) break;
             e = d.$(e.prefix || "");
@@ -28927,7 +28929,7 @@ const fontoxpath = function (xspattern, prsc) {
     d && 59 !== d.type && L(a, "type", d);
     return d;
   }
-  function fh(a) {
+  function eh(a) {
     const b = {
       type: 0,
       g: 3
@@ -28935,14 +28937,14 @@ const fontoxpath = function (xspattern, prsc) {
     L(a, "type", b);
     return b;
   }
-  function gh(a, b, c) {
+  function fh(a, b, c) {
     0 === b ? b = {
       type: 53,
       g: 2
     } : 1 === b ? b = c[0] : c.includes(void 0) || c.includes(null) ? b = {
       type: 59,
       g: 2
-    } : (b = ah(c), b = 1 < b.length ? {
+    } : (b = $g(c), b = 1 < b.length ? {
       type: 59,
       g: 2
     } : {
@@ -28952,7 +28954,7 @@ const fontoxpath = function (xspattern, prsc) {
     b && 59 !== b.type && L(a, "type", b);
     return b;
   }
-  function hh(a, b, c, d) {
+  function gh(a, b, c, d) {
     if (!b || c.includes(void 0)) return {
       type: 59,
       g: 2
@@ -28962,10 +28964,10 @@ const fontoxpath = function (xspattern, prsc) {
       var f = F(e[h], "*");
       switch (f[0]) {
         case "sequenceType":
-          if (f = ih(f, b, c[h])) return 59 !== f.type && L(a, "type", f), f;
+          if (f = hh(f, b, c[h])) return 59 !== f.type && L(a, "type", f), f;
           continue;
         case "sequenceTypeUnion":
-          for (d = K(f, "*"), e = 0; 2 > e; e++) if (f = ih(d[e], b, c[h])) return 59 !== f.type && L(a, "type", f), f;
+          for (d = K(f, "*"), e = 0; 2 > e; e++) if (f = hh(d[e], b, c[h])) return 59 !== f.type && L(a, "type", f), f;
         default:
           return {
             type: 59,
@@ -28976,7 +28978,7 @@ const fontoxpath = function (xspattern, prsc) {
     59 !== d.type && L(a, "type", d);
     return d;
   }
-  function ih(a, b, c) {
+  function hh(a, b, c) {
     const d = K(a, "*"),
       e = F(a, "atomicType");
     if (!e) return {
@@ -28987,20 +28989,20 @@ const fontoxpath = function (xspattern, prsc) {
       if (3 === b.g) return c;
     } else if (a = F(a, "occurrenceIndicator")[1], b.g === Ka(a)) return c;
   }
-  function jh(a, b) {
+  function ih(a, b) {
     O(a, b);
   }
   function O(a, b) {
-    var c = kh.get(a[0]);
+    var c = jh.get(a[0]);
     if (c) return c(a, b);
     for (c = 1; c < a.length; c++) a[c] && O(a[c], b);
   }
-  const lh = (a, b) => {
+  const kh = (a, b) => {
       var c = O(F(a, "firstOperand")[1], b);
       const d = O(F(a, "secondOperand")[1], b);
       var e = a[0];
       if (c && d) {
-        if (b = Ug(e, c.type, d.type)) c = {
+        if (b = Tg(e, c.type, d.type)) c = {
           type: b,
           g: c.g
         }, 2 !== b && 59 !== b && L(a, "type", c), a = c;else throw Error(`XPTY0004: ${e} not available for types ${Ha(c)} and ${Ha(d)}`);
@@ -29010,7 +29012,7 @@ const fontoxpath = function (xspattern, prsc) {
       };
       return a;
     },
-    mh = (a, b) => {
+    lh = (a, b) => {
       O(F(a, "firstOperand")[1], b);
       O(F(a, "secondOperand")[1], b);
       a: {
@@ -29036,7 +29038,7 @@ const fontoxpath = function (xspattern, prsc) {
       }
       return a;
     },
-    nh = (a, b) => {
+    mh = (a, b) => {
       O(F(a, "firstOperand")[1], b);
       O(F(a, "secondOperand")[1], b);
       a: {
@@ -29070,12 +29072,24 @@ const fontoxpath = function (xspattern, prsc) {
       }
       return a;
     },
-    oh = (a, b) => {
+    nh = (a, b) => {
       O(F(a, "firstOperand")[1], b);
       O(F(a, "secondOperand")[1], b);
       b = {
         type: 0,
         g: 3
+      };
+      L(a, "type", b);
+      return b;
+    },
+    oh = (a, b) => {
+      O(F(a, "firstOperand")[1], b);
+      O(F(a, "secondOperand")[1], b);
+      b = I(J(a, ["firstOperand", "*"]), "type");
+      const c = I(J(a, ["secondOperand", "*"]), "type");
+      b = {
+        type: 0,
+        g: wc(b) || wc(c) ? 0 : 3
       };
       L(a, "type", b);
       return b;
@@ -29092,19 +29106,7 @@ const fontoxpath = function (xspattern, prsc) {
       L(a, "type", b);
       return b;
     },
-    qh = (a, b) => {
-      O(F(a, "firstOperand")[1], b);
-      O(F(a, "secondOperand")[1], b);
-      b = I(J(a, ["firstOperand", "*"]), "type");
-      const c = I(J(a, ["secondOperand", "*"]), "type");
-      b = {
-        type: 0,
-        g: wc(b) || wc(c) ? 0 : 3
-      };
-      L(a, "type", b);
-      return b;
-    },
-    kh = new Map([["unaryMinusOp", (a, b) => {
+    jh = new Map([["unaryMinusOp", (a, b) => {
       b = O(F(a, "operand")[1], b);
       b ? v(b.type, 2) ? (b = {
         type: b.type,
@@ -29130,11 +29132,11 @@ const fontoxpath = function (xspattern, prsc) {
         g: 2
       }, L(a, "type", b), a = b);
       return a;
-    }], ["addOp", lh], ["subtractOp", lh], ["divOp", lh], ["idivOp", lh], ["modOp", lh], ["multiplyOp", lh], ["andOp", mh], ["orOp", mh], ["sequenceExpr", (a, b) => {
+    }], ["addOp", kh], ["subtractOp", kh], ["divOp", kh], ["idivOp", kh], ["modOp", kh], ["multiplyOp", kh], ["andOp", lh], ["orOp", lh], ["sequenceExpr", (a, b) => {
       const c = K(a, "*"),
         d = c.map(e => O(e, b));
-      return gh(a, c.length, d);
-    }], ["unionOp", nh], ["intersectOp", nh], ["exceptOp", nh], ["stringConcatenateOp", (a, b) => {
+      return fh(a, c.length, d);
+    }], ["unionOp", mh], ["intersectOp", mh], ["exceptOp", mh], ["stringConcatenateOp", (a, b) => {
       O(F(a, "firstOperand")[1], b);
       O(F(a, "secondOperand")[1], b);
       b = {
@@ -29152,11 +29154,11 @@ const fontoxpath = function (xspattern, prsc) {
       };
       L(a, "type", b);
       return b;
-    }], ["equalOp", oh], ["notEqualOp", oh], ["lessThanOrEqualOp", oh], ["lessThanOp", oh], ["greaterThanOrEqualOp", oh], ["greaterThanOp", oh], ["eqOp", ph], ["neOp", ph], ["ltOp", ph], ["leOp", ph], ["gtOp", ph], ["geOp", ph], ["isOp", qh], ["nodeBeforeOp", qh], ["nodeAfterOp", qh], ["pathExpr", (a, b) => {
+    }], ["equalOp", nh], ["notEqualOp", nh], ["lessThanOrEqualOp", nh], ["lessThanOp", nh], ["greaterThanOrEqualOp", nh], ["greaterThanOp", nh], ["eqOp", oh], ["neOp", oh], ["ltOp", oh], ["leOp", oh], ["gtOp", oh], ["geOp", oh], ["isOp", ph], ["nodeBeforeOp", ph], ["nodeAfterOp", ph], ["pathExpr", (a, b) => {
       const c = F(a, "rootExpr");
       c && c[1] && O(c[1], b);
       K(a, "stepExpr").map(d => O(d, b));
-      return eh(a, b);
+      return dh(a, b);
     }], ["contextItemExpr", () => ({
       type: 59,
       g: 2
@@ -29215,10 +29217,10 @@ const fontoxpath = function (xspattern, prsc) {
     }], ["functionCallExpr", (a, b) => {
       const c = F(a, "arguments");
       K(c, "*").map(d => O(d, b));
-      return bh(a, b);
+      return ah(a, b);
     }], ["arrowExpr", (a, b) => {
       O(F(a, "argExpr")[1], b);
-      return Ng(a, b);
+      return Mg(a, b);
     }], ["dynamicFunctionInvocationExpr", (a, b) => {
       O(J(a, ["functionItem", "*"]), b);
       (a = F(a, "arguments")) && O(a, b);
@@ -29226,7 +29228,7 @@ const fontoxpath = function (xspattern, prsc) {
         type: 59,
         g: 2
       };
-    }], ["namedFunctionRef", (a, b) => dh(a, b)], ["inlineFunctionExpr", (a, b) => {
+    }], ["namedFunctionRef", (a, b) => ch(a, b)], ["inlineFunctionExpr", (a, b) => {
       O(F(a, "functionBody")[1], b);
       b = {
         type: 60,
@@ -29266,10 +29268,10 @@ const fontoxpath = function (xspattern, prsc) {
         key: O(J(c, ["mapKeyExpr", "*"]), b),
         value: O(J(c, ["mapValueExpr", "*"]), b)
       }));
-      return ch(a);
+      return bh(a);
     }], ["arrayConstructor", (a, b) => {
       K(F(a, "*"), "arrayElem").map(c => O(c, b));
-      return Mg(a);
+      return Lg(a);
     }], ["unaryLookup", a => {
       F(a, "NCName");
       return {
@@ -29280,15 +29282,15 @@ const fontoxpath = function (xspattern, prsc) {
       const c = O(F(a, "argExpr")[1], b),
         d = K(a, "typeswitchExprCaseClause").map(f => O(J(f, ["resultExpr"])[1], b)),
         e = O(J(a, ["typeswitchExprDefaultClause", "resultExpr"])[1], b);
-      return hh(a, c, d, e);
+      return gh(a, c, d, e);
     }], ["quantifiedExpr", (a, b) => {
       K(a, "*").map(c => O(c, b));
-      return fh(a);
+      return eh(a);
     }], ["x:stackTrace", (a, b) => {
       a = K(a, "*");
       return O(a[0], b);
-    }], ["queryBody", (a, b) => O(a[1], b)], ["flworExpr", (a, b) => Xg(a, b)], ["varRef", (a, b) => {
-      const c = Kg(F(a, "name"));
+    }], ["queryBody", (a, b) => O(a[1], b)], ["flworExpr", (a, b) => Wg(a, b)], ["varRef", (a, b) => {
+      const c = Jg(F(a, "name"));
       var d;
       a: {
         for (d = b.h; 0 <= d; d--) {
@@ -29304,16 +29306,16 @@ const fontoxpath = function (xspattern, prsc) {
       null === c.namespaceURI && (b = b.$(c.prefix), void 0 !== b && L(a, "URI", b));
       return d;
     }]]);
-  function Yg(a) {
+  function Xg(a) {
     a.h++;
     a.o.push({});
     a.v.push({});
   }
-  function Zg(a, b, c) {
+  function Yg(a, b, c) {
     if (a.o[a.h][b]) throw Error(`Another variable of in the scope ${a.h} with the same name ${b} already exists`);
     a.o[a.h][b] = c;
   }
-  var rh = class {
+  var qh = class {
     constructor(a) {
       this.h = 0;
       this.ga = a;
@@ -29328,9 +29330,9 @@ const fontoxpath = function (xspattern, prsc) {
       return this.ga ? this.ga.$(a) : void 0;
     }
   };
-  var sh = class extends D {
+  var rh = class extends D {
     constructor(a, b) {
-      super(new vf({
+      super(new uf({
         external: 1
       }), a, {
         B: a.every(c => c.B)
@@ -29341,9 +29343,9 @@ const fontoxpath = function (xspattern, prsc) {
       return 0 === this.l.length ? w.m(new pb([])) : C(this.l[0], a, b).N(c => w.m(new pb(c.map(d => Ra(w.m(d))))));
     }
   };
-  var th = class extends D {
+  var sh = class extends D {
     constructor(a, b) {
-      super(new vf({
+      super(new uf({
         external: 1
       }), a, {
         B: a.every(c => c.B)
@@ -29354,12 +29356,12 @@ const fontoxpath = function (xspattern, prsc) {
       return w.m(new pb(this.l.map(c => Ra(C(c, a, b)))));
     }
   };
-  function uh(a) {
+  function th(a) {
     if (null === a) throw lc("context is absent, it needs to be present to use axes.");
     if (!v(a.type, 53)) throw Error("XPTY0020: Axes can only be applied to nodes.");
     return a.value;
   }
-  function vh(a, b, c) {
+  function uh(a, b, c) {
     let d = b;
     return {
       next: () => {
@@ -29370,7 +29372,7 @@ const fontoxpath = function (xspattern, prsc) {
       }
     };
   }
-  var wh = class extends D {
+  var vh = class extends D {
     constructor(a, b) {
       b = b || {
         Qa: !1
@@ -29386,26 +29388,26 @@ const fontoxpath = function (xspattern, prsc) {
     }
     h(a, b) {
       b = b.h;
-      a = uh(a.M);
+      a = th(a.M);
       var c = this.l.D();
       c = c && (c.startsWith("name-") || "type-1" === c) ? "type-1" : null;
-      return w.create(vh(b, this.s ? a : x(b, a, c), c)).filter(d => this.l.l(d));
+      return w.create(uh(b, this.s ? a : x(b, a, c), c)).filter(d => this.l.l(d));
     }
   };
-  const xh = new Map([["type-1-or-type-2", ["name", "type-1", "type-2"]], ["type-1", ["name"]], ["type-2", ["name"]]]);
-  function yh(a, b) {
+  const wh = new Map([["type-1-or-type-2", ["name", "type-1", "type-2"]], ["type-1", ["name"]], ["type-2", ["name"]]]);
+  function xh(a, b) {
     if (null === a) return b;
     if (null === b || a === b) return a;
     const c = a.startsWith("name-") ? "name" : a,
       d = b.startsWith("name-") ? "name" : b,
-      e = xh.get(c);
+      e = wh.get(c);
     if (void 0 !== e && e.includes(d)) return b;
-    b = xh.get(d);
+    b = wh.get(d);
     return void 0 !== b && b.includes(c) ? a : "empty";
   }
-  var zh = class extends D {
+  var yh = class extends D {
     constructor(a, b) {
-      super(new vf({
+      super(new uf({
         attribute: 1
       }), [a], {
         R: "unsorted",
@@ -29414,11 +29416,11 @@ const fontoxpath = function (xspattern, prsc) {
         B: !1
       });
       this.l = a;
-      this.s = yh(this.l.D(), b);
+      this.s = xh(this.l.D(), b);
     }
     h(a, b) {
       b = b.h;
-      a = uh(a.M);
+      a = th(a.M);
       if (1 !== a.node.nodeType) return w.empty();
       a = eb(b, a, this.s).filter(c => "http://www.w3.org/2000/xmlns/" !== c.node.namespaceURI).map(c => rb(c)).filter(c => this.l.l(c));
       return w.create(a);
@@ -29427,7 +29429,7 @@ const fontoxpath = function (xspattern, prsc) {
       return "type-1";
     }
   };
-  var Ah = class extends D {
+  var zh = class extends D {
     constructor(a, b) {
       super(a.o, [a], {
         R: "sorted",
@@ -29436,11 +29438,11 @@ const fontoxpath = function (xspattern, prsc) {
         B: !1
       });
       this.s = a;
-      this.l = yh(b, a.D());
+      this.l = xh(b, a.D());
     }
     h(a, b) {
       const c = b.h,
-        d = uh(a.M);
+        d = th(a.M);
       a = d.node.nodeType;
       if (1 !== a && 9 !== a) return w.empty();
       let e = null,
@@ -29449,7 +29451,7 @@ const fontoxpath = function (xspattern, prsc) {
         next: () => {
           for (; !f;) {
             if (!e) {
-              e = jb(c, d, this.l);
+              e = ib(c, d, this.l);
               if (!e) {
                 f = !0;
                 continue;
@@ -29464,12 +29466,12 @@ const fontoxpath = function (xspattern, prsc) {
       }).filter(h => this.s.l(h));
     }
   };
-  function Bh(a, b, c) {
+  function Ah(a, b, c) {
     const d = b.node.nodeType;
     if (1 !== d && 9 !== d) return {
       next: () => p
     };
-    let e = jb(a, b, c);
+    let e = ib(a, b, c);
     return {
       next() {
         if (!e) return p;
@@ -29479,7 +29481,7 @@ const fontoxpath = function (xspattern, prsc) {
       }
     };
   }
-  function Ch(a, b, c) {
+  function Bh(a, b, c) {
     const d = [kd(b)];
     return {
       next: e => {
@@ -29490,12 +29492,12 @@ const fontoxpath = function (xspattern, prsc) {
           if (!d.length) return p;
           e = d[0].next(0);
         }
-        d.unshift(Bh(a, e.value, c));
+        d.unshift(Ah(a, e.value, c));
         return q(rb(e.value));
       }
     };
   }
-  var Dh = class extends D {
+  var Ch = class extends D {
     constructor(a, b) {
       b = b || {
         Qa: !1
@@ -29512,13 +29514,13 @@ const fontoxpath = function (xspattern, prsc) {
     }
     h(a, b) {
       b = b.h;
-      a = uh(a.M);
-      a = Ch(b, a, this.A);
+      a = th(a.M);
+      a = Bh(b, a, this.A);
       this.s || a.next(0);
       return w.create(a).filter(c => this.l.l(c));
     }
   };
-  function Eh(a, b, c) {
+  function Dh(a, b, c) {
     var d = a.node.nodeType;
     if (1 !== d && 9 !== d) return a;
     for (d = kb(b, a, c); null !== d;) {
@@ -29528,23 +29530,23 @@ const fontoxpath = function (xspattern, prsc) {
     }
     return a;
   }
-  function Fh(a, b, c = !1, d) {
+  function Eh(a, b, c = !1, d) {
     if (c) {
       let f = b,
         h = !1;
       return {
         next: () => {
           if (h) return p;
-          if (md(f, b)) return f = Eh(b, a, d), md(f, b) ? (h = !0, p) : q(rb(f));
+          if (md(f, b)) return f = Dh(b, a, d), md(f, b) ? (h = !0, p) : q(rb(f));
           const k = f.node.nodeType,
             l = 9 === k || 2 === k ? null : mb(a, f, d);
-          if (null !== l) return f = Eh(l, a, d), q(rb(f));
+          if (null !== l) return f = Dh(l, a, d), q(rb(f));
           f = 9 === k ? null : x(a, f, d);
           return md(f, b) ? (h = !0, p) : q(rb(f));
         }
       };
     }
-    const e = [Bh(a, b, d)];
+    const e = [Ah(a, b, d)];
     return {
       next: () => {
         if (!e.length) return p;
@@ -29554,12 +29556,12 @@ const fontoxpath = function (xspattern, prsc) {
           if (!e.length) return p;
           f = e[0].next(0);
         }
-        e.unshift(Bh(a, f.value, d));
+        e.unshift(Ah(a, f.value, d));
         return q(rb(f.value));
       }
     };
   }
-  function Gh(a, b, c) {
+  function Fh(a, b, c) {
     const d = [];
     for (; b && 9 !== b.node.nodeType; b = x(a, b, null)) {
       const f = lb(a, b, c);
@@ -29570,7 +29572,7 @@ const fontoxpath = function (xspattern, prsc) {
       next: () => {
         for (; e || d.length;) {
           if (!e) {
-            e = Fh(a, d[0], !1, c);
+            e = Eh(a, d[0], !1, c);
             var f = q(rb(d[0]));
             const h = lb(a, d[0], c);
             h ? d[0] = h : d.shift();
@@ -29583,7 +29585,7 @@ const fontoxpath = function (xspattern, prsc) {
       }
     };
   }
-  var Hh = class extends D {
+  var Gh = class extends D {
     constructor(a) {
       super(a.o, [a], {
         R: "sorted",
@@ -29596,16 +29598,16 @@ const fontoxpath = function (xspattern, prsc) {
     }
     h(a, b) {
       b = b.h;
-      a = uh(a.M);
-      return w.create(Gh(b, a, this.s)).filter(c => this.l.l(c));
+      a = th(a.M);
+      return w.create(Fh(b, a, this.s)).filter(c => this.l.l(c));
     }
   };
-  function Ih(a, b, c) {
+  function Hh(a, b, c) {
     return {
       next: () => (b = b && lb(a, b, c)) ? q(rb(b)) : p
     };
   }
-  var Jh = class extends D {
+  var Ih = class extends D {
     constructor(a, b) {
       super(a.o, [a], {
         R: "sorted",
@@ -29614,15 +29616,15 @@ const fontoxpath = function (xspattern, prsc) {
         B: !1
       });
       this.l = a;
-      this.s = yh(this.l.D(), b);
+      this.s = xh(this.l.D(), b);
     }
     h(a, b) {
       b = b.h;
-      a = uh(a.M);
-      return w.create(Ih(b, a, this.s)).filter(c => this.l.l(c));
+      a = th(a.M);
+      return w.create(Hh(b, a, this.s)).filter(c => this.l.l(c));
     }
   };
-  var Kh = class extends D {
+  var Jh = class extends D {
     constructor(a, b) {
       super(a.o, [a], {
         R: "reverse-sorted",
@@ -29631,18 +29633,18 @@ const fontoxpath = function (xspattern, prsc) {
         B: !1
       });
       this.l = a;
-      this.s = yh(b, this.l.D());
+      this.s = xh(b, this.l.D());
     }
     h(a, b) {
       b = b.h;
-      a = uh(a.M);
+      a = th(a.M);
       a = x(b, a, this.s);
       if (!a) return w.empty();
       a = rb(a);
       return this.l.l(a) ? w.m(a) : w.empty();
     }
   };
-  function Lh(a, b, c) {
+  function Kh(a, b, c) {
     const d = [];
     for (; b && 9 !== b.node.nodeType; b = x(a, b, null)) {
       const f = mb(a, b, c);
@@ -29652,7 +29654,7 @@ const fontoxpath = function (xspattern, prsc) {
     return {
       next: () => {
         for (; e || d.length;) {
-          e ||= Fh(a, d[0], !0, c);
+          e ||= Eh(a, d[0], !0, c);
           var f = e.next(0);
           if (f.done) {
             e = null;
@@ -29667,7 +29669,7 @@ const fontoxpath = function (xspattern, prsc) {
       }
     };
   }
-  var Mh = class extends D {
+  var Lh = class extends D {
     constructor(a) {
       super(a.o, [a], {
         B: !1,
@@ -29680,16 +29682,16 @@ const fontoxpath = function (xspattern, prsc) {
     }
     h(a, b) {
       b = b.h;
-      a = uh(a.M);
-      return w.create(Lh(b, a, this.s)).filter(c => this.l.l(c));
+      a = th(a.M);
+      return w.create(Kh(b, a, this.s)).filter(c => this.l.l(c));
     }
   };
-  function Nh(a, b, c) {
+  function Mh(a, b, c) {
     return {
       next: () => (b = b && mb(a, b, c)) ? q(rb(b)) : p
     };
   }
-  var Oh = class extends D {
+  var Nh = class extends D {
     constructor(a, b) {
       super(a.o, [a], {
         B: !1,
@@ -29698,15 +29700,15 @@ const fontoxpath = function (xspattern, prsc) {
         subtree: !1
       });
       this.l = a;
-      this.s = yh(this.l.D(), b);
+      this.s = xh(this.l.D(), b);
     }
     h(a, b) {
       b = b.h;
-      a = uh(a.M);
-      return w.create(Nh(b, a, this.s)).filter(c => this.l.l(c));
+      a = th(a.M);
+      return w.create(Mh(b, a, this.s)).filter(c => this.l.l(c));
     }
   };
-  var Ph = class extends D {
+  var Oh = class extends D {
     constructor(a, b) {
       super(a.o, [a], {
         R: "sorted",
@@ -29715,17 +29717,17 @@ const fontoxpath = function (xspattern, prsc) {
         B: !1
       });
       this.l = a;
-      this.s = yh(this.l.D(), b);
+      this.s = xh(this.l.D(), b);
     }
     h(a) {
-      uh(a.M);
+      th(a.M);
       return this.l.l(a.M) ? w.m(a.M) : w.empty();
     }
     D() {
       return this.s;
     }
   };
-  var Qh = class extends rf {
+  var Ph = class extends qf {
     constructor(a, b, c, d) {
       super(a.o.add(b.o).add(c.o), [a, b, c], {
         B: a.B && b.B && c.B,
@@ -29747,19 +29749,19 @@ const fontoxpath = function (xspattern, prsc) {
     }
     v(a) {
       super.v(a);
-      if (this.l.I) throw Oe();
+      if (this.l.I) throw Ne();
     }
   };
-  function ig(a) {
-    return a.h instanceof Error ? a.location : ig(a.h);
+  function hg(a) {
+    return a.h instanceof Error ? a.location : hg(a.h);
   }
-  function jg(a) {
+  function ig(a) {
     let b;
-    b = a.h instanceof gg ? ["Inner error:", a.h.message] : a.h instanceof Error ? [a.h.toString()] : jg(a.h);
+    b = a.h instanceof fg ? ["Inner error:", a.h.message] : a.h instanceof Error ? [a.h.toString()] : ig(a.h);
     b.push(`  at <${a.o}${a.Wa ? ` (${a.Wa})` : ""}>:${a.location.start.line}:${a.location.start.ha} - ${a.location.end.line}:${a.location.end.ha}`);
     return b;
   }
-  var Rh = class {
+  var Qh = class {
     constructor(a, b, c, d) {
       this.location = a;
       this.o = b;
@@ -29767,7 +29769,7 @@ const fontoxpath = function (xspattern, prsc) {
       this.h = d;
     }
   };
-  var Sh = class extends rf {
+  var Rh = class extends qf {
     constructor(a, b, c, d) {
       super(c.o, [c], {
         B: c.B,
@@ -29795,14 +29797,14 @@ const fontoxpath = function (xspattern, prsc) {
       try {
         d = c(a);
       } catch (e) {
-        throw new Rh(this.P, this.L, this.l, e);
+        throw new Qh(this.P, this.L, this.l, e);
       }
       return w.create({
         next: e => {
           try {
             return d.value.next(e);
           } catch (f) {
-            throw new Rh(this.P, this.L, this.l, f);
+            throw new Qh(this.P, this.L, this.l, f);
           }
         }
       });
@@ -29811,19 +29813,19 @@ const fontoxpath = function (xspattern, prsc) {
       try {
         super.v(a);
       } catch (b) {
-        throw new Rh(this.P, this.L, this.l, b);
+        throw new Qh(this.P, this.L, this.l, b);
       }
     }
     D() {
       return this.Fa[0].D();
     }
   };
-  function Th(a, b, c, d) {
+  function Sh(a, b, c, d) {
     let e = [];
     const f = a.L(b, c, d, k => {
-      if (a.l instanceof Uh) {
-        const n = Th(a.l, b, k, d);
-        return pf(n, t => e = t);
+      if (a.l instanceof Th) {
+        const n = Sh(a.l, b, k, d);
+        return of(n, t => e = t);
       }
       let l = null;
       return w.create({
@@ -29833,7 +29835,7 @@ const fontoxpath = function (xspattern, prsc) {
               var n = k.next(0);
               if (n.done) return p;
               n = a.l.s(n.value, d);
-              l = pf(n, t => e = mf(e, t)).value;
+              l = of(n, t => e = lf(e, t)).value;
             }
             n = l.next(0);
             if (n.done) l = null;else return n;
@@ -29847,13 +29849,13 @@ const fontoxpath = function (xspattern, prsc) {
         if (h) return p;
         const k = f.O();
         h = !0;
-        return q(new Ze(k, e));
+        return q(new Ye(k, e));
       }
     };
   }
-  function Vh(a, b, c, d) {
+  function Uh(a, b, c, d) {
     return a.L(b, c, d, e => {
-      if (a.l instanceof Uh) return Vh(a.l, b, e, d);
+      if (a.l instanceof Th) return Uh(a.l, b, e, d);
       let f = null;
       return w.create({
         next: () => {
@@ -29870,7 +29872,7 @@ const fontoxpath = function (xspattern, prsc) {
       });
     });
   }
-  var Uh = class extends D {
+  var Th = class extends D {
     constructor(a, b, c, d) {
       super(a, b, c, !0);
       this.l = d;
@@ -29878,7 +29880,7 @@ const fontoxpath = function (xspattern, prsc) {
     }
     h(a, b) {
       return this.L(a, kd(a), b, c => {
-        if (this.l instanceof Uh) return Vh(this.l, a, c, b);
+        if (this.l instanceof Th) return Uh(this.l, a, c, b);
         let d = null;
         return w.create({
           next: e => {
@@ -29896,15 +29898,15 @@ const fontoxpath = function (xspattern, prsc) {
       });
     }
     s(a, b) {
-      return Th(this, a, kd(a), b);
+      return Sh(this, a, kd(a), b);
     }
     v(a) {
       super.v(a);
       this.I = this.l.I;
-      for (const b of this.Fa) if (b !== this.l && b.I) throw Oe();
+      for (const b of this.Fa) if (b !== this.l && b.I) throw Ne();
     }
   };
-  var Wh = class extends Uh {
+  var Vh = class extends Th {
     constructor(a, b, c, d) {
       super(b.o.add(d.o), [b, d], {
         B: !1
@@ -29942,21 +29944,21 @@ const fontoxpath = function (xspattern, prsc) {
     v(a) {
       if (this.P && (this.ma = a.$(this.P), !this.ma && this.P)) throw Error(`XPST0081: Could not resolve namespace for prefix ${this.P} in a for expression`);
       this.ya.v(a);
-      Dg(a);
-      this.yb = Hg(a, this.ma, this.Pb);
+      Cg(a);
+      this.yb = Gg(a, this.ma, this.Pb);
       if (this.A) {
         if (this.A.prefix && (this.A.namespaceURI = a.$(this.A.prefix), !this.A.namespaceURI && this.A.prefix)) throw Error(`XPST0081: Could not resolve namespace for prefix ${this.P} in the positionalVariableBinding in a for expression`);
-        this.La = Hg(a, this.A.namespaceURI, this.A.localName);
+        this.La = Gg(a, this.A.namespaceURI, this.A.localName);
       }
       this.l.v(a);
-      Jg(a);
-      if (this.ya.I) throw Oe();
+      Ig(a);
+      if (this.ya.I) throw Ne();
       this.l.I && (this.I = !0);
     }
   };
-  var Xh = class extends D {
+  var Wh = class extends D {
     constructor(a, b, c) {
-      super(new vf({
+      super(new uf({
         external: 1
       }), [c], {
         B: !1,
@@ -29992,14 +29994,14 @@ const fontoxpath = function (xspattern, prsc) {
       return w.m(c);
     }
     v(a) {
-      Dg(a);
-      this.s = this.P.map(b => Hg(a, b.namespaceURI, b.localName));
+      Cg(a);
+      this.s = this.P.map(b => Gg(a, b.namespaceURI, b.localName));
       this.l.v(a);
-      Jg(a);
+      Ig(a);
       if (this.l.I) throw Error("Not implemented: inline functions can not yet be updating.");
     }
   };
-  var Yh = class extends Uh {
+  var Xh = class extends Th {
     constructor(a, b, c) {
       super(b.o.add(c.o), [b, c], {
         B: !1,
@@ -30030,17 +30032,17 @@ const fontoxpath = function (xspattern, prsc) {
     v(a) {
       if (this.A && (this.P = a.$(this.A), !this.P && this.A)) throw Error(`XPST0081: Could not resolve namespace for prefix ${this.A} using in a for expression`);
       this.ma.v(a);
-      Dg(a);
-      this.ya = Hg(a, this.P, this.La);
+      Cg(a);
+      this.ya = Gg(a, this.P, this.La);
       this.l.v(a);
-      Jg(a);
+      Ig(a);
       this.I = this.l.I;
-      if (this.ma.I) throw Oe();
+      if (this.ma.I) throw Ne();
     }
   };
-  var Zh = class extends D {
+  var Yh = class extends D {
     constructor(a, b) {
-      super(new vf({}), [], {
+      super(new uf({}), [], {
         B: !0,
         R: "sorted"
       }, !1, b);
@@ -30065,9 +30067,9 @@ const fontoxpath = function (xspattern, prsc) {
       return this.l();
     }
   };
-  var $h = class extends D {
+  var Zh = class extends D {
     constructor(a, b) {
-      super(new vf({
+      super(new uf({
         external: 1
       }), a.reduce((c, {
         key: d,
@@ -30090,9 +30092,9 @@ const fontoxpath = function (xspattern, prsc) {
       })))));
     }
   };
-  var ai = class extends D {
+  var $h = class extends D {
     constructor(a, b, c) {
-      super(new vf({
+      super(new uf({
         external: 1
       }), [], {
         B: !0
@@ -30122,16 +30124,16 @@ const fontoxpath = function (xspattern, prsc) {
           localName: c,
           prefix: d
         }, this.s);
-        if (!e) throw Error(`XPST0017: The function ${d ? d + ":" : ""}${c} with arity ${this.s} could not be resolved. ${mg(c)}`);
+        if (!e) throw Error(`XPST0017: The function ${d ? d + ":" : ""}${c} with arity ${this.s} could not be resolved. ${lg(c)}`);
         b = e.namespaceURI;
         c = e.localName;
       }
       this.l = a.va(b, c, this.s) || null;
-      if (!this.l) throw a = this.A, Error(`XPST0017: Function ${`${a.namespaceURI ? `Q{${a.namespaceURI}}` : a.prefix ? `${a.prefix}:` : ""}${a.localName}`} with arity of ${this.s} not registered. ${mg(c)}`);
+      if (!this.l) throw a = this.A, Error(`XPST0017: Function ${`${a.namespaceURI ? `Q{${a.namespaceURI}}` : a.prefix ? `${a.prefix}:` : ""}${a.localName}`} with arity of ${this.s} not registered. ${lg(c)}`);
       super.v(a);
     }
   };
-  const bi = {
+  const ai = {
     [5]: 5,
     [27]: 5,
     [28]: 5,
@@ -30149,7 +30151,7 @@ const fontoxpath = function (xspattern, prsc) {
     [6]: 6,
     [3]: 3
   };
-  var ci = class extends D {
+  var bi = class extends D {
     constructor(a, b, c) {
       super(b.o, [b], {
         B: !1
@@ -30163,17 +30165,17 @@ const fontoxpath = function (xspattern, prsc) {
         var d = c[0];
         if (this.type) return c = "+" === this.l ? +d.value : -d.value, 0 === d.type && (c = Number.NaN), w.m(g(c, this.type.type));
         if (1 < c.length) throw Error("XPTY0004: The operand to a unary operator must be a sequence with a length less than one");
-        return v(d.type, 19) ? (d = jd(d, 3).value, w.m(g("+" === this.l ? d : -d, 3))) : v(d.type, 2) ? "+" === this.l ? w.m(d) : w.m(g(-1 * d.value, bi[d.type])) : w.m(g(Number.NaN, 3));
+        return v(d.type, 19) ? (d = jd(d, 3).value, w.m(g("+" === this.l ? d : -d, 3))) : v(d.type, 2) ? "+" === this.l ? w.m(d) : w.m(g(-1 * d.value, ai[d.type])) : w.m(g(Number.NaN, 3));
       });
     }
   };
-  var di = class extends D {
+  var ci = class extends D {
     constructor(a, b) {
-      super(a.reduce((c, d) => c.add(d.o), new vf({})), a, {
+      super(a.reduce((c, d) => c.add(d.o), new uf({})), a, {
         B: a.every(c => c.B)
       }, !1, b);
       this.l = a;
-      this.s = a.reduce((c, d) => yh(c, d.D()), null);
+      this.s = a.reduce((c, d) => xh(c, d.D()), null);
     }
     h(a, b) {
       let c = 0,
@@ -30208,9 +30210,9 @@ const fontoxpath = function (xspattern, prsc) {
       return this.s;
     }
   };
-  var ei = class extends D {
+  var di = class extends D {
     constructor(a, b) {
-      super(a.reduce((d, e) => 0 < uf(d, e.o) ? d : e.o, new vf({})), a, {
+      super(a.reduce((d, e) => 0 < tf(d, e.o) ? d : e.o, new uf({})), a, {
         B: a.every(d => d.B)
       }, !1, b);
       let c;
@@ -30261,7 +30263,7 @@ const fontoxpath = function (xspattern, prsc) {
       return this.s;
     }
   };
-  function fi(a, b) {
+  function ei(a, b) {
     let c;
     return w.create({
       next: d => {
@@ -30277,7 +30279,7 @@ const fontoxpath = function (xspattern, prsc) {
       }
     });
   }
-  function gi(a, b) {
+  function fi(a, b) {
     if ("eqOp" === a) return (c, d) => {
       const {
         U: e,
@@ -30294,7 +30296,7 @@ const fontoxpath = function (xspattern, prsc) {
     };
     throw Error('XPTY0004: Only the "eq" and "ne" comparison is defined for xs:QName');
   }
-  function hi(a, b) {
+  function gi(a, b) {
     switch (a) {
       case "eqOp":
         return (c, d) => {
@@ -30346,7 +30348,7 @@ const fontoxpath = function (xspattern, prsc) {
         };
     }
   }
-  function ii(a, b) {
+  function hi(a, b) {
     switch (a) {
       case "ltOp":
         return (c, d) => {
@@ -30382,7 +30384,7 @@ const fontoxpath = function (xspattern, prsc) {
         };
     }
   }
-  function ji(a, b) {
+  function ii(a, b) {
     switch (a) {
       case "eqOp":
         return (c, d) => {
@@ -30426,7 +30428,7 @@ const fontoxpath = function (xspattern, prsc) {
         };
     }
   }
-  function ki(a, b) {
+  function ji(a, b) {
     switch (a) {
       case "eqOp":
         return (c, d) => {
@@ -30446,7 +30448,7 @@ const fontoxpath = function (xspattern, prsc) {
         };
     }
   }
-  function li(a, b) {
+  function ki(a, b) {
     switch (a) {
       case "eqOp":
         return (c, d, e) => {
@@ -30502,7 +30504,7 @@ const fontoxpath = function (xspattern, prsc) {
         };
     }
   }
-  function mi(a, b) {
+  function li(a, b) {
     switch (a) {
       case "eqOp":
         return (c, d, e) => {
@@ -30522,7 +30524,7 @@ const fontoxpath = function (xspattern, prsc) {
         };
     }
   }
-  function ni(a, b, c) {
+  function mi(a, b, c) {
     function d(n, t) {
       return {
         U: h ? h(n) : n,
@@ -30538,24 +30540,24 @@ const fontoxpath = function (xspattern, prsc) {
     let h = null,
       k = null;
     v(b, 19) && v(c, 19) ? b = c = 1 : v(b, 19) ? (h = n => jd(n, c), b = c) : v(c, 19) && (k = n => jd(n, b), c = b);
-    if (v(b, 23) && v(c, 23)) return gi(a, d);
+    if (v(b, 23) && v(c, 23)) return fi(a, d);
     if (e(0) || f([1, 47, 61]) || f([2, 47, 61]) || e(20) || e(22) || e(21) || f([1, 20])) {
-      var l = hi(a, d);
+      var l = gi(a, d);
       if (void 0 !== l) return l;
     }
-    if (e(16) && (l = ii(a, d), void 0 !== l) || e(17) && (l = ji(a, d), void 0 !== l) || e(18) && (l = ki(a, d), void 0 !== l)) return l;
-    if (e(9) || e(7) || e(8)) if (l = li(a, d), void 0 !== l) return l;
-    if (e(11) || e(12) || e(13) || e(14) || e(15)) if (l = mi(a, d), void 0 !== l) return l;
+    if (e(16) && (l = hi(a, d), void 0 !== l) || e(17) && (l = ii(a, d), void 0 !== l) || e(18) && (l = ji(a, d), void 0 !== l)) return l;
+    if (e(9) || e(7) || e(8)) if (l = ki(a, d), void 0 !== l) return l;
+    if (e(11) || e(12) || e(13) || e(14) || e(15)) if (l = li(a, d), void 0 !== l) return l;
     throw Error(`XPTY0004: ${a} not available for ${Da[b]} and ${Da[c]}`);
   }
-  const oi = Object.create(null);
-  function pi(a, b, c) {
+  const ni = Object.create(null);
+  function oi(a, b, c) {
     const d = `${b}~${c}~${a}`;
-    let e = oi[d];
-    e ||= oi[d] = ni(a, b, c);
+    let e = ni[d];
+    e ||= ni[d] = mi(a, b, c);
     return e;
   }
-  var qi = class extends D {
+  var pi = class extends D {
     constructor(a, b, c) {
       super(b.o.add(c.o), [b, c], {
         B: !1
@@ -30567,8 +30569,8 @@ const fontoxpath = function (xspattern, prsc) {
     h(a, b) {
       const c = C(this.l, a, b),
         d = C(this.A, a, b),
-        e = fi(c, b),
-        f = fi(d, b);
+        e = ei(c, b),
+        f = ei(d, b);
       return e.X({
         empty: () => w.empty(),
         m: () => f.X({
@@ -30576,7 +30578,7 @@ const fontoxpath = function (xspattern, prsc) {
           m: () => {
             const h = e.first(),
               k = f.first();
-            return pi(this.s, h.type, k.type)(h, k, a) ? w.aa() : w.T();
+            return oi(this.s, h.type, k.type)(h, k, a) ? w.aa() : w.T();
           },
           multiple: () => {
             throw Error("XPTY0004: Sequences to compare are not singleton.");
@@ -30588,7 +30590,7 @@ const fontoxpath = function (xspattern, prsc) {
       });
     }
   };
-  const ri = {
+  const qi = {
     equalOp: "eqOp",
     notEqualOp: "neOp",
     lessThanOrEqualOp: "leOp",
@@ -30596,8 +30598,8 @@ const fontoxpath = function (xspattern, prsc) {
     greaterThanOrEqualOp: "geOp",
     greaterThanOp: "gtOp"
   };
-  function si(a, b, c, d) {
-    a = ri[a];
+  function ri(a, b, c, d) {
+    a = qi[a];
     return c.N(e => b.filter(f => {
       for (let l = 0, n = e.length; l < n; ++l) {
         let t = e[l],
@@ -30610,7 +30612,7 @@ const fontoxpath = function (xspattern, prsc) {
         h = y;
         k = G;
         h ? f = jd(f, h) : k && (t = jd(t, k));
-        if (pi(a, f.type, t.type)(f, t, d)) return !0;
+        if (oi(a, f.type, t.type)(f, t, d)) return !0;
       }
       return !1;
     }).X({
@@ -30618,7 +30620,7 @@ const fontoxpath = function (xspattern, prsc) {
       empty: () => w.T()
     }));
   }
-  var ti = class extends D {
+  var si = class extends D {
     constructor(a, b, c) {
       super(b.o.add(c.o), [b, c], {
         B: !1
@@ -30635,19 +30637,19 @@ const fontoxpath = function (xspattern, prsc) {
         default: () => d.X({
           empty: () => w.T(),
           default: () => {
-            const e = fi(c, b),
-              f = fi(d, b);
-            return si(this.s, e, f, a);
+            const e = ei(c, b),
+              f = ei(d, b);
+            return ri(this.s, e, f, a);
           }
         })
       });
     }
   };
-  function ui(a, b, c, d) {
+  function ti(a, b, c, d) {
     if (!v(c, 53) || !v(d, 53)) throw Error("XPTY0004: Sequences to compare are not nodes");
     switch (a) {
       case "isOp":
-        return vi(c, d);
+        return ui(c, d);
       case "nodeBeforeOp":
         return b ? (e, f) => 0 > sd(b, e.first(), f.first()) : void 0;
       case "nodeAfterOp":
@@ -30656,10 +30658,10 @@ const fontoxpath = function (xspattern, prsc) {
         throw Error("Unexpected operator");
     }
   }
-  function vi(a, b) {
+  function ui(a, b) {
     return a !== b || 47 !== a && 53 !== a && 54 !== a && 55 !== a && 56 !== a && 57 !== a && 58 !== a ? () => !1 : (c, d) => md(c.first().value, d.first().value);
   }
-  var wi = class extends D {
+  var vi = class extends D {
     constructor(a, b, c) {
       super(b.o.add(c.o), [b, c], {
         B: !1
@@ -30684,21 +30686,21 @@ const fontoxpath = function (xspattern, prsc) {
           m: () => {
             const e = c.first(),
               f = d.first();
-            return ui(this.s, b.h, e.type, f.type)(c, d, a) ? w.aa() : w.T();
+            return ti(this.s, b.h, e.type, f.type)(c, d, a) ? w.aa() : w.T();
           }
         })
       });
     }
   };
-  function xi(a, b, c, d) {
+  function wi(a, b, c, d) {
     return c.N(e => {
       if (e.some(f => !v(f.type, 53))) throw Error(`XPTY0004: Sequences given to ${a} should only contain nodes.`);
       return "sorted" === d ? w.create(e) : "reverse-sorted" === d ? w.create(e.reverse()) : w.create(td(b, e));
     });
   }
-  var yi = class extends D {
+  var xi = class extends D {
     constructor(a, b, c, d) {
-      super(0 < uf(b.o, c.o) ? b.o : c.o, [b, c], {
+      super(0 < tf(b.o, c.o) ? b.o : c.o, [b, c], {
         B: b.B && c.B
       }, !1, d);
       this.l = a;
@@ -30706,8 +30708,8 @@ const fontoxpath = function (xspattern, prsc) {
       this.A = c;
     }
     h(a, b) {
-      const c = xi(this.l, b.h, C(this.s, a, b), this.s.ia);
-      a = xi(this.l, b.h, C(this.A, a, b), this.A.ia);
+      const c = wi(this.l, b.h, C(this.s, a, b), this.s.ia);
+      a = wi(this.l, b.h, C(this.A, a, b), this.A.ia);
       const d = c.value,
         e = a.value;
       let f = null,
@@ -30744,9 +30746,9 @@ const fontoxpath = function (xspattern, prsc) {
       });
     }
   };
-  var zi = class extends rf {
+  var yi = class extends qf {
     constructor(a, b) {
-      super(a.reduce((c, d) => c.add(d.o), new vf({})), a, {
+      super(a.reduce((c, d) => c.add(d.o), new uf({})), a, {
         R: "unsorted",
         B: a.every(c => c.B)
       }, b);
@@ -30755,9 +30757,9 @@ const fontoxpath = function (xspattern, prsc) {
       return c.length ? jc(c.map(d => d(a))) : w.empty();
     }
   };
-  var Ai = class extends D {
+  var zi = class extends D {
     constructor(a, b, c) {
-      super(new vf({}).add(a.o), [a, b], {
+      super(new uf({}).add(a.o), [a, b], {
         B: a.B && b.B
       }, !1, c);
       this.l = a;
@@ -30781,7 +30783,7 @@ const fontoxpath = function (xspattern, prsc) {
       });
     }
   };
-  var Bi = class extends D {
+  var Ai = class extends D {
     constructor(a, b, c) {
       super(a.o, [a], {
         B: !1
@@ -30801,7 +30803,7 @@ const fontoxpath = function (xspattern, prsc) {
       });
     }
   };
-  var Ci = class extends D {
+  var Bi = class extends D {
     constructor(a, b, c) {
       super(a.o, [a], {
         B: !1
@@ -30826,7 +30828,7 @@ const fontoxpath = function (xspattern, prsc) {
       });
     }
   };
-  function Di(a, b) {
+  function Ci(a, b) {
     const c = a.value;
     let d = null,
       e = !1;
@@ -30846,7 +30848,7 @@ const fontoxpath = function (xspattern, prsc) {
       }
     });
   }
-  var Ei = class extends D {
+  var Di = class extends D {
     constructor(a, b, c, d) {
       super(a.o, [a], {
         B: !1
@@ -30859,12 +30861,12 @@ const fontoxpath = function (xspattern, prsc) {
       const c = C(this.A, a, b);
       return c.X({
         empty: () => "?" === this.l || "*" === this.l ? w.aa() : w.T(),
-        multiple: () => "+" === this.l || "*" === this.l ? Di(c, d => {
+        multiple: () => "+" === this.l || "*" === this.l ? Ci(c, d => {
           const e = w.m(d);
           d = bc(a, 0, d, e);
           return C(this.s, d, b);
         }) : w.T(),
-        m: () => Di(c, d => {
+        m: () => Ci(c, d => {
           const e = w.m(d);
           d = bc(a, 0, d, e);
           return C(this.s, d, b);
@@ -30872,10 +30874,10 @@ const fontoxpath = function (xspattern, prsc) {
       });
     }
   };
-  function Fi(a, b) {
+  function Ei(a, b) {
     return null !== a && null !== b && v(a.type, 53) && v(b.type, 53) ? md(a.value, b.value) : !1;
   }
-  function Gi(a) {
+  function Fi(a) {
     let b = a.next(0);
     if (b.done) return w.empty();
     let c = null,
@@ -30889,13 +30891,13 @@ const fontoxpath = function (xspattern, prsc) {
           b = a.next(0);
           if (b.done) return f;
           c = b.value.value;
-        } while (f.done || Fi(f.value, d));
+        } while (f.done || Ei(f.value, d));
         d = f.value;
         return f;
       }
     });
   }
-  function Hi(a, b) {
+  function Gi(a, b) {
     const c = [];
     (function () {
       for (var f = b.next(0); !f.done;) {
@@ -30938,15 +30940,15 @@ const fontoxpath = function (xspattern, prsc) {
             }
             c.splice(k, 0, h);
           }
-        } while (Fi(f.value, d));
+        } while (Ei(f.value, d));
         d = f.value;
         return f;
       }
     });
   }
-  var Ii = class extends D {
+  var Hi = class extends D {
     constructor(a, b) {
-      super(a.reduce((c, d) => 0 < uf(c, d.o) ? c : d.o, new vf({})), a, {
+      super(a.reduce((c, d) => 0 < tf(c, d.o) ? c : d.o, new uf({})), a, {
         B: a.every(c => c.B)
       }, !1, b);
       this.l = a;
@@ -30954,7 +30956,7 @@ const fontoxpath = function (xspattern, prsc) {
     h(a, b) {
       if (this.l.every(c => "sorted" === c.ia)) {
         let c = 0;
-        return Hi(b.h, {
+        return Gi(b.h, {
           next: () => c >= this.l.length ? p : q(C(this.l[c++], a, b))
         }).map(d => {
           if (!v(d.type, 53)) throw Error("XPTY0004: The sequences to union are not of type node()*");
@@ -30968,15 +30970,15 @@ const fontoxpath = function (xspattern, prsc) {
       });
     }
   };
-  function Ji(a) {
+  function Ii(a) {
     return a.every(b => null === b || v(b.type, 5) || v(b.type, 4)) || null !== a.map(b => b ? rc(b.type) : null).reduce((b, c) => null === c ? b : c === b ? b : null) ? a : a.every(b => null === b || v(b.type, 1) || v(b.type, 20)) ? a.map(b => b ? jd(b, 1) : null) : a.every(b => null === b || v(b.type, 4) || v(b.type, 6)) ? a.map(b => b ? jd(b, 6) : b) : a.every(b => null === b || v(b.type, 4) || v(b.type, 6) || v(b.type, 3)) ? a.map(b => b ? jd(b, 3) : b) : null;
   }
-  function Ki(a) {
+  function Ji(a) {
     return (a = a.find(b => !!b)) ? rc(a.type) : null;
   }
-  var Li = class extends Uh {
+  var Ki = class extends Th {
     constructor(a, b) {
-      super(new vf({}), [b, ...a.map(c => c.ba)], {
+      super(new uf({}), [b, ...a.map(c => c.ba)], {
         B: !1,
         W: !1,
         R: "unsorted",
@@ -31000,7 +31002,7 @@ const fontoxpath = function (xspattern, prsc) {
             if (t.find(z => !z.F() && !z.oa())) throw Error("XPTY0004: Order by only accepts empty or singleton sequences");
             h = t.map(z => z.first());
             h = h.map(z => null === z ? z : v(19, z.type) ? jd(z, 1) : z);
-            if (Ki(h) && (h = Ji(h), !h)) throw Error("XPTY0004: Could not cast values");
+            if (Ji(h) && (h = Ii(h), !h)) throw Error("XPTY0004: Could not cast values");
             t = h.length;
             k = h.map((z, y) => y);
             for (let z = 0; z < t; z++) if (z + 1 !== t) for (let y = z; 0 <= y; y--) {
@@ -31010,7 +31012,7 @@ const fontoxpath = function (xspattern, prsc) {
               const U = h[k[G]],
                 ca = h[k[N]];
               if (null !== ca || null !== U) {
-                if (n.bc) {
+                if (n.cc) {
                   if (null === U) continue;
                   if (null === ca && null !== U) {
                     [k[G], k[N]] = [k[N], k[G]];
@@ -31031,7 +31033,7 @@ const fontoxpath = function (xspattern, prsc) {
                     continue;
                   }
                 }
-                pi("gtOp", U.type, ca.type)(U, ca, a) && ([k[G], k[N]] = [k[N], k[G]]);
+                oi("gtOp", U.type, ca.type)(U, ca, a) && ([k[G], k[N]] = [k[N], k[G]]);
               }
             }
             let u = n.Bb ? 0 : h.length - 1;
@@ -31045,9 +31047,9 @@ const fontoxpath = function (xspattern, prsc) {
       });
     }
   };
-  var Mi = class extends D {
+  var Li = class extends D {
     constructor(a) {
-      super(a ? a.o : new vf({}), a ? [a] : [], {
+      super(a ? a.o : new uf({}), a ? [a] : [], {
         R: "sorted",
         subtree: !1,
         W: !1,
@@ -31064,9 +31066,9 @@ const fontoxpath = function (xspattern, prsc) {
       return this.l ? C(this.l, bc(a, 0, c.first(), c), b) : c;
     }
   };
-  var Ni = class extends D {
+  var Mi = class extends D {
     constructor(a) {
-      super(new vf({}), [], {
+      super(new uf({}), [], {
         R: "sorted"
       }, !1, a);
     }
@@ -31075,7 +31077,7 @@ const fontoxpath = function (xspattern, prsc) {
       return w.m(a.M);
     }
   };
-  function Oi(a, b) {
+  function Ni(a, b) {
     let c = !1,
       d = !1;
     b.forEach(e => {
@@ -31084,11 +31086,11 @@ const fontoxpath = function (xspattern, prsc) {
     if (d && c) throw Error("XPTY0018: The path operator should either return nodes or non-nodes. Mixed sequences are not allowed.");
     return c ? td(a, b) : b;
   }
-  var Pi = class extends D {
+  var Oi = class extends D {
     constructor(a, b) {
       const c = a.every(e => e.W),
         d = a.every(e => e.subtree);
-      super(a.reduce((e, f) => e.add(f.o), new vf({})), a, {
+      super(a.reduce((e, f) => e.add(f.o), new uf({})), a, {
         B: !1,
         W: c,
         R: b ? "sorted" : "unsorted",
@@ -31121,14 +31123,14 @@ const fontoxpath = function (xspattern, prsc) {
             };
           case "sorted":
             if (e.subtree && c) {
-              k = Gi(d);
+              k = Fi(d);
               break;
             }
-            k = Hi(b.h, d);
+            k = Gi(b.h, d);
             break;
           case "unsorted":
-            return Gi(d).N(n => w.create(Oi(b.h, n)));
-        } else k = Gi(d);
+            return Fi(d).N(n => w.create(Ni(b.h, n)));
+        } else k = Fi(d);
         c = c && e.W;
         return k;
       }, null);
@@ -31137,7 +31139,7 @@ const fontoxpath = function (xspattern, prsc) {
       return this.l[0].D();
     }
   };
-  var Qi = class extends D {
+  var Pi = class extends D {
     constructor(a, b) {
       super(a.o.add(b.o), [a, b], {
         B: a.B && b.B,
@@ -31198,7 +31200,7 @@ const fontoxpath = function (xspattern, prsc) {
       return this.s.D();
     }
   };
-  function Ri(a, b, c) {
+  function Qi(a, b, c) {
     c = [c];
     if (v(a.type, 62)) {
       if ("*" === b) c.push(...a.h.map(d => d()));else if (v(b.type, 5)) {
@@ -31209,13 +31211,13 @@ const fontoxpath = function (xspattern, prsc) {
     } else if (v(a.type, 61)) "*" === b ? c.push(...a.h.map(d => d.value())) : (a = a.h.find(d => sb(d.key, b))) && c.push(a.value());else throw Error("XPTY0004: The provided context item is not a map or an array.");
     return jc(c);
   }
-  function Si(a, b, c, d, e) {
-    if ("*" === b) return Ri(a, b, c);
+  function Ri(a, b, c, d, e) {
+    if ("*" === b) return Qi(a, b, c);
     b = C(b, d, e);
-    b = Ra(b)().N(f => f.reduce((h, k) => Ri(a, k, h), new Ba()));
+    b = Ra(b)().N(f => f.reduce((h, k) => Qi(a, k, h), new Ba()));
     return jc([c, b]);
   }
-  var Ti = class extends D {
+  var Si = class extends D {
     constructor(a, b) {
       super(a.o, [a].concat("*" === b ? [] : [b]), {
         B: a.B,
@@ -31226,15 +31228,15 @@ const fontoxpath = function (xspattern, prsc) {
       this.s = b;
     }
     h(a, b) {
-      return C(this.l, a, b).N(c => c.reduce((d, e) => Si(e, this.s, d, a, b), new Ba()));
+      return C(this.l, a, b).N(c => c.reduce((d, e) => Ri(e, this.s, d, a, b), new Ba()));
     }
     D() {
       return this.l.D();
     }
   };
-  var Ui = class extends D {
+  var Ti = class extends D {
     constructor(a, b) {
-      super(new vf({
+      super(new uf({
         external: 1
       }), "*" === a ? [] : [a], {
         B: !1
@@ -31242,10 +31244,10 @@ const fontoxpath = function (xspattern, prsc) {
       this.l = a;
     }
     h(a, b) {
-      return Si(a.M, this.l, new Ba(), a, b);
+      return Ri(a.M, this.l, new Ba(), a, b);
     }
   };
-  var Vi = class extends D {
+  var Ui = class extends D {
     constructor(a, b, c, d) {
       const e = b.map(f => f.fb);
       b = b.map(f => f.name);
@@ -31295,17 +31297,17 @@ const fontoxpath = function (xspattern, prsc) {
       this.l = [];
       for (let c = 0, d = this.A.length; c < d; ++c) {
         this.L[c].v(a);
-        Dg(a);
+        Cg(a);
         var b = this.A[c];
         const e = b.prefix ? a.$(b.prefix) : null;
-        b = Hg(a, e, b.localName);
+        b = Gg(a, e, b.localName);
         this.l[c] = b;
       }
       this.P.v(a);
-      for (let c = 0, d = this.A.length; c < d; ++c) Jg(a);
+      for (let c = 0, d = this.A.length; c < d; ++c) Ig(a);
     }
   };
-  var Wi = class extends D {
+  var Vi = class extends D {
     constructor(a) {
       super(a, [], {
         B: !1
@@ -31315,9 +31317,9 @@ const fontoxpath = function (xspattern, prsc) {
       return this.l(a.M) ? w.aa() : w.T();
     }
   };
-  var Xi = class extends Wi {
+  var Wi = class extends Vi {
     constructor(a) {
-      super(new vf({
+      super(new uf({
         nodeType: 1
       }));
       this.s = a;
@@ -31331,7 +31333,7 @@ const fontoxpath = function (xspattern, prsc) {
       return `type-${this.s}`;
     }
   };
-  var Yi = class extends Wi {
+  var Xi = class extends Vi {
     constructor(a, b = {
       kind: null
     }) {
@@ -31341,7 +31343,7 @@ const fontoxpath = function (xspattern, prsc) {
       const e = {};
       "*" !== a && (e.nodeName = 1);
       e.nodeType = 1;
-      super(new vf(e));
+      super(new uf(e));
       this.s = a;
       this.L = d;
       this.A = c;
@@ -31361,9 +31363,9 @@ const fontoxpath = function (xspattern, prsc) {
       if (null === this.L && "*" !== this.A && (this.L = a.$(this.A || "") || null, !this.L && this.A)) throw Error(`XPST0081: The prefix ${this.A} could not be resolved.`);
     }
   };
-  var Zi = class extends Wi {
+  var Yi = class extends Vi {
     constructor(a) {
-      super(new vf({
+      super(new uf({
         nodeName: 1
       }));
       this.s = a;
@@ -31375,18 +31377,18 @@ const fontoxpath = function (xspattern, prsc) {
       return "type-7";
     }
   };
-  var $i = class extends Wi {
+  var Zi = class extends Vi {
     constructor(a) {
-      super(new vf({}));
+      super(new uf({}));
       this.s = a;
     }
     l(a) {
       return v(a.type, Ia(this.s.prefix ? this.s.prefix + ":" + this.s.localName : this.s.localName));
     }
   };
-  var aj = class extends D {
+  var $i = class extends D {
     constructor(a, b, c) {
-      super(new vf({}), [], {
+      super(new uf({}), [], {
         B: !1,
         R: "unsorted"
       });
@@ -31409,9 +31411,9 @@ const fontoxpath = function (xspattern, prsc) {
       if (a = a.Ea[this.l]) this.P = a;
     }
   };
-  var bj = class extends Uh {
+  var aj = class extends Th {
     constructor(a, b) {
-      super(new vf({}), [a, b], {
+      super(new uf({}), [a, b], {
         B: !1,
         W: !1,
         R: "unsorted",
@@ -31440,12 +31442,12 @@ const fontoxpath = function (xspattern, prsc) {
       });
     }
   };
-  var cj = class {
+  var bj = class {
     constructor(a) {
       this.type = a;
     }
   };
-  var dj = class extends cj {
+  var cj = class extends bj {
     constructor(a) {
       super("delete");
       this.target = a;
@@ -31453,11 +31455,11 @@ const fontoxpath = function (xspattern, prsc) {
     h(a) {
       return {
         type: this.type,
-        target: ag(this.target, a, !1)
+        target: $f(this.target, a, !1)
       };
     }
   };
-  var ej = class extends cj {
+  var dj = class extends bj {
     constructor(a, b, c) {
       super(c);
       this.target = a;
@@ -31466,17 +31468,17 @@ const fontoxpath = function (xspattern, prsc) {
     h(a) {
       return {
         type: this.type,
-        target: ag(this.target, a, !1),
-        content: this.content.map(b => ag(b, a, !0))
+        target: $f(this.target, a, !1),
+        content: this.content.map(b => $f(b, a, !0))
       };
     }
   };
-  var fj = class extends ej {
+  var ej = class extends dj {
     constructor(a, b) {
       super(a, b, "insertAfter");
     }
   };
-  var gj = class extends cj {
+  var fj = class extends bj {
     constructor(a, b) {
       super("insertAttributes");
       this.target = a;
@@ -31485,32 +31487,32 @@ const fontoxpath = function (xspattern, prsc) {
     h(a) {
       return {
         type: this.type,
-        target: ag(this.target, a, !1),
-        content: this.content.map(b => ag(b, a, !0))
+        target: $f(this.target, a, !1),
+        content: this.content.map(b => $f(b, a, !0))
       };
     }
   };
-  var hj = class extends ej {
+  var gj = class extends dj {
     constructor(a, b) {
       super(a, b, "insertBefore");
     }
   };
-  var ij = class extends ej {
+  var hj = class extends dj {
     constructor(a, b) {
       super(a, b, "insertIntoAsFirst");
     }
   };
-  var jj = class extends ej {
+  var ij = class extends dj {
     constructor(a, b) {
       super(a, b, "insertIntoAsLast");
     }
   };
-  var kj = class extends ej {
+  var jj = class extends dj {
     constructor(a, b) {
       super(a, b, "insertInto");
     }
   };
-  var lj = class extends cj {
+  var kj = class extends bj {
     constructor(a, b) {
       super("rename");
       this.target = a;
@@ -31519,7 +31521,7 @@ const fontoxpath = function (xspattern, prsc) {
     h(a) {
       return {
         type: this.type,
-        target: ag(this.target, a, !1),
+        target: $f(this.target, a, !1),
         newName: {
           prefix: this.o.prefix,
           namespaceURI: this.o.namespaceURI,
@@ -31528,7 +31530,7 @@ const fontoxpath = function (xspattern, prsc) {
       };
     }
   };
-  var mj = class extends cj {
+  var lj = class extends bj {
     constructor(a, b) {
       super("replaceElementContent");
       this.target = a;
@@ -31537,12 +31539,12 @@ const fontoxpath = function (xspattern, prsc) {
     h(a) {
       return {
         type: this.type,
-        target: ag(this.target, a, !1),
-        text: this.text ? ag(this.text, a, !0) : null
+        target: $f(this.target, a, !1),
+        text: this.text ? $f(this.text, a, !0) : null
       };
     }
   };
-  var nj = class extends cj {
+  var mj = class extends bj {
     constructor(a, b) {
       super("replaceNode");
       this.target = a;
@@ -31551,12 +31553,12 @@ const fontoxpath = function (xspattern, prsc) {
     h(a) {
       return {
         type: this.type,
-        target: ag(this.target, a, !1),
-        replacement: this.o.map(b => ag(b, a, !0))
+        target: $f(this.target, a, !1),
+        replacement: this.o.map(b => $f(b, a, !0))
       };
     }
   };
-  var oj = class extends cj {
+  var nj = class extends bj {
     constructor(a, b) {
       super("replaceValue");
       this.target = a;
@@ -31565,22 +31567,22 @@ const fontoxpath = function (xspattern, prsc) {
     h(a) {
       return {
         type: this.type,
-        target: ag(this.target, a, !1),
+        target: $f(this.target, a, !1),
         ["string-value"]: this.o
       };
     }
   };
-  var pj = (a, b) => new nj(a, b);
-  var qj = class extends of {
+  var oj = (a, b) => new mj(a, b);
+  var pj = class extends nf {
     constructor(a) {
-      super(new vf({}), [a], {
+      super(new uf({}), [a], {
         B: !1,
         R: "unsorted"
       });
       this.l = a;
     }
     s(a, b) {
-      const c = nf(this.l)(a, b),
+      const c = mf(this.l)(a, b),
         d = b.h;
       let e, f;
       return {
@@ -31593,14 +31595,14 @@ const fontoxpath = function (xspattern, prsc) {
           }
           e = e.filter(h => x(d, h.value));
           return q({
-            da: mf(e.map(h => new dj(h.value)), f),
+            da: lf(e.map(h => new cj(h.value)), f),
             J: []
           });
         }
       };
     }
   };
-  function rj(a, b, c, d, e, f) {
+  function qj(a, b, c, d, e, f) {
     const h = b.h;
     a.reduce(function t(l, n) {
       if (v(n.type, 62)) return n.h.forEach(u => u().O().forEach(z => t(l, z))), l;
@@ -31611,7 +31613,7 @@ const fontoxpath = function (xspattern, prsc) {
         if (e) throw f(l.value, h);
         c.push(l.value.node);
       } else if (v(l.type, 46) || v(l.type, 53) && 3 === l.value.node.nodeType) {
-        const u = v(l.type, 46) ? jd(pc(l, b).first(), 1).value : ib(h, l.value);
+        const u = v(l.type, 46) ? jd(pc(l, b).first(), 1).value : hb(h, l.value);
         0 !== n && v(t[n - 1].type, 46) && v(l.type, 46) ? (d.push({
           data: " " + u,
           Ra: !0,
@@ -31623,8 +31625,8 @@ const fontoxpath = function (xspattern, prsc) {
         }), e = !0);
       } else if (v(l.type, 55)) {
         const u = [];
-        hb(h, l.value).forEach(z => u.push(rb(z)));
-        e = rj(u, b, c, d, e, f);
+        gb(h, l.value).forEach(z => u.push(rb(z)));
+        e = qj(u, b, c, d, e, f);
       } else if (v(l.type, 53)) d.push(l.value.node), e = !0;else {
         if (v(l.type, 60)) throw nc(l.type);
         throw Error(`Atomizing ${l.type} is not implemented.`);
@@ -31632,45 +31634,45 @@ const fontoxpath = function (xspattern, prsc) {
     });
     return e;
   }
-  function sj(a, b, c) {
+  function rj(a, b, c) {
     const d = [],
       e = [];
     let f = !1;
     a.forEach(h => {
-      f = rj(h, b, d, e, f, c);
+      f = qj(h, b, d, e, f, c);
     });
     return {
       attributes: d,
       Xa: e
     };
   }
-  function tj(a, b, c, d, e) {
+  function sj(a, b, c, d, e) {
     const f = [];
     switch (a) {
       case 4:
-        d.length && f.push(new gj(b, d));
-        e.length && f.push(new ij(b, e));
-        break;
-      case 5:
-        d.length && f.push(new gj(b, d));
-        e.length && f.push(new jj(b, e));
-        break;
-      case 3:
-        d.length && f.push(new gj(b, d));
-        e.length && f.push(new kj(b, e));
-        break;
-      case 2:
-        d.length && f.push(new gj(c, d));
+        d.length && f.push(new fj(b, d));
         e.length && f.push(new hj(b, e));
         break;
+      case 5:
+        d.length && f.push(new fj(b, d));
+        e.length && f.push(new ij(b, e));
+        break;
+      case 3:
+        d.length && f.push(new fj(b, d));
+        e.length && f.push(new jj(b, e));
+        break;
+      case 2:
+        d.length && f.push(new fj(c, d));
+        e.length && f.push(new gj(b, e));
+        break;
       case 1:
-        d.length && f.push(new gj(c, d)), e.length && f.push(new fj(b, e));
+        d.length && f.push(new fj(c, d)), e.length && f.push(new ej(b, e));
     }
     return f;
   }
-  var uj = class extends of {
+  var tj = class extends nf {
     constructor(a, b, c) {
-      super(new vf({}), [a, c], {
+      super(new uf({}), [a, c], {
         B: !1,
         R: "unsorted"
       });
@@ -31679,15 +31681,15 @@ const fontoxpath = function (xspattern, prsc) {
       this.A = c;
     }
     s(a, b) {
-      const c = nf(this.L)(a, b),
-        d = nf(this.A)(a, b),
+      const c = mf(this.L)(a, b),
+        d = mf(this.A)(a, b),
         e = b.h;
       let f, h, k, l, n, t;
       return {
         next: () => {
           if (!f) {
             var u = c.next(0);
-            const z = sj([u.value.J], b, Pe);
+            const z = rj([u.value.J], b, Oe);
             f = z.attributes.map(y => ({
               node: y,
               G: null
@@ -31700,13 +31702,13 @@ const fontoxpath = function (xspattern, prsc) {
           }
           if (!l) {
             u = d.next(0);
-            if (0 === u.value.J.length) throw Ye();
+            if (0 === u.value.J.length) throw Xe();
             if (3 <= this.l) {
-              if (1 !== u.value.J.length) throw Qe();
-              if (!v(u.value.J[0].type, 54) && !v(u.value.J[0].type, 55)) throw Qe();
+              if (1 !== u.value.J.length) throw Pe();
+              if (!v(u.value.J[0].type, 54) && !v(u.value.J[0].type, 55)) throw Pe();
             } else {
-              if (1 !== u.value.J.length) throw Re();
-              if (!(v(u.value.J[0].type, 54) || v(u.value.J[0].type, 56) || v(u.value.J[0].type, 58) || v(u.value.J[0].type, 57))) throw Re();
+              if (1 !== u.value.J.length) throw Qe();
+              if (!(v(u.value.J[0].type, 54) || v(u.value.J[0].type, 56) || v(u.value.J[0].type, 58) || v(u.value.J[0].type, 57))) throw Qe();
               t = x(e, u.value.J[0].value, null);
               if (null === t) throw Error(`XUDY0029: The target ${u.value.J[0].value.outerHTML} for inserting a node before or after must have a parent.`);
             }
@@ -31722,40 +31724,40 @@ const fontoxpath = function (xspattern, prsc) {
               var N = y.node.prefix || "";
               const U = y.node.namespaceURI,
                 ca = N ? l.value.node.lookupNamespaceURI(N) : null;
-              if (ca && ca !== U) throw We(U);
-              if ((N = z[N]) && U !== N) throw Xe(U);
+              if (ca && ca !== U) throw Ve(U);
+              if ((N = z[N]) && U !== N) throw We(U);
               z[G] = y.node.namespaceURI;
               return z;
             }, {});
           }
           return q({
             J: [],
-            da: mf(tj(this.l, l.value, t ? t : null, f, h), k, n)
+            da: lf(sj(this.l, l.value, t ? t : null, f, h), k, n)
           });
         }
       };
     }
   };
-  const vj = () => mc("Casting not supported from given type to a single xs:string or xs:untypedAtomic or any of its derived types."),
-    wj = /([A-Z_a-z\xC0-\xD6\xD8-\xF6\xF8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD]|[\uD800-\uDB7F][\uDC00-\uDFFF])/,
-    xj = new RegExp(`${wj.source}${new RegExp(`(${wj.source}|[-.0-9\xB7\u0300-\u036F\u203F\u2040])`).source}*`, "g"),
-    yj = a => (a = a.match(xj)) ? 1 === a.length : !1;
-  function zj(a, b) {
+  const uj = () => mc("Casting not supported from given type to a single xs:string or xs:untypedAtomic or any of its derived types."),
+    vj = /([A-Z_a-z\xC0-\xD6\xD8-\xF6\xF8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD]|[\uD800-\uDB7F][\uDC00-\uDFFF])/,
+    wj = new RegExp(`${vj.source}${new RegExp(`(${vj.source}|[-.0-9\xB7\u0300-\u036F\u203F\u2040])`).source}*`, "g"),
+    xj = a => (a = a.match(wj)) ? 1 === a.length : !1;
+  function yj(a, b) {
     return qc(b, a).X({
       m: c => {
         c = c.first();
         if (v(c.type, 1) || v(c.type, 19)) {
-          if (!yj(c.value)) throw Error(`XQDY0041: The value "${c.value}" of a name expressions cannot be converted to a NCName.`);
+          if (!xj(c.value)) throw Error(`XQDY0041: The value "${c.value}" of a name expressions cannot be converted to a NCName.`);
           return w.m(c);
         }
-        throw vj();
+        throw uj();
       },
       default: () => {
-        throw vj();
+        throw uj();
       }
     }).value;
   }
-  function Aj(a, b, c) {
+  function zj(a, b, c) {
     return qc(c, b).X({
       m: d => {
         d = d.first();
@@ -31764,23 +31766,23 @@ const fontoxpath = function (xspattern, prsc) {
           let e, f;
           d = d.value.split(":");
           1 === d.length ? d = d[0] : (e = d[0], f = a.$(e), d = d[1]);
-          if (!yj(d) || e && !yj(e)) throw yg(e ? `${e}:${d}` : d);
-          if (e && !f) throw yg(`${e}:${d}`);
+          if (!xj(d) || e && !xj(e)) throw xg(e ? `${e}:${d}` : d);
+          if (e && !f) throw xg(`${e}:${d}`);
           return w.m({
             type: 23,
             value: new Sa(e, f, d)
           });
         }
-        throw vj();
+        throw uj();
       },
       default: () => {
-        throw vj();
+        throw uj();
       }
     }).value;
   }
-  var Nj = class extends of {
+  var Aj = class extends nf {
     constructor(a, b) {
-      super(new vf({}), [a, b], {
+      super(new uf({}), [a, b], {
         B: !1,
         R: "unsorted"
       });
@@ -31789,15 +31791,15 @@ const fontoxpath = function (xspattern, prsc) {
       this.l = void 0;
     }
     s(a, b) {
-      const c = nf(this.A)(a, b),
-        d = nf(this.L)(a, b);
+      const c = mf(this.A)(a, b),
+        d = mf(this.L)(a, b);
       return {
         next: () => {
           const e = c.next(0);
           var f = e.value.J;
-          if (0 === f.length) throw Ye();
-          if (1 !== f.length) throw Te();
-          if (!v(f[0].type, 54) && !v(f[0].type, 47) && !v(f[0].type, 57)) throw Te();
+          if (0 === f.length) throw Xe();
+          if (1 !== f.length) throw Se();
+          if (!v(f[0].type, 54) && !v(f[0].type, 47) && !v(f[0].type, 57)) throw Se();
           f = f[0];
           const h = d.next(0);
           a: {
@@ -31805,15 +31807,15 @@ const fontoxpath = function (xspattern, prsc) {
             var l = w.create(h.value.J);
             switch (f.type) {
               case 54:
-                k = Aj(k, b, l).next(0).value.value;
-                if ((l = f.value.node.lookupNamespaceURI(k.prefix)) && l !== k.namespaceURI) throw We(k.namespaceURI);
+                k = zj(k, b, l).next(0).value.value;
+                if ((l = f.value.node.lookupNamespaceURI(k.prefix)) && l !== k.namespaceURI) throw Ve(k.namespaceURI);
                 break a;
               case 47:
-                k = Aj(k, b, l).next(0).value.value;
-                if (k.namespaceURI && (l = f.value.node.lookupNamespaceURI(k.prefix)) && l !== k.namespaceURI) throw We(k.namespaceURI);
+                k = zj(k, b, l).next(0).value.value;
+                if (k.namespaceURI && (l = f.value.node.lookupNamespaceURI(k.prefix)) && l !== k.namespaceURI) throw Ve(k.namespaceURI);
                 break a;
               case 57:
-                k = zj(b, l).next(0).value.value;
+                k = yj(b, l).next(0).value.value;
                 k = new Sa("", null, k);
                 break a;
             }
@@ -31821,23 +31823,23 @@ const fontoxpath = function (xspattern, prsc) {
           }
           return q({
             J: [],
-            da: mf([new lj(f.value, k)], e.value.da, h.value.da)
+            da: lf([new kj(f.value, k)], e.value.da, h.value.da)
           });
         }
       };
     }
     v(a) {
-      this.l = Ff(a);
+      this.l = Ef(a);
       super.v(a);
     }
   };
-  function Oj(a, b, c) {
+  function Bj(a, b, c) {
     let d, e, f;
     return {
       next: () => {
         if (!d) {
           var h = c.next(0),
-            k = sj([h.value.J], a, Xe);
+            k = rj([h.value.J], a, We);
           d = {
             attributes: k.attributes.map(l => ({
               node: l,
@@ -31851,9 +31853,9 @@ const fontoxpath = function (xspattern, prsc) {
           e = h.value.da;
         }
         k = b.next(0);
-        if (0 === k.value.J.length) throw Ye();
-        if (1 !== k.value.J.length) throw Se();
-        if (!(v(k.value.J[0].type, 54) || v(k.value.J[0].type, 47) || v(k.value.J[0].type, 56) || v(k.value.J[0].type, 58) || v(k.value.J[0].type, 57))) throw Se();
+        if (0 === k.value.J.length) throw Xe();
+        if (1 !== k.value.J.length) throw Re();
+        if (!(v(k.value.J[0].type, 54) || v(k.value.J[0].type, 47) || v(k.value.J[0].type, 56) || v(k.value.J[0].type, 58) || v(k.value.J[0].type, 57))) throw Re();
         f = x(a.h, k.value.J[0].value, null);
         if (null === f) throw Error(`XUDY0009: The target ${k.value.J[0].value.outerHTML} for replacing a node must have a parent.`);
         h = k.value.J[0];
@@ -31864,20 +31866,20 @@ const fontoxpath = function (xspattern, prsc) {
             const t = n.node.prefix || "";
             n = n.node.namespaceURI;
             var u = f.node.lookupNamespaceURI(t);
-            if (u && u !== n) throw We(n);
-            if ((u = l[t]) && n !== u) throw Xe(n);
+            if (u && u !== n) throw Ve(n);
+            if ((u = l[t]) && n !== u) throw We(n);
             l[t] = n;
             return l;
           }, {});
         } else if (d.attributes.length) throw Error("XUTY0010: When replacing an an element, text, comment, or processing instruction node the new value must be a single node.");
         return q({
           J: [],
-          da: mf([pj(h.value, [].concat(d.attributes, d.Xa))], e, k)
+          da: lf([oj(h.value, [].concat(d.attributes, d.Xa))], e, k)
         });
       }
     };
   }
-  function Pj(a, b, c) {
+  function Cj(a, b, c) {
     let d,
       e,
       f,
@@ -31897,32 +31899,32 @@ const fontoxpath = function (xspattern, prsc) {
         }
         if (!d) {
           l = b.next(0);
-          if (0 === l.value.J.length) throw Ye();
-          if (1 !== l.value.J.length) throw Se();
-          if (!(v(l.value.J[0].type, 54) || v(l.value.J[0].type, 47) || v(l.value.J[0].type, 56) || v(l.value.J[0].type, 58) || v(l.value.J[0].type, 57))) throw Se();
+          if (0 === l.value.J.length) throw Xe();
+          if (1 !== l.value.J.length) throw Re();
+          if (!(v(l.value.J[0].type, 54) || v(l.value.J[0].type, 47) || v(l.value.J[0].type, 56) || v(l.value.J[0].type, 58) || v(l.value.J[0].type, 57))) throw Re();
           d = l.value.J[0];
           e = l.value.da;
         }
         if (v(d.type, 54)) return k = !0, q({
           J: [],
-          da: mf([new mj(d.value, f)], h, e)
+          da: lf([new lj(d.value, f)], h, e)
         });
         if (v(d.type, 47) || v(d.type, 56) || v(d.type, 58) || v(d.type, 57)) {
-          l = f ? ib(a.h, f) : "";
+          l = f ? hb(a.h, f) : "";
           if (v(d.type, 58) && (l.includes("--") || l.endsWith("-"))) throw Error(`XQDY0072: The content "${l}" for a comment node contains two adjacent hyphens or ends with a hyphen.`);
           if (v(d.type, 57) && l.includes("?>")) throw Error(`XQDY0026: The content "${l}" for a processing instruction node contains "?>".`);
           k = !0;
           return q({
             J: [],
-            da: mf([new oj(d.value, l)], h, e)
+            da: lf([new nj(d.value, l)], h, e)
           });
         }
       }
     };
   }
-  var Qj = class extends of {
+  var Qj = class extends nf {
     constructor(a, b, c) {
-      super(new vf({}), [b, c], {
+      super(new uf({}), [b, c], {
         B: !1,
         R: "unsorted"
       });
@@ -31931,20 +31933,20 @@ const fontoxpath = function (xspattern, prsc) {
       this.A = c;
     }
     s(a, b) {
-      const c = nf(this.l)(a, b);
-      a = nf(this.A)(a, b);
-      return this.L ? Pj(b, c, a) : Oj(b, c, a);
+      const c = mf(this.l)(a, b);
+      a = mf(this.A)(a, b);
+      return this.L ? Cj(b, c, a) : Bj(b, c, a);
     }
   };
   function Rj(a) {
     switch (a.type) {
       case "delete":
-        return new dj({
+        return new cj({
           node: a.target,
           G: null
         });
       case "insertAfter":
-        return new fj({
+        return new ej({
           node: a.target,
           G: null
         }, a.content.map(b => ({
@@ -31952,38 +31954,6 @@ const fontoxpath = function (xspattern, prsc) {
           G: null
         })));
       case "insertBefore":
-        return new hj({
-          node: a.target,
-          G: null
-        }, a.content.map(b => ({
-          node: b,
-          G: null
-        })));
-      case "insertInto":
-        return new kj({
-          node: a.target,
-          G: null
-        }, a.content.map(b => ({
-          node: b,
-          G: null
-        })));
-      case "insertIntoAsFirst":
-        return new ij({
-          node: a.target,
-          G: null
-        }, a.content.map(b => ({
-          node: b,
-          G: null
-        })));
-      case "insertIntoAsLast":
-        return new jj({
-          node: a.target,
-          G: null
-        }, a.content.map(b => ({
-          node: b,
-          G: null
-        })));
-      case "insertAttributes":
         return new gj({
           node: a.target,
           G: null
@@ -31991,13 +31961,45 @@ const fontoxpath = function (xspattern, prsc) {
           node: b,
           G: null
         })));
+      case "insertInto":
+        return new jj({
+          node: a.target,
+          G: null
+        }, a.content.map(b => ({
+          node: b,
+          G: null
+        })));
+      case "insertIntoAsFirst":
+        return new hj({
+          node: a.target,
+          G: null
+        }, a.content.map(b => ({
+          node: b,
+          G: null
+        })));
+      case "insertIntoAsLast":
+        return new ij({
+          node: a.target,
+          G: null
+        }, a.content.map(b => ({
+          node: b,
+          G: null
+        })));
+      case "insertAttributes":
+        return new fj({
+          node: a.target,
+          G: null
+        }, a.content.map(b => ({
+          node: b,
+          G: null
+        })));
       case "rename":
-        return new lj({
+        return new kj({
           node: a.target,
           G: null
         }, a.newName);
       case "replaceNode":
-        return new nj({
+        return new mj({
           node: a.target,
           G: null
         }, a.replacement.map(b => ({
@@ -32005,12 +32007,12 @@ const fontoxpath = function (xspattern, prsc) {
           G: null
         })));
       case "replaceValue":
-        return new oj({
+        return new nj({
           node: a.target,
           G: null
         }, a["string-value"]);
       case "replaceElementContent":
-        return new mj({
+        return new lj({
           node: a.target,
           G: null
         }, a.text ? {
@@ -32026,9 +32028,9 @@ const fontoxpath = function (xspattern, prsc) {
     const d = x(c, a);
     return d ? Sj(d, b, c) : !1;
   }
-  var Tj = class extends of {
+  var Tj = class extends nf {
     constructor(a, b, c) {
-      super(new vf({}), a.reduce((d, e) => {
+      super(new uf({}), a.reduce((d, e) => {
         d.push(e.fb);
         return d;
       }, [b, c]), {
@@ -32042,7 +32044,7 @@ const fontoxpath = function (xspattern, prsc) {
     }
     h(a, b) {
       a = this.s(a, b);
-      return pf(a, () => {});
+      return of(a, () => {});
     }
     s(a, b) {
       const c = b.h,
@@ -32057,17 +32059,17 @@ const fontoxpath = function (xspattern, prsc) {
           if (n.length !== this.l.length) for (var u = n.length; u < this.l.length; u++) {
             const y = this.l[u];
             var z = f[u];
-            z || (f[u] = z = nf(y.fb)(a, b));
+            z || (f[u] = z = mf(y.fb)(a, b));
             z = z.next(0);
             if (1 !== z.value.J.length || !v(z.value.J[0].type, 53)) throw Error("XUTY0013: The source expression of a copy modify expression must return a single node.");
-            const G = rb(Xf(z.value.J[0].value, b));
+            const G = rb(Wf(z.value.J[0].value, b));
             n.push(G.value);
             t.push(z.value.da);
             a = hc(a, {
               [y.fc]: () => w.m(G)
             });
           }
-          l || (h ||= nf(this.L)(a, b), l = h.next(0).value.da);
+          l || (h ||= mf(this.L)(a, b), l = h.next(0).value.da);
           l.forEach(y => {
             if (y.target && !Sj(y.target, n, c)) throw Error(`XUDY0014: The target ${y.target.node.outerHTML} must be a node created by the copy clause.`);
             if ("put" === y.type) throw Error("XUDY0037: The modify expression of a copy modify expression can not contain a fn:put.");
@@ -32076,21 +32078,21 @@ const fontoxpath = function (xspattern, prsc) {
             y = y.h(b);
             return Rj(y);
           });
-          lf(u, c, d, e);
-          k ||= nf(this.A)(a, b);
+          kf(u, c, d, e);
+          k ||= mf(this.A)(a, b);
           u = k.next(0);
           return q({
             J: u.value.J,
-            da: mf(u.value.da, ...t)
+            da: lf(u.value.da, ...t)
           });
         }
       };
     }
     v(a) {
-      Dg(a);
-      this.l.forEach(b => b.fc = Hg(a, b.Jb.namespaceURI, b.Jb.localName));
+      Cg(a);
+      this.l.forEach(b => b.fc = Gg(a, b.Jb.namespaceURI, b.Jb.localName));
       super.v(a);
-      Jg(a);
+      Ig(a);
       this.I = this.l.some(b => b.fb.I) || this.A.I;
     }
   };
@@ -32113,7 +32115,7 @@ const fontoxpath = function (xspattern, prsc) {
     constructor(a, b) {
       let c = b.nb || [];
       c = c.concat(a.Na || []);
-      super(new vf({}), c, {
+      super(new uf({}), c, {
         B: !1,
         R: "unsorted"
       });
@@ -32133,16 +32135,16 @@ const fontoxpath = function (xspattern, prsc) {
             if (this.s) {
               if (!c) {
                 var h = this.s.h(a, b);
-                c = Aj(this.A, b, h);
+                c = zj(this.A, b, h);
               }
               d = c.next(0).value.value;
             } else d = this.name;
             if (d) {
-              if ("xmlns" === d.prefix) throw sg(d);
-              if ("" === d.prefix && "xmlns" === d.localName) throw sg(d);
-              if ("http://www.w3.org/2000/xmlns/" === d.namespaceURI) throw sg(d);
-              if ("xml" === d.prefix && "http://www.w3.org/XML/1998/namespace" !== d.namespaceURI) throw sg(d);
-              if ("" !== d.prefix && "xml" !== d.prefix && "http://www.w3.org/XML/1998/namespace" === d.namespaceURI) throw sg(d);
+              if ("xmlns" === d.prefix) throw rg(d);
+              if ("" === d.prefix && "xmlns" === d.localName) throw rg(d);
+              if ("http://www.w3.org/2000/xmlns/" === d.namespaceURI) throw rg(d);
+              if ("xml" === d.prefix && "http://www.w3.org/XML/1998/namespace" !== d.namespaceURI) throw rg(d);
+              if ("" !== d.prefix && "xml" !== d.prefix && "http://www.w3.org/XML/1998/namespace" === d.namespaceURI) throw rg(d);
             }
           }
           if (this.l.nb) return h = this.l.nb, e || (e = jc(h.map(k => qc(k.h(a, b), b).N(l => w.m(g(l.map(n => n.value).join(" "), 1))))).N(k => w.m(rb(Uj(d, k.map(l => l.value).join(""))))).value), e.next(0);
@@ -32152,7 +32154,7 @@ const fontoxpath = function (xspattern, prsc) {
       });
     }
     v(a) {
-      this.A = Ff(a);
+      this.A = Ef(a);
       if (this.name && this.name.prefix && !this.name.namespaceURI) {
         const b = a.$(this.name.prefix);
         if (void 0 === b && this.name.prefix) throw oc(this.name.prefix);
@@ -32163,7 +32165,7 @@ const fontoxpath = function (xspattern, prsc) {
   };
   var Wj = class extends D {
     constructor(a) {
-      super(a ? a.o : new vf({}), a ? [a] : [], {
+      super(a ? a.o : new uf({}), a ? [a] : [], {
         B: !1,
         R: "unsorted"
       });
@@ -32191,7 +32193,7 @@ const fontoxpath = function (xspattern, prsc) {
   };
   var Xj = class extends D {
     constructor(a, b, c, d) {
-      super(new vf({}), d.concat(b).concat(a.Na || []), {
+      super(new uf({}), d.concat(b).concat(a.Na || []), {
         B: !1,
         R: "unsorted"
       });
@@ -32228,7 +32230,7 @@ const fontoxpath = function (xspattern, prsc) {
             k = t;
             f = !0;
           }
-          this.s && (l || (t = this.s.h(a, b), l = Aj(this.A, b, t)), this.l = l.next(0).value.value);
+          this.s && (l || (t = this.s.h(a, b), l = zj(this.A, b, t)), this.l = l.next(0).value.value);
           if ("xmlns" === this.l.prefix || "http://www.w3.org/2000/xmlns/" === this.l.namespaceURI || "xml" === this.l.prefix && "http://www.w3.org/XML/1998/namespace" !== this.l.namespaceURI || this.l.prefix && "xml" !== this.l.prefix && "http://www.w3.org/XML/1998/namespace" === this.l.namespaceURI) throw Error(`XQDY0096: The node name "${this.l.za()}" is invalid for a computed element constructor.`);
           const y = {
             nodeType: 1,
@@ -32247,7 +32249,7 @@ const fontoxpath = function (xspattern, prsc) {
           e.forEach(G => {
             y.attributes.push(G.value.node);
           });
-          u = sj(k, b, rg);
+          u = rj(k, b, qg);
           u.attributes.forEach(G => {
             if (y.attributes.find(N => N.namespaceURI === G.namespaceURI && N.localName === G.localName)) throw Error(`XQDY0025: The attribute ${G.name} does not have an unique name in the constructed element.`);
             y.attributes.push(G);
@@ -32267,8 +32269,8 @@ const fontoxpath = function (xspattern, prsc) {
       });
     }
     v(a) {
-      Dg(a);
-      Object.keys(this.P).forEach(b => Gg(a, b, this.P[b]));
+      Cg(a);
+      Object.keys(this.P).forEach(b => Fg(a, b, this.P[b]));
       this.Fa.forEach(b => b.v(a));
       this.L.reduce((b, c) => {
         if (c.name) {
@@ -32283,8 +32285,8 @@ const fontoxpath = function (xspattern, prsc) {
         if (void 0 === b && this.l.prefix) throw oc(this.l.prefix);
         this.l.namespaceURI = b;
       }
-      this.A = Ff(a);
-      Jg(a);
+      this.A = Ef(a);
+      Ig(a);
     }
   };
   function Yj(a) {
@@ -32305,7 +32307,7 @@ const fontoxpath = function (xspattern, prsc) {
   var ak = class extends D {
     constructor(a, b) {
       const c = a.xb ? [a.xb].concat(b) : [b];
-      super(c.reduce((d, e) => d.add(e.o), new vf({})), c, {
+      super(c.reduce((d, e) => d.add(e.o), new uf({})), c, {
         B: !1,
         R: "unsorted"
       });
@@ -32319,7 +32321,7 @@ const fontoxpath = function (xspattern, prsc) {
         if (-1 !== e.indexOf("?>")) throw Error('XQDY0026: The contents of the data of a processing instruction may not include "?>"');
         if (null !== this.l.Fb) return d = this.l.Fb, Yj(d), w.m(rb(Zj(d, e)));
         d = C(this.l.xb, a, b);
-        const f = zj(b, d);
+        const f = yj(b, d);
         return w.create({
           next: () => {
             var h = f.next(0);
@@ -32334,7 +32336,7 @@ const fontoxpath = function (xspattern, prsc) {
   };
   var bk = class extends D {
     constructor(a) {
-      super(a ? a.o : new vf({}), a ? [a] : [], {
+      super(a ? a.o : new uf({}), a ? [a] : [], {
         B: !1,
         R: "unsorted"
       });
@@ -32357,9 +32359,9 @@ const fontoxpath = function (xspattern, prsc) {
       });
     }
   };
-  var ck = class extends rf {
+  var ck = class extends qf {
     constructor(a, b, c, d) {
-      super(new vf({}), [a, ...b.map(e => e.pb), c].concat(...b.map(e => e.Ib.map(f => f.Hb))), {
+      super(new uf({}), [a, ...b.map(e => e.pb), c].concat(...b.map(e => e.Ib.map(f => f.Hb))), {
         B: !1,
         W: !1,
         R: "unsorted",
@@ -32372,7 +32374,7 @@ const fontoxpath = function (xspattern, prsc) {
     A(a, b, c) {
       return c[0](a).N(d => {
         for (let e = 0; e < this.l; e++) if (this.P[e].some(f => {
-          switch (f.dc) {
+          switch (f.ec) {
             case "?":
               if (1 < d.length) return !1;
               break;
@@ -32395,12 +32397,12 @@ const fontoxpath = function (xspattern, prsc) {
     }
     v(a) {
       super.v(a);
-      if (this.L.I) throw Oe();
+      if (this.L.I) throw Ne();
     }
   };
-  var dk = class extends rf {
+  var dk = class extends qf {
     constructor(a, b, c, d) {
-      super(new vf({}), [a, c, ...b.map(e => e.pb)].concat(...b.map(e => e.Gb.map(f => f))), {
+      super(new uf({}), [a, c, ...b.map(e => e.pb)].concat(...b.map(e => e.Gb.map(f => f))), {
         B: !1,
         W: !1,
         R: "unsorted",
@@ -32411,7 +32413,7 @@ const fontoxpath = function (xspattern, prsc) {
       this.P = b.map(e => e.Gb);
     }
     A(a, b, c) {
-      const d = fi(c[0](a), b),
+      const d = ei(c[0](a), b),
         [, e, ...f] = c;
       return d.X({
         multiple: () => {
@@ -32422,11 +32424,11 @@ const fontoxpath = function (xspattern, prsc) {
             k = !h;
           for (let n = 0; n < this.l; n++) {
             var l = this.P[n].map(t => C(t, a, b));
-            for (const t of l) if (l = fi(t, b), l.F()) {
+            for (const t of l) if (l = ei(t, b), l.F()) {
               if (k) return f[n](a);
             } else {
               if (!l.oa()) throw Error("XPTY0004: The operand for a switch case should result in zero or one item");
-              if (!k && (l = l.first(), He(a, b, null, h, l).next(0).value)) return f[n](a);
+              if (!k && (l = l.first(), Ge(a, b, null, h, l).next(0).value)) return f[n](a);
             }
           }
           return e(a);
@@ -32435,7 +32437,7 @@ const fontoxpath = function (xspattern, prsc) {
     }
     v(a) {
       super.v(a);
-      if (this.L.I) throw Oe();
+      if (this.L.I) throw Ne();
     }
   };
   var ek = {
@@ -32457,13 +32459,13 @@ const fontoxpath = function (xspattern, prsc) {
     switch (a[0]) {
       case "andOp":
         var c = I(a, "type");
-        return new di(hk("andOp", a, P(b)), c);
+        return new ci(hk("andOp", a, P(b)), c);
       case "orOp":
-        return c = I(a, "type"), new ei(hk("orOp", a, P(b)), c);
+        return c = I(a, "type"), new di(hk("orOp", a, P(b)), c);
       case "unaryPlusOp":
-        return c = F(F(a, "operand"), "*"), a = I(a, "type"), new ci("+", Q(c, b), a);
+        return c = F(F(a, "operand"), "*"), a = I(a, "type"), new bi("+", Q(c, b), a);
       case "unaryMinusOp":
-        return c = F(F(a, "operand"), "*"), a = I(a, "type"), new ci("-", Q(c, b), a);
+        return c = F(F(a, "operand"), "*"), a = I(a, "type"), new bi("-", Q(c, b), a);
       case "addOp":
       case "subtractOp":
       case "multiplyOp":
@@ -32476,15 +32478,15 @@ const fontoxpath = function (xspattern, prsc) {
         const f = I(a, "type"),
           h = I(J(a, ["firstOperand", "*"]), "type"),
           k = I(J(a, ["secondOperand", "*"]), "type");
-        h && k && I(a, "type") && (c = Sg(d, h.type, k.type));
-        return new Wg(d, e, b, f, c);
+        h && k && I(a, "type") && (c = Rg(d, h.type, k.type));
+        return new Vg(d, e, b, f, c);
       case "sequenceExpr":
         return ik(a, b);
       case "unionOp":
-        return c = I(a, "type"), new Ii([Q(J(a, ["firstOperand", "*"]), P(b)), Q(J(a, ["secondOperand", "*"]), P(b))], c);
+        return c = I(a, "type"), new Hi([Q(J(a, ["firstOperand", "*"]), P(b)), Q(J(a, ["secondOperand", "*"]), P(b))], c);
       case "exceptOp":
       case "intersectOp":
-        return c = I(a, "type"), new yi(a[0], Q(J(a, ["firstOperand", "*"]), P(b)), Q(J(a, ["secondOperand", "*"]), P(b)), c);
+        return c = I(a, "type"), new xi(a[0], Q(J(a, ["firstOperand", "*"]), P(b)), Q(J(a, ["secondOperand", "*"]), P(b)), c);
       case "stringConcatenateOp":
         return jk(a, b);
       case "rangeSequenceExpr":
@@ -32510,7 +32512,7 @@ const fontoxpath = function (xspattern, prsc) {
       case "pathExpr":
         return mk(a, b);
       case "contextItemExpr":
-        return new Ni(I(a, "type"));
+        return new Mi(I(a, "type"));
       case "functionCallExpr":
         return nk(a, b);
       case "inlineFunctionExpr":
@@ -32520,24 +32522,24 @@ const fontoxpath = function (xspattern, prsc) {
       case "dynamicFunctionInvocationExpr":
         return qk(a, b);
       case "namedFunctionRef":
-        return b = F(a, "functionName"), c = I(a, "type"), a = H(J(a, ["integerConstantExpr", "value"])), new ai(Kg(b), parseInt(a, 10), c);
+        return b = F(a, "functionName"), c = I(a, "type"), a = H(J(a, ["integerConstantExpr", "value"])), new $h(Jg(b), parseInt(a, 10), c);
       case "integerConstantExpr":
-        return new Zh(H(F(a, "value")), {
+        return new Yh(H(F(a, "value")), {
           type: 5,
           g: 3
         });
       case "stringConstantExpr":
-        return new Zh(H(F(a, "value")), {
+        return new Yh(H(F(a, "value")), {
           type: 1,
           g: 3
         });
       case "decimalConstantExpr":
-        return new Zh(H(F(a, "value")), {
+        return new Yh(H(F(a, "value")), {
           type: 4,
           g: 3
         });
       case "doubleConstantExpr":
-        return new Zh(H(F(a, "value")), {
+        return new Yh(H(F(a, "value")), {
           type: 3,
           g: 3
         });
@@ -32546,20 +32548,20 @@ const fontoxpath = function (xspattern, prsc) {
           prefix: l,
           namespaceURI: n,
           localName: t
-        } = Kg(F(a, "name"));
-        return new aj(l, n, t);
+        } = Jg(F(a, "name"));
+        return new $i(l, n, t);
       case "flworExpr":
         return rk(a, b);
       case "quantifiedExpr":
         return sk(a, b);
       case "ifThenElseExpr":
-        return c = I(a, "type"), d = F(a, "ifClause") || K(a, "x:stackTrace")[0], e = F(a, "thenClause") || K(a, "x:stackTrace")[1], a = F(a, "elseClause") || K(a, "x:stackTrace")[2], new Qh(Q(d, P(b)), Q(e, b), Q(a, b), c);
+        return c = I(a, "type"), d = F(a, "ifClause") || K(a, "x:stackTrace")[0], e = F(a, "thenClause") || K(a, "x:stackTrace")[1], a = F(a, "elseClause") || K(a, "x:stackTrace")[2], new Ph(Q(d, P(b)), Q(e, b), Q(a, b), c);
       case "instanceOfExpr":
-        return c = Q(J(a, ["argExpr", "*"]), b), d = J(a, ["sequenceType", "*"]), e = J(a, ["sequenceType", "occurrenceIndicator"]), a = I(a, "type"), new Ei(c, Q(d, P(b)), e ? H(e) : "", a);
+        return c = Q(J(a, ["argExpr", "*"]), b), d = J(a, ["sequenceType", "*"]), e = J(a, ["sequenceType", "occurrenceIndicator"]), a = I(a, "type"), new Di(c, Q(d, P(b)), e ? H(e) : "", a);
       case "castExpr":
-        return b = Q(F(F(a, "argExpr"), "*"), P(b)), c = F(a, "singleType"), a = Kg(F(c, "atomicType")), c = null !== F(c, "optional"), new Ci(b, a, c);
+        return b = Q(F(F(a, "argExpr"), "*"), P(b)), c = F(a, "singleType"), a = Jg(F(c, "atomicType")), c = null !== F(c, "optional"), new Bi(b, a, c);
       case "castableExpr":
-        return b = Q(F(F(a, "argExpr"), "*"), P(b)), c = F(a, "singleType"), a = Kg(F(c, "atomicType")), c = null !== F(c, "optional"), new Bi(b, a, c);
+        return b = Q(F(F(a, "argExpr"), "*"), P(b)), c = F(a, "singleType"), a = Jg(F(c, "atomicType")), c = null !== F(c, "optional"), new Ai(b, a, c);
       case "simpleMapExpr":
         return tk(a, b);
       case "mapConstructor":
@@ -32567,7 +32569,7 @@ const fontoxpath = function (xspattern, prsc) {
       case "arrayConstructor":
         return vk(a, b);
       case "unaryLookup":
-        return c = I(a, "type"), new Ui(wk(a, b), c);
+        return c = I(a, "type"), new Ti(wk(a, b), c);
       case "typeswitchExpr":
         return xk(a, b);
       case "switchExpr":
@@ -32577,7 +32579,7 @@ const fontoxpath = function (xspattern, prsc) {
       case "attributeConstructor":
         return Ak(a, b);
       case "computedAttributeConstructor":
-        return (c = F(a, "tagName")) ? c = Kg(c) : (c = F(a, "tagNameExpr"), c = {
+        return (c = F(a, "tagName")) ? c = Jg(c) : (c = F(a, "tagNameExpr"), c = {
           Na: Q(F(c, "*"), P(b))
         }), b = Q(F(F(a, "valueExpr"), "*"), P(b)), new Vj(c, {
           nb: [b]
@@ -32601,14 +32603,14 @@ const fontoxpath = function (xspattern, prsc) {
         return new ak({
           xb: c ? Q(F(c, "*"), P(b)) : null,
           Fb: d ? H(d) : null
-        }, e ? Q(F(e, "*"), P(b)) : new zi([], a));
+        }, e ? Q(F(e, "*"), P(b)) : new yi([], a));
       case "CDataSection":
-        return new Zh(H(a), {
+        return new Yh(H(a), {
           type: 1,
           g: 3
         });
       case "deleteExpr":
-        return b = Q(J(a, ["targetExpr", "*"]), b), new qj(b);
+        return b = Q(J(a, ["targetExpr", "*"]), b), new pj(b);
       case "insertExpr":
         c = Q(J(a, ["sourceExpr", "*"]), b);
         e = K(a, "*")[1];
@@ -32623,9 +32625,9 @@ const fontoxpath = function (xspattern, prsc) {
             d = (d = F(e, "*")) ? "insertAsFirst" === d[0] ? 4 : 5 : 3;
         }
         b = Q(J(a, ["targetExpr", "*"]), b);
-        return new uj(c, d, b);
+        return new tj(c, d, b);
       case "renameExpr":
-        return c = Q(J(a, ["targetExpr", "*"]), b), b = Q(J(a, ["newNameExpr", "*"]), b), new Nj(c, b);
+        return c = Q(J(a, ["targetExpr", "*"]), b), b = Q(J(a, ["newNameExpr", "*"]), b), new Aj(c, b);
       case "replaceExpr":
         return c = !!F(a, "replaceValue"), d = Q(J(a, ["targetExpr", "*"]), b), b = Q(J(a, ["replacementExpr", "*"]), b), new Qj(c, d, b);
       case "transformExpr":
@@ -32634,7 +32636,7 @@ const fontoxpath = function (xspattern, prsc) {
         c = a;
         for (a = c[2]; "x:stackTrace" === a[0];) c = a, a = a[2];
         c = c[1];
-        return new Sh(c, a[0], Q(a, b), c.Wa);
+        return new Rh(c, a[0], Q(a, b), c.Wa);
       case "ifClause":
       case "thenClause":
       case "elseClause":
@@ -32646,64 +32648,64 @@ const fontoxpath = function (xspattern, prsc) {
   function Dk(a) {
     switch (a[0]) {
       case "nameTest":
-        return new Yi(Kg(a));
+        return new Xi(Jg(a));
       case "piTest":
-        return (a = F(a, "piTarget")) ? new Zi(H(a)) : new Xi(7);
+        return (a = F(a, "piTarget")) ? new Yi(H(a)) : new Wi(7);
       case "commentTest":
-        return new Xi(8);
+        return new Wi(8);
       case "textTest":
-        return new Xi(3);
+        return new Wi(3);
       case "documentTest":
-        return new Xi(9);
+        return new Wi(9);
       case "attributeTest":
         var b = (a = F(a, "attributeName")) && F(a, "star");
-        return !a || b ? new Xi(2) : new Yi(Kg(F(a, "QName")), {
+        return !a || b ? new Wi(2) : new Xi(Jg(F(a, "QName")), {
           kind: 2
         });
       case "elementTest":
-        return b = (a = F(a, "elementName")) && F(a, "star"), !a || b ? new Xi(1) : new Yi(Kg(F(a, "QName")), {
+        return b = (a = F(a, "elementName")) && F(a, "star"), !a || b ? new Wi(1) : new Xi(Jg(F(a, "QName")), {
           kind: 1
         });
       case "anyKindTest":
-        return new $i({
+        return new Zi({
           prefix: "",
           namespaceURI: null,
           localName: "node()"
         });
       case "anyMapTest":
-        return new $i({
+        return new Zi({
           prefix: "",
           namespaceURI: null,
           localName: "map(*)"
         });
       case "anyArrayTest":
-        return new $i({
+        return new Zi({
           prefix: "",
           namespaceURI: null,
           localName: "array(*)"
         });
       case "Wildcard":
-        return F(a, "star") ? (b = F(a, "uri")) ? a = new Yi({
+        return F(a, "star") ? (b = F(a, "uri")) ? a = new Xi({
           localName: "*",
           namespaceURI: H(b),
           prefix: ""
-        }) : (b = F(a, "NCName"), a = "star" === F(a, "*")[0] ? new Yi({
+        }) : (b = F(a, "NCName"), a = "star" === F(a, "*")[0] ? new Xi({
           localName: H(b),
           namespaceURI: null,
           prefix: "*"
-        }) : new Yi({
+        }) : new Xi({
           localName: "*",
           namespaceURI: null,
           prefix: H(b)
-        })) : a = new Yi({
+        })) : a = new Xi({
           localName: "*",
           namespaceURI: null,
           prefix: "*"
         }), a;
       case "atomicType":
-        return new $i(Kg(a));
+        return new Zi(Jg(a));
       case "anyItemType":
-        return new $i({
+        return new Zi({
           prefix: "",
           namespaceURI: null,
           localName: "item()"
@@ -32718,16 +32720,16 @@ const fontoxpath = function (xspattern, prsc) {
     const d = K(a, "arrayElem").map(e => Q(F(e, "*"), P(b)));
     switch (a[0]) {
       case "curlyArray":
-        return new sh(d, c);
+        return new rh(d, c);
       case "squareArray":
-        return new th(d, c);
+        return new sh(d, c);
       default:
         throw Error("Unrecognized arrayType: " + a[0]);
     }
   }
   function uk(a, b) {
     const c = I(a, "type");
-    return new $h(K(a, "mapConstructorEntry").map(d => ({
+    return new Zh(K(a, "mapConstructorEntry").map(d => ({
       key: Q(J(d, ["mapKeyExpr", "*"]), P(b)),
       value: Q(J(d, ["mapValueExpr", "*"]), P(b))
     })), c);
@@ -32747,7 +32749,7 @@ const fontoxpath = function (xspattern, prsc) {
     a = F(a, "*");
     switch (a[0]) {
       case "NCName":
-        return new Zh(H(a), {
+        return new Yh(H(a), {
           type: 1,
           g: 3
         });
@@ -32764,16 +32766,16 @@ const fontoxpath = function (xspattern, prsc) {
     c = Q(e, P(c));
     switch (a) {
       case "valueCompare":
-        return new qi(b[0], d, c);
+        return new pi(b[0], d, c);
       case "nodeCompare":
-        return new wi(b[0], d, c);
+        return new vi(b[0], d, c);
       case "generalCompare":
-        return new ti(b[0], d, c);
+        return new si(b[0], d, c);
     }
   }
   function Ek(a, b, c) {
     a = K(a, "*");
-    return new Li(a.filter(d => "stable" !== d[0]).map(d => {
+    return new Ki(a.filter(d => "stable" !== d[0]).map(d => {
       var e = F(d, "orderModifier"),
         f = e ? F(e, "orderingKind") : null;
       e = e ? F(e, "emptyOrderingMode") : null;
@@ -32782,7 +32784,7 @@ const fontoxpath = function (xspattern, prsc) {
       return {
         ba: Q(J(d, ["orderByExpr", "*"]), b),
         Bb: f,
-        bc: e
+        cc: e
       };
     }), c);
   }
@@ -32799,16 +32801,16 @@ const fontoxpath = function (xspattern, prsc) {
             var h = e[f],
               k = J(h, ["forExpr", "*"]);
             const l = F(h, "positionalVariableBinding");
-            d = new Wh(Kg(J(h, ["typedVariableBinding", "varName"])), Q(k, P(b)), l ? Kg(l) : null, d);
+            d = new Vh(Jg(J(h, ["typedVariableBinding", "varName"])), Q(k, P(b)), l ? Jg(l) : null, d);
           }
           return d;
         case "letClause":
           e = K(e, "*");
-          for (f = e.length - 1; 0 <= f; --f) h = e[f], k = J(h, ["letExpr", "*"]), d = new Yh(Kg(J(h, ["typedVariableBinding", "varName"])), Q(k, P(b)), d);
+          for (f = e.length - 1; 0 <= f; --f) h = e[f], k = J(h, ["letExpr", "*"]), d = new Xh(Jg(J(h, ["typedVariableBinding", "varName"])), Q(k, P(b)), d);
           return d;
         case "whereClause":
           e = K(e, "*");
-          for (f = e.length - 1; 0 <= f; --f) d = new bj(Q(e[f], b), d);
+          for (f = e.length - 1; 0 <= f; --f) d = new aj(Q(e[f], b), d);
           return d;
         case "windowClause":
           throw Error(`Not implemented: ${e[0]} is not implemented yet.`);
@@ -32827,7 +32829,7 @@ const fontoxpath = function (xspattern, prsc) {
     const c = F(a, "functionName"),
       d = K(F(a, "arguments"), "*");
     a = I(a, "type");
-    return new Gf(new ai(Kg(c), d.length, a), d.map(e => "argumentPlaceholder" === e[0] ? null : Q(e, b)), a);
+    return new Ff(new $h(Jg(c), d.length, a), d.map(e => "argumentPlaceholder" === e[0] ? null : Q(e, b)), a);
   }
   function pk(a, b) {
     const c = I(a, "type");
@@ -32839,8 +32841,8 @@ const fontoxpath = function (xspattern, prsc) {
         var e = K(a[f + 1], "*");
         d = d.concat(e.map(h => "argumentPlaceholder" === h[0] ? null : Q(h, b)));
       }
-      e = "EQName" === a[f][0] ? new ai(Kg(a[f]), d.length, c) : Q(a[f], P(b));
-      d = [new Gf(e, d, c)];
+      e = "EQName" === a[f][0] ? new $h(Jg(a[f]), d.length, c) : Q(a[f], P(b));
+      d = [new Ff(e, d, c)];
     }
     return d[0];
   }
@@ -32850,16 +32852,16 @@ const fontoxpath = function (xspattern, prsc) {
     a = F(a, "arguments");
     let e = [];
     a && (e = K(a, "*").map(f => "argumentPlaceholder" === f[0] ? null : Q(f, b)));
-    return new Gf(Q(c, b), e, d);
+    return new Ff(Q(c, b), e, d);
   }
   function ok(a, b) {
     const c = K(F(a, "paramList"), "*"),
       d = J(a, ["functionBody", "*"]),
       e = I(a, "type");
-    return new Xh(c.map(f => ({
-      name: Kg(F(f, "varName")),
-      type: Lg(f)
-    })), Lg(a), d ? Q(d, b) : new zi([], e));
+    return new Wh(c.map(f => ({
+      name: Jg(F(f, "varName")),
+      type: Kg(f)
+    })), Kg(a), d ? Q(d, b) : new yi([], e));
   }
   function mk(a, b) {
     const c = I(a, "type");
@@ -32882,62 +32884,62 @@ const fontoxpath = function (xspattern, prsc) {
             n = Q(G, P(b));
             if (!z) {
               const N = n.D();
-              null === N ? z = !0 : u = yh(u, N);
+              null === N ? z = !0 : u = xh(u, N);
             }
             t.push(["predicate", n]);
           }
       }
       if (k) switch (e = !0, h = F(h, "attributeTest anyElementTest piTest documentTest elementTest commentTest namespaceTest anyKindTest textTest anyFunctionTest typedFunctionTest schemaAttributeTest atomicType anyItemType parenthesizedItemType typedMapTest typedArrayTest nameTest Wildcard".split(" ")), h = Dk(h), H(k)) {
         case "ancestor":
-          l = new wh(h, {
+          l = new vh(h, {
             Qa: !1
           });
           break;
         case "ancestor-or-self":
-          l = new wh(h, {
+          l = new vh(h, {
             Qa: !0
           });
           break;
         case "attribute":
-          l = new zh(h, u);
+          l = new yh(h, u);
           break;
         case "child":
-          l = new Ah(h, u);
+          l = new zh(h, u);
           break;
         case "descendant":
-          l = new Dh(h, {
+          l = new Ch(h, {
             Qa: !1
           });
           break;
         case "descendant-or-self":
-          l = new Dh(h, {
+          l = new Ch(h, {
             Qa: !0
           });
           break;
         case "parent":
-          l = new Kh(h, u);
-          break;
-        case "following-sibling":
           l = new Jh(h, u);
           break;
+        case "following-sibling":
+          l = new Ih(h, u);
+          break;
         case "preceding-sibling":
-          l = new Oh(h, u);
+          l = new Nh(h, u);
           break;
         case "following":
-          l = new Hh(h);
+          l = new Gh(h);
           break;
         case "preceding":
-          l = new Mh(h);
+          l = new Lh(h);
           break;
         case "self":
-          l = new Ph(h, u);
+          l = new Oh(h, u);
       } else k = J(h, ["filterExpr", "*"]), l = Q(k, P(b));
       for (const y of t) switch (y[0]) {
         case "lookup":
-          l = new Ti(l, y[1]);
+          l = new Si(l, y[1]);
           break;
         case "predicate":
-          l = new Qi(l, y[1]);
+          l = new Pi(l, y[1]);
       }
       l.type = c;
       return l;
@@ -32945,38 +32947,38 @@ const fontoxpath = function (xspattern, prsc) {
     a = F(a, "rootExpr");
     d = e || null !== a || 1 < d.length;
     if (!d && 1 === f.length || !a && 1 === f.length && "sorted" === f[0].ia) return f[0];
-    if (a && 0 === f.length) return new Mi(null);
-    f = new Pi(f, d);
-    return a ? new Mi(f) : f;
+    if (a && 0 === f.length) return new Li(null);
+    f = new Oi(f, d);
+    return a ? new Li(f) : f;
   }
   function sk(a, b) {
     const c = I(a, "type"),
       d = H(F(a, "quantifier")),
       e = J(a, ["predicateExpr", "*"]);
     a = K(a, "quantifiedExprInClause").map(f => {
-      const h = Kg(J(f, ["typedVariableBinding", "varName"]));
+      const h = Jg(J(f, ["typedVariableBinding", "varName"]));
       f = J(f, ["sourceExpr", "*"]);
       return {
         name: h,
         fb: Q(f, P(b))
       };
     });
-    return new Vi(d, a, Q(e, P(b)), c);
+    return new Ui(d, a, Q(e, P(b)), c);
   }
   function ik(a, b) {
     var c = K(a, "*").map(d => Q(d, b));
     if (1 === c.length) return c[0];
     c = I(a, "type");
-    return new zi(K(a, "*").map(d => Q(d, b)), c);
+    return new yi(K(a, "*").map(d => Q(d, b)), c);
   }
   function tk(a, b) {
     const c = I(a, "type");
-    return K(a, "*").reduce((d, e) => null === d ? Q(e, P(b)) : new Ai(d, Q(e, P(b)), c), null);
+    return K(a, "*").reduce((d, e) => null === d ? Q(e, P(b)) : new zi(d, Q(e, P(b)), c), null);
   }
   function jk(a, b) {
     const c = I(a, "type");
     a = [J(a, ["firstOperand", "*"]), J(a, ["secondOperand", "*"])];
-    return new Gf(new ai({
+    return new Ff(new $h({
       localName: "concat",
       namespaceURI: "http://www.w3.org/2005/xpath-functions",
       prefix: ""
@@ -32985,16 +32987,16 @@ const fontoxpath = function (xspattern, prsc) {
   function kk(a, b) {
     const c = I(a, "type");
     a = [F(F(a, "startExpr"), "*"), F(F(a, "endExpr"), "*")];
-    const d = new ai({
+    const d = new $h({
       localName: "to",
       namespaceURI: "http://fontoxpath/operators",
       prefix: ""
     }, a.length, c);
-    return new Gf(d, a.map(e => Q(e, P(b))), c);
+    return new Ff(d, a.map(e => Q(e, P(b))), c);
   }
   function zk(a, b) {
     if (!b.Z) throw Error("XPST0003: Use of XQuery functionality is not allowed in XPath context");
-    const c = Kg(F(a, "tagName"));
+    const c = Jg(F(a, "tagName"));
     var d = F(a, "attributeList");
     const e = d ? K(d, "attributeConstructor").map(f => Q(f, P(b))) : [];
     d = d ? K(d, "namespaceDeclaration").map(f => {
@@ -33009,7 +33011,7 @@ const fontoxpath = function (xspattern, prsc) {
   }
   function Ak(a, b) {
     if (!b.Z) throw Error("XPST0003: Use of XQuery functionality is not allowed in XPath context");
-    const c = Kg(F(a, "attributeName"));
+    const c = Jg(F(a, "attributeName"));
     var d = F(a, "attributeValue");
     d = d ? H(d) : null;
     a = (a = F(a, "attributeValueExpr")) ? K(a, "*").map(e => Q(e, P(b))) : null;
@@ -33020,7 +33022,7 @@ const fontoxpath = function (xspattern, prsc) {
   }
   function Bk(a, b) {
     var c = F(a, "tagName");
-    c ? c = Kg(c) : (c = F(a, "tagNameExpr"), c = {
+    c ? c = Jg(c) : (c = F(a, "tagNameExpr"), c = {
       Na: Q(F(c, "*"), P(b))
     });
     a = (a = F(a, "contentExpr")) ? K(a, "*").map(d => Q(d, P(b))) : [];
@@ -33028,7 +33030,7 @@ const fontoxpath = function (xspattern, prsc) {
   }
   function Ck(a, b) {
     const c = K(F(a, "transformCopies"), "transformCopy").map(e => {
-        const f = Kg(F(F(e, "varRef"), "name"));
+        const f = Jg(F(F(e, "varRef"), "name"));
         return {
           fb: Q(F(F(e, "copySource"), "*"), b),
           Jb: new Sa(f.prefix, f.namespaceURI, f.localName)
@@ -33049,7 +33051,7 @@ const fontoxpath = function (xspattern, prsc) {
           Ib: h.map(k => {
             const l = F(k, "occurrenceIndicator");
             return {
-              dc: l ? H(l) : "",
+              ec: l ? H(l) : "",
               Hb: Q(F(k, "*"), b)
             };
           })
@@ -33091,7 +33093,7 @@ const fontoxpath = function (xspattern, prsc) {
     if (!a) return null;
     b = a[b + (f ? "_DEBUG" : "")];
     return b ? (b = b.find(l => l.o === h && l.v.every(n => c(n.prefix) === n.namespaceURI) && l.D.every(n => void 0 !== d[n.name]) && l.kb.every(n => e[n.prefix] === n.namespaceURI) && l.l.every(n => {
-      const t = k(n.cc, n.arity);
+      const t = k(n.dc, n.arity);
       return t && t.namespaceURI === n.Db.namespaceURI && t.localName === n.Db.localName;
     }))) ? {
       ba: b.h,
@@ -33148,11 +33150,11 @@ const fontoxpath = function (xspattern, prsc) {
       const c = Lk[b];
       if (!c) throw Error(`XQST0051: No modules found with the namespace uri ${b}`);
       c.Ia.forEach(d => {
-        d.cb && Fg(a, b, d.localName, d.arity, d);
+        d.cb && Eg(a, b, d.localName, d.arity, d);
       });
       c.Ta.forEach(d => {
-        Hg(a, b, d.localName);
-        Ig(a, b, d.localName, (e, f) => C(d.ba, e, f));
+        Gg(a, b, d.localName);
+        Hg(a, b, d.localName, (e, f) => C(d.ba, e, f));
       });
     },
     Ok = () => {
@@ -33161,7 +33163,7 @@ const fontoxpath = function (xspattern, prsc) {
         if (a.pa) try {
           a.pa(a);
         } catch (b) {
-          a.pa = null, hg(a.source, b);
+          a.pa = null, gg(a.source, b);
         }
         a.pa = null;
       });
@@ -33413,86 +33415,91 @@ const fontoxpath = function (xspattern, prsc) {
     Po = (0, R.token)("node()"),
     Qo = (0, R.token)("item()"),
     Ro = (0, R.token)("empty-sequence()");
-  var So = new Map(),
-    To = new Map(),
-    Uo = (0, R.or)([Wk(/[\t\n\r -\uD7FF\uE000\uFFFD]/), Wk(/[\uD800-\uDBFF][\uDC00-\uDFFF]/)]),
-    Vo = (0, R.preceded)((0, R.peek)((0, R.not)((0, R.or)([Yk, Zk]), ['comment contents cannot contain "(:" or ":)"'])), Uo),
-    Wo = (0, R.map)((0, R.delimited)(Yk, (0, R.star)((0, R.or)([Vo, function (a, b) {
-      return Wo(a, b);
+  (0, R.token)("`");
+  var So = (0, R.token)("``["),
+    To = (0, R.token)("]``"),
+    Uo = (0, R.token)("`{"),
+    Vo = (0, R.token)("}`");
+  var Wo = new Map(),
+    Xo = new Map(),
+    Yo = (0, R.or)([Wk(/[\t\n\r -\uD7FF\uE000\uFFFD]/), Wk(/[\uD800-\uDBFF][\uDC00-\uDFFF]/)]),
+    Zo = (0, R.preceded)((0, R.peek)((0, R.not)((0, R.or)([Yk, Zk]), ['comment contents cannot contain "(:" or ":)"'])), Yo),
+    $o = (0, R.map)((0, R.delimited)(Yk, (0, R.star)((0, R.or)([Zo, function (a, b) {
+      return $o(a, b);
     }])), Zk, !0), a => a.join("")),
-    Xo = (0, R.or)([Xk, Wo]),
-    Yo = (0, R.map)((0, R.plus)(Xk), a => a.join("")),
-    V = Qk((0, R.map)((0, R.star)(Xo), a => a.join("")), So),
-    W = Qk((0, R.map)((0, R.plus)(Xo), a => a.join("")), To);
-  const Zo = (0, R.or)([Wk(/[A-Z_a-z\xC0-\xD6\xD8-\xF6\xF8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD]/), (0, R.then)(Wk(/[\uD800-\uDB7F]/), Wk(/[\uDC00-\uDFFF]/), (a, b) => a + b)]),
-    $o = (0, R.or)([Zo, Wk(/[\-\.0-9\xB7\u0300-\u036F\u203F\u2040]/)]);
-  var ap = (0, R.then)(Zo, (0, R.star)($o), (a, b) => a + b.join("")),
-    bp = (0, R.map)(ap, a => ["prefix", a]);
-  const cp = (0, R.or)([Zo, Bl]),
-    dp = (0, R.or)([$o, Bl]);
-  (0, R.then)(cp, (0, R.star)(dp), (a, b) => a + b.join(""));
-  const ep = (0, R.map)(ap, a => [{
+    ap = (0, R.or)([Xk, $o]),
+    bp = (0, R.map)((0, R.plus)(Xk), a => a.join("")),
+    V = Qk((0, R.map)((0, R.star)(ap), a => a.join("")), Wo),
+    X = Qk((0, R.map)((0, R.plus)(ap), a => a.join("")), Xo);
+  const cp = (0, R.or)([Wk(/[A-Z_a-z\xC0-\xD6\xD8-\xF6\xF8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD]/), (0, R.then)(Wk(/[\uD800-\uDB7F]/), Wk(/[\uDC00-\uDFFF]/), (a, b) => a + b)]),
+    dp = (0, R.or)([cp, Wk(/[\-\.0-9\xB7\u0300-\u036F\u203F\u2040]/)]);
+  var ep = (0, R.then)(cp, (0, R.star)(dp), (a, b) => a + b.join("")),
+    fp = (0, R.map)(ep, a => ["prefix", a]);
+  const gp = (0, R.or)([cp, Bl]),
+    hp = (0, R.or)([dp, Bl]);
+  (0, R.then)(gp, (0, R.star)(hp), (a, b) => a + b.join(""));
+  const ip = (0, R.map)(ep, a => [{
       prefix: "",
       URI: null
     }, a]),
-    fp = (0, R.then)(ap, (0, R.preceded)(Bl, ap), (a, b) => [{
+    jp = (0, R.then)(ep, (0, R.preceded)(Bl, ep), (a, b) => [{
       prefix: a,
       URI: null
     }, b]);
-  var gp = (0, R.or)([fp, ep]),
-    hp = (0, R.followed)(T([dm, V, fl], (0, R.map)((0, R.star)(Wk(/[^{}]/)), a => a.join("").replace(/\s+/g, " ").trim())), gl);
-  const ip = (0, R.then)(hp, ap, (a, b) => [a, b]);
-  var jp = (0, R.or)([(0, R.map)(ip, a => [{
+  var kp = (0, R.or)([jp, ip]),
+    lp = (0, R.followed)(T([dm, V, fl], (0, R.map)((0, R.star)(Wk(/[^{}]/)), a => a.join("").replace(/\s+/g, " ").trim())), gl);
+  const mp = (0, R.then)(lp, ep, (a, b) => [a, b]);
+  var np = (0, R.or)([(0, R.map)(mp, a => [{
       prefix: null,
       URI: a[0]
-    }, a[1]]), gp]),
-    kp = (0, R.or)([(0, R.map)(jp, a => ["QName", ...a]), (0, R.map)(Dl, () => ["star"])]),
-    lp = (0, R.map)((0, R.preceded)(Fl, jp), a => ["varRef", ["name", ...a]]);
-  var mp = (0, R.peek)((0, R.or)([bl, ll, jl, Xo])),
-    np = (0, R.map)((0, R.or)([mo, no, oo, po, qo, ro, so]), a => a.substring(0, a.length - 2)),
-    op = (0, R.map)((0, R.or)([to, uo, vo, wo, xo]), a => a.substring(0, a.length - 2)),
-    pp = Rk(Al, (0, R.or)([Fm, Hm, Jm, Km, Lm]), Cl, (a, b, c) => a + b + c),
-    qp = (0, R.or)([Rk(vl, Wk(/[0-9a-fA-F]+/), Cl, (a, b, c) => a + b + c), Rk(wl, Wk(/[0-9]+/), Cl, (a, b, c) => a + b + c)]),
-    rp = Vk([ml], '"'),
-    sp = Vk([kl], "'"),
-    tp = Uk(Vk([Mo], "commentTest")),
-    up = Uk(Vk([No], "textTest")),
-    vp = Uk(Vk([Oo], "namespaceTest")),
-    wp = Uk(Vk([Po], "anyKindTest"));
-  const xp = Wk(/[0-9]+/),
-    yp = (0, R.then)((0, R.or)([(0, R.then)(Vl, xp, (a, b) => a + b), (0, R.then)(xp, (0, R.optional)((0, R.preceded)(Vl, Wk(/[0-9]*/))), (a, b) => a + (null !== b ? "." + b : ""))]), Rk((0, R.or)([bm, cm]), (0, R.optional)((0, R.or)([Xl, Yl])), xp, (a, b, c) => a + (b ? b : "") + c), (a, b) => ["doubleConstantExpr", ["value", a + b]]),
-    zp = (0, R.or)([(0, R.map)((0, R.preceded)(Vl, xp), a => ["decimalConstantExpr", ["value", "." + a]]), (0, R.then)((0, R.followed)(xp, Vl), (0, R.optional)(xp), (a, b) => ["decimalConstantExpr", ["value", a + "." + (null !== b ? b : "")]])]);
-  var Ap = (0, R.map)(xp, a => ["integerConstantExpr", ["value", a]]),
-    Bp = (0, R.followed)((0, R.or)([yp, zp, Ap]), (0, R.peek)((0, R.not)(Wk(/[a-zA-Z]/), ["no alphabetical characters after numeric literal"]))),
-    Cp = (0, R.map)((0, R.followed)(Vl, (0, R.peek)((0, R.not)(Vl, ["context item should not be followed by another ."]))), () => ["contextItemExpr"]),
-    Dp = (0, R.or)([bn, rm, fn, go, qm, lo, om, Mm, bo, pm, ho, km, gn, io, sm, On, en, zn]),
-    Ep = Uk(Vk([Il], "argumentPlaceholder")),
-    Fp = (0, R.or)([Il, Dl, Xl]),
-    Gp = (0, R.preceded)((0, R.peek)((0, R.not)(Wk(/[{}<&]/), ["elementContentChar cannot be {, }, <, or &"])), Uo),
-    Hp = (0, R.map)((0, R.delimited)(nl, (0, R.star)((0, R.preceded)((0, R.peek)((0, R.not)(ol, ['CDataSection content may not contain "]]\x3e"'])), Uo)), ol, !0), a => ["CDataSection", a.join("")]),
-    Ip = (0, R.preceded)((0, R.peek)((0, R.not)(Wk(/["{}<&]/), ['quotAttrValueContentChar cannot be ", {, }, <, or &'])), Uo),
-    Jp = (0, R.preceded)((0, R.peek)((0, R.not)(Wk(/['{}<&]/), ["aposAttrValueContentChar cannot be ', {, }, <, or &"])), Uo),
-    Kp = (0, R.map)((0, R.star)((0, R.or)([(0, R.preceded)((0, R.peek)((0, R.not)(Yl, [])), Uo), (0, R.map)(T([Yl, (0, R.peek)((0, R.not)(Yl, []))], Uo), a => "-" + a)])), a => a.join("")),
-    Lp = (0, R.map)((0, R.delimited)(rl, Kp, sl, !0), a => ["computedCommentConstructor", ["argExpr", ["stringConstantExpr", ["value", a]]]]);
-  const Mp = (0, R.filter)(ap, a => "xml" !== a.toLowerCase(), ['A processing instruction target cannot be "xml"']),
-    Np = (0, R.map)((0, R.star)((0, R.preceded)((0, R.peek)((0, R.not)(ul, [])), Uo)), a => a.join(""));
-  var Op = (0, R.then)((0, R.preceded)(tl, (0, R.cut)(Mp)), (0, R.cut)((0, R.followed)((0, R.optional)((0, R.preceded)(Yo, Np)), ul)), (a, b) => ["computedPIConstructor", ["piTarget", a], ["piValueExpr", ["stringConstantExpr", ["value", b]]]]),
-    Pp = (0, R.map)($l, () => ["stepExpr", ["xpathAxis", "descendant-or-self"], ["anyKindTest"]]),
-    Qp = (0, R.or)([hn, jn]),
-    Rp = (0, R.map)((0, R.star)((0, R.followed)(Uo, (0, R.peek)((0, R.not)(al, ["Pragma contents should not contain '#)'"])))), a => a.join("")),
-    Sp = (0, R.map)((0, R.followed)((0, R.or)([Dm, Em, Fm, Gm, Hm, Im]), mp), a => a + "Op"),
-    Tp = (0, R.or)([(0, R.followed)(Vk([xm], "isOp"), mp), Vk([Pl], "nodeBeforeOp"), Vk([Sl], "nodeAfterOp")]),
-    Up = (0, R.or)([Vk([Jl], "equalOp"), Vk([Nl], "notEqualOp"), Vk([Ql], "lessThanOrEqualOp"), Vk([Ol], "lessThanOp"), Vk([Tl], "greaterThanOrEqualOp"), Vk([Rl], "greaterThanOp")]),
-    Vp = (0, R.map)(Rn, () => ["annotation", ["annotationName", "updating"]]);
-  const Wp = (0, R.or)([qn, rn]),
-    Xp = (0, R.or)([sn, tn]);
-  var Yp = (0, R.or)([yo, zo, Ao, Bo, Co, Hl, Do, Eo, Fo, Go, Ho]),
-    Zp = (0, R.map)(T([mn, W, on, W], (0, R.or)([qn, pn])), a => ["boundarySpaceDecl", a]),
-    $p = (0, R.map)(T([mn, W, Wn, W], (0, R.or)([qn, pn])), a => ["constructionDecl", a]),
-    aq = (0, R.map)(T([mn, W, Xn, W], (0, R.or)([Yn, Zn])), a => ["orderingModeDecl", a]),
-    bq = (0, R.map)(T([mn, W, nn, W, Zm, W, Qm, W], (0, R.or)([un, vn])), a => ["emptyOrderDecl", a]),
-    cq = (0, R.then)(T([mn, W, wn, W], Wp), T([V, Ul, V], Xp), (a, b) => ["copyNamespacesDecl", ["preserveMode", a], ["inheritMode", b]]);
-  function dq(a) {
+    }, a[1]]), kp]),
+    op = (0, R.or)([(0, R.map)(np, a => ["QName", ...a]), (0, R.map)(Dl, () => ["star"])]),
+    pp = (0, R.map)((0, R.preceded)(Fl, np), a => ["varRef", ["name", ...a]]);
+  var qp = (0, R.peek)((0, R.or)([bl, ll, jl, ap])),
+    rp = (0, R.map)((0, R.or)([mo, no, oo, po, qo, ro, so]), a => a.substring(0, a.length - 2)),
+    sp = (0, R.map)((0, R.or)([to, uo, vo, wo, xo]), a => a.substring(0, a.length - 2)),
+    tp = Rk(Al, (0, R.or)([Fm, Hm, Jm, Km, Lm]), Cl, (a, b, c) => a + b + c),
+    up = (0, R.or)([Rk(vl, Wk(/[0-9a-fA-F]+/), Cl, (a, b, c) => a + b + c), Rk(wl, Wk(/[0-9]+/), Cl, (a, b, c) => a + b + c)]),
+    vp = Vk([ml], '"'),
+    wp = Vk([kl], "'"),
+    xp = Uk(Vk([Mo], "commentTest")),
+    yp = Uk(Vk([No], "textTest")),
+    zp = Uk(Vk([Oo], "namespaceTest")),
+    Ap = Uk(Vk([Po], "anyKindTest"));
+  const Bp = Wk(/[0-9]+/),
+    Cp = (0, R.then)((0, R.or)([(0, R.then)(Vl, Bp, (a, b) => a + b), (0, R.then)(Bp, (0, R.optional)((0, R.preceded)(Vl, Wk(/[0-9]*/))), (a, b) => a + (null !== b ? "." + b : ""))]), Rk((0, R.or)([bm, cm]), (0, R.optional)((0, R.or)([Xl, Yl])), Bp, (a, b, c) => a + (b ? b : "") + c), (a, b) => ["doubleConstantExpr", ["value", a + b]]),
+    Dp = (0, R.or)([(0, R.map)((0, R.preceded)(Vl, Bp), a => ["decimalConstantExpr", ["value", "." + a]]), (0, R.then)((0, R.followed)(Bp, Vl), (0, R.optional)(Bp), (a, b) => ["decimalConstantExpr", ["value", a + "." + (null !== b ? b : "")]])]);
+  var Ep = (0, R.map)(Bp, a => ["integerConstantExpr", ["value", a]]),
+    Fp = (0, R.followed)((0, R.or)([Cp, Dp, Ep]), (0, R.peek)((0, R.not)(Wk(/[a-zA-Z]/), ["no alphabetical characters after numeric literal"]))),
+    Gp = (0, R.map)((0, R.followed)(Vl, (0, R.peek)((0, R.not)(Vl, ["context item should not be followed by another ."]))), () => ["contextItemExpr"]),
+    Hp = (0, R.or)([bn, rm, fn, go, qm, lo, om, Mm, bo, pm, ho, km, gn, io, sm, On, en, zn]),
+    Ip = Uk(Vk([Il], "argumentPlaceholder")),
+    Jp = (0, R.or)([Il, Dl, Xl]),
+    Kp = (0, R.preceded)((0, R.peek)((0, R.not)(Wk(/[{}<&]/), ["elementContentChar cannot be {, }, <, or &"])), Yo),
+    Lp = (0, R.map)((0, R.delimited)(nl, (0, R.star)((0, R.preceded)((0, R.peek)((0, R.not)(ol, ['CDataSection content may not contain "]]\x3e"'])), Yo)), ol, !0), a => ["CDataSection", a.join("")]),
+    Mp = (0, R.preceded)((0, R.peek)((0, R.not)(Wk(/["{}<&]/), ['quotAttrValueContentChar cannot be ", {, }, <, or &'])), Yo),
+    Np = (0, R.preceded)((0, R.peek)((0, R.not)(Wk(/['{}<&]/), ["aposAttrValueContentChar cannot be ', {, }, <, or &"])), Yo),
+    Op = (0, R.map)((0, R.star)((0, R.or)([(0, R.preceded)((0, R.peek)((0, R.not)(Yl, [])), Yo), (0, R.map)(T([Yl, (0, R.peek)((0, R.not)(Yl, []))], Yo), a => "-" + a)])), a => a.join("")),
+    Pp = (0, R.map)((0, R.delimited)(rl, Op, sl, !0), a => ["computedCommentConstructor", ["argExpr", ["stringConstantExpr", ["value", a]]]]);
+  const Qp = (0, R.filter)(ep, a => "xml" !== a.toLowerCase(), ['A processing instruction target cannot be "xml"']),
+    Rp = (0, R.map)((0, R.star)((0, R.preceded)((0, R.peek)((0, R.not)(ul, [])), Yo)), a => a.join(""));
+  var Sp = (0, R.then)((0, R.preceded)(tl, (0, R.cut)(Qp)), (0, R.cut)((0, R.followed)((0, R.optional)((0, R.preceded)(bp, Rp)), ul)), (a, b) => ["computedPIConstructor", ["piTarget", a], ["piValueExpr", ["stringConstantExpr", ["value", b]]]]),
+    Tp = (0, R.map)($l, () => ["stepExpr", ["xpathAxis", "descendant-or-self"], ["anyKindTest"]]),
+    Up = (0, R.or)([hn, jn]),
+    Vp = (0, R.map)((0, R.star)((0, R.followed)(Yo, (0, R.peek)((0, R.not)(al, ["Pragma contents should not contain '#)'"])))), a => a.join("")),
+    Wp = (0, R.map)((0, R.followed)((0, R.or)([Dm, Em, Fm, Gm, Hm, Im]), qp), a => a + "Op"),
+    Xp = (0, R.or)([(0, R.followed)(Vk([xm], "isOp"), qp), Vk([Pl], "nodeBeforeOp"), Vk([Sl], "nodeAfterOp")]),
+    Yp = (0, R.or)([Vk([Jl], "equalOp"), Vk([Nl], "notEqualOp"), Vk([Ql], "lessThanOrEqualOp"), Vk([Ol], "lessThanOp"), Vk([Tl], "greaterThanOrEqualOp"), Vk([Rl], "greaterThanOp")]),
+    Zp = (0, R.map)(Rn, () => ["annotation", ["annotationName", "updating"]]);
+  const $p = (0, R.or)([qn, rn]),
+    aq = (0, R.or)([sn, tn]);
+  var bq = (0, R.or)([yo, zo, Ao, Bo, Co, Hl, Do, Eo, Fo, Go, Ho]),
+    cq = (0, R.map)(T([mn, X, on, X], (0, R.or)([qn, pn])), a => ["boundarySpaceDecl", a]),
+    dq = (0, R.map)(T([mn, X, Wn, X], (0, R.or)([qn, pn])), a => ["constructionDecl", a]),
+    eq = (0, R.map)(T([mn, X, Xn, X], (0, R.or)([Yn, Zn])), a => ["orderingModeDecl", a]),
+    fq = (0, R.map)(T([mn, X, nn, X, Zm, X, Qm, X], (0, R.or)([un, vn])), a => ["emptyOrderDecl", a]),
+    gq = (0, R.then)(T([mn, X, wn, X], $p), T([V, Ul, V], aq), (a, b) => ["copyNamespacesDecl", ["preserveMode", a], ["inheritMode", b]]);
+  function hq(a) {
     switch (a[0]) {
       case "constantExpr":
       case "varRef":
@@ -33520,13 +33527,13 @@ const fontoxpath = function (xspattern, prsc) {
     }
     return ["sequenceExpr", a];
   }
-  function eq(a) {
+  function iq(a) {
     if (!(1 <= a && 55295 >= a || 57344 <= a && 65533 >= a || 65536 <= a && 1114111 >= a)) throw Error("XQST0090: The character reference " + a + " (" + a.toString(16) + ") does not reference a valid codePoint.");
   }
-  function fq(a) {
+  function jq(a) {
     return a.replace(/(&[^;]+);/g, b => {
-      if (/^&#x/.test(b)) return b = parseInt(b.slice(3, -1), 16), eq(b), String.fromCodePoint(b);
-      if (/^&#/.test(b)) return b = parseInt(b.slice(2, -1), 10), eq(b), String.fromCodePoint(b);
+      if (/^&#x/.test(b)) return b = parseInt(b.slice(3, -1), 16), iq(b), String.fromCodePoint(b);
+      if (/^&#/.test(b)) return b = parseInt(b.slice(2, -1), 10), iq(b), String.fromCodePoint(b);
       switch (b) {
         case "&lt;":
           return "<";
@@ -33542,7 +33549,7 @@ const fontoxpath = function (xspattern, prsc) {
       throw Error('XPST0003: Unknown character reference: "' + b + '"');
     });
   }
-  function gq(a, b, c) {
+  function kq(a, b, c) {
     if (!a.length) return [];
     let d = [a[0]];
     for (let e = 1; e < a.length; ++e) {
@@ -33553,35 +33560,35 @@ const fontoxpath = function (xspattern, prsc) {
     d = d.reduce((e, f, h) => {
       if ("string" !== typeof f) e.push(f);else if (c && /^\s*$/.test(f)) {
         const k = d[h + 1];
-        k && "CDataSection" === k[0] ? e.push(fq(f)) : (h = d[h - 1]) && "CDataSection" === h[0] && e.push(fq(f));
-      } else e.push(fq(f));
+        k && "CDataSection" === k[0] ? e.push(jq(f)) : (h = d[h - 1]) && "CDataSection" === h[0] && e.push(jq(f));
+      } else e.push(jq(f));
       return e;
     }, []);
     if (!d.length) return d;
     if (1 < d.length || b) for (a = 0; a < d.length; a++) "string" === typeof d[a] && (d[a] = ["stringConstantExpr", ["value", d[a]]]);
     return d;
   }
-  function hq(a) {
+  function lq(a) {
     return a[0].prefix ? a[0].prefix + ":" + a[1] : a[1];
   }
-  var iq = (0, R.then)(jp, (0, R.optional)(Il), (a, b) => null !== b ? ["singleType", ["atomicType", ...a], ["optional"]] : ["singleType", ["atomicType", ...a]]),
-    jq = (0, R.map)(jp, a => ["atomicType", ...a]);
-  const kq = new Map();
-  function lq(a) {
+  var mq = (0, R.then)(np, (0, R.optional)(Il), (a, b) => null !== b ? ["singleType", ["atomicType", ...a], ["optional"]] : ["singleType", ["atomicType", ...a]]),
+    nq = (0, R.map)(np, a => ["atomicType", ...a]);
+  const oq = new Map();
+  function pq(a) {
     function b(m, r) {
-      return r.reduce((B, X) => [X[0], ["firstOperand", B], ["secondOperand", X[1]]], m);
+      return r.reduce((B, W) => [W[0], ["firstOperand", B], ["secondOperand", W[1]]], m);
     }
     function c(m, r, B) {
-      return (0, R.then)(m, (0, R.star)((0, R.then)(S(r, V), (0, R.cut)(m), (X, ea) => [X, ea])), B);
+      return (0, R.then)(m, (0, R.star)((0, R.then)(S(r, V), (0, R.cut)(m), (W, ea) => [W, ea])), B);
     }
-    function d(m, r, B = "firstOperand", X = "secondOperand") {
-      return (0, R.then)(m, (0, R.optional)((0, R.then)(S(r, V), (0, R.cut)(m), (ea, Fa) => [ea, Fa])), (ea, Fa) => null === Fa ? ea : [Fa[0], [B, ea], [X, Fa[1]]]);
+    function d(m, r, B = "firstOperand", W = "secondOperand") {
+      return (0, R.then)(m, (0, R.optional)((0, R.then)(S(r, V), (0, R.cut)(m), (ea, Fa) => [ea, Fa])), (ea, Fa) => null === Fa ? ea : [Fa[0], [B, ea], [W, Fa[1]]]);
     }
     function e(m) {
       return a.mb ? (r, B) => {
         r = m(r, B);
         if (!r.success) return r;
-        const X = n.has(B) ? n.get(B) : {
+        const W = n.has(B) ? n.get(B) : {
             offset: B,
             line: -1,
             ha: -1
@@ -33591,11 +33598,11 @@ const fontoxpath = function (xspattern, prsc) {
             line: -1,
             ha: -1
           };
-        n.set(B, X);
+        n.set(B, W);
         n.set(r.offset, ea);
         B = r.value.Wa;
         return (0, R.okWithValue)(r.offset, ["x:stackTrace", Object.assign({
-          start: X,
+          start: W,
           end: ea
         }, B ? {
           Wa: B
@@ -33603,87 +33610,95 @@ const fontoxpath = function (xspattern, prsc) {
       } : m;
     }
     function f(m, r) {
-      return Bj(m, r);
+      return Dj(m, r);
     }
     function h(m, r) {
-      return yf(m, r);
+      return xf(m, r);
     }
     function k(m, r) {
-      return e((0, R.or)([zr, Ar, Br, Cr, Dr, Er, Fr, Gr, Hr, Ir, Jr]))(m, r);
+      return e((0, R.or)([Dr, Er, Fr, Gr, Hr, Ir, Jr, Kr, Lr, Mr, Nr]))(m, r);
     }
     function l(m, r) {
-      return c(k, Ul, (B, X) => 0 === X.length ? B : ["sequenceExpr", B, ...X.map(ea => ea[1])])(m, r);
+      return c(k, Ul, (B, W) => 0 === W.length ? B : ["sequenceExpr", B, ...W.map(ea => ea[1])])(m, r);
     }
     const n = new Map(),
       t = (0, R.preceded)(dl, (0, R.followed)(S(l, V), el)),
-      u = (0, R.map)(a.Za ? (0, R.or)([S((0, R.star)((0, R.or)([pp, qp, rp, Wk(/[^"&]/)])), ll), S((0, R.star)((0, R.or)([pp, qp, sp, Wk(/[^'&]/)])), jl)]) : (0, R.or)([S((0, R.star)((0, R.or)([rp, Wk(/[^"]/)])), ll), S((0, R.star)((0, R.or)([sp, Wk(/[^']/)])), jl)]), m => m.join("")),
-      z = (0, R.or)([(0, R.map)(T([qm, V], (0, R.delimited)((0, R.followed)(bl, V), (0, R.then)(kp, T([V, Ul, V], jp), (m, r) => [["elementName", m], ["typeName", ...r]]), (0, R.preceded)(V, cl))), ([m, r]) => ["elementTest", m, r]), (0, R.map)(T([qm, V], (0, R.delimited)(bl, kp, cl)), m => ["elementTest", ["elementName", m]]), (0, R.map)(T([qm, V], (0, R.delimited)(bl, V, cl)), () => ["elementTest"])]),
-      y = (0, R.or)([(0, R.map)(jp, m => ["QName", ...m]), (0, R.map)(Dl, () => ["star"])]),
-      G = (0, R.or)([(0, R.map)(T([rm, V], (0, R.delimited)((0, R.followed)(bl, V), (0, R.then)(y, T([V, Ul, V], jp), (m, r) => [["attributeName", m], ["typeName", ...r]]), (0, R.preceded)(V, cl))), ([m, r]) => ["attributeTest", m, r]), (0, R.map)(T([rm, V], (0, R.delimited)(bl, y, cl)), m => ["attributeTest", ["attributeName", m]]), (0, R.map)(T([rm, V], (0, R.delimited)(bl, V, cl)), () => ["attributeTest"])]),
-      N = (0, R.map)(T([sm, V, bl], (0, R.followed)(jp, cl)), m => ["schemaElementTest", ...m]),
-      U = (0, R.map)((0, R.delimited)(Io, S(jp, V), cl), m => ["schemaAttributeTest", ...m]),
+      u = (0, R.map)(a.Za ? (0, R.or)([S((0, R.star)((0, R.or)([tp, up, vp, Wk(/[^"&]/)])), ll), S((0, R.star)((0, R.or)([tp, up, wp, Wk(/[^'&]/)])), jl)]) : (0, R.or)([S((0, R.star)((0, R.or)([vp, Wk(/[^"]/)])), ll), S((0, R.star)((0, R.or)([wp, Wk(/[^']/)])), jl)]), m => m.join("")),
+      z = (0, R.or)([(0, R.map)(T([qm, V], (0, R.delimited)((0, R.followed)(bl, V), (0, R.then)(op, T([V, Ul, V], np), (m, r) => [["elementName", m], ["typeName", ...r]]), (0, R.preceded)(V, cl))), ([m, r]) => ["elementTest", m, r]), (0, R.map)(T([qm, V], (0, R.delimited)(bl, op, cl)), m => ["elementTest", ["elementName", m]]), (0, R.map)(T([qm, V], (0, R.delimited)(bl, V, cl)), () => ["elementTest"])]),
+      y = (0, R.or)([(0, R.map)(np, m => ["QName", ...m]), (0, R.map)(Dl, () => ["star"])]),
+      G = (0, R.or)([(0, R.map)(T([rm, V], (0, R.delimited)((0, R.followed)(bl, V), (0, R.then)(y, T([V, Ul, V], np), (m, r) => [["attributeName", m], ["typeName", ...r]]), (0, R.preceded)(V, cl))), ([m, r]) => ["attributeTest", m, r]), (0, R.map)(T([rm, V], (0, R.delimited)(bl, y, cl)), m => ["attributeTest", ["attributeName", m]]), (0, R.map)(T([rm, V], (0, R.delimited)(bl, V, cl)), () => ["attributeTest"])]),
+      N = (0, R.map)(T([sm, V, bl], (0, R.followed)(np, cl)), m => ["schemaElementTest", ...m]),
+      U = (0, R.map)((0, R.delimited)(Io, S(np, V), cl), m => ["schemaAttributeTest", ...m]),
       ca = (0, R.map)((0, R.preceded)(Jo, (0, R.followed)(S((0, R.optional)((0, R.or)([z, N])), V), cl)), m => ["documentTest", ...(m ? [m] : [])]),
-      Ga = (0, R.or)([(0, R.map)((0, R.preceded)(Ko, (0, R.followed)(S((0, R.or)([ap, u]), V), cl)), m => ["piTest", ["piTarget", m]]), Uk(Vk([Lo], "piTest"))]),
-      Gb = (0, R.or)([ca, z, G, N, U, Ga, tp, up, vp, wp]),
-      Xb = (0, R.or)([(0, R.map)((0, R.preceded)(yl, ap), m => ["Wildcard", ["star"], ["NCName", m]]), Uk(Vk([Dl], "Wildcard")), (0, R.map)((0, R.followed)(hp, Dl), m => ["Wildcard", ["uri", m], ["star"]]), (0, R.map)((0, R.followed)(ap, xl), m => ["Wildcard", ["NCName", m], ["star"]])]),
-      fd = (0, R.or)([Xb, (0, R.map)(jp, m => ["nameTest", ...m])]),
+      Ga = (0, R.or)([(0, R.map)((0, R.preceded)(Ko, (0, R.followed)(S((0, R.or)([ep, u]), V), cl)), m => ["piTest", ["piTarget", m]]), Uk(Vk([Lo], "piTest"))]),
+      Gb = (0, R.or)([ca, z, G, N, U, Ga, xp, yp, zp, Ap]),
+      Xb = (0, R.or)([(0, R.map)((0, R.preceded)(yl, ep), m => ["Wildcard", ["star"], ["NCName", m]]), Uk(Vk([Dl], "Wildcard")), (0, R.map)((0, R.followed)(lp, Dl), m => ["Wildcard", ["uri", m], ["star"]]), (0, R.map)((0, R.followed)(ep, xl), m => ["Wildcard", ["NCName", m], ["star"]])]),
+      fd = (0, R.or)([Xb, (0, R.map)(np, m => ["nameTest", ...m])]),
       Yb = (0, R.or)([Gb, fd]),
-      Kr = (0, R.then)((0, R.optional)(El), Yb, (m, r) => null !== m || "attributeTest" === r[0] || "schemaAttributeTest" === r[0] ? ["stepExpr", ["xpathAxis", "attribute"], r] : ["stepExpr", ["xpathAxis", "child"], r]),
-      Lr = (0, R.or)([(0, R.then)(np, Yb, (m, r) => ["stepExpr", ["xpathAxis", m], r]), Kr]),
-      Mr = (0, R.map)(Wl, () => ["stepExpr", ["xpathAxis", "parent"], ["anyKindTest"]]),
-      Nr = (0, R.or)([(0, R.then)(op, Yb, (m, r) => ["stepExpr", ["xpathAxis", m], r]), Mr]),
-      Or = (0, R.map)((0, R.star)((0, R.preceded)(V, t)), m => 0 < m.length ? ["predicates", ...m] : void 0),
-      Pr = (0, R.then)((0, R.or)([Nr, Lr]), Or, (m, r) => void 0 === r ? m : m.concat([r])),
-      zf = (0, R.or)([Bp, (0, R.map)(u, m => ["stringConstantExpr", ["value", a.Za ? fq(m) : m]])]),
-      Af = (0, R.or)([(0, R.delimited)(bl, S(l, V), cl), (0, R.map)((0, R.delimited)(bl, V, cl), () => ["sequenceExpr"])]),
-      Cj = (0, R.or)([k, Ep]),
-      de = (0, R.map)((0, R.delimited)(bl, S((0, R.optional)((0, R.then)(Cj, (0, R.star)((0, R.preceded)(S(Ul, V), Cj)), (m, r) => [m, ...r])), V), cl), m => null !== m ? m : []),
-      Qr = (0, R.preceded)((0, R.not)(Rk(Dp, V, bl, () => {}), ["cannot use reserved keyword for function names"]), e((0, R.then)(jp, (0, R.preceded)(V, de), (m, r) => {
+      Or = (0, R.then)((0, R.optional)(El), Yb, (m, r) => null !== m || "attributeTest" === r[0] || "schemaAttributeTest" === r[0] ? ["stepExpr", ["xpathAxis", "attribute"], r] : ["stepExpr", ["xpathAxis", "child"], r]),
+      Pr = (0, R.or)([(0, R.then)(rp, Yb, (m, r) => ["stepExpr", ["xpathAxis", m], r]), Or]),
+      Qr = (0, R.map)(Wl, () => ["stepExpr", ["xpathAxis", "parent"], ["anyKindTest"]]),
+      Rr = (0, R.or)([(0, R.then)(sp, Yb, (m, r) => ["stepExpr", ["xpathAxis", m], r]), Qr]),
+      Sr = (0, R.map)((0, R.star)((0, R.preceded)(V, t)), m => 0 < m.length ? ["predicates", ...m] : void 0),
+      Tr = (0, R.then)((0, R.or)([Rr, Pr]), Sr, (m, r) => void 0 === r ? m : m.concat([r])),
+      yf = (0, R.or)([Fp, (0, R.map)(u, m => ["stringConstantExpr", ["value", a.Za ? jq(m) : m]])]),
+      zf = (0, R.or)([(0, R.delimited)(bl, S(l, V), cl), (0, R.map)((0, R.delimited)(bl, V, cl), () => ["sequenceExpr"])]),
+      Ej = (0, R.or)([k, Ip]),
+      de = (0, R.map)((0, R.delimited)(bl, S((0, R.optional)((0, R.then)(Ej, (0, R.star)((0, R.preceded)(S(Ul, V), Ej)), (m, r) => [m, ...r])), V), cl), m => null !== m ? m : []),
+      Ur = (0, R.preceded)((0, R.not)(Rk(Hp, V, bl, () => {}), ["cannot use reserved keyword for function names"]), e((0, R.then)(np, (0, R.preceded)(V, de), (m, r) => {
         r = ["functionCallExpr", ["functionName", ...m], null !== r ? ["arguments", ...r] : ["arguments"]];
         const B = m[0].prefix,
-          X = m[0].URI;
+          W = m[0].URI;
         m = m[1];
-        r.Wa = B ? `${B}:${m}` : X ? `Q{${X}}${m}` : m;
+        r.Wa = B ? `${B}:${m}` : W ? `Q{${W}}${m}` : m;
         return r;
       }))),
-      Rr = (0, R.then)(jp, (0, R.preceded)(Gl, Ap), (m, r) => ["namedFunctionRef", ["functionName", ...m], r]),
-      Ta = (0, R.delimited)(fl, S((0, R.optional)(l), V), gl),
-      Dj = (0, R.map)(Ta, m => m ? m : ["sequenceExpr"]),
-      gb = (0, R.or)([(0, R.map)(Ro, () => [["voidSequenceType"]]), (0, R.then)(f, (0, R.optional)((0, R.preceded)(V, Fp)), (m, r) => [m, ...(null !== r ? [["occurrenceIndicator", r]] : [])])]),
-      Bf = (0, R.then)(T([Hl, V], jp), (0, R.optional)((0, R.followed)((0, R.then)(T([bl, V], zf), (0, R.star)(T([Ul, V], zf)), (m, r) => m.concat(r)), cl)), (m, r) => ["annotation", ["annotationName", ...m], ...(r ? ["arguments", r] : [])]),
-      Sr = (0, R.map)(T([om, V, bl, V, Dl, V], cl), () => ["anyFunctionTest"]),
-      Tr = (0, R.then)(T([om, V, bl, V], (0, R.optional)(c(gb, Ul, (m, r) => m.concat.apply(m, r.map(B => B[1]))))), T([V, cl, W, em, W], gb), (m, r) => ["typedFunctionTest", ["paramTypeList", ["sequenceType", ...(m ? m : [])]], ["sequenceType", ...r]]),
-      Ur = (0, R.then)((0, R.star)(Bf), (0, R.or)([Sr, Tr]), (m, r) => [r[0], ...m, ...r.slice(1)]),
-      Vr = (0, R.map)(T([pm, V, bl, V, Dl, V], cl), () => ["anyMapTest"]),
-      Wr = (0, R.then)(T([pm, V, bl, V], jq), T([V, Ul], (0, R.followed)(S(gb, V), cl)), (m, r) => ["typedMapTest", m, ["sequenceType", ...r]]),
-      Xr = (0, R.or)([Vr, Wr]),
-      Yr = (0, R.map)(T([bn, V, bl, V, Dl, V], cl), () => ["anyArrayTest"]),
-      Zr = (0, R.map)(T([bn, V, bl], (0, R.followed)(S(gb, V), cl)), m => ["typedArrayTest", ["sequenceType", ...m]]),
-      $r = (0, R.or)([Yr, Zr]),
-      as = (0, R.map)((0, R.delimited)(bl, S(f, V), cl), m => ["parenthesizedItemType", m]),
-      Bj = (0, R.or)([Gb, Uk(Vk([Qo], "anyItemType")), Ur, Xr, $r, jq, as]),
-      Ac = (0, R.map)(T([em, W], gb), m => ["typeDeclaration", ...m]),
-      bs = (0, R.then)((0, R.preceded)(Fl, jp), (0, R.optional)((0, R.preceded)(W, Ac)), (m, r) => ["param", ["varName", ...m], ...(r ? [r] : [])]),
-      Ej = c(bs, Ul, (m, r) => [m, ...r.map(B => B[1])]),
-      cs = Sk((0, R.star)(Bf), T([V, om, V, bl, V], (0, R.optional)(Ej)), T([V, cl, V], (0, R.optional)((0, R.map)(T([em, V], (0, R.followed)(gb, V)), m => ["typeDeclaration", ...m]))), Dj, (m, r, B, X) => ["inlineFunctionExpr", ...m, ["paramList", ...(r ? r : [])], ...(B ? [B] : []), ["functionBody", X]]),
-      ds = (0, R.or)([Rr, cs]),
-      es = (0, R.map)(k, m => ["mapKeyExpr", m]),
-      fs = (0, R.map)(k, m => ["mapValueExpr", m]),
-      gs = (0, R.then)(es, (0, R.preceded)(S(Bl, V), fs), (m, r) => ["mapConstructorEntry", m, r]),
-      hs = (0, R.preceded)(pm, (0, R.delimited)(S(fl, V), (0, R.map)((0, R.optional)(c(gs, S(Ul, V), (m, r) => [m, ...r.map(B => B[1])])), m => m ? ["mapConstructor", ...m] : ["mapConstructor"]), (0, R.preceded)(V, gl))),
-      is = (0, R.map)((0, R.delimited)(dl, S((0, R.optional)(c(k, Ul, (m, r) => [m, ...r.map(B => B[1])].map(B => ["arrayElem", B]))), V), el), m => ["squareArray", ...(null !== m ? m : [])]),
-      js = (0, R.map)((0, R.preceded)(bn, (0, R.preceded)(V, Ta)), m => ["curlyArray", ...(null !== m ? [["arrayElem", m]] : [])]),
-      ks = (0, R.map)((0, R.or)([is, js]), m => ["arrayConstructor", m]),
-      Fj = (0, R.or)([ap, Ap, Af, Dl]),
-      ls = (0, R.map)((0, R.preceded)(Il, (0, R.preceded)(V, Fj)), m => "*" === m ? ["unaryLookup", ["star"]] : "string" === typeof m ? ["unaryLookup", ["NCName", m]] : ["unaryLookup", m]),
-      Cf = (0, R.or)([pp, qp, Vk([hl], "{"), Vk([il], "}"), (0, R.map)(Ta, m => m || ["sequenceExpr"])]),
-      ms = (0, R.or)([Hp, function (m, r) {
-        return Gj(m, r);
-      }, Cf, Gp]),
-      ns = (0, R.or)([(0, R.map)(Ip, m => m.replace(/[\x20\x0D\x0A\x09]/g, " ")), Cf]),
-      os = (0, R.or)([(0, R.map)(Jp, m => m.replace(/[\x20\x0D\x0A\x09]/g, " ")), Cf]),
-      ps = (0, R.map)((0, R.or)([S((0, R.star)((0, R.or)([rp, ns])), ll), S((0, R.star)((0, R.or)([sp, os])), jl)]), m => gq(m, !1, !1)),
-      qs = (0, R.then)(gp, (0, R.preceded)(S(Jl, (0, R.optional)(Yo)), ps), (m, r) => {
+      Vr = (0, R.then)(np, (0, R.preceded)(Gl, Ep), (m, r) => ["namedFunctionRef", ["functionName", ...m], r]),
+      Ua = (0, R.delimited)(fl, S((0, R.optional)(l), V), gl),
+      Fj = (0, R.map)(Ua, m => m ? m : ["sequenceExpr"]),
+      jb = (0, R.or)([(0, R.map)(Ro, () => [["voidSequenceType"]]), (0, R.then)(f, (0, R.optional)((0, R.preceded)(V, Jp)), (m, r) => [m, ...(null !== r ? [["occurrenceIndicator", r]] : [])])]),
+      Af = (0, R.then)(T([Hl, V], np), (0, R.optional)((0, R.followed)((0, R.then)(T([bl, V], yf), (0, R.star)(T([Ul, V], yf)), (m, r) => m.concat(r)), cl)), (m, r) => ["annotation", ["annotationName", ...m], ...(r ? ["arguments", r] : [])]),
+      Wr = (0, R.map)(T([om, V, bl, V, Dl, V], cl), () => ["anyFunctionTest"]),
+      Xr = (0, R.then)(T([om, V, bl, V], (0, R.optional)(c(jb, Ul, (m, r) => m.concat.apply(m, r.map(B => B[1]))))), T([V, cl, X, em, X], jb), (m, r) => ["typedFunctionTest", ["paramTypeList", ["sequenceType", ...(m ? m : [])]], ["sequenceType", ...r]]),
+      Yr = (0, R.then)((0, R.star)(Af), (0, R.or)([Wr, Xr]), (m, r) => [r[0], ...m, ...r.slice(1)]),
+      Zr = (0, R.map)(T([pm, V, bl, V, Dl, V], cl), () => ["anyMapTest"]),
+      $r = (0, R.then)(T([pm, V, bl, V], nq), T([V, Ul], (0, R.followed)(S(jb, V), cl)), (m, r) => ["typedMapTest", m, ["sequenceType", ...r]]),
+      as = (0, R.or)([Zr, $r]),
+      bs = (0, R.map)(T([bn, V, bl, V, Dl, V], cl), () => ["anyArrayTest"]),
+      cs = (0, R.map)(T([bn, V, bl], (0, R.followed)(S(jb, V), cl)), m => ["typedArrayTest", ["sequenceType", ...m]]),
+      ds = (0, R.or)([bs, cs]),
+      es = (0, R.map)((0, R.delimited)(bl, S(f, V), cl), m => ["parenthesizedItemType", m]),
+      Dj = (0, R.or)([Gb, Uk(Vk([Qo], "anyItemType")), Yr, as, ds, nq, es]),
+      Ac = (0, R.map)(T([em, X], jb), m => ["typeDeclaration", ...m]),
+      fs = (0, R.then)((0, R.preceded)(Fl, np), (0, R.optional)((0, R.preceded)(X, Ac)), (m, r) => ["param", ["varName", ...m], ...(r ? [r] : [])]),
+      Gj = c(fs, Ul, (m, r) => [m, ...r.map(B => B[1])]),
+      gs = Sk((0, R.star)(Af), T([V, om, V, bl, V], (0, R.optional)(Gj)), T([V, cl, V], (0, R.optional)((0, R.map)(T([em, V], (0, R.followed)(jb, V)), m => ["typeDeclaration", ...m]))), Fj, (m, r, B, W) => ["inlineFunctionExpr", ...m, ["paramList", ...(r ? r : [])], ...(B ? [B] : []), ["functionBody", W]]),
+      hs = (0, R.or)([Vr, gs]),
+      is = (0, R.map)(k, m => ["mapKeyExpr", m]),
+      js = (0, R.map)(k, m => ["mapValueExpr", m]),
+      ks = (0, R.then)(is, (0, R.preceded)(S(Bl, V), js), (m, r) => ["mapConstructorEntry", m, r]),
+      ls = (0, R.preceded)(pm, (0, R.delimited)(S(fl, V), (0, R.map)((0, R.optional)(c(ks, S(Ul, V), (m, r) => [m, ...r.map(B => B[1])])), m => m ? ["mapConstructor", ...m] : ["mapConstructor"]), (0, R.preceded)(V, gl))),
+      ms = (0, R.map)((0, R.delimited)(dl, S((0, R.optional)(c(k, Ul, (m, r) => [m, ...r.map(B => B[1])].map(B => ["arrayElem", B]))), V), el), m => ["squareArray", ...(null !== m ? m : [])]),
+      ns = (0, R.map)((0, R.preceded)(bn, (0, R.preceded)(V, Ua)), m => ["curlyArray", ...(null !== m ? [["arrayElem", m]] : [])]),
+      os = (0, R.map)((0, R.or)([ms, ns]), m => ["arrayConstructor", m]),
+      Hj = (0, R.map)((0, R.star)((0, R.preceded)((0, R.peek)((0, R.not)((0, R.or)([Uo, Vo, To]), ["String constructors can not contain interpolation characters"])), Yo)), m => ["stringConstructorChars", m.join("")]),
+      ps = (0, R.map)((0, R.delimited)(Uo, l, Vo, !0), m => ["stringConstructorInterpolation", m]),
+      qs = (0, R.then)(Hj, (0, R.star)((0, R.then)(ps, Hj, (m, r) => [m, r])), (m, r) => {
+        m = [m];
+        for (const [B, W] of r) m.push(B, W);
+        return m;
+      }),
+      rs = (0, R.map)((0, R.delimited)(So, qs, To, !0), m => ["stringConstructor", ...m]),
+      Ij = (0, R.or)([ep, Ep, zf, Dl]),
+      ss = (0, R.map)((0, R.preceded)(Il, (0, R.preceded)(V, Ij)), m => "*" === m ? ["unaryLookup", ["star"]] : "string" === typeof m ? ["unaryLookup", ["NCName", m]] : ["unaryLookup", m]),
+      Bf = (0, R.or)([tp, up, Vk([hl], "{"), Vk([il], "}"), (0, R.map)(Ua, m => m || ["sequenceExpr"])]),
+      ts = (0, R.or)([Lp, function (m, r) {
+        return Jj(m, r);
+      }, Bf, Kp]),
+      us = (0, R.or)([(0, R.map)(Mp, m => m.replace(/[\x20\x0D\x0A\x09]/g, " ")), Bf]),
+      vs = (0, R.or)([(0, R.map)(Np, m => m.replace(/[\x20\x0D\x0A\x09]/g, " ")), Bf]),
+      ws = (0, R.map)((0, R.or)([S((0, R.star)((0, R.or)([vp, us])), ll), S((0, R.star)((0, R.or)([wp, vs])), jl)]), m => kq(m, !1, !1)),
+      xs = (0, R.then)(kp, (0, R.preceded)(S(Jl, (0, R.optional)(bp)), ws), (m, r) => {
         if ("" === m[0].prefix && "xmlns" === m[1]) {
           if (r.length && "string" !== typeof r[0]) throw Error("XQST0022: A namespace declaration may not contain enclosed expressions");
           return ["namespaceDeclaration", r.length ? ["uri", r[0]] : ["uri"]];
@@ -33694,202 +33709,202 @@ const fontoxpath = function (xspattern, prsc) {
         }
         return ["attributeConstructor", ["attributeName"].concat(m), 0 === r.length ? ["attributeValue"] : 1 === r.length && "string" === typeof r[0] ? ["attributeValue", r[0]] : ["attributeValueExpr"].concat(r)];
       }),
-      rs = (0, R.map)((0, R.star)((0, R.preceded)(Yo, (0, R.optional)(qs))), m => m.filter(Boolean)),
-      ss = Rk((0, R.preceded)(Ol, gp), rs, (0, R.or)([(0, R.map)(pl, () => null), (0, R.then)((0, R.preceded)(Rl, (0, R.star)(ms)), T([V, ql], (0, R.followed)(gp, (0, R.then)((0, R.optional)(Yo), Rl, () => null))), (m, r) => [gq(m, !0, !0), r])]), (m, r, B) => {
-        var X = B;
+      ys = (0, R.map)((0, R.star)((0, R.preceded)(bp, (0, R.optional)(xs))), m => m.filter(Boolean)),
+      zs = Rk((0, R.preceded)(Ol, kp), ys, (0, R.or)([(0, R.map)(pl, () => null), (0, R.then)((0, R.preceded)(Rl, (0, R.star)(ts)), T([V, ql], (0, R.followed)(kp, (0, R.then)((0, R.optional)(bp), Rl, () => null))), (m, r) => [kq(m, !0, !0), r])]), (m, r, B) => {
+        var W = B;
         if (B && B.length) {
-          X = hq(m);
-          const ea = hq(B[1]);
-          if (X !== ea) throw Error('XQST0118: The start and the end tag of an element constructor must be equal. "' + X + '" does not match "' + ea + '"');
-          X = B[0];
+          W = lq(m);
+          const ea = lq(B[1]);
+          if (W !== ea) throw Error('XQST0118: The start and the end tag of an element constructor must be equal. "' + W + '" does not match "' + ea + '"');
+          W = B[0];
         }
-        return ["elementConstructor", ["tagName", ...m], ...(r.length ? [["attributeList", ...r]] : []), ...(X && X.length ? [["elementContent", ...X]] : [])];
+        return ["elementConstructor", ["tagName", ...m], ...(r.length ? [["attributeList", ...r]] : []), ...(W && W.length ? [["elementContent", ...W]] : [])];
       }),
-      Gj = (0, R.or)([ss, Lp, Op]),
-      ts = (0, R.map)(T([cn, V], Ta), m => ["computedDocumentConstructor", ...(m ? [["argExpr", m]] : [])]),
-      us = (0, R.map)(Ta, m => m ? [["contentExpr", m]] : []),
-      vs = (0, R.then)(T([qm, V], (0, R.or)([(0, R.map)(jp, m => ["tagName", ...m]), (0, R.map)((0, R.delimited)(fl, S(l, V), gl), m => ["tagNameExpr", m])])), (0, R.preceded)(V, us), (m, r) => ["computedElementConstructor", m, ...r]),
-      ws = (0, R.then)((0, R.preceded)(rm, (0, R.or)([(0, R.map)(T([mp, V], jp), m => ["tagName", ...m]), (0, R.map)((0, R.preceded)(V, (0, R.delimited)(fl, S(l, V), gl)), m => ["tagNameExpr", m])])), (0, R.preceded)(V, Ta), (m, r) => ["computedAttributeConstructor", m, ["valueExpr", r ? r : ["sequenceExpr"]]]),
-      xs = (0, R.map)(Ta, m => m ? [["prefixExpr", m]] : []),
-      ys = (0, R.map)(Ta, m => m ? [["URIExpr", m]] : []),
-      zs = (0, R.then)(T([dn, V], (0, R.or)([bp, xs])), (0, R.preceded)(V, ys), (m, r) => ["computedNamespaceConstructor", ...m, ...r]),
-      As = (0, R.map)(T([en, V], Ta), m => ["computedTextConstructor", ...(m ? [["argExpr", m]] : [])]),
-      Bs = (0, R.map)(T([fn, V], Ta), m => ["computedCommentConstructor", ...(m ? [["argExpr", m]] : [])]),
-      Cs = T([gn, V], (0, R.then)((0, R.or)([(0, R.map)(ap, m => ["piTarget", m]), (0, R.map)((0, R.delimited)(fl, S(l, V), gl), m => ["piTargetExpr", m])]), (0, R.preceded)(V, Ta), (m, r) => ["computedPIConstructor", m, ...(r ? [["piValueExpr", r]] : [])])),
-      Ds = (0, R.or)([ts, vs, ws, zs, As, Bs, Cs]),
-      Es = (0, R.or)([Gj, Ds]),
-      Hj = (0, R.or)([zf, lp, Af, Cp, Qr, Es, ds, hs, ks, ls]),
-      Ij = (0, R.map)(T([Il, V], Fj), m => "*" === m ? ["lookup", ["star"]] : "string" === typeof m ? ["lookup", ["NCName", m]] : ["lookup", m]),
-      Fs = (0, R.then)((0, R.map)(Hj, m => dq(m)), (0, R.star)((0, R.or)([(0, R.map)((0, R.preceded)(V, t), m => ["predicate", m]), (0, R.map)((0, R.preceded)(V, de), m => ["argumentList", m]), (0, R.preceded)(V, Ij)])), (m, r) => {
+      Jj = (0, R.or)([zs, Pp, Sp]),
+      As = (0, R.map)(T([cn, V], Ua), m => ["computedDocumentConstructor", ...(m ? [["argExpr", m]] : [])]),
+      Bs = (0, R.map)(Ua, m => m ? [["contentExpr", m]] : []),
+      Cs = (0, R.then)(T([qm, V], (0, R.or)([(0, R.map)(np, m => ["tagName", ...m]), (0, R.map)((0, R.delimited)(fl, S(l, V), gl), m => ["tagNameExpr", m])])), (0, R.preceded)(V, Bs), (m, r) => ["computedElementConstructor", m, ...r]),
+      Ds = (0, R.then)((0, R.preceded)(rm, (0, R.or)([(0, R.map)(T([qp, V], np), m => ["tagName", ...m]), (0, R.map)((0, R.preceded)(V, (0, R.delimited)(fl, S(l, V), gl)), m => ["tagNameExpr", m])])), (0, R.preceded)(V, Ua), (m, r) => ["computedAttributeConstructor", m, ["valueExpr", r ? r : ["sequenceExpr"]]]),
+      Es = (0, R.map)(Ua, m => m ? [["prefixExpr", m]] : []),
+      Fs = (0, R.map)(Ua, m => m ? [["URIExpr", m]] : []),
+      Gs = (0, R.then)(T([dn, V], (0, R.or)([fp, Es])), (0, R.preceded)(V, Fs), (m, r) => ["computedNamespaceConstructor", ...m, ...r]),
+      Hs = (0, R.map)(T([en, V], Ua), m => ["computedTextConstructor", ...(m ? [["argExpr", m]] : [])]),
+      Is = (0, R.map)(T([fn, V], Ua), m => ["computedCommentConstructor", ...(m ? [["argExpr", m]] : [])]),
+      Js = T([gn, V], (0, R.then)((0, R.or)([(0, R.map)(ep, m => ["piTarget", m]), (0, R.map)((0, R.delimited)(fl, S(l, V), gl), m => ["piTargetExpr", m])]), (0, R.preceded)(V, Ua), (m, r) => ["computedPIConstructor", m, ...(r ? [["piValueExpr", r]] : [])])),
+      Ks = (0, R.or)([As, Cs, Ds, Gs, Hs, Is, Js]),
+      Ls = (0, R.or)([Jj, Ks]),
+      Kj = (0, R.or)([yf, pp, zf, Gp, Ur, Ls, hs, ls, os, rs, ss]),
+      Lj = (0, R.map)(T([Il, V], Ij), m => "*" === m ? ["lookup", ["star"]] : "string" === typeof m ? ["lookup", ["NCName", m]] : ["lookup", m]),
+      Ms = (0, R.then)((0, R.map)(Kj, m => hq(m)), (0, R.star)((0, R.or)([(0, R.map)((0, R.preceded)(V, t), m => ["predicate", m]), (0, R.map)((0, R.preceded)(V, de), m => ["argumentList", m]), (0, R.preceded)(V, Lj)])), (m, r) => {
         function B() {
-          Jj && 1 === Fa.length ? Bc.push(["predicate", Fa[0]]) : 0 !== Fa.length && Bc.push(["predicates", ...Fa]);
+          Mj && 1 === Fa.length ? Bc.push(["predicate", Fa[0]]) : 0 !== Fa.length && Bc.push(["predicates", ...Fa]);
           Fa.length = 0;
         }
-        function X(Zb) {
+        function W(Zb) {
           B();
           0 !== Bc.length ? ("sequenceExpr" === ea[0][0] && 2 < ea[0].length && (ea = [["sequenceExpr", ...ea]]), ea = [["filterExpr", ...ea], ...Bc], Bc.length = 0) : Zb && (ea = [["filterExpr", ...ea]]);
         }
         let ea = [m];
         const Fa = [],
           Bc = [];
-        let Jj = !1;
+        let Mj = !1;
         for (const Zb of r) switch (Zb[0]) {
           case "predicate":
             Fa.push(Zb[1]);
             break;
           case "lookup":
-            Jj = !0;
+            Mj = !0;
             B();
             Bc.push(Zb);
             break;
           case "argumentList":
-            X(!1);
+            W(!1);
             1 < ea.length && (ea = [["sequenceExpr", ["pathExpr", ["stepExpr", ...ea]]]]);
             ea = [["dynamicFunctionInvocationExpr", ["functionItem", ...ea], ...(Zb[1].length ? [["arguments", ...Zb[1]]] : [])]];
             break;
           default:
             throw Error("unreachable");
         }
-        X(!0);
+        W(!0);
         return ea;
       }),
-      Cc = (0, R.or)([(0, R.map)(Fs, m => ["stepExpr", ...m]), Pr]),
-      Gs = (0, R.followed)(Hj, (0, R.peek)((0, R.not)((0, R.preceded)(V, (0, R.or)([t, de, Ij])), ["primary expression not followed by predicate, argumentList, or lookup"]))),
-      Hs = (0, R.or)([Rk(Cc, (0, R.preceded)(V, Pp), (0, R.preceded)(V, h), (m, r, B) => ["pathExpr", m, r, ...B]), (0, R.then)(Cc, (0, R.preceded)(S(Zl, V), h), (m, r) => ["pathExpr", m, ...r]), Gs, (0, R.map)(Cc, m => ["pathExpr", m])]),
-      yf = (0, R.or)([Rk(Cc, (0, R.preceded)(V, Pp), (0, R.preceded)(V, h), (m, r, B) => [m, r, ...B]), (0, R.then)(Cc, (0, R.preceded)(S(Zl, V), h), (m, r) => [m, ...r]), (0, R.map)(Cc, m => [m])]),
-      Is = (0, R.or)([(0, R.map)(T([Zl, V], yf), m => ["pathExpr", ["rootExpr"], ...m]), (0, R.then)(Pp, (0, R.preceded)(V, yf), (m, r) => ["pathExpr", ["rootExpr"], m, ...r]), (0, R.map)((0, R.followed)(Zl, (0, R.not)((0, R.preceded)(V, a.Za ? Wk(/[*<a-zA-Z]/) : Wk(/[*a-zA-Z]/)), ["Single rootExpr cannot be by followed by something that can be interpreted as a relative path"])), () => ["pathExpr", ["rootExpr"]])]),
-      Js = Qk((0, R.or)([Hs, Is]), kq),
-      Ks = (0, R.preceded)(kn, (0, R.then)((0, R.optional)((0, R.or)([(0, R.map)((0, R.preceded)(V, Qp), m => ["validationMode", m]), (0, R.map)(T([V, ln, V], jp), m => ["type", ...m])])), (0, R.delimited)((0, R.preceded)(V, fl), S(l, V), gl), (m, r) => ["validateExpr", ...(m ? [m] : []), ["argExpr", r]])),
-      Ls = (0, R.delimited)($k, (0, R.then)((0, R.preceded)(V, jp), (0, R.optional)((0, R.preceded)(W, Rp)), (m, r) => r ? ["pragma", ["pragmaName", m], ["pragmaContents", r]] : ["pragma", ["pragmaName", m]]), (0, R.preceded)(V, al)),
-      Ms = (0, R.map)((0, R.followed)((0, R.plus)(Ls), (0, R.preceded)(V, (0, R.delimited)(fl, S((0, R.optional)(l), V), gl))), m => ["extensionExpr", ...m]),
-      Ns = e(c(Js, Kl, (m, r) => 0 === r.length ? m : ["simpleMapExpr", "pathExpr" === m[0] ? m : ["pathExpr", ["stepExpr", ["filterExpr", dq(m)]]]].concat(r.map(B => {
+      Cc = (0, R.or)([(0, R.map)(Ms, m => ["stepExpr", ...m]), Tr]),
+      Ns = (0, R.followed)(Kj, (0, R.peek)((0, R.not)((0, R.preceded)(V, (0, R.or)([t, de, Lj])), ["primary expression not followed by predicate, argumentList, or lookup"]))),
+      Os = (0, R.or)([Rk(Cc, (0, R.preceded)(V, Tp), (0, R.preceded)(V, h), (m, r, B) => ["pathExpr", m, r, ...B]), (0, R.then)(Cc, (0, R.preceded)(S(Zl, V), h), (m, r) => ["pathExpr", m, ...r]), Ns, (0, R.map)(Cc, m => ["pathExpr", m])]),
+      xf = (0, R.or)([Rk(Cc, (0, R.preceded)(V, Tp), (0, R.preceded)(V, h), (m, r, B) => [m, r, ...B]), (0, R.then)(Cc, (0, R.preceded)(S(Zl, V), h), (m, r) => [m, ...r]), (0, R.map)(Cc, m => [m])]),
+      Ps = (0, R.or)([(0, R.map)(T([Zl, V], xf), m => ["pathExpr", ["rootExpr"], ...m]), (0, R.then)(Tp, (0, R.preceded)(V, xf), (m, r) => ["pathExpr", ["rootExpr"], m, ...r]), (0, R.map)((0, R.followed)(Zl, (0, R.not)((0, R.preceded)(V, a.Za ? Wk(/[*<a-zA-Z]/) : Wk(/[*a-zA-Z]/)), ["Single rootExpr cannot be by followed by something that can be interpreted as a relative path"])), () => ["pathExpr", ["rootExpr"]])]),
+      Qs = Qk((0, R.or)([Os, Ps]), oq),
+      Rs = (0, R.preceded)(kn, (0, R.then)((0, R.optional)((0, R.or)([(0, R.map)((0, R.preceded)(V, Up), m => ["validationMode", m]), (0, R.map)(T([V, ln, V], np), m => ["type", ...m])])), (0, R.delimited)((0, R.preceded)(V, fl), S(l, V), gl), (m, r) => ["validateExpr", ...(m ? [m] : []), ["argExpr", r]])),
+      Ss = (0, R.delimited)($k, (0, R.then)((0, R.preceded)(V, np), (0, R.optional)((0, R.preceded)(X, Vp)), (m, r) => r ? ["pragma", ["pragmaName", m], ["pragmaContents", r]] : ["pragma", ["pragmaName", m]]), (0, R.preceded)(V, al)),
+      Ts = (0, R.map)((0, R.followed)((0, R.plus)(Ss), (0, R.preceded)(V, (0, R.delimited)(fl, S((0, R.optional)(l), V), gl))), m => ["extensionExpr", ...m]),
+      Us = e(c(Qs, Kl, (m, r) => 0 === r.length ? m : ["simpleMapExpr", "pathExpr" === m[0] ? m : ["pathExpr", ["stepExpr", ["filterExpr", hq(m)]]]].concat(r.map(B => {
         B = B[1];
-        return "pathExpr" === B[0] ? B : ["pathExpr", ["stepExpr", ["filterExpr", dq(B)]]];
+        return "pathExpr" === B[0] ? B : ["pathExpr", ["stepExpr", ["filterExpr", hq(B)]]];
       })))),
-      Os = (0, R.or)([Ks, Ms, Ns]),
-      Kj = (0, R.or)([(0, R.then)((0, R.or)([Vk([Yl], "unaryMinusOp"), Vk([Xl], "unaryPlusOp")]), (0, R.preceded)(V, function (m, r) {
-        return Kj(m, r);
-      }), (m, r) => [m, ["operand", r]]), Os]),
-      Ps = (0, R.or)([(0, R.map)(jp, m => ["EQName", ...m]), lp, Af]),
-      Qs = (0, R.then)(Kj, (0, R.star)(T([V, am, V], (0, R.then)(Ps, (0, R.preceded)(V, de), (m, r) => [m, r]))), (m, r) => r.reduce((B, X) => ["arrowExpr", ["argExpr", B], X[0], ["arguments", ...X[1]]], m)),
-      Rs = (0, R.then)(Qs, (0, R.optional)(T([V, fm, W, em, mp, V], iq)), (m, r) => null !== r ? ["castExpr", ["argExpr", m], r] : m),
-      Ss = (0, R.then)(Rs, (0, R.optional)(T([V, gm, W, em, mp, V], iq)), (m, r) => null !== r ? ["castableExpr", ["argExpr", m], r] : m),
-      Ts = (0, R.then)(Ss, (0, R.optional)(T([V, hm, W, em, mp, V], gb)), (m, r) => null !== r ? ["treatExpr", ["argExpr", m], ["sequenceType", ...r]] : m),
-      Us = (0, R.then)(Ts, (0, R.optional)(T([V, im, W, jm, mp, V], gb)), (m, r) => null !== r ? ["instanceOfExpr", ["argExpr", m], ["sequenceType", ...r]] : m),
-      Vs = c(Us, (0, R.followed)((0, R.or)([Vk([tm], "intersectOp"), Vk([um], "exceptOp")]), mp), b),
-      Ws = c(Vs, (0, R.or)([Vk([Ll], "unionOp"), (0, R.followed)(Vk([vm], "unionOp"), mp)]), b),
-      Xs = c(Ws, (0, R.or)([Vk([Dl], "multiplyOp"), (0, R.followed)(Vk([Am], "divOp"), mp), (0, R.followed)(Vk([Bm], "idivOp"), mp), (0, R.followed)(Vk([Cm], "modOp"), mp)]), b),
-      Ys = c(Xs, (0, R.or)([Vk([Yl], "subtractOp"), Vk([Xl], "addOp")]), b),
-      Zs = d(Ys, (0, R.followed)(Vk([wm], "rangeSequenceExpr"), mp), "startExpr", "endExpr"),
-      $s = c(Zs, Vk([Ml], "stringConcatenateOp"), b),
-      at = d($s, (0, R.or)([Sp, Tp, Up])),
-      bt = c(at, (0, R.followed)(Vk([zm], "andOp"), mp), b),
-      Jr = c(bt, (0, R.followed)(Vk([ym], "orOp"), mp), b),
-      ct = e((0, R.map)(l, m => ["ifClause", m])),
-      dt = e((0, R.map)(k, m => ["thenClause", m])),
-      et = e((0, R.map)(k, m => ["elseClause", m])),
-      Dr = (0, R.then)((0, R.then)(T([Mm, V, bl, V], ct), T([V, cl, V, Nm, mp, V], dt), (m, r) => [m, r]), T([V, Om, mp, V], et), (m, r) => ["ifThenElseExpr", m[0], m[1], r]),
-      ft = (0, R.delimited)(Pm, W, Qm),
-      gt = (0, R.map)(T([Rm, W, Fl], jp), m => ["positionalVariableBinding", ...m]),
-      ht = Tk((0, R.preceded)(Fl, (0, R.cut)(jp)), (0, R.cut)((0, R.preceded)(V, (0, R.optional)(Ac))), (0, R.cut)((0, R.preceded)(V, (0, R.optional)(ft))), (0, R.cut)((0, R.preceded)(V, (0, R.optional)(gt))), (0, R.cut)((0, R.preceded)(S(Sm, V), k)), (m, r, B, X, ea) => ["forClauseItem", ["typedVariableBinding", ["varName", ...m, ...(r ? [r] : [])]], ...(B ? [["allowingEmpty"]] : []), ...(X ? [X] : []), ["forExpr", ea]]),
-      it = T([Tm, W], c(ht, Ul, (m, r) => ["forClause", m, ...r.map(B => B[1])])),
-      jt = Rk((0, R.preceded)(Fl, jp), (0, R.preceded)(V, (0, R.optional)(Ac)), (0, R.preceded)(S(zl, V), k), (m, r, B) => ["letClauseItem", ["typedVariableBinding", ["varName", ...m], ...(r ? [r] : [])], ["letExpr", B]]),
-      kt = (0, R.map)(T([Um, V], c(jt, Ul, (m, r) => [m, ...r.map(B => B[1])])), m => ["letClause", ...m]),
-      Lj = (0, R.or)([it, kt]),
-      lt = (0, R.map)(T([Vm, mp, V], k), m => ["whereClause", m]),
-      mt = (0, R.map)((0, R.preceded)(Fl, jp), m => ["varName", ...m]),
-      nt = (0, R.then)((0, R.preceded)(V, (0, R.optional)(Ac)), (0, R.preceded)(S(zl, V), k), (m, r) => ["groupVarInitialize", ...(m ? [["typeDeclaration", ...m]] : []), ["varValue", r]]),
-      ot = Rk(mt, (0, R.optional)(nt), (0, R.optional)((0, R.map)((0, R.preceded)(S(Wm, V), u), m => ["collation", m])), (m, r, B) => ["groupingSpec", m, ...(r ? [r] : []), ...(B ? [B] : [])]),
-      pt = c(ot, Ul, (m, r) => [m, ...r.map(B => B[1])]),
-      qt = (0, R.map)(T([Xm, W, Ym, V], pt), m => ["groupByClause", ...m]),
-      rt = Rk((0, R.optional)((0, R.or)([jo, ko])), (0, R.optional)(T([V, Qm, V], (0, R.or)([un, vn].map(m => (0, R.map)(m, r => "empty " + r))))), (0, R.preceded)(V, (0, R.optional)(T([Wm, V], u))), (m, r, B) => m || r || B ? ["orderModifier", ...(m ? [["orderingKind", m]] : []), ...(r ? [["emptyOrderingMode", r]] : []), ...(B ? [["collation", B]] : [])] : null),
-      st = (0, R.then)(k, (0, R.preceded)(V, rt), (m, r) => ["orderBySpec", ["orderByExpr", m], ...(r ? [r] : [])]),
-      tt = c(st, Ul, (m, r) => [m, ...r.map(B => B[1])]),
-      ut = (0, R.then)((0, R.or)([(0, R.map)(T([Zm, W], Ym), () => !1), (0, R.map)(T([$m, W, Zm, W], Ym), () => !0)]), (0, R.preceded)(V, tt), (m, r) => ["orderByClause", ...(m ? [["stable"]] : []), ...r]),
-      vt = (0, R.or)([Lj, lt, qt, ut]),
-      wt = (0, R.map)(T([an, V], k), m => ["returnClause", m]),
-      zr = Rk(Lj, (0, R.cut)((0, R.star)((0, R.preceded)(V, vt))), (0, R.cut)((0, R.preceded)(V, wt)), (m, r, B) => ["flworExpr", m, ...r, B]),
-      xt = c(gb, Ll, (m, r) => 0 === r.length ? ["sequenceType", ...m] : ["sequenceTypeUnion", ["sequenceType", ...m], ...r.map(B => ["sequenceType", ...B[1]])]),
-      yt = Rk(T([yn, V], (0, R.optional)((0, R.preceded)(Fl, (0, R.followed)((0, R.followed)(jp, W), em)))), (0, R.preceded)(V, xt), T([W, an, W], k), (m, r, B) => ["typeswitchExprCaseClause"].concat(m ? [["variableBinding", ...m]] : [], [r], [["resultExpr", B]])),
-      Cr = Sk((0, R.preceded)(zn, S((0, R.delimited)(bl, S(l, V), cl), V)), (0, R.plus)((0, R.followed)(yt, V)), T([nn, W], (0, R.optional)((0, R.preceded)(Fl, (0, R.followed)(jp, W)))), T([an, W], k), (m, r, B, X) => ["typeswitchExpr", ["argExpr", m], ...r, ["typeswitchExprDefaultClause", ...(B || []), ["resultExpr", X]]]),
-      zt = Rk((0, R.preceded)(Fl, jp), (0, R.optional)((0, R.preceded)(W, Ac)), (0, R.preceded)(S(Sm, W), k), (m, r, B) => ["quantifiedExprInClause", ["typedVariableBinding", ["varName", ...m], ...(r ? [r] : [])], ["sourceExpr", B]]),
+      Vs = (0, R.or)([Rs, Ts, Us]),
+      Nj = (0, R.or)([(0, R.then)((0, R.or)([Vk([Yl], "unaryMinusOp"), Vk([Xl], "unaryPlusOp")]), (0, R.preceded)(V, function (m, r) {
+        return Nj(m, r);
+      }), (m, r) => [m, ["operand", r]]), Vs]),
+      Ws = (0, R.or)([(0, R.map)(np, m => ["EQName", ...m]), pp, zf]),
+      Xs = (0, R.then)(Nj, (0, R.star)(T([V, am, V], (0, R.then)(Ws, (0, R.preceded)(V, de), (m, r) => [m, r]))), (m, r) => r.reduce((B, W) => ["arrowExpr", ["argExpr", B], W[0], ["arguments", ...W[1]]], m)),
+      Ys = (0, R.then)(Xs, (0, R.optional)(T([V, fm, X, em, qp, V], mq)), (m, r) => null !== r ? ["castExpr", ["argExpr", m], r] : m),
+      Zs = (0, R.then)(Ys, (0, R.optional)(T([V, gm, X, em, qp, V], mq)), (m, r) => null !== r ? ["castableExpr", ["argExpr", m], r] : m),
+      $s = (0, R.then)(Zs, (0, R.optional)(T([V, hm, X, em, qp, V], jb)), (m, r) => null !== r ? ["treatExpr", ["argExpr", m], ["sequenceType", ...r]] : m),
+      at = (0, R.then)($s, (0, R.optional)(T([V, im, X, jm, qp, V], jb)), (m, r) => null !== r ? ["instanceOfExpr", ["argExpr", m], ["sequenceType", ...r]] : m),
+      bt = c(at, (0, R.followed)((0, R.or)([Vk([tm], "intersectOp"), Vk([um], "exceptOp")]), qp), b),
+      ct = c(bt, (0, R.or)([Vk([Ll], "unionOp"), (0, R.followed)(Vk([vm], "unionOp"), qp)]), b),
+      dt = c(ct, (0, R.or)([Vk([Dl], "multiplyOp"), (0, R.followed)(Vk([Am], "divOp"), qp), (0, R.followed)(Vk([Bm], "idivOp"), qp), (0, R.followed)(Vk([Cm], "modOp"), qp)]), b),
+      et = c(dt, (0, R.or)([Vk([Yl], "subtractOp"), Vk([Xl], "addOp")]), b),
+      ft = d(et, (0, R.followed)(Vk([wm], "rangeSequenceExpr"), qp), "startExpr", "endExpr"),
+      gt = c(ft, Vk([Ml], "stringConcatenateOp"), b),
+      ht = d(gt, (0, R.or)([Wp, Xp, Yp])),
+      it = c(ht, (0, R.followed)(Vk([zm], "andOp"), qp), b),
+      Nr = c(it, (0, R.followed)(Vk([ym], "orOp"), qp), b),
+      jt = e((0, R.map)(l, m => ["ifClause", m])),
+      kt = e((0, R.map)(k, m => ["thenClause", m])),
+      lt = e((0, R.map)(k, m => ["elseClause", m])),
+      Hr = (0, R.then)((0, R.then)(T([Mm, V, bl, V], jt), T([V, cl, V, Nm, qp, V], kt), (m, r) => [m, r]), T([V, Om, qp, V], lt), (m, r) => ["ifThenElseExpr", m[0], m[1], r]),
+      mt = (0, R.delimited)(Pm, X, Qm),
+      nt = (0, R.map)(T([Rm, X, Fl], np), m => ["positionalVariableBinding", ...m]),
+      ot = Tk((0, R.preceded)(Fl, (0, R.cut)(np)), (0, R.cut)((0, R.preceded)(V, (0, R.optional)(Ac))), (0, R.cut)((0, R.preceded)(V, (0, R.optional)(mt))), (0, R.cut)((0, R.preceded)(V, (0, R.optional)(nt))), (0, R.cut)((0, R.preceded)(S(Sm, V), k)), (m, r, B, W, ea) => ["forClauseItem", ["typedVariableBinding", ["varName", ...m, ...(r ? [r] : [])]], ...(B ? [["allowingEmpty"]] : []), ...(W ? [W] : []), ["forExpr", ea]]),
+      pt = T([Tm, X], c(ot, Ul, (m, r) => ["forClause", m, ...r.map(B => B[1])])),
+      qt = Rk((0, R.preceded)(Fl, np), (0, R.preceded)(V, (0, R.optional)(Ac)), (0, R.preceded)(S(zl, V), k), (m, r, B) => ["letClauseItem", ["typedVariableBinding", ["varName", ...m], ...(r ? [r] : [])], ["letExpr", B]]),
+      rt = (0, R.map)(T([Um, V], c(qt, Ul, (m, r) => [m, ...r.map(B => B[1])])), m => ["letClause", ...m]),
+      Oj = (0, R.or)([pt, rt]),
+      st = (0, R.map)(T([Vm, qp, V], k), m => ["whereClause", m]),
+      tt = (0, R.map)((0, R.preceded)(Fl, np), m => ["varName", ...m]),
+      ut = (0, R.then)((0, R.preceded)(V, (0, R.optional)(Ac)), (0, R.preceded)(S(zl, V), k), (m, r) => ["groupVarInitialize", ...(m ? [["typeDeclaration", ...m]] : []), ["varValue", r]]),
+      vt = Rk(tt, (0, R.optional)(ut), (0, R.optional)((0, R.map)((0, R.preceded)(S(Wm, V), u), m => ["collation", m])), (m, r, B) => ["groupingSpec", m, ...(r ? [r] : []), ...(B ? [B] : [])]),
+      wt = c(vt, Ul, (m, r) => [m, ...r.map(B => B[1])]),
+      xt = (0, R.map)(T([Xm, X, Ym, V], wt), m => ["groupByClause", ...m]),
+      yt = Rk((0, R.optional)((0, R.or)([jo, ko])), (0, R.optional)(T([V, Qm, V], (0, R.or)([un, vn].map(m => (0, R.map)(m, r => "empty " + r))))), (0, R.preceded)(V, (0, R.optional)(T([Wm, V], u))), (m, r, B) => m || r || B ? ["orderModifier", ...(m ? [["orderingKind", m]] : []), ...(r ? [["emptyOrderingMode", r]] : []), ...(B ? [["collation", B]] : [])] : null),
+      zt = (0, R.then)(k, (0, R.preceded)(V, yt), (m, r) => ["orderBySpec", ["orderByExpr", m], ...(r ? [r] : [])]),
       At = c(zt, Ul, (m, r) => [m, ...r.map(B => B[1])]),
-      Ar = Rk((0, R.or)([An, Bn]), (0, R.preceded)(W, At), (0, R.preceded)(S(Cn, V), k), (m, r, B) => ["quantifiedExpr", ["quantifier", m], ...r, ["predicateExpr", B]]),
-      Fr = (0, R.map)(T([mm, W, (0, R.or)([lm, km]), W], k), m => ["deleteExpr", ["targetExpr", m]]),
-      Hr = Rk(T([Dn, W], (0, R.optional)(T([nm, W, jm], W))), T([km, W], k), (0, R.preceded)(S(En, W), k), (m, r, B) => m ? ["replaceExpr", ["replaceValue"], ["targetExpr", r], ["replacementExpr", B]] : ["replaceExpr", ["targetExpr", r], ["replacementExpr", B]]),
-      Bt = (0, R.then)(lp, (0, R.preceded)(S(zl, V), k), (m, r) => ["transformCopy", m, ["copySource", r]]),
-      Ir = Rk(T([Fn, W], c(Bt, Ul, (m, r) => [m, ...r.map(B => B[1])])), T([V, Gn, W], k), (0, R.preceded)(S(an, W), k), (m, r, B) => ["transformExpr", ["transformCopies", ...m], ["modifyExpr", r], ["returnExpr", B]]),
-      Ct = (0, R.or)([(0, R.followed)((0, R.map)((0, R.optional)((0, R.followed)(T([em, W], (0, R.or)([(0, R.map)(Hn, () => ["insertAsFirst"]), (0, R.map)(In, () => ["insertAsLast"])])), W)), m => m ? ["insertInto", m] : ["insertInto"]), Ln), (0, R.map)(Kn, () => ["insertAfter"]), (0, R.map)(Jn, () => ["insertBefore"])]),
-      Er = Rk(T([Mn, W, (0, R.or)([lm, km]), W], k), (0, R.preceded)(W, Ct), (0, R.preceded)(W, k), (m, r, B) => ["insertExpr", ["sourceExpr", m], r, ["targetExpr", B]]),
-      Gr = (0, R.then)(T([Nn, W, km, V], k), T([W, em, W], k), (m, r) => ["renameExpr", ["targetExpr", m], ["newNameExpr", r]]),
-      Dt = (0, R.then)((0, R.plus)((0, R.then)((0, R.map)(T([yn, W], (0, R.cut)(k)), m => ["switchCaseExpr", m]), (0, R.cut)(W), m => m)), (0, R.cut)(T([an, W], (0, R.cut)(k))), (m, r) => ["switchExprCaseClause", ...m, ["resultExpr", r]]),
-      Br = Rk(T([On, V, bl], (0, R.cut)(l)), (0, R.cut)(T([V, cl, (0, R.cut)(V)], (0, R.plus)((0, R.followed)(Dt, V)))), (0, R.cut)(T([nn, W, an, W], k)), (m, r, B) => ["switchExpr", ["argExpr", m], ...r, ["switchExprDefaultClause", ["resultExpr", B]]]),
-      Et = (0, R.map)(l, m => ["queryBody", m]),
-      Ft = T([mn, W, dn, W], (0, R.cut)((0, R.then)(ap, (0, R.preceded)(S(Jl, V), u), (m, r) => ["namespaceDecl", ["prefix", m], ["uri", r]]))),
-      Gt = (0, R.then)(T([Pn, W, Fl, V], (0, R.then)(jp, (0, R.optional)((0, R.preceded)(V, Ac)), (m, r) => [m, r])), (0, R.cut)((0, R.or)([(0, R.map)(T([V, zl, V], k), m => ["varValue", m]), (0, R.map)(T([W, Qn], (0, R.optional)(T([V, zl, V], k))), m => ["external", ...(m ? [["varValue", m]] : [])])])), ([m, r], B) => ["varDecl", ["varName", ...m], ...(null !== r ? [r] : []), B]),
-      Ht = Sk(T([om, W, (0, R.cut)((0, R.peek)((0, R.not)((0, R.followed)(Dp, (0, R.not)(Bl, [""])), ["Cannot use reserved function name"])))], jp), (0, R.cut)(T([V, bl, V], (0, R.optional)(Ej))), (0, R.cut)(T([V, cl], (0, R.optional)(T([W, em, W], gb)))), (0, R.cut)((0, R.preceded)(V, (0, R.or)([(0, R.map)(Dj, m => ["functionBody", m]), (0, R.map)(Qn, () => ["externalDefinition"])]))), (m, r, B, X) => ["functionDecl", ["functionName", ...m], ["paramList", ...(r || [])], ...(B ? [["typeDeclaration", ...B]] : []), X]),
-      It = T([mn, W], (0, R.then)((0, R.star)((0, R.followed)((0, R.or)([Bf, Vp]), W)), (0, R.or)([Gt, Ht]), (m, r) => [r[0], ...m, ...r.slice(1)])),
-      Jt = (0, R.then)(T([mn, W, nn, W], (0, R.or)([qm, om])), T([W, dn, W], u), (m, r) => ["defaultNamespaceDecl", ["defaultNamespaceCategory", m], ["uri", r]]),
-      Kt = (0, R.or)([(0, R.map)((0, R.followed)(T([dn, W], ap), (0, R.preceded)(V, Jl)), m => ["namespacePrefix", m]), (0, R.map)(T([nn, W, qm, W], dn), () => ["defaultElementNamespace"])]),
-      Lt = T([Sn, W, Tn], Rk((0, R.optional)((0, R.preceded)(W, Kt)), (0, R.preceded)(V, u), (0, R.optional)((0, R.then)(T([W, Rm, W], u), (0, R.star)(T([V, Ul, V], u)), (m, r) => [m, ...r])), (m, r, B) => ["schemaImport", ...(m ? [m] : []), ["targetNamespace", r], ...(B ? [B] : [])])),
-      Mt = T([Sn, W, Un], Rk((0, R.optional)((0, R.followed)(T([W, dn, W], ap), (0, R.preceded)(V, Jl))), (0, R.preceded)(V, u), (0, R.optional)((0, R.then)(T([W, Rm, W], u), (0, R.star)(T([V, Ul, V], u)), (m, r) => [m, ...r])), (m, r) => ["moduleImport", ["namespacePrefix", m], ["targetNamespace", r]])),
-      Nt = (0, R.or)([Lt, Mt]),
-      Ot = (0, R.map)(T([mn, W, nn, W, Wm, W], u), m => ["defaultCollationDecl", m]),
-      Pt = (0, R.map)(T([mn, W, Vn, W], u), m => ["baseUriDecl", m]),
-      Qt = (0, R.then)(T([mn, W], (0, R.or)([(0, R.map)(T([xn, W], jp), m => ["decimalFormatName", ...m]), (0, R.map)(T([nn, W], xn), () => null)])), (0, R.star)((0, R.then)((0, R.preceded)(W, Yp), (0, R.preceded)(S(Jl, W), u), (m, r) => ["decimalFormatParam", ["decimalFormatParamName", m], ["decimalFormatParamValue", r]])), (m, r) => ["decimalFormatDecl", ...(m ? [m] : []), ...r]),
-      Rt = (0, R.or)([Zp, Ot, Pt, $p, aq, bq, cq, Qt]),
-      St = (0, R.then)(T([mn, W, $n, W], jp), (0, R.preceded)(W, u), (m, r) => ["optionDecl", ["optionName", m], ["optionContents", r]]),
-      Tt = (0, R.then)(T([mn, W, ao, W, bo], (0, R.optional)(T([W, em], Bj))), (0, R.or)([(0, R.map)((0, R.preceded)(S(zl, V), k), m => ["varValue", m]), (0, R.map)(T([W, Qn], (0, R.optional)((0, R.preceded)(S(zl, V), k))), () => ["external"])]), (m, r) => ["contextItemDecl", ...(m ? [["contextItemType", m]] : []), r]),
-      Mj = (0, R.then)((0, R.star)((0, R.followed)((0, R.or)([Jt, Rt, Ft, Nt]), (0, R.cut)(S(Cl, V)))), (0, R.star)((0, R.followed)((0, R.or)([Tt, It, St]), (0, R.cut)(S(Cl, V)))), (m, r) => 0 === m.length && 0 === r.length ? null : ["prolog", ...m, ...r]),
-      Ut = T([Un, W, dn, W], (0, R.then)((0, R.followed)(ap, S(Jl, V)), (0, R.followed)(u, S(Cl, V)), (m, r) => ["moduleDecl", ["prefix", m], ["uri", r]])),
-      Vt = (0, R.then)(Ut, (0, R.preceded)(V, Mj), (m, r) => ["libraryModule", m, ...(r ? [r] : [])]),
-      Wt = (0, R.then)(Mj, (0, R.preceded)(V, Et), (m, r) => ["mainModule", ...(m ? [m] : []), r]),
-      Xt = (0, R.map)(T([co, V], (0, R.followed)((0, R.or)([(0, R.then)((0, R.preceded)(fo, W), u, m => ["encoding", m]), (0, R.then)(T([eo, W], u), (0, R.optional)(T([W, fo, W], u)), (m, r) => [["version", m], ...(r ? [["encoding", r]] : [])])]), (0, R.preceded)(V, Cl))), m => ["versionDecl", ...m]),
-      Yt = (0, R.then)((0, R.optional)(S(Xt, V)), (0, R.or)([Vt, Wt]), (m, r) => ["module", ...(m ? [m] : []), r]),
-      Zt = (0, R.complete)(S(Yt, V));
+      Bt = (0, R.then)((0, R.or)([(0, R.map)(T([Zm, X], Ym), () => !1), (0, R.map)(T([$m, X, Zm, X], Ym), () => !0)]), (0, R.preceded)(V, At), (m, r) => ["orderByClause", ...(m ? [["stable"]] : []), ...r]),
+      Ct = (0, R.or)([Oj, st, xt, Bt]),
+      Dt = (0, R.map)(T([an, V], k), m => ["returnClause", m]),
+      Dr = Rk(Oj, (0, R.cut)((0, R.star)((0, R.preceded)(V, Ct))), (0, R.cut)((0, R.preceded)(V, Dt)), (m, r, B) => ["flworExpr", m, ...r, B]),
+      Et = c(jb, Ll, (m, r) => 0 === r.length ? ["sequenceType", ...m] : ["sequenceTypeUnion", ["sequenceType", ...m], ...r.map(B => ["sequenceType", ...B[1]])]),
+      Ft = Rk(T([yn, V], (0, R.optional)((0, R.preceded)(Fl, (0, R.followed)((0, R.followed)(np, X), em)))), (0, R.preceded)(V, Et), T([X, an, X], k), (m, r, B) => ["typeswitchExprCaseClause"].concat(m ? [["variableBinding", ...m]] : [], [r], [["resultExpr", B]])),
+      Gr = Sk((0, R.preceded)(zn, S((0, R.delimited)(bl, S(l, V), cl), V)), (0, R.plus)((0, R.followed)(Ft, V)), T([nn, X], (0, R.optional)((0, R.preceded)(Fl, (0, R.followed)(np, X)))), T([an, X], k), (m, r, B, W) => ["typeswitchExpr", ["argExpr", m], ...r, ["typeswitchExprDefaultClause", ...(B || []), ["resultExpr", W]]]),
+      Gt = Rk((0, R.preceded)(Fl, np), (0, R.optional)((0, R.preceded)(X, Ac)), (0, R.preceded)(S(Sm, X), k), (m, r, B) => ["quantifiedExprInClause", ["typedVariableBinding", ["varName", ...m], ...(r ? [r] : [])], ["sourceExpr", B]]),
+      Ht = c(Gt, Ul, (m, r) => [m, ...r.map(B => B[1])]),
+      Er = Rk((0, R.or)([An, Bn]), (0, R.preceded)(X, Ht), (0, R.preceded)(S(Cn, V), k), (m, r, B) => ["quantifiedExpr", ["quantifier", m], ...r, ["predicateExpr", B]]),
+      Jr = (0, R.map)(T([mm, X, (0, R.or)([lm, km]), X], k), m => ["deleteExpr", ["targetExpr", m]]),
+      Lr = Rk(T([Dn, X], (0, R.optional)(T([nm, X, jm], X))), T([km, X], k), (0, R.preceded)(S(En, X), k), (m, r, B) => m ? ["replaceExpr", ["replaceValue"], ["targetExpr", r], ["replacementExpr", B]] : ["replaceExpr", ["targetExpr", r], ["replacementExpr", B]]),
+      It = (0, R.then)(pp, (0, R.preceded)(S(zl, V), k), (m, r) => ["transformCopy", m, ["copySource", r]]),
+      Mr = Rk(T([Fn, X], c(It, Ul, (m, r) => [m, ...r.map(B => B[1])])), T([V, Gn, X], k), (0, R.preceded)(S(an, X), k), (m, r, B) => ["transformExpr", ["transformCopies", ...m], ["modifyExpr", r], ["returnExpr", B]]),
+      Jt = (0, R.or)([(0, R.followed)((0, R.map)((0, R.optional)((0, R.followed)(T([em, X], (0, R.or)([(0, R.map)(Hn, () => ["insertAsFirst"]), (0, R.map)(In, () => ["insertAsLast"])])), X)), m => m ? ["insertInto", m] : ["insertInto"]), Ln), (0, R.map)(Kn, () => ["insertAfter"]), (0, R.map)(Jn, () => ["insertBefore"])]),
+      Ir = Rk(T([Mn, X, (0, R.or)([lm, km]), X], k), (0, R.preceded)(X, Jt), (0, R.preceded)(X, k), (m, r, B) => ["insertExpr", ["sourceExpr", m], r, ["targetExpr", B]]),
+      Kr = (0, R.then)(T([Nn, X, km, V], k), T([X, em, X], k), (m, r) => ["renameExpr", ["targetExpr", m], ["newNameExpr", r]]),
+      Kt = (0, R.then)((0, R.plus)((0, R.then)((0, R.map)(T([yn, X], (0, R.cut)(k)), m => ["switchCaseExpr", m]), (0, R.cut)(X), m => m)), (0, R.cut)(T([an, X], (0, R.cut)(k))), (m, r) => ["switchExprCaseClause", ...m, ["resultExpr", r]]),
+      Fr = Rk(T([On, V, bl], (0, R.cut)(l)), (0, R.cut)(T([V, cl, (0, R.cut)(V)], (0, R.plus)((0, R.followed)(Kt, V)))), (0, R.cut)(T([nn, X, an, X], k)), (m, r, B) => ["switchExpr", ["argExpr", m], ...r, ["switchExprDefaultClause", ["resultExpr", B]]]),
+      Lt = (0, R.map)(l, m => ["queryBody", m]),
+      Mt = T([mn, X, dn, X], (0, R.cut)((0, R.then)(ep, (0, R.preceded)(S(Jl, V), u), (m, r) => ["namespaceDecl", ["prefix", m], ["uri", r]]))),
+      Nt = (0, R.then)(T([Pn, X, Fl, V], (0, R.then)(np, (0, R.optional)((0, R.preceded)(V, Ac)), (m, r) => [m, r])), (0, R.cut)((0, R.or)([(0, R.map)(T([V, zl, V], k), m => ["varValue", m]), (0, R.map)(T([X, Qn], (0, R.optional)(T([V, zl, V], k))), m => ["external", ...(m ? [["varValue", m]] : [])])])), ([m, r], B) => ["varDecl", ["varName", ...m], ...(null !== r ? [r] : []), B]),
+      Ot = Sk(T([om, X, (0, R.cut)((0, R.peek)((0, R.not)((0, R.followed)(Hp, (0, R.not)(Bl, [""])), ["Cannot use reserved function name"])))], np), (0, R.cut)(T([V, bl, V], (0, R.optional)(Gj))), (0, R.cut)(T([V, cl], (0, R.optional)(T([X, em, X], jb)))), (0, R.cut)((0, R.preceded)(V, (0, R.or)([(0, R.map)(Fj, m => ["functionBody", m]), (0, R.map)(Qn, () => ["externalDefinition"])]))), (m, r, B, W) => ["functionDecl", ["functionName", ...m], ["paramList", ...(r || [])], ...(B ? [["typeDeclaration", ...B]] : []), W]),
+      Pt = T([mn, X], (0, R.then)((0, R.star)((0, R.followed)((0, R.or)([Af, Zp]), X)), (0, R.or)([Nt, Ot]), (m, r) => [r[0], ...m, ...r.slice(1)])),
+      Qt = (0, R.then)(T([mn, X, nn, X], (0, R.or)([qm, om])), T([X, dn, X], u), (m, r) => ["defaultNamespaceDecl", ["defaultNamespaceCategory", m], ["uri", r]]),
+      Rt = (0, R.or)([(0, R.map)((0, R.followed)(T([dn, X], ep), (0, R.preceded)(V, Jl)), m => ["namespacePrefix", m]), (0, R.map)(T([nn, X, qm, X], dn), () => ["defaultElementNamespace"])]),
+      St = T([Sn, X, Tn], Rk((0, R.optional)((0, R.preceded)(X, Rt)), (0, R.preceded)(V, u), (0, R.optional)((0, R.then)(T([X, Rm, X], u), (0, R.star)(T([V, Ul, V], u)), (m, r) => [m, ...r])), (m, r, B) => ["schemaImport", ...(m ? [m] : []), ["targetNamespace", r], ...(B ? [B] : [])])),
+      Tt = T([Sn, X, Un], Rk((0, R.optional)((0, R.followed)(T([X, dn, X], ep), (0, R.preceded)(V, Jl))), (0, R.preceded)(V, u), (0, R.optional)((0, R.then)(T([X, Rm, X], u), (0, R.star)(T([V, Ul, V], u)), (m, r) => [m, ...r])), (m, r) => ["moduleImport", ["namespacePrefix", m], ["targetNamespace", r]])),
+      Ut = (0, R.or)([St, Tt]),
+      Vt = (0, R.map)(T([mn, X, nn, X, Wm, X], u), m => ["defaultCollationDecl", m]),
+      Wt = (0, R.map)(T([mn, X, Vn, X], u), m => ["baseUriDecl", m]),
+      Xt = (0, R.then)(T([mn, X], (0, R.or)([(0, R.map)(T([xn, X], np), m => ["decimalFormatName", ...m]), (0, R.map)(T([nn, X], xn), () => null)])), (0, R.star)((0, R.then)((0, R.preceded)(X, bq), (0, R.preceded)(S(Jl, X), u), (m, r) => ["decimalFormatParam", ["decimalFormatParamName", m], ["decimalFormatParamValue", r]])), (m, r) => ["decimalFormatDecl", ...(m ? [m] : []), ...r]),
+      Yt = (0, R.or)([cq, Vt, Wt, dq, eq, fq, gq, Xt]),
+      Zt = (0, R.then)(T([mn, X, $n, X], np), (0, R.preceded)(X, u), (m, r) => ["optionDecl", ["optionName", m], ["optionContents", r]]),
+      $t = (0, R.then)(T([mn, X, ao, X, bo], (0, R.optional)(T([X, em], Dj))), (0, R.or)([(0, R.map)((0, R.preceded)(S(zl, V), k), m => ["varValue", m]), (0, R.map)(T([X, Qn], (0, R.optional)((0, R.preceded)(S(zl, V), k))), () => ["external"])]), (m, r) => ["contextItemDecl", ...(m ? [["contextItemType", m]] : []), r]),
+      Pj = (0, R.then)((0, R.star)((0, R.followed)((0, R.or)([Qt, Yt, Mt, Ut]), (0, R.cut)(S(Cl, V)))), (0, R.star)((0, R.followed)((0, R.or)([$t, Pt, Zt]), (0, R.cut)(S(Cl, V)))), (m, r) => 0 === m.length && 0 === r.length ? null : ["prolog", ...m, ...r]),
+      au = T([Un, X, dn, X], (0, R.then)((0, R.followed)(ep, S(Jl, V)), (0, R.followed)(u, S(Cl, V)), (m, r) => ["moduleDecl", ["prefix", m], ["uri", r]])),
+      bu = (0, R.then)(au, (0, R.preceded)(V, Pj), (m, r) => ["libraryModule", m, ...(r ? [r] : [])]),
+      cu = (0, R.then)(Pj, (0, R.preceded)(V, Lt), (m, r) => ["mainModule", ...(m ? [m] : []), r]),
+      du = (0, R.map)(T([co, V], (0, R.followed)((0, R.or)([(0, R.then)((0, R.preceded)(fo, X), u, m => ["encoding", m]), (0, R.then)(T([eo, X], u), (0, R.optional)(T([X, fo, X], u)), (m, r) => [["version", m], ...(r ? [["encoding", r]] : [])])]), (0, R.preceded)(V, Cl))), m => ["versionDecl", ...m]),
+      eu = (0, R.then)((0, R.optional)(S(du, V)), (0, R.or)([bu, cu]), (m, r) => ["module", ...(m ? [m] : []), r]),
+      fu = (0, R.complete)(S(eu, V));
     return (m, r) => {
       n.clear();
-      r = Zt(m, r);
+      r = fu(m, r);
       let B = 1,
-        X = 1;
+        W = 1;
       for (let ea = 0; ea < m.length + 1; ea++) {
         if (n.has(ea)) {
           const Fa = n.get(ea);
-          Fa.line = X;
+          Fa.line = W;
           Fa.ha = B;
         }
-        "\n" === m[ea] ? (X++, B = 1) : B++;
+        "\n" === m[ea] ? (W++, B = 1) : B++;
       }
       return r;
     };
   }
-  const mq = lq({
+  const qq = pq({
       mb: !1,
       Za: !1
     }),
-    nq = lq({
+    rq = pq({
       mb: !0,
       Za: !1
     }),
-    oq = lq({
+    sq = pq({
       mb: !1,
       Za: !0
     }),
-    pq = lq({
+    tq = pq({
       mb: !0,
       Za: !0
     });
-  function qq(a, b) {
+  function uq(a, b) {
     var c = !!b.Z;
     b = !!b.debug;
-    So.clear();
-    To.clear();
-    kq.clear();
-    c = c ? b ? pq(a, 0) : oq(a, 0) : b ? nq(a, 0) : mq(a, 0);
+    Wo.clear();
+    Xo.clear();
+    oq.clear();
+    c = c ? b ? tq(a, 0) : sq(a, 0) : b ? rq(a, 0) : qq(a, 0);
     if (!0 === c.success) return c.value;
     a = a.substring(0, c.offset).split("\n");
     b = a[a.length - 1].length + 1;
-    throw new Rh({
+    throw new Qh({
       start: {
         offset: c.offset,
         line: a.length,
@@ -33902,36 +33917,36 @@ const fontoxpath = function (xspattern, prsc) {
       }
     }, "", "", Error(`XPST0003: Failed to parse script. Expected ${[...new Set(c.expected)]}`));
   }
-  const rq = "http://www.w3.org/XML/1998/namespace http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema-instance http://www.w3.org/2005/xpath-functions http://www.w3.org/2005/xpath-functions/math http://www.w3.org/2012/xquery http://www.w3.org/2005/xpath-functions/array http://www.w3.org/2005/xpath-functions/map".split(" ");
-  function sq(a, b, c, d, e) {
+  const vq = "http://www.w3.org/XML/1998/namespace http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema-instance http://www.w3.org/2005/xpath-functions http://www.w3.org/2005/xpath-functions/math http://www.w3.org/2012/xquery http://www.w3.org/2005/xpath-functions/array http://www.w3.org/2005/xpath-functions/map".split(" ");
+  function wq(a, b, c, d, e) {
     var f = F(a, "functionName"),
       h = I(f, "prefix") || "";
     let k = I(f, "URI");
     const l = H(f);
-    if (null === k && (k = "" === h ? null === b.v ? "http://www.w3.org/2005/xpath-functions" : b.v : b.$(h), !k && h)) throw zg(h);
-    if (rq.includes(k)) throw tg();
+    if (null === k && (k = "" === h ? null === b.v ? "http://www.w3.org/2005/xpath-functions" : b.v : b.$(h), !k && h)) throw yg(h);
+    if (vq.includes(k)) throw sg();
     h = K(a, "annotation").map(y => F(y, "annotationName"));
     f = h.every(y => !I(y, "URI") && "private" !== H(y));
     h = h.some(y => !I(y, "URI") && "updating" === H(y));
-    if (!k) throw vg();
-    const n = Lg(a),
+    if (!k) throw ug();
+    const n = Kg(a),
       t = K(F(a, "paramList"), "param"),
       u = t.map(y => F(y, "varName")),
-      z = t.map(y => Lg(y));
+      z = t.map(y => Kg(y));
     if (a = F(a, "functionBody")) {
-      if (b.va(k, l, z.length)) throw ug(k, l);
+      if (b.va(k, l, z.length)) throw tg(k, l);
       if (!e) return;
       const y = Fk(a[1], {
           sa: !1,
           Z: !0
         }),
-        G = new Cg(b),
+        G = new Bg(b),
         N = u.map(U => {
           let ca = I(U, "URI");
           const Ga = I(U, "prefix");
           U = H(U);
           Ga && null === ca && (ca = b.$(Ga || ""));
-          return Hg(G, ca, U);
+          return Gg(G, ca, U);
         });
       e = h ? {
         j: z,
@@ -33985,7 +34000,7 @@ const fontoxpath = function (xspattern, prsc) {
         arity: u.length,
         callFunction: (y, G, N, ...U) => {
           const ca = N.va(k, l, u.length, !0);
-          if (!ca) throw Error(`XPST0017: Function Q{${k}}${l} with arity of ${u.length} not registered. ${mg(l)}`);
+          if (!ca) throw Error(`XPST0017: Function Q{${k}}${l} with arity of ${u.length} not registered. ${lg(l)}`);
           if (ca.i.type !== n.type || ca.j.some((Ga, Gb) => Ga.type !== z[Gb].type)) throw Error("External function declaration types do not match actual function");
           return ca.callFunction(y, G, N, ...U);
         },
@@ -33997,9 +34012,9 @@ const fontoxpath = function (xspattern, prsc) {
         i: n
       };
     }
-    Fg(b, k, l, u.length, e);
+    Eg(b, k, l, u.length, e);
   }
-  function tq(a, b, c, d) {
+  function xq(a, b, c, d) {
     const e = [],
       f = [];
     K(a, "*").forEach(t => {
@@ -34020,60 +34035,60 @@ const fontoxpath = function (xspattern, prsc) {
       t = H(F(t, "targetNamespace"));
       if (h.has(t)) throw Error(`XQST0047: The namespace "${t}" is imported more than once.`);
       h.add(t);
-      Gg(b, u, t);
+      Fg(b, u, t);
     });
     K(a, "namespaceDecl").forEach(t => {
       const u = H(F(t, "prefix"));
       t = H(F(t, "uri"));
-      if ("xml" === u || "xmlns" === u) throw xg();
-      if ("http://www.w3.org/XML/1998/namespace" === t || "http://www.w3.org/2000/xmlns/" === t) throw xg();
-      Gg(b, u, t);
+      if ("xml" === u || "xmlns" === u) throw wg();
+      if ("http://www.w3.org/XML/1998/namespace" === t || "http://www.w3.org/2000/xmlns/" === t) throw wg();
+      Fg(b, u, t);
     });
     let k = null,
       l = null;
     for (const t of K(a, "defaultNamespaceDecl")) {
       const u = H(F(t, "defaultNamespaceCategory")),
         z = H(F(t, "uri"));
-      if (!z) throw vg();
-      if ("http://www.w3.org/XML/1998/namespace" === z || "http://www.w3.org/2000/xmlns/" === z) throw xg();
+      if (!z) throw ug();
+      if ("http://www.w3.org/XML/1998/namespace" === z || "http://www.w3.org/2000/xmlns/" === z) throw wg();
       if ("function" === u) {
-        if (k) throw wg();
+        if (k) throw vg();
         k = z;
       } else if ("element" === u) {
-        if (l) throw wg();
+        if (l) throw vg();
         l = z;
       }
     }
     k && (b.v = k);
-    l && Gg(b, "", l);
+    l && Fg(b, "", l);
     K(a, "functionDecl").forEach(t => {
-      sq(t, b, e, f, c);
+      wq(t, b, e, f, c);
     });
     const n = [];
     K(a, "varDecl").forEach(t => {
-      const u = Kg(F(t, "varName"));
+      const u = Jg(F(t, "varName"));
       let z = u.namespaceURI;
-      if (null === z && (z = b.$(u.prefix), !z && u.prefix)) throw zg(u.prefix);
-      if (rq.includes(z)) throw tg();
+      if (null === z && (z = b.$(u.prefix), !z && u.prefix)) throw yg(u.prefix);
+      if (vq.includes(z)) throw sg();
       var y = F(t, "external");
       t = F(t, "varValue");
       let G, N;
       null !== y ? (y = F(y, "varValue"), null !== y && (G = F(y, "*"))) : null !== t && (G = F(t, "*"));
       if (n.some(U => U.namespaceURI === z && U.localName === u.localName)) throw Error(`XQST0049: The variable ${z ? `Q{${z}}` : ""}${u.localName} has already been declared.`);
-      Hg(b, z || "", u.localName);
+      Gg(b, z || "", u.localName);
       if (c && (G && (N = Fk(G, {
         sa: !1,
         Z: !0
-      })), G && !Eg(b, z || "", u.localName))) {
+      })), G && !Dg(b, z || "", u.localName))) {
         let U = null;
-        Ig(b, z, u.localName, (ca, Ga) => {
+        Hg(b, z, u.localName, (ca, Ga) => {
           if (U) return U();
           U = Ra(C(N, ca, Ga));
           return U();
         });
         e.push({
           ba: N,
-          Eb: new Cg(b)
+          Eb: new Bg(b)
         });
         n.push({
           ba: N,
@@ -34083,7 +34098,7 @@ const fontoxpath = function (xspattern, prsc) {
       }
     });
     f.forEach(t => {
-      if (!t.Ab.I && t.ba.I) throw Oe(`The function Q{${t.namespaceURI}}${t.localName} is updating but the %updating annotation is missing.`);
+      if (!t.Ab.I && t.ba.I) throw Ne(`The function Q{${t.namespaceURI}}${t.localName} is updating but the %updating annotation is missing.`);
     });
     return {
       Ia: f.map(t => t.Ab),
@@ -34101,17 +34116,17 @@ const fontoxpath = function (xspattern, prsc) {
             Nk(z, y);
           });
           t.Ia.forEach(y => {
-            z.va(y.namespaceURI, y.localName, y.arity, !0) || y.cb && Fg(z, y.namespaceURI, y.localName, y.arity, y);
+            z.va(y.namespaceURI, y.localName, y.arity, !0) || y.cb && Eg(z, y.namespaceURI, y.localName, y.arity, y);
           });
           t.Ta.forEach(y => {
-            z.eb(y.namespaceURI, y.localName) || Hg(z, y.namespaceURI, y.localName);
+            z.eb(y.namespaceURI, y.localName) || Gg(z, y.namespaceURI, y.localName);
           });
           u.v(z);
         });
       }
     };
   }
-  function uq(a, b, c, d, e, f, h) {
+  function yq(a, b, c, d, e, f, h) {
     const k = b.Z ? "XQuery" : "XPath";
     c = b.Ha ? null : Ik(a, k, c, d, e, b.debug, f, h);
     return null !== c ? {
@@ -34119,34 +34134,34 @@ const fontoxpath = function (xspattern, prsc) {
       ba: c.ba
     } : {
       state: 0,
-      Zb: "string" === typeof a ? qq(a, b) : Kk(a)
+      Zb: "string" === typeof a ? uq(a, b) : Kk(a)
     };
   }
-  function vq(a, b, c, d) {
+  function zq(a, b, c, d) {
     const e = F(a, "mainModule");
     if (!e) throw Error("Can not execute a library module.");
     const f = F(e, "prolog");
     if (f) {
       if (!b.Z) throw Error("XPST0003: Use of XQuery functionality is not allowed in XPath context");
       Ok();
-      d = tq(f, c, !0, d);
+      d = xq(f, c, !0, d);
       d.pa(d);
     }
-    O(a, new rh(c));
+    O(a, new qh(c));
     a = J(e, ["queryBody", "*"]);
     return Q(a, b);
   }
-  function wq(a, b, c, d, e, f, h) {
-    const k = new qg(c, d, f, h),
-      l = new Cg(k);
+  function Aq(a, b, c, d, e, f, h) {
+    const k = new pg(c, d, f, h),
+      l = new Bg(k);
     0 < Object.keys(e).length && Ok();
     Object.keys(e).forEach(n => {
       const t = e[n];
       Nk(l, t);
-      Gg(l, n, t);
+      Fg(l, n, t);
     });
     "string" === typeof a && (a = Pk(a));
-    c = uq(a, b, c, d, e, f, h);
+    c = yq(a, b, c, d, e, f, h);
     switch (c.state) {
       case 2:
         return {
@@ -34159,18 +34174,18 @@ const fontoxpath = function (xspattern, prsc) {
           ba: c.ba
         };
       case 0:
-        return c = vq(c.Zb, b, l, a), c.v(l), b.Ha || Jk(a, b.Z ? "XQuery" : "XPath", k, e, c, b.debug, f), {
+        return c = zq(c.Zb, b, l, a), c.v(l), b.Ha || Jk(a, b.Z ? "XQuery" : "XPath", k, e, c, b.debug, f), {
           ga: l,
           ba: c
         };
     }
   }
-  function xq(a) {
+  function Bq(a) {
     if (v(a.type, 1)) return a.value;
     if (v(a.type, 54)) return a.value.node;
     throw mc(`Unable to convert selector argument of type ${Da[a.type]} to either an ${Da[1]} or an ${Da[54]} representing an XQueryX program while calling 'fontoxpath:evaluate'`);
   }
-  function yq(a, b, c, d) {
+  function Cq(a, b, c, d) {
     a = a.first();
     const e = b.first().h.reduce((f, h) => {
       f[h.key.value] = Ra(h.value());
@@ -34178,11 +34193,12 @@ const fontoxpath = function (xspattern, prsc) {
     }, Object.create(null));
     b = e["."] ? e["."]() : w.empty();
     delete e["."];
+    a = Bq(a);
     try {
       const {
           ba: f,
           ga: h
-        } = wq(xq(a), {
+        } = Aq(a, {
           sa: !1,
           Z: !0,
           debug: d.debug,
@@ -34203,22 +34219,22 @@ const fontoxpath = function (xspattern, prsc) {
         });
       return {
         ic: f.h(l, d).value,
-        ec: a
+        ac: a
       };
     } catch (f) {
-      hg(a.value, f);
+      gg(a, f);
     }
   }
-  function zq(a, b, c) {
+  function Dq(a, b, c) {
     if (1 !== b.node.nodeType && 9 !== b.node.nodeType) return [];
-    const d = hb(a, b).reduce((e, f) => {
-      for (const h of zq(a, f, c)) e.push(h);
+    const d = gb(a, b).reduce((e, f) => {
+      for (const h of Dq(a, f, c)) e.push(h);
       return e;
     }, []);
     c(b) && d.unshift(b);
     return d;
   }
-  const Aq = (a, b, c, d, e) => {
+  const Eq = (a, b, c, d, e) => {
       a = e.first();
       if (!a) throw lc("The context is absent, it needs to be present to use id function.");
       if (!v(a.type, 53)) throw mc("The context item is not a node, it needs to be node to use id function.");
@@ -34230,7 +34246,7 @@ const fontoxpath = function (xspattern, prsc) {
           return k;
         }, Object.create(null));
       for (b = a.value; 9 !== b.node.nodeType;) if (b = x(f, b), null === b) throw Error("FODC0001: the root node of the target node is not a document node.");
-      b = zq(f, b, k => {
+      b = Dq(f, b, k => {
         if (1 !== k.node.nodeType) return !1;
         k = fb(f, k, "id");
         if (!k || !h[k]) return !1;
@@ -34239,7 +34255,7 @@ const fontoxpath = function (xspattern, prsc) {
       });
       return w.create(b.map(k => rb(k)));
     },
-    Bq = (a, b, c, d, e) => {
+    Fq = (a, b, c, d, e) => {
       a = e.first();
       if (!a) throw lc("The context is absent, it needs to be present to use idref function.");
       if (!v(a.type, 53)) throw mc("The context item is not a node, it needs to be node to use idref function.");
@@ -34249,15 +34265,15 @@ const fontoxpath = function (xspattern, prsc) {
           return k;
         }, Object.create(null));
       for (b = a.value; 9 !== b.node.nodeType;) if (b = x(f, b), null === b) throw Error("FODC0001: the root node of the context node is not a document node.");
-      b = zq(f, b, k => 1 !== k.node.nodeType ? !1 : (k = fb(f, k, "idref")) ? k.split(/\s+/).some(l => h[l]) : !1);
+      b = Dq(f, b, k => 1 !== k.node.nodeType ? !1 : (k = fb(f, k, "idref")) ? k.split(/\s+/).some(l => h[l]) : !1);
       return w.create(b.map(k => rb(k)));
     };
-  function Cq(a) {
+  function Gq(a) {
     switch (typeof a) {
       case "object":
-        return Array.isArray(a) ? w.m(new pb(a.map(b => Ra(Cq(b))))) : null === a ? w.empty() : w.m(new ub(Object.keys(a).map(b => ({
+        return Array.isArray(a) ? w.m(new pb(a.map(b => Ra(Gq(b))))) : null === a ? w.empty() : w.m(new ub(Object.keys(a).map(b => ({
           key: g(b, 1),
-          value: Ra(Cq(a[b]))
+          value: Ra(Gq(a[b]))
         }))));
       case "number":
         return w.m(g(a, 3));
@@ -34269,7 +34285,7 @@ const fontoxpath = function (xspattern, prsc) {
         throw Error("Unexpected type in JSON parse");
     }
   }
-  const Dq = (a, b, c, d, e) => {
+  const Hq = (a, b, c, d, e) => {
     const f = w.m(g("duplicates", 1));
     a = tb(a, b, c, e, f);
     const h = a.F() ? "use-first" : a.first().value;
@@ -34296,7 +34312,7 @@ const fontoxpath = function (xspattern, prsc) {
       return l;
     }, []))));
   };
-  function Eq(a, b, c) {
+  function Iq(a, b, c) {
     let d = 1;
     const e = a.value;
     a = a.Pa(!0);
@@ -34313,35 +34329,35 @@ const fontoxpath = function (xspattern, prsc) {
       }
     }, f);
   }
-  function Fq(a) {
+  function Jq(a) {
     return a.map(b => v(b.type, 19) ? jd(b, 3) : b);
   }
-  function Gq(a) {
-    a = Fq(a);
+  function Kq(a) {
+    a = Jq(a);
     if (a.some(b => Number.isNaN(b.value))) return [g(NaN, 3)];
-    a = Ji(a);
+    a = Ii(a);
     if (!a) throw Error("FORG0006: Incompatible types to be converted to a common type");
     return a;
   }
-  const Hq = (a, b, c, d, e, f) => A([e, f], ([h, k]) => {
+  const Lq = (a, b, c, d, e, f) => A([e, f], ([h, k]) => {
       if (Infinity === h.value) return w.empty();
       if (-Infinity === h.value) return k && Infinity === k.value ? w.empty() : d;
       if (k) {
         if (isNaN(k.value)) return w.empty();
         Infinity === k.value && (k = null);
       }
-      return isNaN(h.value) ? w.empty() : Eq(d, Math.round(h.value), k ? Math.round(k.value) : null);
+      return isNaN(h.value) ? w.empty() : Iq(d, Math.round(h.value), k ? Math.round(k.value) : null);
     }),
-    Iq = (a, b, c, d, e) => {
+    Mq = (a, b, c, d, e) => {
       if (d.F()) return e;
-      a = Fq(d.O());
-      a = Ji(a);
+      a = Jq(d.O());
+      a = Ii(a);
       if (!a) throw Error("FORG0006: Incompatible types to be converted to a common type");
       if (!a.every(f => v(f.type, 2))) throw Error("FORG0006: items passed to fn:sum are not all numeric.");
       b = a.reduce((f, h) => f + h.value, 0);
       return a.every(f => v(f.type, 5)) ? w.m(g(b, 5)) : a.every(f => v(f.type, 3)) ? w.m(g(b, 3)) : a.every(f => v(f.type, 4)) ? w.m(g(b, 4)) : w.m(g(b, 6));
     };
-  var Jq = [].concat(Nf, [{
+  var Nq = [].concat(Mf, [{
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "boolean",
     j: [{
@@ -34451,7 +34467,7 @@ const fontoxpath = function (xspattern, prsc) {
       g: 3
     },
     callFunction: a => w.m(g(fc(a), 17))
-  }], Of, Wf, cg, [{
+  }], Nf, Vf, bg, [{
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "years-from-duration",
     j: [{
@@ -34523,7 +34539,7 @@ const fontoxpath = function (xspattern, prsc) {
       g: 0
     },
     callFunction: (a, b, c, d) => d.F() ? d : w.m(g(d.first().value.getSeconds(), 4))
-  }], eg, [{
+  }], dg, [{
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "id",
     j: [{
@@ -34537,7 +34553,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 54,
       g: 2
     },
-    callFunction: Aq
+    callFunction: Eq
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "id",
@@ -34550,7 +34566,7 @@ const fontoxpath = function (xspattern, prsc) {
       g: 2
     },
     callFunction(a, b, c, d) {
-      return Aq(a, b, c, d, w.m(a.M));
+      return Eq(a, b, c, d, w.m(a.M));
     }
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
@@ -34566,7 +34582,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 53,
       g: 2
     },
-    callFunction: Bq
+    callFunction: Fq
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     localName: "idref",
@@ -34579,7 +34595,7 @@ const fontoxpath = function (xspattern, prsc) {
       g: 2
     },
     callFunction(a, b, c, d) {
-      return Bq(a, b, c, d, w.m(a.M));
+      return Fq(a, b, c, d, w.m(a.M));
     }
   }], [{
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
@@ -34599,7 +34615,7 @@ const fontoxpath = function (xspattern, prsc) {
       } catch (f) {
         throw Error("FOJS0001: parsed JSON string contains illegal JSON.");
       }
-      return Cq(e);
+      return Gq(e);
     }
   }], [{
     namespaceURI: "http://www.w3.org/2005/xpath-functions/map",
@@ -34690,7 +34706,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 61,
       g: 3
     },
-    callFunction: Dq
+    callFunction: Hq
   }, {
     namespaceURI: "http://www.w3.org/2005/xpath-functions/map",
     localName: "merge",
@@ -34703,7 +34719,7 @@ const fontoxpath = function (xspattern, prsc) {
       g: 3
     },
     callFunction(a, b, c, d) {
-      return Dq(a, b, c, d, w.m(new ub([{
+      return Hq(a, b, c, d, w.m(new ub([{
         key: g("duplicates", 1),
         value: () => w.m(g("use-first", 1))
       }])));
@@ -34944,7 +34960,7 @@ const fontoxpath = function (xspattern, prsc) {
       g: 0
     },
     callFunction: (a, b, c, d, e) => e.N(([f]) => d.map(h => g(Math.atan2(h.value, f.value), 3)))
-  }], Ae, Yd, [{
+  }], ze, Zd, [{
     namespaceURI: "http://fontoxpath/operators",
     localName: "to",
     j: [{
@@ -35069,7 +35085,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 59,
       g: 2
     }],
-    callFunction: (a, b, c, d) => Eq(d, 1, 1),
+    callFunction: (a, b, c, d) => Iq(d, 1, 1),
     localName: "head",
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     i: {
@@ -35081,7 +35097,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 59,
       g: 2
     }],
-    callFunction: (a, b, c, d) => Eq(d, 2, null),
+    callFunction: (a, b, c, d) => Iq(d, 2, null),
     localName: "tail",
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     i: {
@@ -35155,7 +35171,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 3,
       g: 3
     }],
-    callFunction: (a, b, c, d, e) => Hq(a, b, c, d, e, w.empty()),
+    callFunction: (a, b, c, d, e) => Lq(a, b, c, d, e, w.empty()),
     localName: "subsequence",
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     i: {
@@ -35173,7 +35189,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 3,
       g: 3
     }],
-    callFunction: Hq,
+    callFunction: Lq,
     localName: "subsequence",
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     i: {
@@ -35199,7 +35215,7 @@ const fontoxpath = function (xspattern, prsc) {
     }],
     callFunction: (a, b, c, d) => {
       const e = qc(d, b).O();
-      return w.create(e).filter((f, h) => e.slice(0, h).every(k => !De(f, k)));
+      return w.create(e).filter((f, h) => e.slice(0, h).every(k => !Ce(f, k)));
     },
     localName: "distinct-values",
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
@@ -35232,7 +35248,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 46,
       g: 3
     }],
-    callFunction: (a, b, c, d, e) => e.N(([f]) => qc(d, b).map((h, k) => pi("eqOp", h.type, f.type)(h, f, a) ? g(k + 1, 5) : g(-1, 5)).filter(h => -1 !== h.value)),
+    callFunction: (a, b, c, d, e) => e.N(([f]) => qc(d, b).map((h, k) => oi("eqOp", h.type, f.type)(h, f, a) ? g(k + 1, 5) : g(-1, 5)).filter(h => -1 !== h.value)),
     localName: "index-of",
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     i: {
@@ -35269,7 +35285,7 @@ const fontoxpath = function (xspattern, prsc) {
     }],
     callFunction: (a, b, c, d, e) => {
       let f = !1;
-      const h = Ge(a, b, c, d, e);
+      const h = Fe(a, b, c, d, e);
       return w.create({
         next: () => {
           if (f) return p;
@@ -35335,8 +35351,8 @@ const fontoxpath = function (xspattern, prsc) {
     }],
     callFunction: (a, b, c, d) => {
       if (d.F()) return d;
-      a = Fq(d.O());
-      a = Ji(a);
+      a = Jq(d.O());
+      a = Ii(a);
       if (!a) throw Error("FORG0006: Incompatible types to be converted to a common type");
       if (!a.every(e => v(e.type, 2))) throw Error("FORG0006: items passed to fn:avg are not all numeric.");
       b = a.reduce((e, f) => e + f.value, 0) / a.length;
@@ -35355,7 +35371,7 @@ const fontoxpath = function (xspattern, prsc) {
     }],
     callFunction: (a, b, c, d) => {
       if (d.F()) return d;
-      a = Gq(d.O());
+      a = Kq(d.O());
       return w.m(a.reduce((e, f) => e.value < f.value ? f : e));
     },
     localName: "max",
@@ -35388,7 +35404,7 @@ const fontoxpath = function (xspattern, prsc) {
     }],
     callFunction: (a, b, c, d) => {
       if (d.F()) return d;
-      a = Gq(d.O());
+      a = Kq(d.O());
       return w.m(a.reduce((e, f) => e.value > f.value ? f : e));
     },
     localName: "min",
@@ -35419,7 +35435,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 46,
       g: 2
     }],
-    callFunction: (a, b, c, d) => Iq(a, b, c, d, w.m(g(0, 5))),
+    callFunction: (a, b, c, d) => Mq(a, b, c, d, w.m(g(0, 5))),
     localName: "sum",
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     i: {
@@ -35434,7 +35450,7 @@ const fontoxpath = function (xspattern, prsc) {
       type: 46,
       g: 0
     }],
-    callFunction: Iq,
+    callFunction: Mq,
     localName: "sum",
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
     i: {
@@ -35500,7 +35516,7 @@ const fontoxpath = function (xspattern, prsc) {
         h = f.o;
       if (1 !== h.length) throw Error("XPTY0004: signature of function passed to fn:filter is incompatible.");
       return d.filter(k => {
-        k = Ad(h[0], w.m(k), b, "fn:filter", !1);
+        k = zd(h[0], w.m(k), b, "fn:filter", !1);
         k = f.value.call(void 0, a, b, c, k);
         if (!k.oa() || !v(k.first().type, 0)) throw Error("XPTY0004: signature of function passed to fn:filter is incompatible.");
         return k.first().value;
@@ -35533,7 +35549,7 @@ const fontoxpath = function (xspattern, prsc) {
             if (!l) {
               var t = k.next(0);
               if (t.done) return t;
-              t = Ad(h[0], w.m(t.value), b, "fn:for-each", !1);
+              t = zd(h[0], w.m(t.value), b, "fn:for-each", !1);
               l = f.value.call(void 0, a, b, c, t).value;
             }
             t = l.next(n);
@@ -35566,8 +35582,8 @@ const fontoxpath = function (xspattern, prsc) {
         k = h.o;
       if (2 !== k.length) throw Error("XPTY0004: signature of function passed to fn:fold-left is incompatible.");
       return d.N(l => l.reduce((n, t) => {
-        n = Ad(k[0], n, b, "fn:fold-left", !1);
-        t = Ad(k[1], w.m(t), b, "fn:fold-left", !1);
+        n = zd(k[0], n, b, "fn:fold-left", !1);
+        t = zd(k[1], w.m(t), b, "fn:fold-left", !1);
         return h.value.call(void 0, a, b, c, n, t);
       }, e));
     },
@@ -35594,8 +35610,8 @@ const fontoxpath = function (xspattern, prsc) {
         k = h.o;
       if (2 !== k.length) throw Error("XPTY0004: signature of function passed to fn:fold-right is incompatible.");
       return d.N(l => l.reduceRight((n, t) => {
-        n = Ad(k[0], n, b, "fn:fold-right", !1);
-        t = Ad(k[1], w.m(t), b, "fn:fold-right", !1);
+        n = zd(k[0], n, b, "fn:fold-right", !1);
+        t = zd(k[1], w.m(t), b, "fn:fold-right", !1);
         return h.value.call(void 0, a, b, c, t, n);
       }, e));
     },
@@ -35614,7 +35630,7 @@ const fontoxpath = function (xspattern, prsc) {
       if (!b.Ua) throw Error("serialize() called but no xmlSerializer set in execution parameters.");
       a = d.O();
       if (!a.every(e => v(e.type, 53))) throw Error("Expected argument to fn:serialize to resolve to a sequence of Nodes.");
-      return w.m(g(a.map(e => b.Ua.serializeToString(ag(e.value, b, !1))).join(""), 1));
+      return w.m(g(a.map(e => b.Ua.serializeToString($f(e.value, b, !1))).join(""), 1));
     },
     localName: "serialize",
     namespaceURI: "http://www.w3.org/2005/xpath-functions",
@@ -35636,12 +35652,12 @@ const fontoxpath = function (xspattern, prsc) {
         next: () => {
           f || ({
             ic: f,
-            ec: h
-          } = yq(d, e, c, b));
+            ac: h
+          } = Cq(d, e, c, b));
           try {
             return f.next(0);
           } catch (k) {
-            hg(h.value, k);
+            gg(h, k);
           }
         }
       });
@@ -35713,7 +35729,7 @@ const fontoxpath = function (xspattern, prsc) {
       g: 3
     }
   }]);
-  class Kq {
+  class Oq {
     constructor(a) {
       this.h = a;
     }
@@ -35739,23 +35755,23 @@ const fontoxpath = function (xspattern, prsc) {
       return this.h.createTextNode(a);
     }
   }
-  var Lq = Symbol("IS_XPATH_VALUE_SYMBOL");
-  function Mq(a) {
+  var Pq = Symbol("IS_XPATH_VALUE_SYMBOL");
+  function Qq(a) {
     return (b, c) => {
       b = Vb(new nb(null === c ? new Za() : c), b, Ja(a));
       return {
-        [Lq]: !0,
+        [Pq]: !0,
         zb: b
       };
     };
   }
-  Jq.forEach(a => {
-    og(a.namespaceURI, a.localName, a.j, a.i, a.callFunction);
+  Nq.forEach(a => {
+    ng(a.namespaceURI, a.localName, a.j, a.i, a.callFunction);
   });
-  function Nq(a) {
+  function Rq(a) {
     return a && "object" === typeof a && "lookupNamespaceURI" in a ? b => a.lookupNamespaceURI(b || null) : () => null;
   }
-  function Oq(a) {
+  function Sq(a) {
     return ({
       prefix: b,
       localName: c
@@ -35764,7 +35780,7 @@ const fontoxpath = function (xspattern, prsc) {
       localName: c
     };
   }
-  function Pq(a, b, c, d, e, f) {
+  function Tq(a, b, c, d, e, f) {
     if (null === d || void 0 === d) d = d || {};
     const h = e ? {
         jb: e.logger || {
@@ -35773,7 +35789,7 @@ const fontoxpath = function (xspattern, prsc) {
         Ma: e.documentWriter,
         kb: e.moduleImports,
         Cb: e.namespaceResolver,
-        ac: e.functionNameResolver,
+        bc: e.functionNameResolver,
         Ja: e.nodesFactory,
         Ua: e.xmlSerializer
       } : {
@@ -35789,14 +35805,14 @@ const fontoxpath = function (xspattern, prsc) {
       k = new nb(null === c ? new Za() : c);
     c = h.kb || Object.create(null);
     var l = void 0 === e.defaultFunctionNamespaceURI ? "http://www.w3.org/2005/xpath-functions" : e.defaultFunctionNamespaceURI;
-    const n = wq(a, f, h.Cb || Nq(b), d, c, l, h.ac || Oq(l));
+    const n = Aq(a, f, h.Cb || Rq(b), d, c, l, h.bc || Sq(l));
     a = b ? Wb(k, b) : w.empty();
-    b = !h.Ja && f.Z ? new $e(b) : new Kq(h.Ja);
+    b = !h.Ja && f.Z ? new Ze(b) : new Oq(h.Ja);
     c = h.Ma ? new bb(h.Ma) : ab;
     l = h.Ua;
     const t = Object.keys(d).reduce((y, G) => {
       const N = d[G];
-      y[`Q{}${G}[0]`] = N && "object" === typeof N && Lq in N ? () => w.create(N.zb) : () => Wb(k, d[G]);
+      y[`Q{}${G}[0]`] = N && "object" === typeof N && Pq in N ? () => w.create(N.zb) : () => Wb(k, d[G]);
       return y;
     }, Object.create(null));
     let u;
@@ -35814,7 +35830,7 @@ const fontoxpath = function (xspattern, prsc) {
       ba: n.ba
     };
   }
-  function Qq(a, b) {
+  function Uq(a, b) {
     const c = {};
     let d = 0,
       e = !1,
@@ -35837,7 +35853,7 @@ const fontoxpath = function (xspattern, prsc) {
               d++;
               continue;
             }
-            f = Rq(h, b);
+            f = Vq(h, b);
           }
           h = f.next(0);
           f = null;
@@ -35849,7 +35865,7 @@ const fontoxpath = function (xspattern, prsc) {
       }
     };
   }
-  function Sq(a, b) {
+  function Wq(a, b) {
     const c = [];
     let d = 0,
       e = !1,
@@ -35869,7 +35885,7 @@ const fontoxpath = function (xspattern, prsc) {
               c[d++] = null;
               continue;
             }
-            f = Rq(h, b);
+            f = Vq(h, b);
           }
           h = f.next(0);
           f = null;
@@ -35880,9 +35896,9 @@ const fontoxpath = function (xspattern, prsc) {
       }
     };
   }
-  function Rq(a, b) {
-    if (v(a.type, 61)) return Qq(a, b);
-    if (v(a.type, 62)) return Sq(a, b);
+  function Vq(a, b) {
+    if (v(a.type, 61)) return Uq(a, b);
+    if (v(a.type, 62)) return Wq(a, b);
     if (v(a.type, 23)) {
       const c = a.value;
       return {
@@ -35911,7 +35927,7 @@ const fontoxpath = function (xspattern, prsc) {
       case 58:
         const d = a.value;
         return {
-          next: () => q(ag(d, b, !1))
+          next: () => q($f(d, b, !1))
         };
       default:
         return {
@@ -35919,7 +35935,7 @@ const fontoxpath = function (xspattern, prsc) {
         };
     }
   }
-  var Tq = {
+  var Xq = {
     ANY: 0,
     NUMBER: 1,
     STRING: 2,
@@ -35933,19 +35949,19 @@ const fontoxpath = function (xspattern, prsc) {
     ALL_RESULTS: 14,
     ASYNC_ITERATOR: 99
   };
-  Tq[Tq.ANY] = "ANY";
-  Tq[Tq.NUMBER] = "NUMBER";
-  Tq[Tq.STRING] = "STRING";
-  Tq[Tq.BOOLEAN] = "BOOLEAN";
-  Tq[Tq.NODES] = "NODES";
-  Tq[Tq.FIRST_NODE] = "FIRST_NODE";
-  Tq[Tq.STRINGS] = "STRINGS";
-  Tq[Tq.MAP] = "MAP";
-  Tq[Tq.ARRAY] = "ARRAY";
-  Tq[Tq.NUMBERS] = "NUMBERS";
-  Tq[Tq.ALL_RESULTS] = "ALL_RESULTS";
-  Tq[Tq.ASYNC_ITERATOR] = "ASYNC_ITERATOR";
-  function Uq(a, b, c, d) {
+  Xq[Xq.ANY] = "ANY";
+  Xq[Xq.NUMBER] = "NUMBER";
+  Xq[Xq.STRING] = "STRING";
+  Xq[Xq.BOOLEAN] = "BOOLEAN";
+  Xq[Xq.NODES] = "NODES";
+  Xq[Xq.FIRST_NODE] = "FIRST_NODE";
+  Xq[Xq.STRINGS] = "STRINGS";
+  Xq[Xq.MAP] = "MAP";
+  Xq[Xq.ARRAY] = "ARRAY";
+  Xq[Xq.NUMBERS] = "NUMBERS";
+  Xq[Xq.ALL_RESULTS] = "ALL_RESULTS";
+  Xq[Xq.ASYNC_ITERATOR] = "ASYNC_ITERATOR";
+  function Yq(a, b, c, d) {
     switch (c) {
       case 3:
         return b.fa();
@@ -35958,27 +35974,27 @@ const fontoxpath = function (xspattern, prsc) {
       case 9:
         b = b.first();
         if (null === b) return null;
-        if (!v(b.type, 53)) throw Error("Expected XPath " + fg(a) + " to resolve to Node. Got " + Da[b.type]);
-        return ag(b.value, d, !1);
+        if (!v(b.type, 53)) throw Error("Expected XPath " + eg(a) + " to resolve to Node. Got " + Da[b.type]);
+        return $f(b.value, d, !1);
       case 7:
         b = b.O();
-        if (!b.every(l => v(l.type, 53))) throw Error("Expected XPath " + fg(a) + " to resolve to a sequence of Nodes.");
-        return b.map(l => ag(l.value, d, !1));
+        if (!b.every(l => v(l.type, 53))) throw Error("Expected XPath " + eg(a) + " to resolve to a sequence of Nodes.");
+        return b.map(l => $f(l.value, d, !1));
       case 11:
         b = b.O();
-        if (1 !== b.length) throw Error("Expected XPath " + fg(a) + " to resolve to a single map.");
+        if (1 !== b.length) throw Error("Expected XPath " + eg(a) + " to resolve to a single map.");
         b = b[0];
-        if (!v(b.type, 61)) throw Error("Expected XPath " + fg(a) + " to resolve to a map");
-        return Qq(b, d).next(0).value;
+        if (!v(b.type, 61)) throw Error("Expected XPath " + eg(a) + " to resolve to a map");
+        return Uq(b, d).next(0).value;
       case 12:
         b = b.O();
-        if (1 !== b.length) throw Error("Expected XPath " + fg(a) + " to resolve to a single array.");
+        if (1 !== b.length) throw Error("Expected XPath " + eg(a) + " to resolve to a single array.");
         b = b[0];
-        if (!v(b.type, 62)) throw Error("Expected XPath " + fg(a) + " to resolve to an array");
-        return Sq(b, d).next(0).value;
+        if (!v(b.type, 62)) throw Error("Expected XPath " + eg(a) + " to resolve to an array");
+        return Wq(b, d).next(0).value;
       case 13:
         return b.O().map(l => {
-          if (!v(l.type, 2)) throw Error("Expected XPath " + fg(a) + " to resolve to numbers");
+          if (!v(l.type, 2)) throw Error("Expected XPath " + eg(a) + " to resolve to numbers");
           return l.value;
         });
       case 99:
@@ -35993,7 +36009,7 @@ const fontoxpath = function (xspattern, prsc) {
                 h = !0;
                 break;
               }
-              f = Rq(l.value, d);
+              f = Vq(l.value, d);
             }
             l = f.next(0);
             f = null;
@@ -36009,22 +36025,22 @@ const fontoxpath = function (xspattern, prsc) {
             return this;
           },
           next: () => new Promise(l => l(k())).catch(l => {
-            hg(a, l);
+            gg(a, l);
           })
         } : {
           next: () => new Promise(l => l(k()))
         };
       case 14:
-        return b.O().map(l => Rq(l, d).next(0).value);
+        return b.O().map(l => Vq(l, d).next(0).value);
       default:
-        return b = b.O(), b.every(l => v(l.type, 53) && !v(l.type, 47)) ? (b = b.map(l => ag(l.value, d, !1)), 1 === b.length ? b[0] : b) : 1 === b.length ? (b = b[0], v(b.type, 62) ? Sq(b, d).next(0).value : v(b.type, 61) ? Qq(b, d).next(0).value : pc(b, d).first().value) : qc(w.create(b), d).O().map(l => l.value);
+        return b = b.O(), b.every(l => v(l.type, 53) && !v(l.type, 47)) ? (b = b.map(l => $f(l.value, d, !1)), 1 === b.length ? b[0] : b) : 1 === b.length ? (b = b[0], v(b.type, 62) ? Wq(b, d).next(0).value : v(b.type, 61) ? Uq(b, d).next(0).value : pc(b, d).first().value) : qc(w.create(b), d).O().map(l => l.value);
     }
   }
-  let Vq = !1,
-    Wq = null;
-  var Xq = {
+  let Zq = !1,
+    $q = null;
+  var ar = {
     getPerformanceSummary() {
-      const a = Wq.getEntriesByType("measure").filter(b => b.name.startsWith("XPath: "));
+      const a = $q.getEntriesByType("measure").filter(b => b.name.startsWith("XPath: "));
       return Array.from(a.reduce((b, c) => {
         var d = c.name.substring(7);
         b.has(d) ? (d = b.get(d), d.times += 1, d.totalDuration += c.duration) : b.set(d, {
@@ -36040,31 +36056,31 @@ const fontoxpath = function (xspattern, prsc) {
       }).sort((b, c) => c.totalDuration - b.totalDuration);
     },
     setPerformanceImplementation(a) {
-      Wq = a;
+      $q = a;
     },
     startProfiling() {
-      if (null === Wq) throw Error("Performance API object must be set using `profiler.setPerformanceImplementation` before starting to profile");
-      Wq.clearMarks();
-      Wq.clearMeasures();
-      Vq = !0;
+      if (null === $q) throw Error("Performance API object must be set using `profiler.setPerformanceImplementation` before starting to profile");
+      $q.clearMarks();
+      $q.clearMeasures();
+      Zq = !0;
     },
     stopProfiling() {
-      Vq = !1;
+      Zq = !1;
     }
   };
-  let Yq = 0;
-  var Zq = {
+  let br = 0;
+  var cr = {
     XPATH_3_1_LANGUAGE: "XPath3.1",
     XQUERY_3_1_LANGUAGE: "XQuery3.1",
     XQUERY_UPDATE_3_1_LANGUAGE: "XQueryUpdate3.1"
   };
-  const $q = (a, b, c, d, e, f) => {
+  const dr = (a, b, c, d, e, f) => {
     e = e || 0;
     if (!a || "string" !== typeof a && !("nodeType" in a)) throw new TypeError("Failed to execute 'evaluateXPath': xpathExpression must be a string or an element depicting an XQueryX DOM tree.");
     f = f || {};
     let h, k;
     try {
-      const n = Pq(a, b, c || null, d || {}, f, {
+      const n = Tq(a, b, c || null, d || {}, f, {
         sa: "XQueryUpdate3.1" === f.language,
         Z: "XQuery3.1" === f.language || "XQueryUpdate3.1" === f.language,
         debug: !!f.debug,
@@ -36074,23 +36090,23 @@ const fontoxpath = function (xspattern, prsc) {
       h = n.ub;
       k = n.ba;
     } catch (n) {
-      hg(a, n);
+      gg(a, n);
     }
     if (k.I) throw Error("XUST0001: Updating expressions should be evaluated as updating expressions");
     if (3 === e && b && "object" === typeof b && "nodeType" in b && (c = k.D(), b = Ya(b), null !== c && !b.includes(c))) return !1;
     try {
       b = a;
-      Vq && ("string" !== typeof b && (b = fg(b)), Wq.mark(`${b}${0 === Yq ? "" : "@" + Yq}`), Yq++);
+      Zq && ("string" !== typeof b && (b = eg(b)), $q.mark(`${b}${0 === br ? "" : "@" + br}`), br++);
       const n = C(k, l, h),
-        t = Uq(a, n, e, h);
+        t = Yq(a, n, e, h);
       e = a;
-      Vq && ("string" !== typeof e && (e = fg(e)), Yq--, l = `${e}${0 === Yq ? "" : "@" + Yq}`, Wq.measure(`XPath: ${e}`, l), Wq.clearMarks(l));
+      Zq && ("string" !== typeof e && (e = eg(e)), br--, l = `${e}${0 === br ? "" : "@" + br}`, $q.measure(`XPath: ${e}`, l), $q.clearMarks(l));
       return t;
     } catch (n) {
-      hg(a, n);
+      gg(a, n);
     }
   };
-  Object.assign($q, {
+  Object.assign(dr, {
     jc: 14,
     ANY_TYPE: 0,
     Lb: 12,
@@ -36107,7 +36123,7 @@ const fontoxpath = function (xspattern, prsc) {
     lc: "XQuery3.1",
     Yb: "XQueryUpdate3.1"
   });
-  Object.assign($q, {
+  Object.assign(dr, {
     ALL_RESULTS_TYPE: 14,
     ANY_TYPE: 0,
     ARRAY_TYPE: 12,
@@ -36124,21 +36140,21 @@ const fontoxpath = function (xspattern, prsc) {
     XQUERY_3_1_LANGUAGE: "XQuery3.1",
     XQUERY_UPDATE_3_1_LANGUAGE: "XQueryUpdate3.1"
   });
-  function ar(a, b, c, d, e) {
-    return $q(a, b, c, d, $q.Mb, e);
+  function er(a, b, c, d, e) {
+    return dr(a, b, c, d, dr.Mb, e);
   }
-  function br(a, b, c, d) {
+  function fr(a, b, c, d) {
     return {
       pendingUpdateList: a.da.map(e => e.h(d)),
-      xdmValue: Uq(b, w.create(a.J), c, d)
+      xdmValue: Yq(b, w.create(a.J), c, d)
     };
   }
-  async function cr(a, b, c, d, e) {
+  async function gr(a, b, c, d, e) {
     e = e || {};
     Ok();
     let f, h;
     try {
-      const n = Pq(a, b, c || null, d || {}, e || {}, {
+      const n = Tq(a, b, c || null, d || {}, e || {}, {
         sa: !0,
         Z: !0,
         debug: !!e.debug,
@@ -36148,11 +36164,11 @@ const fontoxpath = function (xspattern, prsc) {
       f = n.ub;
       h = n.ba;
     } catch (n) {
-      hg(a, n);
+      gg(a, n);
     }
     if (!h.I) {
       k = [];
-      a = ar(a, b, c, d, Object.assign(Object.assign({}, e), {
+      a = er(a, b, c, d, Object.assign(Object.assign({}, e), {
         language: "XQueryUpdate3.1"
       }));
       for (b = await a.next(); !b.done; b = await a.next()) k.push(b.value);
@@ -36165,16 +36181,16 @@ const fontoxpath = function (xspattern, prsc) {
     try {
       l = h.s(k, f).next(0);
     } catch (n) {
-      hg(a, n);
+      gg(a, n);
     }
-    return br(l.value, a, e.returnType, f);
+    return fr(l.value, a, e.returnType, f);
   }
-  function dr(a, b, c, d, e) {
+  function hr(a, b, c, d, e) {
     e = e || {};
     Ok();
     let f, h, k;
     try {
-      const n = Pq(a, b, c || null, d || {}, e || {}, {
+      const n = Tq(a, b, c || null, d || {}, e || {}, {
         sa: !0,
         Z: !0,
         debug: !!e.debug,
@@ -36184,55 +36200,55 @@ const fontoxpath = function (xspattern, prsc) {
       h = n.ub;
       k = n.ba;
     } catch (n) {
-      hg(a, n);
+      gg(a, n);
     }
     if (!k.I) return {
       pendingUpdateList: [],
-      xdmValue: $q(a, b, c, d, e.i, Object.assign(Object.assign({}, e), {
-        language: $q.Yb
+      xdmValue: dr(a, b, c, d, e.i, Object.assign(Object.assign({}, e), {
+        language: dr.Yb
       }))
     };
     let l;
     try {
       l = k.s(f, h).next(0);
     } catch (n) {
-      hg(a, n);
+      gg(a, n);
     }
-    return br(l.value, a, e.returnType, h);
-  }
-  function er(a, b, c, d, e) {
-    return $q(a, b, c, d, $q.Lb, e);
-  }
-  function fr(a, b, c, d, e) {
-    return $q(a, b, c, d, $q.BOOLEAN_TYPE, e);
-  }
-  function gr(a, b, c, d, e) {
-    return $q(a, b, c, d, $q.Ob, e);
-  }
-  function hr(a, b, c, d, e) {
-    return $q(a, b, c, d, $q.Rb, e);
+    return fr(l.value, a, e.returnType, h);
   }
   function ir(a, b, c, d, e) {
-    return $q(a, b, c, d, $q.Tb, e);
+    return dr(a, b, c, d, dr.Lb, e);
   }
   function jr(a, b, c, d, e) {
-    return $q(a, b, c, d, $q.NUMBER_TYPE, e);
+    return dr(a, b, c, d, dr.BOOLEAN_TYPE, e);
   }
   function kr(a, b, c, d, e) {
-    return $q(a, b, c, d, $q.Ub, e);
+    return dr(a, b, c, d, dr.Ob, e);
   }
   function lr(a, b, c, d, e) {
-    return $q(a, b, c, d, $q.STRING_TYPE, e);
+    return dr(a, b, c, d, dr.Rb, e);
   }
   function mr(a, b, c, d, e) {
-    return $q(a, b, c, d, $q.Vb, e);
+    return dr(a, b, c, d, dr.Tb, e);
   }
-  function nr(a, b, c, d) {
+  function nr(a, b, c, d, e) {
+    return dr(a, b, c, d, dr.NUMBER_TYPE, e);
+  }
+  function or(a, b, c, d, e) {
+    return dr(a, b, c, d, dr.Ub, e);
+  }
+  function pr(a, b, c, d, e) {
+    return dr(a, b, c, d, dr.STRING_TYPE, e);
+  }
+  function qr(a, b, c, d, e) {
+    return dr(a, b, c, d, dr.Vb, e);
+  }
+  function rr(a, b, c, d) {
     b = new nb(b ? b : new Za());
     d = d ? new bb(d) : ab;
-    c = c ? c = new Kq(c) : null;
+    c = c ? c = new Oq(c) : null;
     a = a.map(Rj);
-    lf(a, b, c, d);
+    kf(a, b, c, d);
   }
   function Y(a, b, c) {
     return {
@@ -36242,7 +36258,7 @@ const fontoxpath = function (xspattern, prsc) {
       isAstAccepted: !0
     };
   }
-  function or(a) {
+  function sr(a) {
     return {
       isAstAccepted: !1,
       reason: a
@@ -36251,16 +36267,16 @@ const fontoxpath = function (xspattern, prsc) {
   function Z(a, b) {
     return a.isAstAccepted ? b(a) : a;
   }
-  function pr(a, b) {
+  function tr(a, b) {
     return a.isAstAccepted ? b(a) : [a, null];
   }
-  function qr(a, b, c) {
+  function ur(a, b, c) {
     return Z(a, d => {
       switch (d.ua.type) {
         case 0:
           return d;
         case 1:
-          return Z(rr(c, d, "nodes"), e => Z(rr(c, b, "contextItem"), f => Y(`(function () {
+          return Z(vr(c, d, "nodes"), e => Z(vr(c, b, "contextItem"), f => Y(`(function () {
 							const { done, value } = ${e.code}(${f.code}).next();
 							return done ? null : value;
 						})()`, {
@@ -36271,26 +36287,26 @@ const fontoxpath = function (xspattern, prsc) {
       }
     });
   }
-  function sr(a, b, c, d) {
-    a = qr(a, c, d);
+  function wr(a, b, c, d) {
+    a = ur(a, c, d);
     return b && 0 === b.type && 3 === b.g ? a : Z(a, e => Y(`!!${e.code}`, {
       type: 0
     }, e.H));
   }
-  function tr(a, b, c) {
-    return b ? a.isAstAccepted && 0 !== a.ua.type ? or("Atomization only implemented for single value") : v(b.type, 1) ? a : v(b.type, 47) ? Z(rr(c, a, "attr"), d => Y(`(${d.code} ? domFacade.getData(${d.code}) : null)`, {
+  function xr(a, b, c) {
+    return b ? a.isAstAccepted && 0 !== a.ua.type ? sr("Atomization only implemented for single value") : v(b.type, 1) ? a : v(b.type, 47) ? Z(vr(c, a, "attr"), d => Y(`(${d.code} ? domFacade.getData(${d.code}) : null)`, {
       type: 0
-    }, d.H)) : or("Atomization only implemented for string and attribute") : or("Can not atomize value if type was not annotated");
+    }, d.H)) : sr("Atomization only implemented for string and attribute") : sr("Can not atomize value if type was not annotated");
   }
-  function ur(a, b, c, d) {
-    a = qr(a, c, d);
-    d = tr(a, b, d);
+  function yr(a, b, c, d) {
+    a = ur(a, c, d);
+    d = xr(a, b, d);
     return wc(b) ? Z(d, e => Y(`${e.code} ?? ''`, {
       type: 0
     }, e.H)) : d;
   }
-  function vr(a, b, c) {
-    return Z(rr(c, a, "node"), d => 1 === d.ua.type ? d : b && !v(b.type, 53) ? or("Can not evaluate to node if expression does not result in nodes") : Y(`(function () {
+  function zr(a, b, c) {
+    return Z(vr(c, a, "node"), d => 1 === d.ua.type ? d : b && !v(b.type, 53) ? sr("Can not evaluate to node if expression does not result in nodes") : Y(`(function () {
 				if (${d.code} !== null && !${d.code}.nodeType) {
 					throw new Error('XPDY0050: The result of the expression was not a node');
 				}
@@ -36299,23 +36315,23 @@ const fontoxpath = function (xspattern, prsc) {
       type: 0
     }, d.H));
   }
-  function wr(a, b, c, d) {
+  function Ar(a, b, c, d) {
     return Z(a, e => {
       switch (e.ua.type) {
         case 1:
-          return Z(rr(d, e, "nodes"), f => Z(rr(d, c, "contextItem"), h => Y(`Array.from(${f.code}(${h.code}))`, {
+          return Z(vr(d, e, "nodes"), f => Z(vr(d, c, "contextItem"), h => Y(`Array.from(${f.code}(${h.code}))`, {
             type: 0
           }, [...f.H, ...h.H])));
         case 0:
-          return Z(rr(d, vr(e, b, d), "node"), f => Y(`(${f.code} === null ? [] : [${f.code}])`, {
+          return Z(vr(d, zr(e, b, d), "node"), f => Y(`(${f.code} === null ? [] : [${f.code}])`, {
             type: 0
           }, f.H));
         default:
-          return or("Unsupported code type to evaluate to nodes");
+          return sr("Unsupported code type to evaluate to nodes");
       }
     });
   }
-  function xr(a, b) {
+  function Br(a, b) {
     return Z(a, c => Z(b, d => {
       if (0 !== c.ua.type || 0 !== d.ua.type) throw Error("can only use emitAnd with value expressions");
       return Y(`${c.code} && ${d.code}`, {
@@ -36323,10 +36339,10 @@ const fontoxpath = function (xspattern, prsc) {
       }, [...c.H, ...d.H]);
     }));
   }
-  function yr(a, b, c, d) {
-    return (a = J(a, [b, "*"])) ? d.h(a, c, d) : [or(`${b} expression not found`), null];
+  function Cr(a, b, c, d) {
+    return (a = J(a, [b, "*"])) ? d.h(a, c, d) : [sr(`${b} expression not found`), null];
   }
-  const $t = {
+  const gu = {
       equalOp: "eqOp",
       notEqualOp: "neOp",
       lessThanOrEqualOp: "leOp",
@@ -36334,7 +36350,7 @@ const fontoxpath = function (xspattern, prsc) {
       greaterThanOrEqualOp: "geOp",
       greaterThanOp: "gtOp"
     },
-    au = {
+    hu = {
       eqOp: "eqOp",
       neOp: "neOp",
       leOp: "geOp",
@@ -36342,23 +36358,23 @@ const fontoxpath = function (xspattern, prsc) {
       geOp: "leOp",
       gtOp: "ltOp"
     };
-  function bu(a, b, c, d) {
+  function iu(a, b, c, d) {
     const e = I(J(a, ["firstOperand", "*"]), "type"),
       f = I(J(a, ["secondOperand", "*"]), "type");
-    if (!e || !f) return or("Can not generate code for value compare without both types");
+    if (!e || !f) return sr("Can not generate code for value compare without both types");
     var h = [47, 1];
-    if (!h.includes(e.type) || !h.includes(f.type)) return or(`Unsupported types in compare: [${Da[e.type]}, ${Da[f.type]}]`);
+    if (!h.includes(e.type) || !h.includes(f.type)) return sr(`Unsupported types in compare: [${Da[e.type]}, ${Da[f.type]}]`);
     h = new Map([["eqOp", "==="], ["neOp", "!=="]]);
-    if (!h.has(b)) return or(b + " not yet implemented");
+    if (!h.has(b)) return sr(b + " not yet implemented");
     const k = h.get(b);
-    [b] = yr(a, "firstOperand", c, d);
-    b = qr(b, c, d);
-    b = tr(b, e, d);
-    return Z(rr(d, b, "first"), l => {
-      var [n] = yr(a, "secondOperand", c, d);
-      n = qr(n, c, d);
-      n = tr(n, f, d);
-      return Z(rr(d, n, "second"), t => {
+    [b] = Cr(a, "firstOperand", c, d);
+    b = ur(b, c, d);
+    b = xr(b, e, d);
+    return Z(vr(d, b, "first"), l => {
+      var [n] = Cr(a, "secondOperand", c, d);
+      n = ur(n, c, d);
+      n = xr(n, f, d);
+      return Z(vr(d, n, "second"), t => {
         const u = [];
         wc(e) && u.push(`${l.code} === null`);
         wc(f) && u.push(`${t.code} === null`);
@@ -36368,24 +36384,24 @@ const fontoxpath = function (xspattern, prsc) {
       });
     });
   }
-  function cu(a, b, c, d, e, f) {
+  function ju(a, b, c, d, e, f) {
     var h = I(J(a, [b, "*"]), "type");
     const k = I(J(a, [c, "*"]), "type");
-    if (!h || !k) return or("Can not generate code for general compare without both types");
+    if (!h || !k) return sr("Can not generate code for general compare without both types");
     var l = [47, 1];
-    if (!l.includes(h.type) || !l.includes(k.type)) return or(`Unsupported types in compare: [${Da[h.type]}, ${Da[k.type]}]`);
+    if (!l.includes(h.type) || !l.includes(k.type)) return sr(`Unsupported types in compare: [${Da[h.type]}, ${Da[k.type]}]`);
     l = new Map([["eqOp", "==="], ["neOp", "!=="]]);
-    if (!l.has(d)) return or(d + " not yet implemented");
+    if (!l.has(d)) return sr(d + " not yet implemented");
     const n = l.get(d);
-    [b] = yr(a, b, e, f);
-    b = qr(b, e, f);
-    h = tr(b, h, f);
-    return Z(rr(f, h, "single"), t => {
-      const [u] = yr(a, c, e, f);
-      return Z(rr(f, u, "multiple"), z => {
-        if (1 !== z.ua.type) return or("can only generate general compare for a single value and a generator");
-        const y = du(f, eu(f, "n")),
-          G = tr(y, k, f);
+    [b] = Cr(a, b, e, f);
+    b = ur(b, e, f);
+    h = xr(b, h, f);
+    return Z(vr(f, h, "single"), t => {
+      const [u] = Cr(a, c, e, f);
+      return Z(vr(f, u, "multiple"), z => {
+        if (1 !== z.ua.type) return sr("can only generate general compare for a single value and a generator");
+        const y = ku(f, lu(f, "n")),
+          G = xr(y, k, f);
         return Z(e, N => Z(G, U => Y(`(function () {
 									for (const ${y.code} of ${z.code}(${N.code})) {
 										${U.H.join("\n")}
@@ -36400,138 +36416,138 @@ const fontoxpath = function (xspattern, prsc) {
       });
     });
   }
-  function fu(a) {
+  function mu(a) {
     return JSON.stringify(a).replace(/\u2028/g, "\\u2028").replace(/\u2029/g, "\\u2029");
   }
-  const lu = {
-      "false#0": gu,
-      "local-name#0": hu,
-      "local-name#1": hu,
-      "name#0": iu,
-      "name#1": iu,
-      "not#1": ju,
-      "true#0": ku
+  const su = {
+      "false#0": nu,
+      "local-name#0": ou,
+      "local-name#1": ou,
+      "name#0": pu,
+      "name#1": pu,
+      "not#1": qu,
+      "true#0": ru
     },
-    mu = {
+    tu = {
       ["http://fontoxml.com/fontoxpath"]: ["version#0"],
       [""]: ["root#1", "path#1"]
     };
-  function nu(a, b, c, d) {
+  function uu(a, b, c, d) {
     const [e] = d.h(a, c, d);
     a = I(a, "type");
-    if (b ? 2 === b.g || 1 === b.g : 1) return or("Not supported: sequence arguments with multiple items");
-    if (v(b.type, 53)) return b = qr(e, c, d), vr(b, a, d);
+    if (b ? 2 === b.g || 1 === b.g : 1) return sr("Not supported: sequence arguments with multiple items");
+    if (v(b.type, 53)) return b = ur(e, c, d), zr(b, a, d);
     switch (b.type) {
       case 59:
-        return qr(e, c, d);
+        return ur(e, c, d);
       case 0:
-        return sr(e, a, c, d);
+        return wr(e, a, c, d);
       case 1:
-        return ur(e, a, c, d);
+        return yr(e, a, c, d);
     }
-    return or(`Argument types not supported: ${a ? Da[a.type] : "unknown"} -> ${Da[b.type]}`);
+    return sr(`Argument types not supported: ${a ? Da[a.type] : "unknown"} -> ${Da[b.type]}`);
   }
-  function ou(a, b, c, d) {
-    if (a.length !== b.length || b.some(l => 4 === l)) return or("Not supported: variadic function or mismatch in argument count");
+  function vu(a, b, c, d) {
+    if (a.length !== b.length || b.some(l => 4 === l)) return sr("Not supported: variadic function or mismatch in argument count");
     if (0 === a.length) return Y("", {
       type: 0
     }, []);
     const [e, ...f] = a,
       [h, ...k] = b;
-    a = rr(d, nu(e, h, c, d), "arg");
+    a = vr(d, uu(e, h, c, d), "arg");
     return 0 === f.length ? a : Z(a, l => {
-      const n = ou(f, k, c, d);
+      const n = vu(f, k, c, d);
       return Z(n, t => Y(`${l.code}, ${t.code}`, {
         type: 0
       }, [...l.H, ...t.H]));
     });
   }
-  function pu(a, b) {
-    return Z(a, c => (b ? 2 === b.g || 1 === b.g : 1) || ![0, 1].includes(b.type) && !v(b.type, 53) ? or(`Function return type ${Da[b.type]} not supported`) : c);
+  function wu(a, b) {
+    return Z(a, c => (b ? 2 === b.g || 1 === b.g : 1) || ![0, 1].includes(b.type) && !v(b.type, 53) ? sr(`Function return type ${Da[b.type]} not supported`) : c);
   }
-  function qu(a, b, c) {
+  function xu(a, b, c) {
     const {
         localName: d,
         namespaceURI: e
-      } = Kg(F(a, "functionName")),
+      } = Jg(F(a, "functionName")),
       f = K(F(a, "arguments"), "*");
     var h = f.length;
     const k = `${d}#${h}`,
       l = e === c.D;
     if (l) {
-      const n = lu[k];
+      const n = su[k];
       if (void 0 !== n) return n(a, b, c);
     }
-    if ((a = mu[l ? "" : e]) && !a.includes(k)) return or(`Not supported: built-in function not on allow list: ${k}`);
-    h = ng(e, d, h);
-    if (!h) return or(`Unknown function / arity: ${k}`);
-    if (h.I) return or("Not supported: updating functions");
-    b = ou(f, h.j, b, c);
-    b = Z(b, n => Y(`runtimeLib.callFunction(domFacade, ${fu(e)}, ${fu(d)}, [${n.code}], options)`, {
+    if ((a = tu[l ? "" : e]) && !a.includes(k)) return sr(`Not supported: built-in function not on allow list: ${k}`);
+    h = mg(e, d, h);
+    if (!h) return sr(`Unknown function / arity: ${k}`);
+    if (h.I) return sr("Not supported: updating functions");
+    b = vu(f, h.j, b, c);
+    b = Z(b, n => Y(`runtimeLib.callFunction(domFacade, ${mu(e)}, ${mu(d)}, [${n.code}], options)`, {
       type: 0
     }, n.H));
-    return pu(b, h.i);
+    return wu(b, h.i);
   }
-  function ru(a, b) {
-    return Z(rr(b, a, "contextItem"), c => Y(c.code, {
+  function yu(a, b) {
+    return Z(vr(b, a, "contextItem"), c => Y(c.code, {
       type: 0
     }, [...c.H, `if (${c.code} === undefined || ${c.code} === null) {
 					throw errXPDY0002('The function which was called depends on dynamic context, which is absent.');
 				}`]));
   }
-  function su(a, b, c, d) {
+  function zu(a, b, c, d) {
     if ((a = J(a, ["arguments", "*"])) && "contextItemExpr" !== a[0]) {
       const e = I(a, "type");
-      if (!e || !v(e.type, 53)) return or("name function only implemented if arg is a node");
+      if (!e || !v(e.type, 53)) return sr("name function only implemented if arg is a node");
       [a] = c.h(a, b, c);
-    } else a = ru(b, c);
-    b = qr(a, b, c);
-    return Z(rr(c, b, "arg"), e => Y(`(${e.code} ? ${d(e.code)} : '')`, {
+    } else a = yu(b, c);
+    b = ur(a, b, c);
+    return Z(vr(c, b, "arg"), e => Y(`(${e.code} ? ${d(e.code)} : '')`, {
       type: 0
     }, e.H));
   }
-  function iu(a, b, c) {
-    return su(a, b, c, d => `(((${d}.prefix || '').length !== 0 ? ${d}.prefix + ':' : '')
+  function pu(a, b, c) {
+    return zu(a, b, c, d => `(((${d}.prefix || '').length !== 0 ? ${d}.prefix + ':' : '')
 		+ (${d}.localName || ${d}.target || ''))`);
   }
-  function hu(a, b, c) {
-    return su(a, b, c, d => `(${d}.localName || ${d}.target || '')`);
+  function ou(a, b, c) {
+    return zu(a, b, c, d => `(${d}.localName || ${d}.target || '')`);
   }
-  function ju(a, b, c) {
+  function qu(a, b, c) {
     var d = J(a, ["arguments", "*"]);
     a = I(d, "type");
     [d] = c.h(d, b, c);
-    b = sr(d, a, b, c);
+    b = wr(d, a, b, c);
     return Z(b, e => Y(`!${e.code}`, {
       type: 0
     }, e.H));
   }
-  function gu() {
+  function nu() {
     return Y("false", {
       type: 0
     }, []);
   }
-  function ku() {
+  function ru() {
     return Y("true", {
       type: 0
     }, []);
   }
-  function tu(a, b, c, d) {
-    const [e, f] = yr(a, "firstOperand", c, d);
+  function Au(a, b, c, d) {
+    const [e, f] = Cr(a, "firstOperand", c, d);
     var h = I(J(a, ["firstOperand", "*"]), "type");
-    h = sr(e, h, c, d);
-    const [k, l] = yr(a, "secondOperand", c, d);
+    h = wr(e, h, c, d);
+    const [k, l] = Cr(a, "secondOperand", c, d);
     h = Z(h, t => {
       var u = I(J(a, ["secondOperand", "*"]), "type");
-      u = sr(k, u, c, d);
+      u = wr(k, u, c, d);
       return Z(u, z => Y(`(${t.code} ${b} ${z.code})`, {
         type: 0
       }, [...t.H, ...z.H]));
     });
-    const n = "&&" === b ? yh(f, l) : f === l ? f : null;
+    const n = "&&" === b ? xh(f, l) : f === l ? f : null;
     return [h, n];
   }
-  function uu(a, b, c) {
+  function Bu(a, b, c) {
     return Z(a, d => Z(b, e => Z(c, f => Y(`for (${d.code}) {
 						${e.H.join("\n")}
 						if (!(${e.code})) {
@@ -36543,34 +36559,34 @@ const fontoxpath = function (xspattern, prsc) {
       type: 2
     }, d.H))));
   }
-  function vu(a, b, c, d, e) {
+  function Cu(a, b, c, d, e) {
     const f = b ? `, "${b}"` : "";
     b = Z(d, h => Z(e, k => Y(`let ${h.code} = domFacade.getFirstChild(${k.code}${f});
 							${h.code};
 							${h.code} = domFacade.getNextSibling(${h.code}${f})`, {
       type: 2
     }, [...h.H, ...k.H])));
-    return uu(b, a, c);
+    return Bu(b, a, c);
   }
-  function wu(a, b, c, d, e) {
-    const f = yh(b, "type-2"),
+  function Du(a, b, c, d, e) {
+    const f = xh(b, "type-2"),
       h = Z(e, k => Y(`(${k.code} && ${k.code}.nodeType === /*ELEMENT_NODE*/ ${1} ? domFacade.getAllAttributes(${k.code}${f ? `, "${f}"` : ""}) : [])`, {
         type: 0
       }, k.H));
     b = Z(d, k => Z(h, l => Y(`const ${k.code} of ${l.code}`, {
       type: 2
     }, [...k.H, ...l.H])));
-    return uu(b, a, c);
+    return Bu(b, a, c);
   }
-  function xu(a, b, c, d, e) {
+  function Eu(a, b, c, d, e) {
     const f = b ? `, "${b}"` : "";
     b = Z(e, h => Y(`domFacade.getParentNode(${h.code}${f})`, {
       type: 0
     }, h.H));
-    return yu(d, b, a, c);
+    return Fu(d, b, a, c);
   }
-  function yu(a, b, c, d) {
-    const e = xr(a, c);
+  function Fu(a, b, c, d) {
+    const e = Br(a, c);
     return Z(a, f => Z(b, h => Z(e, k => Z(d, l => Y(`const ${f.code} = ${h.code};
 						${k.H.join("\n")}
 						if (${k.code}) {
@@ -36580,48 +36596,48 @@ const fontoxpath = function (xspattern, prsc) {
       type: 2
     }, [...f.H, ...h.H])))));
   }
-  function zu(a, b, c, d, e, f) {
+  function Gu(a, b, c, d, e, f) {
     a = H(a);
     switch (a) {
       case "attribute":
-        return [wu(b, c, d, e, f), "type-1"];
+        return [Du(b, c, d, e, f), "type-1"];
       case "child":
-        return [vu(b, c, d, e, f), null];
+        return [Cu(b, c, d, e, f), null];
       case "parent":
-        return [xu(b, c, d, e, f), null];
+        return [Eu(b, c, d, e, f), null];
       case "self":
-        return [yu(e, f, b, d), c];
+        return [Fu(e, f, b, d), c];
       default:
-        return [or(`Unsupported: the ${a} axis`), null];
+        return [sr(`Unsupported: the ${a} axis`), null];
     }
   }
-  const Au = {
+  const Hu = {
     Wb: "textTest",
     Nb: "elementTest",
     Sb: "nameTest",
     Xb: "Wildcard",
     Kb: "anyKindTest"
   };
-  var Bu = Object.values(Au);
-  function Cu(a) {
+  var Iu = Object.values(Hu);
+  function Ju(a) {
     return [Z(a, b => Y(`(${b.code}.nodeType === /*TEXT_NODE*/ ${3} ||
 				${b.code}.nodeType === /* CDATA_SECTION_NODE */ ${4})`, {
       type: 0
     }, [])), "type-3"];
   }
-  function Du(a, b) {
+  function Ku(a, b) {
     if (null === a.namespaceURI && "*" !== a.prefix) {
       b = b.$(a.prefix || "") || null;
       if (!b && a.prefix) throw Error(`XPST0081: The prefix ${a.prefix} could not be resolved.`);
       a.namespaceURI = b;
     }
   }
-  function Eu(a, b, c, d) {
-    Du(a, d);
+  function Lu(a, b, c, d) {
+    Ku(a, d);
     const e = a.prefix,
       f = a.namespaceURI,
       h = a.localName;
-    return pr(c, k => {
+    return tr(c, k => {
       var l = b ? Y(`${k.code}.nodeType
 						&& (${k.code}.nodeType === /*ELEMENT_NODE*/ ${1}
 						|| ${k.code}.nodeType === /*ATTRIBUTE_NODE*/ ${2})`, {
@@ -36630,13 +36646,13 @@ const fontoxpath = function (xspattern, prsc) {
 						&& ${k.code}.nodeType === /*ELEMENT_NODE*/ ${1}`, {
         type: 0
       }, []);
-      if ("*" === e) return "*" === h ? [l, b ? "type-1-or-type-2" : "type-1"] : [xr(l, Y(`${k.code}.localName === ${fu(h)}`, {
+      if ("*" === e) return "*" === h ? [l, b ? "type-1-or-type-2" : "type-1"] : [Br(l, Y(`${k.code}.localName === ${mu(h)}`, {
         type: 0
       }, [])), `name-${h}`];
-      l = "*" === h ? l : xr(l, Y(`${k.code}.localName === ${fu(h)}`, {
+      l = "*" === h ? l : Br(l, Y(`${k.code}.localName === ${mu(h)}`, {
         type: 0
       }, []));
-      var n = Y(fu(f), {
+      var n = Y(mu(f), {
         type: 0
       }, []);
       n = "" === e && b ? Z(n, t => Y(`${k.code}.nodeType === /*ELEMENT_NODE*/ ${1} ? ${t.code} : null`, {
@@ -36645,67 +36661,67 @@ const fontoxpath = function (xspattern, prsc) {
       n = Z(n, t => Y(`(${k.code}.namespaceURI || null) === ((${t.code}) || null)`, {
         type: 0
       }, t.H));
-      return [xr(l, n), `name-${h}`];
+      return [Br(l, n), `name-${h}`];
     });
   }
-  function Fu(a, b, c) {
+  function Mu(a, b, c) {
     const d = (a = F(a, "elementName")) && F(a, "star");
     if (null === a || d) return [Z(b, e => Y(`${e.code}.nodeType === /*ELEMENT_NODE*/ ${1}`, {
       type: 0
     }, [])), "type-1"];
-    a = Kg(F(a, "QName"));
-    return Eu(a, !1, b, c);
+    a = Jg(F(a, "QName"));
+    return Lu(a, !1, b, c);
   }
-  function Gu(a) {
+  function Nu(a) {
     return [Z(a, b => Y(`!!${b.code}.nodeType`, {
       type: 0
     }, [])), null];
   }
-  function Hu(a, b, c, d) {
+  function Ou(a, b, c, d) {
     var e = a[0];
     switch (e) {
-      case Au.Nb:
-        return Fu(a, c, d);
-      case Au.Wb:
-        return Cu(c);
-      case Au.Sb:
-        return Eu(Kg(a), b, c, d);
-      case Au.Xb:
-        return F(a, "star") ? (e = F(a, "uri"), null !== e ? a = Eu({
+      case Hu.Nb:
+        return Mu(a, c, d);
+      case Hu.Wb:
+        return Ju(c);
+      case Hu.Sb:
+        return Lu(Jg(a), b, c, d);
+      case Hu.Xb:
+        return F(a, "star") ? (e = F(a, "uri"), null !== e ? a = Lu({
           localName: "*",
           namespaceURI: H(e),
           prefix: ""
-        }, b, c, d) : (e = F(a, "NCName"), a = "star" === F(a, "*")[0] ? Eu({
+        }, b, c, d) : (e = F(a, "NCName"), a = "star" === F(a, "*")[0] ? Lu({
           localName: H(e),
           namespaceURI: null,
           prefix: "*"
-        }, b, c, d) : Eu({
+        }, b, c, d) : Lu({
           localName: "*",
           namespaceURI: null,
           prefix: H(e)
-        }, b, c, d))) : a = Eu({
+        }, b, c, d))) : a = Lu({
           localName: "*",
           namespaceURI: null,
           prefix: "*"
         }, b, c, d), a;
-      case Au.Kb:
-        return Gu(c);
+      case Hu.Kb:
+        return Nu(c);
       default:
-        return [or(`Test not implemented: '${e}`), null];
+        return [sr(`Test not implemented: '${e}`), null];
     }
   }
-  function Iu(a, b, c) {
+  function Pu(a, b, c) {
     const [d, e] = c.h(a, b, c);
-    return [sr(d, I(a, "type"), b, c), e];
+    return [wr(d, I(a, "type"), b, c), e];
   }
-  function Ju(a, b, c) {
+  function Qu(a, b, c) {
     a = a ? K(a, "*") : [];
     const [d, e] = a.reduce(([f, h], k) => {
-      if (!f) return Iu(k, b, c);
+      if (!f) return Pu(k, b, c);
       let l = h;
-      return pr(f, n => {
-        const [t, u] = Iu(k, b, c);
-        l = yh(h, u);
+      return tr(f, n => {
+        const [t, u] = Pu(k, b, c);
+        l = xh(h, u);
         return [Z(t, z => Y(`${n.code} && ${z.code}`, {
           type: 0
         }, [...n.H, ...z.H])), l];
@@ -36718,28 +36734,28 @@ const fontoxpath = function (xspattern, prsc) {
       type: 0
     }, [])) : null, e];
   }
-  function Ku(a, b, c, d) {
+  function Ru(a, b, c, d) {
     if (0 === a.length) return [Z(c, y => Y(`yield ${y.code};`, {
       type: 2
     }, y.H)), null];
     const [e, ...f] = a;
-    if (0 < K(e, "lookup").length) return [or("Unsupported: lookups"), null];
-    const h = du(d, eu(d, "contextItem"));
+    if (0 < K(e, "lookup").length) return [sr("Unsupported: lookups"), null];
+    const h = ku(d, lu(d, "contextItem"));
     a = F(e, "predicates");
-    const [k, l] = Ju(a, h, d);
+    const [k, l] = Qu(a, h, d);
     if (a = F(e, "xpathAxis")) {
-      var n = F(e, Bu);
-      if (!n) return [or("Unsupported test in step"), null];
+      var n = F(e, Iu);
+      if (!n) return [sr("Unsupported test in step"), null];
       var t = H(a);
       b = "attribute" === t || "self" === t && b;
-      const [y, G] = Hu(n, b, h, d);
-      n = null === k ? y : xr(y, k);
-      t = yh(G, l);
-      [b] = Ku(f, b, h, d);
-      return zu(a, n, t, b, h, c);
+      const [y, G] = Ou(n, b, h, d);
+      n = null === k ? y : Br(y, k);
+      t = xh(G, l);
+      [b] = Ru(f, b, h, d);
+      return Gu(a, n, t, b, h, c);
     }
     a = J(e, ["filterExpr", "*"]);
-    if (!a) return [or("Unsupported: unknown step type"), null];
+    if (!a) return [sr("Unsupported: unknown step type"), null];
     const [u, z] = d.h(a, c, d);
     return [Z(u, y => {
       const G = 0 === f.length ? Y("", {
@@ -36749,7 +36765,7 @@ const fontoxpath = function (xspattern, prsc) {
 								}`, {
           type: 2
         }, []),
-        [N] = Ku(f, !0, h, d),
+        [N] = Ru(f, !0, h, d),
         U = null === k ? N : Z(k, ca => Z(N, Ga => Y(`if (${ca.code}) {
 									${Ga.H.join("\n")}
 									${Ga.code}
@@ -36775,12 +36791,12 @@ const fontoxpath = function (xspattern, prsc) {
               type: 2
             }, [...h.H, ...y.H, ...G.H]);
           default:
-            return or("Unsupported generated code type for filterExpr");
+            return sr("Unsupported generated code type for filterExpr");
         }
       });
     }), z];
   }
-  function Lu(a) {
+  function Su(a) {
     return Z(a, b => Y(`(function () {
 				let n = ${b.code};
 				while (n.nodeType !== /*DOCUMENT_NODE*/${9}) {
@@ -36794,30 +36810,30 @@ const fontoxpath = function (xspattern, prsc) {
       type: 0
     }, b.H));
   }
-  function Mu(a, b, c) {
-    return pr(b, d => {
-      if (0 < K(a, "lookup").length) return [or("Unsupported: lookups"), null];
+  function Tu(a, b, c) {
+    return tr(b, d => {
+      if (0 < K(a, "lookup").length) return [sr("Unsupported: lookups"), null];
       var e = F(a, "predicates");
-      const [f, h] = Ju(e, d, c);
-      e = F(a, Bu);
-      if (!e) return [or("Unsupported test in step"), null];
-      const [k, l] = Hu(e, !0, d, c);
-      e = null === f ? k : xr(k, f);
-      const n = yh(l, h);
+      const [f, h] = Qu(e, d, c);
+      e = F(a, Iu);
+      if (!e) return [sr("Unsupported test in step"), null];
+      const [k, l] = Ou(e, !0, d, c);
+      e = null === f ? k : Br(k, f);
+      const n = xh(l, h);
       return [Z(e, t => Y(`((${t.code}) ? ${d.code} : null)`, {
         type: 0
       }, [...d.H, ...t.H])), n];
     });
   }
-  function Nu(a, b, c) {
+  function Uu(a, b, c) {
     const d = K(a, "stepExpr");
     if (1 === d.length) {
       const k = F(d[0], "xpathAxis");
-      if (k && "self" === H(k)) return Mu(d[0], b, c);
+      if (k && "self" === H(k)) return Tu(d[0], b, c);
     }
-    const e = du(c, eu(c, "contextItem"));
-    b = (a = F(a, "rootExpr")) ? rr(c, Lu(e), "root") : e;
-    const [f, h] = Ku(d, !a, b, c);
+    const e = ku(c, lu(c, "contextItem"));
+    b = (a = F(a, "rootExpr")) ? vr(c, Su(e), "root") : e;
+    const [f, h] = Ru(d, !a, b, c);
     return [Z(f, k => Y(`(function* (${e.code}) {
 			${k.H.join("\n")}
 			${k.code}
@@ -36825,19 +36841,19 @@ const fontoxpath = function (xspattern, prsc) {
       type: 1
     }, [])), h];
   }
-  function Ou(a, b, c) {
+  function Vu(a, b, c) {
     const d = a[0];
     switch (d) {
       case "contextItemExpr":
         return [b, null];
       case "pathExpr":
-        return Nu(a, b, c);
+        return Uu(a, b, c);
       case "andOp":
-        return tu(a, "&&", b, c);
+        return Au(a, "&&", b, c);
       case "orOp":
-        return tu(a, "||", b, c);
+        return Au(a, "||", b, c);
       case "stringConstantExpr":
-        return a = F(a, "value")[1] || "", a = fu(a), [Y(a, {
+        return a = F(a, "value")[1] || "", a = mu(a), [Y(a, {
           type: 0
         }, []), null];
       case "equalOp":
@@ -36863,7 +36879,7 @@ const fontoxpath = function (xspattern, prsc) {
           case "gtOp":
           case "geOp":
           case "isOp":
-            a = bu(a, d, b, c);
+            a = iu(a, d, b, c);
             break a;
           case "equalOp":
           case "notEqualOp":
@@ -36873,53 +36889,53 @@ const fontoxpath = function (xspattern, prsc) {
           case "greaterThanOp":
             const e = I(J(a, ["firstOperand", "*"]), "type"),
               f = I(J(a, ["secondOperand", "*"]), "type");
-            a = e && f ? 3 === e.g && 3 === f.g ? bu(a, $t[d], b, c) : 3 === e.g ? cu(a, "firstOperand", "secondOperand", $t[d], b, c) : 3 === f.g ? cu(a, "secondOperand", "firstOperand", au[$t[d]], b, c) : or("General comparison for sequences is not implemented") : or("types of compare are not known");
+            a = e && f ? 3 === e.g && 3 === f.g ? iu(a, gu[d], b, c) : 3 === e.g ? ju(a, "firstOperand", "secondOperand", gu[d], b, c) : 3 === f.g ? ju(a, "secondOperand", "firstOperand", hu[gu[d]], b, c) : sr("General comparison for sequences is not implemented") : sr("types of compare are not known");
             break a;
           default:
-            a = or(`Unsupported compare type: ${d}`);
+            a = sr(`Unsupported compare type: ${d}`);
         }
         return [a, null];
       case "functionCallExpr":
-        return [qu(a, b, c), null];
+        return [xu(a, b, c), null];
       default:
-        return [or(`Unsupported: the base expression '${d}'.`), null];
+        return [sr(`Unsupported: the base expression '${d}'.`), null];
     }
   }
-  function rr(a, b, c) {
+  function vr(a, b, c) {
     return Z(b, d => {
       var e = a.o.get(d);
-      e || (e = eu(a, c), e = Y(e, d.ua, [...d.H, `const ${e} = ${d.code};`]), a.o.set(d, e), a.o.set(e, e));
+      e || (e = lu(a, c), e = Y(e, d.ua, [...d.H, `const ${e} = ${d.code};`]), a.o.set(d, e), a.o.set(e, e));
       return e;
     });
   }
-  function eu(a, b = "v") {
+  function lu(a, b = "v") {
     const c = a.v.get(b) || 0;
     a.v.set(b, c + 1);
     return `${b}${c}`;
   }
-  function du(a, b) {
+  function ku(a, b) {
     b = Y(b, {
       type: 0
     }, []);
     a.o.set(b, b);
     return b;
   }
-  var Pu = class {
+  var Wu = class {
     constructor(a, b) {
       this.o = new Map();
       this.v = new Map();
       this.$ = a;
       this.D = b;
-      this.h = Ou;
+      this.h = Vu;
     }
   };
-  function Qu(a) {
+  function Xu(a) {
     const b = K(a, "*");
     if ("pathExpr" === a[0]) return !0;
-    for (const c of b) if (Qu(c)) return !0;
+    for (const c of b) if (Xu(c)) return !0;
     return !1;
   }
-  function Ru(a, b, c) {
+  function Yu(a, b, c) {
     c = c || {};
     b = b || 0;
     if ("string" === typeof a) {
@@ -36929,91 +36945,91 @@ const fontoxpath = function (xspattern, prsc) {
         debug: !1
       };
       try {
-        var e = qq(a, d);
+        var e = uq(a, d);
       } catch (h) {
-        hg(a, h);
+        gg(a, h);
       }
     } else e = Kk(a);
     a = F(e, "mainModule");
-    if (!a) return or("Unsupported: XQuery Library modules are not supported.");
-    if (F(a, "prolog")) return or("Unsupported: XQuery Prologs are not supported.");
+    if (!a) return sr("Unsupported: XQuery Library modules are not supported.");
+    if (F(a, "prolog")) return sr("Unsupported: XQuery Prologs are not supported.");
     d = void 0 === c.defaultFunctionNamespaceURI ? "http://www.w3.org/2005/xpath-functions" : c.defaultFunctionNamespaceURI;
-    a = new Pu(c.namespaceResolver || Nq(null), d);
-    c = new rh(new Cg(new qg(a.$, {}, d, c.functionNameResolver || Oq("http://www.w3.org/2005/xpath-functions"))));
+    a = new Wu(c.namespaceResolver || Rq(null), d);
+    c = new qh(new Bg(new pg(a.$, {}, d, c.functionNameResolver || Sq("http://www.w3.org/2005/xpath-functions"))));
     O(e, c);
     if (c = F(e, "mainModule")) {
-      if (F(c, "prolog")) a = or("Unsupported: XQuery.");else {
+      if (F(c, "prolog")) a = sr("Unsupported: XQuery.");else {
         var f = J(c, ["queryBody", "*"]);
-        c = du(a, "contextItem");
+        c = ku(a, "contextItem");
         [d] = a.h(f, c, a);
         b: switch (f = I(f, "type"), b) {
           case 9:
-            b = qr(d, c, a);
-            a = vr(b, f, a);
+            b = ur(d, c, a);
+            a = zr(b, f, a);
             break b;
           case 7:
-            a = wr(d, f, c, a);
+            a = Ar(d, f, c, a);
             break b;
           case 3:
-            a = sr(d, f, c, a);
+            a = wr(d, f, c, a);
             break b;
           case 2:
-            a = ur(d, f, c, a);
+            a = yr(d, f, c, a);
             break b;
           default:
-            a = or(`Unsupported: the return type '${b}'.`);
+            a = sr(`Unsupported: the return type '${b}'.`);
         }
         a.isAstAccepted && (a = `
 		${a.H.join("\n")}
-		return ${a.code};`, b = "\n\treturn (contextItem, domFacade, runtimeLib, options) => {\n\t\tconst {\n\t\t\terrXPDY0002,\n\t\t} = runtimeLib;", Qu(e) && (b += '\n\t\tif (!contextItem) {\n\t\t\tthrow errXPDY0002("Context is needed to evaluate the given path expression.");\n\t\t}\n\n\t\tif (!contextItem.nodeType) {\n\t\t\tthrow new Error("Context item must be subtype of node().");\n\t\t}\n\t\t'), a = {
+		return ${a.code};`, b = "\n\treturn (contextItem, domFacade, runtimeLib, options) => {\n\t\tconst {\n\t\t\terrXPDY0002,\n\t\t} = runtimeLib;", Xu(e) && (b += '\n\t\tif (!contextItem) {\n\t\t\tthrow errXPDY0002("Context is needed to evaluate the given path expression.");\n\t\t}\n\n\t\tif (!contextItem.nodeType) {\n\t\t\tthrow new Error("Context item must be subtype of node().");\n\t\t}\n\t\t'), a = {
           code: b + (a + "}\n//# sourceURL=generated.js"),
           isAstAccepted: !0
         });
       }
-    } else a = or("Unsupported: Can not execute a library module.");
+    } else a = sr("Unsupported: Can not execute a library module.");
     return a;
   }
-  class Su extends Error {
+  class Zu extends Error {
     constructor(a, b, c) {
       var d = a.stack;
       d && (d.includes(a.message) && (d = d.substr(d.indexOf(a.message) + a.message.length).trim()), d = d.split("\n"), d.splice(10), d = d.map(e => e.startsWith("    ") || e.startsWith("\t") ? e : `    ${e}`), d = d.join("\n"));
       super(`Custom XPath function Q{${c}}${b} raised:\n${a.message}\n${d}`);
     }
   }
-  function Tu(a, b, c) {
-    return 0 === b.g ? a.F() ? null : Rq(a.first(), c).next(0).value : 2 === b.g || 1 === b.g ? a.O().map(d => {
+  function $u(a, b, c) {
+    return 0 === b.g ? a.F() ? null : Vq(a.first(), c).next(0).value : 2 === b.g || 1 === b.g ? a.O().map(d => {
       if (v(d.type, 47)) throw Error("Cannot pass attribute nodes to custom functions");
-      return Rq(d, c).next(0).value;
-    }) : Rq(a.first(), c).next(0).value;
+      return Vq(d, c).next(0).value;
+    }) : Vq(a.first(), c).next(0).value;
   }
-  function Uu(a) {
+  function av(a) {
     if ("object" === typeof a) return a;
     a = a.split(":");
     if (2 !== a.length) throw Error("Do not register custom functions in the default function namespace");
     const [b, c] = a;
-    a = pg[b];
+    a = og[b];
     if (!a) {
       a = `generated_namespace_uri_${b}`;
-      if (pg[b]) throw Error("Prefix already registered: Do not register the same prefix twice.");
-      pg[b] = a;
+      if (og[b]) throw Error("Prefix already registered: Do not register the same prefix twice.");
+      og[b] = a;
     }
     return {
       localName: c,
       namespaceURI: a
     };
   }
-  function Vu(a, b, c, d) {
+  function bv(a, b, c, d) {
     const {
       namespaceURI: e,
       localName: f
-    } = Uu(a);
-    if (!e) throw vg();
+    } = av(a);
+    if (!e) throw ug();
     const h = b.map(l => Ja(l)),
       k = Ja(c);
-    og(e, f, h, k, function (l, n, t) {
+    ng(e, f, h, k, function (l, n, t) {
       var u = Array.from(arguments);
       u.splice(0, 3);
-      u = u.map((G, N) => Tu(G, h[N], n));
+      u = u.map((G, N) => $u(G, h[N], n));
       const z = {
         currentContext: n.o,
         domFacade: n.h.h
@@ -37022,14 +37038,14 @@ const fontoxpath = function (xspattern, prsc) {
       try {
         y = d.apply(void 0, [z, ...u]);
       } catch (G) {
-        throw new Su(G, f, e);
+        throw new Zu(G, f, e);
       }
-      return y && "object" === typeof y && Object.getOwnPropertySymbols(y).includes(Lq) ? w.create(y.zb) : Wb(n.h, y, k);
+      return y && "object" === typeof y && Object.getOwnPropertySymbols(y).includes(Pq) ? w.create(y.zb) : Wb(n.h, y, k);
     });
   }
-  var Wu = {
+  var cv = {
     callFunction(a, b, c, d, e) {
-      const f = ng(b, c, d.length);
+      const f = mg(b, c, d.length);
       if (!f) throw Error("function not found for codegen function call");
       b = new cc({
         M: null,
@@ -37040,23 +37056,23 @@ const fontoxpath = function (xspattern, prsc) {
       const h = new nb(a);
       a = new ic(!1, !1, h, null, null, e ? e.currentContext : null, null);
       d = f.callFunction(b, a, null, ...d.map((k, l) => Wb(h, k, f.j[l])));
-      return Tu(d, {
+      return $u(d, {
         type: 59,
         g: 0
       }, a);
     },
     errXPDY0002: lc
   };
-  var Xu = (a, b, c, d) => {
+  var dv = (a, b, c, d) => {
     c = c ? c : new Za();
-    return a()(null !== b && void 0 !== b ? b : null, c, Wu, d);
+    return a()(null !== b && void 0 !== b ? b : null, c, cv, d);
   };
-  const Yu = {
+  const ev = {
     ["http://www.w3.org/2005/XQueryX"]: "xqx",
     ["http://www.w3.org/2007/xquery-update-10"]: "xquf",
     ["http://fontoxml.com/fontoxpath"]: "x"
   };
-  function Zu(a, b) {
+  function fv(a, b) {
     switch (a) {
       case "copySource":
       case "insertAfter":
@@ -37098,64 +37114,64 @@ const fontoxpath = function (xspattern, prsc) {
         };
     }
   }
-  function $u(a, b, c, d, e) {
+  function gv(a, b, c, d, e) {
     if ("string" === typeof c) return 0 === c.length ? null : b.createTextNode(c);
     if (!Array.isArray(c)) throw new TypeError("JsonML element should be an array or string");
-    var f = Zu(c[0], d);
+    var f = fv(c[0], d);
     d = f.localName;
     f = f.lb;
-    const h = b.createElementNS(f, Yu[f] + ":" + d),
+    const h = b.createElementNS(f, ev[f] + ":" + d),
       k = c[1];
     var l = 1;
     if ("object" === typeof k && !Array.isArray(k)) {
-      if (null !== k) for (var n of Object.keys(k)) l = k[n], null !== l && ("type" === n ? void 0 !== l && a.setAttributeNS(h, f, "fontoxpath:" + n, Ha(l)) : ("start" !== n && "end" !== n && "comment" !== n || "stackTrace" !== d || (l = JSON.stringify(l)), e && "prefix" === n && "" === l || a.setAttributeNS(h, f, Yu[f] + ":" + n, l)));
+      if (null !== k) for (var n of Object.keys(k)) l = k[n], null !== l && ("type" === n ? void 0 !== l && a.setAttributeNS(h, f, "fontoxpath:" + n, Ha(l)) : ("start" !== n && "end" !== n && "comment" !== n || "stackTrace" !== d || (l = JSON.stringify(l)), e && "prefix" === n && "" === l || a.setAttributeNS(h, f, ev[f] + ":" + n, l)));
       l = 2;
     }
-    for (let t = l, u = c.length; t < u; ++t) n = $u(a, b, c[t], f, e), null !== n && a.insertBefore(h, n, null);
+    for (let t = l, u = c.length; t < u; ++t) n = gv(a, b, c[t], f, e), null !== n && a.insertBefore(h, n, null);
     return h;
   }
-  function av(a, b, c, d = ab) {
+  function hv(a, b, c, d = ab) {
     a = Pk(a);
     let e;
     try {
-      e = qq(a, {
+      e = uq(a, {
         Z: "XQuery3.1" === b.language || "XQueryUpdate3.1" === b.language,
         debug: b.debug
       });
     } catch (l) {
-      hg(a, l);
+      gg(a, l);
     }
-    var f = new qg(b.namespaceResolver || (() => null), {}, void 0 === b.defaultFunctionNamespaceURI ? "http://www.w3.org/2005/xpath-functions" : b.defaultFunctionNamespaceURI, b.functionNameResolver || (() => null));
-    f = new Cg(f);
+    var f = new pg(b.namespaceResolver || (() => null), {}, void 0 === b.defaultFunctionNamespaceURI ? "http://www.w3.org/2005/xpath-functions" : b.defaultFunctionNamespaceURI, b.functionNameResolver || (() => null));
+    f = new Bg(f);
     var h = F(e, ["mainModule", "libraryModule"]),
       k = F(h, "moduleDecl");
     if (k) {
       const l = H(F(k, "prefix"));
       k = H(F(k, "uri"));
-      Gg(f, l, k);
+      Fg(f, l, k);
     }
-    (h = F(h, "prolog")) && tq(h, f, !1, a);
-    !1 !== b.annotateAst && jh(e, new rh(f));
+    (h = F(h, "prolog")) && xq(h, f, !1, a);
+    !1 !== b.annotateAst && ih(e, new qh(f));
     f = new Za();
-    b = $u(d, c, e, null, !1 === b.mc);
+    b = gv(d, c, e, null, !1 === b.mc);
     d.insertBefore(b, c.createComment(a), f.getFirstChild(b));
     return b;
   }
-  function bv(a) {
+  function iv(a) {
     return Promise.resolve(a);
   }
-  function cv(a, b = {
+  function jv(a, b = {
     debug: !1
   }) {
     try {
-      var c = qq(a, {
+      var c = uq(a, {
         Z: !0,
         debug: b.debug
       });
     } catch (f) {
-      hg(a, f);
+      gg(a, f);
     }
-    jh(c, new rh());
+    ih(c, new qh());
     b = F(c, "libraryModule");
     if (!b) throw Error("XQuery module must be declared in a library module.");
     c = F(b, "moduleDecl");
@@ -37163,15 +37179,15 @@ const fontoxpath = function (xspattern, prsc) {
     const e = H(d);
     c = F(c, "prefix");
     d = H(c);
-    c = new Cg(new qg(() => null, Object.create(null), "http://www.w3.org/2005/xpath-functions", Oq("http://www.w3.org/2005/xpath-functions")));
-    Gg(c, d, e);
+    c = new Bg(new pg(() => null, Object.create(null), "http://www.w3.org/2005/xpath-functions", Sq("http://www.w3.org/2005/xpath-functions")));
+    Fg(c, d, e);
     b = F(b, "prolog");
     if (null !== b) {
       let f;
       try {
-        f = tq(b, c, !0, a);
+        f = xq(b, c, !0, a);
       } catch (h) {
-        hg(a, h);
+        gg(a, h);
       }
       f.Ia.forEach(({
         namespaceURI: h
@@ -37187,8 +37203,8 @@ const fontoxpath = function (xspattern, prsc) {
     });
     return e;
   }
-  const dv = new Map();
-  function ev(a) {
+  const kv = new Map();
+  function lv(a) {
     var b;
     a: {
       if (b = Gk.get(a)) for (const c of Object.keys(b)) if (b[c] && b[c].length) {
@@ -37198,8 +37214,8 @@ const fontoxpath = function (xspattern, prsc) {
       b = null;
     }
     if (b) return b;
-    if (dv.has(a)) return dv.get(a);
-    b = "string" === typeof a ? qq(a, {
+    if (kv.has(a)) return kv.get(a);
+    b = "string" === typeof a ? uq(a, {
       Z: !1
     }) : Kk(a);
     b = J(b, ["mainModule", "queryBody", "*"]);
@@ -37208,17 +37224,17 @@ const fontoxpath = function (xspattern, prsc) {
       sa: !1,
       Z: !1
     });
-    dv.set(a, b);
+    kv.set(a, b);
     return b;
   }
-  function fv(a) {
-    return ev(a).D();
+  function mv(a) {
+    return lv(a).D();
   }
-  function gv(a, b) {
-    return uf(ev(a).o, ev(b).o);
+  function nv(a, b) {
+    return tf(lv(a).o, lv(b).o);
   }
-  var hv = new Za();
-  "undefined" !== typeof fontoxpathGlobal && (fontoxpathGlobal.compareSpecificity = gv, fontoxpathGlobal.compileXPathToJavaScript = Ru, fontoxpathGlobal.domFacade = hv, fontoxpathGlobal.evaluateXPath = $q, fontoxpathGlobal.evaluateXPathToArray = er, fontoxpathGlobal.evaluateXPathToAsyncIterator = ar, fontoxpathGlobal.evaluateXPathToBoolean = fr, fontoxpathGlobal.evaluateXPathToFirstNode = gr, fontoxpathGlobal.evaluateXPathToMap = hr, fontoxpathGlobal.evaluateXPathToNodes = ir, fontoxpathGlobal.evaluateXPathToNumber = jr, fontoxpathGlobal.evaluateXPathToNumbers = kr, fontoxpathGlobal.evaluateXPathToString = lr, fontoxpathGlobal.evaluateXPathToStrings = mr, fontoxpathGlobal.evaluateUpdatingExpression = cr, fontoxpathGlobal.evaluateUpdatingExpressionSync = dr, fontoxpathGlobal.executeJavaScriptCompiledXPath = Xu, fontoxpathGlobal.executePendingUpdateList = nr, fontoxpathGlobal.getBucketForSelector = fv, fontoxpathGlobal.getBucketsForNode = Ya, fontoxpathGlobal.precompileXPath = bv, fontoxpathGlobal.registerXQueryModule = cv, fontoxpathGlobal.registerCustomXPathFunction = Vu, fontoxpathGlobal.parseScript = av, fontoxpathGlobal.profiler = Xq, fontoxpathGlobal.createTypedValueFactory = Mq, fontoxpathGlobal.finalizeModuleRegistration = Ok, fontoxpathGlobal.Language = Zq, fontoxpathGlobal.ReturnType = Tq);
+  var ov = new Za();
+  "undefined" !== typeof fontoxpathGlobal && (fontoxpathGlobal.compareSpecificity = nv, fontoxpathGlobal.compileXPathToJavaScript = Yu, fontoxpathGlobal.domFacade = ov, fontoxpathGlobal.evaluateXPath = dr, fontoxpathGlobal.evaluateXPathToArray = ir, fontoxpathGlobal.evaluateXPathToAsyncIterator = er, fontoxpathGlobal.evaluateXPathToBoolean = jr, fontoxpathGlobal.evaluateXPathToFirstNode = kr, fontoxpathGlobal.evaluateXPathToMap = lr, fontoxpathGlobal.evaluateXPathToNodes = mr, fontoxpathGlobal.evaluateXPathToNumber = nr, fontoxpathGlobal.evaluateXPathToNumbers = or, fontoxpathGlobal.evaluateXPathToString = pr, fontoxpathGlobal.evaluateXPathToStrings = qr, fontoxpathGlobal.evaluateUpdatingExpression = gr, fontoxpathGlobal.evaluateUpdatingExpressionSync = hr, fontoxpathGlobal.executeJavaScriptCompiledXPath = dv, fontoxpathGlobal.executePendingUpdateList = rr, fontoxpathGlobal.getBucketForSelector = mv, fontoxpathGlobal.getBucketsForNode = Ya, fontoxpathGlobal.precompileXPath = iv, fontoxpathGlobal.registerXQueryModule = jv, fontoxpathGlobal.registerCustomXPathFunction = bv, fontoxpathGlobal.parseScript = hv, fontoxpathGlobal.profiler = ar, fontoxpathGlobal.createTypedValueFactory = Qq, fontoxpathGlobal.finalizeModuleRegistration = Ok, fontoxpathGlobal.Language = cr, fontoxpathGlobal.ReturnType = Xq);
   return fontoxpathGlobal;
 }.call(typeof window === 'undefined' ? undefined : window, xspattern, prsc);
 fontoxpath.compareSpecificity;
@@ -37844,6 +37860,7 @@ function evaluateXPath(xpath, contextNode, formElement, variables = {}, options 
       ...variablesInScope,
       ...variables
     }, evaluateXPath$1.ALL_RESULTS_TYPE, {
+      xmlSerializer: new XMLSerializer(),
       debug: true,
       currentContext: {
         formElement,
@@ -37909,7 +37926,8 @@ function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
         formElement
       },
       functionNameResolver,
-      namespaceResolver
+      namespaceResolver,
+      xmlSerializer: new XMLSerializer()
     });
     // console.log('evaluateXPathToFirstNode',xpath, result);
     return result;
@@ -37925,6 +37943,7 @@ function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
       }
     }));
   }
+  return null;
 }
 
 /**
@@ -37947,7 +37966,8 @@ function evaluateXPathToNodes(xpath, contextNode, formElement) {
       moduleImports: {
         xf: XFORMS_NAMESPACE_URI
       },
-      namespaceResolver
+      namespaceResolver,
+      xmlSerializer: new XMLSerializer()
     });
     // console.log('evaluateXPathToNodes',xpath, result);
     return result;
@@ -37985,7 +38005,8 @@ function evaluateXPathToBoolean(xpath, contextNode, formElement) {
       moduleImports: {
         xf: XFORMS_NAMESPACE_URI
       },
-      namespaceResolver
+      namespaceResolver,
+      xmlSerializer: new XMLSerializer()
     });
   } catch (e) {
     formElement.dispatchEvent(new CustomEvent('error', {
@@ -38024,7 +38045,8 @@ function evaluateXPathToString(xpath, contextNode, formElement, domFacade = null
       moduleImports: {
         xf: XFORMS_NAMESPACE_URI
       },
-      namespaceResolver
+      namespaceResolver,
+      xmlSerializer: new XMLSerializer()
     });
   } catch (e) {
     formElement.dispatchEvent(new CustomEvent('error', {
@@ -38062,7 +38084,8 @@ function evaluateXPathToStrings(xpath, contextNode, formElement, domFacade = nul
       moduleImports: {
         xf: XFORMS_NAMESPACE_URI
       },
-      namespaceResolver
+      namespaceResolver,
+      xmlSerializer: new XMLSerializer()
     });
   } catch (e) {
     formElement.dispatchEvent(new CustomEvent('error', {
@@ -38101,7 +38124,8 @@ function evaluateXPathToNumber(xpath, contextNode, formElement, domFacade = null
       moduleImports: {
         xf: XFORMS_NAMESPACE_URI
       },
-      namespaceResolver
+      namespaceResolver,
+      xmlSerializer: new XMLSerializer()
     });
   } catch (e) {
     formElement.dispatchEvent(new CustomEvent('error', {
@@ -41521,13 +41545,11 @@ class ForeElementMixin extends HTMLElement {
     } else {
       // this.nodeset = fx.evaluateXPathToFirstNode(this.ref, inscopeContext, null, {namespaceResolver: this.namespaceResolver});
       if (!inscopeContext) return;
-      const {
-        nodeType
-      } = inscopeContext;
-      if (nodeType && !XPathUtil.isAbsolutePath(this.ref)) {
-        this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext, this);
+      if (this.nodeName === 'FX-REPEAT') {
+        // Repeats are special: they have multiple nodes in their nodeset
+        this.nodeset = evaluateXPath(this.ref, inscopeContext, this);
       } else {
-        [this.nodeset] = evaluateXPath(this.ref, inscopeContext, this);
+        this.nodeset = evaluateXPath(this.ref, inscopeContext, this)[0] || null;
       }
     }
     // console.log('UiElement evaluated to nodeset: ', this.nodeset);
@@ -44366,7 +44388,7 @@ class FxFore extends HTMLElement {
       this._createRepeatsFromAttributes();
       this.inited = true;
     };
-    this.version = 'Version: 2.7.1 - built on December 4, 2025 12:26:28';
+    this.version = 'Version: 2.7.2 - built on December 10, 2025 11:39:51';
 
     /**
      * @type {import('./fx-model.js').FxModel}
@@ -44606,6 +44628,7 @@ class FxFore extends HTMLElement {
     const modelElement = Array.from(this.children).find(modelElem => modelElem.nodeName.toUpperCase() === 'FX-MODEL');
     this.model = modelElement;
     this.style.visibility = 'hidden';
+    // console.time('init');
     this.strict = !!this.hasAttribute('strict');
     /*
             document.re('ready', (e) =>{
@@ -44698,10 +44721,12 @@ class FxFore extends HTMLElement {
   markAsClean() {
     this.addEventListener('value-changed', () => {
       this.dirtyState = dirtyStates.DIRTY;
+      this.classList.toggle('fx-modified');
     }, {
       once: true
     });
     this.dirtyState = dirtyStates.CLEAN;
+    this.classList.remove('fx-modified');
   }
 
   /**
@@ -44954,6 +44979,7 @@ class FxFore extends HTMLElement {
     this._processTemplateExpressions();
   }
   _processTemplateExpressions() {
+    // console.log('processing template expressions ', this.storedTemplateExpressionByNode);
     for (const node of Array.from(this.storedTemplateExpressionByNode.keys())) {
       if (node.nodeType === Node.ATTRIBUTE_NODE) {
         // Attribute nodes are not contained by the document, but their owner elements are!
@@ -45061,7 +45087,6 @@ class FxFore extends HTMLElement {
    * @private
    */
   _handleModelConstructDone() {
-    this.markAsClean();
     if (this.showConfirmation) {
       window.addEventListener('beforeunload', event => {
         if (this.dirtyState === dirtyStates.DIRTY) {
@@ -45202,7 +45227,7 @@ class FxFore extends HTMLElement {
     // console.log('### modelItems: ', this.getModel().modelItems);
     Fore.dispatch(this, 'ready', {});
     // console.log('dataChanged', FxModel.dataChanged);
-
+    this.markAsClean();
     this.addEventListener('dragstart', this._handleDragStart);
     //	this.addEventListener('dragend', this._handleDragEnd);
     this.handleDrop = event => this._handleDrop(event);
@@ -45323,6 +45348,7 @@ class FxFore extends HTMLElement {
    */
   initData(root = this) {
     // const created = new Promise(resolve => {
+    // console.log('INIT');
     // const boundControls = Array.from(root.querySelectorAll('[ref]:not(fx-model *),fx-repeatitem'));
 
     /**
@@ -45342,9 +45368,11 @@ class FxFore extends HTMLElement {
         // Repeat items are dumb. They do not respond to evalInContext
         bound.evalInContext();
       }
-      if (bound.nodeset !== null && !(Array.isArray(bound.nodeset) && bound.nodeset.length > 0)) {
+      if (bound.nodeset !== null && !(Array.isArray(bound.nodeset) && bound.nodeset.length === 0)) {
+        // console.log('Node exists', bound.nodeset);
         continue;
       }
+      // console.log('Node does not exists', bound.ref);
 
       // We need to create that node!
       const previousControl = boundControls[i - 1];
@@ -45353,6 +45381,8 @@ class FxFore extends HTMLElement {
       // First: parent
       if (previousControl && previousControl.contains(bound)) {
         // Parent is here.
+        // console.log('insert into', bound, previousControl);
+        // console.log('insert into nodeset', bound.nodeset);
         /**
          * @type {ParentNode}
          */
@@ -45383,7 +45413,10 @@ class FxFore extends HTMLElement {
           }
         }
         bound.evalInContext();
-        bound.getModelItem().bind?.evalInContext();
+        if (bound.nodeName !== 'FX-REPEAT') {
+          // Do not try to get a bind for a nodeSET of a repeat. there are multiple.
+          bound.getModelItem().bind?.evalInContext();
+        }
 
         // console.log('CREATED child', newElement);
         // console.log('new control evaluated to ', control.nodeset);
@@ -45396,17 +45429,11 @@ class FxFore extends HTMLElement {
       let ourParent = XPathUtil.getParentBindingElement(bound);
       // console.log('ourParent', ourParent);
       let siblingControl = null;
-      /*
-            for (let j = i - 1; j >= 0; --j) {
-                const potentialSibling = boundControls[j];
-                if (XPathUtil.getParentBindingElement(potentialSibling) === ourParent) {
-                    siblingControl = potentialSibling;
-                    break; // Exit once the sibling is found
-                }
-            }
-      */
       for (let j = i - 1; j > 0; --j) {
         const siblingOrDescendant = boundControls[j];
+        if (siblingOrDescendant.nodeset && !('nodeType' in siblingOrDescendant.nodeset)) {
+          continue;
+        }
         if (XPathUtil.getParentBindingElement(siblingOrDescendant) === ourParent) {
           siblingControl = siblingOrDescendant;
           break;
@@ -45426,6 +45453,10 @@ class FxFore extends HTMLElement {
       }
       const ref = bound.ref;
       const newNode = this._createNodes(ref, parentNodeset);
+      if (!newNode) {
+        // We could not make the node for some reason. Maybe it's something like `instance('XXX')`?
+        continue;
+      }
       if (newNode.nodeType === Node.ATTRIBUTE_NODE) {
         parentNodeset.setAttributeNode(newNode);
       } else {
@@ -45487,6 +45518,7 @@ class FxFore extends HTMLElement {
   _handleDragStart(event) {
     const draggedItem = event.target.closest('[draggable="true"]');
     this.originalDraggedItem = draggedItem;
+    // console.log('DRAG START', this);
     if (draggedItem.getAttribute('drop-action') === 'copy') {
       event.dataTransfer.dropEffect = 'copy';
       event.dataTransfer.effectAllowed = 'copy';
@@ -45500,6 +45532,7 @@ class FxFore extends HTMLElement {
     }
   }
   _handleDrop(event) {
+    // console.log('DROP ON BODY', this);
     if (!this.draggedItem) {
       return;
     }
@@ -45950,16 +45983,16 @@ class FxSubmission extends ForeElementMixin {
         return;
       }
       const contentType = response.headers.get('content-type').split(';')[0].trim().toLowerCase();
-      if (contentType.startsWith('text/')) {
+      if (contentType.endsWith('/xml') || contentType.endsWith('+xml')) {
+        const text = await response.text();
+        const xml = new DOMParser().parseFromString(text, 'application/xml');
+        this._handleResponse(xml, resolvedUrl, contentType);
+      } else if (contentType.startsWith('text/')) {
         const text = await response.text();
         this._handleResponse(text, resolvedUrl, contentType);
       } else if (contentType.endsWith('/json') || contentType.endsWith('+json')) {
         const json = await response.json();
         this._handleResponse(json, resolvedUrl, contentType);
-      } else if (contentType.endsWith('/xml') || contentType.endsWith('+xml')) {
-        const text = await response.text();
-        const xml = new DOMParser().parseFromString(text, 'application/xml');
-        this._handleResponse(xml, resolvedUrl, contentType);
       } else {
         const blob = await response.blob();
         this._handleResponse(blob, resolvedUrl, contentType);
@@ -46839,6 +46872,11 @@ class FxControl extends AbstractControl {
     this.attachShadow({
       mode: 'open'
     });
+
+    /**
+     * Flag that is raised while refreshing, to ignore any updates from the widget inside of us
+     */
+    this._isRefreshing = false;
   }
   static get properties() {
     return {
@@ -46858,6 +46896,13 @@ class FxControl extends AbstractControl {
     if (this.valueProp === 'selectedOptions') {
       // We have multiple! Just return that as space-separated for now
       return [...this.widget.selectedOptions].map(option => option.value).join(' ');
+    }
+    if (this.getAttribute('as') === 'xml') {
+      // We are setting serialized XML here, so when roundtripping, parse it
+      const value = this.widget[this.valueProp];
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(value, 'application/xml');
+      return doc.documentElement;
     }
     return this.widget[this.valueProp];
   }
@@ -46945,6 +46990,10 @@ class FxControl extends AbstractControl {
       }, this.debounceDelay));
     } else {
       listenOn.addEventListener(this.updateEvent, event => {
+        if (this._isRefreshing) {
+          // We are refreshing. No use in updating
+          return;
+        }
         this.setValue(this._getValueOfWidget());
       });
       listenOn.addEventListener('blur', event => {
@@ -46975,6 +47024,7 @@ class FxControl extends AbstractControl {
    * activates a control that uses 'on-demand' attribute
    */
   activate() {
+    // console.log('fx-control.activate() called');
     this.removeAttribute('on-demand');
     this.style.display = '';
     this.refresh(true);
@@ -47004,6 +47054,7 @@ class FxControl extends AbstractControl {
    * @param val the new value to be set
    */
   setValue(val) {
+    // console.log('Control.setValue', val, 'on', this);
     const modelitem = this.getModelItem();
     if (this.getAttribute('class')) {
       this.classList.add('visited');
@@ -47016,10 +47067,9 @@ class FxControl extends AbstractControl {
 
     if (this.getAttribute('as') === 'node') {
       const replace = this.shadowRoot.getElementById('replace');
-      const widgetValue = this.getWidget()[this.valueProp];
-      replace.replace(this.nodeset, widgetValue);
-      if (modelitem && widgetValue && widgetValue !== modelitem.value) {
-        modelitem.value = widgetValue;
+      replace.replace(this.nodeset, val);
+      if (modelitem && val && val !== modelitem.value) {
+        modelitem.value = val;
         FxModel.dataChanged = true;
         replace.actionPerformed();
       }
@@ -47151,11 +47201,14 @@ class FxControl extends AbstractControl {
     if (this.hasAttribute('as')) {
       const as = this.getAttribute('as');
 
-      // ### when there's an `as=text` attribute serialize nodeset to prettified string
-      if (as === 'text') {
+      // ### when there's an `as="xml"` attribute serialize nodeset to prettified string
+      if (as === 'xml') {
         const serializer = new XMLSerializer();
-        const pretty = Fore.prettifyXml(serializer.serializeToString(this.nodeset));
-        widget.value = pretty;
+        const pretty = serializer.serializeToString(this.nodeset);
+        if (widget[this.valueProp] === pretty) {
+          return;
+        }
+        widget[this.valueProp] = pretty;
       }
       if (as === 'node' && this.nodeset !== widget.value) {
         // const oldVal = this.nodeset.innerHTML;
@@ -47288,14 +47341,20 @@ class FxControl extends AbstractControl {
     return this.querySelector('template');
   }
   async refresh(force = false) {
-    super.refresh(force);
-    // console.log('refresh template', this.template);
-    // const {widget} = this;
+    try {
+      this._isRefreshing = true;
+      // console.log('🔄 fx-control refresh', this);
+      super.refresh(force);
+      // console.log('refresh template', this.template);
+      // const {widget} = this;
 
-    // ### if we find a ref on control we have a 'select' control of some kind
-    const widget = this.getWidget();
-    this._handleBoundWidget(widget, force);
-    this._handleDataAttributeBinding();
+      // ### if we find a ref on control we have a 'select' control of some kind
+      const widget = this.getWidget();
+      this._handleBoundWidget(widget, force);
+      this._handleDataAttributeBinding();
+    } finally {
+      this._isRefreshing = false;
+    }
     Fore.refreshChildren(this, force);
   }
 
@@ -47762,8 +47821,6 @@ if (!customElements.get('fx-hint')) {
   customElements.define('fx-hint', FxHint);
 }
 
-// import {markdown} from '../drawdown.js';
-
 /**
  * todo: review placing of value. should probably work with value attribute and not allow slotted content.
  */
@@ -47805,7 +47862,7 @@ class FxOutput extends AbstractControl {
         `;
     const outputHtml = `
             <slot name="label"></slot>
-            
+
             <span id="value">
                 <slot name="default"></slot>
             </span>
@@ -48604,11 +48661,13 @@ class FxRepeat extends withDraggability(UIElement) {
       this.appendChild(repeatItem);
       if (this.getOwnerForm().createNodes) {
         this.getOwnerForm().initData(repeatItem);
-        const repeatItemClone = repeatItem.nodeset.cloneNode(true);
-        this.clearTextValues(repeatItemClone);
-
-        // this.createdNodeset = repeatItem.nodeset.cloneNode(true);
-        this.createdNodeset = repeatItemClone;
+        if (repeatItem.nodeset.nodeType) {
+          // Do not try to d things with repeats that do not reason over nodes
+          const repeatItemClone = repeatItem.nodeset.cloneNode(true);
+          this.clearTextValues(repeatItemClone);
+          // this.createdNodeset = repeatItem.nodeset.cloneNode(true);
+          this.createdNodeset = repeatItemClone;
+        }
         // console.log('createdNodeset', this.createdNodeset)
       }
 
