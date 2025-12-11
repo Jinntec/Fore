@@ -10,6 +10,7 @@ import { XPathUtil } from './xpath-util.js';
 import getInScopeContext from './getInScopeContext.js';
 import { getPath } from './xpath-path.js';
 import { evaluateXPathToFirstNode } from 'fontoxpath';
+import { JSONLens } from './json/JSONLens.js';
 
 /**
  * FxBind declaratively attaches constraints to nodes in the data (instances).
@@ -166,6 +167,8 @@ export class FxBind extends ForeElementMixin {
       this._evalInContext();
       this._buildBindGraph();
       this._createModelItems();
+    } else if (this.bindType === 'json') {
+      this._createModelItemsForJSON();
     }
     // todo: support json
 
@@ -176,9 +179,9 @@ export class FxBind extends ForeElementMixin {
   _buildBindGraph() {
     if (this.bindType === 'xml') {
       this.nodeset.forEach(node => {
-        const instance = XPathUtil.resolveInstance(this, this.ref);
+        const instanceId = XPathUtil.resolveInstance(this, this.ref);
 
-        const path = getPath(node, instance);
+        const path = getPath(node, instanceId);
         this.model.mainGraph.addNode(path, node);
 
         /* ### catching references in the 'ref' itself...
@@ -309,6 +312,24 @@ export class FxBind extends ForeElementMixin {
       return alertChild.innerHTML;
     }
     return null;
+  }
+
+  _createModelItemsForJSON() {
+    const instance = this.getModel().getInstance(this.instanceId);
+    const fore = this.closest('fx-fore');
+
+    this.nodeset.forEach(jsonNode => {
+      const path = jsonNode.getPath().join('/'); // or enhance to XPath-like
+      const lens = new JSONLens(instance.jsonData, jsonNode.getPath());
+      const newItem = new ModelItem(path, this.ref, lens, this, this.instanceId, fore);
+
+      const alert = this.getAlert();
+      if (alert) {
+        newItem.addAlert(alert);
+      }
+
+      this.getModel().registerModelItem(newItem);
+    });
   }
 
   /**

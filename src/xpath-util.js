@@ -24,9 +24,7 @@ export class XPathUtil {
           for (const item of astNode[key]) {
             if (XPathUtil.containsDynamicContent(item)) return true;
           }
-        } else {
-          if (XPathUtil.containsDynamicContent(astNode[key])) return true;
-        }
+        } else if (XPathUtil.containsDynamicContent(astNode[key])) return true;
       }
     }
 
@@ -247,22 +245,30 @@ export class XPathUtil {
    * @returns {*|null}
    */
   static getParentBindingElement(start) {
-    /*    if (start.parentNode.host) {
-          const { host } = start.parentNode;
-          if (host.hasAttribute('ref')) {
-            return host;
-          }
-        } else */
-    if (
-      start.parentNode &&
-      (start.parentNode.nodeType !== Node.DOCUMENT_NODE ||
-        start.parentNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE)
-    ) {
-      return this.getClosest(
-        'fx-control[ref],fx-upload[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref],fx-repeatitem',
-        start.parentNode,
-      );
+    // JSON lens case
+    if (start && start.__jsonlens__ === true) {
+      let current = start.parent;
+      while (current) {
+        if (current.bindingElement) return current.bindingElement;
+        current = current.parent;
+      }
+      return null;
     }
+
+    // DOM case
+    let node = start?.parentNode;
+
+    while (
+      node &&
+      node.nodeType !== Node.DOCUMENT_NODE &&
+      node.nodeType !== Node.DOCUMENT_FRAGMENT_NODE
+    ) {
+      if (node.matches?.('[ref],fx-repeatitem')) {
+        return node;
+      }
+      node = node.parentNode;
+    }
+
     return null;
   }
 
@@ -360,18 +366,6 @@ export class XPathUtil {
     return shortened.startsWith('/') ? `${shortened}` : `/${shortened}`;
   }
 */
-
-  /**
-   * @param {Node} node
-   * @param {string} instanceId
-   * @returns string
-   */
-  static getPath(node, instanceId) {
-    const path = fx.evaluateXPathToString('path()', node);
-    // Path is like `$default/x[1]/y[1]`
-    const shortened = XPathUtil.shortenPath(path);
-    return shortened.startsWith('/') ? `$${instanceId}${shortened}` : `$${instanceId}/${shortened}`;
-  }
 
   /**
    * @param {string} path

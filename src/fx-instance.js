@@ -1,5 +1,6 @@
 import { Fore } from './fore.js';
 import { evaluateXPathToFirstNode } from './xpath-evaluation.js';
+import { wrapJson, JSONNode } from './json/JSONNode.js';
 
 async function handleResponse(fxInstance, response) {
   const { status } = response;
@@ -274,10 +275,15 @@ export class FxInstance extends HTMLElement {
 
   _setInitialData(data) {
     this.instanceData = data;
-    if (data.nodeType) {
+
+    if (data?.nodeType) {
+      // XML instance
       this.originalInstance = this.instanceData.cloneNode(true);
-    } else {
-      this.originalInstance = { ...this.instanceData };
+      this.nodeset = this.instanceData;
+    } else if (this.type === 'json') {
+      // JSON instance
+      this.originalInstance = structuredClone(this.instanceData);
+      this.nodeset = wrapJson(this.instanceData, null, null, this.id || 'default');
     }
   }
 

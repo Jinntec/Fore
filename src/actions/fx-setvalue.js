@@ -82,17 +82,20 @@ export default class FxSetvalue extends AbstractAction {
    */
   dispatchExecute() {}
 
+  // Adjustment in setValue logic to ensure we work with JSONNode, not just raw values
   setValue(modelItem, newVal) {
     console.log('setValue', modelItem, newVal);
     const item = modelItem;
     if (!item) return;
 
-    if (item.value !== newVal) {
-      // const path = XPathUtil.getPath(modelItem.node);
-      const path = Fore.getDomNodeIndexString(modelItem.node);
+    // Check if current node is a JSONNode
+    const node = Array.isArray(item.node) ? item.node[0] : item.node;
 
+    if (item.value !== newVal) {
+      const path = Fore.getDomNodeIndexString(node);
       const ev = this.event;
       const targetElem = this;
+
       this.dispatchEvent(
         new CustomEvent('execute-action', {
           composed: true,
@@ -107,20 +110,24 @@ export default class FxSetvalue extends AbstractAction {
         }),
       );
 
-      if (newVal?.nodeType) {
+      // JSON-aware update if it's a JSONNode
+      if (item.lens) {
+        node.set(newVal);
+      } else if (newVal?.nodeType) {
         if (newVal.nodeType === Node.ELEMENT_NODE) {
           item.value = newVal;
-        }
-        if (newVal.nodeType === Node.ATTRIBUTE_NODE) {
-          item.value = newVal.getValue();
-        }
-        if (newVal.nodeType === Node.TEXT_NODE) {
+        } else if (newVal.nodeType === Node.ATTRIBUTE_NODE) {
+          item.value = newVal.nodeValue;
+        } else if (newVal.nodeType === Node.TEXT_NODE) {
           item.value = newVal.textContent;
         }
       } else {
         item.value = newVal;
-        item.node.textContent = newVal;
+        if (node?.textContent !== undefined) {
+          node.textContent = newVal;
+        }
       }
+
       this.getModel().changed.push(modelItem);
       this.needsUpdate = true;
       modelItem.notify();

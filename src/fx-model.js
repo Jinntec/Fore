@@ -2,9 +2,10 @@ import { DepGraph } from './dep_graph.js';
 import { Fore } from './fore.js';
 import './fx-instance.js';
 import { ModelItem } from './modelitem.js';
-import { getPath } from './xpath-path.js';
+import { parseJsonRef, getPath } from './xpath-path.js';
 import { evaluateXPath, evaluateXPathToBoolean, evaluateXPathToNodes } from './xpath-evaluation.js';
 import { XPathUtil } from './xpath-util.js';
+import { getLensForNode } from './json/JSONNode.js';
 
 /**
  * The model of this Fore scope. It holds all the intances, binding, submissions and custom
@@ -128,6 +129,7 @@ export class FxModel extends HTMLElement {
    */
   static lazyCreateModelItem(model, ref, node, formElement) {
     const instanceId = XPathUtil.resolveInstance(formElement, ref);
+    const instance = model.getInstance(instanceId);
     const fore = model.formElement;
 
     if (fore?.createNodes && (node === null || node === undefined)) {
@@ -139,10 +141,29 @@ export class FxModel extends HTMLElement {
 
     if (node === null || node === undefined) return null;
 
-    let targetNode = node.nodeType === Node.TEXT_NODE ? node.parentNode : node;
+    let targetNode = Array.isArray(node) ? node[0] : node;
+
+    // Handle raw JSON primitives by wrapping with lens
+    // if (!targetNode?.__jsonlens__ && typeof targetNode !== 'object' && !targetNode.nodeType) {
+    if (instance.type === 'json') {
+      /*
+      const parentLens = instance.nodeset; // Assuming the root lens is here
+      const key = getPath(targetNode, instanceId)
+        .split('/')
+        .pop(); // crude key guess
+      targetNode = getLensForNode(targetNode, parentLens, key);
+*/
+
+      const parentLens = instance.nodeset;
+      const refSteps = parseJsonRef(ref);
+      const key = refSteps[refSteps.length - 1];
+      targetNode = getLensForNode(targetNode, parentLens, key, instanceId);
+    }
+
+    // }
 
     let path = null;
-    if (targetNode?.nodeType) {
+    if (targetNode?.nodeType || targetNode?.__jsonlens__) {
       path = getPath(targetNode, instanceId);
     }
 

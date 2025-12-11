@@ -11,8 +11,10 @@ import {
   registerXQueryModule,
 } from 'fontoxpath';
 
+import * as fx from 'fontoxpath';
 import { XPathUtil } from './xpath-util.js';
 import { prettifyXml } from './functions/common-function.js';
+import { JSONDomFacade } from './json/JSONDomFacade.js';
 
 const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
 
@@ -58,18 +60,6 @@ export function isInShadow(node) {
 export function resolveId(id, sourceObject, nodeName = null) {
   const query =
     'outermost(ancestor-or-self::fx-fore[1]/(descendant::fx-fore|descendant::*[@id = $id]))[not(self::fx-fore)]';
-  /*
-        if (nodeName === 'fx-instance') {
-            // Instance elements can only be in the `model` element
-            // query = 'ancestor-or-self::fx-fore[1]/fx-model/fx-instance[@id = $id]';
-
-            const fore = Fore.getFore(sourceObject);
-            const instances = fore.getModel().instances;
-            const targetInstance = instances.find(i => i.id === id);
-            return targetInstance;
-        return document.getElementById(id);
-	}
-    */
   if (sourceObject.nodeType === Node.TEXT_NODE) {
     sourceObject = sourceObject.parentNode;
   }
@@ -481,22 +471,23 @@ export function evaluateXPath(xpath, contextNode, formElement, variables = {}, o
     const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
     const variablesInScope = getVariablesInScope(formElement);
 
+    const instance = formElement?.getModel?.()?.getInstance?.(formElement.instanceId);
+    const isJSON = instance?.type === 'json';
+
     const result = fxEvaluateXPath(
       xpath,
       contextNode,
-      null,
+      isJSON ? instance.domFacade : null,
       { ...variablesInScope, ...variables },
       fxEvaluateXPath.ALL_RESULTS_TYPE,
       {
         xmlSerializer: new XMLSerializer(),
         debug: true,
         currentContext: { formElement, variables },
-        moduleImports: {
-          xf: XFORMS_NAMESPACE_URI,
-        },
+        moduleImports: { xf: XFORMS_NAMESPACE_URI },
         functionNameResolver,
         namespaceResolver,
-        language: options.language || fxEvaluateXPath.XPATH_3_1_LANGUAGE,
+        language: isJSON ? Language.XQUERY_3_1_LANGUAGE : Language.XPATH_3_1_LANGUAGE,
       },
     );
     // console.log('evaluateXPath',xpath, result);
@@ -545,18 +536,24 @@ export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
   try {
     const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
     const variablesInScope = getVariablesInScope(formElement);
-    const result = fxEvaluateXPathToFirstNode(xpath, contextNode, null, variablesInScope, {
-      defaultFunctionNamespaceURI: XFORMS_NAMESPACE_URI,
-      moduleImports: {
-        xf: XFORMS_NAMESPACE_URI,
+    const instance = formElement?.getModel?.()?.getInstance?.(formElement.instanceId);
+    const isJSON = instance?.type === 'json';
+
+    const result = fxEvaluateXPathToFirstNode(
+      xpath,
+      contextNode,
+      isJSON ? instance.domFacade : null,
+      variablesInScope,
+      {
+        currentContext: { formElement },
+        functionNameResolver,
+        moduleImports: { xf: XFORMS_NAMESPACE_URI },
+        namespaceResolver,
+        xmlSerializer: new XMLSerializer(),
       },
-      currentContext: { formElement },
-      functionNameResolver,
-      namespaceResolver,
-      xmlSerializer: new XMLSerializer(),
-    });
+    );
     // console.log('evaluateXPathToFirstNode',xpath, result);
-    return result;
+    return /** @type {*} */ (result);
   } catch (e) {
     formElement.dispatchEvent(
       new CustomEvent('error', {
@@ -582,6 +579,51 @@ export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
  * @param  {import('./ForeElementMixin.js').default} formElement  The form element associated to the XPath
  * @return {Node[]}  All nodes
  */
+export function evaluateXPathToNodes(xpath, contextNode, formElement) {
+  console.log('📍 evaluateXPathToNodes:');
+  console.log('  xpath:', xpath);
+  console.log('  contextNode:', contextNode);
+  console.log('  nodeType:', contextNode?.nodeType);
+  console.log('  lens:', contextNode?.__jsonlens__);
+  try {
+    const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
+    const variablesInScope = getVariablesInScope(formElement);
+
+    const options = {
+      currentContext: { formElement },
+      functionNameResolver,
+      moduleImports: {
+        xf: XFORMS_NAMESPACE_URI,
+      },
+      namespaceResolver,
+    };
+
+    // 🔍 Detect JSON context
+    const instance = formElement?.getModel?.()?.getInstance?.(formElement.instanceId);
+    if (instance?.type === 'json') {
+      options.language = 'XQUERY_3.1';
+      options.domFacade = instance.domFacade || new JSONDomFacade(); // fallback if needed
+    }
+
+    const result = fxEvaluateXPathToNodes(xpath, contextNode, null, variablesInScope, options);
+    return /** @type {*} */ (result);
+  } catch (e) {
+    formElement.dispatchEvent(
+      new CustomEvent('error', {
+        composed: false,
+        bubbles: true,
+        detail: {
+          origin: formElement,
+          message: `Expression '${xpath}' failed: ${e}`,
+          expr: xpath,
+          level: 'Error',
+        },
+      }),
+    );
+  }
+}
+
+/*
 export function evaluateXPathToNodes(xpath, contextNode, formElement) {
   try {
     const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
@@ -613,6 +655,7 @@ export function evaluateXPathToNodes(xpath, contextNode, formElement) {
     );
   }
 }
+*/
 
 /**
  * Evaluate an XPath to a boolean
@@ -627,15 +670,23 @@ export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
     const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
     const variablesInScope = getVariablesInScope(formElement);
 
-    return fxEvaluateXPathToBoolean(xpath, contextNode, null, variablesInScope, {
-      currentContext: { formElement },
-      functionNameResolver,
-      moduleImports: {
-        xf: XFORMS_NAMESPACE_URI,
+    const instance = formElement?.getModel?.()?.getInstance?.(formElement.instanceId);
+    const isJSON = instance?.type === 'json';
+
+    return fxEvaluateXPathToBoolean(
+      xpath,
+      contextNode,
+      isJSON ? instance.domFacade : null,
+      variablesInScope,
+      {
+        currentContext: { formElement },
+        functionNameResolver,
+        moduleImports: { xf: XFORMS_NAMESPACE_URI },
+        namespaceResolver,
+        language: isJSON ? Language.XQUERY_3_1_LANGUAGE : Language.XPATH_3_1_LANGUAGE,
+        xmlSerializer: new XMLSerializer(),
       },
-      namespaceResolver,
-      xmlSerializer: new XMLSerializer(),
-    });
+    );
   } catch (e) {
     formElement.dispatchEvent(
       new CustomEvent('error', {
@@ -668,6 +719,9 @@ export function evaluateXPathToString(xpath, contextNode, formElement, domFacade
     const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
     const variablesInScope = getVariablesInScope(formElement);
 
+    const instance = formElement?.getModel?.()?.getInstance?.(formElement.instanceId);
+    const isJSON = instance?.type === 'json';
+
     return fxEvaluateXPathToString(xpath, contextNode, domFacade, variablesInScope, {
       currentContext: { formElement },
       functionNameResolver,
@@ -675,6 +729,7 @@ export function evaluateXPathToString(xpath, contextNode, formElement, domFacade
         xf: XFORMS_NAMESPACE_URI,
       },
       namespaceResolver,
+      language: isJSON ? Language.XQUERY_3_1_LANGUAGE : Language.XPATH_3_1_LANGUAGE,
       xmlSerializer: new XMLSerializer(),
     });
   } catch (e) {
@@ -707,6 +762,9 @@ export function evaluateXPathToString(xpath, contextNode, formElement, domFacade
 export function evaluateXPathToStrings(xpath, contextNode, formElement, domFacade = null) {
   try {
     const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
+
+    const instance = formElement?.getModel?.()?.getInstance?.(formElement.instanceId);
+    const isJSON = instance?.type === 'json';
     return fxEvaluateXPathToStrings(
       xpath,
       contextNode,
@@ -719,6 +777,7 @@ export function evaluateXPathToStrings(xpath, contextNode, formElement, domFacad
           xf: XFORMS_NAMESPACE_URI,
         },
         namespaceResolver,
+        language: isJSON ? Language.XQUERY_3_1_LANGUAGE : Language.XPATH_3_1_LANGUAGE,
         xmlSerializer: new XMLSerializer(),
       },
     );
@@ -754,6 +813,8 @@ export function evaluateXPathToNumber(xpath, contextNode, formElement, domFacade
     const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
     const variablesInScope = getVariablesInScope(formElement);
 
+    const instance = formElement?.getModel?.()?.getInstance?.(formElement.instanceId);
+    const isJSON = instance?.type === 'json';
     return fxEvaluateXPathToNumber(xpath, contextNode, domFacade, variablesInScope, {
       currentContext: { formElement },
       functionNameResolver,
@@ -761,6 +822,7 @@ export function evaluateXPathToNumber(xpath, contextNode, formElement, domFacade
         xf: XFORMS_NAMESPACE_URI,
       },
       namespaceResolver,
+      language: isJSON ? Language.XQUERY_3_1_LANGUAGE : Language.XPATH_3_1_LANGUAGE,
       xmlSerializer: new XMLSerializer(),
     });
   } catch (e) {
@@ -865,11 +927,10 @@ registerCustomXPathFunction(
     if (instance) {
       if (instance.getAttribute('type') === 'json') {
         console.warn('log() does not work for JSON yet');
-        // return JSON.stringify(instance.getDefaultContext());
-      } else {
-        const def = new XMLSerializer().serializeToString(instance.getDefaultContext());
-        return prettifyXml(def);
+        return JSON.stringify(instance.getDefaultContext());
       }
+      const def = new XMLSerializer().serializeToString(instance.getDefaultContext());
+      return prettifyXml(def);
     }
     return null;
   },
@@ -903,18 +964,18 @@ registerCustomXPathFunction(
     console.log('parse', out);
 
     /*
-                const {formElement} = dynamicContext.currentContext;
-                const instance = resolveId(string, formElement, 'fx-instance');
-                if (instance) {
-                    if (instance.getAttribute('type') === 'json') {
-                        console.warn('log() does not work for JSON yet');
-                        // return JSON.stringify(instance.getDefaultContext());
-                    } else {
-                        const def = new XMLSerializer().serializeToString(instance.getDefaultContext());
-                        return Fore.prettifyXml(def);
-                    }
-                }
-        */
+                  const {formElement} = dynamicContext.currentContext;
+                  const instance = resolveId(string, formElement, 'fx-instance');
+                  if (instance) {
+                      if (instance.getAttribute('type') === 'json') {
+                          console.warn('log() does not work for JSON yet');
+                          // return JSON.stringify(instance.getDefaultContext());
+                      } else {
+                          const def = new XMLSerializer().serializeToString(instance.getDefaultContext());
+                          return Fore.prettifyXml(def);
+                      }
+                  }
+          */
     return out.firstElementChild;
   },
 );
@@ -1265,11 +1326,11 @@ registerXQueryModule(`
  Insert attribute somewhere
  ~:)
  declare %public %updating function my-custom-namespace:do-something ($ele as element()) as xs:boolean {
-	if ($ele/@done) then false() else
-	(insert node
-	attribute done {"true"}
-	into $ele, true())
-};
+ if ($ele/@done) then false() else
+ (insert node
+ attribute done {"true"}
+ into $ele, true())
+ };
  `)
  // At some point:
  const contextNode = null;

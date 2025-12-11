@@ -31,10 +31,104 @@ export function getDocPath(node) {
  * @returns string
  */
 export function getPath(node, instanceId) {
+  const instance = document.querySelector(`fx-instance[id='${instanceId}']`);
+
+  if (!instance) {
+    throw new Error(`Instance with id '${instanceId}' not found.`);
+  }
+
+  const isJson = instance.getAttribute('type') === 'json';
+
+  if (isJson) {
+    // if (typeof node === 'object' && node !== null && node.__jsonlens__ === true) {
+
+    // if (typeof node === 'object' && node !== null && node.__jsonlens__ === true) {
+    if (instance.type === 'json') {
+      return getJsonPath(node);
+    } else {
+      throw new Error('Unsupported node type for JSON instance in getPath');
+    }
+  } else {
+    if (node.nodeType !== undefined) {
+      return getXmlPath(node, instanceId);
+    } else {
+      throw new Error('Unsupported node type for XML instance in getPath');
+    }
+  }
+}
+
+function getXmlPath(node, instanceId) {
   const path = fx.evaluateXPathToString('path()', node);
   // Path is like `$default/x[1]/y[1]`
   const shortened = shortenPath(path);
   return shortened.startsWith('/') ? `$${instanceId}${shortened}` : `$${instanceId}/${shortened}`;
+}
+
+/*
+function getJsonPath(node) {
+  const segments = [];
+
+  let current = node;
+  while (current?.parent) {
+    const { keyOrIndex } = current;
+
+    if (typeof keyOrIndex === 'number') {
+      segments.unshift(`[${keyOrIndex}]`);
+    } else {
+      segments.unshift(`/${keyOrIndex}`);
+    }
+
+    current = current.parent;
+  }
+
+  // root node
+  if (segments.length === 0) {
+    return '/';
+  }
+
+  return segments.join('');
+}
+*/
+export function getJsonPath(node) {
+  if (!node || !node.__jsonlens__) {
+    throw new Error('getJsonPath called on non-JSONLens node');
+  }
+
+  const pathSegments = [];
+  let current = node;
+  let instanceId = node.instanceId || 'default';
+
+  while (current && current.parent) {
+    const { keyOrIndex, parent } = current;
+    if (typeof keyOrIndex === 'number') {
+      pathSegments.unshift(`[${keyOrIndex + 1}]`); // XPath is 1-based
+    } else {
+      pathSegments.unshift(`/${keyOrIndex}`);
+    }
+    current = parent;
+  }
+
+  return pathSegments.length > 0 ? `$${instanceId}${pathSegments.join('')}` : `$${instanceId}/`;
+}
+
+/**
+ * Parses a JSON-style binding expression like `?automobiles?1?maker`
+ * into a list of steps: ['automobiles', 0, 'maker']
+ *
+ * @param {string} ref
+ * @returns {Array<string|number>}
+ */
+export function parseJsonRef(ref) {
+  if (!ref || !ref.startsWith('?')) return null;
+
+  return ref
+    .split('?')
+    .filter(Boolean)
+    .map(part => {
+      // Convert numeric parts to 0-based numbers
+      const idx = Number(part);
+      return isNaN(idx) ? part : idx - 1;
+    });
 }
 
 /**

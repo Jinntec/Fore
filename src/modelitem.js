@@ -25,7 +25,7 @@ export class ModelItem {
    * @param {string} instance - The fx-instance id having created this ModelItem
    * @param {import('./fx-fore').FxFore} fore - The fx-fore element this ModelItem belongs to
    */
-  constructor(path, ref, node, bind, instance, fore) {
+  constructor(path, ref, nodeOrLens, bind, instance, fore) {
     this.path = path;
     this.ref = ref;
     this.readonly = ModelItem.READONLY_DEFAULT;
@@ -33,7 +33,13 @@ export class ModelItem {
     this.required = ModelItem.REQUIRED_DEFAULT;
     this.constraint = ModelItem.CONSTRAINT_DEFAULT;
     this.type = ModelItem.TYPE_DEFAULT;
-    this.node = node;
+    this.node = null;
+    this.lens = null;
+    if (nodeOrLens?.get && nodeOrLens?.set) {
+      this.lens = nodeOrLens;
+    } else {
+      this.node = nodeOrLens;
+    }
     this.bind = bind;
     this.instanceId = instance;
     this.fore = fore;
@@ -59,6 +65,7 @@ export class ModelItem {
   }
 
   get value() {
+    if (this.lens) return this.lens.get();
     if (!this.node) return null;
     if (!this.node.nodeType) return this.node;
     if (this.node.nodeType === Node.ATTRIBUTE_NODE) {
@@ -68,6 +75,13 @@ export class ModelItem {
   }
 
   set value(newVal) {
+    if (this.lens) {
+      const oldVal = this.lens.get();
+      this.lens.set(newVal);
+      if (oldVal !== newVal) this.notify();
+      return;
+    }
+
     if (!this.node) return;
     const oldVal = this.value;
 
