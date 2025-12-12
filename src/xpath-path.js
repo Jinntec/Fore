@@ -45,15 +45,13 @@ export function getPath(node, instanceId) {
     // if (typeof node === 'object' && node !== null && node.__jsonlens__ === true) {
     if (instance.type === 'json') {
       return getJsonPath(node);
-    } else {
-      throw new Error('Unsupported node type for JSON instance in getPath');
     }
+    throw new Error('Unsupported node type for JSON instance in getPath');
   } else {
     if (node.nodeType !== undefined) {
       return getXmlPath(node, instanceId);
-    } else {
-      throw new Error('Unsupported node type for XML instance in getPath');
     }
+    throw new Error('Unsupported node type for XML instance in getPath');
   }
 }
 
@@ -64,31 +62,6 @@ function getXmlPath(node, instanceId) {
   return shortened.startsWith('/') ? `$${instanceId}${shortened}` : `$${instanceId}/${shortened}`;
 }
 
-/*
-function getJsonPath(node) {
-  const segments = [];
-
-  let current = node;
-  while (current?.parent) {
-    const { keyOrIndex } = current;
-
-    if (typeof keyOrIndex === 'number') {
-      segments.unshift(`[${keyOrIndex}]`);
-    } else {
-      segments.unshift(`/${keyOrIndex}`);
-    }
-
-    current = current.parent;
-  }
-
-  // root node
-  if (segments.length === 0) {
-    return '/';
-  }
-
-  return segments.join('');
-}
-*/
 export function getJsonPath(node) {
   if (!node || !node.__jsonlens__) {
     throw new Error('getJsonPath called on non-JSONLens node');
@@ -96,7 +69,7 @@ export function getJsonPath(node) {
 
   const pathSegments = [];
   let current = node;
-  let instanceId = node.instanceId || 'default';
+  const instanceId = node.instanceId || 'default';
 
   while (current && current.parent) {
     const { keyOrIndex, parent } = current;
@@ -118,17 +91,39 @@ export function getJsonPath(node) {
  * @param {string} ref
  * @returns {Array<string|number>}
  */
-export function parseJsonRef(ref) {
-  if (!ref || !ref.startsWith('?')) return null;
+// returns null if it's not a JSON-lens style ref
+// otherwise returns { instanceId: string, steps: Array<string|number> }
+export function parseJsonRef(ref, defaultInstanceId = 'default') {
+  if (!ref) return null;
 
-  return ref
+  const s = String(ref).trim();
+
+  // Optional leading instance('id') / instance("id")
+  const instMatch = s.match(/^instance\s*\(\s*(['"])(.*?)\1\s*\)\s*(\?.*)?$/);
+
+  let instanceId;
+  let lensPart;
+
+  if (instMatch) {
+    instanceId = instMatch[2];
+    lensPart = instMatch[3] || '';
+  } else {
+    // No instance(...): must be a lens ref starting with '?'
+    if (!s.startsWith('?')) return null;
+    instanceId = defaultInstanceId;
+    lensPart = s;
+  }
+
+  const steps = lensPart
     .split('?')
     .filter(Boolean)
     .map(part => {
-      // Convert numeric parts to 0-based numbers
-      const idx = Number(part);
-      return isNaN(idx) ? part : idx - 1;
+      if (part === '*') return '*';
+      if (/^\d+$/.test(part)) return Number(part) - 1; // 1-based -> 0-based
+      return part;
     });
+
+  return { instanceId, steps };
 }
 
 /**
