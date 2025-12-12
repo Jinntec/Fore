@@ -303,19 +303,27 @@ export class XPathUtil {
    * @returns {string}
    */
   static getInstanceId(ref, boundElement) {
-    if (!ref) {
+    const refStr = typeof ref === 'string' ? ref.trim() : '';
+
+    // Explicit "default instance" selector
+    if (refStr.startsWith('instance()')) {
       return 'default';
     }
-    if (ref.startsWith('instance()')) {
-      return 'default';
+
+    // Explicit instance('id') selector at the START of the expression only
+    // (Do NOT use refStr.includes('instance(') because predicates may reference other instances.)
+    {
+      const m = refStr.match(/^instance\(\s*(['"])(?<id>.*?)\1\s*\)/);
+      if (m?.groups?.id != null) {
+        return m.groups.id;
+      }
     }
-    if (ref.startsWith('instance(')) {
-      const result = ref.substring(ref.indexOf('(') + 1);
-      return result.substring(1, result.indexOf(')') - 1);
-    }
-    if (ref.startsWith('$')) {
-      // this variable might actually point to an instance
-      const variableName = ref.match(/\$(?<variableName>[a-zA-Z0-9\-\_]+).*/)?.groups?.variableName;
+
+    // Variable indirection (may ultimately point to instance(...))
+    if (refStr.startsWith('$')) {
+      const variableName = refStr.match(/^\$(?<variableName>[a-zA-Z0-9\-_]+)/)?.groups
+        ?.variableName;
+
       let closestActualFormElement = boundElement;
       while (closestActualFormElement && !('inScopeVariables' in closestActualFormElement)) {
         closestActualFormElement =
@@ -325,12 +333,31 @@ export class XPathUtil {
       }
 
       const correspondingVariable = closestActualFormElement?.inScopeVariables?.get(variableName);
-      if (!correspondingVariable) {
-        return null;
-      }
+      if (!correspondingVariable) return null;
+
       return this.getInstanceId(correspondingVariable.valueQuery, correspondingVariable);
     }
-    return null;
+
+    // If we can't decide from the ref itself (relative paths, '/', '.', missing ref, fx-repeatitem),
+    // inherit from the nearest ancestor that *does* have a ref or explicit instance().
+    const parentBinding = XPathUtil.getParentBindingElement(boundElement);
+    if (parentBinding) {
+      // If this is a repeatitem boundary with no ref, keep climbing
+      if (parentBinding.matches?.('fx-repeatitem') && !parentBinding.getAttribute?.('ref')) {
+        return this.getInstanceId(null, parentBinding);
+      }
+
+      const parentRef = parentBinding.getAttribute?.('ref');
+      if (parentRef) {
+        return this.getInstanceId(parentRef, parentBinding);
+      }
+
+      // Parent binding exists but has no ref (rare, but safe): keep climbing
+      return this.getInstanceId(null, parentBinding);
+    }
+
+    // No parent binding => top of scope. If ref wasn't explicit, default.
+    return 'default';
   }
 
   /**
