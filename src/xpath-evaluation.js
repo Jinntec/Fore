@@ -9,6 +9,7 @@ import {
   parseScript,
   registerCustomXPathFunction,
   registerXQueryModule,
+  Language,
 } from 'fontoxpath';
 
 import * as fx from 'fontoxpath';
@@ -487,7 +488,7 @@ export function evaluateXPath(xpath, contextNode, formElement, variables = {}, o
         moduleImports: { xf: XFORMS_NAMESPACE_URI },
         functionNameResolver,
         namespaceResolver,
-        language: isJSON ? Language.XQUERY_3_1_LANGUAGE : Language.XPATH_3_1_LANGUAGE,
+        language: options.language || fxEvaluateXPath.XPATH_3_1_LANGUAGE,
       },
     );
     // console.log('evaluateXPath',xpath, result);
@@ -729,7 +730,7 @@ export function evaluateXPathToString(xpath, contextNode, formElement, domFacade
         xf: XFORMS_NAMESPACE_URI,
       },
       namespaceResolver,
-      language: isJSON ? Language.XQUERY_3_1_LANGUAGE : Language.XPATH_3_1_LANGUAGE,
+      language: Language.XQUERY_3_1_LANGUAGE,
       xmlSerializer: new XMLSerializer(),
     });
   } catch (e) {
