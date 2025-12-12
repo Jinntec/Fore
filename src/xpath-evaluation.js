@@ -467,12 +467,13 @@ export function evaluateXPath(xpath, contextNode, formElement, variables = {}, o
     );
 }
 */
+
 export function evaluateXPath(xpath, contextNode, formElement, variables = {}, options = {}) {
   try {
     const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
     const variablesInScope = getVariablesInScope(formElement);
-
-    const instance = formElement?.getModel?.()?.getInstance?.(formElement.instanceId);
+    const instanceId = XPathUtil.getInstanceId(xpath,formElement);
+    const instance = formElement?.getModel().getInstance(instanceId);
     const isJSON = instance?.type === 'json';
 
     const result = fxEvaluateXPath(
