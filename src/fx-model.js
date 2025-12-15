@@ -155,9 +155,11 @@ export class FxModel extends HTMLElement {
 */
 
       const parentLens = instance.nodeset;
-      const refSteps = parseJsonRef(ref);
-      const key = refSteps[refSteps.length - 1];
-      targetNode = getLensForNode(targetNode, parentLens, key, instanceId);
+      const parsedRef = parseJsonRef(ref);
+      if (parsedRef && parsedRef.steps && parsedRef.steps.length > 0) {
+        const key = parsedRef.steps[parsedRef.steps.length - 1];
+        targetNode = getLensForNode(targetNode, parentLens, key, instanceId);
+      }
     }
 
     // }

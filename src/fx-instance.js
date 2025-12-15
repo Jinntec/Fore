@@ -1,6 +1,7 @@
 import { Fore } from './fore.js';
 import { evaluateXPathToFirstNode } from './xpath-evaluation.js';
 import { wrapJson, JSONNode } from './json/JSONNode.js';
+import { JSONDomFacade } from './json/JSONDomFacade.js';
 
 async function handleResponse(fxInstance, response) {
   const { status } = response;
@@ -161,14 +162,14 @@ export class FxInstance extends HTMLElement {
    * @returns {Document|T|any|Element}
    */
   getDefaultContext() {
-    // Note: use the getter here: it might provide us with stubbed data if anything async is racing,
-    // such as an @src attribute
     const instanceData = this.getInstanceData();
     if (this.type === 'xml') {
       return instanceData.firstElementChild;
     }
-    return instanceData;
+    // JSON: use wrapped tree as context item
+    return this.nodeset;
   }
+
 
   /**
    * does the actual loading of data. Handles inline data, data loaded via fetch() or data constructed from
@@ -284,6 +285,7 @@ export class FxInstance extends HTMLElement {
       // JSON instance
       this.originalInstance = structuredClone(this.instanceData);
       this.nodeset = wrapJson(this.instanceData, null, null, this.id || 'default');
+      this.domFacade = new JSONDomFacade();
     }
   }
 

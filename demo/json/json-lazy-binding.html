@@ -19,7 +19,7 @@
 
   <fx-fore>
     <fx-model id="model1">
-      <fx-instance id="test-json" type="json">
+      <fx-instance type="json">
         {
           "person": {
             "name": "John Doe",
@@ -40,7 +40,7 @@
 
     <h2>Simple JSON Values (does not update data !!!)</h2>
     
-    <fx-control ref="?person?name">
+    <fx-control ref="?person?name" update-event="input">
       <label>Name:</label>
     </fx-control>
     

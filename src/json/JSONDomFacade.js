@@ -7,6 +7,10 @@ export class JSONDomFacade {
     return node.getChildren();
   }
 
+  getChildren(node) {
+    return node.getChildren();
+  }
+
   getChildNodeCount(node) {
     return node.getChildren().length;
   }

@@ -768,6 +768,10 @@ export class FxFore extends HTMLElement {
         }
       });
 
+      // Update template expressions after processing batched notifications
+      // This ensures template expressions are re-evaluated when data changes
+      this._processTemplateExpressions();
+
       // Clear the batch
       this.batchedNotifications.clear();
     }
@@ -794,6 +798,7 @@ export class FxFore extends HTMLElement {
 
     // console.log('######### storedTemplateExpressions', this.storedTemplateExpressions.length);
 
+    if(!tmplExpressions) return;
     /*
     storing expressions and their nodes for re-evaluation
     */

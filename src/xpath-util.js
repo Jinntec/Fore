@@ -281,7 +281,7 @@ export class XPathUtil {
    */
   static isAbsolutePath(path) {
     return (
-      path != null && (path.startsWith('/') || path.startsWith('instance(') || path.startsWith('$'))
+      path != null && (path.startsWith('/') || path.startsWith('instance(') || path.startsWith('$') || path.startsWith('?'))
     );
   }
 

@@ -19,6 +19,23 @@ export class JSONNode {
     }
   }
 
+  // Methods for JSONDomFacade compatibility
+  getParent() {
+    return this.parent;
+  }
+
+  getChildren() {
+    return this.children;
+  }
+
+  getKey() {
+    return this.keyOrIndex;
+  }
+
+  getValue() {
+    return this.value;
+  }
+
   /**
    * Get the value of this node or a child node by key.
    * @param {string|number} [key] - Optional key or index to get a child node
@@ -82,6 +99,12 @@ export class JSONNode {
    */
   set(value) {
     this.value = value;
+
+    // Update the parent's data structure if this is a child node
+    if (this.parent && this.keyOrIndex !== null && this.keyOrIndex !== undefined) {
+      this.parent.value[this.keyOrIndex] = value;
+    }
+
     this.children = [];
     if (Array.isArray(value)) {
       this.children = value.map(
