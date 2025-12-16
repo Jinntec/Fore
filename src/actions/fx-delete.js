@@ -1,46 +1,268 @@
+// src/actions/fx-delete.js
+
 import { AbstractAction } from './abstract-action.js';
 import { Fore } from '../fore.js';
-import { evaluateXPathToNodes } from '../xpath-evaluation.js';
 import { XPathUtil } from '../xpath-util.js';
 import getInScopeContext from '../getInScopeContext.js';
 
 /**
- * `fx-delete`
- * deletes nodes from instance data.
+ * fx-delete
  *
- * @fires deleted event
- * @customElement
- * @demo demo/todo.html
+ * XML: remove DOM nodes using XPath.
+ * JSON: delete JSONNode(s) (node.__jsonlens__ === true) without calling FontoXPath.
+ *
+ * Rationale: evaluating ref="." through FontoXPath while using a JSONDomFacade can recurse
+ * (eg. getParentNode / getAllAttributes / etc.) and blow the stack.
  */
 class FxDelete extends AbstractAction {
   static get properties() {
     return {
       ...super.properties,
-      ref: {
-        type: String,
-      },
+      ref: { type: String },
     };
   }
 
-  /**
-   * deletes nodes from instance data.
-   *
-   * Will NOT perform delete if nodeset is pointing to document node, document fragment, root node or being readonly.
-   */
   async perform() {
-    const inscopeContext = getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
-    this.nodeset = evaluateXPathToNodes(this.ref, inscopeContext, this);
+    const ref = (this.getAttribute('ref') || this.ref || '.').trim() || '.';
 
-    // console.log('delete nodeset ', this.nodeset);
+    // IMPORTANT: for JSON this must become the current JSON repeat item (JSONNode)
+    // when ref="." is used inside an fx-repeat.
+    const inscopeContext = getInScopeContext(this.getAttributeNode('ref') || this, ref);
 
-    const instanceId = XPathUtil.resolveInstance(this, this.ref);
+    // Resolve instance from the *action element* (never from a JSONNode!)
+    const instanceId = XPathUtil.resolveInstance(this, ref);
     const instance = this.getModel().getInstance(instanceId);
 
-    // const path = instance && this.nodeset.length !== 0 ? evaluateXPathToString('path()', this.nodeset[0], instance) : '';
+    const isJsonInstance =
+      !!instance &&
+      (instance.type === 'json' ||
+        (typeof instance.getAttribute === 'function' && instance.getAttribute('type') === 'json'));
 
-    const path = Fore.getDomNodeIndexString(this.nodeset);
+    if (isJsonInstance) {
+      return this._performJsonDelete(ref, inscopeContext, instance, instanceId);
+    }
 
-    const nodesToDelete = this.nodeset;
+    return this._performXmlDelete(ref, inscopeContext, instance, instanceId);
+  }
+
+  // -----------------
+  // JSON delete branch
+  // -----------------
+
+  async _performJsonDelete(ref, inscopeContext, instance, instanceId) {
+    const nodesToDelete = this._resolveJsonNodeset(ref, inscopeContext, instance);
+    this.nodeset = nodesToDelete;
+
+    const path = this._jsonNodesetPath(nodesToDelete);
+
+    this.dispatchEvent(
+      new CustomEvent('execute-action', {
+        composed: true,
+        bubbles: true,
+        cancelable: true,
+        detail: { action: this, event: this.event, path, isJson: true },
+      }),
+    );
+
+    if (!nodesToDelete.length) {
+      this.needsUpdate = true;
+      return;
+    }
+
+    const removed = this._deleteJsonNodes(nodesToDelete);
+    if (!removed.length) {
+      this.needsUpdate = true;
+      return;
+    }
+
+    const fore = this.getOwnerForm();
+
+    await Fore.dispatch(instance, 'deleted', {
+      ref: path,
+      deletedNodes: removed,
+      instanceId,
+      parent: removed[0]?.parent || null,
+      foreId: fore?.id,
+      isJson: true,
+    });
+
+    this.needsUpdate = true;
+  }
+
+  _isJsonNode(n) {
+    return !!n && n.__jsonlens__ === true;
+  }
+
+  /**
+   * Resolve ref to JSONNode(s) without calling fontoxpath.
+   * Supports:
+   *  - '.'
+   *  - '?a?b'
+   *  - "instance('id')?a?b"
+   *  - '?*' (returns children)
+   */
+  _resolveJsonNodeset(ref, inscopeContext, instance) {
+    // 1) '.' means: current JSON node (repeat item) or instance root
+    if (ref === '.') {
+      if (this._isJsonNode(inscopeContext)) return [inscopeContext];
+      if (this._isJsonNode(instance?.nodeset)) return [instance.nodeset];
+      return [];
+    }
+
+    // 2) lens refs
+    const parsed = this._parseJsonLensRef(ref);
+    if (!parsed) return [];
+
+    const model = this.getModel();
+    const targetInstance = model?.getInstance?.(parsed.instanceId) || instance;
+    const root = targetInstance?.nodeset;
+    if (!this._isJsonNode(root)) return [];
+
+    // Base:
+    // - explicit instance('x') => root
+    // - otherwise: relative to JSON inscope if available, else root
+    let node = parsed.hasExplicitInstance
+      ? root
+      : this._isJsonNode(inscopeContext)
+        ? inscopeContext
+        : root;
+
+    for (const step of parsed.steps) {
+      if (!node) return [];
+      if (step === '*') {
+        return Array.isArray(node.children) ? node.children : [];
+      }
+      node = typeof node.get === 'function' ? node.get(step) : null;
+    }
+
+    if (!node) return [];
+
+    // If the final node is an array container, treat its children as the nodeset.
+    if (Array.isArray(node.value)) return node.children || [];
+
+    return [node];
+  }
+
+  _parseJsonLensRef(ref, defaultInstanceId = 'default') {
+    if (!ref) return null;
+    const s = String(ref).trim();
+
+    const instMatch = s.match(/^instance\s*\(\s*(['\"])(.*?)\1\s*\)\s*(\?.*)?$/);
+    let instanceId;
+    let lensPart;
+
+    if (instMatch) {
+      instanceId = instMatch[2];
+      lensPart = instMatch[3] || '';
+    } else {
+      if (!s.startsWith('?')) return null;
+      instanceId = defaultInstanceId;
+      lensPart = s;
+    }
+
+    const steps = lensPart
+      .split('?')
+      .filter(Boolean)
+      .map(part => {
+        if (part === '*') return '*';
+        if (/^\d+$/.test(part)) return Number(part) - 1; // 1-based -> 0-based
+        return part;
+      });
+
+    return { instanceId, steps, hasExplicitInstance: !!instMatch };
+  }
+
+  _jsonNodesetPath(nodes) {
+    const first = nodes?.[0];
+    if (!first) return '';
+    if (typeof first.getPath === 'function') return first.getPath();
+    // fallback: behave like root
+    const inst = first.instanceId || 'default';
+    return `$${inst}/`;
+  }
+
+  _deleteJsonNodes(nodes) {
+    const model = this.getModel();
+    const removed = [];
+
+    // Never delete root, and keep indices stable: delete array members from the end.
+    const arrayNodes = [];
+    const objectNodes = [];
+
+    for (const n of nodes) {
+      if (!this._isJsonNode(n)) continue;
+      if (!n.parent) continue;
+
+      const p = n.parent;
+      if (Array.isArray(p.value) && typeof n.keyOrIndex === 'number') arrayNodes.push(n);
+      else objectNodes.push(n);
+    }
+
+    arrayNodes.sort((a, b) => (b.keyOrIndex ?? 0) - (a.keyOrIndex ?? 0));
+
+    const canDelete = n => {
+      try {
+        const mi = model?.getModelItem?.(n);
+        return !mi?.readonly;
+      } catch (_e) {
+        return true;
+      }
+    };
+
+    const rebuildUp = start => {
+      let cur = start;
+      while (cur) {
+        if (typeof cur._buildChildren === 'function') cur._buildChildren();
+        cur = cur.parent;
+      }
+    };
+
+    const removeModelItem = n => {
+      try {
+        model?.removeModelItem?.(n);
+      } catch (_e) {
+        // ignore
+      }
+    };
+
+    const doDelete = n => {
+      if (!canDelete(n)) return;
+      const p = n.parent;
+      if (!p) return;
+
+      if (Array.isArray(p.value) && typeof n.keyOrIndex === 'number') {
+        p.value.splice(n.keyOrIndex, 1);
+        removed.push(n);
+        rebuildUp(p);
+        removeModelItem(n);
+        return;
+      }
+
+      if (p.value && typeof p.value === 'object' && typeof n.keyOrIndex === 'string') {
+        delete p.value[n.keyOrIndex];
+        removed.push(n);
+        rebuildUp(p);
+        removeModelItem(n);
+      }
+    };
+
+    arrayNodes.forEach(doDelete);
+    objectNodes.forEach(doDelete);
+
+    return removed;
+  }
+
+  // -----------------
+  // XML delete branch
+  // -----------------
+
+  async _performXmlDelete(ref, inscopeContext, instance, instanceId) {
+    const { evaluateXPathToNodes } = await import('../xpath-evaluation.js');
+
+    const nodesToDelete = evaluateXPathToNodes(ref, inscopeContext, this);
+    this.nodeset = nodesToDelete;
+
+    const path = Fore.getDomNodeIndexString(nodesToDelete);
 
     this.dispatchEvent(
       new CustomEvent('execute-action', {
@@ -52,56 +274,44 @@ class FxDelete extends AbstractAction {
     );
 
     const fore = this.getOwnerForm();
-
+    const removedNodes = [];
     let parent;
 
-    const removedNodes = [];
     if (Array.isArray(nodesToDelete)) {
-      if (nodesToDelete.length === 0) {
-        return;
-      }
+      if (nodesToDelete.length === 0) return;
       parent = nodesToDelete[0].parentNode;
-
       nodesToDelete.forEach(item => {
-        if (this._deleteNode(parent, item)) {
+        if (this._deleteXmlNode(parent, item)) {
           fore.signalChangeToElement(item.localName);
           removedNodes.push(item);
         }
       });
-      if (removedNodes.length) {
-        fore.signalChangeToElement(parent.localName);
-      }
-    } else {
+      if (removedNodes.length) fore.signalChangeToElement(parent.localName);
+    } else if (nodesToDelete) {
       parent = nodesToDelete.parentNode;
-      if (this._deleteNode(parent, nodesToDelete)) {
+      if (this._deleteXmlNode(parent, nodesToDelete)) {
         fore.signalChangeToElement(parent.localName);
-
         fore.signalChangeToElement(nodesToDelete.localName);
         removedNodes.push(nodesToDelete);
       }
     }
 
-    if (removedNodes.length) {
-      await Fore.dispatch(instance, 'deleted', {
-        ref: path,
-        deletedNodes: removedNodes,
-        instanceId,
-        parent,
-        foreId: fore.id,
-      });
-      this.needsUpdate = true;
-    }
+    if (!removedNodes.length) return;
+
+    await Fore.dispatch(instance, 'deleted', {
+      ref: path,
+      deletedNodes: removedNodes,
+      instanceId,
+      parent,
+      foreId: fore?.id,
+    });
+
+    this.needsUpdate = true;
   }
 
-  /**
-   * Delete a node (if allowed). Does not hold for JSON
-   *
-   * @param {ParentNode}  parent - The parent of the node to remove
-   * @param {ChildNode}   node   - The child to remove
-   *
-   * @returns {boolean} Whether the delete is allowed and succeeded
-   */
-  _deleteNode(parent, node) {
+  _deleteXmlNode(parent, node) {
+    if (!parent || !node) return false;
+
     if (
       parent.nodeType === Node.DOCUMENT_NODE ||
       node.nodeType === Node.DOCUMENT_NODE ||
@@ -112,16 +322,10 @@ class FxDelete extends AbstractAction {
     }
 
     const mi = this.getModel().getModelItem(node);
-    // Note that the model item can be absent, For elements that had no controls on them.
-    // In that case, allow removals
-    if (mi?.readonly) {
-      return false;
-    }
+    if (mi?.readonly) return false;
 
     parent.removeChild(node);
-
     this.getModel().removeModelItem(node);
-
     return true;
   }
 }

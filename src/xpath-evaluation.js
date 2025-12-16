@@ -462,6 +462,10 @@ export function evaluateXPath(
   options = {},
   domFacade = null,
 ) {
+  const trimmedExpr = String(xpath ?? '').trim();
+  if (contextNode && contextNode.__jsonlens__ === true && trimmedExpr === '.') {
+    return [contextNode];
+  }
   const lensNodes = _resolveJsonLensToNodes(xpath, contextNode, formElement);
   if (lensNodes) return lensNodes;
 
@@ -514,6 +518,10 @@ export function evaluateXPath(
 }
 
 export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
+  const trimmedExpr = String(xpath ?? '').trim();
+  if (contextNode && contextNode.__jsonlens__ === true && trimmedExpr === '.') {
+    return [contextNode];
+  }
   const lens = _resolveJsonLens(xpath, contextNode, formElement);
   if (lens) return Array.isArray(lens) ? lens[0] || null : lens;
 
@@ -555,6 +563,10 @@ export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
 }
 
 export function evaluateXPathToNodes(xpath, contextNode, formElement) {
+  const trimmedExpr = String(xpath ?? '').trim();
+  if (contextNode && contextNode.__jsonlens__ === true && trimmedExpr === '.') {
+    return [contextNode];
+  }
   const lensNodes = _resolveJsonLensToNodes(xpath, contextNode, formElement);
   if (lensNodes) return lensNodes;
 
@@ -645,6 +657,10 @@ export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
 }
 
 export function evaluateXPathToString(xpath, contextNode, formElement, domFacade = null) {
+  const trimmedExpr = String(xpath ?? '').trim();
+  if (contextNode && contextNode.__jsonlens__ === true && trimmedExpr === '.') {
+    return [contextNode];
+  }
   const lens = _resolveJsonLens(xpath, contextNode, formElement);
   if (lens && !Array.isArray(lens)) return String(lens.get());
 
