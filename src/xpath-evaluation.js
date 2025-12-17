@@ -185,75 +185,30 @@ export function isInShadow(node) {
   return node.getRootNode() instanceof ShadowRoot;
 }
 
-function resolveJsonLens(xpath, contextNode, formElement) {
-  if (typeof xpath !== 'string') return null;
-
-  const trimmed = xpath.trim();
-  // lens refs: "?a?b" or "instance('x')?a?b"
-  if (!(trimmed.startsWith('?') || trimmed.startsWith('instance('))) return null;
-
-  const parsed = parseJsonRef(trimmed, 'default');
-  if (!parsed) return null;
-
-  // If ref explicitly targets an instance, use that root; otherwise, prefer JSON contextNode.
-  let startNode = null;
-
-  if (trimmed.startsWith('instance(')) {
-    const inst = formElement?.getModel?.()?.getInstance?.(parsed.instanceId);
-    startNode = inst?.nodeset || null; // FxInstance sets this for JSON
-  } else if (contextNode?.__jsonlens__) {
-    startNode = contextNode;
-  } else {
-    const inst = formElement?.getModel?.()?.getInstance?.(parsed.instanceId);
-    startNode = inst?.nodeset || null;
-  }
-
-  if (!startNode || !startNode.__jsonlens__) return null;
-
-  // Walk steps on the EXISTING JSONNode tree so parent/keyOrIndex stay intact
-  let node = startNode;
-
-  for (const step of parsed.steps) {
-    if (step === '*') {
-      return node.children || [];
-    }
-    node = node?.get(step);
-    if (!node) return null;
-  }
-
-  return node;
-}
-
 /**
- * Resolve an id in scope. Behaves like the algorithm defined on https://www.w3.org/community/xformsusers/wiki/XForms_2.0#idref-resolve
- *
- * @param {string} id
- * @param {Node} sourceObject
- * @param {string} nodeName
- *
- * @returns {HTMLElement} The element with that ID, resolved with respect to repeats
+ * Resolve an id in scope. Behaves like the algorithm defined on
+ * https://www.w3.org/community/xformsusers/wiki/XForms_2.0#idref-resolve
  */
 export function resolveId(id, sourceObject, nodeName = null) {
   const query =
     'outermost(ancestor-or-self::fx-fore[1]/(descendant::fx-fore|descendant::*[@id = $id]))[not(self::fx-fore)]';
+
   if (sourceObject.nodeType === Node.TEXT_NODE) {
     sourceObject = sourceObject.parentNode;
   }
   if (sourceObject.nodeType === Node.ATTRIBUTE_NODE) {
     sourceObject = sourceObject.ownerElement;
   }
-  if (sourceObject.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+  if (sourceObject.parentNode?.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
     sourceObject = sourceObject.parentNode.host;
   }
+
   const ownerForm =
     sourceObject.localName === 'fx-fore' ? sourceObject : sourceObject.closest('fx-fore');
   const elementsWithId = ownerForm.querySelectorAll(`[id='${id}']`);
   if (elementsWithId.length === 1) {
-    // A single one is found. Assume no ID reuse.
     const targetObject = elementsWithId[0];
-    if (nodeName && targetObject.localName !== nodeName) {
-      return null;
-    }
+    if (nodeName && targetObject.localName !== nodeName) return null;
     return targetObject;
   }
 
@@ -264,10 +219,7 @@ export function resolveId(id, sourceObject, nodeName = null) {
     { id },
     { namespaceResolver: xhtmlNamespaceResolver },
   );
-
-  if (allMatchingTargetObjects.length === 0) {
-    return null;
-  }
+  if (allMatchingTargetObjects.length === 0) return null;
 
   if (
     allMatchingTargetObjects.length === 1 &&
@@ -279,32 +231,11 @@ export function resolveId(id, sourceObject, nodeName = null) {
       { namespaceResolver: xhtmlNamespaceResolver },
     )
   ) {
-    // If the target element is not repeated, then the search for the target object is trivial since
-    // there is only one associated with the target element that bears the matching ID. This is true
-    // regardless of whether or not the source object is repeated. However, if the target element is
-    // repeated, then additional information must be used to help select a target object from among
-    // those associated with the identified target element.
     const targetObject = allMatchingTargetObjects[0];
-    if (nodeName && targetObject.localName !== nodeName) {
-      return null;
-    }
+    if (nodeName && targetObject.localName !== nodeName) return null;
     return targetObject;
   }
 
-  // SPEC:
-
-  // 12.2.1 References to Elements within a repeat Element
-
-  // When the target element that is identified by the IDREF of a source object has one or more
-  // repeat elements as ancestors, then the set of ancestor repeats are partitioned into two
-  // subsets, those in common with the source element and those that are not in common. Any ancestor
-  // repeat elements of the target element not in common with the source element are descendants of
-  // the repeat elements that the source and target element have in common, if any.
-
-  // For the repeat elements that are in common, the desired target object exists in the same set of
-  // run-time objects that contains the source object. Then, for each ancestor repeat of the target
-  // element that is not in common with the source element, the current index of the repeat
-  // determines the set of run-time objects that contains the desired target object.
   for (const ancestorRepeatItem of fxEvaluateXPathToNodes(
     'ancestor::fx-repeatitem => reverse()',
     sourceObject,
@@ -317,20 +248,13 @@ export function resolveId(id, sourceObject, nodeName = null) {
     );
     switch (foundTargetObjects.length) {
       case 0:
-        // Nothing found: ignore
         break;
       case 1: {
-        // A single one is found: the target object is directly in a common repeat
         const targetObject = foundTargetObjects[0];
-        if (nodeName && targetObject.localName !== nodeName) {
-          return null;
-        }
+        if (nodeName && targetObject.localName !== nodeName) return null;
         return targetObject;
       }
       default: {
-        // Multiple target objects are found: they are in a repeat that is not common with the
-        // source object We found a target object in a common repeat! We now need to find the one
-        // that is in the repeatitem identified at the current index
         const targetObject = foundTargetObjects.find(to =>
           fxEvaluateXPathToNodes(
             'every $ancestor of ancestor::fx-repeatitem satisfies $ancestor is $ancestor/../child::fx-repeatitem[../@repeat-index]',
@@ -339,34 +263,23 @@ export function resolveId(id, sourceObject, nodeName = null) {
             {},
           ),
         );
-        if (!targetObject) {
-          // Nothing valid found for whatever reason. This might be something dynamic?
-          return null;
-        }
-        if (nodeName && targetObject.localName !== nodeName) {
-          return null;
-        }
+        if (!targetObject) return null;
+        if (nodeName && targetObject.localName !== nodeName) return null;
         return targetObject;
       }
     }
   }
-  // We found no target objects in common repeats. The id is unresolvable
   return null;
 }
 
-// Make namespace resolving use the `instance` element that is related to here
+// Namespace resolving infra
 const xmlDocument = new DOMParser().parseFromString('<xml />', 'text/xml');
-
 const instanceReferencesByQuery = new Map();
 
 function findInstanceReferences(xpathQuery) {
-  if (!xpathQuery.includes('instance')) {
-    // No call to the instance function anyway: short-circuit and prevent AST processing
-    return [];
-  }
-  if (instanceReferencesByQuery.has(xpathQuery)) {
-    return instanceReferencesByQuery.get(xpathQuery);
-  }
+  if (!xpathQuery.includes('instance')) return [];
+  if (instanceReferencesByQuery.has(xpathQuery)) return instanceReferencesByQuery.get(xpathQuery);
+
   const xpathAST = parseScript(xpathQuery, {}, xmlDocument);
   const instanceReferences = fxEvaluateXPathToStrings(
     `descendant::xqx:functionCallExpr
@@ -384,37 +297,19 @@ function findInstanceReferences(xpathQuery) {
   );
 
   instanceReferencesByQuery.set(xpathQuery, instanceReferences);
-
   return instanceReferences;
 }
+
 /**
  * @typedef {function(string):string} NamespaceResolver
  */
 
-/**
- * @function
- * Resolve a namespace. Needs a namespace prefix and the element that is most closely related to the
- * XPath in which the namespace is being resolved. The prefix will be resolved by using the
- * ancestry of said element.
- *
- * It has two ways of doing so:
- *
- * - If the prefix is defined in an `xmlns:XXX="YYY"` namespace declaration, it will return 'YYY'.
- * - If the prefix is the empty prefix and there is an `xpath-default-namespace="YYY"` attribute in
- * - the * ancestry, that attribute will be used and 'YYY' will be returned
- *
- * @param  {string} xpathQuery
- * @param  {HTMLElement} formElement
- * @returns {NamespaceResolver} The namespace resolver for this context
- */
 export function createNamespaceResolver(xpathQuery, formElement) {
   const cachedResolver = getCachedNamespaceResolver(xpathQuery, formElement);
-  if (cachedResolver) {
-    return cachedResolver;
-  }
+  if (cachedResolver) return cachedResolver;
+
   let instanceReferences = findInstanceReferences(xpathQuery);
   if (instanceReferences.length === 0) {
-    // No instance functions. Look up further in the hierarchy to see if we can deduce the intended context from there
     const ancestorComponent =
       formElement.parentNode &&
       formElement.parentNode.nodeType === formElement.ELEMENT_NODE &&
@@ -427,17 +322,12 @@ export function createNamespaceResolver(xpathQuery, formElement) {
       setCachedNamespaceResolver(xpathQuery, formElement, resolver);
       return resolver;
     }
-    // Nothing found: let's just assume we're supposed to use the `default` instance
     instanceReferences = ['default'];
   }
 
   if (instanceReferences.length === 1) {
-    // console.log(`resolving ${xpathQuery} with ${instanceReferences[0]}`);
     let instance;
     if (instanceReferences[0] === 'default') {
-      /**
-       * @type {HTMLElement}
-       */
       const actualForeElement = fxEvaluateXPathToFirstNode(
         'ancestor-or-self::fx-fore[1]',
         formElement,
@@ -445,7 +335,6 @@ export function createNamespaceResolver(xpathQuery, formElement) {
         null,
         { namespaceResolver: xhtmlNamespaceResolver },
       );
-
       instance = actualForeElement && actualForeElement.querySelector('fx-instance');
     } else {
       instance = resolveId(instanceReferences[0], formElement, 'fx-instance');
@@ -453,20 +342,7 @@ export function createNamespaceResolver(xpathQuery, formElement) {
 
     if (instance && instance.hasAttribute('xpath-default-namespace')) {
       const xpathDefaultNamespace = instance.getAttribute('xpath-default-namespace');
-      /*
-            console.log(
-              `Resolving the xpath ${xpathQuery} with the default namespace set to ${xpathDefaultNamespace}`,
-            );
-			*/
-      /**
-       * @type {NamespaceResolver}
-       */
-      const resolveNamespacePrefix = prefix => {
-        if (!prefix) {
-          return xpathDefaultNamespace;
-        }
-        return undefined;
-      };
+      const resolveNamespacePrefix = prefix => (!prefix ? xpathDefaultNamespace : undefined);
       setCachedNamespaceResolver(xpathQuery, formElement, resolveNamespacePrefix);
       return resolveNamespacePrefix;
     }
@@ -476,17 +352,10 @@ export function createNamespaceResolver(xpathQuery, formElement) {
     fxEvaluateXPathToString('ancestor-or-self::*/@xpath-default-namespace[last()]', formElement) ||
     '';
 
-  /**
-   * @type {NamespaceResolver}
-   */
   const resolveNamespacePrefix = function resolveNamespacePrefix(prefix) {
     if (prefix === '') {
       return xpathDefaultNamespace;
     }
-
-    // Note: ideally we should use Node#lookupNamespaceURI. However, the nodes we are passed are
-    // XML. The best we can do is emulate the `xmlns:xxx` namespace declarations by regarding them as
-    // attributes. Which they technically ARE NOT!
 
     return fxEvaluateXPathToString(
       'ancestor-or-self::*/@*[name() = "xmlns:" || $prefix][last()]',
@@ -502,20 +371,14 @@ export function createNamespaceResolver(xpathQuery, formElement) {
 
 function createNamespaceResolverForNode(query, contextNode, formElement) {
   if (((contextNode && contextNode.ownerDocument) || contextNode) === window.document) {
-    // Running a query on the HTML DOM. Don't bother resolving namespaces in any other way
     return xhtmlNamespaceResolver;
   }
   return createNamespaceResolver(query, formElement);
 }
 
-/**
- * Implementation of the functionNameResolver passed to FontoXPath to
- * redirect function resolving for unprefixed functions to either the fn or the xf namespace
- */
 // eslint-disable-next-line no-unused-vars
 function functionNameResolver({ prefix, localName }, _arity) {
   switch (localName) {
-    // TODO: put the full XForms library functions set here
     case 'context':
     case 'base64encode':
     case 'boolean-from-string':
@@ -545,8 +408,6 @@ function functionNameResolver({ prefix, localName }, _arity) {
       return { namespaceURI: XFORMS_NAMESPACE_URI, localName };
     default:
       if (prefix === '' && globallyDeclaredFunctionLocalNames.includes(localName)) {
-        // The function has been declared without a prefix and is called here without a prefix.
-        // Just make this work. It is the developer-friendly way
         return { namespaceURI: 'http://www.w3.org/2005/xquery-local-functions', localName };
       }
       if (prefix === 'fn' || prefix === '') {
@@ -559,14 +420,6 @@ function functionNameResolver({ prefix, localName }, _arity) {
   }
 }
 
-/**
- * Get the variables in scope of the form element. These are the values of the variables that
- * logically precede the formElement that declares the XPath
- *
- * @param  {Node}  formElement  The element that declares the XPath
- *
- * @returns  {Object}  A key-value mapping of the variables
- */
 function getVariablesInScope(formElement) {
   let closestActualFormElement = formElement;
   while (closestActualFormElement && !('inScopeVariables' in closestActualFormElement)) {
@@ -588,11 +441,8 @@ function getVariablesInScope(formElement) {
         continue;
       }
       if (varElementOrValue.nodeType) {
-        // We are a var element, set the value to the value computed there
         variables[key] = varElementOrValue.value;
-        // variables[key] = varElementOrValue.inScopeVariables.get(key);
       } else {
-        // We are a direct value. This is used to leak in event variables
         variables[key] = varElementOrValue;
       }
     }
@@ -600,71 +450,58 @@ function getVariablesInScope(formElement) {
   return variables;
 }
 
-/**
- * Evaluate an XPath to _any_ type. When possible, prefer to use any other function to ensure the
- * type of the output is more predictable.
- *
- * @param  {string} xpath  The XPath to run
- * @param  {Node} contextNode The start of the XPath
- * @param  {import('./ForeElementMixin.js').default} formElement  The form element associated to the XPath
- * @param  {Object} variables  Any variables to pass to the XPath
- * @param  {Object} options  Any options to pass to the XPath
- *
- * @returns {any[]}
- */
-/*
-export function evaluateXPath(xpath, contextNode, formElement, variables = {}, options={}, domFacade = null) {
-    const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
-    const variablesInScope = getVariablesInScope(formElement);
+// ---------------------------
+// Exported evaluation helpers
+// ---------------------------
 
-    return fxEvaluateXPath(
-        xpath,
-        contextNode,
-        domFacade,
-        {...variablesInScope, ...variables},
-        fxEvaluateXPath.ALL_RESULTS_TYPE,
-        {
-			debug: true,
-            currentContext: {formElement, variables},
-            moduleImports: {
-                xf: XFORMS_NAMESPACE_URI,
-            },
-            functionNameResolver,
-            namespaceResolver,
-			language: options.language || evaluateXPath.XPATH_3_1
-        },
-    );
-}
-*/
+export function evaluateXPath(
+  xpath,
+  contextNode,
+  formElement,
+  variables = {},
+  options = {},
+  domFacade = null,
+) {
+  const trimmedExpr = String(xpath ?? '').trim();
+  if (contextNode && contextNode.__jsonlens__ === true && trimmedExpr === '.') {
+    return [contextNode];
+  }
+  const lensNodes = _resolveJsonLensToNodes(xpath, contextNode, formElement);
+  if (lensNodes) return lensNodes;
 
-export function evaluateXPath(xpath, contextNode, formElement, variables = {}, options = {}) {
   try {
     const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
     const variablesInScope = getVariablesInScope(formElement);
-    const instanceId = XPathUtil.getInstanceId(xpath, formElement);
-    const instance = formElement?.getModel().getInstance(instanceId);
-    const isJSON = instance?.type === 'json';
 
-    const result = fxEvaluateXPath(
-      xpath,
-      contextNode,
-      isJSON ? instance.domFacade : null,
+    const effectiveFacade = getJsonFacade(formElement, xpath, contextNode, domFacade);
+    const isJson = !!effectiveFacade && shouldUseJson(xpath, contextNode);
+    const expr = normalizeUnaryLookup(xpath, isJson);
+
+    const instanceId = XPathUtil.getInstanceId(expr, formElement);
+    const instance = formElement?.getModel?.()?.getInstance?.(instanceId);
+    const effectiveContext = isJson && !contextNode?.__jsonlens__ ? instance?.nodeset : contextNode;
+
+    return fxEvaluateXPath(
+      expr,
+      effectiveContext,
+      effectiveFacade,
       { ...variablesInScope, ...variables },
       fxEvaluateXPath.ALL_RESULTS_TYPE,
       {
-        xmlSerializer: new XMLSerializer(),
         debug: true,
         currentContext: { formElement, variables },
         moduleImports: { xf: XFORMS_NAMESPACE_URI },
         functionNameResolver,
         namespaceResolver,
-        language: options.language || fxEvaluateXPath.XPATH_3_1_LANGUAGE,
+        language: isJson
+          ? Language.XQUERY_3_1_LANGUAGE
+          : options.language || fxEvaluateXPath.XPATH_3_1_LANGUAGE,
+        xmlSerializer: new XMLSerializer(),
+        ...options,
       },
     );
-    // console.log('evaluateXPath',xpath, result);
-    return result;
   } catch (e) {
-    formElement.dispatchEvent(
+    formElement?.dispatchEvent?.(
       new CustomEvent('error', {
         composed: false,
         bubbles: true,
@@ -679,14 +516,7 @@ export function evaluateXPath(xpath, contextNode, formElement, variables = {}, o
     return [];
   }
 }
-/**
- * Evaluate an XPath to the first Node
- *
- * @param  {string} xpath  The XPath to run
- * @param  {Node} contextNode The start of the XPath
- * @param  {import('./ForeElementMixin.js').default} formElement  The form element associated to the XPath
- * @returns {Node} The first node found in the XPath
- */
+
 export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
   const trimmedExpr = String(xpath ?? '').trim();
   if (contextNode && contextNode.__jsonlens__ === true && trimmedExpr === '.') {
@@ -732,14 +562,6 @@ export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
   }
 }
 
-/**
- * Evaluate an XPath to all nodes
- *
- * @param  {string} xpath  The XPath to run
- * @param  {Node} contextNode The start of the XPath
- * @param  {import('./ForeElementMixin.js').default} formElement  The form element associated to the XPath
- * @return {Node[]}  All nodes
- */
 export function evaluateXPathToNodes(xpath, contextNode, formElement) {
   const trimmedExpr = String(xpath ?? '').trim();
   if (contextNode && contextNode.__jsonlens__ === true && trimmedExpr === '.') {
@@ -785,14 +607,6 @@ export function evaluateXPathToNodes(xpath, contextNode, formElement) {
   }
 }
 
-/**
- * Evaluate an XPath to a boolean
- *
- * @param  {string} xpath  The XPath to run
- * @param  {Node} contextNode The start of the XPath
- * @param  {import('./ForeElementMixin.js').default} formElement  The form element associated to the XPath
- * @return {boolean}
- */
 export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
   const lens = _resolveJsonLens(xpath, contextNode, formElement);
   if (lens) {
@@ -842,17 +656,6 @@ export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
   }
 }
 
-/**
- * Evaluate an XPath to a string
- *
- * @param  {string}     xpath             The XPath to run
- * @param  {Node}       contextNode       The start of the XPath
- * @param  {Node}       formElement       The form element associated to the XPath
- * @param  {Node}       formElement       The element where the XPath is defined: used for namespace resolving
- * @param  {import('fontoxpath').IDomFacade}  [domFacade=null]  A DomFacade is used in bindings to intercept DOM
- * access. This is used to determine dependencies between bind elements.
- * @return {string}
- */
 export function evaluateXPathToString(xpath, contextNode, formElement, domFacade = null) {
   const trimmedExpr = String(xpath ?? '').trim();
   if (contextNode && contextNode.__jsonlens__ === true && trimmedExpr === '.') {
@@ -898,17 +701,6 @@ export function evaluateXPathToString(xpath, contextNode, formElement, domFacade
   }
 }
 
-/**
- * Evaluate an XPath to a set of strings
- *
- * @param  {string}     xpath             The XPath to run
- * @param  {Node}       contextNode       The start of the XPath
- * @param  {Node}       formElement       The form element associated to the XPath
- * @param  {Node}       formElement       The element where the XPath is defined: used for namespace resolving
- * @param  {import('fontoxpath').IDomFacade}  [domFacade=null]  A DomFacade is used in bindings to intercept DOM
- * access. This is used to determine dependencies between bind elements.
- * @return {string[]}
- */
 export function evaluateXPathToStrings(xpath, contextNode, formElement, domFacade = null) {
   try {
     const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
@@ -952,17 +744,6 @@ export function evaluateXPathToStrings(xpath, contextNode, formElement, domFacad
   }
 }
 
-/**
- * Evaluate an XPath to a number
- *
- * @param  {string}     xpath             The XPath to run
- * @param  {Node}       contextNode       The start of the XPath
- * @param  {Node}       formElement       The form element associated to the XPath
- * @param  {Node}       formElement       The element where the XPath is defined: used for namespace resolving
- * @param  {import('fontoxpath').IDomFacade}  [domFacade=null]  A DomFacade is used in bindings to intercept DOM
- * access. This is used to determine dependencies between bind elements.
- * @return {number}
- */
 export function evaluateXPathToNumber(xpath, contextNode, formElement, domFacade = null) {
   try {
     const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
@@ -1037,35 +818,24 @@ const currentFunction = (dynamicContext, string) => {
 
 const elementFunction = (_dynamicContext, string) => document.createElement(string);
 
-/**
- * @param id as string
- * @return instance data for given id serialized to string.
- */
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'context' },
   [],
   'item()?',
   contextFunction,
 );
-
-/**
- * @param id as string
- * @return instance data for given id serialized to string.
- */
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'context' },
   ['xs:string'],
   'item()?',
   contextFunction,
 );
-
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'current' },
   ['xs:string'],
   'item()?',
   currentFunction,
 );
-
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'element' },
   ['xs:string'],
@@ -1073,10 +843,6 @@ registerCustomXPathFunction(
   elementFunction,
 );
 
-/**
- * @param id as string
- * @return instance data for given id serialized to string.
- */
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'log' },
   ['xs:string?'],
@@ -1104,13 +870,10 @@ registerCustomXPathFunction(
     const { formElement } = dynamicContext.currentContext;
 
     let parent = formElement;
-    if (formElement.nodeType === Node.TEXT_NODE) {
-      parent = formElement.parentNode;
-    }
+    if (formElement.nodeType === Node.TEXT_NODE) parent = formElement.parentNode;
+
     const foreElement = parent.closest('fx-fore');
-    if (foreElement.hasAttribute(string)) {
-      return foreElement.getAttribute(string);
-    }
+    if (foreElement.hasAttribute(string)) return foreElement.getAttribute(string);
     return null;
   },
 );

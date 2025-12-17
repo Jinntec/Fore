@@ -39,7 +39,7 @@ export class JSONLens {
   }
 
   insert(value, keyOrIndex = null) {
-    const target = this.get();
+    const  target = this.get();
 
     if (Array.isArray(target)) {
       if (keyOrIndex === null || keyOrIndex >= target.length) {

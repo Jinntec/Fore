@@ -110,10 +110,8 @@ export default class FxSetvalue extends AbstractAction {
         }),
       );
 
-      // JSON-aware update if it's a JSONNode
-      if (item.lens) {
-        node.set(newVal);
-      } else if (newVal?.nodeType) {
+      // Use ModelItem's value setter which handles both DOM nodes and JSON lenses
+      if (newVal?.nodeType) {
         if (newVal.nodeType === Node.ELEMENT_NODE) {
           item.value = newVal;
         } else if (newVal.nodeType === Node.ATTRIBUTE_NODE) {
@@ -123,9 +121,6 @@ export default class FxSetvalue extends AbstractAction {
         }
       } else {
         item.value = newVal;
-        if (node?.textContent !== undefined) {
-          node.textContent = newVal;
-        }
       }
 
       this.getModel().changed.push(modelItem);

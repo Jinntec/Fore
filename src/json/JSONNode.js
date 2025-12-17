@@ -25,7 +25,7 @@ export class JSONNode {
   }
 
   getChildren() {
-    return this.children || [];
+    return this.children;
   }
 
   getKey() {
