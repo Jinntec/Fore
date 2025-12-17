@@ -377,6 +377,24 @@ export class FxSubmission extends ForeElementMixin {
     const targetInstance = this._getTargetInstance();
 
     if (this.replace === 'instance') {
+        const targetInstance = this._getTargetInstance();
+
+        // ### contentType handling
+
+        if(contentType.includes('html')){
+            let effectiveData;
+            if(data.nodeType){
+                effectiveData = data;
+            }
+            // ##ä try parsing
+            try{
+                effectiveData = new DOMParser().parseFromString(data, 'text/html');
+            } catch {
+                Fore.dispatch(this, 'error', {message:'could not parse data as HTML'});
+            }
+
+            targetInstance.instanceData = effectiveData;
+        }
       if (targetInstance) {
         if (this.targetref) {
           const [theTarget] = evaluateXPath(

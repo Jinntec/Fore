@@ -163,10 +163,10 @@ export class FxInstance extends HTMLElement {
     // Note: use the getter here: it might provide us with stubbed data if anything async is racing,
     // such as an @src attribute
     const instanceData = this.getInstanceData();
-    if (this.type === 'xml') {
+    if (this.type === 'xml'  || this.type === 'html') {
       return instanceData.firstElementChild;
     }
-    return instanceData;
+    return this.instanceData;
   }
 
   /**
