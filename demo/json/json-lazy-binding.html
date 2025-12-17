@@ -14,7 +14,7 @@
 </head>
 <body>
 <div class="wrapper">
-  <h1>JSON Lazy Binding Test</h1>
+  <h1>JSON Binding</h1>
   <p>This test demonstrates binding to JSON values without explicit fx-bind elements.</p>
 
   <fx-fore>
@@ -39,26 +39,26 @@
     </fx-model>
 
     <h2>Updating json</h2>
-    
+
     <fx-control ref="?person?name" update-event="input">
       <label>Name:</label>
     </fx-control>
-    
+
     <fx-control ref="?person?age">
       <label>Age:</label>
     </fx-control>
-    
+
     <fx-control ref="?person?address?street">
       <label>Street:</label>
     </fx-control>
-    
+
     <fx-control ref="?person?address?city">
       <label>City:</label>
     </fx-control>
 
     <h2>Array Items</h2>
-    
-    <fx-repeat ref="?items">
+
+    <fx-repeat id="items" ref="?items">
       <template>
         <div style="margin-bottom: 10px; padding: 10px; border: 1px solid #ccc;">
           <fx-control ref="?id">
@@ -67,13 +67,31 @@
           <fx-control ref="?name">
             <label>Item Name:</label>
           </fx-control>
+          <fx-trigger>
+            <button title="delete">x</button>
+            <fx-delete ref="."></fx-delete>
+          </fx-trigger>
         </div>
       </template>
     </fx-repeat>
     <fx-trigger>
-      <button>add</button>
+      <button>append</button>
       <fx-insert ref="?items"></fx-insert>
     </fx-trigger>
+    <fx-trigger>
+      <button>insert as first</button>
+      <fx-insert ref="?items" position="before" at="1"></fx-insert>
+    </fx-trigger>
+    <fx-trigger>
+      <button>insert after first</button>
+      <fx-insert ref="?items" position="after" at="1"></fx-insert>
+    </fx-trigger>
+    <fx-trigger>
+      <button>insert after current</button>
+      <fx-insert ref="task" at="index('items')"></fx-insert>
+    </fx-trigger>
+
+
   </fx-fore>
 </div>
 

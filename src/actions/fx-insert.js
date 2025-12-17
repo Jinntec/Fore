@@ -5,7 +5,7 @@ import {
   evaluateXPathToFirstNode,
   evaluateXPathToNumber,
 } from '../xpath-evaluation.js';
-import { XPathUtil } from '../xpath-util';
+import { XPathUtil } from '../xpath-util.js';
 import { Fore } from '../fore.js';
 import { getPath } from '../xpath-path.js';
 
@@ -108,8 +108,8 @@ export class FxInsert extends AbstractAction {
   _resolveRepeatElement() {
     // Don’t use XPathUtil.getClosest here: it can receive non-Elements and then `.matches()` explodes.
     return this && this.nodeType === Node.ELEMENT_NODE && typeof this.closest === 'function'
-        ? this.closest('fx-repeat')
-        : null;
+      ? this.closest('fx-repeat')
+      : null;
   }
 
   _performJsonInsert(inscope, fore) {
@@ -126,10 +126,15 @@ export class FxInsert extends AbstractAction {
     let insertIndex = 0;
 
     // If ref points to an array item, insert relative to its parent array
-    if (!Array.isArray(arrayNode.value) && arrayNode.parent && Array.isArray(arrayNode.parent.value)) {
+    if (
+      !Array.isArray(arrayNode.value) &&
+      arrayNode.parent &&
+      Array.isArray(arrayNode.parent.value)
+    ) {
       const itemNode = arrayNode;
       arrayNode = itemNode.parent;
-      const base = typeof itemNode.keyOrIndex === 'number' ? itemNode.keyOrIndex : arrayNode.value.length;
+      const base =
+        typeof itemNode.keyOrIndex === 'number' ? itemNode.keyOrIndex : arrayNode.value.length;
       if (this.position === 'before') insertIndex = base;
       else insertIndex = base + 1; // after (default)
     } else {
@@ -158,8 +163,8 @@ export class FxInsert extends AbstractAction {
 
     if (this.origin) {
       const originNode = this._isJsonLensRef(this.origin)
-          ? this._resolveJsonRefToNode(this.origin)
-          : evaluateXPathToFirstNode(this.origin, inscope, this);
+        ? this._resolveJsonRefToNode(this.origin)
+        : evaluateXPathToFirstNode(this.origin, inscope, this);
       if (originNode && originNode.__jsonlens__) {
         templateValue = this._deepClone(originNode.value);
       }
@@ -177,7 +182,7 @@ export class FxInsert extends AbstractAction {
 
     const newValue = this.keepValues ? templateValue : this._clearJsonValues(templateValue);
 
-    // Mutate raw JSON via JSONLens (NOTE: JSONLens.insert is an INSTANCE method)
+    // Mutate raw JSON via JSONLens
     const instanceId = XPathUtil.resolveInstance(this, this.ref);
     const model = this.getModel();
     const instance = model.getInstance(instanceId);
@@ -215,14 +220,14 @@ export class FxInsert extends AbstractAction {
     });
 
     document.dispatchEvent(
-        new CustomEvent('index-changed', {
-          composed: true,
-          bubbles: true,
-          detail: {
-            insertedNodes: insertedNode,
-            index: insertIndex + 1,
-          },
-        }),
+      new CustomEvent('index-changed', {
+        composed: true,
+        bubbles: true,
+        detail: {
+          insertedNodes: insertedNode,
+          index: insertIndex + 1,
+        },
+      }),
     );
 
     // Ensure UI updates
@@ -276,6 +281,7 @@ export class FxInsert extends AbstractAction {
     }
     return targetSequence.length;
   }
+
   _parseJsonLensRef(ref, defaultInstanceId = 'default') {
     if (!ref) return null;
     const s = String(ref).trim();
@@ -295,13 +301,13 @@ export class FxInsert extends AbstractAction {
     }
 
     const steps = lensPart
-        .split('?')
-        .filter(Boolean)
-        .map(part => {
-          if (part === '*') return '*';
-          if (/^\d+$/.test(part)) return Number(part) - 1; // 1-based -> 0-based
-          return part;
-        });
+      .split('?')
+      .filter(Boolean)
+      .map(part => {
+        if (part === '*') return '*';
+        if (/^\d+$/.test(part)) return Number(part) - 1; // 1-based -> 0-based
+        return part;
+      });
 
     return { instanceId, steps };
   }
@@ -373,18 +379,16 @@ export class FxInsert extends AbstractAction {
         fore.signalChangeToElement(insertLocationNode.localName);
         fore.signalChangeToElement(originSequenceClone.localName);
         index = 1;
+      } else if (!inscope && this.getOwnerForm().createNodes) {
+        const repeat = this.getOwnerForm().querySelector(this.origin);
+        inscope = getInScopeContext(repeat, repeat.ref);
+        insertLocationNode = inscope;
+        inscope.appendChild(originSequenceClone);
+        index = inscope.length - 1;
       } else {
-        if (!inscope && this.getOwnerForm().createNodes) {
-          const repeat = this.getOwnerForm().querySelector(this.origin);
-          inscope = getInScopeContext(repeat, repeat.ref);
-          insertLocationNode = inscope;
-          inscope.appendChild(originSequenceClone);
-          index = inscope.length - 1;
-        } else {
-          insertLocationNode = inscope;
-          inscope.appendChild(originSequenceClone);
-          index = 1;
-        }
+        insertLocationNode = inscope;
+        inscope.appendChild(originSequenceClone);
+        index = 1;
       }
     } else {
       if (this.hasAttribute('at')) {
@@ -399,9 +403,9 @@ export class FxInsert extends AbstractAction {
         index = 1;
         insertLocationNode = targetSequence;
         const ctxIndex = evaluateXPathToNumber(
-            'count(preceding::*)',
-            targetSequence,
-            this.getOwnerForm(),
+          'count(preceding::*)',
+          targetSequence,
+          this.getOwnerForm(),
         );
         index = ctxIndex + 1;
       }
@@ -437,12 +441,12 @@ export class FxInsert extends AbstractAction {
 
     const path = Fore.getDomNodeIndexString(originSequenceClone);
     this.dispatchEvent(
-        new CustomEvent('execute-action', {
-          composed: true,
-          bubbles: true,
-          cancelable: true,
-          detail: { action: this, event: this.event, path },
-        }),
+      new CustomEvent('execute-action', {
+        composed: true,
+        bubbles: true,
+        cancelable: true,
+        detail: { action: this, event: this.event, path },
+      }),
     );
 
     Fore.dispatch(inst, 'insert', {
@@ -458,14 +462,14 @@ export class FxInsert extends AbstractAction {
     });
 
     document.dispatchEvent(
-        new CustomEvent('index-changed', {
-          composed: true,
-          bubbles: true,
-          detail: {
-            insertedNodes: originSequenceClone,
-            index,
-          },
-        }),
+      new CustomEvent('index-changed', {
+        composed: true,
+        bubbles: true,
+        detail: {
+          insertedNodes: originSequenceClone,
+          index,
+        },
+      }),
     );
 
     this.needsUpdate = true;
