@@ -94,7 +94,7 @@ export class FxBind extends ForeElementMixin {
     }
 
     // ✅ only the repeat item gets the _<opNum> suffix; children do not.
-    const basePath = XPathUtil.getPath(node, instanceId);
+    const basePath = getPath(node, instanceId);
     const path = opNum ? `${basePath}_${opNum}` : basePath;
 
     // const path = XPathUtil.getPath(node, instanceId);
