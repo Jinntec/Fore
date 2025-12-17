@@ -877,7 +877,7 @@ export class FxFore extends HTMLElement {
       }
       // Templates are special: they use the namespace configuration from the place where they are
       // being defined
-      const instanceId = XPathUtil.getInstanceId(naked);
+      const instanceId = XPathUtil.getInstanceId(naked,node);
 
       // If there is an instance referred
       const inst = instanceId
