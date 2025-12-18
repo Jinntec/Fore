@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Init on Event</title>
+
+    <!--    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
+
+    <link href="../resources/demo.css" rel="stylesheet">
+    <style>
+        .dynamic {
+            background: #76ff03;
+        }
+        #first{
+            visibility:visible !important;
+            background:aquamarine;
+            border:thin solid;
+            width:10rem;
+            height:10rem;
+            display:block;
+        }
+    </style>
+</head>
+<body unresolved="unresolved">
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+
+<div class="wrapper">
+    <h1><code>init-on</code> and <code>init-on-target</code></h1>
+
+    <p>
+        Fore can delay initialization until an event occurs. This is useful when you need to wait for other components
+        (or a bootstrap process) before models/instances are constructed.
+    </p>
+
+    <ul>
+        <li><code>init-on</code>: event name that must be observed before Fore initializes.</li>
+        <li><code>init-on-target</code>: where to listen for that event. Supports <code>self</code> (default),
+            <code>document</code>, <code>window</code>, <code>closest</code>, or a CSS selector. Multiple targets are
+            supported as a whitespace or comma separated list.</li>
+        <li><code>wait-for</code> (deprecated): legacy alias for waiting on other <code>fx-fore</code> elements to fire
+            <code>ready</code>. Use <code>init-on="ready"</code> + <code>init-on-target="..."</code> instead.</li>
+    </ul>
+
+
+    <h2>1) Initialize on click (default target: self)</h2>
+
+    <demo-snippet>
+        <template>
+<fx-fore id="first" init-on="click">
+    <button type="button">Click to initialize Fore</button>
+
+    <fx-model>
+        <fx-instance>
+            <data>
+                <planet>
+                    <greeting>Hello Earth</greeting>
+                </planet>
+            </data>
+        </fx-instance>
+    </fx-model>
+
+    <p>
+        <fx-output ref="planet/greeting"></fx-output>
+    </p>
+</fx-fore>
+        </template>
+    </demo-snippet>
+
+
+    <h2>2) Initialize on a custom event dispatched on <code>document</code></h2>
+
+    <demo-snippet>
+        <template>
+            <button type="button" onclick="document.dispatchEvent(new CustomEvent('boot'))">
+                Dispatch <code>boot</code> on document
+            </button>
+
+            <fx-fore init-on="boot" init-on-target="document">
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <status>Booted by document event...</status>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+
+                <p>
+                    Status: <fx-output ref="status"></fx-output>
+                </p>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+
+
+    <h2>3) Initialize when another <code>fx-fore</code> fires <code>ready</code> (replacement for <code>wait-for</code>)</h2>
+
+    <demo-snippet>
+        <template>
+            <fx-fore id="master-fore">
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <msg>Master is ready.</msg>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+                <p>
+                    <strong>Master:</strong> <fx-output ref="msg"></fx-output>
+                </p>
+            </fx-fore>
+
+            <fx-fore init-on="ready" init-on-target="#master-fore">
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <msg>Dependent initialized after master ready.</msg>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+                <p>
+                    <strong>Dependent:</strong> <fx-output ref="msg"></fx-output>
+                </p>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+
+
+    <h2>4) Initialize only after multiple targets are ready (list support)</h2>
+
+    <demo-snippet>
+        <template>
+            <fx-fore id="dep-a">
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <msg>A ready.</msg>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+                <p><strong>A:</strong> <fx-output ref="msg"></fx-output></p>
+            </fx-fore>
+
+            <fx-fore id="dep-b">
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <msg>B ready.</msg>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+                <p><strong>B:</strong> <fx-output ref="msg"></fx-output></p>
+            </fx-fore>
+
+            <fx-fore init-on="ready" init-on-target="#dep-a #dep-b">
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <msg>Initialized after A and B were ready.</msg>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+                <p><strong>Gate:</strong> <fx-output ref="msg"></fx-output></p>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+
+
+    <h2>Deprecated: <code>wait-for</code> (kept for compatibility)</h2>
+    <p class="note">
+        This still works but prints a deprecation warning in the console. Replace it with
+        <code>init-on="ready" init-on-target="..."</code>.
+    </p>
+
+    <demo-snippet>
+        <template>
+            <fx-fore id="legacy-master">
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <msg>Legacy master is ready.</msg>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+                <p><strong>Legacy master:</strong> <fx-output ref="msg"></fx-output></p>
+            </fx-fore>
+
+            <fx-fore wait-for="#legacy-master">
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <msg>Legacy dependent initialized after master ready.</msg>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+                <p><strong>Legacy dependent:</strong> <fx-output ref="msg"></fx-output></p>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+
+
+</div>
+
+
+<script type="module" src="./demo.js"></script>
+</body>
+</html>
