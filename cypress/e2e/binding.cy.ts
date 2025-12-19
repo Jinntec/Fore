@@ -3,6 +3,27 @@ describe('binding.html', () => {
 		cy.visit('binding.html');
 	});
 
+	it('toggle the "valid buttons"', () => {
+		cy.get('fx-fore.fx-ready [data-cy="required"]').click()
+
+		cy.get('#input input').should('have.attr', 'required');
+		cy.get('[data-cy="optional"]').click();
+		cy.get('#input input').should('not.have.attr', 'required');
+
+		// Assert the toast is shown
+		cy.get('.toastify')
+			.should('be.visible')
+			.should('contain', 'optional event fired');
+				cy.get('[data-cy="required"]').click()
+
+		cy.get('#input input').should('have.attr', 'required')
+
+		// Assert the toast is shown
+		cy.get('.toastify')
+			.should('be.visible')
+			.should('contain', 'required event fired');
+	});
+
 	it('toggle the "required buttons"', () => {
 		cy.get('fx-fore.fx-ready [data-cy="required"]').click()
 
