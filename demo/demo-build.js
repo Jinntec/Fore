@@ -7,3 +7,4 @@ import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
 // import './codemirror/jinn-codemirror-bundle.js';
 import '../index.js';
 import '../doc/fore-corner.js';
+import '../tools/fx-lens.js';
