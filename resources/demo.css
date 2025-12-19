@@ -223,3 +223,7 @@ p{
 ul{
     margin-top:0;
 }
+li{
+    line-height: 1.5;
+    font-size: 1.1rem;
+}

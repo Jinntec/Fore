@@ -71,13 +71,13 @@ export class ModelItem {
     if (!this.node) return;
     const oldVal = this.value;
 
-    if (newVal?.nodeType === Node.DOCUMENT_NODE) {
+    if (newVal?.nodeType && newVal.nodeType === Node.DOCUMENT_NODE) {
       this.node.replaceWith(newVal.firstElementChild);
-      this.node = newVal.firstElementChild;
-    } else if (newVal?.nodeType === Node.ELEMENT_NODE) {
+      // this.node.appendChild(newVal.firstElementChild);
+    } else if (newVal?.nodeType && newVal.nodeType === Node.ELEMENT_NODE) {
       this.node.replaceWith(newVal);
-      this.node = newVal;
-    } else if (this.node.nodeType === Node.ATTRIBUTE_NODE) {
+      // this.node.appendChild(newVal);
+    } else if (newVal?.nodeType && this.node.nodeType === Node.ATTRIBUTE_NODE) {
       this.node.nodeValue = newVal;
     } else {
       this.node.textContent = newVal;

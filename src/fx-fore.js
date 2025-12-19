@@ -2,7 +2,7 @@ import { Fore } from './fore.js';
 import './fx-instance.js';
 import { FxModel } from './fx-model.js';
 import '@jinntec/jinn-toast';
-import { evaluateXPathToNodes, evaluateXPathToString } from './xpath-evaluation.js';
+import { evaluateXPathToNodes, evaluateXPathToString, createNamespaceResolver } from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
 import { XPathUtil } from './xpath-util.js';
 import { FxRepeatAttributes } from './ui/fx-repeat-attributes.js';
@@ -42,6 +42,29 @@ export class FxFore extends HTMLElement {
   static outermostHandler = null;
 
   static draggedItem = null;
+
+  // Records init gate events that have already happened for a given target (document/window/element).
+  // This prevents “missed gate” situations when an fx-fore is replaced (e.g. via src loading)
+  // after the init event already fired.
+  static _initEventState = new WeakMap();
+
+  static _hasSeenInitEvent(target, eventName) {
+    const set = FxFore._initEventState.get(target);
+    return !!(set && set.has(eventName));
+  }
+
+  static _markInitEventSeen(target, eventName) {
+    let set = FxFore._initEventState.get(target);
+    if (!set) {
+      set = new Set();
+      FxFore._initEventState.set(target, set);
+    }
+    set.add(eventName);
+  }
+
+  static get observedAttributes() {
+    return ['src', 'selector'];
+  }
 
   static get properties() {
     return {
@@ -111,6 +134,9 @@ export class FxFore extends HTMLElement {
      */
     this.model = null;
     this.inited = false;
+    this._initGatesPromise = null;
+    this._warnedWaitForDeprecation = false;
+    this._srcLoadPromise = null;
     // this.addEventListener('model-construct-done', this._handleModelConstructDone);
     // todo: refactoring - these should rather go into connectedcallback
     this.addEventListener('message', this._displayMessage);
@@ -249,8 +275,8 @@ export class FxFore extends HTMLElement {
     this._scanForNewTemplateExpressionsNextRefresh = false;
     this.repeatsFromAttributesCreated = false;
     this.validateOn = this.hasAttribute('validate-on')
-      ? this.getAttribute('validate-on')
-      : 'update';
+        ? this.getAttribute('validate-on')
+        : 'update';
     // this.mergePartial = this.hasAttribute('merge-partial')? true:false;
     this.mergePartial = false;
     this.createNodes = this.hasAttribute('create-nodes') ? true : false;
@@ -259,108 +285,206 @@ export class FxFore extends HTMLElement {
   }
 
   /**
-   * Resolve elements from the `wait-for` attribute.
-   * Supports comma-separated CSS selectors and the special value "closest".
+   * Parse a list of target specs.
+   *
+   * We accept both comma- and whitespace-separated lists (for backward compatibility with `wait-for`).
+   * Each token can be:
+   * - "self" (default)
+   * - "closest" (closest fx-fore)
+   * - "document"
+   * - "window"
+   * - a CSS selector (no whitespace)
    */
-  _resolveDependencies() {
-    const raw = this.getAttribute('wait-for');
+  _parseTargetList(raw) {
     if (!raw) return [];
-    const sels = raw
-      .split(',')
-      .map(s => s.trim())
-      .filter(Boolean);
+    return raw
+        .split(/[\s,]+/)
+        .map(s => s.trim())
+        .filter(Boolean);
+  }
 
+  _findBySelector(sel) {
     const roots = [this.getRootNode?.() ?? document, document];
-    const out = [];
-
-    for (const sel of sels) {
-      let el = null;
-
-      if (sel === 'closest') {
-        el = this.closest('fx-fore');
-      } else {
-        for (const r of roots) {
-          if (r && 'querySelector' in r) {
-            el = r.querySelector(sel);
-            if (el) break;
-          }
-        }
+    for (const r of roots) {
+      if (r && 'querySelector' in r) {
+        const el = r.querySelector(sel);
+        if (el) return el;
       }
-      if (el) out.push(el);
     }
-    return out;
+    return null;
+  }
+
+  _isReadyTarget(el) {
+    return !!(
+        el &&
+        (el.ready === true ||
+            (el.classList && el.classList.contains('fx-ready')) ||
+            (typeof el.hasAttribute === 'function' && el.hasAttribute('ready')))
+    );
   }
 
   /**
-   * Wait until all dependencies are ready (i.e., they set `ready = true`
-   * and dispatch the `ready` event).
+   * Collect all init gates derived from attributes.
+   *
+   * - `wait-for` (DEPRECATED) becomes: init-on="ready" + init-on-target=<list>
+   * - `init-on` / `init-on-target` define a generic event gate
    */
-  _whenDependenciesReady() {
-    const raw = this.getAttribute('wait-for');
-    if (!raw) return Promise.resolve();
+  _collectInitGates() {
+    const gates = [];
 
-    const sels = raw
-      .split(',')
-      .map(s => s.trim())
-      .filter(Boolean);
-    const roots = [this.getRootNode?.() ?? document, document];
+    const waitForRaw = this.getAttribute('wait-for');
+    if (waitForRaw) {
+      if (!this._warnedWaitForDeprecation) {
+        console.warn(
+            '[fx-fore] The "wait-for" attribute is deprecated. Use init-on="ready" init-on-target="..." instead.',
+        );
+        this._warnedWaitForDeprecation = true;
+      }
 
-    const query = sel => {
-      for (const r of roots) {
-        if (r && 'querySelector' in r) {
-          const el = r.querySelector(sel);
-          if (el) return el;
+      const deps = this._parseTargetList(waitForRaw);
+      for (const dep of deps) {
+        gates.push({ event: 'ready', targetSpec: dep });
+      }
+    }
+
+    const initOn = this.getAttribute('init-on');
+    const initOnTargetRaw = this.getAttribute('init-on-target');
+    if (initOn || initOnTargetRaw) {
+      const eventName = initOn || 'ready';
+      const targets = initOnTargetRaw ? this._parseTargetList(initOnTargetRaw) : ['self'];
+      for (const t of targets) {
+        gates.push({ event: eventName, targetSpec: t });
+      }
+    }
+
+    return gates;
+  }
+
+  _waitForEvent(target, eventName, isSatisfiedFn = null) {
+    // If a caller provides an explicit satisfaction check, honor it first.
+    if (typeof isSatisfiedFn === 'function' && isSatisfiedFn(target)) {
+      FxFore._markInitEventSeen(target, eventName);
+      return Promise.resolve();
+    }
+
+    // Sticky gate: if this event already happened on this target, don't wait again.
+    if (FxFore._hasSeenInitEvent(target, eventName)) {
+      return Promise.resolve();
+    }
+
+    return new Promise(resolve => {
+      const ac = new AbortController();
+      const on = () => {
+        FxFore._markInitEventSeen(target, eventName);
+        ac.abort();
+        resolve();
+      };
+      target.addEventListener(eventName, on, { once: true, signal: ac.signal });
+    });
+  }
+
+  _waitForMatchingEvent(eventName, matchesEventFn, recheckFn = null) {
+    if (typeof recheckFn === 'function' && recheckFn()) {
+      return Promise.resolve();
+    }
+
+    return new Promise(resolve => {
+      const root = document;
+
+      const cleanupAll = () => {
+        root.removeEventListener(eventName, onEvent, true);
+        if (mo) mo.disconnect();
+      };
+
+      const onEvent = ev => {
+        if (matchesEventFn(ev)) {
+          cleanupAll();
+          resolve();
         }
-      }
-      return null;
-    };
+      };
 
-    const isReadyNow = sel => {
-      if (sel === 'closest') {
-        const outer = this.closest('fx-fore');
-        return !!(outer && outer.ready === true);
-      }
-      const el = query(sel);
-      return !!(el && el.ready === true);
-    };
+      root.addEventListener(eventName, onEvent, true);
 
-    const waitOne = sel =>
-      new Promise(resolve => {
-        // fast path
-        if (isReadyNow(sel)) return resolve();
-
-        // robust path: listen at the document/root so replacement doesn't matter
-        const onReady = ev => {
-          const t = ev.target;
-          if (sel === 'closest') {
-            // outer fore becoming ready anywhere above us
-            if (t?.tagName === 'FX-FORE' && t.contains(this)) {
-              cleanup();
-              resolve();
-            }
-          } else if (t?.matches?.(sel)) {
-            cleanup();
-            resolve();
-          }
-        };
-
-        const root = document; // capture at doc to catch composed events
-        const cleanup = () => root.removeEventListener('ready', onReady, true);
-
-        root.addEventListener('ready', onReady, true);
-
-        // also re-check on DOM changes in case a ready fore is inserted without firing (paranoia)
-        const mo = new MutationObserver(() => {
-          if (isReadyNow(sel)) {
-            mo.disconnect();
-            cleanup();
+      // Only used for `ready` (or any other gate that provides a recheck function)
+      let mo = null;
+      if (typeof recheckFn === 'function') {
+        mo = new MutationObserver(() => {
+          if (recheckFn()) {
+            cleanupAll();
             resolve();
           }
         });
         mo.observe(document.documentElement, { childList: true, subtree: true });
-      });
+      }
+    });
+  }
 
-    return Promise.all(sels.map(waitOne));
+  _waitForInitGate({ event, targetSpec }) {
+    // Direct targets
+    if (targetSpec === 'self') {
+      const satisfied = event === 'ready' ? t => this._isReadyTarget(t) : null;
+      return this._waitForEvent(this, event, satisfied);
+    }
+    if (targetSpec === 'document') {
+      return this._waitForEvent(document, event);
+    }
+    if (targetSpec === 'window') {
+      return this._waitForEvent(window, event);
+    }
+
+    // Special: closest fx-fore
+    if (targetSpec === 'closest') {
+      const recheckFn =
+          event === 'ready' ? () => this._isReadyTarget(this.closest('fx-fore')) : null;
+
+      const matchesFn = ev => {
+        const t = ev.target;
+        return t?.tagName === 'FX-FORE' && t.contains(this);
+      };
+
+      return this._waitForMatchingEvent(event, matchesFn, recheckFn);
+    }
+
+    // Selector targets
+    const selector = targetSpec;
+
+    const recheckFn =
+        event === 'ready' ? () => this._isReadyTarget(this._findBySelector(selector)) : null;
+
+    if (typeof recheckFn === 'function' && recheckFn()) {
+      return Promise.resolve();
+    }
+
+    const matchesFn = ev => {
+      // Prefer composedPath() so events coming from inside shadow DOM still match
+      const path = typeof ev.composedPath === 'function' ? ev.composedPath() : [];
+      for (const n of path) {
+        if (n && n.matches && n.matches(selector)) return true;
+      }
+      const t = ev.target;
+      return !!(t && t.closest && t.closest(selector));
+    };
+
+    return this._waitForMatchingEvent(event, matchesFn, recheckFn);
+  }
+
+  /**
+   * Wait until all configured init gates are satisfied.
+   * This is the single consolidation point for init gating.
+   */
+  _waitForInitGates() {
+    if (this._initGatesPromise) return this._initGatesPromise;
+
+    const gates = this._collectInitGates();
+    if (!gates.length) {
+      this._initGatesPromise = Promise.resolve();
+      return this._initGatesPromise;
+    }
+
+    this._initGatesPromise = Promise.all(gates.map(g => this._waitForInitGate(g))).then(
+        () => undefined,
+    );
+    return this._initGatesPromise;
   }
 
   _onSlotChange = async ev => {
@@ -371,14 +495,12 @@ export class FxFore extends HTMLElement {
     // avoid double init
     if (this.inited) return;
 
-    // 2) Wait for dependencies if needed
-    if (this.hasAttribute('wait-for')) {
-      try {
-        await this._whenDependenciesReady();
-      } catch (e) {
-        console.warn('wait-for failed', e);
-        return;
-      }
+    // 2) Wait for init gates (init-on / init-on-target / wait-for)
+    try {
+      await this._waitForInitGates();
+    } catch (e) {
+      console.warn('init gating failed', e);
+      return;
     }
 
     // 3) Bail if we got disconnected/replaced while waiting
@@ -395,12 +517,12 @@ export class FxFore extends HTMLElement {
       }
       // Fallback for odd engines/polyfills
       return (slotEl.assignedNodes({ flatten: true }) || []).filter(
-        n => n.nodeType === Node.ELEMENT_NODE,
+          n => n.nodeType === Node.ELEMENT_NODE,
       );
     };
 
     // SAFE: slotEl is the actual event source, not a fresh query
-    const children = slotEl.assignedElements({ flatten: true });
+    const children = getAssignedElements();
 
     let modelElement = children.find(modelElem => modelElem.nodeName.toUpperCase() === 'FX-MODEL');
     if (!modelElement) {
@@ -413,8 +535,8 @@ export class FxFore extends HTMLElement {
     }
     if (!modelElement.inited) {
       console.info(
-        `%cFore running ... ${this.id ? '#' + this.id : ''}`,
-        'background:#64b5f6; color:white; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+          `%cFore running ... ${this.id ? '#' + this.id : ''}`,
+          'background:#64b5f6; color:white; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
       );
 
       const variables = new Map();
@@ -435,9 +557,48 @@ export class FxFore extends HTMLElement {
     this.inited = true;
   };
 
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (oldValue === newValue) return;
+
+    if (name === 'src') {
+      this.src = newValue;
+      if (!newValue) {
+        // Reset so a later src assignment can load again
+        this._srcLoadPromise = null;
+        return;
+      }
+      if (this.isConnected) {
+        this._maybeLoadFromSrc();
+      }
+      return;
+    }
+
+    if (name === 'selector') {
+      // Selector changes should affect a pending src-load
+      if (this.isConnected && this.src && !this._srcLoadPromise) {
+        this._maybeLoadFromSrc();
+      }
+    }
+  }
+
+  _maybeLoadFromSrc() {
+    if (!this.src) return null;
+    if (this._srcLoadPromise) return this._srcLoadPromise;
+
+    this._srcLoadPromise = (async () => {
+      await this._waitForInitGates();
+      if (!this.isConnected) return;
+      const selector = this.getAttribute('selector') || 'fx-fore';
+      await Fore.loadForeFromSrc(this, this.src, selector);
+    })();
+
+    return this._srcLoadPromise;
+  }
+
   connectedCallback() {
     const modelElement = Array.from(this.children).find(
-      modelElem => modelElem.nodeName.toUpperCase() === 'FX-MODEL',
+        modelElem => modelElem.nodeName.toUpperCase() === 'FX-MODEL',
     );
 
     this.model = modelElement;
@@ -464,8 +625,8 @@ export class FxFore extends HTMLElement {
             },true);
         */
     this.ignoreExpressions = this.hasAttribute('ignore-expressions')
-      ? this.getAttribute('ignore-expressions')
-      : null;
+        ? this.getAttribute('ignore-expressions')
+        : null;
 
     this.lazyRefresh = this.hasAttribute('refresh-on-view');
     if (this.lazyRefresh) {
@@ -479,7 +640,7 @@ export class FxFore extends HTMLElement {
 
     this.src = this.hasAttribute('src') ? this.getAttribute('src') : null;
     if (this.src) {
-      this._loadFromSrc();
+      this._maybeLoadFromSrc();
       return;
     }
 
@@ -542,12 +703,12 @@ export class FxFore extends HTMLElement {
 
   markAsClean() {
     this.addEventListener(
-      'value-changed',
-      () => {
-        this.dirtyState = dirtyStates.DIRTY;
-        this.classList.toggle('fx-modified')
-      },
-      { once: true },
+        'value-changed',
+        () => {
+          this.dirtyState = dirtyStates.DIRTY;
+          this.classList.toggle('fx-modified')
+        },
+        { once: true },
     );
     this.dirtyState = dirtyStates.CLEAN;
     this.classList.remove('fx-modified');
@@ -560,15 +721,7 @@ export class FxFore extends HTMLElement {
    * @private
    */
   async _loadFromSrc() {
-    // console.log('########## loading Fore from ', this.src, '##########');
-    if (this.hasAttribute('wait-for')) {
-      await this._whenDependenciesReady();
-    }
-    if(this.hasAttribute('selector')){
-      await Fore.loadForeFromSrc(this, this.src, this.getAttribute('selector'));
-    }else{
-      await Fore.loadForeFromSrc(this, this.src, 'fx-fore');
-    }
+    return this._maybeLoadFromSrc();
   }
 
   /**
@@ -676,9 +829,9 @@ export class FxFore extends HTMLElement {
     this.initialRun = false;
     this.style.visibility = 'visible';
     console.info(
-      `%c ✅ refresh-done on #${this.id}`,
-      'background:darkorange; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
-      this.getModel().modelItems,
+        `%c ✅ refresh-done on #${this.id}`,
+        'background:darkorange; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+        this.getModel().modelItems,
     );
 
     Fore.dispatch(this, 'refresh-done', {});
@@ -783,7 +936,7 @@ export class FxFore extends HTMLElement {
    */
   _updateTemplateExpressions() {
     const search =
-      "(descendant-or-self::*!(text(), @*))[contains(., '{')][substring-after(., '{') => contains('}')][not(ancestor-or-self::*[self::fx-model or self::fx-function])]";
+        "(descendant-or-self::*!(text(), @*))[contains(., '{')][substring-after(., '{') => contains('}')][not(ancestor-or-self::*[self::fx-model or self::fx-function])]";
 
     const tmplExpressions = evaluateXPathToNodes(search, this, this);
     // console.log('template expressions found ', tmplExpressions);
@@ -870,19 +1023,19 @@ export class FxFore extends HTMLElement {
       if (!inscope) {
         console.warn('no inscope context for expr', naked);
         const errNode =
-          node.nodeType === Node.TEXT_NODE || node.nodeType === Node.ATTRIBUTE_NODE
-            ? node.parentNode
-            : node;
+            node.nodeType === Node.TEXT_NODE || node.nodeType === Node.ATTRIBUTE_NODE
+                ? node.parentNode
+                : node;
         return match;
       }
       // Templates are special: they use the namespace configuration from the place where they are
       // being defined
-      const instanceId = XPathUtil.getInstanceId(naked);
+      const instanceId = XPathUtil.getInstanceId(naked,node);
 
       // If there is an instance referred
       const inst = instanceId
-        ? this.getModel().getInstance(instanceId)
-        : this.getModel().getDefaultInstance();
+          ? this.getModel().getInstance(instanceId)
+          : this.getModel().getDefaultInstance();
 
       try {
         const result = evaluateXPathToString(naked, inscope, node, null, inst);
@@ -957,17 +1110,17 @@ export class FxFore extends HTMLElement {
 
     // ##### lazy creation should NOT take place if there's a parent Fore using shared instances
     const parentFore =
-      this.parentNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE
-        ? this.parentNode.closest('fx-fore')
-        : null;
+        this.parentNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE
+            ? this.parentNode.closest('fx-fore')
+            : null;
     if (this.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
       console.log('fragment', this.parentNode);
     }
 
     if (parentFore) {
       const shared = parentFore
-        .getModel()
-        .instances.filter(shared => shared.hasAttribute('shared'));
+          .getModel()
+          .instances.filter(shared => shared.hasAttribute('shared'));
       if (shared.length !== 0) return;
     }
 
@@ -988,8 +1141,8 @@ export class FxFore extends HTMLElement {
       }
     } catch (e) {
       console.warn(
-        'lazyCreateInstance created an error attempting to create a document',
-        e.message,
+          'lazyCreateInstance created an error attempting to create a document',
+          e.message,
       );
     }
   }
@@ -1046,8 +1199,8 @@ export class FxFore extends HTMLElement {
    */
   async _initUI() {
     console.info(
-      `%cinitUI #${this.id}`,
-      'background:lightblue; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+        `%cinitUI #${this.id}`,
+        'background:lightblue; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
     );
 
     const parentFore = this.closest('fx-fore');
@@ -1087,8 +1240,8 @@ export class FxFore extends HTMLElement {
     this.initialRun = false;
     // console.log('### >>>>> dispatching ready >>>>>', this);
     console.info(
-      `%c ✅ ${this.id ? '#' + this.id : 'Fore'} is ready`,
-      'background:lightgreen; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+        `%c ✅ ${this.id ? '#' + this.id : 'Fore'} is ready`,
+        'background:lightgreen; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
     );
 
     // console.log(`### <<<<< ${this.id} ready >>>>>`);
@@ -1226,9 +1379,9 @@ export class FxFore extends HTMLElement {
      * @type {import('./ForeElementMixin.js').default[]}
      */
     const boundControls = Array.from(
-      root.querySelectorAll(
-        'fx-control[ref],fx-upload[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref]',
-      ),
+        root.querySelectorAll(
+            'fx-control[ref],fx-upload[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref]',
+        ),
     );
     if (root.matches && root.matches('fx-repeatitem')) {
       boundControls.unshift(root);
@@ -1291,7 +1444,7 @@ export class FxFore extends HTMLElement {
         bound.evalInContext();
         if (bound.nodeName !== 'FX-REPEAT') {
           // Do not try to get a bind for a nodeSET of a repeat. there are multiple.
-        bound.getModelItem().bind?.evalInContext();
+          bound.getModelItem().bind?.evalInContext();
         }
 
         // console.log('CREATED child', newElement);
@@ -1343,9 +1496,9 @@ export class FxFore extends HTMLElement {
         parentNodeset.setAttributeNode(newNode);
       } else {
         let referenceNode = this._findReferenceNodeForNewElement(
-          newNode,
-          parentNodeset,
-          siblingControl,
+            newNode,
+            parentNodeset,
+            siblingControl,
         );
 
         if (referenceNode) {
@@ -1396,11 +1549,13 @@ export class FxFore extends HTMLElement {
     let newElement;
     if (ref.includes('/')) {
       // multi-step ref expressions
-      newElement = XPathUtil.createNodesFromXPath(ref, referenceNode.ownerDocument, this);
+      const namespaceResolver = createNamespaceResolver(ref, this);
+      newElement = XPathUtil.createNodesFromXPath(ref, referenceNode.ownerDocument, this, namespaceResolver);
       // console.log('new subtree', newElement);
       return newElement;
     } else {
-      return XPathUtil.createNodesFromXPath(ref, referenceNode.ownerDocument, this);
+      const namespaceResolver = createNamespaceResolver(ref, this);
+      return XPathUtil.createNodesFromXPath(ref, referenceNode.ownerDocument, this, namespaceResolver);
     }
   }
 
