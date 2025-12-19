@@ -1,4 +1,4 @@
-/* Version: 2.7.2 - December 10, 2025 11:39:51 */
+/* Version: 2.8.0 - December 19, 2025 13:18:00 */
 /**
 @license
 Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
@@ -37429,6 +37429,753 @@ class DependencyNotifyingDomFacade {
   }
 }
 
+class XPathUtil {
+  /**
+   * Recursively check AST for any dynamic expression components.
+   */
+  static containsDynamicContent(astNode) {
+    if (!astNode) return false;
+
+    // Location paths, function calls, or variable refs are dynamic
+    if (astNode.type === 'pathExpression' || astNode.type === 'functionCall' || astNode.type === 'variableReference') {
+      return true;
+    }
+
+    // Recursively check any child expressions
+    for (const key in astNode) {
+      if (astNode[key] && typeof astNode[key] === 'object') {
+        if (Array.isArray(astNode[key])) {
+          for (const item of astNode[key]) {
+            if (XPathUtil.containsDynamicContent(item)) return true;
+          }
+        } else {
+          if (XPathUtil.containsDynamicContent(astNode[key])) return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
+   * creates DOM Nodes from an XPath locationpath expression. Support namespaced and un-namespaced
+   * nodes.
+   * E.g. 'foo/bar' creates an element 'foo' with an child element 'bar'
+   * 'foo/@bar' creates a 'foo' element with an 'bar' attribute
+   *
+   * supports multiple steps
+   *
+   * @param xpath
+   * @param doc {XMLDocument}
+   * @param fore
+   * @param namespaceResolver {function} optional namespace resolver function
+   * @return {Node|Attr}
+   */
+  static createNodesFromXPath(xpath, doc, fore, namespaceResolver = null) {
+    const resolveNamespace = namespaceResolver || (() => undefined);
+    if (!doc) {
+      doc = document.implementation.createDocument(null, null, null); // Create a new XML document if not provided
+    }
+
+    const parts = [];
+    let scratch = '';
+    let isInPredicate = false;
+    for (const char of xpath.split('')) {
+      if (!isInPredicate) {
+        // We are not in a predicate, the slash will terminate our step.
+        if (char === '/') {
+          parts.push(scratch);
+          scratch = '';
+          continue;
+        }
+        scratch += char;
+        if (char === '[') {
+          isInPredicate = true;
+        }
+        continue;
+      }
+      // We are in a predicate! So the only interesting token is ']', which means we're out of one.
+      scratch += char;
+      if (char === ']') {
+        isInPredicate = false;
+      }
+    }
+    // Flush the last step
+    parts.push(scratch);
+    let rootNode = null;
+    let currentNode = null;
+    for (const part of parts) {
+      if (!part) continue; // Skip empty parts (e.g., leading slashes)
+      if (part === '.') {
+        // A '.' does not introduce new elements
+        continue;
+      }
+
+      // Handle attributes
+      if (part.startsWith('@')) {
+        const attrName = part.slice(1); // Strip '@'
+        if (!currentNode) {
+          return doc.createAttribute(attrName, '');
+        }
+        currentNode.setAttribute(attrName, '');
+      } else {
+        // We are a predicate selector! Handle it
+        // This regex matches strings like:
+        // - listBibl
+        // - tei:listBibl
+        // - listBibl[@type="foo"]
+        // - listBibl[@type="foo"][@class="bar"]
+        // It will also match strings like
+        // - listBibl[ancestor-or-self::foo]
+        // which will be filtered out later.
+
+        const result = part.match(/^(?<name>[\w:-]+)(?<predicates>(\[[^]*\])*)$/);
+        if (!result) {
+          throw new Error(`No element could be made from the XPath step ${part}. It must be of these forms: 'localName', 'prefix:name', 'name[@attr="value"]' et cetera.`);
+        }
+        const {
+          name,
+          predicates
+        } = result.groups;
+        // Handle namespaces if present
+        const [prefix, localName] = name.includes(':') ? name.split(':') : [null, name];
+        const namespace = resolveNamespace(prefix);
+        const newElement = namespace ? doc.createElementNS(namespace, localName) : doc.createElement(localName);
+        if (predicates) {
+          const predicateExtractionRegex = /(\[@(?<name>[\w:-]*)\s?=\s?["'](?<value>[^"']*)['"]\])+/g;
+          const parsedPredicates = predicates.matchAll(predicateExtractionRegex).map(match => ({
+            attrName: match.groups.name,
+            value: match.groups.value
+          }));
+          for (const {
+            attrName,
+            value
+          } of parsedPredicates) {
+            newElement.setAttribute(attrName, value);
+          }
+        }
+        if (!rootNode) {
+          rootNode = newElement; // Set as the root node
+        } else {
+          currentNode.appendChild(newElement);
+        }
+        currentNode = newElement;
+      }
+    }
+    if (!rootNode) {
+      throw new Error('Invalid XPath; no root element could be created.');
+    }
+    return rootNode;
+  }
+
+  /**
+   * looks up namespace on ownerForm. Though not strictly in the sense of resolving namespaces in XML, the
+   * fx-fore element is a convenient place to put namespace declarations for 2 reasons:
+   * - this way namespaces are scoped to a Fore element
+   * - as fx-fore is a web component we can add our xmlns attributes as we got no restrictions to attributes
+   *   though strictly speaking they are no xmlns declarations and just serve the purpose of namespace lookup.
+   *
+   * @param boundElement
+   * @param prefix
+   * @return {string}
+   */
+  static lookupNamespace(ownerForm, prefix) {
+    return ownerForm.getAttribute(`xmlns:${prefix}`);
+  }
+  static querySelectorAll(querySelector, start) {
+    const queue = [start];
+    const found = [];
+    while (queue.length) {
+      const item = queue.shift();
+      for (const child of Array.from(item.children).reverse()) {
+        queue.unshift(child);
+      }
+      if (item.matches && item.matches('template')) {
+        queue.unshift(item.content);
+      }
+      if (item.matches && item.matches(querySelector)) {
+        found.push(item);
+      }
+    }
+    return found;
+  }
+
+  /**
+   * Alternative to `contains` that respects shadowroots
+   * @param {Node} ancestor
+   * @param {Node} descendant
+   * @returns {boolean}
+   */
+  static contains(ancestor, descendant) {
+    while (descendant) {
+      if (descendant === ancestor) {
+        return true;
+      }
+      if (descendant.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+        // We are passing a shadow root boundary
+        descendant = descendant.host;
+      } else {
+        descendant = descendant.parentNode;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Alternative to `closest` that respects subcontrol boundaries
+   *
+   * @param {string} querySelector
+   * @param {Node} start
+   * @returns {HTMLElement}
+   */
+  static getClosest(querySelector, start) {
+    while (start && !start.matches || !start.matches(querySelector)) {
+      if (start.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+        // We are passing a shadow root boundary
+        start = start.host;
+        continue;
+      }
+      if (start.nodeType === Node.ATTRIBUTE_NODE) {
+        // We are passing an attribute
+        start = start.ownerElement;
+        continue;
+      }
+      if (start.nodeType === Node.TEXT_NODE) {
+        start = start.parentNode;
+      }
+      if (start.matches('fx-fore')) {
+        // Subform reached. Bail out
+        return null;
+      }
+      start = start.parentNode;
+      if (!start) {
+        return null;
+      }
+    }
+    return start;
+  }
+
+  /**
+   * returns next bound element upwards in tree
+   * @param {Node} start where to start the search
+   * @returns {*|null}
+   */
+  static getParentBindingElement(start) {
+    /*    if (start.parentNode.host) {
+          const { host } = start.parentNode;
+          if (host.hasAttribute('ref')) {
+            return host;
+          }
+        } else */
+    if (start.parentNode && (start.parentNode.nodeType !== Node.DOCUMENT_NODE || start.parentNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE)) {
+      return this.getClosest('fx-control[ref],fx-upload[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref],fx-repeatitem', start.parentNode);
+    }
+    return null;
+  }
+
+  /**
+   * Checks whether the specified path expression is an absolute path.
+   *
+   * @param {string} path the path expression.
+   * @returns {boolean} <code>true</code> if specified path expression is an absolute
+   * path, otherwise <code>false</code>.
+   */
+  static isAbsolutePath(path) {
+    return path != null && (path.startsWith('/') || path.startsWith('instance(') || path.startsWith('$'));
+  }
+
+  /**
+   * @param {string} ref
+   */
+  static isSelfReference(ref) {
+    return ref === '.' || ref === './text()' || ref === 'text()' || ref === '' || ref === null;
+  }
+
+  /**
+   * returns the instance id from a complete XPath using `instance()` function.
+   *
+   * Will return 'default' in case no ref is given at all or the `instance()` function is called without arg.
+   *
+   * Otherwise instance id is extracted from function and returned. If all fails null is returned.
+   * @param {string} ref
+   * @param {HTMLElement}  boundElement  The element related to this ref. Used to resolve variables
+   * @returns {string}
+   */
+  static getInstanceId(ref, boundElement) {
+    if (!ref) {
+      return 'default';
+    }
+    if (ref.startsWith('instance()')) {
+      return 'default';
+    }
+    if (ref.startsWith('instance(')) {
+      const result = ref.substring(ref.indexOf('(') + 1);
+      return result.substring(1, result.indexOf(')') - 1);
+    }
+    if (ref.startsWith('$')) {
+      // this variable might actually point to an instance
+      const variableName = ref.match(/\$(?<variableName>[a-zA-Z0-9\-\_]+).*/)?.groups?.variableName;
+      let closestActualFormElement = boundElement;
+      while (closestActualFormElement && !('inScopeVariables' in closestActualFormElement)) {
+        closestActualFormElement = closestActualFormElement.nodeType === Node.ATTRIBUTE_NODE ? closestActualFormElement.ownerElement : closestActualFormElement.parentNode;
+      }
+      const correspondingVariable = closestActualFormElement?.inScopeVariables?.get(variableName);
+      if (!correspondingVariable) {
+        return null;
+      }
+      return this.getInstanceId(correspondingVariable.valueQuery, correspondingVariable);
+    }
+    return null;
+  }
+
+  /**
+   * @param {HTMLElement} boundElement
+   * @param {string} path
+   * @returns {string}
+   */
+  static resolveInstance(boundElement, path) {
+    let instanceId = XPathUtil.getInstanceId(path, boundElement);
+    if (!instanceId) {
+      instanceId = XPathUtil.getInstanceId(boundElement.getAttribute('ref'), boundElement);
+    }
+    if (instanceId !== null) {
+      return instanceId;
+    }
+    const parentBinding = XPathUtil.getParentBindingElement(boundElement);
+    if (parentBinding) {
+      return this.resolveInstance(parentBinding, path);
+    }
+    return 'default';
+  }
+
+  /**
+   * @param {Node} node
+   * @returns string
+   */
+  /*
+  static getDocPath(node) {
+    const path = fx.evaluateXPathToString('path()', node);
+    // Path is like `$default/x[1]/y[1]`
+    const shortened = XPathUtil.shortenPath(path);
+    return shortened.startsWith('/') ? `${shortened}` : `/${shortened}`;
+  }
+  */
+
+  /**
+   * @param {Node} node
+   * @param {string} instanceId
+   * @returns string
+   */
+  static getPath(node, instanceId) {
+    const path = evaluateXPathToString$1('path()', node);
+    // Path is like `$default/x[1]/y[1]`
+    const shortened = XPathUtil.shortenPath(path);
+    return shortened.startsWith('/') ? `$${instanceId}${shortened}` : `$${instanceId}/${shortened}`;
+  }
+
+  /**
+   * @param {string} path
+   * @returns string
+   */
+  static shortenPath(path) {
+    const tmp = path.replaceAll(/(Q{(.*?)\})/g, '');
+    if (tmp === 'root()') return tmp;
+    // cut off leading slash
+    const tmp1 = tmp.substring(1, tmp.length);
+    // ### cut-off root node ref
+    return tmp1.substring(tmp1.indexOf('/'), tmp.length);
+  }
+
+  /**
+   * @param {string} dep
+   * @returns {string}
+   */
+  static getBasePath(dep) {
+    const split = dep.split(':');
+    return split[0];
+  }
+}
+
+/**
+ * A simple dependency graph
+ *
+ * based on the work of https://github.com/jriecken/dependency-graph but working on ES6.
+ *
+ * Furthermore instead of the DepGraphCycleError a compute-exception event is dispatched.
+ *
+ *
+ */
+
+/**
+ * Cycle error, including the path of the cycle.
+ */
+// const DepGraphCycleError = (exports.DepGraphCycleError = function (cyclePath) {
+
+/*
+export function DepGraphCycleError(cyclePath) {
+  const message = "Dependency Cycle Found: " + cyclePath.join(" -> ");
+  const instance = new Error(message);
+  instance.cyclePath = cyclePath;
+  Object.setPrototypeOf(instance, Object.getPrototypeOf(this));
+  if (Error.captureStackTrace) {
+    Error.captureStackTrace(instance, DepGraphCycleError);
+  }
+  return instance;
+};
+
+DepGraphCycleError.prototype = Object.create(Error.prototype, {
+  constructor: {
+    value: Error,
+    enumerable: false,
+    writable: true,
+    configurable: true
+  }
+});
+Object.setPrototypeOf(DepGraphCycleError, Error);
+*/
+
+/**
+ * Helper for creating a Topological Sort using Depth-First-Search on a set of edges.
+ *
+ * Detects cycles and throws an Error if one is detected (unless the "circular"
+ * parameter is "true" in which case it ignores them).
+ *
+ * @param edges The set of edges to DFS through
+ * @param leavesOnly Whether to only return "leaf" nodes (ones who have no edges)
+ * @param result An array in which the results will be populated
+ * @param circular A boolean to allow circular dependencies
+ */
+function createDFS(edges, leavesOnly, result, circular) {
+  const visited = {};
+  // eslint-disable-next-line func-names
+  return function (start) {
+    // console.log('start ', start);
+    if (visited[start]) {
+      return;
+    }
+    const inCurrentPath = {};
+    const currentPath = [];
+    const todo = []; // used as a stack
+    todo.push({
+      node: start,
+      processed: false
+    });
+    while (todo.length > 0) {
+      const current = todo[todo.length - 1]; // peek at the todo stack
+      const {
+        processed
+      } = current;
+      const {
+        node
+      } = current;
+      if (!processed) {
+        // Haven't visited edges yet (visiting phase)
+        if (visited[node]) {
+          todo.pop();
+          // eslint-disable-next-line no-continue
+          continue;
+        } else if (inCurrentPath[node]) {
+          // It's not a DAG
+          if (circular) {
+            todo.pop();
+            // If we're tolerating cycles, don't revisit the node
+            // eslint-disable-next-line no-continue
+            continue;
+          }
+          currentPath.push(node);
+          window.dispatchEvent(new CustomEvent('compute-exception', {
+            composed: false,
+            bubbles: true,
+            detail: {
+              path: currentPath,
+              message: 'cyclic graph'
+            }
+          }));
+          // return;
+          // console.log('‘circular path: ' + currentPath);
+          // throw new DepGraphCycleError(currentPath);
+
+          // Stop all processing. This form is broken and we should not break the browser
+          throw new Error(`Cyclic at ${currentPath}`);
+        }
+        inCurrentPath[node] = true;
+        currentPath.push(node);
+        const nodeEdges = edges[node];
+        // (push edges onto the todo stack in reverse order to be order-compatible with the old DFS implementation)
+        for (let i = nodeEdges.length - 1; i >= 0; i -= 1) {
+          todo.push({
+            node: nodeEdges[i],
+            processed: false
+          });
+        }
+        current.processed = true;
+      } else {
+        // Have visited edges (stack unrolling phase)
+        todo.pop();
+        currentPath.pop();
+        inCurrentPath[node] = false;
+        visited[node] = true;
+        if (!leavesOnly || edges[node].length === 0) {
+          result.push(node);
+        }
+      }
+    }
+  };
+}
+
+/**
+ * Simple Dependency Graph
+ */
+
+/*
+var DepGraph = (exports.DepGraph = function DepGraph(opts) {
+  this.nodes = {}; // Node -> Node/Data (treated like a Set)
+  this.outgoingEdges = {}; // Node -> [Dependency Node]
+  this.incomingEdges = {}; // Node -> [Dependant Node]
+  this.circular = opts && !!opts.circular; // Allows circular deps
+});
+*/
+
+function DepGraph(opts) {
+  this.nodes = {}; // Node -> Node/Data (treated like a Set)
+  this.outgoingEdges = {}; // Node -> [Dependency Node]
+  this.incomingEdges = {}; // Node -> [Dependant Node]
+  this.circular = opts && !!opts.circular; // Allows circular deps
+}
+
+DepGraph.prototype = {
+  /**
+   * The number of nodes in the graph.
+   */
+  size() {
+    return Object.keys(this.nodes).length;
+  },
+  /**
+   * Add a node to the dependency graph. If a node already exists, this method will do nothing.
+   */
+  addNode(node, data) {
+    if (!this.hasNode(node)) {
+      // Checking the arguments length allows the user to add a node with undefined data
+      if (arguments.length === 2) {
+        this.nodes[node] = data;
+      } else {
+        this.nodes[node] = node;
+      }
+      this.outgoingEdges[node] = [];
+      this.incomingEdges[node] = [];
+    }
+  },
+  /**
+   * Remove a node from the dependency graph. If a node does not exist, this method will do nothing.
+   */
+  removeNode(node) {
+    if (this.hasNode(node)) {
+      delete this.nodes[node];
+      delete this.outgoingEdges[node];
+      delete this.incomingEdges[node];
+      // [this.incomingEdges, this.outgoingEdges].forEach(function (edgeList) {
+      [this.incomingEdges, this.outgoingEdges].forEach(edgeList => {
+        Object.keys(edgeList).forEach(key => {
+          const idx = edgeList[key].indexOf(node);
+          if (idx >= 0) {
+            edgeList[key].splice(idx, 1);
+          }
+        }, this);
+      });
+    }
+  },
+  /**
+   * Check if a node exists in the graph
+   */
+  hasNode(node) {
+    // return this.nodes.hasOwnProperty(node);
+
+    return Object.prototype.hasOwnProperty.call(this.nodes, node);
+  },
+  /**
+   * Get the data associated with a node name
+   */
+  getNodeData(node) {
+    if (this.hasNode(node)) {
+      return this.nodes[node];
+    }
+    throw new Error(`Node does not exist: ${node}`);
+  },
+  /**
+   * Set the associated data for a given node name. If the node does not exist, this method will throw an error
+   */
+  setNodeData(node, data) {
+    if (this.hasNode(node)) {
+      this.nodes[node] = data;
+    } else {
+      throw new Error(`Node does not exist: ${node}`);
+    }
+  },
+  /**
+   * Add a dependency between two nodes. If either of the nodes does not exist,
+   * an Error will be thrown.
+   */
+  addDependency(from, to) {
+    if (!this.hasNode(from)) {
+      throw new Error(`Node does not exist: ${from}`);
+    }
+    if (!this.hasNode(to)) {
+      throw new Error(`Node does not exist: ${to}`);
+    }
+    if (this.outgoingEdges[from].indexOf(to) === -1) {
+      this.outgoingEdges[from].push(to);
+    }
+    if (this.incomingEdges[to].indexOf(from) === -1) {
+      this.incomingEdges[to].push(from);
+    }
+    return true;
+  },
+  /**
+   * Remove a dependency between two nodes.
+   */
+  removeDependency(from, to) {
+    let idx;
+    if (this.hasNode(from)) {
+      idx = this.outgoingEdges[from].indexOf(to);
+      if (idx >= 0) {
+        this.outgoingEdges[from].splice(idx, 1);
+      }
+    }
+    if (this.hasNode(to)) {
+      idx = this.incomingEdges[to].indexOf(from);
+      if (idx >= 0) {
+        this.incomingEdges[to].splice(idx, 1);
+      }
+    }
+  },
+  /**
+   * Return a clone of the dependency graph. If any custom data is attached
+   * to the nodes, it will only be shallow copied.
+   */
+  clone() {
+    const source = this;
+    const result = new DepGraph();
+    const keys = Object.keys(source.nodes);
+    keys.forEach(n => {
+      result.nodes[n] = source.nodes[n];
+      result.outgoingEdges[n] = source.outgoingEdges[n].slice(0);
+      result.incomingEdges[n] = source.incomingEdges[n].slice(0);
+    });
+    return result;
+  },
+  /**
+   * Get an array containing the direct dependencies of the specified node.
+   *
+   * Throws an Error if the specified node does not exist.
+   */
+  directDependenciesOf(node) {
+    if (this.hasNode(node)) {
+      return this.outgoingEdges[node].slice(0);
+    }
+    throw new Error(`Node does not exist: ${node}`);
+  },
+  /**
+   * Get an array containing the nodes that directly depend on the specified node.
+   *
+   * Throws an Error if the specified node does not exist.
+   */
+  directDependantsOf(node) {
+    if (this.hasNode(node)) {
+      return this.incomingEdges[node].slice(0);
+    }
+    throw new Error(`Node does not exist: ${node}`);
+  },
+  /**
+   * Get an array containing the nodes that the specified node depends on (transitively).
+   *
+   * Throws an Error if the graph has a cycle, or the specified node does not exist.
+   *
+   * If `leavesOnly` is true, only nodes that do not depend on any other nodes will be returned
+   * in the array.
+   */
+  dependenciesOf(node, leavesOnly) {
+    if (this.hasNode(node)) {
+      const result = [];
+      const DFS = createDFS(this.outgoingEdges, leavesOnly, result, this.circular);
+      DFS(node);
+      const idx = result.indexOf(node);
+      if (idx >= 0) {
+        result.splice(idx, 1);
+      }
+      return result;
+    }
+    throw new Error(`Node does not exist: ${node}`);
+  },
+  /**
+   * get an array containing the nodes that depend on the specified node (transitively).
+   *
+   * Throws an Error if the graph has a cycle, or the specified node does not exist.
+   *
+   * If `leavesOnly` is true, only nodes that do not have any dependants will be returned in the array.
+   */
+  dependantsOf(node, leavesOnly) {
+    if (this.hasNode(node)) {
+      const result = [];
+      const DFS = createDFS(this.incomingEdges, leavesOnly, result, this.circular);
+      DFS(node);
+      const idx = result.indexOf(node);
+      if (idx >= 0) {
+        result.splice(idx, 1);
+      }
+      return result;
+    }
+    throw new Error(`Node does not exist: ${node}`);
+  },
+  /**
+   * Get an array of nodes that have no dependants (i.e. nothing depends on them).
+   */
+  entryNodes() {
+    const self = this;
+    return Object.keys(this.nodes).filter(node => self.incomingEdges[node].length === 0);
+  },
+  /**
+   * Construct the overall processing order for the dependency graph.
+   *
+   * Throws an Error if the graph has a cycle.
+   *
+   * If `leavesOnly` is true, only nodes that do not depend on any other nodes will be returned.
+   */
+  overallOrder(leavesOnly) {
+    const self = this;
+    const result = [];
+    const keys = Object.keys(this.nodes);
+    if (keys.length === 0) {
+      return result; // Empty graph
+    }
+
+    if (!this.circular) {
+      // Look for cycles - we run the DFS starting at all the nodes in case there
+      // are several disconnected subgraphs inside this dependency graph.
+      const CycleDFS = createDFS(this.outgoingEdges, false, [], this.circular);
+      keys.forEach(n => {
+        CycleDFS(n);
+      });
+    }
+    const DFS = createDFS(this.outgoingEdges, leavesOnly, result, this.circular);
+    // Find all potential starting points (nodes with nothing depending on them) an
+    // run a DFS starting at these points to get the order
+    keys.filter(node => self.incomingEdges[node].length === 0).forEach(n => {
+      DFS(n);
+    });
+
+    // If we're allowing cycles - we need to run the DFS against any remaining
+    // nodes that did not end up in the initial result (as they are part of a
+    // subgraph that does not have a clear starting point)
+    if (this.circular) {
+      keys.filter(node => result.indexOf(node) === -1).forEach(n => DFS(n));
+    }
+    return result;
+  }
+};
+
+// Create some aliases
+DepGraph.prototype.directDependentsOf = DepGraph.prototype.directDependantsOf;
+DepGraph.prototype.dependentsOf = DepGraph.prototype.dependantsOf;
+
 function prettifyXml(source) {
   const xmlDoc = new DOMParser().parseFromString(source, 'application/xml');
   const xsltDoc = new DOMParser().parseFromString([
@@ -38651,752 +39398,6 @@ export static getDocPath(node) {
 }
 */
 
-class XPathUtil {
-  /**
-   * Recursively check AST for any dynamic expression components.
-   */
-  static containsDynamicContent(astNode) {
-    if (!astNode) return false;
-
-    // Location paths, function calls, or variable refs are dynamic
-    if (astNode.type === 'pathExpression' || astNode.type === 'functionCall' || astNode.type === 'variableReference') {
-      return true;
-    }
-
-    // Recursively check any child expressions
-    for (const key in astNode) {
-      if (astNode[key] && typeof astNode[key] === 'object') {
-        if (Array.isArray(astNode[key])) {
-          for (const item of astNode[key]) {
-            if (XPathUtil.containsDynamicContent(item)) return true;
-          }
-        } else {
-          if (XPathUtil.containsDynamicContent(astNode[key])) return true;
-        }
-      }
-    }
-    return false;
-  }
-
-  /**
-   * creates DOM Nodes from an XPath locationpath expression. Support namespaced and un-namespaced
-   * nodes.
-   * E.g. 'foo/bar' creates an element 'foo' with an child element 'bar'
-   * 'foo/@bar' creates a 'foo' element with an 'bar' attribute
-   *
-   * supports multiple steps
-   *
-   * @param xpath
-   * @param doc {XMLDocument}
-   * @param fore
-   * @return {Node|Attr}
-   */
-  static createNodesFromXPath(xpath, doc, fore) {
-    const resolveNamespace = createNamespaceResolver(xpath, fore);
-    if (!doc) {
-      doc = document.implementation.createDocument(null, null, null); // Create a new XML document if not provided
-    }
-
-    const parts = [];
-    let scratch = '';
-    let isInPredicate = false;
-    for (const char of xpath.split('')) {
-      if (!isInPredicate) {
-        // We are not in a predicate, the slash will terminate our step.
-        if (char === '/') {
-          parts.push(scratch);
-          scratch = '';
-          continue;
-        }
-        scratch += char;
-        if (char === '[') {
-          isInPredicate = true;
-        }
-        continue;
-      }
-      // We are in a predicate! So the only interesting token is ']', which means we're out of one.
-      scratch += char;
-      if (char === ']') {
-        isInPredicate = false;
-      }
-    }
-    // Flush the last step
-    parts.push(scratch);
-    let rootNode = null;
-    let currentNode = null;
-    for (const part of parts) {
-      if (!part) continue; // Skip empty parts (e.g., leading slashes)
-      if (part === '.') {
-        // A '.' does not introduce new elements
-        continue;
-      }
-
-      // Handle attributes
-      if (part.startsWith('@')) {
-        const attrName = part.slice(1); // Strip '@'
-        if (!currentNode) {
-          return doc.createAttribute(attrName, '');
-        }
-        currentNode.setAttribute(attrName, '');
-      } else {
-        // We are a predicate selector! Handle it
-        // This regex matches strings like:
-        // - listBibl
-        // - tei:listBibl
-        // - listBibl[@type="foo"]
-        // - listBibl[@type="foo"][@class="bar"]
-        // It will also match strings like
-        // - listBibl[ancestor-or-self::foo]
-        // which will be filtered out later.
-
-        const result = part.match(/^(?<name>[\w:-]+)(?<predicates>(\[[^]*\])*)$/);
-        if (!result) {
-          throw new Error(`No element could be made from the XPath step ${part}. It must be of these forms: 'localName', 'prefix:name', 'name[@attr="value"]' et cetera.`);
-        }
-        const {
-          name,
-          predicates
-        } = result.groups;
-        // Handle namespaces if present
-        const [prefix, localName] = name.includes(':') ? name.split(':') : [null, name];
-        const namespace = resolveNamespace(prefix);
-        const newElement = namespace ? doc.createElementNS(namespace, localName) : doc.createElement(localName);
-        if (predicates) {
-          const predicateExtractionRegex = /(\[@(?<name>[\w:-]*)\s?=\s?["'](?<value>[^"']*)['"]\])+/g;
-          const parsedPredicates = predicates.matchAll(predicateExtractionRegex).map(match => ({
-            attrName: match.groups.name,
-            value: match.groups.value
-          }));
-          for (const {
-            attrName,
-            value
-          } of parsedPredicates) {
-            newElement.setAttribute(attrName, value);
-          }
-        }
-        if (!rootNode) {
-          rootNode = newElement; // Set as the root node
-        } else {
-          currentNode.appendChild(newElement);
-        }
-        currentNode = newElement;
-      }
-    }
-    if (!rootNode) {
-      throw new Error('Invalid XPath; no root element could be created.');
-    }
-    return rootNode;
-  }
-
-  /**
-   * looks up namespace on ownerForm. Though not strictly in the sense of resolving namespaces in XML, the
-   * fx-fore element is a convenient place to put namespace declarations for 2 reasons:
-   * - this way namespaces are scoped to a Fore element
-   * - as fx-fore is a web component we can add our xmlns attributes as we got no restrictions to attributes
-   *   though strictly speaking they are no xmlns declarations and just serve the purpose of namespace lookup.
-   *
-   * @param boundElement
-   * @param prefix
-   * @return {string}
-   */
-  static lookupNamespace(ownerForm, prefix) {
-    return ownerForm.getAttribute(`xmlns:${prefix}`);
-  }
-  static querySelectorAll(querySelector, start) {
-    const queue = [start];
-    const found = [];
-    while (queue.length) {
-      const item = queue.shift();
-      for (const child of Array.from(item.children).reverse()) {
-        queue.unshift(child);
-      }
-      if (item.matches && item.matches('template')) {
-        queue.unshift(item.content);
-      }
-      if (item.matches && item.matches(querySelector)) {
-        found.push(item);
-      }
-    }
-    return found;
-  }
-
-  /**
-   * Alternative to `contains` that respects shadowroots
-   * @param {Node} ancestor
-   * @param {Node} descendant
-   * @returns {boolean}
-   */
-  static contains(ancestor, descendant) {
-    while (descendant) {
-      if (descendant === ancestor) {
-        return true;
-      }
-      if (descendant.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
-        // We are passing a shadow root boundary
-        descendant = descendant.host;
-      } else {
-        descendant = descendant.parentNode;
-      }
-    }
-    return false;
-  }
-
-  /**
-   * Alternative to `closest` that respects subcontrol boundaries
-   *
-   * @param {string} querySelector
-   * @param {Node} start
-   * @returns {HTMLElement}
-   */
-  static getClosest(querySelector, start) {
-    while (start && !start.matches || !start.matches(querySelector)) {
-      if (start.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
-        // We are passing a shadow root boundary
-        start = start.host;
-        continue;
-      }
-      if (start.nodeType === Node.ATTRIBUTE_NODE) {
-        // We are passing an attribute
-        start = start.ownerElement;
-        continue;
-      }
-      if (start.nodeType === Node.TEXT_NODE) {
-        start = start.parentNode;
-      }
-      if (start.matches('fx-fore')) {
-        // Subform reached. Bail out
-        return null;
-      }
-      start = start.parentNode;
-      if (!start) {
-        return null;
-      }
-    }
-    return start;
-  }
-
-  /**
-   * returns next bound element upwards in tree
-   * @param {Node} start where to start the search
-   * @returns {*|null}
-   */
-  static getParentBindingElement(start) {
-    /*    if (start.parentNode.host) {
-          const { host } = start.parentNode;
-          if (host.hasAttribute('ref')) {
-            return host;
-          }
-        } else */
-    if (start.parentNode && (start.parentNode.nodeType !== Node.DOCUMENT_NODE || start.parentNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE)) {
-      return this.getClosest('fx-control[ref],fx-upload[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref],fx-repeatitem', start.parentNode);
-    }
-    return null;
-  }
-
-  /**
-   * Checks whether the specified path expression is an absolute path.
-   *
-   * @param {string} path the path expression.
-   * @returns {boolean} <code>true</code> if specified path expression is an absolute
-   * path, otherwise <code>false</code>.
-   */
-  static isAbsolutePath(path) {
-    return path != null && (path.startsWith('/') || path.startsWith('instance(') || path.startsWith('$'));
-  }
-
-  /**
-   * @param {string} ref
-   */
-  static isSelfReference(ref) {
-    return ref === '.' || ref === './text()' || ref === 'text()' || ref === '' || ref === null;
-  }
-
-  /**
-   * returns the instance id from a complete XPath using `instance()` function.
-   *
-   * Will return 'default' in case no ref is given at all or the `instance()` function is called without arg.
-   *
-   * Otherwise instance id is extracted from function and returned. If all fails null is returned.
-   * @param {string} ref
-   * @param {HTMLElement}  boundElement  The element related to this ref. Used to resolve variables
-   * @returns {string}
-   */
-  static getInstanceId(ref, boundElement) {
-    if (!ref) {
-      return 'default';
-    }
-    if (ref.startsWith('instance()')) {
-      return 'default';
-    }
-    if (ref.startsWith('instance(')) {
-      const result = ref.substring(ref.indexOf('(') + 1);
-      return result.substring(1, result.indexOf(')') - 1);
-    }
-    if (ref.startsWith('$')) {
-      // this variable might actually point to an instance
-      const variableName = ref.match(/\$(?<variableName>[a-zA-Z0-9\-\_]+).*/)?.groups?.variableName;
-      let closestActualFormElement = boundElement;
-      while (closestActualFormElement && !('inScopeVariables' in closestActualFormElement)) {
-        closestActualFormElement = closestActualFormElement.nodeType === Node.ATTRIBUTE_NODE ? closestActualFormElement.ownerElement : closestActualFormElement.parentNode;
-      }
-      const correspondingVariable = closestActualFormElement?.inScopeVariables?.get(variableName);
-      if (!correspondingVariable) {
-        return null;
-      }
-      return this.getInstanceId(correspondingVariable.valueQuery, correspondingVariable);
-    }
-    return null;
-  }
-
-  /**
-   * @param {HTMLElement} boundElement
-   * @param {string} path
-   * @returns {string}
-   */
-  static resolveInstance(boundElement, path) {
-    let instanceId = XPathUtil.getInstanceId(path, boundElement);
-    if (!instanceId) {
-      instanceId = XPathUtil.getInstanceId(boundElement.getAttribute('ref'), boundElement);
-    }
-    if (instanceId !== null) {
-      return instanceId;
-    }
-    const parentBinding = XPathUtil.getParentBindingElement(boundElement);
-    if (parentBinding) {
-      return this.resolveInstance(parentBinding, path);
-    }
-    return 'default';
-  }
-
-  /**
-   * @param {Node} node
-   * @returns string
-   */
-  /*
-  static getDocPath(node) {
-    const path = fx.evaluateXPathToString('path()', node);
-    // Path is like `$default/x[1]/y[1]`
-    const shortened = XPathUtil.shortenPath(path);
-    return shortened.startsWith('/') ? `${shortened}` : `/${shortened}`;
-  }
-  */
-
-  /**
-   * @param {Node} node
-   * @param {string} instanceId
-   * @returns string
-   */
-  static getPath(node, instanceId) {
-    const path = evaluateXPathToString$1('path()', node);
-    // Path is like `$default/x[1]/y[1]`
-    const shortened = XPathUtil.shortenPath(path);
-    return shortened.startsWith('/') ? `$${instanceId}${shortened}` : `$${instanceId}/${shortened}`;
-  }
-
-  /**
-   * @param {string} path
-   * @returns string
-   */
-  static shortenPath(path) {
-    const tmp = path.replaceAll(/(Q{(.*?)\})/g, '');
-    if (tmp === 'root()') return tmp;
-    // cut off leading slash
-    const tmp1 = tmp.substring(1, tmp.length);
-    // ### cut-off root node ref
-    return tmp1.substring(tmp1.indexOf('/'), tmp.length);
-  }
-
-  /**
-   * @param {string} dep
-   * @returns {string}
-   */
-  static getBasePath(dep) {
-    const split = dep.split(':');
-    return split[0];
-  }
-}
-
-/**
- * A simple dependency graph
- *
- * based on the work of https://github.com/jriecken/dependency-graph but working on ES6.
- *
- * Furthermore instead of the DepGraphCycleError a compute-exception event is dispatched.
- *
- *
- */
-
-/**
- * Cycle error, including the path of the cycle.
- */
-// const DepGraphCycleError = (exports.DepGraphCycleError = function (cyclePath) {
-
-/*
-export function DepGraphCycleError(cyclePath) {
-  const message = "Dependency Cycle Found: " + cyclePath.join(" -> ");
-  const instance = new Error(message);
-  instance.cyclePath = cyclePath;
-  Object.setPrototypeOf(instance, Object.getPrototypeOf(this));
-  if (Error.captureStackTrace) {
-    Error.captureStackTrace(instance, DepGraphCycleError);
-  }
-  return instance;
-};
-
-DepGraphCycleError.prototype = Object.create(Error.prototype, {
-  constructor: {
-    value: Error,
-    enumerable: false,
-    writable: true,
-    configurable: true
-  }
-});
-Object.setPrototypeOf(DepGraphCycleError, Error);
-*/
-
-/**
- * Helper for creating a Topological Sort using Depth-First-Search on a set of edges.
- *
- * Detects cycles and throws an Error if one is detected (unless the "circular"
- * parameter is "true" in which case it ignores them).
- *
- * @param edges The set of edges to DFS through
- * @param leavesOnly Whether to only return "leaf" nodes (ones who have no edges)
- * @param result An array in which the results will be populated
- * @param circular A boolean to allow circular dependencies
- */
-function createDFS(edges, leavesOnly, result, circular) {
-  const visited = {};
-  // eslint-disable-next-line func-names
-  return function (start) {
-    // console.log('start ', start);
-    if (visited[start]) {
-      return;
-    }
-    const inCurrentPath = {};
-    const currentPath = [];
-    const todo = []; // used as a stack
-    todo.push({
-      node: start,
-      processed: false
-    });
-    while (todo.length > 0) {
-      const current = todo[todo.length - 1]; // peek at the todo stack
-      const {
-        processed
-      } = current;
-      const {
-        node
-      } = current;
-      if (!processed) {
-        // Haven't visited edges yet (visiting phase)
-        if (visited[node]) {
-          todo.pop();
-          // eslint-disable-next-line no-continue
-          continue;
-        } else if (inCurrentPath[node]) {
-          // It's not a DAG
-          if (circular) {
-            todo.pop();
-            // If we're tolerating cycles, don't revisit the node
-            // eslint-disable-next-line no-continue
-            continue;
-          }
-          currentPath.push(node);
-          window.dispatchEvent(new CustomEvent('compute-exception', {
-            composed: false,
-            bubbles: true,
-            detail: {
-              path: currentPath,
-              message: 'cyclic graph'
-            }
-          }));
-          // return;
-          // console.log('‘circular path: ' + currentPath);
-          // throw new DepGraphCycleError(currentPath);
-
-          // Stop all processing. This form is broken and we should not break the browser
-          throw new Error(`Cyclic at ${currentPath}`);
-        }
-        inCurrentPath[node] = true;
-        currentPath.push(node);
-        const nodeEdges = edges[node];
-        // (push edges onto the todo stack in reverse order to be order-compatible with the old DFS implementation)
-        for (let i = nodeEdges.length - 1; i >= 0; i -= 1) {
-          todo.push({
-            node: nodeEdges[i],
-            processed: false
-          });
-        }
-        current.processed = true;
-      } else {
-        // Have visited edges (stack unrolling phase)
-        todo.pop();
-        currentPath.pop();
-        inCurrentPath[node] = false;
-        visited[node] = true;
-        if (!leavesOnly || edges[node].length === 0) {
-          result.push(node);
-        }
-      }
-    }
-  };
-}
-
-/**
- * Simple Dependency Graph
- */
-
-/*
-var DepGraph = (exports.DepGraph = function DepGraph(opts) {
-  this.nodes = {}; // Node -> Node/Data (treated like a Set)
-  this.outgoingEdges = {}; // Node -> [Dependency Node]
-  this.incomingEdges = {}; // Node -> [Dependant Node]
-  this.circular = opts && !!opts.circular; // Allows circular deps
-});
-*/
-
-function DepGraph(opts) {
-  this.nodes = {}; // Node -> Node/Data (treated like a Set)
-  this.outgoingEdges = {}; // Node -> [Dependency Node]
-  this.incomingEdges = {}; // Node -> [Dependant Node]
-  this.circular = opts && !!opts.circular; // Allows circular deps
-}
-
-DepGraph.prototype = {
-  /**
-   * The number of nodes in the graph.
-   */
-  size() {
-    return Object.keys(this.nodes).length;
-  },
-  /**
-   * Add a node to the dependency graph. If a node already exists, this method will do nothing.
-   */
-  addNode(node, data) {
-    if (!this.hasNode(node)) {
-      // Checking the arguments length allows the user to add a node with undefined data
-      if (arguments.length === 2) {
-        this.nodes[node] = data;
-      } else {
-        this.nodes[node] = node;
-      }
-      this.outgoingEdges[node] = [];
-      this.incomingEdges[node] = [];
-    }
-  },
-  /**
-   * Remove a node from the dependency graph. If a node does not exist, this method will do nothing.
-   */
-  removeNode(node) {
-    if (this.hasNode(node)) {
-      delete this.nodes[node];
-      delete this.outgoingEdges[node];
-      delete this.incomingEdges[node];
-      // [this.incomingEdges, this.outgoingEdges].forEach(function (edgeList) {
-      [this.incomingEdges, this.outgoingEdges].forEach(edgeList => {
-        Object.keys(edgeList).forEach(key => {
-          const idx = edgeList[key].indexOf(node);
-          if (idx >= 0) {
-            edgeList[key].splice(idx, 1);
-          }
-        }, this);
-      });
-    }
-  },
-  /**
-   * Check if a node exists in the graph
-   */
-  hasNode(node) {
-    // return this.nodes.hasOwnProperty(node);
-
-    return Object.prototype.hasOwnProperty.call(this.nodes, node);
-  },
-  /**
-   * Get the data associated with a node name
-   */
-  getNodeData(node) {
-    if (this.hasNode(node)) {
-      return this.nodes[node];
-    }
-    throw new Error(`Node does not exist: ${node}`);
-  },
-  /**
-   * Set the associated data for a given node name. If the node does not exist, this method will throw an error
-   */
-  setNodeData(node, data) {
-    if (this.hasNode(node)) {
-      this.nodes[node] = data;
-    } else {
-      throw new Error(`Node does not exist: ${node}`);
-    }
-  },
-  /**
-   * Add a dependency between two nodes. If either of the nodes does not exist,
-   * an Error will be thrown.
-   */
-  addDependency(from, to) {
-    if (!this.hasNode(from)) {
-      throw new Error(`Node does not exist: ${from}`);
-    }
-    if (!this.hasNode(to)) {
-      throw new Error(`Node does not exist: ${to}`);
-    }
-    if (this.outgoingEdges[from].indexOf(to) === -1) {
-      this.outgoingEdges[from].push(to);
-    }
-    if (this.incomingEdges[to].indexOf(from) === -1) {
-      this.incomingEdges[to].push(from);
-    }
-    return true;
-  },
-  /**
-   * Remove a dependency between two nodes.
-   */
-  removeDependency(from, to) {
-    let idx;
-    if (this.hasNode(from)) {
-      idx = this.outgoingEdges[from].indexOf(to);
-      if (idx >= 0) {
-        this.outgoingEdges[from].splice(idx, 1);
-      }
-    }
-    if (this.hasNode(to)) {
-      idx = this.incomingEdges[to].indexOf(from);
-      if (idx >= 0) {
-        this.incomingEdges[to].splice(idx, 1);
-      }
-    }
-  },
-  /**
-   * Return a clone of the dependency graph. If any custom data is attached
-   * to the nodes, it will only be shallow copied.
-   */
-  clone() {
-    const source = this;
-    const result = new DepGraph();
-    const keys = Object.keys(source.nodes);
-    keys.forEach(n => {
-      result.nodes[n] = source.nodes[n];
-      result.outgoingEdges[n] = source.outgoingEdges[n].slice(0);
-      result.incomingEdges[n] = source.incomingEdges[n].slice(0);
-    });
-    return result;
-  },
-  /**
-   * Get an array containing the direct dependencies of the specified node.
-   *
-   * Throws an Error if the specified node does not exist.
-   */
-  directDependenciesOf(node) {
-    if (this.hasNode(node)) {
-      return this.outgoingEdges[node].slice(0);
-    }
-    throw new Error(`Node does not exist: ${node}`);
-  },
-  /**
-   * Get an array containing the nodes that directly depend on the specified node.
-   *
-   * Throws an Error if the specified node does not exist.
-   */
-  directDependantsOf(node) {
-    if (this.hasNode(node)) {
-      return this.incomingEdges[node].slice(0);
-    }
-    throw new Error(`Node does not exist: ${node}`);
-  },
-  /**
-   * Get an array containing the nodes that the specified node depends on (transitively).
-   *
-   * Throws an Error if the graph has a cycle, or the specified node does not exist.
-   *
-   * If `leavesOnly` is true, only nodes that do not depend on any other nodes will be returned
-   * in the array.
-   */
-  dependenciesOf(node, leavesOnly) {
-    if (this.hasNode(node)) {
-      const result = [];
-      const DFS = createDFS(this.outgoingEdges, leavesOnly, result, this.circular);
-      DFS(node);
-      const idx = result.indexOf(node);
-      if (idx >= 0) {
-        result.splice(idx, 1);
-      }
-      return result;
-    }
-    throw new Error(`Node does not exist: ${node}`);
-  },
-  /**
-   * get an array containing the nodes that depend on the specified node (transitively).
-   *
-   * Throws an Error if the graph has a cycle, or the specified node does not exist.
-   *
-   * If `leavesOnly` is true, only nodes that do not have any dependants will be returned in the array.
-   */
-  dependantsOf(node, leavesOnly) {
-    if (this.hasNode(node)) {
-      const result = [];
-      const DFS = createDFS(this.incomingEdges, leavesOnly, result, this.circular);
-      DFS(node);
-      const idx = result.indexOf(node);
-      if (idx >= 0) {
-        result.splice(idx, 1);
-      }
-      return result;
-    }
-    throw new Error(`Node does not exist: ${node}`);
-  },
-  /**
-   * Get an array of nodes that have no dependants (i.e. nothing depends on them).
-   */
-  entryNodes() {
-    const self = this;
-    return Object.keys(this.nodes).filter(node => self.incomingEdges[node].length === 0);
-  },
-  /**
-   * Construct the overall processing order for the dependency graph.
-   *
-   * Throws an Error if the graph has a cycle.
-   *
-   * If `leavesOnly` is true, only nodes that do not depend on any other nodes will be returned.
-   */
-  overallOrder(leavesOnly) {
-    const self = this;
-    const result = [];
-    const keys = Object.keys(this.nodes);
-    if (keys.length === 0) {
-      return result; // Empty graph
-    }
-
-    if (!this.circular) {
-      // Look for cycles - we run the DFS starting at all the nodes in case there
-      // are several disconnected subgraphs inside this dependency graph.
-      const CycleDFS = createDFS(this.outgoingEdges, false, [], this.circular);
-      keys.forEach(n => {
-        CycleDFS(n);
-      });
-    }
-    const DFS = createDFS(this.outgoingEdges, leavesOnly, result, this.circular);
-    // Find all potential starting points (nodes with nothing depending on them) an
-    // run a DFS starting at these points to get the order
-    keys.filter(node => self.incomingEdges[node].length === 0).forEach(n => {
-      DFS(n);
-    });
-
-    // If we're allowing cycles - we need to run the DFS against any remaining
-    // nodes that did not end up in the initial result (as they are part of a
-    // subgraph that does not have a clear starting point)
-    if (this.circular) {
-      keys.filter(node => result.indexOf(node) === -1).forEach(n => DFS(n));
-    }
-    return result;
-  }
-};
-
-// Create some aliases
-DepGraph.prototype.directDependentsOf = DepGraph.prototype.directDependantsOf;
-DepGraph.prototype.dependentsOf = DepGraph.prototype.dependantsOf;
-
 /**
  * @param {Node} node
  * @returns {HTMLElement}
@@ -40261,10 +40262,10 @@ class FxInstance extends HTMLElement {
     // Note: use the getter here: it might provide us with stubbed data if anything async is racing,
     // such as an @src attribute
     const instanceData = this.getInstanceData();
-    if (this.type === 'xml') {
+    if (this.type === 'xml' || this.type === 'html') {
       return instanceData.firstElementChild;
     }
-    return instanceData;
+    return this.instanceData;
   }
 
   /**
@@ -40488,13 +40489,13 @@ class ModelItem {
   set value(newVal) {
     if (!this.node) return;
     const oldVal = this.value;
-    if (newVal?.nodeType === Node.DOCUMENT_NODE) {
+    if (newVal?.nodeType && newVal.nodeType === Node.DOCUMENT_NODE) {
       this.node.replaceWith(newVal.firstElementChild);
-      this.node = newVal.firstElementChild;
-    } else if (newVal?.nodeType === Node.ELEMENT_NODE) {
+      // this.node.appendChild(newVal.firstElementChild);
+    } else if (newVal?.nodeType && newVal.nodeType === Node.ELEMENT_NODE) {
       this.node.replaceWith(newVal);
-      this.node = newVal;
-    } else if (this.node.nodeType === Node.ATTRIBUTE_NODE) {
+      // this.node.appendChild(newVal);
+    } else if (newVal?.nodeType && this.node.nodeType === Node.ATTRIBUTE_NODE) {
       this.node.nodeValue = newVal;
     } else {
       this.node.textContent = newVal;
@@ -41779,7 +41780,7 @@ class FxBind extends ForeElementMixin {
     }
 
     // ✅ only the repeat item gets the _<opNum> suffix; children do not.
-    const basePath = XPathUtil.getPath(node, instanceId);
+    const basePath = getPath(node, instanceId);
     const path = opNum ? `${basePath}_${opNum}` : basePath;
 
     // const path = XPathUtil.getPath(node, instanceId);
@@ -44275,6 +44276,24 @@ const dirtyStates = {
  * @ts-check
  */
 class FxFore extends HTMLElement {
+  // Records init gate events that have already happened for a given target (document/window/element).
+  // This prevents “missed gate” situations when an fx-fore is replaced (e.g. via src loading)
+  // after the init event already fired.
+  static _hasSeenInitEvent(target, eventName) {
+    const set = FxFore._initEventState.get(target);
+    return !!(set && set.has(eventName));
+  }
+  static _markInitEventSeen(target, eventName) {
+    let set = FxFore._initEventState.get(target);
+    if (!set) {
+      set = new Set();
+      FxFore._initEventState.set(target, set);
+    }
+    set.add(eventName);
+  }
+  static get observedAttributes() {
+    return ['src', 'selector'];
+  }
   static get properties() {
     return {
       /**
@@ -44344,13 +44363,11 @@ class FxFore extends HTMLElement {
       // avoid double init
       if (this.inited) return;
 
-      // 2) Wait for dependencies if needed
-      if (this.hasAttribute('wait-for')) {
-        try {
-          await this._whenDependenciesReady();
-        } catch (e) {
-          return;
-        }
+      // 2) Wait for init gates (init-on / init-on-target / wait-for)
+      try {
+        await this._waitForInitGates();
+      } catch (e) {
+        return;
       }
 
       // 3) Bail if we got disconnected/replaced while waiting
@@ -44359,10 +44376,21 @@ class FxFore extends HTMLElement {
         this.ignoredNodes = Array.from(this.querySelectorAll(this.ignoreExpressions));
       }
 
+      // 4) Safely read assigned content
+      const getAssignedElements = () => {
+        if (typeof slotEl.assignedElements === 'function') {
+          return slotEl.assignedElements({
+            flatten: true
+          });
+        }
+        // Fallback for odd engines/polyfills
+        return (slotEl.assignedNodes({
+          flatten: true
+        }) || []).filter(n => n.nodeType === Node.ELEMENT_NODE);
+      };
+
       // SAFE: slotEl is the actual event source, not a fresh query
-      const children = slotEl.assignedElements({
-        flatten: true
-      });
+      const children = getAssignedElements();
       let modelElement = children.find(modelElem => modelElem.nodeName.toUpperCase() === 'FX-MODEL');
       if (!modelElement) {
         const generatedModel = document.createElement('fx-model');
@@ -44388,13 +44416,16 @@ class FxFore extends HTMLElement {
       this._createRepeatsFromAttributes();
       this.inited = true;
     };
-    this.version = 'Version: 2.7.2 - built on December 10, 2025 11:39:51';
+    this.version = 'Version: 2.8.0 - built on December 19, 2025 13:18:00';
 
     /**
      * @type {import('./fx-model.js').FxModel}
      */
     this.model = null;
     this.inited = false;
+    this._initGatesPromise = null;
+    this._warnedWaitForDeprecation = false;
+    this._srcLoadPromise = null;
     // this.addEventListener('model-construct-done', this._handleModelConstructDone);
     // todo: refactoring - these should rather go into connectedcallback
     this.addEventListener('message', this._displayMessage);
@@ -44535,94 +44566,216 @@ class FxFore extends HTMLElement {
   }
 
   /**
-   * Resolve elements from the `wait-for` attribute.
-   * Supports comma-separated CSS selectors and the special value "closest".
+   * Parse a list of target specs.
+   *
+   * We accept both comma- and whitespace-separated lists (for backward compatibility with `wait-for`).
+   * Each token can be:
+   * - "self" (default)
+   * - "closest" (closest fx-fore)
+   * - "document"
+   * - "window"
+   * - a CSS selector (no whitespace)
    */
-  _resolveDependencies() {
-    const raw = this.getAttribute('wait-for');
+  _parseTargetList(raw) {
     if (!raw) return [];
-    const sels = raw.split(',').map(s => s.trim()).filter(Boolean);
+    return raw.split(/[\s,]+/).map(s => s.trim()).filter(Boolean);
+  }
+  _findBySelector(sel) {
     const roots = [this.getRootNode?.() ?? document, document];
-    const out = [];
-    for (const sel of sels) {
-      let el = null;
-      if (sel === 'closest') {
-        el = this.closest('fx-fore');
-      } else {
-        for (const r of roots) {
-          if (r && 'querySelector' in r) {
-            el = r.querySelector(sel);
-            if (el) break;
-          }
-        }
+    for (const r of roots) {
+      if (r && 'querySelector' in r) {
+        const el = r.querySelector(sel);
+        if (el) return el;
       }
-      if (el) out.push(el);
     }
-    return out;
+    return null;
+  }
+  _isReadyTarget(el) {
+    return !!(el && (el.ready === true || el.classList && el.classList.contains('fx-ready') || typeof el.hasAttribute === 'function' && el.hasAttribute('ready')));
   }
 
   /**
-   * Wait until all dependencies are ready (i.e., they set `ready = true`
-   * and dispatch the `ready` event).
+   * Collect all init gates derived from attributes.
+   *
+   * - `wait-for` (DEPRECATED) becomes: init-on="ready" + init-on-target=<list>
+   * - `init-on` / `init-on-target` define a generic event gate
    */
-  _whenDependenciesReady() {
-    const raw = this.getAttribute('wait-for');
-    if (!raw) return Promise.resolve();
-    const sels = raw.split(',').map(s => s.trim()).filter(Boolean);
-    const roots = [this.getRootNode?.() ?? document, document];
-    const query = sel => {
-      for (const r of roots) {
-        if (r && 'querySelector' in r) {
-          const el = r.querySelector(sel);
-          if (el) return el;
-        }
+  _collectInitGates() {
+    const gates = [];
+    const waitForRaw = this.getAttribute('wait-for');
+    if (waitForRaw) {
+      if (!this._warnedWaitForDeprecation) {
+        this._warnedWaitForDeprecation = true;
       }
-      return null;
-    };
-    const isReadyNow = sel => {
-      if (sel === 'closest') {
-        const outer = this.closest('fx-fore');
-        return !!(outer && outer.ready === true);
+      const deps = this._parseTargetList(waitForRaw);
+      for (const dep of deps) {
+        gates.push({
+          event: 'ready',
+          targetSpec: dep
+        });
       }
-      const el = query(sel);
-      return !!(el && el.ready === true);
-    };
-    const waitOne = sel => new Promise(resolve => {
-      // fast path
-      if (isReadyNow(sel)) return resolve();
+    }
+    const initOn = this.getAttribute('init-on');
+    const initOnTargetRaw = this.getAttribute('init-on-target');
+    if (initOn || initOnTargetRaw) {
+      const eventName = initOn || 'ready';
+      const targets = initOnTargetRaw ? this._parseTargetList(initOnTargetRaw) : ['self'];
+      for (const t of targets) {
+        gates.push({
+          event: eventName,
+          targetSpec: t
+        });
+      }
+    }
+    return gates;
+  }
+  _waitForEvent(target, eventName, isSatisfiedFn = null) {
+    // If a caller provides an explicit satisfaction check, honor it first.
+    if (typeof isSatisfiedFn === 'function' && isSatisfiedFn(target)) {
+      FxFore._markInitEventSeen(target, eventName);
+      return Promise.resolve();
+    }
 
-      // robust path: listen at the document/root so replacement doesn't matter
-      const onReady = ev => {
-        const t = ev.target;
-        if (sel === 'closest') {
-          // outer fore becoming ready anywhere above us
-          if (t?.tagName === 'FX-FORE' && t.contains(this)) {
-            cleanup();
-            resolve();
-          }
-        } else if (t?.matches?.(sel)) {
-          cleanup();
+    // Sticky gate: if this event already happened on this target, don't wait again.
+    if (FxFore._hasSeenInitEvent(target, eventName)) {
+      return Promise.resolve();
+    }
+    return new Promise(resolve => {
+      const ac = new AbortController();
+      const on = () => {
+        FxFore._markInitEventSeen(target, eventName);
+        ac.abort();
+        resolve();
+      };
+      target.addEventListener(eventName, on, {
+        once: true,
+        signal: ac.signal
+      });
+    });
+  }
+  _waitForMatchingEvent(eventName, matchesEventFn, recheckFn = null) {
+    if (typeof recheckFn === 'function' && recheckFn()) {
+      return Promise.resolve();
+    }
+    return new Promise(resolve => {
+      const root = document;
+      const cleanupAll = () => {
+        root.removeEventListener(eventName, onEvent, true);
+        if (mo) mo.disconnect();
+      };
+      const onEvent = ev => {
+        if (matchesEventFn(ev)) {
+          cleanupAll();
           resolve();
         }
       };
-      const root = document; // capture at doc to catch composed events
-      const cleanup = () => root.removeEventListener('ready', onReady, true);
-      root.addEventListener('ready', onReady, true);
+      root.addEventListener(eventName, onEvent, true);
 
-      // also re-check on DOM changes in case a ready fore is inserted without firing (paranoia)
-      const mo = new MutationObserver(() => {
-        if (isReadyNow(sel)) {
-          mo.disconnect();
-          cleanup();
-          resolve();
-        }
-      });
-      mo.observe(document.documentElement, {
-        childList: true,
-        subtree: true
-      });
+      // Only used for `ready` (or any other gate that provides a recheck function)
+      let mo = null;
+      if (typeof recheckFn === 'function') {
+        mo = new MutationObserver(() => {
+          if (recheckFn()) {
+            cleanupAll();
+            resolve();
+          }
+        });
+        mo.observe(document.documentElement, {
+          childList: true,
+          subtree: true
+        });
+      }
     });
-    return Promise.all(sels.map(waitOne));
+  }
+  _waitForInitGate({
+    event,
+    targetSpec
+  }) {
+    // Direct targets
+    if (targetSpec === 'self') {
+      const satisfied = event === 'ready' ? t => this._isReadyTarget(t) : null;
+      return this._waitForEvent(this, event, satisfied);
+    }
+    if (targetSpec === 'document') {
+      return this._waitForEvent(document, event);
+    }
+    if (targetSpec === 'window') {
+      return this._waitForEvent(window, event);
+    }
+
+    // Special: closest fx-fore
+    if (targetSpec === 'closest') {
+      const recheckFn = event === 'ready' ? () => this._isReadyTarget(this.closest('fx-fore')) : null;
+      const matchesFn = ev => {
+        const t = ev.target;
+        return t?.tagName === 'FX-FORE' && t.contains(this);
+      };
+      return this._waitForMatchingEvent(event, matchesFn, recheckFn);
+    }
+
+    // Selector targets
+    const selector = targetSpec;
+    const recheckFn = event === 'ready' ? () => this._isReadyTarget(this._findBySelector(selector)) : null;
+    if (typeof recheckFn === 'function' && recheckFn()) {
+      return Promise.resolve();
+    }
+    const matchesFn = ev => {
+      // Prefer composedPath() so events coming from inside shadow DOM still match
+      const path = typeof ev.composedPath === 'function' ? ev.composedPath() : [];
+      for (const n of path) {
+        if (n && n.matches && n.matches(selector)) return true;
+      }
+      const t = ev.target;
+      return !!(t && t.closest && t.closest(selector));
+    };
+    return this._waitForMatchingEvent(event, matchesFn, recheckFn);
+  }
+
+  /**
+   * Wait until all configured init gates are satisfied.
+   * This is the single consolidation point for init gating.
+   */
+  _waitForInitGates() {
+    if (this._initGatesPromise) return this._initGatesPromise;
+    const gates = this._collectInitGates();
+    if (!gates.length) {
+      this._initGatesPromise = Promise.resolve();
+      return this._initGatesPromise;
+    }
+    this._initGatesPromise = Promise.all(gates.map(g => this._waitForInitGate(g))).then(() => undefined);
+    return this._initGatesPromise;
+  }
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (oldValue === newValue) return;
+    if (name === 'src') {
+      this.src = newValue;
+      if (!newValue) {
+        // Reset so a later src assignment can load again
+        this._srcLoadPromise = null;
+        return;
+      }
+      if (this.isConnected) {
+        this._maybeLoadFromSrc();
+      }
+      return;
+    }
+    if (name === 'selector') {
+      // Selector changes should affect a pending src-load
+      if (this.isConnected && this.src && !this._srcLoadPromise) {
+        this._maybeLoadFromSrc();
+      }
+    }
+  }
+  _maybeLoadFromSrc() {
+    if (!this.src) return null;
+    if (this._srcLoadPromise) return this._srcLoadPromise;
+    this._srcLoadPromise = (async () => {
+      await this._waitForInitGates();
+      if (!this.isConnected) return;
+      const selector = this.getAttribute('selector') || 'fx-fore';
+      await Fore.loadForeFromSrc(this, this.src, selector);
+    })();
+    return this._srcLoadPromise;
   }
   connectedCallback() {
     const modelElement = Array.from(this.children).find(modelElem => modelElem.nodeName.toUpperCase() === 'FX-MODEL');
@@ -44660,7 +44813,7 @@ class FxFore extends HTMLElement {
     }
     this.src = this.hasAttribute('src') ? this.getAttribute('src') : null;
     if (this.src) {
-      this._loadFromSrc();
+      this._maybeLoadFromSrc();
       return;
     }
     this._injectDevtools();
@@ -44736,15 +44889,7 @@ class FxFore extends HTMLElement {
    * @private
    */
   async _loadFromSrc() {
-    // console.log('########## loading Fore from ', this.src, '##########');
-    if (this.hasAttribute('wait-for')) {
-      await this._whenDependenciesReady();
-    }
-    if (this.hasAttribute('selector')) {
-      await Fore.loadForeFromSrc(this, this.src, this.getAttribute('selector'));
-    } else {
-      await Fore.loadForeFromSrc(this, this.src, 'fx-fore');
-    }
+    return this._maybeLoadFromSrc();
   }
 
   /**
@@ -45035,7 +45180,7 @@ class FxFore extends HTMLElement {
       }
       // Templates are special: they use the namespace configuration from the place where they are
       // being defined
-      const instanceId = XPathUtil.getInstanceId(naked);
+      const instanceId = XPathUtil.getInstanceId(naked, node);
 
       // If there is an instance referred
       const inst = instanceId ? this.getModel().getInstance(instanceId) : this.getModel().getDefaultInstance();
@@ -45508,11 +45653,13 @@ class FxFore extends HTMLElement {
     let newElement;
     if (ref.includes('/')) {
       // multi-step ref expressions
-      newElement = XPathUtil.createNodesFromXPath(ref, referenceNode.ownerDocument, this);
+      const namespaceResolver = createNamespaceResolver(ref, this);
+      newElement = XPathUtil.createNodesFromXPath(ref, referenceNode.ownerDocument, this, namespaceResolver);
       // console.log('new subtree', newElement);
       return newElement;
     } else {
-      return XPathUtil.createNodesFromXPath(ref, referenceNode.ownerDocument, this);
+      const namespaceResolver = createNamespaceResolver(ref, this);
+      return XPathUtil.createNodesFromXPath(ref, referenceNode.ownerDocument, this, namespaceResolver);
     }
   }
   _handleDragStart(event) {
@@ -45666,6 +45813,7 @@ class FxFore extends HTMLElement {
 }
 FxFore.outermostHandler = null;
 FxFore.draggedItem = null;
+FxFore._initEventState = new WeakMap();
 if (!customElements.get('fx-fore')) {
   customElements.define('fx-fore', FxFore);
 }
@@ -46106,8 +46254,27 @@ class FxSubmission extends ForeElementMixin {
   _handleResponse(data, resolvedUrl, contentType) {
     // console.log('_handleResponse ', data);
 
-    const targetInstance = this._getTargetInstance();
+    this._getTargetInstance();
     if (this.replace === 'instance') {
+      const targetInstance = this._getTargetInstance();
+
+      // ### contentType handling
+
+      if (contentType.includes('html')) {
+        let effectiveData;
+        if (data.nodeType) {
+          effectiveData = data;
+        }
+        // ## try parsing
+        try {
+          effectiveData = new DOMParser().parseFromString(data, 'text/html');
+        } catch {
+          Fore.dispatch(this, 'error', {
+            message: 'could not parse data as HTML'
+          });
+        }
+        targetInstance.instanceData = effectiveData;
+      }
       if (targetInstance) {
         if (this.targetref) {
           const [theTarget] = evaluateXPath(this.targetref, targetInstance.instanceData.firstElementChild, this);
@@ -46588,12 +46755,32 @@ class AbstractControl extends UIElement {
     }
   }
   _toggleValid(valid) {
+    // Used by required handling (and potentially other callers).
+    // It must also fire validity events and sync aria-invalid.
+    const wasInvalid = this.hasAttribute('invalid');
     if (valid) {
       this.removeAttribute('invalid');
       this.setAttribute('valid', '');
     } else {
       this.removeAttribute('valid');
       this.setAttribute('invalid', '');
+    }
+    this._syncAriaInvalid();
+    const isInvalid = this.hasAttribute('invalid');
+    // Only dispatch when the state actually changed
+    if (wasInvalid !== isInvalid) {
+      this._dispatchEvent(isInvalid ? 'invalid' : 'valid');
+    }
+  }
+  _syncAriaInvalid() {
+    // Keep widget aria-invalid in sync with the *control* state, regardless of
+    // whether invalidity comes from constraint, required emptiness, etc.
+    try {
+      const w = this.getWidget?.() || this.widget;
+      if (!w) return;
+      w.setAttribute('aria-invalid', this.hasAttribute('invalid') ? 'true' : 'false');
+    } catch (e) {
+      // ignore: widget might not exist yet
     }
   }
   handleReadonly() {
@@ -46622,8 +46809,8 @@ class AbstractControl extends UIElement {
         // if (alert) alert.style.display = 'none';
         this._dispatchEvent('valid');
         this.setAttribute('valid', '');
-        this.getWidget().setAttribute('aria-invalid', 'false');
         this.removeAttribute('invalid');
+        this.getWidget().setAttribute('aria-invalid', 'false');
       } else {
         this.setAttribute('invalid', '');
         this.getWidget().setAttribute('aria-invalid', 'true');
@@ -46655,33 +46842,40 @@ class AbstractControl extends UIElement {
         this._dispatchEvent('invalid');
       }
     }
+
+    // Ensure aria-invalid matches the current control state even if
+    // we didn't enter the state-change branch above.
+    this._syncAriaInvalid();
   }
   handleRelevant() {
-    // console.log('mip valid', this.modelItem.enabled);
+    // IMPORTANT: don't clear relevant/nonrelevant BEFORE comparing states.
+    // Otherwise isEnabled() (based on attributes) always reads as "enabled"
+    // and we can never detect a transition back to relevant.
     const item = this.modelItem.node;
-    this.removeAttribute('relevant');
-    this.removeAttribute('nonrelevant');
+    const wasEnabled = this.isEnabled();
+
+    // Determine new enabled state
+    let newEnabled = !!this.modelItem.relevant;
+
+    // If a nodeset resolves to an empty array, treat the control as nonrelevant
     if (Array.isArray(item) && item.length === 0) {
-      this._dispatchEvent('nonrelevant');
-      this.setAttribute('nonrelevant', '');
-      // this.style.display = 'none';
-      return;
+      newEnabled = false;
     }
-    if (this.isEnabled() !== this.modelItem.relevant) {
-      if (this.modelItem.relevant) {
-        this._dispatchEvent('relevant');
-        // this._fadeIn(this, this.display);
-        this.setAttribute('relevant', '');
-        // this.style.display = this.display;
-      } else {
-        this._dispatchEvent('nonrelevant');
-        // this._fadeOut(this);
-        this.setAttribute('nonrelevant', '');
-        // this.style.display = 'none';
-      }
+
+    // Apply attributes
+    if (newEnabled) {
+      this.setAttribute('relevant', '');
+      this.removeAttribute('nonrelevant');
+    } else {
+      this.setAttribute('nonrelevant', '');
+      this.removeAttribute('relevant');
+    }
+
+    // Dispatch only on actual change
+    if (wasEnabled !== newEnabled) {
+      this._dispatchEvent(newEnabled ? 'relevant' : 'nonrelevant');
     }
   }
-
   isRequired() {
     return this.hasAttribute('required');
   }
@@ -50703,7 +50897,7 @@ class FxActionLog extends HTMLElement {
    */
   _logDetails(e) {
     const eventType = e.type;
-    const path = XPathUtil.getPath(e.target, '');
+    const path = getPath(e.target, '');
     // console.log('>>>> _logDetails', path);
     const cut = path.substring(path.indexOf('/fx-fore'), path.length);
     const xpath = `/${cut}`;
