@@ -67,5 +67,6 @@ import './src/ui/fx-control-menu.js';
 
 import './src/functions/fx-function.js';
 import './src/functions/fx-functionlib.js';
+import './tools/fx-lens.js';
 
 export default {};
