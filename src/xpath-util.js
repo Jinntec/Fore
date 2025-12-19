@@ -1,5 +1,4 @@
 import * as fx from 'fontoxpath';
-import { createNamespaceResolver } from './xpath-evaluation';
 
 export class XPathUtil {
   /**
@@ -44,10 +43,11 @@ export class XPathUtil {
    * @param xpath
    * @param doc {XMLDocument}
    * @param fore
+   * @param namespaceResolver {function} optional namespace resolver function
    * @return {Node|Attr}
    */
-  static createNodesFromXPath(xpath, doc, fore) {
-    const resolveNamespace = createNamespaceResolver(xpath, fore);
+  static createNodesFromXPath(xpath, doc, fore, namespaceResolver = null) {
+    const resolveNamespace = namespaceResolver || (() => undefined);
 
     if (!doc) {
       doc = document.implementation.createDocument(null, null, null); // Create a new XML document if not provided

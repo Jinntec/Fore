@@ -2,7 +2,7 @@ import { Fore } from './fore.js';
 import './fx-instance.js';
 import { FxModel } from './fx-model.js';
 import '@jinntec/jinn-toast';
-import { evaluateXPathToNodes, evaluateXPathToString } from './xpath-evaluation.js';
+import { evaluateXPathToNodes, evaluateXPathToString, createNamespaceResolver } from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
 import { XPathUtil } from './xpath-util.js';
 import { FxRepeatAttributes } from './ui/fx-repeat-attributes.js';
@@ -1549,11 +1549,13 @@ export class FxFore extends HTMLElement {
     let newElement;
     if (ref.includes('/')) {
       // multi-step ref expressions
-      newElement = XPathUtil.createNodesFromXPath(ref, referenceNode.ownerDocument, this);
+      const namespaceResolver = createNamespaceResolver(ref, this);
+      newElement = XPathUtil.createNodesFromXPath(ref, referenceNode.ownerDocument, this, namespaceResolver);
       // console.log('new subtree', newElement);
       return newElement;
     } else {
-      return XPathUtil.createNodesFromXPath(ref, referenceNode.ownerDocument, this);
+      const namespaceResolver = createNamespaceResolver(ref, this);
+      return XPathUtil.createNodesFromXPath(ref, referenceNode.ownerDocument, this, namespaceResolver);
     }
   }
 
