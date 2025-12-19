@@ -39,11 +39,11 @@
     <p>Add these two lines to the head of a new HTML page.</p>
     <demo-snippet>
         <template>
-            <link rel="stylesheet"
-                  href="https://cdn.jsdelivr.net/npm/@jinntec/fore@latest/resources/fore.css">
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@jinntec/fore@latest/resources/fore.css">
 
-            <script type="module"
-                    src="https://cdn.jsdelivr.net/npm/@jinntec/fore@latest/dist/fore.js"></script>
+<script type="module"
+        src="https://cdn.jsdelivr.net/npm/@jinntec/fore@latest/dist/fore.js"></script>
         </template>
     </demo-snippet>
 
@@ -53,9 +53,9 @@
     <p>Let's jump right into the simplest possible example...</p>
     <demo-snippet>
         <template>
-            <fx-fore>
-                <fx-output ref="greeting">Hello Universe</fx-output>
-            </fx-fore>
+<fx-fore>
+    <fx-output ref="greeting">Hello Universe</fx-output>
+</fx-fore>
         </template>
     </demo-snippet>
 
@@ -85,16 +85,16 @@
 
     <demo-snippet>
         <template>
-            <fx-fore>
-                <fx-model>
-                    <fx-instance>
-                        <data>
-                            <greeting>Hello Universe</greeting>
-                        </data>
-                    </fx-instance>
-                </fx-model>
-                <fx-output ref="greeting"></fx-output>
-            </fx-fore>
+<fx-fore>
+    <fx-model>
+        <fx-instance>
+            <data>
+                <greeting>Hello Universe</greeting>
+            </data>
+        </fx-instance>
+    </fx-model>
+    <fx-output ref="greeting"></fx-output>
+</fx-fore>
         </template>
     </demo-snippet>
 <!--
@@ -107,24 +107,24 @@
     <p>References can nested and Fore will create the respective hierarchy.</p>
     <demo-snippet>
         <template>
-            <fx-fore>
-                <fx-group ref="planet">
-                    <fx-output ref="greeting">Hello Earth</fx-output>
-                </fx-group>
-            </fx-fore>
+<fx-fore>
+    <fx-group ref="planet">
+        <fx-output ref="greeting">Hello Earth</fx-output>
+    </fx-group>
+</fx-fore>
         </template>
     </demo-snippet>
 
     <p>The resulting data structure</p>
     <demo-snippet>
         <template>
-            <fx-instance>
-                <data>
-                    <planet>
-                        <greeting>Hello Earth</greeting>
-                    </planet>
-                </data>
-            </fx-instance>
+<fx-instance>
+    <data>
+        <planet>
+            <greeting>Hello Earth</greeting>
+        </planet>
+    </data>
+</fx-instance>
         </template>
     </demo-snippet>
     <div class="nav-buttons">
