@@ -20,6 +20,12 @@ const dirtyStates = {
   CLEAN: 'clean',
   DIRTY: 'dirty',
 };
+async function waitForFunctionLibs(rootEl) {
+  const libs = Array.from(rootEl.querySelectorAll('fx-functionlib'));
+  await Promise.all(
+      libs.map(l => (l.readyPromise ? l.readyPromise : Promise.resolve()))
+  );
+}
 
 /**
  * Main class for Fore.Outermost container element for each Fore application.
@@ -548,6 +554,11 @@ export class FxFore extends HTMLElement {
           registerVariables(child);
         }
       })(this);
+
+      // Ensure all function libraries are loaded/registered before model construction,
+      // so binds/calculate/XPath evaluations can safely call them.
+      const libs = Array.from(this.querySelectorAll('fx-functionlib'));
+      await Promise.all(libs.map(l => l.readyPromise || Promise.resolve()));
 
       await modelElement.modelConstruct();
       this._handleModelConstructDone();
