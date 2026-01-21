@@ -1,4 +1,4 @@
-/* Version: 2.8.0 - December 19, 2025 13:35:29 */
+/* Version: 2.9.0 - January 21, 2026 15:50:40 */
 /**
 @license
 Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
@@ -44410,13 +44410,18 @@ class FxFore extends HTMLElement {
             registerVariables(child);
           }
         })(this);
+
+        // Ensure all function libraries are loaded/registered before model construction,
+        // so binds/calculate/XPath evaluations can safely call them.
+        const libs = Array.from(this.querySelectorAll('fx-functionlib'));
+        await Promise.all(libs.map(l => l.readyPromise || Promise.resolve()));
         await modelElement.modelConstruct();
         this._handleModelConstructDone();
       }
       this._createRepeatsFromAttributes();
       this.inited = true;
     };
-    this.version = 'Version: 2.8.0 - built on December 19, 2025 13:35:29';
+    this.version = 'Version: 2.9.0 - built on January 21, 2026 15:50:40';
 
     /**
      * @type {import('./fx-model.js').FxModel}
@@ -56684,6 +56689,14 @@ function registerFunction(functionObject, formElement) {
   switch (type) {
     case 'text/javascript':
       {
+        // NEW: if a real JS function is provided (module libs), register it directly.
+        if (typeof functionObject.implementation === 'function') {
+          const impl = functionObject.implementation;
+          registerCustomXPathFunction(functionIdentifier, paramParts.map(paramPart => paramPart.variableType), returnType || 'item()*', (domFacade, ...values) => impl.apply(formElement.getInScopeContext(), [...values, formElement.getOwnerForm()]));
+          break;
+        }
+
+        // Existing behavior: compile from functionBody
         // eslint-disable-next-line no-new-func
         const fun = new Function('_domFacade', ...paramParts.map(paramPart => paramPart.variableName), 'form', functionObject.functionBody);
         registerCustomXPathFunction(functionIdentifier, paramParts.map(paramPart => paramPart.variableType), returnType || 'item()*', (...args) => fun.apply(formElement.getInScopeContext(), [...args, formElement.getOwnerForm()]));
@@ -56734,10 +56747,34 @@ if (!customElements.get('fx-function')) {
   customElements.define('fx-function', FxFunction);
 }
 
-/**
- * Allows to extend a form with remote custom functions.
- *
- */
+const LOCAL_FUNCTIONS_NS = 'http://www.w3.org/2005/xquery-local-functions';
+
+// Global per-page cache to prevent registering the same library multiple times.
+// Keyed by resolved URL + prefix + mode.
+const _functionLibLoadCache = new Map();
+function looksLikeModuleSrc(src) {
+  return /\.m?js($|\?)/i.test(src);
+}
+function applyPrefixToSignature(signature, prefix) {
+  if (!signature || !prefix) return signature;
+  const s = signature.trim();
+  const paren = s.indexOf('(');
+  if (paren < 0) return s;
+  const namePart = s.slice(0, paren).trim();
+  const rest = s.slice(paren);
+  const localName = namePart.includes(':') ? namePart.split(':').pop().trim() : namePart;
+  if (!localName) return s;
+  return `${prefix}:${localName}${rest}`;
+}
+function normalizeModuleExportToList(mod, src) {
+  const lib = mod.functions ?? mod.fxFunctions;
+  if (!lib) {
+    return [];
+  }
+  if (Array.isArray(lib)) return lib;
+  if (typeof lib === 'object') return Object.values(lib);
+  return [];
+}
 class FxFunctionlib extends ForeElementMixin {
   constructor() {
     super();
@@ -56755,25 +56792,95 @@ class FxFunctionlib extends ForeElementMixin {
   async connectedCallback() {
     this.style.display = 'none';
     const src = this.getAttribute('src');
-    const result = await fetch(src);
-    if (!result.ok) ;
+    if (!src) {
+      this._resolveLoading(undefined);
+      return;
+    }
+    const prefix = (this.getAttribute('prefix') || '').trim();
+    const typeAttr = (this.getAttribute('type') || '').trim().toLowerCase();
+    const isModule = typeAttr === 'module' || !typeAttr && looksLikeModuleSrc(src);
+    const resolvedUrl = new URL(src, this.baseURI).href;
+    if (prefix) this._ensurePrefixDeclared(prefix);
+    const mode = isModule ? 'module' : 'html';
+    const cacheKey = `${mode}|${resolvedUrl}|${prefix}`;
+    const existing = _functionLibLoadCache.get(cacheKey);
+    if (existing) {
+      try {
+        await existing;
+      } finally {
+        this._resolveLoading(undefined);
+      }
+      return;
+    }
+    const loadPromise = (async () => {
+      if (isModule) {
+        await this._loadModuleLibrary(resolvedUrl, src, prefix);
+      } else {
+        await this._loadHtmlLibrary(resolvedUrl, src, prefix);
+      }
+    })();
+    _functionLibLoadCache.set(cacheKey, loadPromise);
+    try {
+      await loadPromise;
+    } catch (e) {
+      _functionLibLoadCache.delete(cacheKey);
+    } finally {
+      this._resolveLoading(undefined);
+    }
+  }
+  _ensurePrefixDeclared(prefix) {
+    const ownerForm = typeof this.getOwnerForm === 'function' && this.getOwnerForm() || this.closest('fx-fore');
+    if (!ownerForm) return;
+    const attrName = `xmlns:${prefix}`;
+    if (!ownerForm.getAttribute(attrName)) {
+      ownerForm.setAttribute(attrName, LOCAL_FUNCTIONS_NS);
+    }
+  }
+  _register(functionObject, prefix) {
+    if (!functionObject || typeof functionObject.signature !== 'string') return;
+
+    // If prefix is given: register ONLY the prefixed signature (no unprefixed alias).
+    const sig = prefix ? applyPrefixToSignature(functionObject.signature, prefix) : functionObject.signature;
+    registerFunction({
+      ...functionObject,
+      signature: sig
+    }, this);
+  }
+  async _loadModuleLibrary(resolvedUrl, src, prefix) {
+    const mod = await import( /* @vite-ignore */resolvedUrl);
+    const items = normalizeModuleExportToList(mod);
+    for (const item of items) {
+      if (typeof item === 'function') {
+        const {
+          signature
+        } = item;
+        if (typeof signature !== 'string' || !signature.trim()) continue;
+        this._register({
+          type: 'text/javascript',
+          signature: signature.trim(),
+          implementation: item
+        }, prefix);
+      } else if (item && typeof item === 'object' && typeof item.signature === 'string') {
+        this._register(item, prefix);
+      }
+    }
+  }
+  async _loadHtmlLibrary(resolvedUrl, src, prefix) {
+    const result = await fetch(resolvedUrl);
+    if (!result.ok) {
+      return;
+    }
     const body = await result.text();
     const document = new DOMParser().parseFromString(body, 'text/html');
-
-    /**
-     * @type {HTMLElement[]}
-     */
     const functions = Array.from(document.querySelectorAll('fx-function'));
-    // TODO: also recurse into new function libraries here?
     for (const func of functions) {
       const functionObject = {
         type: func.getAttribute('type'),
         signature: func.getAttribute('signature'),
         functionBody: func.innerText
       };
-      registerFunction(functionObject, this);
+      this._register(functionObject, prefix);
     }
-    this._resolveLoading(undefined);
   }
 }
 if (!customElements.get('fx-functionlib')) {
