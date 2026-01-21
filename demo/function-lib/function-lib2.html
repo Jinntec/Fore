@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Using a function library!</title>
+
+    <link href="../../resources/demo.css" rel="stylesheet">
+    <script type="module" src="../demo.js"></script>
+</head>
+<body unresolved="unresolved">
+<fore-corner href="../../doc/demos.html" title="Back to Demos"></fore-corner>
+
+<div class="wrapper">
+    <h1>External JavaScript module functions.</h1>
+    <p>
+        It might be preferable for security reasons and modularity to keep all your functions in a single JavaScript module file instead
+        of embedding them in a HTML page. This way you can also use a debugger within the external functions.
+    </p>
+
+    <p>
+        It is possible to gather multiple functions in a single JavaScript module file which makes them available
+        in XPath expressions. Optionally a prefix can be specified to avoid conflicts with other function libraries.
+    </p>
+    <p>The module library can be found at <a href="./lib.js">./lib.js</a>. Visit it!</p>
+
+    <h2>Loading a libary of JavaScript module functions.</h2>
+    <demo-snippet open="true">
+        <template>
+<fx-fore>
+    <fx-model id="model1">
+        <!-- Module function library; prefix is optional -->
+        <fx-functionlib src="lib.js"></fx-functionlib>
+    </fx-model>
+
+    <fx-group>
+        <p data-cy="theanswer">calling theanswer(): {theanswer()}</p>
+        <p data-cy="hello">calling hello(): {hello('from function')}</p>
+        <p data-cy="helloXPath">calling helloXPath(): {helloXPath('from XPath function')}</p>
+    </fx-group>
+</fx-fore>
+        </template>
+    </demo-snippet>
+
+
+    <h2>Loading a libary of prefixed functions.</h2>
+    <p>
+        The prefix can be used to avoid conflicts with other function libraries.
+    </p>
+    <demo-snippet open="true">
+        <template>
+<fx-fore>
+    <fx-model id="model1">
+        <!-- Module function library; prefix is optional -->
+        <fx-functionlib src="lib.js" prefix="lib1"></fx-functionlib>
+    </fx-model>
+
+    <fx-group>
+        <p data-cy="theanswer">lib1:theanswer(): {lib1:theanswer()}</p>
+        <p data-cy="hello">lib1:hello(message): {lib1:hello('from function')}</p>
+    </fx-group>
+</fx-fore>
+        </template>
+    </demo-snippet>
+
+    <h1>Reusing function libraries (module)</h1>
+    <p>
+        Making an application with multiple pages or nested Fore elements? No worry, you can reuse the same
+        fx-functionlib without overwriting function definitions. If in conflict the XPath engine always uses the first
+        matching function definition.
+    </p>
+    <p>
+        In the example below 2 function libraries are used. The second also contains theanswer() but that version is ignored.
+        It also contributes now().
+    </p>
+
+    <p>Another library is loaded additionally and can be found at <a href="./lib.js">./lib2.js</a>. Visit it!</p>
+
+
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-model id="model1">
+                    <!-- Second import of lib.js (same as above) -->
+                    <fx-functionlib src="lib.js"></fx-functionlib>
+                    <fx-functionlib src="lib2.js"></fx-functionlib>
+                </fx-model>
+
+                <fx-group>
+                    <h2>The answer to everything</h2>
+                    <p>And the answer is {theanswer()}</p>
+
+                    <h2>XPath function</h2>
+                    <p data-cy="hello">{hello('from XPath function')}</p>
+                    <p data-cy="helloXPath">{helloXPath('from XPath function')}</p>
+
+                    <h2>Timestamp function from another lib</h2>
+                    <p>{now()}</p>
+                </fx-group>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+
+<script type="module" src="../demo.js"></script>
+</body>
+</html>

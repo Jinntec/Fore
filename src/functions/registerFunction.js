@@ -1,5 +1,5 @@
 import { createTypedValueFactory, registerCustomXPathFunction } from 'fontoxpath';
-import { evaluateXPath, globallyDeclaredFunctionLocalNames } from '../xpath-evaluation';
+import { evaluateXPath, globallyDeclaredFunctionLocalNames } from '../xpath-evaluation.js';
 
 /**
  * @param functionObject {{signature: string, type: string|null, functionBody: string}}
@@ -53,6 +53,20 @@ export default function registerFunction(functionObject, formElement) {
 
   switch (type) {
     case 'text/javascript': {
+      // NEW: if a real JS function is provided (module libs), register it directly.
+      if (typeof functionObject.implementation === 'function') {
+        const impl = functionObject.implementation;
+        registerCustomXPathFunction(
+          functionIdentifier,
+          paramParts.map(paramPart => paramPart.variableType),
+          returnType || 'item()*',
+          (domFacade, ...values) =>
+            impl.apply(formElement.getInScopeContext(), [...values, formElement.getOwnerForm()]),
+        );
+        break;
+      }
+
+      // Existing behavior: compile from functionBody
       // eslint-disable-next-line no-new-func
       const fun = new Function(
         '_domFacade',
@@ -69,7 +83,6 @@ export default function registerFunction(functionObject, formElement) {
       );
       break;
     }
-
     case 'text/xquf':
     case 'text/xquery':
     case 'text/xpath': {

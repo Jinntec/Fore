@@ -33,6 +33,23 @@
         return val ? val:'';
     </fx-function>
 
+    <p>Writes XML value to localStorage as string</p>
+    <fx-function
+            signature="set-localstore-xml($key as xs:string, $value as element()?) as xs:string"
+            type="text/javascript">
+        const stringified = new XMLSerializer().serializeToString($value);
+        localStorage.setItem($key,stringified);
+        return $stringified;
+    </fx-function>
+
+    <p>Gets a string value from localStorage and parses it as xml</p>
+    <fx-function
+            signature="get-localstore-xml($key as xs:string) as xs:string"
+            type="text/javascript">
+        const val =  localStorage.getItem($key);
+        return val ? val:'';
+    </fx-function>
+
 
 </main>
 </body>
