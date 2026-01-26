@@ -97,9 +97,9 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       const insertionIndex = this.nodeset.indexOf(insertedNode) + 1; // 1-based
 
       const repeatItems = Array.from(
-          this.querySelectorAll(
-              ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
-          ),
+        this.querySelectorAll(
+          ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
+        ),
       );
 
       const newRepeatItem = this._createNewRepeatItem();
@@ -119,10 +119,10 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
       this.opNum++;
       const parentModelItem = FxBind.createModelItem(
-          this.ref,
-          insertedNode,
-          newRepeatItem,
-          this.opNum,
+        this.ref,
+        insertedNode,
+        newRepeatItem,
+        this.opNum,
       );
       newRepeatItem.modelItem = parentModelItem;
       this.getModel().registerModelItem(parentModelItem);
@@ -270,8 +270,8 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
       const childUsesInstanceFn = /^instance\('/.test(mi.path);
       const parentBaseInChildStyle = childUsesInstanceFn
-          ? parentBaseNorm.replace(/^\$([A-Za-z0-9_-]+)\//, `instance('$1')/`)
-          : parentBaseNorm;
+        ? parentBaseNorm.replace(/^\$([A-Za-z0-9_-]+)\//, `instance('$1')/`)
+        : parentBaseNorm;
 
       if (mi.path.startsWith(`${parentBaseInChildStyle}_`)) return;
 
@@ -282,11 +282,11 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       const nextParentMI = parentModelItem;
 
       const isWidgetEl =
-          child &&
-          ((child.classList && child.classList.contains('widget')) ||
-              (typeof Fore !== 'undefined' && Fore.isWidget && Fore.isWidget(child)) ||
-              (child.tagName &&
-                  ['INPUT', 'SELECT', 'TEXTAREA', 'OPTION', 'DATALIST'].includes(child.tagName)));
+        child &&
+        ((child.classList && child.classList.contains('widget')) ||
+          (typeof Fore !== 'undefined' && Fore.isWidget && Fore.isWidget(child)) ||
+          (child.tagName &&
+            ['INPUT', 'SELECT', 'TEXTAREA', 'OPTION', 'DATALIST'].includes(child.tagName)));
 
       if (!isWidgetEl && child.hasAttribute('ref')) {
         const ref = child.getAttribute('ref').trim();
@@ -324,25 +324,25 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     const fore = this.getOwnerForm();
 
     const repeatItems = () =>
-        Array.from(
-            this.querySelectorAll(
-                ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
-            ),
-        );
+      Array.from(
+        this.querySelectorAll(
+          ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
+        ),
+      );
 
     const deletedNodes = Array.from(detail.deletedNodes || []);
 
     // Collect indices to remove (0-based), prefer keyOrIndex when deletion came from an array.
     const indices = deletedNodes
-        .map(n => {
-          if (!n) return -1;
-          if (typeof n.keyOrIndex === 'number') return n.keyOrIndex;
-          // fallback: identity
-          const idx = this.nodeset.findIndex(x => x === n);
-          return idx;
-        })
-        .filter(i => i >= 0)
-        .sort((a, b) => b - a); // delete from end
+      .map(n => {
+        if (!n) return -1;
+        if (typeof n.keyOrIndex === 'number') return n.keyOrIndex;
+        // fallback: identity
+        const idx = this.nodeset.findIndex(x => x === n);
+        return idx;
+      })
+      .filter(i => i >= 0)
+      .sort((a, b) => b - a); // delete from end
 
     if (indices.length === 0) return;
 
@@ -410,9 +410,9 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
   handleDelete(deleted) {
     const items = Array.from(
-        this.querySelectorAll(
-            ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
-        ),
+      this.querySelectorAll(
+        ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
+      ),
     );
 
     this._evalNodeset();
@@ -425,7 +425,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     itemToRemove.remove();
 
     const newLength = this.querySelectorAll(
-        ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
+      ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
     ).length;
 
     let nextIndex = indexToRemove + 1;
@@ -547,16 +547,16 @@ export class FxRepeat extends withDraggability(UIElement, false) {
   _initTemplate() {
     this.dropTarget = this.template.getAttribute('drop-target');
     this.isDraggable = this.template.hasAttribute('draggable')
-        ? this.template.getAttribute('draggable')
-        : null;
+      ? this.template.getAttribute('draggable')
+      : null;
 
     if (this.template === null) {
       this.dispatchEvent(
-          new CustomEvent('no-template-error', {
-            composed: true,
-            bubbles: true,
-            detail: { message: `no template found for repeat:${this.id}` },
-          }),
+        new CustomEvent('no-template-error', {
+          composed: true,
+          bubbles: true,
+          detail: { message: `no template found for repeat:${this.id}` },
+        }),
       );
     }
 
@@ -622,9 +622,9 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
   _clone() {
     const tpl =
-        this.template ||
-        (this.shadowRoot && this.shadowRoot.querySelector('template')) ||
-        this.querySelector('template');
+      this.template ||
+      (this.shadowRoot && this.shadowRoot.querySelector('template')) ||
+      this.querySelector('template');
 
     if (!tpl) {
       console.error(`[fx-repeat] ${this.id || ''}: no <template> found when cloning`);

@@ -145,9 +145,24 @@ export class FxInsert extends AbstractAction {
       const len = arrayNode.value.length;
 
       if (this.hasAttribute('at')) {
-        // at is 1-based like XForms/XPath
-        const at1 = evaluateXPathToNumber(this.getAttribute('at'), inscope, this);
-        insertIndex = Math.max(0, Number(at1) - 1);
+        // `at` is 1-based like XForms/XPath.
+        // When combined with position="after", we insert *after* the item at `at`.
+        const atExpr = this.getAttribute('at');
+        let at1;
+        if (/^\s*-?\d+(?:\.\d+)?\s*$/.test(atExpr)) {
+          at1 = Number(atExpr);
+        } else {
+          at1 = Number(evaluateXPathToNumber(atExpr, inscope, this));
+        }
+        if (Number.isNaN(at1) || at1 < 1) at1 = 1;
+
+        const base0 = Math.min(len, Math.max(0, at1 - 1));
+        if (this.position === 'after') {
+          insertIndex = Math.min(len, base0 + 1);
+        } else {
+          // before (and any other value): insert at the computed base index
+          insertIndex = base0;
+        }
       } else if (this.position === 'first') {
         insertIndex = 0;
       } else if (this.position === 'last') {

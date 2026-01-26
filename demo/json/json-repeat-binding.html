@@ -85,10 +85,12 @@
     <fx-trigger>
       <button>insert after first</button>
       <fx-insert ref="?items" position="after" at="1"></fx-insert>
+      <fx-setvalue ref="?items[index('items')]?name">newItemAfterFirst</fx-setvalue>
+<!--      <fx-setvalue ref="?items?2?name">newItemAfterFirst</fx-setvalue>-->
     </fx-trigger>
     <fx-trigger>
       <button>insert after current</button>
-      <fx-insert ref="task" at="index('items')"></fx-insert>
+      <fx-insert ref="?items" position="after" at="index('items')"></fx-insert>
     </fx-trigger>
 
 
