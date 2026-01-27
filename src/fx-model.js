@@ -138,22 +138,12 @@ export class FxModel extends HTMLElement {
       model.registerModelItem(mi);
       return mi;
     }
-
     if (node === null || node === undefined) return null;
 
     let targetNode = Array.isArray(node) ? node[0] : node;
 
-    // Handle raw JSON primitives by wrapping with lens
-    // if (!targetNode?.__jsonlens__ && typeof targetNode !== 'object' && !targetNode.nodeType) {
+    // Wrap JSON primitives / raw values into a lens node when needed
     if (instance.type === 'json') {
-      /*
-      const parentLens = instance.nodeset; // Assuming the root lens is here
-      const key = getPath(targetNode, instanceId)
-        .split('/')
-        .pop(); // crude key guess
-      targetNode = getLensForNode(targetNode, parentLens, key);
-*/
-
       const parentLens = instance.nodeset;
       const parsedRef = parseJsonRef(ref);
       if (parsedRef && parsedRef.steps && parsedRef.steps.length > 0) {
@@ -162,40 +152,48 @@ export class FxModel extends HTMLElement {
       }
     }
 
-    // }
-
+    // Compute canonical path
     let path = null;
     if (targetNode?.nodeType || targetNode?.__jsonlens__) {
       path = getPath(targetNode, instanceId);
     }
 
-    // Check if a ModelItem with the same path already exists
+    const isLensObject =
+        !!targetNode && typeof targetNode === 'object' &&
+        typeof targetNode.get === 'function' && typeof targetNode.set === 'function';
+
+    // If ModelItem for same path exists, RETARGET it (node OR lens)
     if (path) {
       const existingModelItem = model.modelItems.find(mi => mi.path === path);
       if (existingModelItem) {
-        // Update the node reference if needed
-        if (existingModelItem.node !== targetNode) {
-          existingModelItem.node = targetNode;
+        if (isLensObject) {
+          if (existingModelItem.lens !== targetNode) {
+            existingModelItem.lens = targetNode;
+            existingModelItem.node = null;
+          }
+        } else {
+          if (existingModelItem.node !== targetNode) {
+            existingModelItem.node = targetNode;
+            existingModelItem.lens = null;
+          }
         }
         return existingModelItem;
       }
     }
 
     const mi = new ModelItem(
-      path,
-      ref,
-      targetNode,
-      model.getBindForElement(targetNode),
-      instanceId,
-      fore,
+        path,
+        ref,
+        targetNode,
+        model.getBindForElement(targetNode),
+        instanceId,
+        fore,
     );
     mi.isSynthetic = true;
 
-    // console.log('new ModelItem is instanceof ModelItem ', mi instanceof ModelItem);
     model.registerModelItem(mi);
     return mi;
   }
-
   /**
    * modelConstruct starts actual processing of the model by
    *
@@ -248,8 +246,37 @@ export class FxModel extends HTMLElement {
   }
 
   registerModelItem(modelItem) {
-    // console.log('ModelItem registered ', modelItem);
-    this.modelItems.push(modelItem);
+    if (!modelItem) return null;
+
+    const path = modelItem.path;
+    if (!path) {
+      this.modelItems.push(modelItem);
+      return modelItem;
+    }
+
+    const existing = this.modelItems.find(mi => mi.path === path);
+    if (!existing) {
+      this.modelItems.push(modelItem);
+      return modelItem;
+    }
+
+    // Retarget existing ModelItem to the new backing object
+    // (critical for JSON array inserts where the same path now points to a different JSONNode/lens)
+    if (modelItem.lens) {
+      existing.lens = modelItem.lens;
+      existing.node = null;
+    } else if (modelItem.node) {
+      existing.node = modelItem.node;
+      existing.lens = null;
+    }
+
+    // Keep bind/ref/instance/fore up to date if the new MI has them
+    if (modelItem.ref) existing.ref = modelItem.ref;
+    if (modelItem.bind) existing.bind = modelItem.bind;
+    if (modelItem.instanceId) existing.instanceId = modelItem.instanceId;
+    if (modelItem.fore) existing.fore = modelItem.fore;
+
+    return existing;
   }
 
   /**
@@ -592,7 +619,17 @@ export class FxModel extends HTMLElement {
    * @returns {ModelItem|null}
    */
   getModelItem(nodeOrPath) {
-    return this.modelItems.find(mi => mi.node === nodeOrPath || mi.path === nodeOrPath) || null;
+    if (nodeOrPath == null) return null;
+
+    // Path lookup
+    if (typeof nodeOrPath === 'string') {
+      return this.modelItems.find(mi => mi.path === nodeOrPath) || null;
+    }
+
+    // Node/lens lookup
+    return (
+        this.modelItems.find(mi => mi.node === nodeOrPath || mi.lens === nodeOrPath) || null
+    );
   }
 
   /**

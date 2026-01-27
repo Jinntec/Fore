@@ -26,6 +26,31 @@ const createdNamespaceResolversByXPathQueryAndNode = new Map();
 // ---------------------------
 // JSON Lens + JSON/XPath mode
 // ---------------------------
+function _matchIndexExpr(expr) {
+  const s = String(expr ?? '').trim();
+  // exact match only
+  const m = s.match(/^index\s*\(\s*(['"])(.*?)\1\s*\)\s*$/);
+  return m ? m[2] : null;
+}
+
+/**
+ * Try to resolve index('repeatId') without XPath evaluation (prevents recursion).
+ * @returns {number|null} number when matched, else null (meaning: not an index() expr)
+ */
+function tryResolveIndexExpr(expr, formElement) {
+  const repeatId = _matchIndexExpr(expr);
+  if (!repeatId) return null;
+
+  // const fore = _getOwningFore(formElement);
+  const fore = formElement.getOwnerForm();
+  if (!fore) return NaN;
+
+  const repeatEl = fore.querySelector(`#${CSS.escape(repeatId)}`);
+  if (!repeatEl) return NaN;
+
+  const idx = Number(repeatEl.getAttribute('index') || '1');
+  return Number.isFinite(idx) ? idx : NaN;
+}
 
 function isXmlDomContext(node) {
   // HTML / XML DOM nodes have nodeType. JSON lens nodes do not.
@@ -40,21 +65,22 @@ function isJsonLookupExpr(xpath) {
 }
 
 function shouldUseJson(xpath, contextNode) {
-  // If we’re evaluating on the Fore/HTML/XML DOM, NEVER treat it as JSON.
-  if (isXmlDomContext(contextNode)) return false;
-
-  // JSON mode only when actually evaluating JSON lens nodes or lens lookup syntax.
+  // Allow JSON lookup syntax even if contextNode is an HTML/XML DOM node (actions often evaluate from DOM context).
+  if (isXmlDomContext(contextNode)) {
+    return isJsonLookupExpr(xpath);
+  }
   return !!contextNode?.__jsonlens__ || isJsonLookupExpr(xpath);
 }
 
 function getJsonFacade(formElement, xpath, contextNode, domFacade = null) {
-  const instanceId = XPathUtil.getInstanceId(xpath, formElement);
+  const instanceId = XPathUtil.getInstanceId(String(xpath ?? ''), formElement);
   const instance = formElement?.getModel?.()?.getInstance?.(instanceId);
 
   // Non-JSON instance: keep the passed facade (usually null, sometimes a tracking facade).
   if (instance?.type !== 'json') return domFacade;
 
-  // JSON instance, but this evaluation is for the XML/HTML DOM (template scan etc.) → don’t switch.
+  // If the expression uses JSON lookup syntax, force JSON mode even from DOM context.
+  // This is essential for fx-setvalue / fx-insert etc. where contextNode can be a button/trigger.
   if (!shouldUseJson(xpath, contextNode)) return domFacade;
 
   if (!instance.domFacade) instance.domFacade = new JSONDomFacade();
@@ -101,12 +127,23 @@ function _parseJsonLensRef(ref, defaultInstanceId = 'default') {
 }
 
 function _findNearestJsonContextNode(formElement) {
-  // IMPORTANT: Do NOT call formElement.getInScopeContext() here.
-  // That often evaluates XPath internally and can recurse back into evaluateXPath → stack overflow.
-  for (let n = formElement; n; n = n.parentNode) {
-    if (typeof n?.getModelItem === 'function') {
-      const mi = n.getModelItem();
-      if (mi?.node?.__jsonlens__) return mi.node;
+  // IMPORTANT: must NOT call getModelItem() or getInScopeContext() here.
+  // We only inspect already-attached fields to avoid recursion.
+
+  for (let n = formElement; n; ) {
+    // Prefer an already bound nodeset on UI elements / repeatitems
+    const ns = n.nodeset;
+    if (ns?.__jsonlens__) return ns;
+
+    // If the element already has a modelItem assigned, inspect it without computing anything
+    const mi = n.modelItem;
+    if (mi?.node?.__jsonlens__) return mi.node;
+
+    // Cross shadow boundaries
+    if (n.parentNode?.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+      n = n.parentNode.host;
+    } else {
+      n = n.parentNode;
     }
   }
   return null;
@@ -114,8 +151,35 @@ function _findNearestJsonContextNode(formElement) {
 
 function _resolveJsonLens(xpath, contextNode, formElement) {
   if (typeof xpath !== 'string') return null;
-  const t = xpath.trim();
+  let t = xpath.trim();
   if (!(t.startsWith('?') || t.startsWith('instance('))) return null;
+
+  // --- Fast-path: support ?items[index('repeatId')]?foo by rewriting index('..') to a number ---
+  // Example: ?items[index('items')]?name  --> ?items?{k}?name  (k = repeat index, 1-based)
+  // We only support exactly index('...') as the predicate payload here (for now).
+  const predRe = /\?\s*([A-Za-z0-9_\-]+)\s*\[\s*index\s*\(\s*(['"])(.*?)\2\s*\)\s*]\s*/;
+  const predMatch = t.match(predRe);
+  if (predMatch) {
+    const arrayKey = predMatch[1];
+    const repeatId = predMatch[3];
+
+    // Compute index without any XPath evaluation (no resolveId() recursion).
+    // We walk up from formElement to find the owning fx-fore, then query by id.
+    let fore = formElement;
+    while (fore && fore.nodeName?.toUpperCase() !== 'FX-FORE') {
+      if (fore.parentNode?.nodeType === Node.DOCUMENT_FRAGMENT_NODE) fore = fore.parentNode.host;
+      else fore = fore.parentNode;
+    }
+
+    if (fore) {
+      const repeatEl = fore.querySelector(`#${CSS.escape(repeatId)}`);
+      const idx1 = repeatEl ? Number(repeatEl.getAttribute('index') || '1') : 1;
+
+      // Rewrite: "?items[index('items')]?name" -> "?items?{idx1}?name"
+      // Your lens parser treats numeric steps as 1-based indices, so we keep idx1.
+      t = t.replace(predRe, `?${arrayKey}?${idx1}?`);
+    }
+  }
 
   const parsed = _parseJsonLensRef(t, 'default');
   if (!parsed) return null;
@@ -128,7 +192,7 @@ function _resolveJsonLens(xpath, contextNode, formElement) {
 
   // Base node:
   // - explicit instance('x') → start at root
-  // - otherwise: prefer JSON contextNode, else nearest modelItem JSON node, else root
+  // - otherwise: prefer JSON contextNode, else nearest already-bound JSON nodeset/modelItem, else root
   let node = root;
   if (!parsed.hasExplicitInstance) {
     if (contextNode?.__jsonlens__) {
@@ -300,28 +364,45 @@ function findInstanceReferences(xpathQuery) {
   return instanceReferences;
 }
 
-/**
- * @typedef {function(string):string} NamespaceResolver
- */
-
 export function createNamespaceResolver(xpathQuery, formElement) {
   const cachedResolver = getCachedNamespaceResolver(xpathQuery, formElement);
   if (cachedResolver) return cachedResolver;
 
+  // IMPORTANT: Break potential recursion by caching a provisional resolver immediately.
+  // If createNamespaceResolver is re-entered for the same (query, node) while computing, it will return this.
+  const provisionalResolver = prefix => (prefix ? undefined : '');
+  setCachedNamespaceResolver(xpathQuery, formElement, provisionalResolver);
+
   let instanceReferences = findInstanceReferences(xpathQuery);
+
+  // Helper: find a *parent* [ref] element, excluding self, across shadow boundaries.
+  const closestRefExcludingSelf = el => {
+    if (!el) return null;
+
+    let n = el;
+    if (n.nodeType === Node.ATTRIBUTE_NODE) n = n.ownerElement;
+    if (n?.parentNode?.nodeType === Node.DOCUMENT_FRAGMENT_NODE) n = n.parentNode.host;
+
+    // Start at parent (or parent host) to avoid returning self
+    let start = n?.parentNode;
+    if (start?.nodeType === Node.DOCUMENT_FRAGMENT_NODE) start = start.host;
+
+    return start?.closest ? start.closest('[ref]') : null;
+  };
+
   if (instanceReferences.length === 0) {
-    const ancestorComponent =
-      formElement.parentNode &&
-      formElement.parentNode.nodeType === formElement.ELEMENT_NODE &&
-      formElement.parentNode.closest('[ref]');
-    if (ancestorComponent) {
-      const resolver = createNamespaceResolver(
-        ancestorComponent.getAttribute('ref'),
-        ancestorComponent,
-      );
-      setCachedNamespaceResolver(xpathQuery, formElement, resolver);
-      return resolver;
+    const ancestorComponent = closestRefExcludingSelf(formElement);
+
+    // Only inherit if we found an actual parent ref-holder and it's not a self-loop
+    if (ancestorComponent && ancestorComponent !== formElement) {
+      const ancestorRef = ancestorComponent.getAttribute('ref');
+      if (ancestorRef && ancestorRef !== xpathQuery) {
+        const resolver = createNamespaceResolver(ancestorRef, ancestorComponent);
+        setCachedNamespaceResolver(xpathQuery, formElement, resolver);
+        return resolver;
+      }
     }
+
     instanceReferences = ['default'];
   }
 
@@ -353,9 +434,7 @@ export function createNamespaceResolver(xpathQuery, formElement) {
     '';
 
   const resolveNamespacePrefix = function resolveNamespacePrefix(prefix) {
-    if (prefix === '') {
-      return xpathDefaultNamespace;
-    }
+    if (prefix === '') return xpathDefaultNamespace;
 
     return fxEvaluateXPathToString(
       'ancestor-or-self::*/@*[name() = "xmlns:" || $prefix][last()]',
@@ -463,6 +542,11 @@ export function evaluateXPath(
   domFacade = null,
 ) {
   const trimmedExpr = String(xpath ?? '').trim();
+
+  // Fast path for index('repeatId')
+  const idx = tryResolveIndexExpr(trimmedExpr, formElement);
+  if (idx !== null) return [idx];
+
   if (contextNode && contextNode.__jsonlens__ === true && trimmedExpr === '.') {
     return [contextNode];
   }
@@ -493,8 +577,9 @@ export function evaluateXPath(
         moduleImports: { xf: XFORMS_NAMESPACE_URI },
         functionNameResolver,
         namespaceResolver,
+        // keep JSON in XPath 3.1 (lens lookup is XPath 3.1)
         language: isJson
-          ? Language.XQUERY_3_1_LANGUAGE
+          ? Language.XPATH_3_1_LANGUAGE
           : options.language || fxEvaluateXPath.XPATH_3_1_LANGUAGE,
         xmlSerializer: new XMLSerializer(),
         ...options,
@@ -608,6 +693,12 @@ export function evaluateXPathToNodes(xpath, contextNode, formElement) {
 }
 
 export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
+  const s = String(xpath ?? '').trim();
+
+  // Fast path for index('repeatId')
+  const idx = tryResolveIndexExpr(s, formElement);
+  if (idx !== null) return Boolean(idx);
+
   const lens = _resolveJsonLens(xpath, contextNode, formElement);
   if (lens) {
     const n = Array.isArray(lens) ? lens[0] : lens;
@@ -620,12 +711,12 @@ export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
   }
 
   try {
-    const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
+    const namespaceResolver = createNamespaceResolverForNode(s, contextNode, formElement);
     const variablesInScope = getVariablesInScope(formElement);
 
-    const domFacade = getJsonFacade(formElement, xpath, contextNode, null);
-    const isJson = !!domFacade && shouldUseJson(xpath, contextNode);
-    const expr = normalizeUnaryLookup(xpath, isJson);
+    const domFacade = getJsonFacade(formElement, s, contextNode, null);
+    const isJson = !!domFacade && shouldUseJson(s, contextNode);
+    const expr = normalizeUnaryLookup(s, isJson);
 
     const instanceId = XPathUtil.getInstanceId(expr, formElement);
     const instance = formElement?.getModel?.()?.getInstance?.(instanceId);
@@ -636,7 +727,7 @@ export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
       functionNameResolver,
       moduleImports: { xf: XFORMS_NAMESPACE_URI },
       namespaceResolver,
-      language: isJson ? Language.XQUERY_3_1_LANGUAGE : Language.XPATH_3_1_LANGUAGE,
+      language: isJson ? Language.XPATH_3_1_LANGUAGE : Language.XPATH_3_1_LANGUAGE,
       xmlSerializer: new XMLSerializer(),
     });
   } catch (e) {
@@ -657,20 +748,25 @@ export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
 }
 
 export function evaluateXPathToString(xpath, contextNode, formElement, domFacade = null) {
-  const trimmedExpr = String(xpath ?? '').trim();
-  if (contextNode && contextNode.__jsonlens__ === true && trimmedExpr === '.') {
+  const s = String(xpath ?? '').trim();
+
+  // Fast path for index('repeatId')
+  const idx = tryResolveIndexExpr(s, formElement);
+  if (idx !== null) return String(idx);
+
+  if (contextNode && contextNode.__jsonlens__ === true && s === '.') {
     return [contextNode];
   }
   const lens = _resolveJsonLens(xpath, contextNode, formElement);
   if (lens && !Array.isArray(lens)) return String(lens.get());
 
   try {
-    const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
+    const namespaceResolver = createNamespaceResolverForNode(s, contextNode, formElement);
     const variablesInScope = getVariablesInScope(formElement);
 
-    const effectiveFacade = getJsonFacade(formElement, xpath, contextNode, domFacade);
-    const isJson = !!effectiveFacade && shouldUseJson(xpath, contextNode);
-    const expr = normalizeUnaryLookup(xpath, isJson);
+    const effectiveFacade = getJsonFacade(formElement, s, contextNode, domFacade);
+    const isJson = !!effectiveFacade && shouldUseJson(s, contextNode);
+    const expr = normalizeUnaryLookup(s, isJson);
 
     const instanceId = XPathUtil.getInstanceId(expr, formElement);
     const instance = formElement?.getModel?.()?.getInstance?.(instanceId);
@@ -681,7 +777,7 @@ export function evaluateXPathToString(xpath, contextNode, formElement, domFacade
       functionNameResolver,
       moduleImports: { xf: XFORMS_NAMESPACE_URI },
       namespaceResolver,
-      language: isJson ? Language.XQUERY_3_1_LANGUAGE : Language.XPATH_3_1_LANGUAGE,
+      language: isJson ? Language.XPATH_3_1_LANGUAGE : Language.XPATH_3_1_LANGUAGE,
       xmlSerializer: new XMLSerializer(),
     });
   } catch (e) {
@@ -702,6 +798,11 @@ export function evaluateXPathToString(xpath, contextNode, formElement, domFacade
 }
 
 export function evaluateXPathToStrings(xpath, contextNode, formElement, domFacade = null) {
+  const s = String(xpath ?? '').trim();
+
+  const idx = tryResolveIndexExpr(s, formElement);
+  if (idx !== null) return [String(idx)];
+
   try {
     const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
 
@@ -745,13 +846,19 @@ export function evaluateXPathToStrings(xpath, contextNode, formElement, domFacad
 }
 
 export function evaluateXPathToNumber(xpath, contextNode, formElement, domFacade = null) {
+  const s = String(xpath ?? '').trim();
+
+  // Fast path for index('repeatId')
+  const idx = tryResolveIndexExpr(s, formElement);
+  if (idx !== null) return idx;
+
   try {
-    const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
+    const namespaceResolver = createNamespaceResolverForNode(s, contextNode, formElement);
     const variablesInScope = getVariablesInScope(formElement);
 
-    const effectiveFacade = getJsonFacade(formElement, xpath, contextNode, domFacade);
-    const isJson = !!effectiveFacade && shouldUseJson(xpath, contextNode);
-    const expr = normalizeUnaryLookup(xpath, isJson);
+    const effectiveFacade = getJsonFacade(formElement, s, contextNode, domFacade);
+    const isJson = !!effectiveFacade && shouldUseJson(s, contextNode);
+    const expr = normalizeUnaryLookup(s, isJson);
 
     const instanceId = XPathUtil.getInstanceId(expr, formElement);
     const instance = formElement?.getModel?.()?.getInstance?.(instanceId);
@@ -762,7 +869,7 @@ export function evaluateXPathToNumber(xpath, contextNode, formElement, domFacade
       functionNameResolver,
       moduleImports: { xf: XFORMS_NAMESPACE_URI },
       namespaceResolver,
-      language: isJson ? Language.XQUERY_3_1_LANGUAGE : Language.XPATH_3_1_LANGUAGE,
+      language: isJson ? Language.XPATH_3_1_LANGUAGE : Language.XPATH_3_1_LANGUAGE,
       xmlSerializer: new XMLSerializer(),
     });
   } catch (e) {

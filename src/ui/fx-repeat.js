@@ -82,19 +82,40 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     // ----------------
     // INSERT handler
     // ----------------
+    // ----------------
+    // INSERT handler
+    // ----------------
     this.handleInsertHandler = event => {
       const { detail } = event;
       const myForeId = this.getOwnerForm().id;
       if (myForeId !== detail.foreId) return;
 
-      // Re-evaluate nodeset (insert can come from many sources)
+      const fore = this.getOwnerForm();
+
+      // Detect JSON insert (robust)
+      const insertedParent = detail?.insertedParent;
+      const insertedNode = detail?.insertedNodes;
+      const isJson =
+        !!detail?.isJson ||
+        !!insertedParent?.__jsonlens__ ||
+        !!insertedNode?.__jsonlens__ ||
+        !!insertedNode?.parent?.__jsonlens__;
+
+      if (isJson) {
+        this._handleJsonInserted(detail);
+        return;
+      }
+
+      // ----------------
+      // XML insert: keep existing behavior
+      // ----------------
       const oldNodesetLength = this.nodeset.length;
       this._evalNodeset();
       const newNodesetLength = this.nodeset.length;
       if (oldNodesetLength === newNodesetLength) return;
 
-      const insertedNode = detail.insertedNodes;
-      const insertionIndex = this.nodeset.indexOf(insertedNode) + 1; // 1-based
+      const inserted = detail.insertedNodes;
+      const insertionIndex = this.nodeset.indexOf(inserted) + 1; // 1-based
 
       const repeatItems = Array.from(
         this.querySelectorAll(
@@ -109,7 +130,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       newRepeatItem.index = insertionIndex;
       this._initVariables(newRepeatItem);
 
-      newRepeatItem.nodeset = insertedNode;
+      newRepeatItem.nodeset = inserted;
 
       for (let i = insertionIndex - 1; i < repeatItems.length; ++i) {
         repeatItems[i].index += 1;
@@ -118,19 +139,14 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       this.setIndex(insertionIndex);
 
       this.opNum++;
-      const parentModelItem = FxBind.createModelItem(
-        this.ref,
-        insertedNode,
-        newRepeatItem,
-        this.opNum,
-      );
+      const parentModelItem = FxBind.createModelItem(this.ref, inserted, newRepeatItem, this.opNum);
       newRepeatItem.modelItem = parentModelItem;
       this.getModel().registerModelItem(parentModelItem);
 
       this._createModelItemsRecursively(newRepeatItem, parentModelItem);
 
-      this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh();
-      this.getOwnerForm().addToBatchedNotifications(newRepeatItem);
+      fore.scanForNewTemplateExpressionsNextRefresh();
+      fore.addToBatchedNotifications(newRepeatItem);
     };
 
     // ----------------
@@ -211,6 +227,83 @@ export class FxRepeat extends withDraggability(UIElement, false) {
             </style>
             ${html}
         `;
+  }
+
+  /**
+   * JSON insert (perfect + incremental):
+   * - re-evaluate nodeset once to get authoritative post-insert ordering
+   * - insert one new repeatitem at the correct position (using detail.index)
+   * - rebind only shifted repeatitems (pos..end) and refresh them
+   */
+  _handleJsonInserted(detail) {
+    console.log('JSON INSERT', detail);
+    console.log('JSON insertedNodes', detail.insertedNodes);
+    console.log('JSON insertedParent', detail.insertedParent);
+
+    const fore = this.getOwnerForm();
+
+    const repeatItems = () =>
+      Array.from(
+        this.querySelectorAll(
+          ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
+        ),
+      );
+
+    // 1) Determine insertion index (1-based) from the event.
+    // Do NOT use indexOf(insertedNodes) for JSON.
+    let insertionIndex1 = Number(detail.index);
+    if (!Number.isFinite(insertionIndex1) || insertionIndex1 < 1) {
+      const ki = detail.insertedNodes?.keyOrIndex;
+      if (typeof ki === 'number') insertionIndex1 = ki + 1;
+    }
+    if (!Number.isFinite(insertionIndex1) || insertionIndex1 < 1) insertionIndex1 = 1;
+
+    // 2) Re-evaluate nodeset AFTER mutation to get correct order.
+    const oldLen = Array.isArray(this.nodeset) ? this.nodeset.length : 0;
+    this._evalNodeset();
+    const newLen = Array.isArray(this.nodeset) ? this.nodeset.length : 0;
+    if (newLen === oldLen) return;
+
+    // Clamp
+    insertionIndex1 = Math.max(1, Math.min(insertionIndex1, newLen));
+    const pos0 = insertionIndex1 - 1;
+
+    // 3) Insert DOM row: IMPORTANT set nodeset/index BEFORE inserting into DOM.
+    const before = repeatItems();
+    const beforeNode = before[pos0] ?? null;
+
+    const newRepeatItem = this._createNewRepeatItem();
+    newRepeatItem.index = pos0 + 1;
+    this._initVariables(newRepeatItem);
+    newRepeatItem.nodeset = this.nodeset[pos0];
+
+    this.insertBefore(newRepeatItem, beforeNode);
+
+    if (fore.createNodes) {
+      fore.initData(newRepeatItem);
+    }
+    fore.scanForNewTemplateExpressionsNextRefresh();
+    fore.addToBatchedNotifications(newRepeatItem);
+
+    // 4) Rebind shifted rows (pos0+1..end) and refresh only those.
+    const after = repeatItems();
+
+    for (let i = pos0 + 1; i < after.length; i++) {
+      const ri = after[i];
+      ri.index = i + 1;
+
+      // Even if identity is stable, keep it correct.
+      const newNode = this.nodeset[i];
+      if (ri.nodeset !== newNode) {
+        ri.nodeset = newNode;
+        if (fore.createNodes) fore.initData(ri);
+      }
+
+      fore.addToBatchedNotifications(ri);
+    }
+
+    // Select inserted row
+    this.setIndex(pos0 + 1);
   }
 
   disconnectedCallback() {
