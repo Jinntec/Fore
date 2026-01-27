@@ -162,8 +162,10 @@ export class FxInstance extends HTMLElement {
    * @returns {Document|T|any|Element}
    */
   getDefaultContext() {
+    // Note: use the getter here: it might provide us with stubbed data if anything async is racing,
+    // such as an @src attribute
     const instanceData = this.getInstanceData();
-    if (this.type === 'xml') {
+    if (this.type === 'xml'  || this.type === 'html') {
       return instanceData.firstElementChild;
     }
     // JSON: use wrapped tree as context item

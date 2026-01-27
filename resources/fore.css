@@ -109,6 +109,9 @@
         background: rgba(0, 0, 0, 0.5);
         z-index: 10;
         transition: opacity 0.4s linear;
+        position: fixed;
+        top: 0;
+        left: 0;
     }
 
     fx-dialog.show .dialog-content {

@@ -10,7 +10,7 @@ const { dependencies } = require('./package.json');
 
 export default [
   {
-    input: './index.js',
+    input: './index-build.js',
     output: [
       {
         file: 'dist/fore.js',

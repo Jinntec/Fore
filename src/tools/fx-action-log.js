@@ -1,4 +1,4 @@
-import { XPathUtil } from '../xpath-util';
+import { XPathUtil } from '../xpath-util.js';
 import './fx-log-item.js';
 import { FxLogSettings } from './fx-log-settings.js';
 import { getDocPath, getPath } from '../xpath-path.js';

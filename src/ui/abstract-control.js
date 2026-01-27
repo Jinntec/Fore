@@ -286,12 +286,35 @@ export default class AbstractControl extends UIElement {
   }
 
   _toggleValid(valid) {
+    // Used by required handling (and potentially other callers).
+    // It must also fire validity events and sync aria-invalid.
+    const wasInvalid = this.hasAttribute('invalid');
+
     if (valid) {
       this.removeAttribute('invalid');
       this.setAttribute('valid', '');
     } else {
       this.removeAttribute('valid');
       this.setAttribute('invalid', '');
+    }
+    this._syncAriaInvalid();
+
+    const isInvalid = this.hasAttribute('invalid');
+    // Only dispatch when the state actually changed
+    if (wasInvalid !== isInvalid) {
+      this._dispatchEvent(isInvalid ? 'invalid' : 'valid');
+    }
+  }
+
+  _syncAriaInvalid() {
+    // Keep widget aria-invalid in sync with the *control* state, regardless of
+    // whether invalidity comes from constraint, required emptiness, etc.
+    try {
+      const w = this.getWidget?.() || this.widget;
+      if (!w) return;
+      w.setAttribute('aria-invalid', this.hasAttribute('invalid') ? 'true' : 'false');
+    } catch (e) {
+      // ignore: widget might not exist yet
     }
   }
 
@@ -321,8 +344,8 @@ export default class AbstractControl extends UIElement {
         // if (alert) alert.style.display = 'none';
         this._dispatchEvent('valid');
         this.setAttribute('valid', '');
-        this.getWidget().setAttribute('aria-invalid', 'false');
         this.removeAttribute('invalid');
+        this.getWidget().setAttribute('aria-invalid', 'false');
       } else {
         this.setAttribute('invalid', '');
         this.getWidget().setAttribute('aria-invalid', 'true');
@@ -352,31 +375,41 @@ export default class AbstractControl extends UIElement {
         this._dispatchEvent('invalid');
       }
     }
+
+    // Ensure aria-invalid matches the current control state even if
+    // we didn't enter the state-change branch above.
+    this._syncAriaInvalid();
+
   }
 
   handleRelevant() {
-    // console.log('mip valid', this.modelItem.enabled);
+    // IMPORTANT: don't clear relevant/nonrelevant BEFORE comparing states.
+    // Otherwise isEnabled() (based on attributes) always reads as "enabled"
+    // and we can never detect a transition back to relevant.
     const item = this.modelItem.node;
-    this.removeAttribute('relevant');
-    this.removeAttribute('nonrelevant');
+
+    const wasEnabled = this.isEnabled();
+
+    // Determine new enabled state
+    let newEnabled = !!this.modelItem.relevant;
+
+    // If a nodeset resolves to an empty array, treat the control as nonrelevant
     if (Array.isArray(item) && item.length === 0) {
-      this._dispatchEvent('nonrelevant');
-      this.setAttribute('nonrelevant', '');
-      // this.style.display = 'none';
-      return;
+      newEnabled = false;
     }
-    if (this.isEnabled() !== this.modelItem.relevant) {
-      if (this.modelItem.relevant) {
-        this._dispatchEvent('relevant');
-        // this._fadeIn(this, this.display);
+
+    // Apply attributes
+    if (newEnabled) {
         this.setAttribute('relevant', '');
-        // this.style.display = this.display;
+      this.removeAttribute('nonrelevant');
       } else {
-        this._dispatchEvent('nonrelevant');
-        // this._fadeOut(this);
         this.setAttribute('nonrelevant', '');
-        // this.style.display = 'none';
+      this.removeAttribute('relevant');
       }
+
+    // Dispatch only on actual change
+    if (wasEnabled !== newEnabled) {
+      this._dispatchEvent(newEnabled ? 'relevant' : 'nonrelevant');
     }
   }
 
