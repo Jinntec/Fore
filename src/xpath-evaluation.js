@@ -777,6 +777,17 @@ export function evaluateXPathToString(xpath, contextNode, formElement, domFacade
     if (contextNode && contextNode.__jsonlens__ === true && s === '.') {
       return [contextNode];
     }
+
+    // Handle simple property access on JSON lens nodes
+    if (contextNode && contextNode.__jsonlens__ === true && !isJsonLookupExpr(s)) {
+      // For simple property names like "value", "name", etc., access them directly from the JSON object
+      const value = contextNode.get(s);
+      if (value !== undefined && value !== null) {
+        // If it's a JSON lens node, get its value, otherwise return the value directly
+        return String(value.__jsonlens__ ? value.get() : value);
+      }
+    }
+
     const lens = _resolveJsonLens(xpath, contextNode, formElement);
     if (lens && !Array.isArray(lens)) return String(lens.get());
 

@@ -697,9 +697,8 @@ export class FxModel extends HTMLElement {
     if (found) {
       return found;
     }
-    if (id === 'default') {
-      return this.getDefaultInstance(); // if id is not found always defaults to first in doc order
-    }
+    // Prevent infinite recursion: don't call getDefaultInstance() for 'default' id
+    // if we already tried to find it and failed
     if (!found && this.fore.strict) {
       // return this.getDefaultInstance(); // if id is not found always defaults to first in doc order
       Fore.dispatch(this, 'error', {
