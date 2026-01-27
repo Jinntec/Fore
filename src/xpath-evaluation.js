@@ -26,30 +26,61 @@ const createdNamespaceResolversByXPathQueryAndNode = new Map();
 // ---------------------------
 // JSON Lens + JSON/XPath mode
 // ---------------------------
+function _getOwningFore(node) {
+  let n = node;
+  if (!n) return null;
+
+  if (n.nodeType === Node.ATTRIBUTE_NODE) n = n.ownerElement;
+  if (n.nodeType === Node.TEXT_NODE) n = n.parentNode;
+
+  // cross shadow
+  if (n?.parentNode?.nodeType === Node.DOCUMENT_FRAGMENT_NODE) n = n.parentNode.host;
+
+  return n?.closest ? n.closest('fx-fore') : null;
+}
+
 function _matchIndexExpr(expr) {
   const s = String(expr ?? '').trim();
-  // exact match only
   const m = s.match(/^index\s*\(\s*(['"])(.*?)\1\s*\)\s*$/);
   return m ? m[2] : null;
 }
 
 /**
- * Try to resolve index('repeatId') without XPath evaluation (prevents recursion).
- * @returns {number|null} number when matched, else null (meaning: not an index() expr)
+ * Resolve index('repeatId') without evaluating XPath (prevents recursion).
+ * Returns:
+ *  - null  => not an index() expr
+ *  - number => resolved index (defaults to 1)
  */
-function tryResolveIndexExpr(expr, formElement) {
-  const repeatId = _matchIndexExpr(expr);
-  if (!repeatId) return null;
+function tryResolveIndexExpr(expr, formElementOrNode) {
+  try {
+    const repeatId = _matchIndexExpr(expr);
+    if (!repeatId) return null;
 
-  // const fore = _getOwningFore(formElement);
-  const fore = formElement.getOwnerForm();
-  if (!fore) return NaN;
+    // Resolve scoped repeat id first (handles repeats/shadow safely)
+    const source = formElementOrNode?.nodeType
+      ? formElementOrNode
+      : _getOwningFore(formElementOrNode);
+    const repeat =
+      (source && resolveId(repeatId, source, 'fx-repeat')) ||
+      _getOwningFore(source)?.querySelector?.(`#${CSS.escape(repeatId)}`);
 
-  const repeatEl = fore.querySelector(`#${CSS.escape(repeatId)}`);
-  if (!repeatEl) return NaN;
+    if (!repeat) return 1;
 
-  const idx = Number(repeatEl.getAttribute('index') || '1');
-  return Number.isFinite(idx) ? idx : NaN;
+    // Prefer attribute if present
+    const attr = repeat.getAttribute('index') ?? repeat.getAttribute('repeat-index');
+    let idx = Number(attr);
+
+    // fallback to property or method
+    if (!Number.isFinite(idx) || idx < 1) {
+      if (typeof repeat.getIndex === 'function') idx = Number(repeat.getIndex());
+      else idx = Number(repeat.index);
+    }
+
+    return Number.isFinite(idx) && idx >= 1 ? idx : 1;
+  } catch (_e) {
+    // absolutely never throw from this helper
+    return null;
+  }
 }
 
 function isXmlDomContext(node) {
@@ -60,28 +91,39 @@ function isXmlDomContext(node) {
 function isJsonLookupExpr(xpath) {
   if (typeof xpath !== 'string') return false;
   const t = xpath.trim();
-  // “?a?b” or “instance('x')?a?b”
-  return t.startsWith('?') || /^instance\s*\(/.test(t);
+
+  // Lens shorthand: "?a?b" or ".?a?b"
+  if (t.startsWith('?') || t.startsWith('.?')) return true;
+
+  // Only treat instance(...) as lens if it is followed by a "?" step
+  // (instance('x') alone is normal XPath, not lens lookup)
+  return /^instance\s*\(\s*(['"]).*?\1\s*\)\s*\?/.test(t);
 }
 
-function shouldUseJson(xpath, contextNode) {
-  // Allow JSON lookup syntax even if contextNode is an HTML/XML DOM node (actions often evaluate from DOM context).
-  if (isXmlDomContext(contextNode)) {
-    return isJsonLookupExpr(xpath);
-  }
-  return !!contextNode?.__jsonlens__ || isJsonLookupExpr(xpath);
-}
+function shouldUseJson(xpath, contextNode, formElement) {
+  // Never treat actual DOM nodes (HTML/XML) as JSON context
+  if (isXmlDomContext(contextNode)) return false;
 
+  // Lens nodes are always JSON
+  if (contextNode?.__jsonlens__) return true;
+
+  // If it's not lens syntax, don't switch to JSON
+  if (!isJsonLookupExpr(xpath)) return false;
+
+  // Now decide by instance type
+  const instanceId = XPathUtil.getInstanceId(String(xpath), formElement);
+  const instance = formElement?.getModel?.()?.getInstance?.(instanceId);
+  return instance?.type === 'json';
+}
 function getJsonFacade(formElement, xpath, contextNode, domFacade = null) {
-  const instanceId = XPathUtil.getInstanceId(String(xpath ?? ''), formElement);
+  const instanceId = XPathUtil.getInstanceId(xpath, formElement);
   const instance = formElement?.getModel?.()?.getInstance?.(instanceId);
 
-  // Non-JSON instance: keep the passed facade (usually null, sometimes a tracking facade).
+  // Only ever return JSON facade if:
+  // - the target instance is json
+  // - AND the expression/context say "this is JSON evaluation"
   if (instance?.type !== 'json') return domFacade;
-
-  // If the expression uses JSON lookup syntax, force JSON mode even from DOM context.
-  // This is essential for fx-setvalue / fx-insert etc. where contextNode can be a button/trigger.
-  if (!shouldUseJson(xpath, contextNode)) return domFacade;
+  if (!shouldUseJson(xpath, contextNode, formElement)) return domFacade;
 
   if (!instance.domFacade) instance.domFacade = new JSONDomFacade();
   return domFacade || instance.domFacade;
@@ -101,31 +143,39 @@ function _parseJsonLensRef(ref, defaultInstanceId = 'default') {
   if (!ref) return null;
   const s = String(ref).trim();
 
-  const instMatch = s.match(/^instance\s*\(\s*(['"])(.*?)\1\s*\)\s*(\?.*)?$/);
-  let instanceId;
-  let lensPart;
+  // Shorthand "?a?b" or ".?a?b" -> default instance
+  if (s.startsWith('?') || s.startsWith('.?')) {
+    const lensPart = s.startsWith('.?') ? s.slice(1) : s; // strip leading "."
+    const steps = lensPart
+      .split('?')
+      .filter(Boolean)
+      .map(part => {
+        if (part === '*') return '*';
+        if (/^\d+$/.test(part)) return Number(part) - 1; // 1-based -> 0-based
+        return part;
+      });
 
-  if (instMatch) {
-    instanceId = instMatch[2];
-    lensPart = instMatch[3] || '';
-  } else {
-    if (!s.startsWith('?')) return null;
-    instanceId = defaultInstanceId;
-    lensPart = s;
+    return { instanceId: defaultInstanceId, steps, hasExplicitInstance: false };
   }
+
+  // instance('x')?a?b  (ONLY lens syntax; reject instance('x') alone)
+  const instMatch = s.match(/^instance\s*\(\s*(['"])(.*?)\1\s*\)\s*(\?.+)$/);
+  if (!instMatch) return null;
+
+  const instanceId = instMatch[2];
+  const lensPart = instMatch[3];
 
   const steps = lensPart
     .split('?')
     .filter(Boolean)
     .map(part => {
       if (part === '*') return '*';
-      if (/^\d+$/.test(part)) return Number(part) - 1; // 1-based -> 0-based
+      if (/^\d+$/.test(part)) return Number(part) - 1;
       return part;
     });
 
-  return { instanceId, steps, hasExplicitInstance: !!instMatch };
+  return { instanceId, steps, hasExplicitInstance: true };
 }
-
 function _findNearestJsonContextNode(formElement) {
   // IMPORTANT: must NOT call getModelItem() or getInScopeContext() here.
   // We only inspect already-attached fields to avoid recursion.
@@ -151,53 +201,23 @@ function _findNearestJsonContextNode(formElement) {
 
 function _resolveJsonLens(xpath, contextNode, formElement) {
   if (typeof xpath !== 'string') return null;
-  let t = xpath.trim();
-  if (!(t.startsWith('?') || t.startsWith('instance('))) return null;
-
-  // --- Fast-path: support ?items[index('repeatId')]?foo by rewriting index('..') to a number ---
-  // Example: ?items[index('items')]?name  --> ?items?{k}?name  (k = repeat index, 1-based)
-  // We only support exactly index('...') as the predicate payload here (for now).
-  const predRe = /\?\s*([A-Za-z0-9_\-]+)\s*\[\s*index\s*\(\s*(['"])(.*?)\2\s*\)\s*]\s*/;
-  const predMatch = t.match(predRe);
-  if (predMatch) {
-    const arrayKey = predMatch[1];
-    const repeatId = predMatch[3];
-
-    // Compute index without any XPath evaluation (no resolveId() recursion).
-    // We walk up from formElement to find the owning fx-fore, then query by id.
-    let fore = formElement;
-    while (fore && fore.nodeName?.toUpperCase() !== 'FX-FORE') {
-      if (fore.parentNode?.nodeType === Node.DOCUMENT_FRAGMENT_NODE) fore = fore.parentNode.host;
-      else fore = fore.parentNode;
-    }
-
-    if (fore) {
-      const repeatEl = fore.querySelector(`#${CSS.escape(repeatId)}`);
-      const idx1 = repeatEl ? Number(repeatEl.getAttribute('index') || '1') : 1;
-
-      // Rewrite: "?items[index('items')]?name" -> "?items?{idx1}?name"
-      // Your lens parser treats numeric steps as 1-based indices, so we keep idx1.
-      t = t.replace(predRe, `?${arrayKey}?${idx1}?`);
-    }
-  }
+  const t = xpath.trim();
+  if (!isJsonLookupExpr(t)) return null;
 
   const parsed = _parseJsonLensRef(t, 'default');
   if (!parsed) return null;
 
   const model = formElement?.getModel?.();
-  const instance = model?.getInstance?.(parsed.instanceId) || model?.getInstance?.('default');
+  const instance = model?.getInstance?.(parsed.instanceId);
+  if (!instance || instance.type !== 'json') return null;
 
-  const root = instance?.nodeset;
+  const root = instance.nodeset;
   if (!root || !root.__jsonlens__) return null;
 
-  // Base node:
-  // - explicit instance('x') → start at root
-  // - otherwise: prefer JSON contextNode, else nearest already-bound JSON nodeset/modelItem, else root
   let node = root;
   if (!parsed.hasExplicitInstance) {
-    if (contextNode?.__jsonlens__) {
-      node = contextNode;
-    } else {
+    if (contextNode?.__jsonlens__) node = contextNode;
+    else {
       const scoped = _findNearestJsonContextNode(formElement);
       if (scoped) node = scoped;
     }
@@ -543,17 +563,16 @@ export function evaluateXPath(
 ) {
   const trimmedExpr = String(xpath ?? '').trim();
 
-  // Fast path for index('repeatId')
-  const idx = tryResolveIndexExpr(trimmedExpr, formElement);
-  if (idx !== null) return [idx];
-
-  if (contextNode && contextNode.__jsonlens__ === true && trimmedExpr === '.') {
-    return [contextNode];
-  }
-  const lensNodes = _resolveJsonLensToNodes(xpath, contextNode, formElement);
-  if (lensNodes) return lensNodes;
-
   try {
+    // Fast path for index('repeatId')
+    const idx = tryResolveIndexExpr(trimmedExpr, formElement);
+    if (idx !== null) return [idx];
+
+    if (contextNode && contextNode.__jsonlens__ === true && trimmedExpr === '.') {
+      return [contextNode];
+    }
+    const lensNodes = _resolveJsonLensToNodes(xpath, contextNode, formElement);
+    if (lensNodes) return lensNodes;
     const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
     const variablesInScope = getVariablesInScope(formElement);
 
@@ -604,13 +623,13 @@ export function evaluateXPath(
 
 export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
   const trimmedExpr = String(xpath ?? '').trim();
-  if (contextNode && contextNode.__jsonlens__ === true && trimmedExpr === '.') {
-    return [contextNode];
-  }
-  const lens = _resolveJsonLens(xpath, contextNode, formElement);
-  if (lens) return Array.isArray(lens) ? lens[0] || null : lens;
-
   try {
+    if (contextNode && contextNode.__jsonlens__ === true && trimmedExpr === '.') {
+      return [contextNode];
+    }
+    const lens = _resolveJsonLens(xpath, contextNode, formElement);
+    if (lens) return Array.isArray(lens) ? lens[0] || null : lens;
+
     const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
     const variablesInScope = getVariablesInScope(formElement);
 
@@ -649,13 +668,13 @@ export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
 
 export function evaluateXPathToNodes(xpath, contextNode, formElement) {
   const trimmedExpr = String(xpath ?? '').trim();
-  if (contextNode && contextNode.__jsonlens__ === true && trimmedExpr === '.') {
-    return [contextNode];
-  }
-  const lensNodes = _resolveJsonLensToNodes(xpath, contextNode, formElement);
-  if (lensNodes) return lensNodes;
-
   try {
+    if (contextNode && contextNode.__jsonlens__ === true && trimmedExpr === '.') {
+      return [contextNode];
+    }
+    const lensNodes = _resolveJsonLensToNodes(xpath, contextNode, formElement);
+
+    if (lensNodes) return lensNodes;
     const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
     const variablesInScope = getVariablesInScope(formElement);
 
@@ -695,22 +714,22 @@ export function evaluateXPathToNodes(xpath, contextNode, formElement) {
 export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
   const s = String(xpath ?? '').trim();
 
-  // Fast path for index('repeatId')
-  const idx = tryResolveIndexExpr(s, formElement);
-  if (idx !== null) return Boolean(idx);
-
-  const lens = _resolveJsonLens(xpath, contextNode, formElement);
-  if (lens) {
-    const n = Array.isArray(lens) ? lens[0] : lens;
-    if (!n) return false;
-    try {
-      return Boolean(n.get ? n.get() : n.value);
-    } catch (_e) {
-      return true;
-    }
-  }
-
   try {
+    // Fast path for index('repeatId')
+    const idx = tryResolveIndexExpr(s, formElement);
+    if (idx !== null) return Boolean(idx);
+
+    const lens = _resolveJsonLens(xpath, contextNode, formElement);
+    if (lens) {
+      const n = Array.isArray(lens) ? lens[0] : lens;
+      if (!n) return false;
+      try {
+        return Boolean(n.get ? n.get() : n.value);
+      } catch (_e) {
+        return true;
+      }
+    }
+
     const namespaceResolver = createNamespaceResolverForNode(s, contextNode, formElement);
     const variablesInScope = getVariablesInScope(formElement);
 
@@ -750,17 +769,17 @@ export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
 export function evaluateXPathToString(xpath, contextNode, formElement, domFacade = null) {
   const s = String(xpath ?? '').trim();
 
-  // Fast path for index('repeatId')
-  const idx = tryResolveIndexExpr(s, formElement);
-  if (idx !== null) return String(idx);
-
-  if (contextNode && contextNode.__jsonlens__ === true && s === '.') {
-    return [contextNode];
-  }
-  const lens = _resolveJsonLens(xpath, contextNode, formElement);
-  if (lens && !Array.isArray(lens)) return String(lens.get());
-
   try {
+    // Fast path for index('repeatId')
+    const idx = tryResolveIndexExpr(s, formElement);
+    if (idx !== null) return String(idx);
+
+    if (contextNode && contextNode.__jsonlens__ === true && s === '.') {
+      return [contextNode];
+    }
+    const lens = _resolveJsonLens(xpath, contextNode, formElement);
+    if (lens && !Array.isArray(lens)) return String(lens.get());
+
     const namespaceResolver = createNamespaceResolverForNode(s, contextNode, formElement);
     const variablesInScope = getVariablesInScope(formElement);
 
@@ -800,10 +819,9 @@ export function evaluateXPathToString(xpath, contextNode, formElement, domFacade
 export function evaluateXPathToStrings(xpath, contextNode, formElement, domFacade = null) {
   const s = String(xpath ?? '').trim();
 
-  const idx = tryResolveIndexExpr(s, formElement);
-  if (idx !== null) return [String(idx)];
-
   try {
+    const idx = tryResolveIndexExpr(s, formElement);
+    if (idx !== null) return [String(idx)];
     const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
 
     const effectiveFacade = getJsonFacade(formElement, xpath, contextNode, domFacade);
@@ -848,11 +866,11 @@ export function evaluateXPathToStrings(xpath, contextNode, formElement, domFacad
 export function evaluateXPathToNumber(xpath, contextNode, formElement, domFacade = null) {
   const s = String(xpath ?? '').trim();
 
-  // Fast path for index('repeatId')
-  const idx = tryResolveIndexExpr(s, formElement);
-  if (idx !== null) return idx;
-
   try {
+    // Fast path for index('repeatId')
+    const idx = tryResolveIndexExpr(s, formElement);
+    if (idx !== null) return idx;
+
     const namespaceResolver = createNamespaceResolverForNode(s, contextNode, formElement);
     const variablesInScope = getVariablesInScope(formElement);
 
@@ -1057,21 +1075,32 @@ registerCustomXPathFunction(
 );
 
 const instance = (dynamicContext, string) => {
-  const formElement = fxEvaluateXPathToFirstNode(
-    'ancestor-or-self::fx-fore[1]',
-    dynamicContext.currentContext.formElement,
-    null,
-    null,
-    { namespaceResolver: xhtmlNamespaceResolver },
-  );
+  const caller = dynamicContext.currentContext.formElement;
 
-  let lookup = null;
+  // Prefer Fore’s built-in owner resolution when present
+  const fore =
+    (caller && typeof caller.getOwnerForm === 'function' && caller.getOwnerForm()) ||
+    _getOwningFore(caller);
+
+  if (!fore) return null;
+
+  const modelEl = fore.querySelector('fx-model');
+  if (!modelEl) return null;
+
+  let instEl = null;
+
   if (string === null || string === 'default') {
-    lookup = formElement.getModel().getDefaultInstance();
+    // Fore default instance is the first fx-instance in the model (regardless of @id)
+    instEl = modelEl.querySelector('fx-instance');
   } else {
-    lookup = formElement.getModel().getInstance(string);
-    if (!lookup) {
-      document.querySelector('fx-fore').dispatchEvent(
+    // scoped resolution first; fallback to model-local lookup
+    instEl =
+      resolveId(string, caller, 'fx-instance') ||
+      modelEl.querySelector(`#${CSS.escape(string)}`) ||
+      modelEl.querySelector(`fx-instance[id="${string}"]`);
+
+    if (!instEl) {
+      fore.dispatchEvent(
         new CustomEvent('error', {
           composed: true,
           bubbles: true,
@@ -1082,12 +1111,27 @@ const instance = (dynamicContext, string) => {
           },
         }),
       );
+      return null;
     }
   }
 
-  const context = lookup.getDefaultContext();
-  if (!context) return null;
-  return context;
+  // IMPORTANT: return a DOM node for XML instances, JSON nodeset for JSON instances
+  const isJson = instEl.getAttribute('type') === 'json';
+
+  if (isJson) {
+    // JSON: Fore stores the JSON root on .nodeset (JSON lens node)
+    return (
+      instEl.nodeset ||
+      (typeof instEl.getDefaultContext === 'function' ? instEl.getDefaultContext() : null)
+    );
+  }
+
+  // XML: always return the XML default context (DOM node)
+  return (
+    (typeof instEl.getDefaultContext === 'function' ? instEl.getDefaultContext() : null) ||
+    instEl.nodeset ||
+    null
+  );
 };
 
 registerCustomXPathFunction(
@@ -1096,10 +1140,23 @@ registerCustomXPathFunction(
   'xs:integer?',
   (dynamicContext, string) => {
     const { formElement } = dynamicContext.currentContext;
+
+    // XForms default: if no argument → 1
     if (string === null) return 1;
     const repeat = resolveId(string, formElement, 'fx-repeat');
-    if (repeat) return repeat.getAttribute('index');
-    return Number(1);
+    if (!repeat) return 1;
+
+    // Prefer attribute (because that's what Fore sets / persists)
+    const attr = repeat.getAttribute('index');
+    const attrNum = Number(attr);
+    if (Number.isFinite(attrNum) && attrNum > 0) return attrNum;
+
+    // Fallback: some components expose .index as a property
+    const propNum = Number(repeat.index);
+    if (Number.isFinite(propNum) && propNum > 0) return propNum;
+
+    // Final fallback: XForms default
+    return 1;
   },
 );
 
