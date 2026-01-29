@@ -9,35 +9,51 @@
 <body>
 <div class="wrapper">
     <fx-fore>
-        <fx-model id="model-1">
-            <fx-instance>
+        <fx-model>
+            <fx-instance id="default" src="typeins-de.json" type="json">
+                <div>Hello</div>
+            </fx-instance>
+            <fx-instance id="vars">
                 <data>
-                    <selected
->https://www.eagle-network.eu/voc/typeins/lod/73
-                        https://www.eagle-network.eu/voc/typeins/lod/113</selected
-                    >
+                    <selected></selected>
                 </data>
             </fx-instance>
-            <fx-instance id="list" type="json">
-                [ { "name": "Akklamation", "value": "https://www.eagle-network.eu/voc/typeins/lod/73" },
-                { "name": "Adnuntiatio", "value": "https://www.eagle-network.eu/voc/typeins/lod/113" },
-                { "name": "Assignationsinschrift", "value":
-                "https://www.eagle-network.eu/voc/typeins/lod/116" } ]
-            </fx-instance>
+            <fx-submission id="switch-lang" method="get" replace="instance" instance="default">
+                <fx-refresh delay="500" event="submit-done" force="true"></fx-refresh>
+            </fx-submission>
         </fx-model>
-        <fx-control ref="selected" update-event="input">
-            <fx-items ref="instance('list')?*" class="widget">
-                <template>
-              <span class="fx-checkbox">
-                <input id="check" name="option" type="checkbox" value="{value}" />
-                <label>{name}</label>
-              </span>
-                </template>
-            </fx-items>
-        </fx-control>
-        <fx-output ref="selected"></fx-output>
+
+        <h1>i18n</h1>
+        <p>
+            This example uses a single instance which holds the current language. It simply loads one
+            language as the default with <code>src</code> and switches between different languages by
+            exchanging the instance with a submission.
+        </p>
+        <fx-group>
+            <fx-control ref="instance('vars')/selected">
+                <label>Select</label>
+                <fx-items ref="instance('default')?*" class="widget">
+                    <template>
+                        <div class="fx-checkbox">
+                            <input type="radio" name="group" value="{value}" />
+                            <label>{name}</label>
+                        </div>
+                    </template>
+                </fx-items>
+            </fx-control>
+            {instance('vars')/selected}
+        </fx-group>
+
+        <fx-trigger id="de">
+            <button>DE</button>
+            <fx-send submission="switch-lang" url="typeins-de.json">de</fx-send>
+        </fx-trigger>
+        <fx-trigger id="en">
+            <button>EN</button>
+            <fx-send submission="switch-lang" url="typeins-en.json">en</fx-send>
+        </fx-trigger>
     </fx-fore>
 </div>
-<script type="module" src="../demo.js"/>
+<script type="module" src="../demo.js"></script>
 </body>
 </html>

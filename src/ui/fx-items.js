@@ -85,8 +85,13 @@ export class FxItems extends FxControl {
     return this;
   }
 
+  async refresh(force = false) {
+    super.refresh(force);
+    console.log('fx-items.refresh() called');
+  }
+
   async updateWidgetValue() {
-    // console.log('setting items value');
+    console.log('setting items value');
 
     const parentBind = XPathUtil.getClosest('[ref]', this.parentNode);
     if (parentBind) {
@@ -107,7 +112,7 @@ export class FxItems extends FxControl {
    * @param node
    */
   updateEntry(newEntry, node) {
-    // console.log('fx-items updateEntry', this.value);
+    console.log('fx-items updateEntry', this.value);
 
     // ### create unique id to connect label and input
     const id = Fore.createUUID();
@@ -119,6 +124,7 @@ export class FxItems extends FxControl {
     // ROOT FIX: JSON lens nodes are objects; do NOT use direct JS property access.
     // Always go through evaluateXPathToString() for JSON too.
     const lblEvaluated = evaluateXPathToString(lblExpr, node, this);
+    console.log('lblEvaluated ', lblEvaluated);
     label.textContent = lblEvaluated;
 
     label.setAttribute('for', id);
@@ -132,6 +138,7 @@ export class FxItems extends FxControl {
 
     // ROOT FIX: same here
     const evaluated = evaluateXPathToString(cutted, node, this);
+    console.log('evaluated ', lblEvaluated);
 
     // Set both property and attribute so *any* downstream code path works
     input.value = evaluated;

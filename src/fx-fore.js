@@ -288,6 +288,7 @@ export class FxFore extends HTMLElement {
     this.createNodes = this.hasAttribute('create-nodes') ? true : false;
     this._localNamesWithChanges = new Set();
     this.setAttribute('role', 'form'); // set aria role
+    this._pendingRefresh = false;
   }
 
   /**
@@ -793,89 +794,73 @@ export class FxFore extends HTMLElement {
   /**
    * @param {(boolean|{reason:'index-function'})} [force]fx-fore
    */
+  /**
+   * @param {(boolean|{reason:'index-function'})} [force]
+   */
+  /**
+   * @param {(boolean|{reason:'index-function'})} [force]
+   */
   async refresh(force) {
+    // If we're already refreshing, do NOT drop the request.
+    // Queue a hard refresh and return a promise that resolves when the next refresh finishes.
     if (this.isRefreshing) {
-      return;
-    }
+      // keep "strongest" request: any true means hard refresh
+      this._pendingRefresh = this._pendingRefresh || force === true;
 
-    /*
-    if (force !== true && this._localNamesWithChanges.size > 0) {
-      force = {
-        ...(force || { reason: undefined }),
-        elementLocalnamesWithChanges: Array.from(this._localNamesWithChanges),
-      };
-      this._localNamesWithChanges.clear();
+      return new Promise(resolve => {
+        this.addEventListener('refresh-done', () => resolve(), { once: true });
+      });
     }
-*/
 
     this.isRefreshing = true;
     this.isRefreshPhase = true;
 
-    // refresh () {
-    // ### refresh Fore UI elements
-    // if (!this.initialRun && this.toRefresh.length !== 0) {
-    // if (!this.initialRun && this.toRefresh.length !== 0) {
-    // if (!force && !this.initialRun && this.toRefresh.length !== 0) {
-    if (force === true || this.initialRun) {
-      console.log('🔄 🔴🔴🔴 ### full refresh() on ', this);
-      Fore.refreshChildren(this, force);
-    } else {
-      // Process all batched no tifications at the end of the refresh phase
-      // console.log('🔄 🎯 ### processing batched notifications');
-      await this._processBatchedNotifications();
-    }
+    try {
+      if (force === true || this.initialRun) {
+        console.log('🔄 🔴🔴🔴 ### full refresh() on ', this);
+        Fore.refreshChildren(this, force);
+      } else {
+        await this._processBatchedNotifications();
+      }
 
-    // ### refresh template expressions
-    if (force === true || this.initialRun || this._scanForNewTemplateExpressionsNextRefresh) {
-      this._updateTemplateExpressions();
-      this._scanForNewTemplateExpressionsNextRefresh = false; // reset
-    }
+      if (force === true || this.initialRun || this._scanForNewTemplateExpressionsNextRefresh) {
+        this._updateTemplateExpressions();
+        this._scanForNewTemplateExpressionsNextRefresh = false;
+      }
 
-    this._processTemplateExpressions();
+      this._processTemplateExpressions();
 
-    this.isRefreshPhase = false;
+      this.isRefreshPhase = false;
+      this.initialRun = false;
+      this.style.visibility = 'visible';
 
-    // console.log('### <<<<< dispatching refresh-done - end of UI update cycle >>>>>');
-    // this.dispatchEvent(new CustomEvent('refresh-done'));
-    this.initialRun = false;
-    this.style.visibility = 'visible';
-    console.info(
-        `%c ✅ refresh-done on #${this.id}`,
-        'background:darkorange; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
-        this.getModel().modelItems,
-    );
+      console.info(
+          `%c ✅ refresh-done on #${this.id}`,
+          'background:darkorange; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+          this.getModel().modelItems,
+      );
 
-    Fore.dispatch(this, 'refresh-done', {});
+      Fore.dispatch(this, 'refresh-done', {});
 
-    const subFores = Array.from(this.querySelectorAll('fx-fore'));
-    /*
-        calling the parent to refresh causes errors and inconsistent state. Also it is questionable
-        if a child should actually interact with its parent in this way.
-
-        This only affects the refreshing NOT the data mutation itself which is happening as expected.
-
-        Current solution is that a child that wants the parent to refresh must do so by adding an additional
-        event handler that dispatches an event upwards and having a handler in the parent to refresh itself.
-
-        So refreshed propagate downwards but not upwards which is at least an option to consider.
-
-        if(this.parentNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE){
-            // await this.parentNode.closest('fx-fore')?.refresh(false);
+      const subFores = Array.from(this.querySelectorAll('fx-fore'));
+      for (const subFore of subFores) {
+        if (subFore.ready) {
+          await subFore.refresh(true);
         }
-    */
-    for (const subFore of subFores) {
-      // subFore.refresh(false, changedPaths);
-      if (subFore.ready) {
-        // Do an unconditional hard refresh: there might be changes that are relevant
-        // todo: investigate impact of observer architecture - do we really want to refresh all subfore elements with a hard refresh?
-        await subFore.refresh(true);
+      }
+    } finally {
+      this.isRefreshing = false;
+
+      // If anything requested a refresh while we were refreshing, run exactly one more.
+      // This prevents "dropped" refresh requests (your timeout).
+      if (this._pendingRefresh) {
+        const pendingHard = this._pendingRefresh === true;
+        this._pendingRefresh = false;
+        // Important: do NOT await in finally without clearing flags first.
+        await this.refresh(pendingHard);
       }
     }
-    this.isRefreshing = false;
-    // Clear the batch
-    // this.batchedNotifications.clear();
   }
-
   /**
    * Add a ModelItem to the batch of notifications to be processed at the end of the refresh phase
    * @param {ModelItem | import('./ui/UIElement.js').UIElement} item - The ModelItem or UI Element to add to the batch

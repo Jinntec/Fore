@@ -1,38 +1,29 @@
 import { Fore } from './fore.js';
 import { evaluateXPathToFirstNode } from './xpath-evaluation.js';
-import { wrapJson, JSONNode } from './json/JSONNode.js';
+import { wrapJson } from './json/JSONNode.js';
 import { JSONDomFacade } from './json/JSONDomFacade.js';
 
 async function handleResponse(fxInstance, response) {
   const { status } = response;
   if (status >= 400) {
-    // console.log('response status', status);
     alert(`response status:  ${status} - failed to load data for '${fxInstance.src}' - stopping.`);
     throw new Error(`failed to load data - status: ${status}`);
   }
   let responseContentType = response.headers.get('content-type').split(';')[0].trim().toLowerCase();
-  // console.log('********** responseContentType *********', responseContentType);
+
   if (responseContentType.startsWith('text/html')) {
-    // const htmlResponse = response.text();
-    // return new DOMParser().parseFromString(htmlResponse, 'text/html');
-    // return response.text();
-    return response.text().then(result =>
-      // console.log('xml ********', result);
-      new DOMParser().parseFromString(result, 'text/html'),
+    return response.text().then(
+        result => new DOMParser().parseFromString(result, 'text/html'),
     );
   }
   if (responseContentType.endsWith('/json') || responseContentType.endsWith('+json')) {
-    // console.log("********** inside res json *********");
     return response.json();
   }
   if (responseContentType.endsWith('/xml') || responseContentType.endsWith('+xml')) {
-    // See https://www.rfc-editor.org/rfc/rfc7303
     const text = await response.text();
-    // console.log('xml ********', result);
     return new DOMParser().parseFromString(text, 'application/xml');
   }
   if (responseContentType.startsWith('text/')) {
-    // console.log("********** inside  res plain *********");
     return response.text();
   }
 
@@ -41,22 +32,28 @@ async function handleResponse(fxInstance, response) {
 
 /**
  * Container for data instances.
- *
- * Offers several ways of loading data from either inline content or via 'src' attribute which will use the fetch
- * API to resolve data.
  */
 export class FxInstance extends HTMLElement {
   constructor() {
     super();
     this.model = this.parentNode;
     this.attachShadow({ mode: 'open' });
+
     this.originalInstance = null;
     this.partialInstance = null;
     this.credentials = '';
+
+    // IMPORTANT: keep backing store private so setter can intercept updates
+    this._instanceData = null;
+
+    // Lens nodeset for JSON, DOM Document for XML
+    this.nodeset = null;
+
+    // JSON facade (only relevant for JSON instances)
+    this.domFacade = null;
   }
 
   connectedCallback() {
-    // console.log('connectedCallback ', this);
     if (this.hasAttribute('src')) {
       this.src = this.getAttribute('src');
     }
@@ -68,12 +65,12 @@ export class FxInstance extends HTMLElement {
     }
 
     this.credentials = this.hasAttribute('credentials')
-      ? this.getAttribute('credentials')
-      : 'same-origin';
+        ? this.getAttribute('credentials')
+        : 'same-origin';
     if (!['same-origin', 'include', 'omit'].includes(this.credentials)) {
       console.error(
-        `fx-submission: the value of credentials is not valid. Expected 'same-origin', 'include' or 'omit' but got '${this.credentials}'`,
-        this,
+          `fx-submission: the value of credentials is not valid. Expected 'same-origin', 'include' or 'omit' but got '${this.credentials}'`,
+          this,
       );
     }
 
@@ -83,50 +80,63 @@ export class FxInstance extends HTMLElement {
       this.type = 'xml';
       this.setAttribute('type', this.type);
     }
-    const style = `
-            :host {
-                display: none;
-            }
-            :host * {
-                display:none;
-            }
-            ::slotted(*){
-                display:none;
-            }
-        `;
 
-    const html = `
-        `;
-    this.shadowRoot.innerHTML = `
-            <style>
-                ${style}
-            </style>
-            ${html}
-        `;
+    const style = `
+      :host { display: none; }
+      :host * { display:none; }
+      ::slotted(*){ display:none; }
+    `;
+
+    this.shadowRoot.innerHTML = `<style>${style}</style>`;
     this.partialInstance = {};
   }
 
   /**
+   * IMPORTANT: canonical accessor for instance data.
+   * Any code that assigns `instance.instanceData = ...` will now rebuild nodeset correctly.
+   */
+  get instanceData() {
+    return this._instanceData;
+  }
+
+  set instanceData(data) {
+    if (!data) {
+      this.createInstanceData();
+      return;
+    }
+
+    // Route ALL updates through _setInitialData so nodeset + originalInstance stay consistent
+    this._setInitialData(data);
+
+    // Signal structure mutation (used by fx-fore for refresh decisions)
+    this.dispatchEvent(new CustomEvent('path-mutated', { bubbles: true, composed: true }));
+  }
+
+  /**
    * Is called by fx-model during initialization phase (model-construct)
-   * @returns {Promise<void>}
    */
   async init() {
-    // console.log('fx-instance init');
     await this._initInstance();
-    // console.log(`### <<<<< instance ${this.id} loaded >>>>> `);
     this.dispatchEvent(
-      new CustomEvent('instance-loaded', {
-        composed: true,
-        bubbles: true,
-        detail: { instance: this },
-      }),
+        new CustomEvent('instance-loaded', {
+          composed: true,
+          bubbles: true,
+          detail: { instance: this },
+        }),
     );
     return this;
   }
 
   reset() {
-    // this._useInlineData();
-    this.instanceData = this.originalInstance.cloneNode(true);
+    // use the setter so nodeset is rebuilt for JSON too
+    if (this.originalInstance && this.type === 'xml') {
+      this.instanceData = this.originalInstance.cloneNode(true);
+    } else if (this.originalInstance && this.type === 'json') {
+      this.instanceData = structuredClone(this.originalInstance);
+    } else {
+      // fallback
+      this.instanceData = this.originalInstance;
+    }
   }
 
   evalXPath(xpath) {
@@ -137,8 +147,6 @@ export class FxInstance extends HTMLElement {
 
   /**
    * returns the current instance data
-   *
-   * @returns {Document | T | any}
    */
   getInstanceData() {
     if (!this.instanceData) {
@@ -147,46 +155,27 @@ export class FxInstance extends HTMLElement {
     return this.instanceData;
   }
 
+  /**
+   * legacy setter API: keep it, but forward to instanceData setter
+   */
   setInstanceData(data) {
-    if (!data) {
-      this.createInstanceData();
-      return;
-    }
-    this._setInitialData(data);
-    // this.instanceData = data;
+    this.instanceData = data;
   }
 
   /**
-   * return the default context (root node of respective instance) for XPath evalution.
-   *
-   * @returns {Document|T|any|Element}
+   * return the default context (root node of respective instance) for XPath evaluation.
    */
   getDefaultContext() {
-    // Note: use the getter here: it might provide us with stubbed data if anything async is racing,
-    // such as an @src attribute
     const instanceData = this.getInstanceData();
-    if (this.type === 'xml'  || this.type === 'html') {
-      return instanceData.firstElementChild;
+    if (this.type === 'xml' || this.type === 'html') {
+      return instanceData?.firstElementChild;
     }
     // JSON: use wrapped tree as context item
     return this.nodeset;
   }
 
-
-  /**
-   * does the actual loading of data. Handles inline data, data loaded via fetch() or data constructed from
-   * querystring.
-   *
-   * @returns {Promise<void>}
-   * @private
-   */
   async _initInstance() {
     if (this.src === '#querystring') {
-      /*
-       * generate XML data from URL querystring
-       * todo: there's no variant to generate JSON yet
-       */
-      // eslint-disable-next-line no-restricted-globals
       const query = new URLSearchParams(location.search);
       const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
       const root = doc.firstElementChild;
@@ -205,19 +194,23 @@ export class FxInstance extends HTMLElement {
 
   createInstanceData() {
     if (this.type === 'xml') {
-      // const doc = new DOMParser().parseFromString('<data data-id="default"></data>', 'application/xml');
       const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
-      this.instanceData = doc;
-      this.originalInstance = this.instanceData.cloneNode(true);
+      this._instanceData = doc;
+      this.originalInstance = doc.cloneNode(true);
+      this.nodeset = doc;
+      return;
     }
     if (this.type === 'json') {
-      this.instanceData = {};
-      this.originalInstance = { ...this.instanceData };
+      this._instanceData = {};
+      this.originalInstance = { ...this._instanceData };
+      this.nodeset = wrapJson(this._instanceData, null, null, this.id || 'default');
+      this.domFacade = new JSONDomFacade();
+      return;
     }
     if (this.type === 'text') {
-      this.instanceData = this.innerText;
+      this._instanceData = this.innerText;
       this.originalInstance = this.innerText;
-      console.log('text data', this.instanceData);
+      this.nodeset = null;
     }
   }
 
@@ -228,8 +221,7 @@ export class FxInstance extends HTMLElement {
       const key = url.substring(url.indexOf(':') + 1);
 
       const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
-      this.instanceData = doc;
-      // ### does it make sense to store originalData here?
+      this._instanceData = doc;
 
       if (!key) {
         console.warn('no key specified for localStore');
@@ -243,10 +235,12 @@ export class FxInstance extends HTMLElement {
         return;
       }
       const data = new DOMParser().parseFromString(serialized, 'application/xml');
-      // let data = this._parse(serialized, instance);
       doc.firstElementChild.replaceWith(data.firstElementChild);
+      // IMPORTANT: keep nodeset consistent
+      this._setInitialData(doc);
       return;
     }
+
     const contentType = Fore.getContentType(this, 'get');
 
     try {
@@ -254,97 +248,55 @@ export class FxInstance extends HTMLElement {
         method: 'GET',
         credentials: this.credentials,
         mode: 'cors',
-        headers: {
-          'Content-Type': contentType,
-        },
+        headers: { 'Content-Type': contentType },
       });
       const data = await handleResponse(this, response);
       this._setInitialData(data);
-      /*
-      if (data.nodeType) {
-        this._setInitialData(data);
-        this.instanceData = data;
-        this.originalInstance = this.instanceData.cloneNode(true);
-        console.log('instanceData loaded: ', this.id, this.instanceData);
-        return;
-      }
-      this.instanceData = data;
-      this.originalInstance = [...data];
-*/
     } catch (error) {
       throw new Error(`failed loading data ${error}`);
     }
   }
 
   _setInitialData(data) {
-    this.instanceData = data;
+    // IMPORTANT: always store in backing field so getter/setter stays consistent
+    this._instanceData = data;
 
     if (data?.nodeType) {
-      // XML instance
-      this.originalInstance = this.instanceData.cloneNode(true);
-      this.nodeset = this.instanceData;
-    } else if (this.type === 'json') {
-      // JSON instance
-      this.originalInstance = structuredClone(this.instanceData);
-      this.nodeset = wrapJson(this.instanceData, null, null, this.id || 'default');
-      this.domFacade = new JSONDomFacade();
+      // XML/HTML instance
+      this.originalInstance = this._instanceData.cloneNode(true);
+      this.nodeset = this._instanceData;
+      // domFacade irrelevant
+      return;
     }
-  }
 
-  _getContentType() {
-    if (this.type === 'xml') {
-      return 'application/xml';
-    }
     if (this.type === 'json') {
-      return 'application/json';
+      // JSON instance
+      this.originalInstance = structuredClone(this._instanceData);
+      this.nodeset = wrapJson(this._instanceData, null, null, this.id || 'default');
+      if (!this.domFacade) this.domFacade = new JSONDomFacade();
+      return;
     }
-    console.warn('content-type unknown ', this.type);
-    return null;
+
+    // text (or unknown)
+    this.nodeset = null;
   }
 
   _useInlineData() {
     if (this.type === 'xml') {
-      // console.log('innerHTML ', this.innerHTML);
       const instanceData = new DOMParser().parseFromString(this.innerHTML, 'application/xml');
-
-      // console.log('fx-instance init id:', this.id);
-      // this.instanceData = instanceData;
       this._setInitialData(instanceData);
-      // console.log('instanceData ', this.instanceData);
-      // console.log('instanceData ', this.instanceData.firstElementChild);
-
-      // console.log('fx-instance data: ', this.instanceData);
-      // this.instanceData.firstElementChild.setAttribute('id', this.id);
-      // todo: move innerHTML out to shadowDOM (for later reset)
     } else if (this.type === 'json') {
-      // this.instanceData = JSON.parse(this.textContent);
       this._setInitialData(JSON.parse(this.textContent));
     } else if (this.type === 'html') {
-      // this.instanceData = this.firstElementChild.children;
       this._setInitialData(this.firstElementChild.children);
     } else if (this.type === 'text') {
-      // this.instanceData = this.textContent;
       this._setInitialData(this.textContent);
     } else {
-      console.warn('unknow type for data ', this.type);
+      console.warn('unknown type for data ', this.type);
     }
   }
-
-  // _handleResponse() {
-  //   console.log('_handleResponse ');
-  //   const ajax = this.shadowRoot.getElementById('loader');
-  //   const instanceData = new DOMParser().parseFromString(ajax.lastResponse, 'application/xml');
-  //   this.instanceData = instanceData;
-  //   console.log('data: ', this.instanceData);
-  // }
-
-  /*
-  _handleError() {
-    const loader = this.shadowRoot.getElementById('loader');
-    console.log('_handleResponse ', loader.lastError);
-  }
-*/
 }
+
 if (!customElements.get('fx-instance')) {
   customElements.define('fx-instance', FxInstance);
 }

@@ -554,12 +554,12 @@ function getVariablesInScope(formElement) {
 // ---------------------------
 
 export function evaluateXPath(
-  xpath,
-  contextNode,
-  formElement,
-  variables = {},
-  options = {},
-  domFacade = null,
+    xpath,
+    contextNode,
+    formElement,
+    variables = {},
+    options = {},
+    domFacade = null,
 ) {
   const trimmedExpr = String(xpath ?? '').trim();
 
@@ -571,13 +571,15 @@ export function evaluateXPath(
     if (contextNode && contextNode.__jsonlens__ === true && trimmedExpr === '.') {
       return [contextNode];
     }
+
     const lensNodes = _resolveJsonLensToNodes(xpath, contextNode, formElement);
     if (lensNodes) return lensNodes;
+
     const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
     const variablesInScope = getVariablesInScope(formElement);
 
     const effectiveFacade = getJsonFacade(formElement, xpath, contextNode, domFacade);
-    const isJson = !!effectiveFacade && shouldUseJson(xpath, contextNode);
+    const isJson = !!effectiveFacade && shouldUseJson(xpath, contextNode, formElement); // ✅ FIX
     const expr = normalizeUnaryLookup(xpath, isJson);
 
     const instanceId = XPathUtil.getInstanceId(expr, formElement);
@@ -585,48 +587,45 @@ export function evaluateXPath(
     const effectiveContext = isJson && !contextNode?.__jsonlens__ ? instance?.nodeset : contextNode;
 
     return fxEvaluateXPath(
-      expr,
-      effectiveContext,
-      effectiveFacade,
-      { ...variablesInScope, ...variables },
-      fxEvaluateXPath.ALL_RESULTS_TYPE,
-      {
-        debug: true,
-        currentContext: { formElement, variables },
-        moduleImports: { xf: XFORMS_NAMESPACE_URI },
-        functionNameResolver,
-        namespaceResolver,
-        // keep JSON in XPath 3.1 (lens lookup is XPath 3.1)
-        language: isJson
-          ? Language.XPATH_3_1_LANGUAGE
-          : options.language || fxEvaluateXPath.XPATH_3_1_LANGUAGE,
-        xmlSerializer: new XMLSerializer(),
-        ...options,
-      },
+        expr,
+        effectiveContext,
+        effectiveFacade,
+        { ...variablesInScope, ...variables },
+        fxEvaluateXPath.ALL_RESULTS_TYPE,
+        {
+          debug: true,
+          currentContext: { formElement, variables },
+          moduleImports: { xf: XFORMS_NAMESPACE_URI },
+          functionNameResolver,
+          namespaceResolver,
+          language: Language.XPATH_3_1_LANGUAGE, // ✅ keep consistent; JSON lens is XPath 3.1
+          xmlSerializer: new XMLSerializer(),
+          ...options,
+        },
     );
   } catch (e) {
     formElement?.dispatchEvent?.(
-      new CustomEvent('error', {
-        composed: false,
-        bubbles: true,
-        detail: {
-          origin: formElement,
-          message: `Expression '${xpath}' failed: ${e}`,
-          expr: xpath,
-          level: 'Error',
-        },
-      }),
+        new CustomEvent('error', {
+          composed: false,
+          bubbles: true,
+          detail: {
+            origin: formElement,
+            message: `Expression '${xpath}' failed: ${e}`,
+            expr: xpath,
+            level: 'Error',
+          },
+        }),
     );
     return [];
   }
 }
-
 export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
   const trimmedExpr = String(xpath ?? '').trim();
   try {
     if (contextNode && contextNode.__jsonlens__ === true && trimmedExpr === '.') {
-      return [contextNode];
+      return contextNode;
     }
+
     const lens = _resolveJsonLens(xpath, contextNode, formElement);
     if (lens) return Array.isArray(lens) ? lens[0] || null : lens;
 
@@ -634,7 +633,7 @@ export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
     const variablesInScope = getVariablesInScope(formElement);
 
     const domFacade = getJsonFacade(formElement, xpath, contextNode, null);
-    const isJson = !!domFacade && shouldUseJson(xpath, contextNode);
+    const isJson = !!domFacade && shouldUseJson(xpath, contextNode, formElement); // ✅ FIX
     const expr = normalizeUnaryLookup(xpath, isJson);
 
     const instanceId = XPathUtil.getInstanceId(expr, formElement);
@@ -646,40 +645,40 @@ export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
       functionNameResolver,
       moduleImports: { xf: XFORMS_NAMESPACE_URI },
       namespaceResolver,
-      language: isJson ? Language.XQUERY_3_1_LANGUAGE : Language.XPATH_3_1_LANGUAGE,
+      language: Language.XPATH_3_1_LANGUAGE, // ✅ FIX (don’t switch JSON to XQuery)
       xmlSerializer: new XMLSerializer(),
     });
   } catch (e) {
     formElement?.dispatchEvent?.(
-      new CustomEvent('error', {
-        composed: false,
-        bubbles: true,
-        detail: {
-          origin: formElement,
-          message: `Expression '${xpath}' failed: ${e}`,
-          expr: xpath,
-          level: 'Error',
-        },
-      }),
+        new CustomEvent('error', {
+          composed: false,
+          bubbles: true,
+          detail: {
+            origin: formElement,
+            message: `Expression '${xpath}' failed: ${e}`,
+            expr: xpath,
+            level: 'Error',
+          },
+        }),
     );
     return null;
   }
 }
-
 export function evaluateXPathToNodes(xpath, contextNode, formElement) {
   const trimmedExpr = String(xpath ?? '').trim();
   try {
     if (contextNode && contextNode.__jsonlens__ === true && trimmedExpr === '.') {
       return [contextNode];
     }
-    const lensNodes = _resolveJsonLensToNodes(xpath, contextNode, formElement);
 
+    const lensNodes = _resolveJsonLensToNodes(xpath, contextNode, formElement);
     if (lensNodes) return lensNodes;
+
     const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
     const variablesInScope = getVariablesInScope(formElement);
 
     const domFacade = getJsonFacade(formElement, xpath, contextNode, null);
-    const isJson = !!domFacade && shouldUseJson(xpath, contextNode);
+    const isJson = !!domFacade && shouldUseJson(xpath, contextNode, formElement); // ✅ FIX
     const expr = normalizeUnaryLookup(xpath, isJson);
 
     const instanceId = XPathUtil.getInstanceId(expr, formElement);
@@ -691,31 +690,29 @@ export function evaluateXPathToNodes(xpath, contextNode, formElement) {
       functionNameResolver,
       moduleImports: { xf: XFORMS_NAMESPACE_URI },
       namespaceResolver,
-      language: isJson ? Language.XQUERY_3_1_LANGUAGE : Language.XPATH_3_1_LANGUAGE,
+      language: Language.XPATH_3_1_LANGUAGE, // ✅ FIX
       xmlSerializer: new XMLSerializer(),
     });
   } catch (e) {
     formElement?.dispatchEvent?.(
-      new CustomEvent('error', {
-        composed: false,
-        bubbles: true,
-        detail: {
-          origin: formElement,
-          message: `Expression '${xpath}' failed: ${e}`,
-          expr: xpath,
-          level: 'Error',
-        },
-      }),
+        new CustomEvent('error', {
+          composed: false,
+          bubbles: true,
+          detail: {
+            origin: formElement,
+            message: `Expression '${xpath}' failed: ${e}`,
+            expr: xpath,
+            level: 'Error',
+          },
+        }),
     );
     return [];
   }
 }
-
 export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
   const s = String(xpath ?? '').trim();
 
   try {
-    // Fast path for index('repeatId')
     const idx = tryResolveIndexExpr(s, formElement);
     if (idx !== null) return Boolean(idx);
 
@@ -734,7 +731,7 @@ export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
     const variablesInScope = getVariablesInScope(formElement);
 
     const domFacade = getJsonFacade(formElement, s, contextNode, null);
-    const isJson = !!domFacade && shouldUseJson(s, contextNode);
+    const isJson = !!domFacade && shouldUseJson(s, contextNode, formElement); // ✅ FIX
     const expr = normalizeUnaryLookup(s, isJson);
 
     const instanceId = XPathUtil.getInstanceId(expr, formElement);
@@ -746,26 +743,25 @@ export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
       functionNameResolver,
       moduleImports: { xf: XFORMS_NAMESPACE_URI },
       namespaceResolver,
-      language: isJson ? Language.XPATH_3_1_LANGUAGE : Language.XPATH_3_1_LANGUAGE,
+      language: Language.XPATH_3_1_LANGUAGE,
       xmlSerializer: new XMLSerializer(),
     });
   } catch (e) {
     formElement?.dispatchEvent?.(
-      new CustomEvent('error', {
-        composed: false,
-        bubbles: true,
-        detail: {
-          origin: formElement,
-          message: `Expression '${xpath}' failed: ${e}`,
-          expr: xpath,
-          level: 'Error',
-        },
-      }),
+        new CustomEvent('error', {
+          composed: false,
+          bubbles: true,
+          detail: {
+            origin: formElement,
+            message: `Expression '${xpath}' failed: ${e}`,
+            expr: xpath,
+            level: 'Error',
+          },
+        }),
     );
     return false;
   }
 }
-
 export function evaluateXPathToString(xpath, contextNode, formElement, domFacade = null) {
   const s = String(xpath ?? '').trim();
 
@@ -902,10 +898,11 @@ export function evaluateXPathToStrings(xpath, contextNode, formElement, domFacad
   try {
     const idx = tryResolveIndexExpr(s, formElement);
     if (idx !== null) return [String(idx)];
+
     const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
 
     const effectiveFacade = getJsonFacade(formElement, xpath, contextNode, domFacade);
-    const isJson = !!effectiveFacade && shouldUseJson(xpath, contextNode);
+    const isJson = !!effectiveFacade && shouldUseJson(xpath, contextNode, formElement); // ✅ FIX
     const expr = normalizeUnaryLookup(xpath, isJson);
 
     const instanceId = XPathUtil.getInstanceId(expr, formElement);
@@ -913,41 +910,39 @@ export function evaluateXPathToStrings(xpath, contextNode, formElement, domFacad
     const effectiveContext = isJson && !contextNode?.__jsonlens__ ? instance?.nodeset : contextNode;
 
     return fxEvaluateXPathToStrings(
-      expr,
-      effectiveContext,
-      effectiveFacade,
-      {},
-      {
-        currentContext: { formElement },
-        functionNameResolver,
-        moduleImports: { xf: XFORMS_NAMESPACE_URI },
-        namespaceResolver,
-        language: isJson ? Language.XQUERY_3_1_LANGUAGE : Language.XPATH_3_1_LANGUAGE,
-        xmlSerializer: new XMLSerializer(),
-      },
+        expr,
+        effectiveContext,
+        effectiveFacade,
+        {},
+        {
+          currentContext: { formElement },
+          functionNameResolver,
+          moduleImports: { xf: XFORMS_NAMESPACE_URI },
+          namespaceResolver,
+          language: Language.XPATH_3_1_LANGUAGE, // ✅ FIX
+          xmlSerializer: new XMLSerializer(),
+        },
     );
   } catch (e) {
     formElement?.dispatchEvent?.(
-      new CustomEvent('error', {
-        composed: false,
-        bubbles: true,
-        detail: {
-          origin: formElement,
-          message: `Expression '${xpath}' failed: ${e}`,
-          expr: xpath,
-          level: 'Error',
-        },
-      }),
+        new CustomEvent('error', {
+          composed: false,
+          bubbles: true,
+          detail: {
+            origin: formElement,
+            message: `Expression '${xpath}' failed: ${e}`,
+            expr: xpath,
+            level: 'Error',
+          },
+        }),
     );
     return [];
   }
 }
-
 export function evaluateXPathToNumber(xpath, contextNode, formElement, domFacade = null) {
   const s = String(xpath ?? '').trim();
 
   try {
-    // Fast path for index('repeatId')
     const idx = tryResolveIndexExpr(s, formElement);
     if (idx !== null) return idx;
 
@@ -955,7 +950,7 @@ export function evaluateXPathToNumber(xpath, contextNode, formElement, domFacade
     const variablesInScope = getVariablesInScope(formElement);
 
     const effectiveFacade = getJsonFacade(formElement, s, contextNode, domFacade);
-    const isJson = !!effectiveFacade && shouldUseJson(s, contextNode);
+    const isJson = !!effectiveFacade && shouldUseJson(s, contextNode, formElement); // ✅ FIX
     const expr = normalizeUnaryLookup(s, isJson);
 
     const instanceId = XPathUtil.getInstanceId(expr, formElement);
@@ -967,26 +962,25 @@ export function evaluateXPathToNumber(xpath, contextNode, formElement, domFacade
       functionNameResolver,
       moduleImports: { xf: XFORMS_NAMESPACE_URI },
       namespaceResolver,
-      language: isJson ? Language.XPATH_3_1_LANGUAGE : Language.XPATH_3_1_LANGUAGE,
+      language: Language.XPATH_3_1_LANGUAGE,
       xmlSerializer: new XMLSerializer(),
     });
   } catch (e) {
     formElement?.dispatchEvent?.(
-      new CustomEvent('error', {
-        composed: false,
-        bubbles: true,
-        detail: {
-          origin: formElement,
-          message: `Expression '${xpath}' failed: ${e}`,
-          expr: xpath,
-          level: 'Error',
-        },
-      }),
+        new CustomEvent('error', {
+          composed: false,
+          bubbles: true,
+          detail: {
+            origin: formElement,
+            message: `Expression '${xpath}' failed: ${e}`,
+            expr: xpath,
+            level: 'Error',
+          },
+        }),
     );
     return NaN;
   }
 }
-
 // ---------------------------
 // Function registrations
 // ---------------------------
