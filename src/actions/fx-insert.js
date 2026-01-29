@@ -352,21 +352,43 @@ export class FxInsert extends AbstractAction {
     let inscope;
     let context;
     let targetSequence = [];
-    const inscopeContext = getInScopeContext(this);
 
     const fore = this.getOwnerForm();
+    const inscopeContext = getInScopeContext(this);
 
-    // JSON lens ref → do JSON insert and return
-    if (this.hasAttribute('ref') && this._isJsonLensRef(this.ref)) {
+    // -----------------------------------------
+    // Decide mode ONLY by instance type (NOT ref)
+    // -----------------------------------------
+    const exprForInstanceResolution =
+      (this.hasAttribute('ref') && this.ref) ||
+      (this.hasAttribute('context') && this.getAttribute('context')) ||
+      "instance('default')";
+
+    const instanceId = XPathUtil.resolveInstance(this, exprForInstanceResolution);
+    const inst = this.getModel()?.getInstance?.(instanceId);
+
+    const isJsonInstance =
+      !!inst &&
+      (inst.type === 'json' ||
+        (typeof inst.getAttribute === 'function' && inst.getAttribute('type') === 'json'));
+
+    if (isJsonInstance) {
+      // In JSON mode we only support lens refs that start with '?'
+      if (this.hasAttribute('ref') && !this._isJsonLensRef(this.ref)) {
+        throw new Error(
+          `fx-insert JSON mode: ref must be a JSON lens path starting with '?' (got: ${this.ref})`,
+        );
+      }
+      // For JSON inserts your implementation expects to work from the in-scope lens context
       inscope = inscopeContext;
       return this._performJsonInsert(inscope, fore);
     }
 
     // -------------------------
-    // XML branch (original)
+    // XML branch (normal XPath)
     // -------------------------
 
-    // ### 'context' attribute takes precedence over 'ref'
+    // context takes precedence over ref
     if (this.hasAttribute('context')) {
       [context] = evaluateXPathToNodes(this.getAttribute('context'), inscopeContext, this);
       inscope = inscopeContext;
@@ -408,7 +430,7 @@ export class FxInsert extends AbstractAction {
     } else {
       if (this.hasAttribute('at')) {
         index = evaluateXPathToNumber(this.getAttribute('at'), inscope, this);
-        insertLocationNode = targetSequence[index - 1];
+        insertLocationNode = targetSequence[index - 1]; // 1-based
       } else {
         index = targetSequence.length;
         insertLocationNode = targetSequence[targetSequence.length - 1];
@@ -450,8 +472,6 @@ export class FxInsert extends AbstractAction {
       }
     }
 
-    const instanceId = XPathUtil.resolveInstance(this, this.ref);
-    const inst = this.getModel().getInstance(instanceId);
     const xpath = getPath(insertLocationNode, instanceId);
 
     const path = Fore.getDomNodeIndexString(originSequenceClone);

@@ -821,7 +821,7 @@ export class FxFore extends HTMLElement {
       Fore.refreshChildren(this, force);
     } else {
       // Process all batched no tifications at the end of the refresh phase
-      console.log('🔄 🎯  ### processing batched notifications');
+      // console.log('🔄 🎯 ### processing batched notifications');
       await this._processBatchedNotifications();
     }
 
@@ -892,6 +892,8 @@ export class FxFore extends HTMLElement {
    */
   _processBatchedNotifications() {
     if (this.batchedNotifications.size > 0) {
+      console.log('🔄 🎯  ### processing batched notifications');
+
       // console.log(`🔍 Processing ${this.batchedNotifications.size} batched notifications`);
 
       // Process all batched notifications
