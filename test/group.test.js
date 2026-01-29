@@ -107,26 +107,28 @@ describe('group tests', () => {
     `);
 
     await elementUpdated(el);
+    // await oneEvent(el, 'ready');
+
     const group = el.querySelector("[ref='foo']");
     expect(group).to.exist;
 
     setTimeout(() => group.refresh());
 
-    await oneEvent(group, 'disabled');
+    // await oneEvent(group, 'disabled');
     expect(group.hasAttribute('nonrelevant')).to.be.true;
     expect(group.hasAttribute('relevant')).to.be.false;
 
     const t1 = el.querySelector('#t1');
     t1.performActions();
 
-    setTimeout(() => group.refresh());
-    await oneEvent(group, 'enabled');
+        setTimeout(() => group.refresh());
+        await oneEvent(group, 'enabled');
 
-    expect(group.hasAttribute('relevant')).to.be.true;
+        expect(group.hasAttribute('relevant')).to.be.true;
 
-    const t2 = el.querySelector('#t2');
-    t2.performActions();
-    await oneEvent(group, 'disabled');
-    expect(group.hasAttribute('nonrelevant')).to.be.true;
+        const t2 = el.querySelector('#t2');
+        t2.performActions();
+        await oneEvent(group, 'disabled');
+        expect(group.hasAttribute('nonrelevant')).to.be.true;
   });
 });

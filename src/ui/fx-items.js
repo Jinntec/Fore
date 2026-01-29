@@ -7,8 +7,6 @@ import { XPathUtil } from '../xpath-util.js';
  * FxItems provides a templated list over its bound nodes. It is not standalone but expects to be used
  * within an fx-control element.
  *
- *
- *
  * @demo demo/selects3.html
  */
 export class FxItems extends FxControl {
@@ -56,22 +54,19 @@ export class FxItems extends FxControl {
         target.focus();
       }
     });
+
     this.addEventListener('click', e => {
-      e.preventDefault;
+      e.preventDefault; // keep as-is (do not change behavior here)
       e.stopPropagation();
       const items = this.querySelectorAll('[value]');
-      /*
-      let target;
-      if (e.target.nodeName === 'LABEL') {
-        target = resolveId(e.target.getAttribute('for'), this);
-        target.checked = !target.checked;
-      }
-*/
 
       let val = '';
       Array.from(items).forEach(item => {
         if (item.checked) {
-          val += ` ${item.getAttribute('value')}`;
+          // ROOT FIX: for generated inputs, attribute "value" may still be "{value}".
+          // The DOM property .value is the authoritative one.
+          const v = item.value != null ? item.value : item.getAttribute('value');
+          val += ` ${v}`;
         }
       });
       this.setAttribute('value', val.trim());
@@ -108,8 +103,6 @@ export class FxItems extends FxControl {
    * attention: limitations here: assumes that there's an `label` element plus an element with an `value`
    * attribute which it will update.
    *
-   *
-   *
    * @param newEntry
    * @param node
    */
@@ -123,14 +116,11 @@ export class FxItems extends FxControl {
     const label = newEntry.querySelector('label');
     const lblExpr = Fore.getExpression(label.textContent);
 
-    // ### xml / JSON
-    if (node.nodeType) {
-      const lblEvaluated = evaluateXPathToString(lblExpr, node, this);
-      label.textContent = lblEvaluated;
-    } else {
-      const labelExpr = Fore.getExpression(lblExpr);
-      label.textContent = node[labelExpr];
-    }
+    // ROOT FIX: JSON lens nodes are objects; do NOT use direct JS property access.
+    // Always go through evaluateXPathToString() for JSON too.
+    const lblEvaluated = evaluateXPathToString(lblExpr, node, this);
+    label.textContent = lblEvaluated;
+
     label.setAttribute('for', id);
 
     // ### handle the 'value'
@@ -138,24 +128,21 @@ export class FxItems extends FxControl {
     const input = newEntry.querySelector('[value]');
     // getting expr
     const expr = input.value;
-    // const cutted = expr.substring(1, expr.length - 1);
     const cutted = Fore.getExpression(expr);
-    let evaluated;
-    if (node.nodeType) {
-      evaluated = evaluateXPathToString(cutted, node, newEntry);
-    } else {
-      evaluated = node[cutted];
-    }
 
+    // ROOT FIX: same here
+    const evaluated = evaluateXPathToString(cutted, node, this);
+
+    // Set both property and attribute so *any* downstream code path works
     input.value = evaluated;
+    input.setAttribute('value', evaluated);
+
     input.setAttribute('id', id);
+
     // Normalize the current value (remove newlines, tabs, excessive spaces)
     const currentValue = (this.getAttribute('value') || '').replace(/\s+/g, ' ').trim();
     const valueList = currentValue.split(/\s+/); // Split on whitespace
 
-    // Check if the value is in the space-separated list of values
-    // const currentValue = this.getAttribute('value') || '';
-    // const valueList = currentValue.split(/\s+/);
     if (valueList.includes(evaluated)) {
       input.checked = true;
     }

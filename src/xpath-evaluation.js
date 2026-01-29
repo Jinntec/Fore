@@ -769,47 +769,117 @@ export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
 export function evaluateXPathToString(xpath, contextNode, formElement, domFacade = null) {
   const s = String(xpath ?? '').trim();
 
+  // Lens detection MUST NOT rely solely on __jsonlens__ (some lens nodes may miss the flag)
+  const isLensLike = v =>
+    !!v &&
+    typeof v === 'object' &&
+    (v.__jsonlens__ === true ||
+      (typeof v.get === 'function' &&
+        (typeof v.set === 'function' || 'value' in v || 'children' in v)));
+
+  const unwrapLens = v => {
+    if (!isLensLike(v)) return v;
+    try {
+      // Most lens nodes expose atomic via get()
+      const got = v.get.length === 0 ? v.get() : v.get();
+      return got;
+    } catch (_e) {
+      // fallback to .value if present
+      return 'value' in v ? v.value : v;
+    }
+  };
+
+  const stringify = v => {
+    if (v === null || v === undefined) return '';
+
+    // unwrap lens nodes (or values that are lens nodes)
+    const unwrapped = unwrapLens(v);
+
+    if (unwrapped === null || unwrapped === undefined) return '';
+    if (
+      typeof unwrapped === 'string' ||
+      typeof unwrapped === 'number' ||
+      typeof unwrapped === 'boolean'
+    ) {
+      return String(unwrapped);
+    }
+
+    // DOM nodes → text
+    if (unwrapped?.nodeType) {
+      if (unwrapped.nodeType === Node.ATTRIBUTE_NODE) return String(unwrapped.nodeValue ?? '');
+      return String(unwrapped.textContent ?? '');
+    }
+
+    // If it is still lens-like (object node), try one more unwrap
+    if (isLensLike(unwrapped)) {
+      return stringify(unwrapLens(unwrapped));
+    }
+
+    // generic object: never return "[object Object]"
+    try {
+      return JSON.stringify(unwrapped);
+    } catch (_e) {
+      return '';
+    }
+  };
+
   try {
     // Fast path for index('repeatId')
     const idx = tryResolveIndexExpr(s, formElement);
     if (idx !== null) return String(idx);
 
-    if (contextNode && contextNode.__jsonlens__ === true && s === '.') {
-      return [contextNode];
+    // "." on a lens node should resolve to its atomic value (not object)
+    if (isLensLike(contextNode) && s === '.') {
+      return stringify(contextNode);
     }
 
-    // Handle simple property access on JSON lens nodes
-    if (contextNode && contextNode.__jsonlens__ === true && !isJsonLookupExpr(s)) {
-      // For simple property names like "value", "name", etc., access them directly from the JSON object
-      const value = contextNode.get(s);
-      if (value !== undefined && value !== null) {
-        // If it's a JSON lens node, get its value, otherwise return the value directly
-        return String(value.__jsonlens__ ? value.get() : value);
+    // Convenience: allow simple property access on JSON lens nodes (e.g. "value")
+    // in addition to lens lookup syntax (e.g. "?value").
+    if (isLensLike(contextNode) && !isJsonLookupExpr(s)) {
+      try {
+        const value = contextNode.get?.(s);
+        if (value !== undefined) {
+          return stringify(value);
+        }
+      } catch (_e) {
+        // fall through to XPath evaluation
       }
     }
 
     const lens = _resolveJsonLens(xpath, contextNode, formElement);
-    if (lens && !Array.isArray(lens)) return String(lens.get());
+    if (lens) {
+      if (Array.isArray(lens)) return lens.length ? stringify(lens[0]) : '';
+      return stringify(lens);
+    }
 
     const namespaceResolver = createNamespaceResolverForNode(s, contextNode, formElement);
     const variablesInScope = getVariablesInScope(formElement);
 
     const effectiveFacade = getJsonFacade(formElement, s, contextNode, domFacade);
-    const isJson = !!effectiveFacade && shouldUseJson(s, contextNode);
+    const isJson = !!effectiveFacade && shouldUseJson(s, contextNode, formElement);
     const expr = normalizeUnaryLookup(s, isJson);
 
     const instanceId = XPathUtil.getInstanceId(expr, formElement);
     const instance = formElement?.getModel?.()?.getInstance?.(instanceId);
-    const effectiveContext = isJson && !contextNode?.__jsonlens__ ? instance?.nodeset : contextNode;
+    const effectiveContext = isJson && !isLensLike(contextNode) ? instance?.nodeset : contextNode;
 
-    return fxEvaluateXPathToString(expr, effectiveContext, effectiveFacade, variablesInScope, {
-      currentContext: { formElement },
-      functionNameResolver,
-      moduleImports: { xf: XFORMS_NAMESPACE_URI },
-      namespaceResolver,
-      language: isJson ? Language.XPATH_3_1_LANGUAGE : Language.XPATH_3_1_LANGUAGE,
-      xmlSerializer: new XMLSerializer(),
-    });
+    const result = fxEvaluateXPathToString(
+      expr,
+      effectiveContext,
+      effectiveFacade,
+      variablesInScope,
+      {
+        currentContext: { formElement },
+        functionNameResolver,
+        moduleImports: { xf: XFORMS_NAMESPACE_URI },
+        namespaceResolver,
+        language: isJson ? Language.XPATH_3_1_LANGUAGE : Language.XPATH_3_1_LANGUAGE,
+        xmlSerializer: new XMLSerializer(),
+      },
+    );
+
+    // IMPORTANT: fontoxpath may return objects for JSON; normalize here
+    return stringify(result);
   } catch (e) {
     formElement?.dispatchEvent?.(
       new CustomEvent('error', {
@@ -826,7 +896,6 @@ export function evaluateXPathToString(xpath, contextNode, formElement, domFacade
     return '';
   }
 }
-
 export function evaluateXPathToStrings(xpath, contextNode, formElement, domFacade = null) {
   const s = String(xpath ?? '').trim();
 
