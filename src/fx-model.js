@@ -303,15 +303,41 @@ export class FxModel extends HTMLElement {
    * @param {Node} node - The node for which to remove the model item
    */
   removeModelItem(node) {
-    const index = this.modelItems.findIndex(mi => mi.node === node);
-    // The model item is not always there. Might be the case if a node is 'skipped' during rendering. All paths jump over it.
-    // It may still have descendants that can have model items
+    if (!node) return;
+
+    // Support both XML nodes (mi.node) and JSON lens nodes (mi.lens)
+    const index = this.modelItems.findIndex(mi => mi.node === node || mi.lens === node);
+
+    // The model item is not always there. Might be the case if a node is 'skipped' during rendering.
+    // It may still have descendants that can have model items.
     if (index !== -1) {
+      const mi = this.modelItems[index];
+
+      // IMPORTANT:
+      // Before removing the ModelItem, enqueue all observers (bound UI controls) for refresh.
+      // Otherwise, deleting a bound node can orphan controls (eg. fx-group) because their ModelItem
+      // disappears before the refresh scheduler can reach them.
+      try {
+        const fore = this.formElement || this.parentNode || mi.fore;
+        if (fore && typeof fore.addToBatchedNotifications === 'function' && mi && mi.observers) {
+          mi.observers.forEach(observer => {
+            if (observer && typeof observer.refresh === 'function') {
+              fore.addToBatchedNotifications(observer);
+            }
+          });
+        }
+      } catch (_e) {
+        // ignore
+      }
+
       this.modelItems.splice(index, 1);
     }
 
-    for (const child of Array.from(node.childNodes)) {
-      this.removeModelItem(child);
+    // Recurse for XML descendants only
+    if (node.childNodes) {
+      for (const child of Array.from(node.childNodes)) {
+        this.removeModelItem(child);
+      }
     }
   }
 
