@@ -97,6 +97,10 @@ function isJsonLookupExpr(xpath) {
 
   // Only treat instance(...) as lens if it is followed by a "?" step
   // (instance('x') alone is normal XPath, not lens lookup)
+  // instance()?a  (default instance root + lens lookup)
+  if (/^instance\s*\(\s*\)\s*\?/.test(t)) return true;
+
+  // instance('x')?a  (explicit instance id + lens lookup)
   return /^instance\s*\(\s*(['"]).*?\1\s*\)\s*\?/.test(t);
 }
 
@@ -157,7 +161,21 @@ function _parseJsonLensRef(ref, defaultInstanceId = 'default') {
 
     return { instanceId: defaultInstanceId, steps, hasExplicitInstance: false };
   }
+  // instance()?a?b -> default instance (explicit root)
+  const instNoArg = s.match(/^instance\s*\(\s*\)\s*(\?.+)$/);
+  if (instNoArg) {
+    const lensPart = instNoArg[1];
+    const steps = lensPart
+      .split('?')
+      .filter(Boolean)
+      .map(part => {
+        if (part === '*') return '*';
+        if (/^\d+$/.test(part)) return Number(part) - 1;
+        return part;
+      });
 
+    return { instanceId: defaultInstanceId, steps, hasExplicitInstance: true };
+  }
   // instance('x')?a?b  (ONLY lens syntax; reject instance('x') alone)
   const instMatch = s.match(/^instance\s*\(\s*(['"])(.*?)\1\s*\)\s*(\?.+)$/);
   if (!instMatch) return null;
@@ -554,12 +572,12 @@ function getVariablesInScope(formElement) {
 // ---------------------------
 
 export function evaluateXPath(
-    xpath,
-    contextNode,
-    formElement,
-    variables = {},
-    options = {},
-    domFacade = null,
+  xpath,
+  contextNode,
+  formElement,
+  variables = {},
+  options = {},
+  domFacade = null,
 ) {
   const trimmedExpr = String(xpath ?? '').trim();
 
@@ -575,6 +593,10 @@ export function evaluateXPath(
     const lensNodes = _resolveJsonLensToNodes(xpath, contextNode, formElement);
     if (lensNodes) return lensNodes;
 
+    // If it *looks* like lens syntax but we couldn't resolve it (e.g. JSON instance not loaded yet),
+    // do NOT fall back to FontoXPath (can recurse with JSONDomFacade). Just return empty.
+    if (isJsonLookupExpr(trimmedExpr)) return [];
+
     const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
     const variablesInScope = getVariablesInScope(formElement);
 
@@ -587,34 +609,34 @@ export function evaluateXPath(
     const effectiveContext = isJson && !contextNode?.__jsonlens__ ? instance?.nodeset : contextNode;
 
     return fxEvaluateXPath(
-        expr,
-        effectiveContext,
-        effectiveFacade,
-        { ...variablesInScope, ...variables },
-        fxEvaluateXPath.ALL_RESULTS_TYPE,
-        {
-          debug: true,
-          currentContext: { formElement, variables },
-          moduleImports: { xf: XFORMS_NAMESPACE_URI },
-          functionNameResolver,
-          namespaceResolver,
-          language: Language.XPATH_3_1_LANGUAGE, // ✅ keep consistent; JSON lens is XPath 3.1
-          xmlSerializer: new XMLSerializer(),
-          ...options,
-        },
+      expr,
+      effectiveContext,
+      effectiveFacade,
+      { ...variablesInScope, ...variables },
+      fxEvaluateXPath.ALL_RESULTS_TYPE,
+      {
+        debug: true,
+        currentContext: { formElement, variables },
+        moduleImports: { xf: XFORMS_NAMESPACE_URI },
+        functionNameResolver,
+        namespaceResolver,
+        language: Language.XPATH_3_1_LANGUAGE, // ✅ keep consistent; JSON lens is XPath 3.1
+        xmlSerializer: new XMLSerializer(),
+        ...options,
+      },
     );
   } catch (e) {
     formElement?.dispatchEvent?.(
-        new CustomEvent('error', {
-          composed: false,
-          bubbles: true,
-          detail: {
-            origin: formElement,
-            message: `Expression '${xpath}' failed: ${e}`,
-            expr: xpath,
-            level: 'Error',
-          },
-        }),
+      new CustomEvent('error', {
+        composed: false,
+        bubbles: true,
+        detail: {
+          origin: formElement,
+          message: `Expression '${xpath}' failed: ${e}`,
+          expr: xpath,
+          level: 'Error',
+        },
+      }),
     );
     return [];
   }
@@ -628,6 +650,8 @@ export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
 
     const lens = _resolveJsonLens(xpath, contextNode, formElement);
     if (lens) return Array.isArray(lens) ? lens[0] || null : lens;
+
+    if (isJsonLookupExpr(trimmedExpr)) return null;
 
     const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
     const variablesInScope = getVariablesInScope(formElement);
@@ -650,16 +674,16 @@ export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
     });
   } catch (e) {
     formElement?.dispatchEvent?.(
-        new CustomEvent('error', {
-          composed: false,
-          bubbles: true,
-          detail: {
-            origin: formElement,
-            message: `Expression '${xpath}' failed: ${e}`,
-            expr: xpath,
-            level: 'Error',
-          },
-        }),
+      new CustomEvent('error', {
+        composed: false,
+        bubbles: true,
+        detail: {
+          origin: formElement,
+          message: `Expression '${xpath}' failed: ${e}`,
+          expr: xpath,
+          level: 'Error',
+        },
+      }),
     );
     return null;
   }
@@ -695,16 +719,16 @@ export function evaluateXPathToNodes(xpath, contextNode, formElement) {
     });
   } catch (e) {
     formElement?.dispatchEvent?.(
-        new CustomEvent('error', {
-          composed: false,
-          bubbles: true,
-          detail: {
-            origin: formElement,
-            message: `Expression '${xpath}' failed: ${e}`,
-            expr: xpath,
-            level: 'Error',
-          },
-        }),
+      new CustomEvent('error', {
+        composed: false,
+        bubbles: true,
+        detail: {
+          origin: formElement,
+          message: `Expression '${xpath}' failed: ${e}`,
+          expr: xpath,
+          level: 'Error',
+        },
+      }),
     );
     return [];
   }
@@ -748,16 +772,16 @@ export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
     });
   } catch (e) {
     formElement?.dispatchEvent?.(
-        new CustomEvent('error', {
-          composed: false,
-          bubbles: true,
-          detail: {
-            origin: formElement,
-            message: `Expression '${xpath}' failed: ${e}`,
-            expr: xpath,
-            level: 'Error',
-          },
-        }),
+      new CustomEvent('error', {
+        composed: false,
+        bubbles: true,
+        detail: {
+          origin: formElement,
+          message: `Expression '${xpath}' failed: ${e}`,
+          expr: xpath,
+          level: 'Error',
+        },
+      }),
     );
     return false;
   }
@@ -910,31 +934,31 @@ export function evaluateXPathToStrings(xpath, contextNode, formElement, domFacad
     const effectiveContext = isJson && !contextNode?.__jsonlens__ ? instance?.nodeset : contextNode;
 
     return fxEvaluateXPathToStrings(
-        expr,
-        effectiveContext,
-        effectiveFacade,
-        {},
-        {
-          currentContext: { formElement },
-          functionNameResolver,
-          moduleImports: { xf: XFORMS_NAMESPACE_URI },
-          namespaceResolver,
-          language: Language.XPATH_3_1_LANGUAGE, // ✅ FIX
-          xmlSerializer: new XMLSerializer(),
-        },
+      expr,
+      effectiveContext,
+      effectiveFacade,
+      {},
+      {
+        currentContext: { formElement },
+        functionNameResolver,
+        moduleImports: { xf: XFORMS_NAMESPACE_URI },
+        namespaceResolver,
+        language: Language.XPATH_3_1_LANGUAGE, // ✅ FIX
+        xmlSerializer: new XMLSerializer(),
+      },
     );
   } catch (e) {
     formElement?.dispatchEvent?.(
-        new CustomEvent('error', {
-          composed: false,
-          bubbles: true,
-          detail: {
-            origin: formElement,
-            message: `Expression '${xpath}' failed: ${e}`,
-            expr: xpath,
-            level: 'Error',
-          },
-        }),
+      new CustomEvent('error', {
+        composed: false,
+        bubbles: true,
+        detail: {
+          origin: formElement,
+          message: `Expression '${xpath}' failed: ${e}`,
+          expr: xpath,
+          level: 'Error',
+        },
+      }),
     );
     return [];
   }
@@ -967,16 +991,16 @@ export function evaluateXPathToNumber(xpath, contextNode, formElement, domFacade
     });
   } catch (e) {
     formElement?.dispatchEvent?.(
-        new CustomEvent('error', {
-          composed: false,
-          bubbles: true,
-          detail: {
-            origin: formElement,
-            message: `Expression '${xpath}' failed: ${e}`,
-            expr: xpath,
-            level: 'Error',
-          },
-        }),
+      new CustomEvent('error', {
+        composed: false,
+        bubbles: true,
+        detail: {
+          origin: formElement,
+          message: `Expression '${xpath}' failed: ${e}`,
+          expr: xpath,
+          level: 'Error',
+        },
+      }),
     );
     return NaN;
   }
