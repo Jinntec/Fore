@@ -132,7 +132,7 @@ export class FxSubmission extends ForeElementMixin {
       serialized = undefined;
     } else {
       const relevant = Relevance.selectRelevant(this, instType);
-      serialized = this._serialize(instType, relevant);
+      serialized = this._serialize(instance, relevant);
     }
 
     if (this.method.toLowerCase() === 'get') {
