@@ -689,44 +689,63 @@ export class FxModel extends HTMLElement {
    * @returns {import('./fx-instance.js').FxInstance}
    */
   getInstance(id) {
-    // console.log('getInstance ', id);
-    // console.log('instances ', this.instances);
-    // console.log('instances array ',Array.from(this.instances));
+    let found = null;
 
-    let found;
+    // default instance is first instance in this model
     if (id === 'default') {
       found = this.instances[0];
     }
+
     // ### lookup in local instances first
     if (!found) {
       const instArray = Array.from(this.instances);
       found = instArray.find(inst => inst.id === id);
     }
-    // ### lookup in parent Fore if present
+
+    // ### lookup in parent Fore if present (shared instances)
     if (!found) {
-      // const parentFore = this.fore.parentNode.closest('fx-fore');
       const parentFore =
-        this.fore.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE
-          ? this.fore.parentNode.host.closest('fx-fore')
-          : this.fore.parentNode.closest('fx-fore');
+          this.fore.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE
+              ? this.fore.parentNode.host.closest('fx-fore')
+              : this.fore.parentNode.closest('fx-fore');
+
       if (parentFore) {
-        // console.log('shared instances from parent', this.parentNode.id);
         const parentInstances = parentFore.getModel().instances;
-        const shared = parentInstances.filter(shared => shared.hasAttribute('shared'));
-        found = shared.find(found => found.id === id);
+        const shared = parentInstances.filter(inst => inst.hasAttribute('shared'));
+        found = shared.find(inst => inst.id === id);
       }
     }
-    // search for shared instances in the whole document
+
+    // ### search for shared instances in the light DOM (legacy)
     if (!found) {
       found = document.querySelector(`fx-instance[id="${id}"][shared]`);
     }
-    if (found) {
-      return found;
+
+    // ### NEW: search for shared instances inside other fx-fore shadowRoots
+    // This is required when a fore keeps its model/instances in its own shadow DOM
+    // and sibling fores want to consume that instance via instance('id').
+    if (!found) {
+      const allFores = Array.from(document.querySelectorAll('fx-fore'));
+      for (const fore of allFores) {
+        // light DOM inside fore (in case someone authoring without shadow)
+        const light = fore.querySelector?.(`fx-instance[id="${id}"][shared]`);
+        if (light) {
+          found = light;
+          break;
+        }
+
+        // shadow DOM inside fore (common in your demos)
+        const shadow = fore.shadowRoot?.querySelector?.(`fx-instance[id="${id}"][shared]`);
+        if (shadow) {
+          found = shadow;
+          break;
+        }
+      }
     }
-    // Prevent infinite recursion: don't call getDefaultInstance() for 'default' id
-    // if we already tried to find it and failed
+
+    if (found) return found;
+
     if (!found && this.fore.strict) {
-      // return this.getDefaultInstance(); // if id is not found always defaults to first in doc order
       Fore.dispatch(this, 'error', {
         origin: this,
         message: `Instance '${id}' does not exist`,

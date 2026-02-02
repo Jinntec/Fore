@@ -1211,58 +1211,104 @@ registerCustomXPathFunction(
 );
 
 const instance = (dynamicContext, string) => {
-  const caller = dynamicContext.currentContext.formElement;
+  // In template expressions the "formElement" can be a #text node
+  let caller = dynamicContext?.currentContext?.formElement || null;
+  if (caller && caller.nodeType === Node.TEXT_NODE) caller = caller.parentNode;
 
-  // Prefer Fore’s built-in owner resolution when present
+  // Resolve owning fx-fore (shadow DOM aware)
   const fore =
     (caller && typeof caller.getOwnerForm === 'function' && caller.getOwnerForm()) ||
-    _getOwningFore(caller);
+    _getOwningFore(caller) ||
+    null;
 
   if (!fore) return null;
 
-  const modelEl = fore.querySelector('fx-model');
+  // Prefer the fx-fore's cached model pointer
+  const modelEl =
+    (typeof fore.getModel === 'function' && fore.getModel()) ||
+    fore.shadowRoot?.querySelector?.('fx-model') ||
+    fore.querySelector?.('fx-model') ||
+    null;
+
   if (!modelEl) return null;
 
-  let instEl = null;
+  // Normalize requested instance id
+  const id =
+    string === null || string === undefined || String(string).trim() === ''
+      ? 'default'
+      : String(string);
 
-  if (string === null || string === 'default') {
-    // Fore default instance is the first fx-instance in the model (regardless of @id)
-    instEl = modelEl.querySelector('fx-instance');
-  } else {
-    // scoped resolution first; fallback to model-local lookup
-    instEl =
-      resolveId(string, caller, 'fx-instance') ||
-      modelEl.querySelector(`#${CSS.escape(string)}`) ||
-      modelEl.querySelector(`fx-instance[id="${string}"]`);
+  // 1) Primary: use fx-model.getInstance() (this is Fore's canonical resolver)
+  let instEl = typeof modelEl.getInstance === 'function' ? modelEl.getInstance(id) : null;
 
-    if (!instEl) {
-      fore.dispatchEvent(
-        new CustomEvent('error', {
-          composed: true,
-          bubbles: true,
-          detail: {
-            origin: 'functions',
-            message: `Instance not found '${string}'`,
-            level: 'Error',
-          },
-        }),
-      );
-      return null;
+  // 2) If still not found, attempt legacy scoped resolution within THIS fore
+  if (!instEl) {
+    if (id === 'default') {
+      instEl =
+        modelEl.querySelector?.('fx-instance:not([id])') ||
+        modelEl.querySelector?.("fx-instance[id='default']") ||
+        modelEl.querySelector?.('fx-instance') ||
+        null;
+    } else {
+      instEl =
+        resolveId(id, caller, 'fx-instance') ||
+        modelEl.querySelector?.(`#${CSS.escape(id)}`) ||
+        modelEl.querySelector?.(`fx-instance[id="${id}"]`) ||
+        null;
     }
   }
 
-  // IMPORTANT: return a DOM node for XML instances, JSON nodeset for JSON instances
-  const isJson = instEl.getAttribute('type') === 'json';
+  // 3) If STILL not found, try a document-wide shared lookup INCLUDING shadowRoots
+  if (!instEl && id !== 'default') {
+    const allFores = Array.from(document.querySelectorAll('fx-fore'));
+    for (const f of allFores) {
+      // light DOM shared instance
+      const light = f.querySelector?.(`fx-instance[id="${id}"][shared]`);
+      if (light) {
+        instEl = light;
+        break;
+      }
+      // shadow DOM shared instance
+      const sh = f.shadowRoot?.querySelector?.(`fx-instance[id="${id}"][shared]`);
+      if (sh) {
+        instEl = sh;
+        break;
+      }
+    }
+  }
 
+  // If not found: dispatch error but DO NOT throw (prevents Cypress loops)
+  if (!instEl) {
+    fore.dispatchEvent(
+      new CustomEvent('error', {
+        composed: true,
+        bubbles: true,
+        detail: {
+          origin: 'functions',
+          message: `Instance not found '${id}'`,
+          level: 'Error',
+        },
+      }),
+    );
+    return null;
+  }
+
+  // Determine instance type safely
+  const type =
+    (typeof instEl.getAttribute === 'function' && instEl.getAttribute('type')) || instEl.type || '';
+  const isJson = type === 'json';
+
+  // Return correct context node
   if (isJson) {
-    // JSON: Fore stores the JSON root on .nodeset (JSON lens node)
+    // JSON: return lens root node
     return (
       instEl.nodeset ||
-      (typeof instEl.getDefaultContext === 'function' ? instEl.getDefaultContext() : null)
+      (typeof instEl.getDefaultContext === 'function' ? instEl.getDefaultContext() : null) ||
+      null
     );
   }
 
-  // XML: always return the XML default context (DOM node)
+  // XML: return DOM node (document element of instance)
   return (
     (typeof instEl.getDefaultContext === 'function' ? instEl.getDefaultContext() : null) ||
     instEl.nodeset ||
