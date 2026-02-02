@@ -30,29 +30,74 @@ export function getDocPath(node) {
  * @param {string} instanceId
  * @returns string
  */
-export function getPath(node, instanceId) {
-  const instance = document.querySelector(`fx-instance[id='${instanceId}']`);
+/**
+ * @param {Node} node
+ * @param {string} instanceId
+ * @returns string
+ */
+/**
+ * Compute a stable Fore path for a node.
+ *
+ * NOTE:
+ * During bind graph build we often deal with XML nodes that live in a separate XML Document
+ * (instance document). Those nodes are not in the HTML DOM and therefore cannot "see" <fx-instance>
+ * via ancestor traversal, shadow root, or document.querySelector.
+ *
+ * For that reason, getPath MUST be able to compute $default/... without requiring that an
+ * <fx-instance id="default"> element exists in the HTML DOM.
+ *
+ * @param {Node|any} node
+ * @param {string} instanceId
+ * @returns {string}
+ */
+export function getPath(node, instanceId = 'default') {
+  const wantedId = (instanceId ?? 'default').trim() || 'default';
 
-  if (!instance) {
-    throw new Error(`Instance with id '${instanceId}' not found.`);
+  // JSON lens nodes carry their own path – no need to resolve <fx-instance>
+  if (node && node.__jsonlens__ === true) {
+    return getJsonPath(node);
   }
 
-  const isJson = instance.getAttribute('type') === 'json';
+  // Try to find the corresponding fx-instance in the current HTML document.
+  // This is useful for sanity checks / detecting JSON instances, but MUST NOT be required
+  // for computing an XML path (especially for the default instance).
+  let instanceEl = null;
+  try {
+    instanceEl = document.querySelector(`fx-instance[id='${wantedId}']`);
 
-  if (isJson) {
-    // if (typeof node === 'object' && node !== null && node.__jsonlens__ === true) {
-
-    // if (typeof node === 'object' && node !== null && node.__jsonlens__ === true) {
-    if (instance.type === 'json') {
-      return getJsonPath(node);
+    // Many Fore documents use an id-less first instance as the default instance.
+    if (!instanceEl && (wantedId === 'default' || wantedId === '')) {
+      instanceEl =
+        document.querySelector('fx-instance:not([id])') ||
+        document.querySelector("fx-instance[id='default']");
     }
-    throw new Error('Unsupported node type for JSON instance in getPath');
+  } catch (_e) {
+    // ignore
+  }
+
+  // If we *did* find an instance element and it is JSON, then the caller is using the wrong node type.
+  // (JSON instances are addressed via JSON lens nodes.)
+  if (instanceEl) {
+    const isJson = instanceEl.getAttribute('type') === 'json' || instanceEl.type === 'json';
+    if (isJson) {
+      throw new Error(`getPath: Instance '${wantedId}' is JSON but node is not a JSON lens node.`);
+    }
   } else {
-    if (node.nodeType !== undefined) {
-      return getXmlPath(node, instanceId);
+    // IMPORTANT BEHAVIOR CHANGE:
+    // - If default instance element can't be found (common for detached XML documents),
+    //   we still compute an XML path. Do NOT throw.
+    // - For non-default ids, keep the old strict behavior.
+    if (wantedId !== 'default') {
+      throw new Error(`Instance with id '${wantedId}' not found.`);
     }
-    throw new Error('Unsupported node type for XML instance in getPath');
   }
+
+  // XML nodes: compute path purely from the XML tree
+  if (node && node.nodeType !== undefined) {
+    return getXmlPath(node, wantedId);
+  }
+
+  throw new Error('Unsupported node type for getPath');
 }
 
 function getXmlPath(node, instanceId) {
@@ -229,7 +274,7 @@ export function isDynamic(expr) {
     let j = i - 1;
     while (j >= 0 && /\s/.test(s[j])) j--;
 
-    let end = j;
+    const end = j;
     while (j >= 0 && /[\w:-]/.test(s[j])) j--;
 
     const fnName = s.slice(j + 1, end + 1);
