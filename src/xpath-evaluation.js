@@ -243,6 +243,44 @@ function _resolveJsonLens(xpath, contextNode, formElement) {
 
   for (const step of parsed.steps) {
     if (step === '*') return node?.children || [];
+
+    // Support JSON-lens array selection using XPath-ish bracket syntax in a step:
+    //   ?items[2]?name
+    //   ?items[index('items')]?name
+    // where the bracket content is 1-based.
+    if (typeof step === 'string') {
+      const m = step.match(/^([^\[]+)\[(.+)\]$/);
+      if (m) {
+        const key = m[1].trim();
+        const pred = m[2].trim();
+
+        // first hop: object property (typically the array container)
+        node = node?.get?.(key);
+        if (!node) return null;
+
+        // resolve bracket => 1-based index
+        let idx1 = null;
+
+        if (/^\d+$/.test(pred)) {
+          idx1 = Number(pred);
+        } else {
+          const resolved = tryResolveIndexExpr(pred, formElement);
+          if (resolved !== null) idx1 = Number(resolved);
+        }
+
+        if (!Number.isFinite(idx1) || idx1 < 1) return null;
+
+        const idx0 = idx1 - 1;
+
+        // second hop: array member
+        node = node?.get?.(idx0);
+        if (!node) return null;
+
+        continue;
+      }
+    }
+
+    // normal lens step (object key or 0-based array index already parsed as number)
     node = node?.get?.(step);
     if (!node) return null;
   }
