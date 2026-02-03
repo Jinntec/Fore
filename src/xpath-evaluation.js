@@ -957,21 +957,92 @@ export function evaluateXPathToString(xpath, contextNode, formElement, domFacade
 export function evaluateXPathToStrings(xpath, contextNode, formElement, domFacade = null) {
   const s = String(xpath ?? '').trim();
 
+  const isAtomicContext =
+    typeof contextNode === 'string' ||
+    typeof contextNode === 'number' ||
+    typeof contextNode === 'boolean' ||
+    typeof contextNode === 'bigint';
+
+  const isLensContext =
+    !!contextNode &&
+    typeof contextNode === 'object' &&
+    (contextNode.__jsonlens__ === true ||
+      (typeof contextNode.get === 'function' &&
+        ('value' in contextNode || 'children' in contextNode)));
+
+  const exprLooksLikeLens = s.includes('?') || (/^\s*instance\s*\(/.test(s) && s.includes(')?')); // instance('x')?a?b
+
+  const stringify = v => {
+    if (v === null || v === undefined) return '';
+    if (
+      typeof v === 'string' ||
+      typeof v === 'number' ||
+      typeof v === 'boolean' ||
+      typeof v === 'bigint'
+    ) {
+      return String(v);
+    }
+    if (v && v.nodeType) {
+      if (v.nodeType === Node.ATTRIBUTE_NODE) return String(v.nodeValue ?? '');
+      return String(v.textContent ?? '');
+    }
+    // JSONNode-like
+    if (v && typeof v === 'object' && v.__jsonlens__ === true) {
+      return stringify(v.value);
+    }
+    // last resort
+    try {
+      return JSON.stringify(v);
+    } catch (_e) {
+      return '';
+    }
+  };
+
   try {
     const idx = tryResolveIndexExpr(s, formElement);
     if (idx !== null) return [String(idx)];
 
-    const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
+    // ✅ IMPORTANT: atomic contexts must not go through node-based namespace resolver / dom facade logic
+    // This happens in repeats like ref="('a','b','c')" where the context item is a string.
+    if (isAtomicContext) {
+      if (s === '.' || s === 'string(.)') return [String(contextNode)];
+      const res = fxEvaluateXPathToStrings(
+        s,
+        contextNode,
+        null,
+        {},
+        {
+          currentContext: { formElement },
+          functionNameResolver,
+          moduleImports: { xf: XFORMS_NAMESPACE_URI },
+          namespaceResolver: null,
+          language: Language.XPATH_3_1_LANGUAGE,
+          xmlSerializer: new XMLSerializer(),
+        },
+      );
+      return Array.isArray(res) ? res.map(stringify) : [stringify(res)];
+    }
 
-    const effectiveFacade = getJsonFacade(formElement, xpath, contextNode, domFacade);
-    const isJson = !!effectiveFacade && shouldUseJson(xpath, contextNode, formElement); // ✅ FIX
-    const expr = normalizeUnaryLookup(xpath, isJson);
+    // ✅ Only attempt JSON lens resolution when it is actually a lens expression or lens context
+    if (exprLooksLikeLens || isLensContext) {
+      const lensResult = _resolveJsonLens(s, contextNode, formElement);
+      if (lensResult !== null && lensResult !== undefined) {
+        if (Array.isArray(lensResult)) return lensResult.map(stringify);
+        return [stringify(lensResult)];
+      }
+    }
+
+    const namespaceResolver = createNamespaceResolverForNode(s, contextNode, formElement);
+
+    const effectiveFacade = getJsonFacade(formElement, s, contextNode, domFacade);
+    const isJson = !!effectiveFacade && shouldUseJson(s, contextNode, formElement);
+    const expr = normalizeUnaryLookup(s, isJson);
 
     const instanceId = XPathUtil.getInstanceId(expr, formElement);
     const instance = formElement?.getModel?.()?.getInstance?.(instanceId);
     const effectiveContext = isJson && !contextNode?.__jsonlens__ ? instance?.nodeset : contextNode;
 
-    return fxEvaluateXPathToStrings(
+    const res = fxEvaluateXPathToStrings(
       expr,
       effectiveContext,
       effectiveFacade,
@@ -981,10 +1052,12 @@ export function evaluateXPathToStrings(xpath, contextNode, formElement, domFacad
         functionNameResolver,
         moduleImports: { xf: XFORMS_NAMESPACE_URI },
         namespaceResolver,
-        language: Language.XPATH_3_1_LANGUAGE, // ✅ FIX
+        language: Language.XPATH_3_1_LANGUAGE,
         xmlSerializer: new XMLSerializer(),
       },
     );
+
+    return Array.isArray(res) ? res.map(stringify) : [stringify(res)];
   } catch (e) {
     formElement?.dispatchEvent?.(
       new CustomEvent('error', {

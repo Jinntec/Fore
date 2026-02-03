@@ -65,12 +65,12 @@ export default class FxSetattribute extends AbstractAction {
       this,
       null,
     );
-    this.getOwnerForm()
-      .getModel()
-      .registerModelItem(newModelItem);
-    this.getOwnerForm().addToBatchedNotifications(newModelItem);
+  // IMPORTANT: registerModelItem may return an existing canonical ModelItem for the same path.
+  // Always use the returned instance for notifications.
+  const canonical = this.getOwnerForm().getModel().registerModelItem(newModelItem);
+  this.getOwnerForm().addToBatchedNotifications(canonical);
     this.needsUpdate = true;
-    newModelItem.notify();
+  canonical.notify();
   }
 }
 

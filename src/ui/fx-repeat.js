@@ -118,9 +118,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       const insertionIndex = this.nodeset.indexOf(inserted) + 1; // 1-based
 
       const repeatItems = Array.from(
-        this.querySelectorAll(
-          ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
-        ),
+    this.querySelectorAll(':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item'),
       );
 
       const newRepeatItem = this._createNewRepeatItem();
@@ -139,9 +137,11 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       this.setIndex(insertionIndex);
 
       this.opNum++;
-      const parentModelItem = FxBind.createModelItem(this.ref, inserted, newRepeatItem, this.opNum);
+  let parentModelItem = FxBind.createModelItem(this.ref, inserted, newRepeatItem, this.opNum);
+  // IMPORTANT: registerModelItem may return an existing canonical ModelItem for the same path.
+  // Always keep using the returned instance to avoid "ghost" ModelItems that still notify.
+  parentModelItem = this.getModel().registerModelItem(parentModelItem);
       newRepeatItem.modelItem = parentModelItem;
-      this.getModel().registerModelItem(parentModelItem);
 
       this._createModelItemsRecursively(newRepeatItem, parentModelItem);
 
@@ -392,7 +392,9 @@ export class FxRepeat extends withDraggability(UIElement, false) {
             if (!modelItem) {
               modelItem = FxBind.createModelItem(ref, node, child, null);
               modelItem.parentModelItem = parentModelItem;
-              this.getModel().registerModelItem(modelItem);
+            // IMPORTANT: keep using the canonical instance returned by registerModelItem.
+            // Otherwise a throwaway ModelItem can leak into observer graphs and be notified.
+            modelItem = this.getModel().registerModelItem(modelItem);
             }
 
             __applyDeweyRewrite(modelItem);

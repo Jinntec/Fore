@@ -249,36 +249,84 @@ export class FxModel extends HTMLElement {
     if (!modelItem) return null;
 
     const path = modelItem.path;
+
+    const resetComputedState = mi => {
+      // Tabula rasa for computed facets; keep identity (boundControls/observers)
+      mi.readonly = ModelItem.READONLY_DEFAULT;
+      mi.relevant = ModelItem.RELEVANT_DEFAULT;
+      mi.required = ModelItem.REQUIRED_DEFAULT;
+      mi.constraint = ModelItem.CONSTRAINT_DEFAULT;
+      mi.type = ModelItem.TYPE_DEFAULT;
+
+      // common extras in Fore's ModelItem
+      if ('valid' in mi) mi.valid = true;
+      if ('enabled' in mi) mi.enabled = true;
+      mi.changed = false;
+
+      // observer/dependency bookkeeping (safe to reset; will be rebuilt)
+      if (mi.dependencies && typeof mi.dependencies.clear === 'function') mi.dependencies.clear();
+      if (mi.stateExpressions) mi.stateExpressions = {};
+      if (mi.state) mi.state = {};
+    };
+
+    const retarget = (target, source) => {
+      // point to current backing node/lens
+      if (source.lens) {
+        target.lens = source.lens;
+        target.node = null;
+      } else if (source.node) {
+        target.node = source.node;
+        target.lens = null;
+      }
+
+      // keep metadata current
+      if (source.ref) target.ref = source.ref;
+      if (source.bind) target.bind = source.bind;
+      if (source.instanceId) target.instanceId = source.instanceId;
+      if (source.fore) target.fore = source.fore;
+
+      // ✅ IMPORTANT: do NOT copy value!
+      // For XML nodes, assigning `value` sets `node.textContent` and can delete child elements.
+
+      resetComputedState(target);
+
+      if (!target.boundControls) target.boundControls = [];
+    };
+
+    // ---- rebuild reuse-by-path (approach A) ----
+    if (path && this._prevModelItemsByPath) {
+      const prev = this._prevModelItemsByPath.get(path);
+      if (prev) {
+        retarget(prev, modelItem);
+
+        if (!this.modelItems.includes(prev)) {
+          this.modelItems.push(prev);
+        }
+
+        this._prevModelItemsByPath.delete(path);
+        return prev;
+      }
+    }
+
+    // ---- normal path ----
     if (!path) {
+      // No path => can't reuse; keep as-is
       this.modelItems.push(modelItem);
       return modelItem;
     }
 
     const existing = this.modelItems.find(mi => mi.path === path);
     if (!existing) {
+      // New canonical item
+      resetComputedState(modelItem);
       this.modelItems.push(modelItem);
       return modelItem;
     }
 
-    // Retarget existing ModelItem to the new backing object
-    // (critical for JSON array inserts where the same path now points to a different JSONNode/lens)
-    if (modelItem.lens) {
-      existing.lens = modelItem.lens;
-      existing.node = null;
-    } else if (modelItem.node) {
-      existing.node = modelItem.node;
-      existing.lens = null;
-    }
-
-    // Keep bind/ref/instance/fore up to date if the new MI has them
-    if (modelItem.ref) existing.ref = modelItem.ref;
-    if (modelItem.bind) existing.bind = modelItem.bind;
-    if (modelItem.instanceId) existing.instanceId = modelItem.instanceId;
-    if (modelItem.fore) existing.fore = modelItem.fore;
-
+    // Re-target canonical item
+    retarget(existing, modelItem);
     return existing;
   }
-
   /**
    * update action triggering the update cycle
    */
@@ -344,35 +392,37 @@ export class FxModel extends HTMLElement {
   rebuild() {
     console.log(`🔷   rebuild() '${this.fore.id}'`);
 
-    this.mainGraph = new DepGraph(false); // do: should be moved down below binds.length check but causes errors in tests.
+    // Build a lookup for existing ModelItems so we can reuse them by path (approach A)
+    const prevItems = Array.isArray(this.modelItems) ? this.modelItems : [];
+    this._prevModelItemsByPath = new Map();
+    prevItems.forEach(mi => {
+      if (mi && mi.path) this._prevModelItemsByPath.set(mi.path, mi);
+    });
+
+    this.mainGraph = new DepGraph(false);
     this.modelItems = [];
 
-    // trigger recursive initialization of the fx-bind elements
     const binds = this.querySelectorAll('fx-model > fx-bind');
     if (binds.length === 0) {
-      // console.log('skipped model update');
       this.skipUpdate = true;
+      this._prevModelItemsByPath = null;
       return;
     }
 
-    binds.forEach(bind => {
-      bind.init(this);
-    });
+    binds.forEach(bind => bind.init(this));
 
     if (this.formElement.createNodes) {
-      // initData should be running here as well: we just got a whole new instance that may be
-      // incomplete
       this.formElement.initData();
     }
+
+    // Drop unused previous ModelItems (not re-registered this rebuild)
+    this._prevModelItemsByPath = null;
 
     console.log('mainGraph', this.mainGraph);
     console.log('rebuild mainGraph calc order', this.mainGraph.overallOrder());
 
-    // this.dispatchEvent(new CustomEvent('rebuild-done', {detail: {maingraph: this.mainGraph}}));
     Fore.dispatch(this, 'rebuild-done', { maingraph: this.mainGraph });
-    // console.log('mainGraph', this.mainGraph);
   }
-
   /**
    * recalculation of all modelItems. Uses dependency graph to determine order of computation.
    *

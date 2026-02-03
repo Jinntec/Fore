@@ -818,7 +818,7 @@ export class FxFore extends HTMLElement {
     try {
       if (force === true || this.initialRun) {
         console.log('🔄 🔴🔴🔴 ### full refresh() on ', this);
-        Fore.refreshChildren(this, force);
+        await Fore.refreshChildren(this, force);
       } else {
         await this._processBatchedNotifications();
       }
@@ -1343,7 +1343,7 @@ export class FxFore extends HTMLElement {
           const lastMatchingSibling = nodeset.reverse().find(node => parentElement.contains(node));
           if (lastMatchingSibling) {
             return lastMatchingSibling;
-          }
+            }
           // Otherwise, just default to appending... If this runs multiple times for multiple nodes
           // it's unexpected to always prepend and get the order of children reversed from the UI.
 
@@ -1368,7 +1368,6 @@ export class FxFore extends HTMLElement {
     // Insert after the previous control
     return referenceNode;
   }
-
   /**
    * @param  {HTMLElement}  root The root of the data initialization. fx-repeat overrides this when it makes new repeat items
    *
