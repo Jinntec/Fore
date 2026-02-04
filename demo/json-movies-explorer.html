@@ -156,7 +156,7 @@
                 </div>
 
                 <div class="muted" style="margin-top:10px;">
-                    Bound path: <fx-output ref="instance('data')?movies[index('movies')]?title"></fx-output>
+                    Bound path: <fx-output value="instance('data')?movies[index('movies')]?title"></fx-output>
                 </div>
             </fx-group>
         </section>
@@ -172,11 +172,11 @@
                 <template>
                     <fx-repeatitem class="log-item">
                         <div>
-                            <strong><fx-output ref="?t"></fx-output></strong>
-                            <span class="pill"><fx-output ref="?kind"></fx-output></span>
+                            <strong><fx-output value="?t"></fx-output></strong>
+                            <span class="pill"><fx-output value="?kind"></fx-output></span>
                         </div>
-                        <div>path: <fx-output ref="?path"></fx-output></div>
-                        <div class="muted"><fx-output ref="?msg"></fx-output></div>
+                        <div>path: <fx-output value="?path"></fx-output></div>
+                        <div class="muted"><fx-output value="?msg"></fx-output></div>
                     </fx-repeatitem>
                 </template>
             </fx-repeat>

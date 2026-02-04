@@ -114,19 +114,30 @@ function shouldUseJson(xpath, contextNode, formElement) {
   // If it's not lens syntax, don't switch to JSON
   if (!isJsonLookupExpr(xpath)) return false;
 
-  // Now decide by instance type
+  // Decide by instance type (property OR attribute)
   const instanceId = XPathUtil.getInstanceId(String(xpath), formElement);
   const instance = formElement?.getModel?.()?.getInstance?.(instanceId);
-  return instance?.type === 'json';
+
+  const isJsonInstance =
+    !!instance &&
+    (instance.type === 'json' ||
+      (typeof instance.getAttribute === 'function' && instance.getAttribute('type') === 'json'));
+
+  return isJsonInstance;
 }
 function getJsonFacade(formElement, xpath, contextNode, domFacade = null) {
   const instanceId = XPathUtil.getInstanceId(xpath, formElement);
   const instance = formElement?.getModel?.()?.getInstance?.(instanceId);
 
+  const isJsonInstance =
+    !!instance &&
+    (instance.type === 'json' ||
+      (typeof instance.getAttribute === 'function' && instance.getAttribute('type') === 'json'));
+
   // Only ever return JSON facade if:
-  // - the target instance is json
+  // - the target instance is json (property OR attribute)
   // - AND the expression/context say "this is JSON evaluation"
-  if (instance?.type !== 'json') return domFacade;
+  if (!isJsonInstance) return domFacade;
   if (!shouldUseJson(xpath, contextNode, formElement)) return domFacade;
 
   if (!instance.domFacade) instance.domFacade = new JSONDomFacade();
