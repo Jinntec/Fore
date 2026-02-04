@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fore JSON Movies Explorer</title>
-    <script type="module" src="../index.js"></script>
-    <script type="module" src="../tools/fx-lens.js"></script>
+    <script type="module" src="../../index.js"></script>
+    <script type="module" src="../../tools/fx-lens.js"></script>
     <style>
         body { font-family: system-ui, sans-serif; margin: 0; }
         header { padding: 12px 16px; border-bottom: 1px solid #ddd; }
@@ -24,6 +24,14 @@
         fx-control label { display: block; font-size: 12px; color: #555; margin-bottom: 4px; }
         fx-control .widget { width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #ccc; }
         .log-item { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
+
+        #genres fx-repeatitem{
+            display: inline-block;
+        }
+        #genres fx-repeatitem[relevant]{
+            display: inline-block;
+            padding:0;
+        }
     </style>
 </head>
 
@@ -63,32 +71,30 @@
             </fx-control>
 
             <div class="muted" style="margin:10px 0;">
-                Selected index: <fx-output value="index('movies')"></fx-output>
+                Selected index: <fx-output ref="index('movies')"></fx-output>
             </div>
 
             <fx-repeat id="movies" ref="instance('data')?movies?*">
                 <template>
-                    <fx-repeatitem>
-                        <div class="row">
-                            <strong>
-                                <fx-output value="?title"></fx-output>
-                            </strong>
-                            <span class="pill"><fx-output value="?year"></fx-output></span>
-                            <span class="pill"><fx-output value="?rating"></fx-output></span>
-                            <span class="pill watched">
-                                <fx-output value="?watched"></fx-output>
-                            </span>
-                        </div>
+                    <div class="row">
+                        <strong>
+                            <fx-output ref="?title"></fx-output>
+                        </strong>
+                        <span class="pill"><fx-output ref="?year"></fx-output></span>
+                        <span class="pill"><fx-output ref="?rating"></fx-output></span>
+                        <span class="pill watched">
+                            <fx-output ref="?watched"></fx-output>
+                        </span>
+                    </div>
 
-                        <div class="muted">
-                            Genres:
-                            <fx-repeat id="genres" ref="?genres?*">
-                                <template>
-                                    <span class="pill"><fx-output value="."></fx-output></span>
-                                </template>
-                            </fx-repeat>
-                        </div>
-                    </fx-repeatitem>
+                    <div class="muted">
+                        Genres:
+                        <fx-repeat id="genres" ref="?genres?*">
+                            <template>
+                                <span class="pill"><fx-output ref="."></fx-output></span>
+                            </template>
+                        </fx-repeat>
+                    </div>
                 </template>
             </fx-repeat>
 
@@ -156,7 +162,7 @@
                 </div>
 
                 <div class="muted" style="margin-top:10px;">
-                    Bound path: <fx-output value="instance('data')?movies[index('movies')]?title"></fx-output>
+                    Bound path: <fx-output ref="instance('data')?movies[index('movies')]?title"></fx-output>
                 </div>
             </fx-group>
         </section>
@@ -172,11 +178,11 @@
                 <template>
                     <fx-repeatitem class="log-item">
                         <div>
-                            <strong><fx-output value="?t"></fx-output></strong>
-                            <span class="pill"><fx-output value="?kind"></fx-output></span>
+                            <strong><fx-output ref="?t"></fx-output></strong>
+                            <span class="pill"><fx-output ref="?kind"></fx-output></span>
                         </div>
-                        <div>path: <fx-output value="?path"></fx-output></div>
-                        <div class="muted"><fx-output value="?msg"></fx-output></div>
+                        <div>path: <fx-output ref="?path"></fx-output></div>
+                        <div class="muted"><fx-output ref="?msg"></fx-output></div>
                     </fx-repeatitem>
                 </template>
             </fx-repeat>
