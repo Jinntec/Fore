@@ -1041,7 +1041,7 @@ export class FxFore extends HTMLElement {
           : this.getModel().getDefaultInstance();
 
       try {
-        const result = evaluateXPathToString(naked, inscope, node, null, inst);
+        const result = evaluateXPathToString(naked, inscope, this, null, inst);
         // console.log(`template expression result for ${naked}=${result}`);
         return result;
       } catch (error) {
