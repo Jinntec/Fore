@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JSON template expressions</title>
+    <script type="module" src="../../index.js"></script>
+    <style>
+        .row { padding: 6px; border-bottom: 1px solid #eee; }
+        .pill { border: 1px solid #ccc; padding: 2px 6px; border-radius: 999px; margin-left: 6px; }
+    </style>
+</head>
+<body>
+<fx-fore>
+    <fx-model>
+        <fx-instance id="data" type="json">
+            {
+            "movies": [
+            { "title": "Blade Runner", "year": 1982 },
+            { "title": "Arrival", "year": 2016 }
+            ]
+            }
+        </fx-instance>
+    </fx-model>
+
+    <fx-repeat id="movies" ref="instance('data')?movies?*">
+        <template>
+            <div class="row" data-cy="row">
+                <strong data-cy="title">{?title}</strong>
+                <span class="pill" data-cy="year">{?year}</span>
+            </div>
+        </template>
+    </fx-repeat>
+</fx-fore>
+</body>
+</html>

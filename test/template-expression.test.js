@@ -296,4 +296,47 @@ lines
     const pb = document.querySelector('pb-authority');
     expect(pb.getAttribute('label')).to.equal('{Name}');
   });
+
+  it('resolves JSON template expressions in fx-repeat contexts', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance id="data" type="json">
+            {
+              "movies": [
+                { "title": "Blade Runner", "year": 1982 },
+                { "title": "Arrival", "year": 2016 }
+              ]
+            }
+          </fx-instance>
+        </fx-model>
+
+        <fx-repeat id="movies" ref="instance('data')?movies?*">
+          <template>
+            <div class="movie">
+              <strong class="title">{?title}</strong>
+              <span class="year">({?year})</span>
+            </div>
+          </template>
+        </fx-repeat>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const movies = el.querySelectorAll('.movie');
+    expect(movies.length).to.equal(2);
+
+    const firstTitle = movies[0].querySelector('.title');
+    const secondTitle = movies[1].querySelector('.title');
+
+    expect(firstTitle.textContent).to.equal('Blade Runner');
+    expect(secondTitle.textContent).to.equal('Arrival');
+
+    const firstYear = movies[0].querySelector('.year');
+    const secondYear = movies[1].querySelector('.year');
+
+    expect(firstYear.textContent).to.equal('(1982)');
+    expect(secondYear.textContent).to.equal('(2016)');
+  });
 });
