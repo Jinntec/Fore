@@ -1013,36 +1013,44 @@ export class FxFore extends HTMLElement {
    * @param {Node} node the node which will get updated with evaluation result
    */
   evaluateTemplateExpression(expr, node) {
-    // ### do not evaluate template expressions with nonrelevant sections
+    // ### do not evaluate template expressions within nonrelevant sections
     if (node.nodeType === Node.ATTRIBUTE_NODE && node.ownerElement.closest('[nonrelevant]')) return;
     if (node.nodeType === Node.TEXT_NODE && node.parentNode.closest('[nonrelevant]')) return;
     if (node.nodeType === Node.ELEMENT_NODE && node.closest('[nonrelevant]')) return;
 
-    // if(node.closest('[nonrelevant]')) return;
+    // The element that "defines" the template expression is the correct basis for:
+    // - namespace resolution (xmlns lookup)
+    // - fx-var scoping (in-scope variables)
+    // - context() in repeats (repeat item detection)
+    //
+    // NOTE: this element may be a native HTML element (div/strong/span) and NOT provide getModel().
+    // xpath-evaluation.js must therefore be robust and resolve the model via the owning <fx-fore>.
+    const definitionElement =
+        node.nodeType === Node.ATTRIBUTE_NODE
+            ? node.ownerElement
+            : node.nodeType === Node.TEXT_NODE
+                ? (node.parentElement || node.parentNode)
+                : node;
+
+    const formElement = definitionElement && definitionElement.nodeType === Node.ELEMENT_NODE
+        ? definitionElement
+        : this;
+
     const replaced = expr.replace(/{[^}]*}/g, match => {
       if (match === '{}') return match;
+
       const naked = match.substring(1, match.length - 1);
       const inscope = getInScopeContext(node, naked);
+
       if (!inscope) {
         console.warn('no inscope context for expr', naked);
-        const errNode =
-            node.nodeType === Node.TEXT_NODE || node.nodeType === Node.ATTRIBUTE_NODE
-                ? node.parentNode
-                : node;
         return match;
       }
-      // Templates are special: they use the namespace configuration from the place where they are
-      // being defined
-      const instanceId = XPathUtil.getInstanceId(naked,node);
-
-      // If there is an instance referred
-      const inst = instanceId
-          ? this.getModel().getInstance(instanceId)
-          : this.getModel().getDefaultInstance();
 
       try {
-        const result = evaluateXPathToString(naked, inscope, this, null, inst);
-        // console.log(`template expression result for ${naked}=${result}`);
+        // IMPORTANT: pass formElement = definition site (not <fx-fore>)
+        // so namespaces/vars/context() resolve correctly.
+        const result = evaluateXPathToString(naked, inscope, formElement, null);
         return result;
       } catch (error) {
         console.warn('ignoring unparseable expr', error);
@@ -1050,8 +1058,7 @@ export class FxFore extends HTMLElement {
       }
     });
 
-    // Update to the new value. Don't do it though if nothing changed to prevent iframes or
-    // images from reloading for example
+    // Update to the new value only if it changed (avoid iframe/image reload etc.)
     if (node.nodeType === Node.ATTRIBUTE_NODE) {
       const parent = node.ownerElement;
       if (parent.getAttribute(node.nodeName) !== replaced) {
@@ -1062,9 +1069,7 @@ export class FxFore extends HTMLElement {
         node.textContent = replaced;
       }
     }
-  }
-
-  // eslint-disable-next-line class-methods-use-this
+  }  // eslint-disable-next-line class-methods-use-this
   _getTemplateExpression(node) {
     if (this.ignoredNodes) {
       if (node.nodeType === Node.ATTRIBUTE_NODE) {

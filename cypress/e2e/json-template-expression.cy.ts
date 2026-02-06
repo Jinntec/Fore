@@ -1,6 +1,6 @@
 describe('JSON template expressions', () => {
     it('renders {?prop} inside a JSON repeat', () => {
-        cy.visit('json/json-template-expressions.html');
+        cy.visit('json/json-template-expression.html');
         cy.get('fx-fore').should('have.class', 'fx-ready');
 
         cy.get('[data-cy="row"]').should('have.length', 2);
