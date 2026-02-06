@@ -67,7 +67,32 @@ export class FxInsert extends AbstractAction {
   // -------------------------
   // JSON helpers
   // -------------------------
+  _isJsonLiteral(value) {
+    if (value === null || value === undefined) return false;
+    const t = String(value).trim();
+    return (t.startsWith('{') && t.endsWith('}')) || (t.startsWith('[') && t.endsWith(']'));
+  }
 
+  _parseJsonLiteral(value) {
+    const t = String(value ?? '').trim();
+    return JSON.parse(t);
+  }
+
+  _matchIndexRepeatId(expr) {
+    const t = String(expr ?? '').trim();
+    const m = t.match(/^index\s*\(\s*(['"])(.*?)\1\s*\)\s*$/);
+    return m ? m[2] : null;
+  }
+
+  _resolveRepeatById(repeatId, fore) {
+    if (!repeatId || !fore) return null;
+    try {
+      return fore.querySelector(`#${CSS.escape(repeatId)}`);
+    } catch (_e) {
+      // CSS.escape not available or invalid selector; fall back
+      return fore.querySelector(`#${repeatId}`);
+    }
+  }
   _isJsonLensRef(ref) {
     if (!ref) return false;
     const t = String(ref).trim();
@@ -127,14 +152,16 @@ export class FxInsert extends AbstractAction {
 
     // If ref points to an array item, insert relative to its parent array
     if (
-      !Array.isArray(arrayNode.value) &&
-      arrayNode.parent &&
-      Array.isArray(arrayNode.parent.value)
+        !Array.isArray(arrayNode.value) &&
+        arrayNode.parent &&
+        Array.isArray(arrayNode.parent.value)
     ) {
       const itemNode = arrayNode;
       arrayNode = itemNode.parent;
+
       const base =
-        typeof itemNode.keyOrIndex === 'number' ? itemNode.keyOrIndex : arrayNode.value.length;
+          typeof itemNode.keyOrIndex === 'number' ? itemNode.keyOrIndex : arrayNode.value.length;
+
       if (this.position === 'before') insertIndex = base;
       else insertIndex = base + 1; // after (default)
     } else {
@@ -142,12 +169,14 @@ export class FxInsert extends AbstractAction {
       if (!Array.isArray(arrayNode.value)) {
         throw new Error('fx-insert JSON mode: target is not an array');
       }
+
       const len = arrayNode.value.length;
 
       if (this.hasAttribute('at')) {
         // `at` is 1-based like XForms/XPath.
         // When combined with position="after", we insert *after* the item at `at`.
         const atExpr = this.getAttribute('at');
+
         let at1;
         if (/^\s*-?\d+(?:\.\d+)?\s*$/.test(atExpr)) {
           at1 = Number(atExpr);
@@ -157,6 +186,7 @@ export class FxInsert extends AbstractAction {
         if (Number.isNaN(at1) || at1 < 1) at1 = 1;
 
         const base0 = Math.min(len, Math.max(0, at1 - 1));
+
         if (this.position === 'after') {
           insertIndex = Math.min(len, base0 + 1);
         } else {
@@ -173,15 +203,52 @@ export class FxInsert extends AbstractAction {
       }
     }
 
+    // ------------------------------------------------------------
+    // IMPORTANT: update repeat index even if action is outside repeat
+    // ------------------------------------------------------------
+    // If at="index('movies')" (like in your demo), ensure index('movies')
+    // points at the new row BEFORE subsequent actions run.
+    const atExpr = this.getAttribute('at');
+    const repeatId = this._matchIndexRepeatId(atExpr);
+    const repeatFromAt = repeatId ? this._resolveRepeatById(repeatId, fore) : null;
+
+    // If action *is* inside a repeat, keep existing behavior as fallback
+    const repeatLocal = this._resolveRepeatElement();
+    const repeat = repeatFromAt || repeatLocal;
+
+    if (repeat) {
+      const newIndex1 = insertIndex + 1;
+      repeat.setAttribute('index', String(newIndex1));
+      if (typeof repeat.setIndex === 'function') {
+        try {
+          repeat.setIndex(newIndex1);
+        } catch (_e) {
+          // ignore
+        }
+      }
+    }
+
+    // ----------------------
     // Compute template value
+    // ----------------------
     let templateValue = null;
+    let originWasJsonLiteral = false;
 
     if (this.origin) {
-      const originNode = this._isJsonLensRef(this.origin)
-        ? this._resolveJsonRefToNode(this.origin)
-        : evaluateXPathToFirstNode(this.origin, inscope, this);
-      if (originNode && originNode.__jsonlens__) {
-        templateValue = this._deepClone(originNode.value);
+      // 1) JSON literal origin (your demo): origin="{ ... }"
+      if (this._isJsonLiteral(this.origin)) {
+        templateValue = this._parseJsonLiteral(this.origin);
+        originWasJsonLiteral = true;
+      } else {
+        // 2) lens origin: origin="?foo?bar"
+        // 3) XPath origin (XML branch use-case): origin="some/xpath"
+        const originNode = this._isJsonLensRef(this.origin)
+            ? this._resolveJsonRefToNode(this.origin)
+            : evaluateXPathToFirstNode(this.origin, inscope, this);
+
+        if (originNode && originNode.__jsonlens__) {
+          templateValue = this._deepClone(originNode.value);
+        }
       }
     }
 
@@ -195,7 +262,11 @@ export class FxInsert extends AbstractAction {
       }
     }
 
-    const newValue = this.keepValues ? templateValue : this._clearJsonValues(templateValue);
+    // If origin is an explicit JSON literal, treat it as the authoritative defaults.
+    // (Do not clear values unless user cloned existing data and explicitly wants that.)
+    const newValue = originWasJsonLiteral
+        ? this._deepClone(templateValue)
+        : (this.keepValues ? templateValue : this._clearJsonValues(templateValue));
 
     // Mutate raw JSON via JSONLens
     const instanceId = XPathUtil.resolveInstance(this, this.ref);
@@ -215,10 +286,6 @@ export class FxInsert extends AbstractAction {
 
     const insertedNode = arrayNode.children?.[insertIndex] || null;
 
-    // Keep repeat index if applicable
-    const repeat = this._resolveRepeatElement();
-    if (repeat) repeat.setAttribute('index', String(insertIndex + 1));
-
     // Dispatch Fore insert event similarly to XML branch
     const xpath = insertedNode?.getPath ? insertedNode.getPath() : '';
 
@@ -235,21 +302,20 @@ export class FxInsert extends AbstractAction {
     });
 
     document.dispatchEvent(
-      new CustomEvent('index-changed', {
-        composed: true,
-        bubbles: true,
-        detail: {
-          insertedNodes: insertedNode,
-          index: insertIndex + 1,
-        },
-      }),
+        new CustomEvent('index-changed', {
+          composed: true,
+          bubbles: true,
+          detail: {
+            insertedNodes: insertedNode,
+            index: insertIndex + 1,
+          },
+        }),
     );
 
     // Ensure UI updates
     this.needsUpdate = true;
     return [xpath];
   }
-
   // -------------------------
   // Existing XML clone helpers
   // -------------------------

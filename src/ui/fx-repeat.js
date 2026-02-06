@@ -65,6 +65,10 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
     this.handleInsertHandler = null;
     this.handleDeleteHandler = null;
+
+    // Flag used to suppress "programmatic index changed" notifications when setIndex()
+    // is called as a direct reaction to a repeatitem's item-changed event.
+    this._settingIndexFromItemChanged = false;
   }
 
   connectedCallback() {
@@ -75,13 +79,20 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     this.dependencies.addXPath(this.ref);
 
     this.addEventListener('item-changed', e => {
+      // IMPORTANT: when *we* emit item-changed from the repeat (programmatic setIndex),
+      // we must not react to it (would recurse).
+      if (e && e.target === this) return;
+      if (e?.detail?.source === 'repeat') return;
+
       const { item } = e.detail;
-      this.setIndex(item.index);
+      this._settingIndexFromItemChanged = true;
+      try {
+        this.setIndex(item.index);
+      } finally {
+        this._settingIndexFromItemChanged = false;
+      }
     });
 
-    // ----------------
-    // INSERT handler
-    // ----------------
     // ----------------
     // INSERT handler
     // ----------------
@@ -102,6 +113,16 @@ export class FxRepeat extends withDraggability(UIElement, false) {
         !!insertedNode?.parent?.__jsonlens__;
 
       if (isJson) {
+        // FILTER: only the repeat whose container ref matches the event ref should handle it.
+        // Example:
+        //   repeat ref="instance('data')?movies?*"
+        //   insert event ref="instance('data')?movies"
+        const myRef = String(this.ref || '').trim();
+        const myContainerRef = myRef.endsWith('?*') ? myRef.slice(0, -2) : myRef;
+        const eventRef = String(detail?.ref || '').trim();
+
+        if (eventRef && eventRef !== myContainerRef) return;
+
         this._handleJsonInserted(detail);
         return;
       }
@@ -118,7 +139,9 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       const insertionIndex = this.nodeset.indexOf(inserted) + 1; // 1-based
 
       const repeatItems = Array.from(
-    this.querySelectorAll(':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item'),
+        this.querySelectorAll(
+          ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
+        ),
       );
 
       const newRepeatItem = this._createNewRepeatItem();
@@ -137,10 +160,10 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       this.setIndex(insertionIndex);
 
       this.opNum++;
-  let parentModelItem = FxBind.createModelItem(this.ref, inserted, newRepeatItem, this.opNum);
-  // IMPORTANT: registerModelItem may return an existing canonical ModelItem for the same path.
-  // Always keep using the returned instance to avoid "ghost" ModelItems that still notify.
-  parentModelItem = this.getModel().registerModelItem(parentModelItem);
+      let parentModelItem = FxBind.createModelItem(this.ref, inserted, newRepeatItem, this.opNum);
+      // IMPORTANT: registerModelItem may return an existing canonical ModelItem for the same path.
+      // Always keep using the returned instance to avoid "ghost" ModelItems that still notify.
+      parentModelItem = this.getModel().registerModelItem(parentModelItem);
       newRepeatItem.modelItem = parentModelItem;
 
       this._createModelItemsRecursively(newRepeatItem, parentModelItem);
@@ -163,10 +186,13 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       const isJson = !!detail.isJson || !!first?.__jsonlens__;
 
       if (isJson) {
-        // IMPORTANT:
-        // No forced refresh. We delete exactly the affected repeat item and
-        // re-bind the remaining repeat items to the *updated* JSONNode children
-        // of the same array-parent (no XPath re-evaluation).
+        // FILTER: only repeat whose container ref matches event ref handles it
+        const myRef = String(this.ref || '').trim();
+        const myContainerRef = myRef.endsWith('?*') ? myRef.slice(0, -2) : myRef;
+        const eventRef = String(detail?.ref || '').trim();
+        if (eventRef && eventRef !== myContainerRef) return;
+
+        // No forced refresh. Delete exactly affected repeat item and rebind remaining.
         this._handleJsonDeleted(detail);
         return;
       }
@@ -219,14 +245,12 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     const html = `
           <slot name="header"></slot>
           <slot></slot>
-          <slot name="footer"></slot>
-        `;
+  `;
+
     this.shadowRoot.innerHTML = `
-            <style>
-                ${style}
-            </style>
-            ${html}
-        `;
+      <style>${style}</style>
+      ${html}
+  `;
   }
 
   /**
@@ -321,8 +345,26 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
   setIndex(index) {
     this.index = index;
+
     const rItems = this.querySelectorAll(':scope > fx-repeatitem');
-    this.applyIndex(rItems[this.index - 1]);
+    const selected = rItems[this.index - 1];
+
+    this.applyIndex(selected);
+
+    // If setIndex is called programmatically (insert/delete), we must notify dependents
+    // (fx-group/fx-control/fx-output with index('repeatId') in ref).
+    //
+    // When setIndex is invoked as a reaction to a repeatitem click/focus,
+    // the repeatitem already dispatched item-changed and dependents already react.
+    if (!this._settingIndexFromItemChanged) {
+      this.dispatchEvent(
+        new CustomEvent('item-changed', {
+          composed: false,
+          bubbles: false,
+          detail: { item: selected || null, index: this.index, source: 'repeat' },
+        }),
+      );
+    }
   }
 
   applyIndex(repeatItem) {
@@ -392,9 +434,9 @@ export class FxRepeat extends withDraggability(UIElement, false) {
             if (!modelItem) {
               modelItem = FxBind.createModelItem(ref, node, child, null);
               modelItem.parentModelItem = parentModelItem;
-            // IMPORTANT: keep using the canonical instance returned by registerModelItem.
-            // Otherwise a throwaway ModelItem can leak into observer graphs and be notified.
-            modelItem = this.getModel().registerModelItem(modelItem);
+              // IMPORTANT: keep using the canonical instance returned by registerModelItem.
+              // Otherwise a throwaway ModelItem can leak into observer graphs and be notified.
+              modelItem = this.getModel().registerModelItem(modelItem);
             }
 
             __applyDeweyRewrite(modelItem);

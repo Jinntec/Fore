@@ -877,7 +877,8 @@ export class FxFore extends HTMLElement {
    */
   _processBatchedNotifications() {
     if (this.batchedNotifications.size > 0) {
-      console.log('🔄 🎯  ### processing batched notifications');
+      console.log(`🔄 🎯  ### processing ${ this.batchedNotifications.size} batched notifications`);
+      console.log('🔄 🎯  ### processing ', Array.from(this.batchedNotifications));
 
       // console.log(`🔍 Processing ${this.batchedNotifications.size} batched notifications`);
 
@@ -1018,6 +1019,20 @@ export class FxFore extends HTMLElement {
     if (node.nodeType === Node.TEXT_NODE && node.parentNode.closest('[nonrelevant]')) return;
     if (node.nodeType === Node.ELEMENT_NODE && node.closest('[nonrelevant]')) return;
 
+  // ---- IMPORTANT GUARD ----
+  // Prevent JSON object/array literals in fx-insert@origin from being treated as
+  // template expressions (they contain {...} but are not XPath templates).
+  if (node.nodeType === Node.ATTRIBUTE_NODE) {
+    const el = node.ownerElement;
+    if (el && el.localName === 'fx-insert' && node.name === 'origin') {
+      const v = String(node.value ?? '').trim();
+      const isJsonLiteral =
+        (v.startsWith('{') && v.endsWith('}')) || (v.startsWith('[') && v.endsWith(']'));
+      if (isJsonLiteral) return;
+    }
+  }
+  // -------------------------
+
     // The element that "defines" the template expression is the correct basis for:
     // - namespace resolution (xmlns lookup)
     // - fx-var scoping (in-scope variables)
@@ -1036,7 +1051,7 @@ export class FxFore extends HTMLElement {
         ? definitionElement
         : this;
 
-    const replaced = expr.replace(/{[^}]*}/g, match => {
+  const replaced = String(expr ?? '').replace(/{[^}]*}/g, match => {
       if (match === '{}') return match;
 
       const naked = match.substring(1, match.length - 1);
@@ -1050,8 +1065,7 @@ export class FxFore extends HTMLElement {
       try {
         // IMPORTANT: pass formElement = definition site (not <fx-fore>)
         // so namespaces/vars/context() resolve correctly.
-        const result = evaluateXPathToString(naked, inscope, formElement, null);
-        return result;
+      return evaluateXPathToString(naked, inscope, formElement, null);
       } catch (error) {
         console.warn('ignoring unparseable expr', error);
         return match;
