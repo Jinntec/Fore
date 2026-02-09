@@ -175,6 +175,9 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     // ----------------
     // DELETE handler
     // ----------------
+// ----------------
+// DELETE handler
+// ----------------
     this.handleDeleteHandler = event => {
       const { detail } = event;
       if (!detail || !detail.deletedNodes || detail.deletedNodes.length === 0) return;
@@ -192,59 +195,44 @@ export class FxRepeat extends withDraggability(UIElement, false) {
           !!first?.parent?.__jsonlens__ ||
           deletedNodes.some(n => n?.__jsonlens__ || n?.parent?.__jsonlens__);
 
-      if (!isJson) {
-        // XML delete: keep existing behavior
-        detail.deletedNodes.forEach(node => {
-          this.handleDelete(node);
-        });
-        fore?.addToBatchedNotifications(this);
+      if (isJson) {
+        // Route by parent array container, NOT by detail.ref string.
+        // detail.ref is often a $path like "$data/movies[2]" which will never match repeat ref.
+        const parent =
+            (detail.parent && Array.isArray(detail.parent.value) && detail.parent) ||
+            (first?.parent && Array.isArray(first.parent.value) ? first.parent : null);
+
+        if (!parent) return;
+
+        // Infer this repeat's array key from ref, e.g. "instance('data')?movies?*" => "movies"
+        const inferArrayKeyFromRef = () => {
+          const r = String(this.ref || this.getAttribute('ref') || '').trim();
+          const m = r.match(/\?([^?\[\]]+)\?\*\s*$/);
+          return m ? m[1] : null;
+        };
+
+        const myKey = inferArrayKeyFromRef();
+
+        // If we can infer a key, only handle deletes for that array
+        if (myKey && String(parent.keyOrIndex) !== String(myKey)) return;
+
+        // Also ensure instance matches if provided
+        if (detail.instanceId && parent.instanceId && String(detail.instanceId) !== String(parent.instanceId)) {
+          return;
+        }
+
+        // Incremental JSON delete update (no forced refresh)
+        this._handleJsonDeleted(detail);
         return;
       }
 
-      // --------------------------
-      // JSON routing (DO NOT use detail.ref string)
-      // detail.ref is a PATH like "$data/movies[2]" for JSON deletes.
-      // We must route by the deleted node's array parent.
-      // --------------------------
-
-      // array container parent emitted by fx-delete
-      const eventArrayParent = detail.parent && Array.isArray(detail.parent.value) ? detail.parent : null;
-
-      // Determine this repeat's array parent (if we currently have any nodes)
-      const myFirstNode = Array.isArray(this.nodeset) ? this.nodeset[0] : null;
-      const myArrayParent =
-          myFirstNode?.parent && Array.isArray(myFirstNode.parent.value) ? myFirstNode.parent : null;
-
-      // Fallback: infer the array key from this.ref (works even if repeat is empty)
-      const inferArrayKeyFromRef = () => {
-        const r = String(this.ref || this.getAttribute('ref') || '').trim();
-        if (!r) return null;
-        // expecting "...?movies?*" or "?genres?*"
-        const m = r.match(/\?([^?\[\]]+)\?\*\s*$/);
-        return m ? m[1] : null;
-      };
-
-      const myKey = inferArrayKeyFromRef();
-      const eventKey = eventArrayParent?.keyOrIndex ?? null;
-
-      // Match conditions:
-      // 1) strongest: same array-parent object identity
-      // 2) fallback: same instance + same array keyOrIndex ("movies", "genres", ...)
-      const sameArray =
-          (eventArrayParent && myArrayParent && eventArrayParent === myArrayParent) ||
-          (eventArrayParent &&
-              myKey &&
-              String(eventKey) === String(myKey) &&
-              String(eventArrayParent.instanceId || '') === String(detail.instanceId || ''));
-
-      if (!sameArray) return;
-
-      // Now actually update DOM repeat items
-      this._handleJsonDeleted(detail);
-
-      // Ensure repeat itself gets processed in the same refresh cycle (safe)
-      fore?.addToBatchedNotifications(this);
+      // XML delete: keep existing behavior
+      detail.deletedNodes.forEach(node => {
+        this.handleDelete(node);
+      });
+      fore?.addToBatchedNotifications?.(this);
     };
+
     document.addEventListener('insert', this.handleInsertHandler, true);
     document.addEventListener('deleted', this.handleDeleteHandler, true);
 
@@ -498,93 +486,88 @@ export class FxRepeat extends withDraggability(UIElement, false) {
    * - rebind remaining repeatitems to the updated JSONNode children of the same parent array
    * - refresh only affected repeatitems (from deleted index onward)
    */
+  /**
+   * JSON delete (incremental, event-driven):
+   * - remove repeatitems at the old indices (keyOrIndex from deleted nodes)
+   * - rebind this.nodeset to the authoritative updated parent.children (rebuilt by JSONNode.delete())
+   * - reindex/rebind remaining repeatitems from the first affected position onward
+   * - update selection ONCE at the end (avoids index drift with programmatic item-changed)
+   */
   _handleJsonDeleted(detail) {
     const fore = this.getOwnerForm();
 
-    console.log('JSON DELETE', detail);
-
     const repeatItems = () =>
-      Array.from(
-        this.querySelectorAll(
-          ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
-        ),
-      );
+        Array.from(
+            this.querySelectorAll(
+                ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
+            ),
+        );
 
-    const deletedNodes = Array.from(detail.deletedNodes || []);
+    // Prefer explicit pre-delete indices from fx-delete (stable)
+    let indices0 = Array.isArray(detail.deletedIndexes0)
+        ? detail.deletedIndexes0.slice()
+        : Array.from(detail.deletedNodes || [])
+            .map(n => (n && typeof n.keyOrIndex === 'number' ? n.keyOrIndex : -1))
+            .filter(i => i >= 0);
 
-    // Collect indices to remove (0-based), prefer keyOrIndex when deletion came from an array.
-    const indices = deletedNodes
-      .map(n => {
-        if (!n) return -1;
-        if (typeof n.keyOrIndex === 'number') return n.keyOrIndex;
-        // fallback: identity
-        const idx = this.nodeset.findIndex(x => x === n);
-        return idx;
-      })
-      .filter(i => i >= 0)
-      .sort((a, b) => b - a); // delete from end
+    indices0 = Array.from(new Set(indices0)).sort((a, b) => b - a);
+    if (indices0.length === 0) return;
 
-    if (indices.length === 0) return;
+    // Snapshot selection (1-based)
+    let currentIndex1 = Number(this.getAttribute('index') || this.index || 1);
+    if (!Number.isFinite(currentIndex1) || currentIndex1 < 1) currentIndex1 = 1;
 
-    // We rebind against the updated array parent if possible.
-    const arrayParent = deletedNodes.find(n => n?.parent && Array.isArray(n.parent.value))?.parent;
-
-    // Remove repeat items in descending order
-    const itemsBefore = repeatItems();
-    for (const idx0 of indices) {
-      const itemEl = itemsBefore[idx0];
-      if (itemEl) {
-        // Clean lazy registration
-        try {
-          fore.unRegisterLazyElement(itemEl);
-        } catch (_e) {
-          // ignore
-        }
-        itemEl.remove();
-      }
-
-      // Keep our local nodeset in sync
-      if (Array.isArray(this.nodeset)) {
-        this.nodeset.splice(idx0, 1);
-      }
-
-      // Adjust selection immediately (keeps UX stable)
-      const removed1 = idx0 + 1;
-      if (this.index > removed1) {
-        this.setIndex(this.index - 1);
-      } else if (this.index === removed1) {
-        // select the item now at this position, or the last if we removed the last
-        const newSize = Math.max(0, this.nodeset.length);
-        const next = newSize === 0 ? 0 : Math.min(removed1, newSize);
-        this.setIndex(next);
-      }
+    // Compute next selection ONCE
+    const deletedIdx1Asc = indices0.map(i0 => i0 + 1).sort((a, b) => a - b);
+    let nextIndex1 = currentIndex1;
+    for (const d1 of deletedIdx1Asc) {
+      if (nextIndex1 > d1) nextIndex1 -= 1;
     }
 
-    // If we can, rebind nodeset to the authoritative updated children of the array parent.
-    // This avoids XPath re-evaluation.
-    if (arrayParent && Array.isArray(arrayParent.children)) {
-      this.nodeset = arrayParent.children;
+    // Remove DOM rows at indices (descending)
+    const before = repeatItems();
+    for (const idx0 of indices0) {
+      const itemEl = before[idx0];
+      if (!itemEl) continue;
+
+      try {
+        fore?.unRegisterLazyElement?.(itemEl);
+      } catch (_e) {}
+
+      itemEl.remove();
     }
 
-    // Reindex + rebind remaining repeatitems from the first affected index onward.
-    const minIdx0 = Math.min(...indices);
+    // Re-evaluate nodeset AFTER mutation (authoritative, same pattern as insert)
+    this._evalNodeset();
+
+    // Reindex/rebind remaining items from first affected index onward
+    const start0 = Math.min(...indices0);
     const after = repeatItems();
 
-    for (let i = minIdx0; i < after.length; i++) {
+    for (let i = start0; i < after.length; i++) {
       const ri = after[i];
-      // 1-based index attribute
       ri.index = i + 1;
 
-      // Rebind to the new nodeset position.
-      const newNode = this.nodeset[i];
+      const newNode = Array.isArray(this.nodeset) ? this.nodeset[i] : null;
       if (ri.nodeset !== newNode) {
         ri.nodeset = newNode;
-        if (fore.createNodes) fore.initData(ri);
+        if (fore?.createNodes) fore.initData(ri);
       }
 
-      // Refresh only the changed repeat item subtree
-      fore.addToBatchedNotifications(ri);
+      fore?.addToBatchedNotifications?.(ri);
     }
+
+    // Apply selection once at end
+    const newLen = after.length;
+    if (newLen === 0) {
+      this.setAttribute('index', '0');
+      this.index = 0;
+      this._removeIndexMarker?.();
+      return;
+    }
+
+    nextIndex1 = Math.max(1, Math.min(nextIndex1, newLen));
+    this.setIndex(nextIndex1);
   }
 
   handleDelete(deleted) {
