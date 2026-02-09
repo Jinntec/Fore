@@ -179,31 +179,72 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       const { detail } = event;
       if (!detail || !detail.deletedNodes || detail.deletedNodes.length === 0) return;
 
-      const myForeId = this.getOwnerForm().id;
+      const fore = this.getOwnerForm();
+      const myForeId = fore?.id;
       if (detail.foreId && myForeId !== detail.foreId) return;
 
-      const first = detail.deletedNodes[0];
-      const isJson = !!detail.isJson || !!first?.__jsonlens__;
+      const deletedNodes = Array.from(detail.deletedNodes || []);
+      const first = deletedNodes[0];
 
-      if (isJson) {
-        // FILTER: only repeat whose container ref matches event ref handles it
-        const myRef = String(this.ref || '').trim();
-        const myContainerRef = myRef.endsWith('?*') ? myRef.slice(0, -2) : myRef;
-        const eventRef = String(detail?.ref || '').trim();
-        if (eventRef && eventRef !== myContainerRef) return;
+      const isJson =
+          !!detail.isJson ||
+          !!first?.__jsonlens__ ||
+          !!first?.parent?.__jsonlens__ ||
+          deletedNodes.some(n => n?.__jsonlens__ || n?.parent?.__jsonlens__);
 
-        // No forced refresh. Delete exactly affected repeat item and rebind remaining.
-        this._handleJsonDeleted(detail);
+      if (!isJson) {
+        // XML delete: keep existing behavior
+        detail.deletedNodes.forEach(node => {
+          this.handleDelete(node);
+        });
+        fore?.addToBatchedNotifications(this);
         return;
       }
 
-      // XML delete: keep existing behavior
-      detail.deletedNodes.forEach(node => {
-        this.handleDelete(node);
-      });
-      this.getOwnerForm().addToBatchedNotifications(this);
-    };
+      // --------------------------
+      // JSON routing (DO NOT use detail.ref string)
+      // detail.ref is a PATH like "$data/movies[2]" for JSON deletes.
+      // We must route by the deleted node's array parent.
+      // --------------------------
 
+      // array container parent emitted by fx-delete
+      const eventArrayParent = detail.parent && Array.isArray(detail.parent.value) ? detail.parent : null;
+
+      // Determine this repeat's array parent (if we currently have any nodes)
+      const myFirstNode = Array.isArray(this.nodeset) ? this.nodeset[0] : null;
+      const myArrayParent =
+          myFirstNode?.parent && Array.isArray(myFirstNode.parent.value) ? myFirstNode.parent : null;
+
+      // Fallback: infer the array key from this.ref (works even if repeat is empty)
+      const inferArrayKeyFromRef = () => {
+        const r = String(this.ref || this.getAttribute('ref') || '').trim();
+        if (!r) return null;
+        // expecting "...?movies?*" or "?genres?*"
+        const m = r.match(/\?([^?\[\]]+)\?\*\s*$/);
+        return m ? m[1] : null;
+      };
+
+      const myKey = inferArrayKeyFromRef();
+      const eventKey = eventArrayParent?.keyOrIndex ?? null;
+
+      // Match conditions:
+      // 1) strongest: same array-parent object identity
+      // 2) fallback: same instance + same array keyOrIndex ("movies", "genres", ...)
+      const sameArray =
+          (eventArrayParent && myArrayParent && eventArrayParent === myArrayParent) ||
+          (eventArrayParent &&
+              myKey &&
+              String(eventKey) === String(myKey) &&
+              String(eventArrayParent.instanceId || '') === String(detail.instanceId || ''));
+
+      if (!sameArray) return;
+
+      // Now actually update DOM repeat items
+      this._handleJsonDeleted(detail);
+
+      // Ensure repeat itself gets processed in the same refresh cycle (safe)
+      fore?.addToBatchedNotifications(this);
+    };
     document.addEventListener('insert', this.handleInsertHandler, true);
     document.addEventListener('deleted', this.handleDeleteHandler, true);
 
@@ -460,6 +501,8 @@ export class FxRepeat extends withDraggability(UIElement, false) {
   _handleJsonDeleted(detail) {
     const fore = this.getOwnerForm();
 
+    console.log('JSON DELETE', detail);
+
     const repeatItems = () =>
       Array.from(
         this.querySelectorAll(
@@ -484,7 +527,6 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     if (indices.length === 0) return;
 
     // We rebind against the updated array parent if possible.
-    // For a repeat over ?items, each item is a child of the same array-container node.
     const arrayParent = deletedNodes.find(n => n?.parent && Array.isArray(n.parent.value))?.parent;
 
     // Remove repeat items in descending order

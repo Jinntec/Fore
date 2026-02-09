@@ -1,9 +1,11 @@
-// src/actions/fx-delete.js
+    // src/actions/fx-delete.js
 
 import { AbstractAction } from './abstract-action.js';
 import { Fore } from '../fore.js';
 import { XPathUtil } from '../xpath-util.js';
 import getInScopeContext from '../getInScopeContext.js';
+import {evaluateXPathToNodes} from "../xpath-evaluation";
+import {getPath} from "../xpath-path";
 
 /**
  * fx-delete
@@ -23,28 +25,56 @@ class FxDelete extends AbstractAction {
   }
 
   async perform() {
-    const ref = (this.getAttribute('ref') || this.ref || '.').trim() || '.';
+    const fore = this.getOwnerForm();
+    const inscope = this.getInScopeContext();
 
-    // IMPORTANT: for JSON this must become the current JSON repeat item (JSONNode)
-    // when ref="." is used inside an fx-repeat.
-    const inscopeContext = getInScopeContext(this.getAttributeNode('ref') || this, ref);
+    const ref = this.getAttribute('ref');
+    if (!ref) return [];
 
-    // Resolve instance from the *action element* (never from a JSONNode!)
+    // Resolve nodes to delete
     const instanceId = XPathUtil.resolveInstance(this, ref);
-    const instance = this.getModel().getInstance(instanceId);
+    const model = this.getModel();
+    const instance = model.getInstance(instanceId);
 
-    const isJsonInstance =
-      !!instance &&
-      (instance.type === 'json' ||
-        (typeof instance.getAttribute === 'function' && instance.getAttribute('type') === 'json'));
+    // JSON branch
+    const isJson = instance && (instance.type === 'json' || instance.getAttribute?.('type') === 'json');
+    if (isJson) {
+      const nodes = this._resolveJsonNodeset(ref, inscope, instance);
 
-    if (isJsonInstance) {
-      return this._performJsonDelete(ref, inscopeContext, instance, instanceId);
+      if (!nodes || nodes.length === 0) return [];
+
+      // Delete data + dispatch 'deleted' event (repeat listens and updates incrementally)
+      const xpaths = this._deleteJsonNodes(nodes, instanceId, fore);
+
+      // CRITICAL: do NOT trigger a forced refresh.
+      // The incremental UI update happens via the 'deleted' event + batchedNotifications.
+      this.needsUpdate = false;
+
+      return xpaths;
     }
 
-    return this._performXmlDelete(ref, inscopeContext, instance, instanceId);
-  }
+    // XML branch (existing behavior)
+    const nodes = evaluateXPathToNodes(ref, inscope, this);
+    if (!nodes || nodes.length === 0) return [];
 
+    const xpaths = [];
+    nodes.forEach(n => {
+      xpaths.push(getPath(n, instanceId));
+      n.parentNode.removeChild(n);
+    });
+
+    Fore.dispatch(instance, 'deleted', {
+      deletedNodes: nodes,
+      ref,
+      instanceId,
+      foreId: fore.id,
+      isJson: false,
+    });
+
+    // XML deletes can still use normal refresh cycle (not forced)
+    this.needsUpdate = true;
+    return xpaths;
+  }
   // -----------------
   // JSON delete branch
   // -----------------
@@ -102,6 +132,46 @@ class FxDelete extends AbstractAction {
    *  - '?*' (returns children)
    */
   _resolveJsonNodeset(ref, inscopeContext, instance) {
+    // Helper: resolve index('repeatId') -> current 1-based repeat index
+    const resolveIndexFunction = expr => {
+      const s = String(expr ?? '').trim();
+      const m = s.match(/^index\s*\(\s*(['"])(.*?)\1\s*\)\s*$/);
+      if (!m) return null;
+
+      const repeatId = m[2];
+      const fore = this.getOwnerForm();
+      if (!fore) return 1;
+
+      let repeat = null;
+      try {
+        repeat = fore.querySelector(`#${CSS.escape(repeatId)}`);
+      } catch (_e) {
+        repeat = fore.querySelector(`#${repeatId}`);
+      }
+      if (!repeat) return 1;
+
+      // prefer attribute 'index', fall back to property
+      const attr = repeat.getAttribute('index');
+      let idx = Number(attr);
+
+      if (!Number.isFinite(idx) || idx < 1) {
+        idx = Number(repeat.index);
+      }
+
+      return Number.isFinite(idx) && idx >= 1 ? idx : 1;
+    };
+
+    const resolveBracketIndex1 = idxExpr => {
+      const t = String(idxExpr ?? '').trim();
+      if (/^\d+$/.test(t)) return Number(t);
+
+      const viaIndex = resolveIndexFunction(t);
+      if (viaIndex !== null) return viaIndex;
+
+      const n = Number(t);
+      return Number.isFinite(n) ? n : null;
+    };
+
     // 1) '.' means: current JSON node (repeat item) or instance root
     if (ref === '.') {
       if (this._isJsonNode(inscopeContext)) return [inscopeContext];
@@ -122,17 +192,55 @@ class FxDelete extends AbstractAction {
     // - explicit instance('x') => root
     // - otherwise: relative to JSON inscope if available, else root
     let node = parsed.hasExplicitInstance
-      ? root
-      : this._isJsonNode(inscopeContext)
-        ? inscopeContext
-        : root;
+        ? root
+        : this._isJsonNode(inscopeContext)
+            ? inscopeContext
+            : root;
 
     for (const step of parsed.steps) {
       if (!node) return [];
+
+      // children wildcard
       if (step === '*') {
         return Array.isArray(node.children) ? node.children : [];
       }
-      node = typeof node.get === 'function' ? node.get(step) : null;
+
+      // numeric step (already parsed by _parseJsonLensRef): 0-based array index
+      if (typeof step === 'number') {
+        const arr = Array.isArray(node.value) ? node.children : node.children;
+        if (!Array.isArray(arr)) return [];
+        node = arr[step] || null;
+        continue;
+      }
+
+      // string step
+      if (typeof step === 'string') {
+        // bracket syntax: movies[index('movies')] or movies[2]
+        const bm = step.match(/^(.*?)\[(.+)\]$/);
+        if (bm) {
+          const prop = bm[1].trim();
+          const idxExpr = bm[2].trim();
+
+          const container = prop ? (typeof node.get === 'function' ? node.get(prop) : null) : node;
+          if (!container) return [];
+
+          if (!Array.isArray(container.value)) return [];
+
+          const idx1 = resolveBracketIndex1(idxExpr);
+          if (!Number.isFinite(idx1) || idx1 < 1) return [];
+
+          const idx0 = idx1 - 1;
+          node = container.children?.[idx0] || null;
+          continue;
+        }
+
+        // normal property step
+        node = typeof node.get === 'function' ? node.get(step) : null;
+        continue;
+      }
+
+      // unknown step type
+      return [];
     }
 
     if (!node) return [];
@@ -181,77 +289,51 @@ class FxDelete extends AbstractAction {
     return `$${inst}/`;
   }
 
-  _deleteJsonNodes(nodes) {
+  _deleteJsonNodes(nodes, instanceId, fore) {
     const model = this.getModel();
-    const removed = [];
+    const instance = model.getInstance(instanceId);
 
-    // Never delete root, and keep indices stable: delete array members from the end.
-    const arrayNodes = [];
-    const objectNodes = [];
+    const deleted = Array.from(nodes || []).filter(n => n && n.__jsonlens__);
+    if (deleted.length === 0) return [];
 
-    for (const n of nodes) {
-      if (!this._isJsonNode(n)) continue;
-      if (!n.parent) continue;
+    // We need the array container parent to route the event to the correct repeat
+    // and for the repeat to rebind its nodeset cheaply.
+    const parent =
+        deleted[0]?.parent && Array.isArray(deleted[0].parent.value) ? deleted[0].parent : null;
 
-      const p = n.parent;
-      if (Array.isArray(p.value) && typeof n.keyOrIndex === 'number') arrayNodes.push(n);
-      else objectNodes.push(n);
+    // Sort descending by old index so splicing is stable
+    const sorted = deleted
+        .slice()
+        .sort((a, b) => (b.keyOrIndex ?? 0) - (a.keyOrIndex ?? 0));
+
+    const paths = [];
+
+    for (const node of sorted) {
+      const idx0 = typeof node.keyOrIndex === 'number' ? node.keyOrIndex : -1;
+      if (!parent || idx0 < 0) continue;
+
+      // Mutate underlying JSON array
+      parent.value.splice(idx0, 1);
+
+      // Rebuild children so future resolution uses correct indices
+      if (typeof parent._buildChildren === 'function') parent._buildChildren();
+
+      // Path is informational; routing should use `parent` + instanceId
+      const path = node.getPath ? node.getPath() : '';
+      paths.push(path);
     }
 
-    arrayNodes.sort((a, b) => (b.keyOrIndex ?? 0) - (a.keyOrIndex ?? 0));
+    Fore.dispatch(instance, 'deleted', {
+      deletedNodes: sorted,
+      parent,                 // <-- this is what the repeat should use
+      ref: this.getAttribute('ref'), // keep the original ref too (useful for debugging)
+      instanceId,
+      foreId: fore.id,
+      isJson: true,
+    });
 
-    const canDelete = n => {
-      try {
-        const mi = model?.getModelItem?.(n);
-        return !mi?.readonly;
-      } catch (_e) {
-        return true;
-      }
-    };
-
-    const rebuildUp = start => {
-      let cur = start;
-      while (cur) {
-        if (typeof cur._buildChildren === 'function') cur._buildChildren();
-        cur = cur.parent;
-      }
-    };
-
-    const removeModelItem = n => {
-      try {
-        model?.removeModelItem?.(n);
-      } catch (_e) {
-        // ignore
-      }
-    };
-
-    const doDelete = n => {
-      if (!canDelete(n)) return;
-      const p = n.parent;
-      if (!p) return;
-
-      if (Array.isArray(p.value) && typeof n.keyOrIndex === 'number') {
-        p.value.splice(n.keyOrIndex, 1);
-        removed.push(n);
-        rebuildUp(p);
-        removeModelItem(n);
-        return;
-      }
-
-      if (p.value && typeof p.value === 'object' && typeof n.keyOrIndex === 'string') {
-        delete p.value[n.keyOrIndex];
-        removed.push(n);
-        rebuildUp(p);
-        removeModelItem(n);
-      }
-    };
-
-    arrayNodes.forEach(doDelete);
-    objectNodes.forEach(doDelete);
-
-    return removed;
+    return paths;
   }
-
   // -----------------
   // XML delete branch
   // -----------------
