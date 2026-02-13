@@ -291,8 +291,8 @@ describe('fx-items tests', () => {
           <fx-items ref="instance('list')?*" class="widget">
             <template>
               <span class="fx-checkbox">
-                <input id="check" name="option" type="checkbox" value="{value}" />
-                <label>{name}</label>
+                <input id="check" name="option" type="checkbox" value="{?value}" />
+                <label>{?name}</label>
               </span>
             </template>
           </fx-items>
@@ -336,8 +336,8 @@ describe('fx-items tests', () => {
           <fx-items ref="instance('list')?*" class="widget">
             <template>
               <span class="fx-checkbox">
-                <input id="check" name="option" type="checkbox" value="{value}" />
-                <label>{name}</label>
+                <input id="check" name="option" type="checkbox" value="{?value}" />
+                <label>{?name}</label>
               </span>
             </template>
           </fx-items>
@@ -378,8 +378,8 @@ describe('fx-items tests', () => {
           <fx-items ref="instance('list')?*" class="widget">
             <template>
               <span class="fx-checkbox">
-                <input id="check" name="option" type="checkbox" value="{value}" />
-                <label>{name}</label>
+                <input id="check" name="option" type="checkbox" value="{?value}" />
+                <label>{?name}</label>
               </span>
             </template>
           </fx-items>
@@ -438,8 +438,8 @@ describe('fx-items tests', () => {
             <fx-items ref="instance('default')?*" class="widget">
               <template>
                 <div class="fx-checkbox">
-                  <input type="radio" name="group" value="{value}" />
-                  <label>{name}</label>
+                  <input type="radio" name="group" value="{?value}" />
+                  <label>{?name}</label>
                 </div>
               </template>
             </fx-items>
