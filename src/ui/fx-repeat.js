@@ -66,6 +66,11 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     this.handleInsertHandler = null;
     this.handleDeleteHandler = null;
 
+    // Tracks ModelItems we observe due to JSON lens lookups inside predicate expressions
+    // (e.g. instance('data')?ui?query). Needed so the repeat refreshes when the query changes.
+    this._jsonPredicateDeps = new Set();
+    this._jsonPredicateDepsObserved = false;
+
     // Flag used to suppress "programmatic index changed" notifications when setIndex()
     // is called as a direct reaction to a repeatitem's item-changed event.
     this._settingIndexFromItemChanged = false;
@@ -175,9 +180,9 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     // ----------------
     // DELETE handler
     // ----------------
-// ----------------
-// DELETE handler
-// ----------------
+    // ----------------
+    // DELETE handler
+    // ----------------
     this.handleDeleteHandler = event => {
       const { detail } = event;
       if (!detail || !detail.deletedNodes || detail.deletedNodes.length === 0) return;
@@ -190,17 +195,17 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       const first = deletedNodes[0];
 
       const isJson =
-          !!detail.isJson ||
-          !!first?.__jsonlens__ ||
-          !!first?.parent?.__jsonlens__ ||
-          deletedNodes.some(n => n?.__jsonlens__ || n?.parent?.__jsonlens__);
+        !!detail.isJson ||
+        !!first?.__jsonlens__ ||
+        !!first?.parent?.__jsonlens__ ||
+        deletedNodes.some(n => n?.__jsonlens__ || n?.parent?.__jsonlens__);
 
       if (isJson) {
         // Route by parent array container, NOT by detail.ref string.
         // detail.ref is often a $path like "$data/movies[2]" which will never match repeat ref.
         const parent =
-            (detail.parent && Array.isArray(detail.parent.value) && detail.parent) ||
-            (first?.parent && Array.isArray(first.parent.value) ? first.parent : null);
+          (detail.parent && Array.isArray(detail.parent.value) && detail.parent) ||
+          (first?.parent && Array.isArray(first.parent.value) ? first.parent : null);
 
         if (!parent) return;
 
@@ -217,7 +222,11 @@ export class FxRepeat extends withDraggability(UIElement, false) {
         if (myKey && String(parent.keyOrIndex) !== String(myKey)) return;
 
         // Also ensure instance matches if provided
-        if (detail.instanceId && parent.instanceId && String(detail.instanceId) !== String(parent.instanceId)) {
+        if (
+          detail.instanceId &&
+          parent.instanceId &&
+          String(detail.instanceId) !== String(parent.instanceId)
+        ) {
           return;
         }
 
@@ -360,6 +369,20 @@ export class FxRepeat extends withDraggability(UIElement, false) {
   }
 
   disconnectedCallback() {
+    // Ensure UIElement cleanup runs (removes observer for primary binding, etc.)
+    if (super.disconnectedCallback) super.disconnectedCallback();
+
+    // Remove observers that were added for predicate dependencies
+    if (this._jsonPredicateDeps && this._jsonPredicateDeps.size) {
+      for (const mi of this._jsonPredicateDeps) {
+        if (mi && typeof mi.removeObserver === 'function') {
+          mi.removeObserver(this);
+        }
+      }
+      this._jsonPredicateDeps.clear();
+    }
+    this._jsonPredicateDepsObserved = false;
+
     document.removeEventListener('deleted', this.handleDeleteHandler, true);
     document.removeEventListener('insert', this.handleInsertHandler, true);
   }
@@ -497,18 +520,18 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     const fore = this.getOwnerForm();
 
     const repeatItems = () =>
-        Array.from(
-            this.querySelectorAll(
-                ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
-            ),
-        );
+      Array.from(
+        this.querySelectorAll(
+          ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
+        ),
+      );
 
     // Prefer explicit pre-delete indices from fx-delete (stable)
     let indices0 = Array.isArray(detail.deletedIndexes0)
-        ? detail.deletedIndexes0.slice()
-        : Array.from(detail.deletedNodes || [])
-            .map(n => (n && typeof n.keyOrIndex === 'number' ? n.keyOrIndex : -1))
-            .filter(i => i >= 0);
+      ? detail.deletedIndexes0.slice()
+      : Array.from(detail.deletedNodes || [])
+          .map(n => (n && typeof n.keyOrIndex === 'number' ? n.keyOrIndex : -1))
+          .filter(i => i >= 0);
 
     indices0 = Array.from(new Set(indices0)).sort((a, b) => b - a);
     if (indices0.length === 0) return;
@@ -622,6 +645,184 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     this.inited = true;
   }
 
+  _observeJsonPredicateDependencies(contextNode) {
+    // Only do this once; the dependency set is stable for a given ref.
+    if (this._jsonPredicateDepsObserved) return;
+
+    const ref = String(this.ref || this.getAttribute('ref') || '').trim();
+    if (!ref || !ref.includes('[') || !ref.includes('?')) return;
+
+    const model = this.getModel && this.getModel();
+    if (!model) return;
+
+    // Collect all predicate bodies: [...], including the star predicate on JSON lists
+    const predicates = [];
+    const predRe = /\[([\s\S]+?)\]/g;
+    let pm;
+    while ((pm = predRe.exec(ref)) !== null) {
+      if (pm[1]) predicates.push(pm[1]);
+    }
+    if (predicates.length === 0) return;
+
+    const isBoundary = ch =>
+      ch === undefined ||
+      ch === null ||
+      /\s/.test(ch) ||
+      ch === ',' ||
+      ch === ')' ||
+      ch === ']' ||
+      ch === '+' ||
+      ch === '-' ||
+      ch === '*' ||
+      ch === '=' ||
+      ch === '>' ||
+      ch === '<' ||
+      ch === '!' ||
+      ch === '|' ||
+      ch === '&';
+
+    // Scan predicate strings for "instance(...) ? ..." lens lookups.
+    const lookups = new Set();
+
+    const readInstanceLensAt = (src, start) => {
+      if (!src.slice(start).match(/^instance\s*\(/)) return null;
+
+      // Find matching ')'
+      let j = start;
+      let inS = false;
+      let inD = false;
+      let depth = 0;
+
+      while (j < src.length) {
+        const ch = src[j];
+
+        if (ch === "'" && !inD) {
+          inS = !inS;
+          j += 1;
+          continue;
+        }
+        if (ch === '"' && !inS) {
+          inD = !inD;
+          j += 1;
+          continue;
+        }
+        if (inS || inD) {
+          j += 1;
+          continue;
+        }
+
+        if (ch === '(') depth += 1;
+        else if (ch === ')') {
+          depth -= 1;
+          if (depth === 0) break;
+        }
+        j += 1;
+      }
+
+      if (j >= src.length) return null;
+
+      // Must be followed by '?' (after optional whitespace)
+      let k = j + 1;
+      while (k < src.length && /\s/.test(src[k])) k += 1;
+      if (src[k] !== '?') return null;
+
+      // Consume until boundary, respecting bracket depth and quotes
+      k += 1;
+      let bracketDepth = 0;
+      inS = false;
+      inD = false;
+
+      while (k < src.length) {
+        const ch = src[k];
+
+        if (ch === "'" && !inD) {
+          inS = !inS;
+          k += 1;
+          continue;
+        }
+        if (ch === '"' && !inS) {
+          inD = !inD;
+          k += 1;
+          continue;
+        }
+        if (inS || inD) {
+          k += 1;
+          continue;
+        }
+
+        if (ch === '[') bracketDepth += 1;
+        else if (ch === ']') {
+          if (bracketDepth > 0) bracketDepth -= 1;
+          else break;
+        }
+
+        if (bracketDepth === 0 && isBoundary(ch)) break;
+        k += 1;
+      }
+
+      return { raw: src.slice(start, k), end: k };
+    };
+
+    for (const predicate of predicates) {
+      const src = String(predicate ?? '');
+
+      let inSingle = false;
+      let inDouble = false;
+
+      for (let i = 0; i < src.length; i += 1) {
+        const ch = src[i];
+
+        if (ch === "'" && !inDouble) {
+          inSingle = !inSingle;
+          continue;
+        }
+        if (ch === '"' && !inSingle) {
+          inDouble = !inDouble;
+          continue;
+        }
+        if (inSingle || inDouble) continue;
+
+        const lens = readInstanceLensAt(src, i);
+        if (lens && lens.raw && lens.raw.includes('?')) {
+          lookups.add(lens.raw.trim());
+          i = lens.end - 1;
+        }
+      }
+    }
+
+    if (lookups.size === 0) return;
+
+    // Resolve each lookup and observe its ModelItem, so changes trigger repeat.refresh().
+    for (const lookup of lookups) {
+      try {
+        const resolved = evaluateXPath(lookup, contextNode, this);
+
+        let node = null;
+        if (Array.isArray(resolved)) {
+          const first = resolved[0];
+          node = Array.isArray(first) ? first[0] : first;
+        } else {
+          node = resolved;
+        }
+
+        if (!node) continue;
+
+        // Ensure a ModelItem exists for this referenced node/lens
+        const mi = FxModel.lazyCreateModelItem(model, lookup, node, this);
+        if (mi && typeof mi.addObserver === 'function') {
+          if (!this._jsonPredicateDeps.has(mi)) {
+            mi.addObserver(this);
+            this._jsonPredicateDeps.add(mi);
+          }
+        }
+      } catch (_e) {
+        // ignore; dependency extraction should never break rendering
+      }
+    }
+
+    this._jsonPredicateDepsObserved = true;
+  }
+
   _evalNodeset() {
     const inscope = getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
     if (!inscope) return;
@@ -635,6 +836,10 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     }
 
     const rawNodeset = evaluateXPath(this.ref, inscope, this);
+
+    // Ensure we observe JSON lens lookups referenced inside predicate expressions,
+    // e.g. instance('data')?ui?query, so the repeat refreshes when the query changes.
+    this._observeJsonPredicateDependencies(inscope);
 
     if (rawNodeset.length === 1 && Array.isArray(rawNodeset[0])) {
       this.nodeset = rawNodeset[0];
