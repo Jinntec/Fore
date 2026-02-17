@@ -545,54 +545,28 @@ export class FxModel extends HTMLElement {
     if (modelItem && path.includes(':')) {
       const property = path.split(':')[1];
       if (property) {
-        /*
-                        if (property === 'readonly') {
-                            // make sure that calculated items are always readonly
-                            if(modelItem.bind['calculate']){
-                                modelItem.readonly =  true;
-                            }else {
-                                const expr = modelItem.bind[property];
-                                const compute = evaluateXPathToBoolean(expr, modelItem.node, this);
-                                modelItem.readonly = compute;
-                            }
-                        }
-        */
         const expr = modelItem.bind[property];
+
+        const context = modelItem.node || modelItem.lens;
+
         if (property === 'calculate') {
-          const compute = evaluateXPath(expr, modelItem.node, this);
+          const compute = evaluateXPath(expr, context, this);
           modelItem.value = compute;
           modelItem.readonly = true; // calculated nodes are always readonly
           modelItem.notify(); // Notify observers directly
         } else if (property !== 'constraint' && property !== 'type') {
-          /*
-          console.log(
-            'recalculating path ',
-            path,
-            ' Expr:',
-            expr,
-            'modelitem value',
-            modelItem.node.textContent,
-          );
-*/
           // ### re-compute the Boolean value of all facets expect 'constraint' and 'type' which are handled in revalidate()
           if (expr) {
-            const compute = evaluateXPathToBoolean(expr, modelItem.node, this);
+            const compute = evaluateXPathToBoolean(expr, context, this);
             modelItem[property] = compute;
             // modelItem.notify(); // Notify observers directly
             this.fore.addToBatchedNotifications(modelItem);
-            /*
-                                    console.log(
-                                      `recalculating path ${path} - Expr:'${expr}' computed`,
-                                      modelItem[property],
-                                    );
-                        */
           }
         }
       }
       this.computes += 1;
     }
   }
-
   /**
    * Iterates all modelItems to calculate the validation status.
    *
