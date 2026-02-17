@@ -665,9 +665,9 @@ function _jsonAtomicFromResolved(resolved) {
   // Arrays: join atomic values with spaces (XPath-ish).
   if (Array.isArray(resolved)) {
     return resolved
-        .map(r => _jsonAtomicFromResolved(r))
-        .filter(s => s !== null && s !== undefined && s !== '')
-        .join(' ');
+      .map(r => _jsonAtomicFromResolved(r))
+      .filter(s => s !== null && s !== undefined && s !== '')
+      .join(' ');
   }
 
   // JSONNode: prefer getValue() if present.
@@ -879,7 +879,9 @@ function _filterJsonNodesByPredicate(nodes, predicateExpr, formElement, variable
         if (!needle && rhs.startsWith('$')) {
           const key = rhs.slice(1);
           const inScope = getVariablesInScope(formElement);
-          const v = (variables && key in variables ? variables[key] : null) ?? (key in inScope ? inScope[key] : null);
+          const v =
+            (variables && key in variables ? variables[key] : null) ??
+            (key in inScope ? inScope[key] : null);
           needle = _jsonAtomicFromResolved(v);
         }
       }
@@ -916,7 +918,11 @@ function _filterJsonNodesByPredicate(nodes, predicateExpr, formElement, variable
     try {
       // Replace instance(...)?... lookups inside predicate with variables so FontoXPath
       // does not need to understand the lookup operator.
-      const { expr: predExpr, extraVars } = _materializeInstanceLookupsInPredicate(pred, n, formElement);
+      const { expr: predExpr, extraVars } = _materializeInstanceLookupsInPredicate(
+        pred,
+        n,
+        formElement,
+      );
       const mergedVars = { ...inScope, ...variables, ...extraVars };
 
       const ok = fxEvaluateXPathToBoolean(predExpr, n, domFacade, mergedVars, {
@@ -1230,24 +1236,12 @@ export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
       return true;
     }
 
-    if (_isJsonNode(contextNode) && !_looksLikeLookupExpr(expr0)) {
-      const variablesInScope = getVariablesInScope(formElement);
-      return fxEvaluateXPathToBoolean(expr0, contextNode, __jsonDomFacade, variablesInScope, {
-        currentContext: { formElement },
-        functionNameResolver,
-        moduleImports: { xf: XFORMS_NAMESPACE_URI },
-        namespaceResolver: null,
-        language: Language.XPATH_3_1_LANGUAGE,
-        xmlSerializer: new XMLSerializer(),
-      });
-    }
-
-    if (_looksLikeLookupExpr(expr0)) {
-      const relativeJson = _isRelativeJsonLookup(expr0, contextNode);
-      const instanceId = relativeJson ? null : _getInstanceIdForLookupExpr(expr0, formElement);
-      const instance = relativeJson ? null : _getInstanceFromFormElement(formElement, instanceId);
-
-      if (relativeJson || _isJsonInstance(instance)) {
+    // ------------------------------------------------------------
+    // JSON CONTEXT
+    // ------------------------------------------------------------
+    if (_isJsonNode(contextNode)) {
+      // 1) Star predicate (repeat filtering style): ?movies?*[ ... ]
+      if (_looksLikeLookupExpr(expr0)) {
         const sp = _splitStarPredicate(expr0);
         if (sp) {
           const baseResolved = _resolveSimpleLookupToJsonNode(sp.base, contextNode, formElement);
@@ -1259,6 +1253,7 @@ export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
           return _filterJsonNodesByPredicate(baseNodes, sp.predicate, formElement).length > 0;
         }
 
+        // 2) Simple navigation lookup: ?title, instance('data')?ui?query, etc.
         if (_isSimpleLookupExpr(expr0)) {
           const resolved = _resolveSimpleLookupToJsonNode(expr0, contextNode, formElement);
           if (!resolved) return false;
@@ -1266,12 +1261,19 @@ export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
           return Boolean(_isJsonNode(node) ? node.value : node);
         }
 
-        // fallback: evaluate as XPath against the *raw root* (boolean result)
-        if (!instance) return false;
-        const rawRoot = _getRawJsonRootValue(instance);
-        if (rawRoot === null || rawRoot === undefined) return false;
+        // 3) ✅ Complex expressions containing lookup operator, e.g.
+        //    contains(?title, instance('data')?ui?query)
+        //
+        // Important: XPath 3.1 lookup operator works on map(*) / array(*) items.
+        // A JSON lens node is not a map(*) to the XPath engine.
+        // So evaluate against the RAW JS value of the current JSON node.
+        // Also enable jsonMode:'raw' so instance('data') returns raw JS root without recursion.
+        const rawContext =
+          typeof contextNode.getValue === 'function' ? contextNode.getValue() : contextNode.value;
 
-        return fxEvaluateXPathToBoolean(expr0, rawRoot, null, getVariablesInScope(formElement), {
+        const variablesInScope = getVariablesInScope(formElement);
+
+        return fxEvaluateXPathToBoolean(expr0, rawContext, null, variablesInScope, {
           currentContext: { formElement, jsonMode: 'raw' },
           functionNameResolver,
           moduleImports: { xf: XFORMS_NAMESPACE_URI },
@@ -1280,8 +1282,22 @@ export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
           xmlSerializer: new XMLSerializer(),
         });
       }
+
+      // 4) Non-lookup XPath in JSON context: evaluate via JSONDomFacade
+      const variablesInScope = getVariablesInScope(formElement);
+      return fxEvaluateXPathToBoolean(expr0, contextNode, __jsonDomFacade, variablesInScope, {
+        currentContext: { formElement },
+        functionNameResolver,
+        moduleImports: { xf: XFORMS_NAMESPACE_URI },
+        namespaceResolver: null,
+        language: Language.XPATH_3_1_LANGUAGE,
+        xmlSerializer: new XMLSerializer(),
+      });
     }
 
+    // ------------------------------------------------------------
+    // XML / normal evaluation
+    // ------------------------------------------------------------
     const namespaceResolver = createNamespaceResolverForNode(expr0, contextNode, formElement);
     const variablesInScope = getVariablesInScope(formElement);
 
@@ -1309,7 +1325,6 @@ export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
     return false;
   }
 }
-
 export function evaluateXPathToString(xpath, contextNode, formElement, domFacade = null) {
   const expr0 = String(xpath ?? '').trim();
 
