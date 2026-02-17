@@ -50,6 +50,8 @@ export class FxRepeatitem extends withDraggability(UIElement, true) {
         `;
     this.getOwnerForm().registerLazyElement(this);
 
+    // Keep ref as a *property only* so repeatitem does not become the nearest [ref] for its children.
+    // Its children already get their context from the repeatitem via getInScopeContext().
     this.ref = `${this.parentNode.ref}`;
 
     this.tabindex = 0;
@@ -58,7 +60,7 @@ export class FxRepeatitem extends withDraggability(UIElement, true) {
   disconnectedCallback() {
     super.disconnectedCallback();
     this.removeEventListener('click', this._dispatchIndexChange);
-    this.removeEventListener('focusin', this._handleFocus);
+    this.removeEventListener('focusin', this._dispatchIndexChange);
   }
 
   init() {
@@ -94,6 +96,19 @@ export class FxRepeatitem extends withDraggability(UIElement, true) {
 
     // Refresh after all of the listeners for that item-changed have had their turn to update!
     this.getOwnerForm().refresh();
+  }
+
+  update(_modelItem) {
+    // Repeatitems must refresh when their ModelItem facets (e.g. relevant) change,
+    // but they should NOT have a `ref` attribute (that would change inscope context resolution).
+    const fore = this.getOwnerForm();
+    if (!fore) return;
+
+    if (fore.isRefreshPhase) {
+      fore.addToBatchedNotifications(this);
+    } else {
+      this.refresh();
+    }
   }
 
   async refresh(force = false) {
