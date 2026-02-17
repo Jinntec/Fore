@@ -24,80 +24,61 @@ export class JSONDomFacade {
 
   getFirstChild(node) {
     const children = node.getChildren();
-    return children.length > 0 ? children[0] : null;
+    return children.length ? children[0] : null;
   }
 
   getLastChild(node) {
     const children = node.getChildren();
-    return children.length > 0 ? children[children.length - 1] : null;
+    return children.length ? children[children.length - 1] : null;
   }
 
   getNextSibling(node) {
     const parent = node.getParent();
     if (!parent) return null;
     const siblings = parent.getChildren();
-    const index = siblings.indexOf(node);
-    return siblings[index + 1] || null;
+    const idx = siblings.indexOf(node);
+    return siblings[idx + 1] || null;
   }
 
   getPreviousSibling(node) {
     const parent = node.getParent();
     if (!parent) return null;
     const siblings = parent.getChildren();
-    const index = siblings.indexOf(node);
-    return index > 0 ? siblings[index - 1] : null;
+    const idx = siblings.indexOf(node);
+    return idx > 0 ? siblings[idx - 1] : null;
   }
 
   getNodeName(node) {
     return String(node.getKey());
   }
 
-  /**
-   * Used by FontoXPath for atomization / string value.
-   * We want search expressions like contains(.) to work for object nodes.
-   */
   getNodeValue(node) {
-    return this.getData(node);
+    return node.getValue();
   }
 
   /**
-   * Treat this as the node's "string-value".
-   * - primitives => string form
-   * - objects/arrays => JSON string (so contains(.) works as “deep contains”)
+   * CRITICAL for fontoxpath: atomization / string-value.
+   * If this returns '' for JSON nodes, contains(), string(), lower-case(), etc. will behave as if empty.
    */
   getData(node) {
     const v = node.getValue();
-
     if (v === null || v === undefined) return '';
+    if (typeof v === 'string') return v;
+    if (typeof v === 'number' || typeof v === 'boolean') return String(v);
 
-    const t = typeof v;
-    if (t === 'string') return v;
-    if (t === 'number' || t === 'boolean' || t === 'bigint') return String(v);
-
+    // object/array: pragmatic string-value
     try {
       return JSON.stringify(v);
     } catch (_e) {
-      return '';
+      return String(v);
     }
   }
 
-  getAllAttributes(/* node */) {
+  getAllAttributes() {
     return [];
   }
 
-  getAttribute(/* node, name */) {
+  getAttribute() {
     return null;
-  }
-
-  getNamespaceURI(/* node */) {
-    return null;
-  }
-
-  getLocalName(node) {
-    return this.getNodeName(node);
-  }
-
-  getPrefix(/* node */) {
-    return '';
   }
 }
