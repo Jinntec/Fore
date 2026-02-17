@@ -69,12 +69,10 @@
         </fx-instance>
 
         <!-- FILTER BIND: mark each movie relevant based on query (no predicates needed) -->
-<!--
         <fx-bind
                 ref="?movies?*"
-                relevant="instance('data')?ui?query = ''">
+                relevant="contains(?title,instance('data')?ui?query)">
         </fx-bind>
--->
 
         <!-- (optional) if you want a separate log instance instead of data?log -->
         <!-- <fx-instance id="log" type="json">{ "entries": [] }</fx-instance> -->
@@ -87,7 +85,7 @@
 
             <fx-control ref="instance('data')?ui?query" update-event="input">
                 <label>Search (client state)</label>
-                <input class="widget" placeholder="Type to store state in JSON..." />
+                <input class="widget" placeholder="Type to store state in JSON..." type="search" />
             </fx-control>
 
             <div class="muted" style="margin:10px 0;">
@@ -101,7 +99,8 @@
                     ref="instance('data')?movies?*[true()]">
 -->
 
-            <fx-repeat id="movies" ref="instance('data')?movies?*[contains(.,instance('data')?ui?query)]">
+<!--            <fx-repeat id="movies" ref="instance('data')?movies?*[contains(.,instance('data')?ui?query)]">-->
+            <fx-repeat id="movies" ref="instance('data')?movies?*">
                 <template>
                     <div class="row">
                         <strong>

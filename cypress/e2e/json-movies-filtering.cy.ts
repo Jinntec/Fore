@@ -2,23 +2,34 @@
 
 const DEMO_URL = 'json/json-movies-explorer.html';
 const FORE_SEL = 'fx-fore#movies-demo';
-const QUERY_INPUT_SEL = "fx-control[ref=\"instance('data')?ui?query\"] input.widget";
+const QUERY_INPUT_SEL = `fx-control[ref="instance('data')?ui?query"] input.widget`;
 
-function movieItems() {
-  return cy.get('fx-repeat#movies > fx-repeatitem');
+// IMPORTANT: filtering is implemented via binds setting nonrelevant + CSS hiding.
+// So "filtered" == items that are NOT [nonrelevant].
+function visibleMovieItems() {
+  return cy.get('fx-repeat#movies > fx-repeatitem:not([nonrelevant])');
 }
 
-function movieTitleOutputs() {
-  return cy.get('fx-repeat#movies > fx-repeatitem fx-output[ref="?title"]');
+function visibleMovieTitleOutputs() {
+  return cy.get('fx-repeat#movies > fx-repeatitem:not([nonrelevant]) fx-output[ref="?title"]');
 }
 
 function setQuery(query: string) {
-  // Use invoke/trigger instead of .type() to keep it robust with custom input wiring.
-  // Fore listens to the native 'input' event.
-  return cy.get(QUERY_INPUT_SEL).should('exist').then($el => {
-    const input = $el[0] as HTMLInputElement;
-    input.value = query;
-    input.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+  // Wait for Fore to finish its refresh cycle after changing the query.
+  return cy.get(FORE_SEL).then($fore => {
+    const fore = $fore[0] as HTMLElement;
+
+    return cy.get(QUERY_INPUT_SEL).should('exist').then($el => {
+      const input = $el[0] as HTMLInputElement;
+
+      return new Cypress.Promise<void>(resolve => {
+        // Attach listener BEFORE dispatching the input event to avoid missing it.
+        fore.addEventListener('refresh-done', () => resolve(), { once: true });
+
+        input.value = query;
+        input.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+      });
+    });
   });
 }
 
@@ -40,34 +51,34 @@ describe('JSON movies explorer filtering', () => {
   });
 
   it('shows many rows initially', () => {
-    movieItems().should('have.length.greaterThan', 5);
+    visibleMovieItems().should('have.length.greaterThan', 5);
   });
 
   it('filters down to Blade Runner when query is "Blade"', () => {
     setQuery('Blade');
 
-    // Cypress retries until the DOM matches.
-    movieItems().should('have.length', 1);
+    // Cypress retries until the selection matches.
+    visibleMovieItems().should('have.length', 1);
 
-    readFxOutputValues(movieTitleOutputs()).then(titles => {
+    readFxOutputValues(visibleMovieTitleOutputs()).then(titles => {
       expect(titles).to.deep.equal(['Blade Runner']);
     });
   });
 
   it('updates when query changes multiple times', () => {
     setQuery('Matrix');
-    movieItems().should('have.length', 1);
-    readFxOutputValues(movieTitleOutputs()).then(titles => {
+    visibleMovieItems().should('have.length', 1);
+    readFxOutputValues(visibleMovieTitleOutputs()).then(titles => {
       expect(titles[0]).to.equal('The Matrix');
     });
 
     setQuery('Alien');
-    movieItems().should('have.length', 1);
-    readFxOutputValues(movieTitleOutputs()).then(titles => {
+    visibleMovieItems().should('have.length', 1);
+    readFxOutputValues(visibleMovieTitleOutputs()).then(titles => {
       expect(titles[0]).to.equal('Alien');
     });
 
     setQuery('');
-    movieItems().should('have.length.greaterThan', 5);
+    visibleMovieItems().should('have.length.greaterThan', 5);
   });
 });
