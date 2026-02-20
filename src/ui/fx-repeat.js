@@ -872,8 +872,8 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
     this._evalNodeset();
 
-    const repeatItems = this.querySelectorAll(':scope > fx-repeatitem');
-    const repeatItemCount = repeatItems.length;
+    let repeatItems = this.querySelectorAll(':scope > fx-repeatitem');
+    let repeatItemCount = repeatItems.length;
 
     let nodeCount = 1;
     if (Array.isArray(this.nodeset)) {
@@ -889,6 +889,10 @@ export class FxRepeat extends withDraggability(UIElement, false) {
         this.getOwnerForm().unRegisterLazyElement(itemToRemove);
       }
     }
+
+    // DOM changed: re-query repeatitems
+    repeatItems = this.querySelectorAll(':scope > fx-repeatitem');
+    repeatItemCount = repeatItems.length;
 
     if (contextSize > repeatItemCount) {
       for (let position = repeatItemCount + 1; position <= contextSize; position += 1) {
@@ -909,6 +913,10 @@ export class FxRepeat extends withDraggability(UIElement, false) {
         newItem.refresh(true);
       }
     }
+
+    // DOM changed: re-query repeatitems
+    repeatItems = this.querySelectorAll(':scope > fx-repeatitem');
+    repeatItemCount = repeatItems.length;
 
     for (let position = 0; position < repeatItemCount; position += 1) {
       const item = repeatItems[position];
@@ -931,22 +939,38 @@ export class FxRepeat extends withDraggability(UIElement, false) {
   }
 
   _initTemplate() {
-    this.dropTarget = this.template.getAttribute('drop-target');
-    this.isDraggable = this.template.hasAttribute('draggable')
-        ? this.template.getAttribute('draggable')
-        : null;
+    // Template can be missing during early init (slot timing / nested repeats).
+    // Never dereference it before we have it.
+    if (!this.template) {
+      // Prefer a direct child template, then any descendant template.
+      this.template =
+        Array.from(this.children).find(c => c && c.localName === 'template') ||
+        this.querySelector('template') ||
+        (this.shadowRoot && this.shadowRoot.querySelector('template')) ||
+        null;
+    }
 
     if (this.template === null) {
       this.dispatchEvent(
-          new CustomEvent('no-template-error', {
-            composed: true,
-            bubbles: true,
-            detail: { message: `no template found for repeat:${this.id}` },
-          }),
+        new CustomEvent('no-template-error', {
+          composed: true,
+          bubbles: true,
+          detail: { message: `no template found for repeat:${this.id}` },
+        }),
       );
+      return;
     }
 
-    this.shadowRoot.appendChild(this.template);
+    this.dropTarget = this.template.getAttribute('drop-target');
+    this.isDraggable = this.template.hasAttribute('draggable')
+      ? this.template.getAttribute('draggable')
+      : null;
+
+    // Move template to shadow for safe reuse.
+    // If it's already in the shadowRoot, don't append again.
+    if (this.template.parentNode !== this.shadowRoot) {
+      this.shadowRoot.appendChild(this.template);
+    }
   }
 
   _initRepeatItems() {
