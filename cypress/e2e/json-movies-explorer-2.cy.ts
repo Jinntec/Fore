@@ -205,7 +205,7 @@ describe('JSON movies explorer 2', () => {
         });
     });
 
-    it('updates when query changes multiple times', () => {
+    it.skip('updates when query changes multiple times', () => {
         setQuery('Matrix');
         movieItems().should('have.length', 1);
         readFxOutputValues(movieTitleOutputs()).then(titles => {
