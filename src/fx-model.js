@@ -541,27 +541,59 @@ export class FxModel extends HTMLElement {
    * @param {string} path - the canonical XPath of the node
    */
   compute(node, path) {
-    const modelItem = this.getModelItem(node);
-    if (modelItem && path.includes(':')) {
-      const property = path.split(':')[1];
-      if (property) {
-        const expr = modelItem.bind[property];
+    // Nodes in dep graphs can be transient during JSON insert/rebuild windows.
+    // Preserve depGraph semantics, but avoid crashing when a ModelItem is momentarily missing.
 
-        const context = modelItem.node || modelItem.lens;
+    // Resolve facet property (eg. "$data/movies[3]/title:relevant")
+    const isFacetPath = typeof path === 'string' && path.includes(':');
+    if (!isFacetPath) return;
 
-        if (property === 'calculate') {
-          const compute = evaluateXPath(expr, context, this);
-          modelItem.value = compute;
-          modelItem.readonly = true; // calculated nodes are always readonly
-          modelItem.notify(); // Notify observers directly
-        } else if (property !== 'constraint' && property !== 'type') {
-          // ### re-compute the Boolean value of all facets expect 'constraint' and 'type' which are handled in revalidate()
-          if (expr) {
-            const compute = evaluateXPathToBoolean(expr, context, this);
-            modelItem[property] = compute;
-            // modelItem.notify(); // Notify observers directly
-            this.fore.addToBatchedNotifications(modelItem);
-          }
+    const property = path.split(':')[1];
+    if (!property) return;
+
+    // Try to resolve the model item primarily by node, but fall back to canonical path.
+    // The depGraph stores node data that may not be the same object identity after lens rebuild.
+    let modelItem = this.getModelItem(node);
+
+    if (!modelItem && node && (node.__jsonlens__ === true || typeof node.getPath === 'function')) {
+      try {
+        const instanceId = node.instanceId || XPathUtil.resolveInstance(this, path);
+        const canonical = getPath(node, instanceId);
+        modelItem = this.getModelItem(canonical);
+      } catch (_e) {
+        // ignore
+      }
+    }
+
+    // If still missing, fall back to the prefix path of the facet node.
+    // eg. "$data/movies[3]/title:relevant" => "$data/movies[3]/title"
+    if (!modelItem) {
+      const basePath = path.substring(0, path.indexOf(':'));
+      modelItem = this.getModelItem(basePath);
+    }
+
+    // ✅ Minimal fix: don't crash the update cycle if the ModelItem doesn't exist.
+    // This can happen during insert/delete when rebuild retargeting is in progress.
+    if (!modelItem) {
+      return;
+    }
+
+    if (modelItem && typeof path === 'string') {
+      const expr = modelItem.bind ? modelItem.bind[property] : null;
+      const context = modelItem.node || modelItem.lens;
+
+      if (property === 'calculate') {
+        const compute = evaluateXPath(expr, context, this);
+        modelItem.value = compute;
+        modelItem.readonly = true; // calculated nodes are always readonly
+        modelItem.notify(); // Notify observers directly
+      } else if (property !== 'constraint' && property !== 'type') {
+        // ### re-compute the Boolean value of all facets expect 'constraint' and 'type' which are handled in revalidate()
+        if (expr) {
+          const compute = evaluateXPathToBoolean(expr, context, this);
+          modelItem[property] = compute;
+          // modelItem.notify(); // Notify observers directly
+          this.fore.addToBatchedNotifications(modelItem);
         }
       }
       this.computes += 1;
@@ -673,7 +705,8 @@ export class FxModel extends HTMLElement {
 
     // Path lookup
     if (typeof nodeOrPath === 'string') {
-      return this.modelItems.find(mi => mi.path === nodeOrPath) || null;
+      const key = nodeOrPath.includes(':') ? nodeOrPath.substring(0, nodeOrPath.indexOf(':')) : nodeOrPath;
+      return this.modelItems.find(mi => mi.path === key) || null;
     }
 
     // Node/lens lookup
