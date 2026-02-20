@@ -67,6 +67,65 @@ export class FxInsert extends AbstractAction {
   // -------------------------
   // JSON helpers
   // -------------------------
+  _getValueAtLensSteps(rootValue, steps) {
+    let cur = rootValue;
+    for (const step of steps || []) {
+      if (cur === null || cur === undefined) return undefined;
+
+      // keyOrIndex can be string (object key) or number (array index)
+      if (typeof step === 'number') {
+        if (!Array.isArray(cur)) return undefined;
+        cur = cur[step];
+      } else {
+        cur = cur[step];
+      }
+    }
+    return cur;
+  }
+  _getInlineTemplateElement() {
+    // Prefer a direct child <template>, otherwise any descendant <template> within fx-insert
+    const direct = Array.from(this.children).find(c => c?.localName === 'template');
+    if (direct) return direct;
+    return this.querySelector('template');
+  }
+
+  _getTemplateElementById(templateId) {
+    if (!templateId) return null;
+
+    // Try within the same fore first (shadow + light)
+    const fore = this.getOwnerForm?.() || this.closest('fx-fore');
+    const sel = `template#${CSS.escape(templateId)}`;
+
+    if (fore) {
+      const inLight = fore.querySelector(sel);
+      if (inLight) return inLight;
+      const inShadow = fore.shadowRoot?.querySelector?.(sel);
+      if (inShadow) return inShadow;
+    }
+
+    // Global fallback
+    const el = document.getElementById(templateId);
+    return el && el.localName === 'template' ? el : null;
+  }
+
+  _getJsonTemplateTextFromTemplateEl(tplEl) {
+    if (!tplEl) return null;
+
+    // Keep it robust against whitespace/formatting
+    const raw = String(tplEl.textContent || '').trim();
+    if (!raw) return null;
+    return raw;
+  }
+
+  _tryParseJsonFromTemplateEl(tplEl, errorLabel) {
+    const txt = this._getJsonTemplateTextFromTemplateEl(tplEl);
+    if (!txt) return null;
+    try {
+      return JSON.parse(txt);
+    } catch (_e) {
+      throw new Error(`fx-insert: ${errorLabel} does not contain valid JSON`);
+    }
+  }
   _isJsonLiteral(value) {
     if (value === null || value === undefined) return false;
     const t = String(value).trim();
@@ -229,59 +288,111 @@ export class FxInsert extends AbstractAction {
     }
 
     // ----------------------
-    // Compute template value
+    // Compute insert value
     // ----------------------
+    // Goal:
+    // - origin attribute OR <template> (inline or referenced) are AUTHOR-DEFINED defaults -> keep as-is
+    // - only the implicit fallback (clone last item) is cleared unless keep-values is set
+
     let templateValue = null;
-    let originWasJsonLiteral = false;
+    let hasExplicitOriginOrTemplate = false;
 
     if (this.origin) {
-      // 1) JSON literal origin (your demo): origin="{ ... }"
+      // origin attribute is always explicit
+      hasExplicitOriginOrTemplate = true;
+
+      // 1) JSON literal origin (existing behavior): origin="{ ... }"
       if (this._isJsonLiteral(this.origin)) {
         templateValue = this._parseJsonLiteral(this.origin);
-        originWasJsonLiteral = true;
       } else {
-        // 2) lens origin: origin="?foo?bar"
-        // 3) XPath origin (XML branch use-case): origin="some/xpath"
+        // 2) lens origin: origin="?foo?bar" OR 3) XPath origin
         const originNode = this._isJsonLensRef(this.origin)
-            ? this._resolveJsonRefToNode(this.origin)
-            : evaluateXPathToFirstNode(this.origin, inscope, this);
+          ? this._resolveJsonRefToNode(this.origin)
+          : evaluateXPathToFirstNode(this.origin, inscope, this);
 
         if (originNode && originNode.__jsonlens__) {
           templateValue = this._deepClone(originNode.value);
+        } else {
+          // origin was present but did not resolve -> keep old behavior: fall back
+          templateValue = null;
+          hasExplicitOriginOrTemplate = false;
+        }
+      }
+    } else {
+      // No origin attribute: allow JSON via template="id" or inline <template>...</template>
+      const templateId = this.getAttribute('template');
+      if (templateId) {
+        const tplEl = this._getTemplateElementById(templateId);
+        const parsed = this._tryParseJsonFromTemplateEl(tplEl, `template=\"${templateId}\"`);
+        if (parsed !== null) {
+          templateValue = parsed;
+          hasExplicitOriginOrTemplate = true;
+        }
+      }
+
+      if (templateValue === null) {
+        const inlineTpl = this._getInlineTemplateElement();
+        const parsed = this._tryParseJsonFromTemplateEl(inlineTpl, 'inline <template>');
+        if (parsed !== null) {
+          templateValue = parsed;
+          hasExplicitOriginOrTemplate = true;
         }
       }
     }
 
     if (templateValue === null) {
-      // No origin: clone last item if it exists, else insert empty object
+      // Fallback: clone last item if it exists, else insert empty object
       const len = arrayNode.value.length;
       if (len > 0) {
         templateValue = this._deepClone(arrayNode.value[len - 1]);
       } else {
         templateValue = {};
       }
+      hasExplicitOriginOrTemplate = false;
     }
 
-    // If origin is an explicit JSON literal, treat it as the authoritative defaults.
-    // (Do not clear values unless user cloned existing data and explicitly wants that.)
-    const newValue = originWasJsonLiteral
+    // Explicit origin/template values must be preserved as-is.
+    // Only the implicit fallback clone gets cleared (unless keep-values is set).
+    const newValue =
+      this.keepValues || hasExplicitOriginOrTemplate
         ? this._deepClone(templateValue)
-        : (this.keepValues ? templateValue : this._clearJsonValues(templateValue));
+        : this._clearJsonValues(templateValue);
 
     // Mutate raw JSON via JSONLens
+// Mutate JSON in a way that keeps JSONNode.children in sync
     const instanceId = XPathUtil.resolveInstance(this, this.ref);
     const model = this.getModel();
     const instance = model.getInstance(instanceId);
 
-    const steps = this._jsonNodeToLensSteps(arrayNode);
-    const lens = new JSONLens(instance.instanceData, steps);
-    lens.insert(newValue, insertIndex);
+// 1) BEST: use the JSONNode API if available (it should update children)
+    if (arrayNode && typeof arrayNode.insert === 'function') {
+      arrayNode.insert(newValue, insertIndex);
+    } else {
+      // 2) Fallback: mutate raw data via JSONLens
+      const steps = this._jsonNodeToLensSteps(arrayNode);
+      const lens = new JSONLens(instance.instanceData, steps);
+      lens.insert(newValue, insertIndex);
 
-    // Rebuild JSONNode children to reflect mutation
-    if (typeof arrayNode.set === 'function') {
-      arrayNode.set(arrayNode.value);
-    } else if (typeof arrayNode._buildChildren === 'function') {
-      arrayNode._buildChildren();
+      // Force the array node to notice the change and rebuild children:
+      // IMPORTANT: change reference so set() can't short-circuit on sameRef=true
+      const nextArr = Array.isArray(arrayNode.value) ? arrayNode.value.slice() : [];
+      if (typeof arrayNode.set === 'function') {
+        arrayNode.set(nextArr);
+      } else {
+        // last resort
+        arrayNode.value = nextArr;
+        if (typeof arrayNode._buildChildren === 'function') arrayNode._buildChildren();
+      }
+    }
+
+// At this point, children MUST match value length
+    if (Array.isArray(arrayNode.value) && Array.isArray(arrayNode.children)) {
+      if (arrayNode.children.length !== arrayNode.value.length) {
+        // One more forced rebuild to be safe
+        const nextArr = arrayNode.value.slice();
+        if (typeof arrayNode.set === 'function') arrayNode.set(nextArr);
+        else if (typeof arrayNode._buildChildren === 'function') arrayNode._buildChildren();
+      }
     }
 
     const insertedNode = arrayNode.children?.[insertIndex] || null;

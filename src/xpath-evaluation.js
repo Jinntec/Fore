@@ -367,29 +367,29 @@ function _resolveSimpleLookupToJsonNode(expr, contextNode, formElement) {
   const trimmed = String(expr ?? '').trim();
   const isExplicitInstance = trimmed.startsWith('instance(');
 
+  // IMPORTANT: always return a NEW array for children (copy),
+  // otherwise fx-repeat may keep a cached reference and miss inserts/deletes.
   const getChildren = n => {
     if (!n) return [];
-    if (typeof n.getChildren === 'function') return n.getChildren() || [];
-    return Array.isArray(n.children) ? n.children : [];
+    const kids =
+        typeof n.getChildren === 'function'
+            ? n.getChildren() || []
+            : Array.isArray(n.children)
+                ? n.children
+                : [];
+    return Array.from(kids);
   };
 
-  // Establish the starting node:
-  // 1) If expression explicitly names an instance => use that instance root
-  // 2) Else if we already have a JSONNode context => resolve relative to it
-  // 3) Else fall back to instance id derived from expression/default
   let node = null;
 
   if (parsed.instanceId) {
-    // instance('id')?... or instance()?...
     const instance = _getInstanceFromFormElement(formElement, parsed.instanceId);
     if (!_isJsonInstance(instance)) return null;
     node = _getJsonRootNode(instance);
     if (!node) return null;
   } else if (!isExplicitInstance && _isJsonNode(contextNode)) {
-    // Relative lookup: ?foo?bar / .?foo?bar
     node = contextNode;
   } else {
-    // No explicit instance and no JSON context => resolve via instance id util
     const fallbackId = XPathUtil.getInstanceId(expr, formElement) || 'default';
     const instance = _getInstanceFromFormElement(formElement, fallbackId);
     if (!_isJsonInstance(instance)) return null;
