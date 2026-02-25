@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fore JSON Movies Explorer</title>
+    <script type="module" src="../../index.js"></script>
+    <script type="module" src="../../tools/fx-lens.js"></script>
+    <style>
+        fx-fore { visibility: hidden; }
+        fx-fore.fx-ready { visibility: visible; }
+
+        body { font-family: system-ui, sans-serif; margin: 0; }
+        header { padding: 12px 16px; border-bottom: 1px solid #ddd; }
+        .grid { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 12px; padding: 12px; }
+        section { border: 1px solid #ddd; border-radius: 10px; padding: 12px; }
+        h2 { margin: 0 0 10px; font-size: 16px; }
+        .row { display: flex; gap: 8px; align-items: center; }
+        .muted { color: #666; font-size: 12px; }
+        fx-repeatitem { display: block; padding: 8px; border-radius: 8px; border: 1px solid transparent; margin-bottom: 8px; }
+        fx-repeatitem[repeat-index] { border-color: #444; }
+        .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; border: 1px solid #ccc; font-size: 12px; margin-left: 6px; }
+        .watched { font-weight: 600; }
+        .btnbar { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+        fx-trigger button { padding: 6px 10px; border-radius: 8px; border: 1px solid #ccc; background: #fafafa; cursor: pointer; }
+        fx-trigger button:hover { background: #f0f0f0; }
+        fx-control label { display: block; font-size: 12px; color: #555; margin-bottom: 4px; }
+        fx-control .widget { width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #ccc; }
+        .log-item { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
+
+        #genres fx-repeatitem{
+            display: inline-block;
+            border:none;
+        }
+        #genres fx-repeatitem[relevant]{
+            display: inline-block;
+        }
+
+        /* FILTERING: hide items marked nonrelevant by binds */
+        fx-repeatitem[nonrelevant]{
+            display: none;
+        }
+        #genres fx-repeatitem[relevant] {
+            display: inline-block;
+        }
+        #movies{
+            display: block;
+            height: 60vh;
+            overflow-y: auto;
+            padding: 0.5rem
+        }
+    </style>
+</head>
+
+<body>
+<header>
+    <strong>Fore JSON Demo:</strong> Movies Explorer
+    <div class="muted">Master/detail, index('movies'), insert/delete/setvalue.</div>
+</header>
+
+<fx-fore id="movies-demo">
+    <fx-model>
+        <fx-instance type="json">
+            {
+            "ui": { "query": ""},
+            "movies": [
+                { "title": "Blade Runner", "year": 1982, "rating": 8.1, "genres": ["Sci-Fi","Noir"], "watched": true },
+                { "title": "Arrival", "year": 2016, "rating": 7.9, "genres": ["Sci-Fi","Drama"], "watched": false },
+                { "title": "Spirited Away", "year": 2001, "rating": 8.6, "genres": ["Animation","Fantasy"], "watched": true },
+                { "title": "The Matrix", "year": 1999, "rating": 8.7, "genres": ["Sci-Fi","Action"], "watched": true },
+                { "title": "Alien", "year": 1979, "rating": 8.5, "genres": ["Sci-Fi","Horror"], "watched": true },
+                { "title": "Inception", "year": 2010, "rating": 8.8, "genres": ["Sci-Fi","Thriller"], "watched": true },
+                { "title": "Interstellar", "year": 2014, "rating": 8.6, "genres": ["Sci-Fi","Drama"], "watched": true },
+                { "title": "Her", "year": 2013, "rating": 8.0, "genres": ["Sci-Fi","Romance"], "watched": false },
+                { "title": "Ex Machina", "year": 2014, "rating": 7.7, "genres": ["Sci-Fi","Drama"], "watched": false },
+                { "title": "The Godfather", "year": 1972, "rating": 9.2, "genres": ["Crime","Drama"], "watched": true },
+                { "title": "Mad Max: Fury Road", "year": 2015, "rating": 8.1, "genres": ["Action","Sci-Fi"], "watched": true },
+                { "title": "Parasite", "year": 2019, "rating": 8.5, "genres": ["Thriller","Drama"], "watched": true }
+            ]
+            }
+        </fx-instance>
+    </fx-model>
+    <div class="grid">
+        <section id="list">
+            <h2>Movies</h2>
+
+            <fx-control ref="?ui?query" update-event="input">
+                <label>Search (client state)</label>
+                <input class="widget" placeholder="Type to filter..." type="search"	data-cy="query"/>
+            </fx-control>
+
+            <div class="muted" style="margin:10px 0;">
+                Selected index: {index('movies')} <fx-output value="index('movies')"></fx-output>
+            </div>
+
+            <fx-repeat id="movies" ref="?movies?*[contains(.,instance('default')?ui?query)]" data-cy="movies-repeat">
+                <template>
+                    <div class="row">
+                        <strong>
+                            <fx-output ref="?title"></fx-output>
+                        </strong>
+                        <span class="pill"><fx-output ref="?year"></fx-output></span>
+                        <span class="pill"><fx-output ref="?rating"></fx-output></span>
+                        <span class="pill watched">
+                            <fx-output ref="?watched"></fx-output>
+                        </span>
+                    </div>
+
+                    <div class="muted">
+                        Genres:
+                        <fx-repeat id="genres" ref="?genres?*">
+                            <template>
+                                <span class="pill"><fx-output ref="."></fx-output></span>
+                            </template>
+                        </fx-repeat>
+                    </div>
+                </template>
+            </fx-repeat>
+
+            <div class="btnbar">
+                <fx-trigger id="insert-after" data-cy="add-movie">
+                    <button>Insert after selected</button>
+                    <!-- Insert an empty movie object after current repeat index -->
+                    <fx-insert ref="?movies" at="index('movies')" position="after">
+                        <template>
+                            {
+                            "title": "",
+                            "year": "",
+                            "rating": 0,
+                            "genres": [],
+                            "watched": false
+                            }
+                        </template>
+                    </fx-insert>
+
+                    <!-- Immediately set title of the (new) selected row -->
+                    <fx-setvalue ref="?movies[index('movies')]?title">New Movie</fx-setvalue>
+                </fx-trigger>
+
+                <fx-trigger id="delete-selected">
+                    <button>Delete selected</button>
+                    <fx-delete ref="?movies[index('movies')]"></fx-delete>
+                </fx-trigger>
+            </div>
+        </section>
+
+    </div>
+</fx-fore>
+
+</body>
+</html>
