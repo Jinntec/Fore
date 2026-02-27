@@ -714,6 +714,7 @@ export class FxFore extends HTMLElement {
   }
 
   markAsClean() {
+    console.log('marking as clean', this);
     this.addEventListener(
         'value-changed',
         () => {
@@ -724,6 +725,7 @@ export class FxFore extends HTMLElement {
     );
     this.dirtyState = dirtyStates.CLEAN;
     this.classList.remove('fx-modified');
+    this.querySelectorAll('.visited').forEach(el => el.classList.remove('visited'));
   }
 
   /**
