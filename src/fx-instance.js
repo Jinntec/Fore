@@ -58,11 +58,12 @@ export class FxInstance extends HTMLElement {
       this.src = this.getAttribute('src');
     }
 
-    if (this.hasAttribute('id')) {
-      this.id = this.getAttribute('id');
-    } else {
-      this.id = 'default';
-    }
+    // IMPORTANT:
+    // Do NOT write to `this.id` for the implicit default instance.
+    // `this.id` is the global HTML id and reflects to an attribute, which would make
+    // every id-less instance appear as id="default" in the DOM.
+    // Keep a separate instance identifier for Fore semantics.
+    this.instanceId = this.hasAttribute('id') ? this.getAttribute('id') : 'default';
 
     this.credentials = this.hasAttribute('credentials')
         ? this.getAttribute('credentials')
@@ -89,6 +90,14 @@ export class FxInstance extends HTMLElement {
 
     this.shadowRoot.innerHTML = `<style>${style}</style>`;
     this.partialInstance = {};
+  }
+
+  /**
+   * Logical Fore instance identifier (NOT the HTML id).
+   * Prefer `instanceId` internally.
+   */
+  get foreId() {
+    return this.instanceId || (this.hasAttribute('id') ? this.getAttribute('id') : 'default');
   }
 
   /**
@@ -203,7 +212,7 @@ export class FxInstance extends HTMLElement {
     if (this.type === 'json') {
       this._instanceData = {};
       this.originalInstance = { ...this._instanceData };
-      this.nodeset = wrapJson(this._instanceData, null, null, this.id || 'default');
+      this.nodeset = wrapJson(this._instanceData, null, null, this.foreId);
       this.domFacade = new JSONDomFacade();
       return;
     }
@@ -272,7 +281,7 @@ export class FxInstance extends HTMLElement {
     if (this.type === 'json') {
       // JSON instance
       this.originalInstance = structuredClone(this._instanceData);
-      this.nodeset = wrapJson(this._instanceData, null, null, this.id || 'default');
+      this.nodeset = wrapJson(this._instanceData, null, null, this.foreId);
       if (!this.domFacade) this.domFacade = new JSONDomFacade();
       return;
     }

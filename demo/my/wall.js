@@ -138,6 +138,10 @@ async function loadFromFileList(fileList){
 
     await setInstanceXml(xml);
 
+    const lens = document.querySelector('fx-lens');
+    if(lens){
+        lens.update(true);
+    }
     // give Fore a frame, then refresh repeat (you saw this hook working)
     await Promise.resolve();
     await new Promise(r => requestAnimationFrame(r));

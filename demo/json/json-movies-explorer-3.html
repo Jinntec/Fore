@@ -93,7 +93,7 @@
                 Selected index: {index('movies')} <fx-output value="index('movies')"></fx-output>
             </div>
 
-            <fx-repeat id="movies" ref="?movies?*[contains(.,instance('default')?ui?query)]" data-cy="movies-repeat">
+            <fx-repeat id="movies" ref="?movies?*[contains(.,$default?ui?query)]" data-cy="movies-repeat">
                 <template>
                     <div class="row">
                         <strong>

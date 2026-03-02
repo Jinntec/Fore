@@ -562,6 +562,7 @@ export class FxFore extends HTMLElement {
       await Promise.all(libs.map(l => l.readyPromise || Promise.resolve()));
 
       await modelElement.modelConstruct();
+      console.log("varbindings ",this._instanceVarBindings);
       this._handleModelConstructDone();
     }
 
@@ -675,6 +676,79 @@ export class FxFore extends HTMLElement {
     }
   }
 
+  /**
+   * Ensure there is an fx-var for each fx-instance in this fx-fore's fx-model scope.
+   *
+   * - For instances with an @id, create `$id` with value `instance('id')`.
+   * - For the first instance WITHOUT an @id, create `$default` with value `instance()`.
+   * - IMPORTANT: if an instance has id="default", we STILL bind `$default` to `instance()`
+   *   (avoids recursion / stack overflow during fx-var refresh in some cycles).
+   *
+   * Vars are inserted as direct children of `<fx-fore>` immediately before `<fx-model>`.
+   * The method is idempotent.
+   */
+  _ensureInstanceVars() {
+    if (this.__instanceVarsEnsured) return;
+    this.__instanceVarsEnsured = true;
+
+    // Resolve this fx-fore's own fx-model (not nested ones)
+    const model = this.querySelector(':scope > fx-model');
+    if (!model) return;
+
+    // Collect instances that are direct children of this model (doc order)
+    const instances = Array.from(model.querySelectorAll(':scope > fx-instance'));
+
+    // Collect existing fx-var names at fx-fore scope (author-defined and previously generated)
+    const existingVars = new Set(
+        Array.from(this.querySelectorAll(':scope > fx-var'))
+            .map(v => (v.getAttribute('name') || '').trim())
+            .filter(Boolean),
+    );
+
+    let defaultAssigned = false;
+
+    for (const inst of instances) {
+      const rawId = (inst.getAttribute('id') || '').trim();
+
+      // First id-less instance => $default = instance()
+      if (!rawId) {
+        if (defaultAssigned) continue;
+        defaultAssigned = true;
+
+        const name = 'default';
+        if (existingVars.has(name)) continue;
+
+        const fxVar = document.createElement('fx-var');
+        fxVar.setAttribute('name', name);
+        fxVar.setAttribute('value', 'instance()');
+        fxVar.setAttribute('data-generated', 'instance-var');
+
+        this.insertBefore(fxVar, model);
+        existingVars.add(name);
+        continue;
+      }
+
+      // Normal id-based instance var
+      const name = rawId;
+      if (existingVars.has(name)) continue;
+
+      const fxVar = document.createElement('fx-var');
+      fxVar.setAttribute('name', name);
+
+      // IMPORTANT: avoid `instance('default')` recursion in fx-var refresh
+      if (name === 'default') {
+        fxVar.setAttribute('value', 'instance()');
+      } else {
+        fxVar.setAttribute('value', `instance('${name}')`);
+      }
+
+      fxVar.setAttribute('data-generated', 'instance-var');
+
+      this.insertBefore(fxVar, model);
+      existingVars.add(name);
+    }
+  }
+
   _injectDevtools() {
     if (this.ownerDocument.querySelector('fx-devtools')) {
       // There's already a devtools, so we can ignore this one.
@@ -718,6 +792,7 @@ export class FxFore extends HTMLElement {
     this.addEventListener(
         'value-changed',
         () => {
+          console.log('MARK as modified', this)
           this.dirtyState = dirtyStates.DIRTY;
           this.classList.toggle('fx-modified')
         },
@@ -1060,7 +1135,7 @@ export class FxFore extends HTMLElement {
       const inscope = getInScopeContext(node, naked);
 
       if (!inscope) {
-        console.warn('no inscope context for expr', naked);
+        // console.warn('no inscope context for expr', naked);
         return match;
       }
 

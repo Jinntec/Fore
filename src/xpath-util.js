@@ -305,6 +305,31 @@ export class XPathUtil {
   static getInstanceId(ref, boundElement) {
     const refStr = typeof ref === 'string' ? ref.trim() : '';
 
+    // Variant A: instance-vars ($default, $foo) must count as instance references
+    // for dependency tracking, otherwise repeats won't refresh when they change.
+    try {
+      const host =
+          boundElement?.nodeType === Node.ATTRIBUTE_NODE ? boundElement.ownerElement : boundElement;
+      const fore = host?.closest?.('fx-fore');
+      const bindings = fore?._instanceVarBindings;
+
+      if (bindings) {
+        // $default => default instance
+        if (/\$default(?![\w.-])/.test(refStr)) return 'default';
+
+        // $<id> => instance <id> (only if it's a known binding key)
+        for (const k of Object.keys(bindings)) {
+          if (k === 'default') continue;
+          const re = new RegExp(
+              `\\$${k.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&')}(?![\\w.-])`,
+          );
+          if (re.test(refStr)) return k;
+        }
+      }
+    } catch (_e) {
+      // ignore
+    }
+
     // Explicit "default instance" selector
     if (refStr.startsWith('instance()')) {
       return 'default';
@@ -322,14 +347,14 @@ export class XPathUtil {
     // Variable indirection (may ultimately point to instance(...))
     if (refStr.startsWith('$')) {
       const variableName = refStr.match(/^\$(?<variableName>[a-zA-Z0-9\-_]+)/)?.groups
-        ?.variableName;
+          ?.variableName;
 
       let closestActualFormElement = boundElement;
       while (closestActualFormElement && !('inScopeVariables' in closestActualFormElement)) {
         closestActualFormElement =
-          closestActualFormElement.nodeType === Node.ATTRIBUTE_NODE
-            ? closestActualFormElement.ownerElement
-            : closestActualFormElement.parentNode;
+            closestActualFormElement.nodeType === Node.ATTRIBUTE_NODE
+                ? closestActualFormElement.ownerElement
+                : closestActualFormElement.parentNode;
       }
 
       const correspondingVariable = closestActualFormElement?.inScopeVariables?.get(variableName);

@@ -453,10 +453,27 @@ function getVariablesInScope(formElement) {
         : closestActualFormElement.parentNode;
   }
 
-  if (!closestActualFormElement) return {};
+  // Fall back to owning fore if we couldn't find an element carrying inScopeVariables
+  const scopeNode = closestActualFormElement || formElement;
+  const fore = _getOwningFore(scopeNode);
 
   const variables = {};
-  if (closestActualFormElement.inScopeVariables) {
+
+  // 1) Implicit instance vars (Variant A): $default and $<instanceId>
+  // These are the lowest-precedence defaults and can be overridden by explicit fx-var.
+  if (fore && fore._instanceVarBindings) {
+    for (const [k, v] of Object.entries(fore._instanceVarBindings)) {
+      if (v && typeof v.getDefaultContext === 'function') {
+        // v is an fx-instance element; resolve dynamically to its current context
+        variables[k] = v.getDefaultContext();
+      } else {
+        variables[k] = v;
+      }
+    }
+  }
+
+  // 2) Explicit in-scope variables (fx-var or other injectors)
+  if (closestActualFormElement && closestActualFormElement.inScopeVariables) {
     for (const key of closestActualFormElement.inScopeVariables.keys()) {
       const varElementOrValue = closestActualFormElement.inScopeVariables.get(key);
       if (!varElementOrValue) continue;
@@ -465,6 +482,7 @@ function getVariablesInScope(formElement) {
       else variables[key] = varElementOrValue;
     }
   }
+
   return variables;
 }
 
@@ -867,22 +885,44 @@ function _filterJsonNodesByPredicate(nodes, predicateExpr, formElement, variable
       if (quoted) {
         needle = String(quoted[2] ?? '');
       } else {
-        // If RHS is a lens expression, resolve it (instance('data')?ui?query, ?query, etc.)
-        // Use the current item node as context for relative lookups.
-        const resolved = _looksLikeLookupExpr(rhs)
-          ? _resolveSimpleLookupToJsonNode(rhs, n, formElement)
-          : null;
+        const inScope = getVariablesInScope(formElement);
 
-        needle = _jsonAtomicFromResolved(resolved);
+        // 1) Support variable-based JSON lens lookups like $default?ui?query
+        //    This is common in Fore JSON demos.
+        const varLens = rhs.match(/^\$([A-Za-z_][\w.-]*)(\?[\s\S]+)?$/);
+        if (varLens) {
+          const varName = varLens[1];
+          const rest = varLens[2] || '';
 
-        // Also allow variable references like $q in predicates
-        if (!needle && rhs.startsWith('$')) {
-          const key = rhs.slice(1);
-          const inScope = getVariablesInScope(formElement);
-          const v =
-            (variables && key in variables ? variables[key] : null) ??
-            (key in inScope ? inScope[key] : null);
-          needle = _jsonAtomicFromResolved(v);
+          const base =
+            (variables && varName in variables ? variables[varName] : null) ??
+            (varName in inScope ? inScope[varName] : null);
+
+          if (rest && base && _isJsonNode(base) && (rest.startsWith('?') || rest.startsWith('.?'))) {
+            // Resolve the remaining lookup steps relative to the variable's JSONNode value.
+            const resolved = _resolveSimpleLookupToJsonNode(rest, base, formElement);
+            needle = _jsonAtomicFromResolved(resolved);
+          } else {
+            // No lookup tail: treat the variable value itself as the needle.
+            needle = _jsonAtomicFromResolved(base);
+          }
+        } else {
+          // 2) If RHS is a lens expression, resolve it (instance('data')?ui?query, ?query, etc.)
+          // Use the current item node as context for relative lookups.
+          const resolved = _looksLikeLookupExpr(rhs)
+            ? _resolveSimpleLookupToJsonNode(rhs, n, formElement)
+            : null;
+
+          needle = _jsonAtomicFromResolved(resolved);
+
+          // 3) Also allow plain variable references like $q in predicates
+          if (!needle && rhs.startsWith('$')) {
+            const key = rhs.slice(1);
+            const v =
+              (variables && key in variables ? variables[key] : null) ??
+              (key in inScope ? inScope[key] : null);
+            needle = _jsonAtomicFromResolved(v);
+          }
         }
       }
 
@@ -1493,7 +1533,7 @@ export function evaluateXPathToStrings(xpath, contextNode, formElement, domFacad
       expr0,
       contextNode,
       domFacade,
-      {},
+      getVariablesInScope(formElement),
       {
         currentContext: { formElement },
         functionNameResolver,

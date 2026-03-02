@@ -1,0 +1,145 @@
+{
+  "overwrite": "default",
+  "pkg": {
+    "abbrev": "C7S"
+  },
+  "label": "C7S",
+  "odds": [
+    "C7S.odd"
+  ],
+  "id": "https://e-editiones.org/apps/C7S",
+  "defaults": {
+    "language": "fr",
+    "data": "/db/apps/C7S-data/data",
+    "address-by-id": true,
+    "languages": [
+      "fr"
+    ],
+    "data-default": "pelyarmenus",
+    "view": "div",
+    "odd": "C7S.odd",
+    "pagination": {
+      "fill": 0,
+      "depth": 1
+    }
+  },
+  "collection-config": {
+    "accueil": {
+      "view": "single",
+      "template": "article.html"
+    },
+    "alignment": {
+      "template": "alignment.html"
+    },
+    "pelyarmenus/commentary": {
+      "view": "single",
+      "template": "article.html"
+    }
+  },
+  "extends": [
+    "base10",
+    "theme-base10",
+    "registers",
+    "landing-page",
+    "theme-base10"
+  ],
+  "menu": {
+    "language": false,
+    "search": false,
+    "dark-mode": false,
+    "items": [
+      {
+        "url": null,
+        "id": "people"
+      },
+      {
+        "url": null,
+        "id": "places"
+      },
+      {
+        "url": null,
+        "id": "explore"
+      },
+      {
+        "subitems": [
+          {
+            "url": "index.html#roman-introduction",
+            "id": "roman-introduction"
+          },
+          {
+            "url": "cycle-des-sept-sages-alignement",
+            "id": "roman-edition"
+          },
+          {
+            "url": "index.html#roman-annexes",
+            "id": "roman-annexes"
+          },
+          {
+            "url": "glossaire",
+            "id": "glossaire"
+          },
+          {
+            "url": "index-locorum",
+            "id": "index-locorum"
+          },
+          {
+            "url": "index-nominum",
+            "id": "index-nominum"
+          },
+          {
+            "url": "proverbes",
+            "id": "proverbes"
+          }
+        ],
+        "id": "pelyarmenus"
+      },
+      {
+        "subitems": [
+          {
+            "url": "roman-de-pelyarmenus-alignement",
+            "id": "roman-alignment"
+          },
+          {
+            "url": "cycle-des-sept-sages-alignement",
+            "id": "c7s-alignment"
+          },
+          {
+            "url": "principes",
+            "id": "guidelines"
+          }
+        ],
+        "id": "alignment"
+      },
+      {
+        "url": "index.html#apropos",
+        "id": "apropos"
+      },
+      {
+        "url": "index.html#projet",
+        "id": "project"
+      },
+      {
+        "url": "index.html#team",
+        "id": "team"
+      }
+    ],
+    "login": false
+  },
+  "theme": {
+    "logo": {
+      "width": "150px",
+      "image": "../images/c7s.svg"
+    },
+    "layout": {
+      "max-width": "1150px"
+    },
+    "landing": {
+      "hero": {
+        "background-image": "../images/jinks-images/ms-bg.jpeg"
+      }
+    },
+    "texture": {
+      "background-image": "../images/jinks-images/ms-bg.jpeg"
+    }
+  }
+}

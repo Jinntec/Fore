@@ -220,11 +220,36 @@ export class FxModel extends HTMLElement {
       // Wait until all the instances are built
       await Promise.all(promises);
       this.instances = Array.from(instances);
+      // Build in-memory variable bindings for instances (Variant A: no <fx-var> DOM nodes).
+      // These bindings are merged into XPath variable resolution by xpath-evaluation.js.
+      if (this.formElement) {
+        const bindings = Object.create(null);
+
+        // $default always points to the model's default instance (first instance)
+        try {
+          const defInst = this.getDefaultInstance();
+          if (defInst) bindings.default = defInst.getDefaultContext();
+        } catch (_e) {
+          // ignore
+        }
+
+        // Also expose $<id> for explicitly id'ed instances
+        this.instances.forEach(inst => {
+          const explicitId = inst.getAttribute('id');
+          if (!explicitId) return;
+          // Do not overwrite $default binding; $default remains instance()
+          if (explicitId === 'default') return;
+          bindings[explicitId] = inst.getDefaultContext();
+        });
+
+        this.formElement._instanceVarBindings = bindings;
+      }
       // console.log('_modelConstruct this.instances ', this.instances);
       // Await until the model-construct-done event is handled off
       this.modelConstructed = true;
       await Fore.dispatch(this, 'model-construct-done', { model: this });
       this.inited = true;
+
       this.updateModel();
     } else {
       // ### if there's no instance one will created

@@ -238,13 +238,13 @@
     <div class="grid" id="grid">
         <!-- Enable template expressions here too (both spellings) -->
         <fx-repeat id="media"
-                   ref="instance('files')//file"
+                   ref="instance('files')/file"
                    template-expressions="true"
                    template-expression="true">
             <template>
                 <!-- NOTE: url/kind template placeholders must expand, otherwise you'll see a 404 for the literal {url} -->
                 <div class="tile" data-kind="{kind}" title="{name}">
-                    <img class="thumb image" src="{url}" alt="{name}" loading="lazy">
+                    <img class="thumb image" src="{name}" alt="{name}" loading="lazy">
                     <video class="thumb video" muted playsinline preload="metadata">
                         <source src="{url}" type="{type}">
                     </video>
