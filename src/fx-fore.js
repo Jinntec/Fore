@@ -1096,27 +1096,24 @@ export class FxFore extends HTMLElement {
     if (node.nodeType === Node.TEXT_NODE && node.parentNode.closest('[nonrelevant]')) return;
     if (node.nodeType === Node.ELEMENT_NODE && node.closest('[nonrelevant]')) return;
 
-  // ---- IMPORTANT GUARD ----
-  // Prevent JSON object/array literals in fx-insert@origin from being treated as
-  // template expressions (they contain {...} but are not XPath templates).
-  if (node.nodeType === Node.ATTRIBUTE_NODE) {
-    const el = node.ownerElement;
-    if (el && el.localName === 'fx-insert' && node.name === 'origin') {
-      const v = String(node.value ?? '').trim();
-      const isJsonLiteral =
-        (v.startsWith('{') && v.endsWith('}')) || (v.startsWith('[') && v.endsWith(']'));
-      if (isJsonLiteral) return;
+    // ---- IMPORTANT GUARD ----
+    // Prevent JSON object/array literals in fx-insert@origin from being treated as
+    // template expressions (they contain {...} but are not XPath templates).
+    if (node.nodeType === Node.ATTRIBUTE_NODE) {
+      const el = node.ownerElement;
+      if (el && el.localName === 'fx-insert' && node.name === 'origin') {
+        const v = String(node.value ?? '').trim();
+        const isJsonLiteral =
+            (v.startsWith('{') && v.endsWith('}')) || (v.startsWith('[') && v.endsWith(']'));
+        if (isJsonLiteral) return;
+      }
     }
-  }
-  // -------------------------
+    // -------------------------
 
     // The element that "defines" the template expression is the correct basis for:
     // - namespace resolution (xmlns lookup)
     // - fx-var scoping (in-scope variables)
     // - context() in repeats (repeat item detection)
-    //
-    // NOTE: this element may be a native HTML element (div/strong/span) and NOT provide getModel().
-    // xpath-evaluation.js must therefore be robust and resolve the model via the owning <fx-fore>.
     const definitionElement =
         node.nodeType === Node.ATTRIBUTE_NODE
             ? node.ownerElement
@@ -1124,25 +1121,27 @@ export class FxFore extends HTMLElement {
                 ? (node.parentElement || node.parentNode)
                 : node;
 
-    const formElement = definitionElement && definitionElement.nodeType === Node.ELEMENT_NODE
-        ? definitionElement
-        : this;
+    const formElement =
+        definitionElement && definitionElement.nodeType === Node.ELEMENT_NODE
+            ? definitionElement
+            : this;
 
-  const replaced = String(expr ?? '').replace(/{[^}]*}/g, match => {
+    const replaced = String(expr ?? '').replace(/{[^}]*}/g, match => {
       if (match === '{}') return match;
 
       const naked = match.substring(1, match.length - 1);
       const inscope = getInScopeContext(node, naked);
 
       if (!inscope) {
-        // console.warn('no inscope context for expr', naked);
         return match;
       }
 
       try {
-        // IMPORTANT: pass formElement = definition site (not <fx-fore>)
-        // so namespaces/vars/context() resolve correctly.
-      return evaluateXPathToString(naked, inscope, formElement, null);
+        // IMPORTANT:
+        // Do NOT pass `null` as the 4th argument here.
+        // Passing `null` suppresses variable collection, which hides implicit vars
+        // like `$default`.
+        return evaluateXPathToString(naked, inscope, formElement);
       } catch (error) {
         console.warn('ignoring unparseable expr', error);
         return match;

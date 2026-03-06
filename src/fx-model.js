@@ -226,22 +226,26 @@ export class FxModel extends HTMLElement {
         const bindings = Object.create(null);
 
         // $default always points to the model's default instance (first instance)
+        // IMPORTANT: For JSON instances, bind RAW JS root so `?` lookup works.
         try {
           const defInst = this.getDefaultInstance();
-          if (defInst) bindings.default = defInst.getDefaultContext();
+          if (defInst) {
+            const t = (defInst.getAttribute && defInst.getAttribute('type')) || defInst.type;
+            bindings.default = t === 'json' ? defInst.getInstanceData() : defInst.getDefaultContext();
+          }
         } catch (_e) {
           // ignore
         }
-
         // Also expose $<id> for explicitly id'ed instances
         this.instances.forEach(inst => {
           const explicitId = inst.getAttribute('id');
           if (!explicitId) return;
-          // Do not overwrite $default binding; $default remains instance()
+          // Do not overwrite $default binding; $default remains the first instance
           if (explicitId === 'default') return;
-          bindings[explicitId] = inst.getDefaultContext();
-        });
 
+          const t = (inst.getAttribute && inst.getAttribute('type')) || inst.type;
+          bindings[explicitId] = t === 'json' ? inst.getInstanceData() : inst.getDefaultContext();
+        });
         this.formElement._instanceVarBindings = bindings;
       }
       // console.log('_modelConstruct this.instances ', this.instances);

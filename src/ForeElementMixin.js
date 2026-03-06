@@ -184,7 +184,7 @@ export default class ForeElementMixin extends HTMLElement {
         // console.log('match ', match);
         const naked = match.substring(1, match.length - 1);
         const inscope = getInScopeContext(node, naked);
-        const result = evaluateXPathToString(naked, inscope, this);
+        const result = evaluateXPathToString(naked, inscope, this.getOwnerForm());
         const replaced = expr.replaceAll(match, result);
         // console.log('replacing ', expr, ' with ', replaced);
         expr = replaced;
