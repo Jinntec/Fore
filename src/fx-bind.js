@@ -9,8 +9,6 @@ import {
 import { XPathUtil } from './xpath-util.js';
 import getInScopeContext from './getInScopeContext.js';
 import { getPath } from './xpath-path.js';
-import { evaluateXPathToFirstNode } from 'fontoxpath';
-import { JSONLens } from './json/JSONLens.js';
 
 /**
  * FxBind declaratively attaches constraints to nodes in the data (instances).
