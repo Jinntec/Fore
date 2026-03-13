@@ -120,10 +120,10 @@ export class FxRepeat extends withDraggability(UIElement, false) {
   _matchesJsonParent(detail) {
     // Fallback routing based on insertedParent / insertedNodes.parent
     const parent =
-        detail?.insertedParent ||
-        detail?.insertedNodes?.parent ||
-        detail?.insertedNodes?.insertedParent ||
-        null;
+      detail?.insertedParent ||
+      detail?.insertedNodes?.parent ||
+      detail?.insertedNodes?.insertedParent ||
+      null;
 
     if (!parent || !parent.__jsonlens__) return false;
 
@@ -175,10 +175,10 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       const insertedParent = detail?.insertedParent;
       const insertedNode = detail?.insertedNodes;
       const isJson =
-          !!detail?.isJson ||
-          !!insertedParent?.__jsonlens__ ||
-          !!insertedNode?.__jsonlens__ ||
-          !!insertedNode?.parent?.__jsonlens__;
+        !!detail?.isJson ||
+        !!insertedParent?.__jsonlens__ ||
+        !!insertedNode?.__jsonlens__ ||
+        !!insertedNode?.parent?.__jsonlens__;
 
       if (isJson) {
         // IMPORTANT FIX:
@@ -211,9 +211,9 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       const insertionIndex = this.nodeset.indexOf(inserted) + 1; // 1-based
 
       const repeatItems = Array.from(
-          this.querySelectorAll(
-              ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
-          ),
+        this.querySelectorAll(
+          ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
+        ),
       );
 
       const newRepeatItem = this._createNewRepeatItem();
@@ -259,16 +259,16 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       const first = deletedNodes[0];
 
       const isJson =
-          !!detail.isJson ||
-          !!first?.__jsonlens__ ||
-          !!first?.parent?.__jsonlens__ ||
-          deletedNodes.some(n => n?.__jsonlens__ || n?.parent?.__jsonlens__);
+        !!detail.isJson ||
+        !!first?.__jsonlens__ ||
+        !!first?.parent?.__jsonlens__ ||
+        deletedNodes.some(n => n?.__jsonlens__ || n?.parent?.__jsonlens__);
 
       if (isJson) {
         // Route by parent array container, NOT by detail.ref string.
         const parent =
-            (detail.parent && Array.isArray(detail.parent.value) && detail.parent) ||
-            (first?.parent && Array.isArray(first.parent.value) ? first.parent : null);
+          (detail.parent && Array.isArray(detail.parent.value) && detail.parent) ||
+          (first?.parent && Array.isArray(first.parent.value) ? first.parent : null);
 
         if (!parent) return;
 
@@ -277,9 +277,9 @@ export class FxRepeat extends withDraggability(UIElement, false) {
         if (myKey && String(parent.keyOrIndex) !== String(myKey)) return;
 
         if (
-            detail.instanceId &&
-            parent.instanceId &&
-            String(detail.instanceId) !== String(parent.instanceId)
+          detail.instanceId &&
+          parent.instanceId &&
+          String(detail.instanceId) !== String(parent.instanceId)
         ) {
           return;
         }
@@ -354,11 +354,11 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     const fore = this.getOwnerForm();
 
     const repeatItems = () =>
-        Array.from(
-            this.querySelectorAll(
-                ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
-            ),
-        );
+      Array.from(
+        this.querySelectorAll(
+          ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
+        ),
+      );
 
     // 1) Determine insertion index (1-based) from the event.
     // Do NOT use indexOf(insertedNodes) for JSON.
@@ -460,11 +460,11 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     // the repeatitem already dispatched item-changed and dependents already react.
     if (!this._settingIndexFromItemChanged) {
       this.dispatchEvent(
-          new CustomEvent('item-changed', {
-            composed: false,
-            bubbles: false,
-            detail: { item: selected || null, index: this.index, source: 'repeat' },
-          }),
+        new CustomEvent('item-changed', {
+          composed: false,
+          bubbles: false,
+          detail: { item: selected || null, index: this.index, source: 'repeat' },
+        }),
       );
     }
   }
@@ -507,8 +507,8 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
       const childUsesInstanceFn = /^instance\('/.test(mi.path);
       const parentBaseInChildStyle = childUsesInstanceFn
-          ? parentBaseNorm.replace(/^\$([A-Za-z0-9_-]+)\//, `instance('$1')/`)
-          : parentBaseNorm;
+        ? parentBaseNorm.replace(/^\$([A-Za-z0-9_-]+)\//, `instance('$1')/`)
+        : parentBaseNorm;
 
       if (mi.path.startsWith(`${parentBaseInChildStyle}_`)) return;
 
@@ -519,11 +519,11 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       const nextParentMI = parentModelItem;
 
       const isWidgetEl =
-          child &&
-          ((child.classList && child.classList.contains('widget')) ||
-              (typeof Fore !== 'undefined' && Fore.isWidget && Fore.isWidget(child)) ||
-              (child.tagName &&
-                  ['INPUT', 'SELECT', 'TEXTAREA', 'OPTION', 'DATALIST'].includes(child.tagName)));
+        child &&
+        ((child.classList && child.classList.contains('widget')) ||
+          (typeof Fore !== 'undefined' && Fore.isWidget && Fore.isWidget(child)) ||
+          (child.tagName &&
+            ['INPUT', 'SELECT', 'TEXTAREA', 'OPTION', 'DATALIST'].includes(child.tagName)));
 
       if (!isWidgetEl && child.hasAttribute('ref')) {
         const ref = child.getAttribute('ref').trim();
@@ -557,17 +557,17 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     const fore = this.getOwnerForm();
 
     const repeatItems = () =>
-        Array.from(
-            this.querySelectorAll(
-                ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
-            ),
-        );
+      Array.from(
+        this.querySelectorAll(
+          ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
+        ),
+      );
 
     let indices0 = Array.isArray(detail.deletedIndexes0)
-        ? detail.deletedIndexes0.slice()
-        : Array.from(detail.deletedNodes || [])
-            .map(n => (n && typeof n.keyOrIndex === 'number' ? n.keyOrIndex : -1))
-            .filter(i => i >= 0);
+      ? detail.deletedIndexes0.slice()
+      : Array.from(detail.deletedNodes || [])
+          .map(n => (n && typeof n.keyOrIndex === 'number' ? n.keyOrIndex : -1))
+          .filter(i => i >= 0);
 
     indices0 = Array.from(new Set(indices0)).sort((a, b) => b - a);
     if (indices0.length === 0) return;
@@ -625,9 +625,9 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
   handleDelete(deleted) {
     const items = Array.from(
-        this.querySelectorAll(
-            ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
-        ),
+      this.querySelectorAll(
+        ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
+      ),
     );
 
     this._evalNodeset();
@@ -640,7 +640,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     itemToRemove.remove();
 
     const newLength = this.querySelectorAll(
-        ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
+      ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
     ).length;
 
     let nextIndex = indexToRemove + 1;
@@ -684,6 +684,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     const model = this.getModel && this.getModel();
     if (!model) return;
 
+    // Collect predicate bodies [...]
     const predicates = [];
     const predRe = /\[([\s\S]+?)\]/g;
     let pm;
@@ -693,21 +694,21 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     if (predicates.length === 0) return;
 
     const isBoundary = ch =>
-        ch === undefined ||
-        ch === null ||
-        /\s/.test(ch) ||
-        ch === ',' ||
-        ch === ')' ||
-        ch === ']' ||
-        ch === '+' ||
-        ch === '-' ||
-        ch === '*' ||
-        ch === '=' ||
-        ch === '>' ||
-        ch === '<' ||
-        ch === '!' ||
-        ch === '|' ||
-        ch === '&';
+      ch === undefined ||
+      ch === null ||
+      /\s/.test(ch) ||
+      ch === ',' ||
+      ch === ')' ||
+      ch === ']' ||
+      ch === '+' ||
+      ch === '-' ||
+      ch === '*' ||
+      ch === '=' ||
+      ch === '>' ||
+      ch === '<' ||
+      ch === '!' ||
+      ch === '|' ||
+      ch === '&';
 
     const lookups = new Set();
 
@@ -787,9 +788,73 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       return { raw: src.slice(start, k), end: k };
     };
 
+    const readVarLensAt = (src, start) => {
+      if (src[start] !== '$') return null;
+
+      let j = start + 1;
+      if (!/[A-Za-z_]/.test(src[j] || '')) return null;
+      j += 1;
+      while (j < src.length && /[\w.-]/.test(src[j])) j += 1;
+
+      const varName = src.slice(start + 1, j);
+
+      let k = j;
+      while (k < src.length && /\s/.test(src[k])) k += 1;
+
+      // We only care if a lookup tail follows: ?foo?bar OR /foo/bar
+      const next = src[k];
+      if (next !== '?' && next !== '.' && next !== '/') {
+        return { raw: src.slice(start, j), end: j, varName, tail: '' };
+      }
+
+      // normalize .?foo?bar => ?foo?bar
+      if (next === '.' && src[k + 1] === '?') k += 1;
+
+      // read until boundary
+      let p = k;
+      let bracketDepth = 0;
+      let inS = false;
+      let inD = false;
+
+      while (p < src.length) {
+        const ch = src[p];
+
+        if (ch === "'" && !inD) {
+          inS = !inS;
+          p += 1;
+          continue;
+        }
+        if (ch === '"' && !inS) {
+          inD = !inD;
+          p += 1;
+          continue;
+        }
+        if (inS || inD) {
+          p += 1;
+          continue;
+        }
+
+        if (ch === '[') bracketDepth += 1;
+        else if (ch === ']') {
+          if (bracketDepth > 0) bracketDepth -= 1;
+          else break;
+        }
+
+        if (bracketDepth === 0 && p !== k && isBoundary(ch)) break;
+        p += 1;
+      }
+
+      return {
+        raw: src.slice(start, p),
+        end: p,
+        varName,
+        tail: src.slice(k, p),
+      };
+    };
+
+    // Collect lookups used inside predicates
     for (const predicate of predicates) {
       const src = String(predicate ?? '');
-
       let inSingle = false;
       let inDouble = false;
 
@@ -806,16 +871,39 @@ export class FxRepeat extends withDraggability(UIElement, false) {
         }
         if (inSingle || inDouble) continue;
 
-        const lens = readInstanceLensAt(src, i);
-        if (lens && lens.raw && lens.raw.includes('?')) {
-          lookups.add(lens.raw.trim());
-          i = lens.end - 1;
+        // instance('x')?foo?bar
+        const instLens = readInstanceLensAt(src, i);
+        if (instLens && instLens.raw && instLens.raw.includes('?')) {
+          lookups.add(instLens.raw.trim());
+          i = instLens.end - 1;
+          continue;
+        }
+
+        // $default?ui?query or $foo?bar  (rewrite to instance() / instance('foo'))
+        const varLens = readVarLensAt(src, i);
+        if (
+          varLens &&
+          varLens.tail &&
+          (varLens.tail.startsWith('?') || varLens.tail.startsWith('/'))
+        ) {
+          const v = varLens.varName;
+          const { tail } = varLens;
+
+          // $default must follow your semantics: first instance in doc order => instance()
+          const rewritten =
+            v === 'default'
+              ? `instance()${tail.startsWith('?') ? tail : tail}`
+              : `instance('${v}')${tail}`;
+
+          lookups.add(rewritten.trim());
+          i = varLens.end - 1;
         }
       }
     }
 
     if (lookups.size === 0) return;
 
+    // Resolve lookups to actual nodes and observe them
     for (const lookup of lookups) {
       try {
         const resolved = evaluateXPath(lookup, contextNode, this);
@@ -865,6 +953,21 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       return;
     }
     this.nodeset = rawNodeset;
+  }
+
+  /**
+   * Observer callback for ModelItem notifications.
+   * When a predicate dependency changes (eg. $default?ui?query),
+   * schedule this repeat for refresh so its nodeset/predicate is re-evaluated.
+   */
+  update(_modelItem) {
+    const fore = this.getOwnerForm && this.getOwnerForm();
+    if (fore && typeof fore.addToBatchedNotifications === 'function') {
+      fore.addToBatchedNotifications(this);
+      return;
+    }
+    // Fallback (should rarely happen)
+    this.refresh(true);
   }
 
   async refresh(force) {
@@ -1032,9 +1135,9 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
   _clone() {
     const tpl =
-        this.template ||
-        (this.shadowRoot && this.shadowRoot.querySelector('template')) ||
-        this.querySelector('template');
+      this.template ||
+      (this.shadowRoot && this.shadowRoot.querySelector('template')) ||
+      this.querySelector('template');
 
     if (!tpl) {
       console.error(`[fx-repeat] ${this.id || ''}: no <template> found when cloning`);
