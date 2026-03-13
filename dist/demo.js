@@ -1,4 +1,4 @@
-/* Version: 2.9.0 - January 21, 2026 15:50:40 */
+/* Version: 3.0.0 - March 13, 2026 15:43:35 */
 /**
 @license
 Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
@@ -37259,7 +37259,7 @@ fontoxpath.executePendingUpdateList;
 fontoxpath.finalizeModuleRegistration;
 fontoxpath.getBucketForSelector;
 const getBucketsForNode = fontoxpath.getBucketsForNode;
-fontoxpath.Language;
+const Language = fontoxpath.Language;
 const parseScript = fontoxpath.parseScript;
 fontoxpath.precompileXPath;
 fontoxpath.profiler;
@@ -37448,9 +37448,7 @@ class XPathUtil {
           for (const item of astNode[key]) {
             if (XPathUtil.containsDynamicContent(item)) return true;
           }
-        } else {
-          if (XPathUtil.containsDynamicContent(astNode[key])) return true;
-        }
+        } else if (XPathUtil.containsDynamicContent(astNode[key])) return true;
       }
     }
     return false;
@@ -37660,14 +37658,23 @@ class XPathUtil {
    * @returns {*|null}
    */
   static getParentBindingElement(start) {
-    /*    if (start.parentNode.host) {
-          const { host } = start.parentNode;
-          if (host.hasAttribute('ref')) {
-            return host;
-          }
-        } else */
-    if (start.parentNode && (start.parentNode.nodeType !== Node.DOCUMENT_NODE || start.parentNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE)) {
-      return this.getClosest('fx-control[ref],fx-upload[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref],fx-repeatitem', start.parentNode);
+    // JSON lens case
+    if (start && start.__jsonlens__ === true) {
+      let current = start.parent;
+      while (current) {
+        if (current.bindingElement) return current.bindingElement;
+        current = current.parent;
+      }
+      return null;
+    }
+
+    // DOM case
+    let node = start?.parentNode;
+    while (node && node.nodeType !== Node.DOCUMENT_NODE && node.nodeType !== Node.DOCUMENT_FRAGMENT_NODE) {
+      if (node.matches?.('[ref],fx-repeatitem')) {
+        return node;
+      }
+      node = node.parentNode;
     }
     return null;
   }
@@ -37680,7 +37687,7 @@ class XPathUtil {
    * path, otherwise <code>false</code>.
    */
   static isAbsolutePath(path) {
-    return path != null && (path.startsWith('/') || path.startsWith('instance(') || path.startsWith('$'));
+    return path != null && (path.startsWith('/') || path.startsWith('instance(') || path.startsWith('$') || path.startsWith('?'));
   }
 
   /**
@@ -37701,30 +37708,74 @@ class XPathUtil {
    * @returns {string}
    */
   static getInstanceId(ref, boundElement) {
-    if (!ref) {
+    const refStr = typeof ref === 'string' ? ref.trim() : '';
+
+    // Variant A: instance-vars ($default, $foo) must count as instance references
+    // for dependency tracking, otherwise repeats won't refresh when they change.
+    try {
+      const host = boundElement?.nodeType === Node.ATTRIBUTE_NODE ? boundElement.ownerElement : boundElement;
+      const fore = host?.closest?.('fx-fore');
+      const bindings = fore?._instanceVarBindings;
+      if (bindings) {
+        // $default => default instance
+        if (/\$default(?![\w.-])/.test(refStr)) return 'default';
+
+        // $<id> => instance <id> (only if it's a known binding key)
+        for (const k of Object.keys(bindings)) {
+          if (k === 'default') continue;
+          const re = new RegExp(`\\$${k.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&')}(?![\\w.-])`);
+          if (re.test(refStr)) return k;
+        }
+      }
+    } catch (_e) {
+      // ignore
+    }
+
+    // Explicit "default instance" selector
+    if (refStr.startsWith('instance()')) {
       return 'default';
     }
-    if (ref.startsWith('instance()')) {
-      return 'default';
+
+    // Explicit instance('id') selector at the START of the expression only
+    // (Do NOT use refStr.includes('instance(') because predicates may reference other instances.)
+    {
+      const m = refStr.match(/^instance\(\s*(['"])(?<id>.*?)\1\s*\)/);
+      if (m?.groups?.id != null) {
+        return m.groups.id;
+      }
     }
-    if (ref.startsWith('instance(')) {
-      const result = ref.substring(ref.indexOf('(') + 1);
-      return result.substring(1, result.indexOf(')') - 1);
-    }
-    if (ref.startsWith('$')) {
-      // this variable might actually point to an instance
-      const variableName = ref.match(/\$(?<variableName>[a-zA-Z0-9\-\_]+).*/)?.groups?.variableName;
+
+    // Variable indirection (may ultimately point to instance(...))
+    if (refStr.startsWith('$')) {
+      const variableName = refStr.match(/^\$(?<variableName>[a-zA-Z0-9\-_]+)/)?.groups?.variableName;
       let closestActualFormElement = boundElement;
       while (closestActualFormElement && !('inScopeVariables' in closestActualFormElement)) {
         closestActualFormElement = closestActualFormElement.nodeType === Node.ATTRIBUTE_NODE ? closestActualFormElement.ownerElement : closestActualFormElement.parentNode;
       }
       const correspondingVariable = closestActualFormElement?.inScopeVariables?.get(variableName);
-      if (!correspondingVariable) {
-        return null;
-      }
+      if (!correspondingVariable) return null;
       return this.getInstanceId(correspondingVariable.valueQuery, correspondingVariable);
     }
-    return null;
+
+    // If we can't decide from the ref itself (relative paths, '/', '.', missing ref, fx-repeatitem),
+    // inherit from the nearest ancestor that *does* have a ref or explicit instance().
+    const parentBinding = XPathUtil.getParentBindingElement(boundElement);
+    if (parentBinding) {
+      // If this is a repeatitem boundary with no ref, keep climbing
+      if (parentBinding.matches?.('fx-repeatitem') && !parentBinding.getAttribute?.('ref')) {
+        return this.getInstanceId(null, parentBinding);
+      }
+      const parentRef = parentBinding.getAttribute?.('ref');
+      if (parentRef) {
+        return this.getInstanceId(parentRef, parentBinding);
+      }
+
+      // Parent binding exists but has no ref (rare, but safe): keep climbing
+      return this.getInstanceId(null, parentBinding);
+    }
+
+    // No parent binding => top of scope. If ref wasn't explicit, default.
+    return 'default';
   }
 
   /**
@@ -37759,18 +37810,6 @@ class XPathUtil {
     return shortened.startsWith('/') ? `${shortened}` : `/${shortened}`;
   }
   */
-
-  /**
-   * @param {Node} node
-   * @param {string} instanceId
-   * @returns string
-   */
-  static getPath(node, instanceId) {
-    const path = evaluateXPathToString$1('path()', node);
-    // Path is like `$default/x[1]/y[1]`
-    const shortened = XPathUtil.shortenPath(path);
-    return shortened.startsWith('/') ? `$${instanceId}${shortened}` : `$${instanceId}/${shortened}`;
-  }
 
   /**
    * @param {string} path
@@ -38190,70 +38229,195 @@ function prettifyXml(source) {
   return resultXml;
 }
 
-const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
-const createdNamespaceResolversByXPathQueryAndNode = new Map();
+// src/json/JSONDomFacade.js
+class JSONDomFacade {
+  // Treat JSONNodes as "element-like" nodes for XPath purposes.
+  // FontoXPath uses DOM nodeType numbers internally; 1 corresponds to ELEMENT_NODE.
+  getNodeType( /* node */
+  ) {
+    return 1;
+  }
+  getParentNode(node) {
+    return node.getParent();
+  }
+  getChildNodes(node) {
+    return node.getChildren();
+  }
+  getChildren(node) {
+    return node.getChildren();
+  }
+  getChildNodeCount(node) {
+    return node.getChildren().length;
+  }
+  getFirstChild(node) {
+    const children = node.getChildren();
+    return children.length ? children[0] : null;
+  }
+  getLastChild(node) {
+    const children = node.getChildren();
+    return children.length ? children[children.length - 1] : null;
+  }
+  getNextSibling(node) {
+    const parent = node.getParent();
+    if (!parent) return null;
+    const siblings = parent.getChildren();
+    const idx = siblings.indexOf(node);
+    return siblings[idx + 1] || null;
+  }
+  getPreviousSibling(node) {
+    const parent = node.getParent();
+    if (!parent) return null;
+    const siblings = parent.getChildren();
+    const idx = siblings.indexOf(node);
+    return idx > 0 ? siblings[idx - 1] : null;
+  }
+  getNodeName(node) {
+    return String(node.getKey());
+  }
+  getNodeValue(node) {
+    return node.getValue();
+  }
 
-// A global registry of function names that are declared in Fore by a developer using the
-// `fx-function` element. These should be available without providing a prefix as well
-const globallyDeclaredFunctionLocalNames = [];
-function getCachedNamespaceResolver(xpath, node) {
-  if (!createdNamespaceResolversByXPathQueryAndNode.has(xpath)) {
+  /**
+   * CRITICAL for fontoxpath: atomization / string-value.
+   * If this returns '' for JSON nodes, contains(), string(), lower-case(), etc. will behave as if empty.
+   */
+  getData(node) {
+    const v = node.getValue();
+    if (v === null || v === undefined) return '';
+    if (typeof v === 'string') return v;
+    if (typeof v === 'number' || typeof v === 'boolean') return String(v);
+
+    // object/array: pragmatic string-value
+    try {
+      return JSON.stringify(v);
+    } catch (_e) {
+      return String(v);
+    }
+  }
+  getAllAttributes() {
+    return [];
+  }
+  getAttribute() {
     return null;
   }
-  return createdNamespaceResolversByXPathQueryAndNode.get(xpath).get(node) || null;
 }
-function setCachedNamespaceResolver(xpath, node, resolver) {
-  if (!createdNamespaceResolversByXPathQueryAndNode.has(xpath)) {
-    return createdNamespaceResolversByXPathQueryAndNode.set(xpath, new Map());
+
+// src/xpath-evaluation.js
+const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
+const createdNamespaceResolversByXPathQueryAndNode = new Map();
+const __jsonDomFacade = new JSONDomFacade();
+
+// ------------------------------------------------------------
+// Helpers: Fore/model/instance
+// ------------------------------------------------------------
+
+function _getOwningFore(node) {
+  let n = node;
+  if (!n) return null;
+
+  // Prefer ForeElementMixin API when available (handles shadow/slot traversal correctly)
+  if (typeof n.getOwnerForm === 'function') {
+    try {
+      const fore = n.getOwnerForm();
+      if (fore) return fore;
+    } catch (_e) {
+      // ignore
+    }
   }
-  return createdNamespaceResolversByXPathQueryAndNode.get(xpath).set(node, resolver);
+  if (n.nodeType === Node.ATTRIBUTE_NODE) n = n.ownerElement;
+  if (n.nodeType === Node.TEXT_NODE) n = n.parentNode;
+
+  // cross shadow
+  if (n?.parentNode?.nodeType === Node.DOCUMENT_FRAGMENT_NODE) n = n.parentNode.host;
+
+  // Element.closest works across light DOM; for shadow, we normalized to host above
+  return n?.closest ? n.closest('fx-fore') : null;
 }
-const xhtmlNamespaceResolver = prefix => {
-  if (!prefix) {
-    return 'http://www.w3.org/1999/xhtml';
+function _getModelFromFormElement(formElement) {
+  if (!formElement) return null;
+  if (typeof formElement.getModel === 'function') {
+    try {
+      return formElement.getModel();
+    } catch (_e) {}
   }
-  return undefined;
-};
+  const fore = _getOwningFore(formElement);
+  if (fore && typeof fore.getModel === 'function') {
+    try {
+      return fore.getModel();
+    } catch (_e) {
+      return null;
+    }
+  }
+  return null;
+}
+function _getInstanceFromFormElement(formElement, instanceId) {
+  const model = _getModelFromFormElement(formElement);
+  if (!model || typeof model.getInstance !== 'function') return null;
+  try {
+    return model.getInstance(instanceId);
+  } catch (_e) {
+    return null;
+  }
+}
+
+// IMPORTANT: source of truth is instance.type / @type
+function _isJsonInstance(instance) {
+  if (!instance) return false;
+  const t = typeof instance.getAttribute === 'function' && instance.getAttribute('type') || instance.type || '';
+  return t === 'json';
+}
+function _isJsonNode(n) {
+  return !!n && typeof n === 'object' && n.__jsonlens__ === true;
+}
+function _getJsonRootNode(instance) {
+  return instance?.nodeset && _isJsonNode(instance.nodeset) ? instance.nodeset : null;
+}
 
 /**
- * Resolve an id in scope. Behaves like the algorithm defined on https://www.w3.org/community/xformsusers/wiki/XForms_2.0#idref-resolve
- *
- * @param {string} id
- * @param {Node} sourceObject
- * @param {string} nodeName
- *
- * @returns {HTMLElement} The element with that ID, resolved with respect to repeats
+ * Avoid calling any instance getters here.
+ * Some FxInstance implementations rebuild lenses / trigger evaluation in getters,
+ * which can recurse into XPath evaluation and overflow the stack.
  */
+function _getRawJsonRootValue(instance) {
+  if (!instance) return null;
+
+  // Canonical backing field in FxInstance
+  if (instance._instanceData !== undefined) return instance._instanceData;
+
+  // Alternate field name
+  if (instance.jsonData !== undefined) return instance.jsonData;
+
+  // Last fallback: unwrap a JSONNode root
+  if (instance.nodeset && instance.nodeset.__jsonlens__ === true) return instance.nodeset.value;
+  return null;
+}
+
+// ------------------------------------------------------------
+// Index('repeat') without XPath evaluation (prevents recursion)
+// ------------------------------------------------------------
+
+function _matchIndexExpr(expr) {
+  const s = String(expr ?? '').trim();
+  const m = s.match(/^index\s*\(\s*(['"])(.*?)\1\s*\)\s*$/);
+  return m ? m[2] : null;
+}
 function resolveId(id, sourceObject, nodeName = null) {
   const query = 'outermost(ancestor-or-self::fx-fore[1]/(descendant::fx-fore|descendant::*[@id = $id]))[not(self::fx-fore)]';
-  /*
-        if (nodeName === 'fx-instance') {
-            // Instance elements can only be in the `model` element
-            // query = 'ancestor-or-self::fx-fore[1]/fx-model/fx-instance[@id = $id]';
-             const fore = Fore.getFore(sourceObject);
-            const instances = fore.getModel().instances;
-            const targetInstance = instances.find(i => i.id === id);
-            return targetInstance;
-        return document.getElementById(id);
-  }
-    */
   if (sourceObject.nodeType === Node.TEXT_NODE) {
     sourceObject = sourceObject.parentNode;
   }
   if (sourceObject.nodeType === Node.ATTRIBUTE_NODE) {
     sourceObject = sourceObject.ownerElement;
   }
-  if (sourceObject.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+  if (sourceObject.parentNode?.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
     sourceObject = sourceObject.parentNode.host;
   }
   const ownerForm = sourceObject.localName === 'fx-fore' ? sourceObject : sourceObject.closest('fx-fore');
   const elementsWithId = ownerForm.querySelectorAll(`[id='${id}']`);
   if (elementsWithId.length === 1) {
-    // A single one is found. Assume no ID reuse.
     const targetObject = elementsWithId[0];
-    if (nodeName && targetObject.localName !== nodeName) {
-      return null;
-    }
+    if (nodeName && targetObject.localName !== nodeName) return null;
     return targetObject;
   }
   const allMatchingTargetObjects = evaluateXPathToNodes$1(query, sourceObject, null, {
@@ -38261,87 +38425,435 @@ function resolveId(id, sourceObject, nodeName = null) {
   }, {
     namespaceResolver: xhtmlNamespaceResolver
   });
-  if (allMatchingTargetObjects.length === 0) {
-    return null;
-  }
+  if (allMatchingTargetObjects.length === 0) return null;
   if (allMatchingTargetObjects.length === 1 && evaluateXPathToBoolean$1('(ancestor::fx-fore | ancestor::fx-repeat)[last()]/self::fx-fore', allMatchingTargetObjects[0], null, null, {
     namespaceResolver: xhtmlNamespaceResolver
   })) {
-    // If the target element is not repeated, then the search for the target object is trivial since
-    // there is only one associated with the target element that bears the matching ID. This is true
-    // regardless of whether or not the source object is repeated. However, if the target element is
-    // repeated, then additional information must be used to help select a target object from among
-    // those associated with the identified target element.
     const targetObject = allMatchingTargetObjects[0];
-    if (nodeName && targetObject.localName !== nodeName) {
-      return null;
-    }
+    if (nodeName && targetObject.localName !== nodeName) return null;
     return targetObject;
   }
-
-  // SPEC:
-
-  // 12.2.1 References to Elements within a repeat Element
-
-  // When the target element that is identified by the IDREF of a source object has one or more
-  // repeat elements as ancestors, then the set of ancestor repeats are partitioned into two
-  // subsets, those in common with the source element and those that are not in common. Any ancestor
-  // repeat elements of the target element not in common with the source element are descendants of
-  // the repeat elements that the source and target element have in common, if any.
-
-  // For the repeat elements that are in common, the desired target object exists in the same set of
-  // run-time objects that contains the source object. Then, for each ancestor repeat of the target
-  // element that is not in common with the source element, the current index of the repeat
-  // determines the set of run-time objects that contains the desired target object.
   for (const ancestorRepeatItem of evaluateXPathToNodes$1('ancestor::fx-repeatitem => reverse()', sourceObject, null, null, {
     namespaceResolver: xhtmlNamespaceResolver
   })) {
     const foundTargetObjects = allMatchingTargetObjects.filter(to => XPathUtil.contains(ancestorRepeatItem, to));
     switch (foundTargetObjects.length) {
       case 0:
-        // Nothing found: ignore
         break;
       case 1:
         {
-          // A single one is found: the target object is directly in a common repeat
           const targetObject = foundTargetObjects[0];
-          if (nodeName && targetObject.localName !== nodeName) {
-            return null;
-          }
+          if (nodeName && targetObject.localName !== nodeName) return null;
           return targetObject;
         }
       default:
         {
-          // Multiple target objects are found: they are in a repeat that is not common with the
-          // source object We found a target object in a common repeat! We now need to find the one
-          // that is in the repeatitem identified at the current index
           const targetObject = foundTargetObjects.find(to => evaluateXPathToNodes$1('every $ancestor of ancestor::fx-repeatitem satisfies $ancestor is $ancestor/../child::fx-repeatitem[../@repeat-index]', to, null, {}));
-          if (!targetObject) {
-            // Nothing valid found for whatever reason. This might be something dynamic?
-            return null;
-          }
-          if (nodeName && targetObject.localName !== nodeName) {
-            return null;
-          }
+          if (!targetObject) return null;
+          if (nodeName && targetObject.localName !== nodeName) return null;
           return targetObject;
         }
     }
   }
-  // We found no target objects in common repeats. The id is unresolvable
   return null;
 }
 
-// Make namespace resolving use the `instance` element that is related to here
+/**
+ * Resolve index('repeatId') without evaluating XPath (prevents recursion).
+ * Returns:
+ *  - null   => not an index() expr
+ *  - number => resolved index (defaults to 1)
+ */
+function tryResolveIndexExpr(expr, formElementOrNode) {
+  try {
+    const repeatId = _matchIndexExpr(expr);
+    if (!repeatId) return null;
+    const source = formElementOrNode?.nodeType ? formElementOrNode : _getOwningFore(formElementOrNode);
+    const repeat = source && resolveId(repeatId, source, 'fx-repeat') || _getOwningFore(source)?.querySelector?.(`#${CSS.escape(repeatId)}`);
+    if (!repeat) return 1;
+    const attr = repeat.getAttribute('index') ?? repeat.getAttribute('repeat-index');
+    let idx = Number(attr);
+    if (!Number.isFinite(idx) || idx < 1) {
+      if (typeof repeat.getIndex === 'function') idx = Number(repeat.getIndex());else idx = Number(repeat.index);
+    }
+    return Number.isFinite(idx) && idx >= 1 ? idx : 1;
+  } catch (_e) {
+    return null;
+  }
+}
+
+// ------------------------------------------------------------
+// JSON lookup handling
+// ------------------------------------------------------------
+
+function _toXQueryMapItem(value) {
+  if (value == null) return value;
+  if (Array.isArray(value)) {
+    return value.map(v => _toXQueryMapItem(v));
+  }
+  if (value instanceof Map) {
+    const m = new Map();
+    for (const [k, v] of value.entries()) m.set(k, _toXQueryMapItem(v));
+    return m;
+  }
+
+  // plain object -> Map
+  if (typeof value === 'object' && !value.nodeType && value.__jsonlens__ !== true) {
+    const m = new Map();
+    for (const [k, v] of Object.entries(value)) m.set(k, _toXQueryMapItem(v));
+    return m;
+  }
+  return value;
+}
+function _resolveLookupOnMapItem(base, rest) {
+  // Resolve XQuery 3.1 lookup steps like "?ui?query" against Map/Array/plain objects.
+  // Returns the resolved JS value (primitive/Map/Array/object) or null.
+  if (base == null) return null;
+  let s = String(rest ?? '').trim();
+  if (!s) return base;
+
+  // Allow prefixes like '.?ui?query'
+  if (s.startsWith('.')) s = s.slice(1);
+  if (!s.startsWith('?')) return base;
+  const steps = s.split('?').filter(Boolean).map(p => String(p).trim()).filter(Boolean);
+  let cur = base;
+  const getProp = (obj, key) => {
+    if (obj == null) return null;
+    if (obj instanceof Map) return obj.get(key);
+    if (Array.isArray(obj)) {
+      // numeric key for arrays
+      const n = Number(key);
+      if (Number.isFinite(n)) return obj[n - 1];
+      return null;
+    }
+    if (typeof obj === 'object') return obj[key];
+    return null;
+  };
+  for (const raw of steps) {
+    if (cur == null) return null;
+    if (raw === '*') {
+      // Star lookup returns the current collection as-is
+      continue;
+    }
+
+    // Support bracket index: prop[3]
+    const bm = raw.match(/^(.*?)\[(.+)\]$/);
+    if (bm) {
+      const prop = bm[1].trim();
+      const idxExpr = bm[2].trim();
+      const container = prop ? getProp(cur, prop) : cur;
+      if (container == null) return null;
+      const idx1 = _resolveBracketIndex1(idxExpr, null) ?? Number(idxExpr);
+      if (!Number.isFinite(idx1) || idx1 < 1) return null;
+      if (Array.isArray(container)) {
+        cur = container[idx1 - 1];
+        continue;
+      }
+      if (container instanceof Map) {
+        // Map with numeric keys is rare; treat as array-like if values are array
+        const v = container.get(idx1);
+        cur = v !== undefined ? v : null;
+        continue;
+      }
+      return null;
+    }
+    cur = getProp(cur, raw);
+  }
+  return cur;
+}
+function _looksLikeLookupExpr(expr) {
+  const s = String(expr ?? '').trim();
+  return s.includes('?');
+}
+
+/**
+ * Split "…?*[(predicate)]" => { base: "…?*", predicate: "(predicate)" }
+ * Works for:
+ *   instance('data')?movies?*[true()]
+ *   ?movies?*[instance('data')?ui?query = 'Ma']
+ */
+function _splitStarPredicate(expr) {
+  const s = String(expr ?? '').trim();
+  const m = s.match(/^(.*\?\*)\s*\[\s*([\s\S]+?)\s*\]\s*$/);
+  if (!m) return null;
+  return {
+    base: m[1].trim(),
+    predicate: m[2].trim()
+  };
+}
+
+/**
+ * Determine whether expression is a "simple navigation" lens path that can be resolved
+ * by JSONNode.get chain:
+ * - no "*[predicate]" (handled separately)
+ * - no operators
+ * - no function calls beyond instance()/index()
+ * - predicates allowed ONLY in form "prop[NUMBER]" or "prop[index('repeat')]"
+ */
+function _isSimpleLookupExpr(expr) {
+  const s = String(expr ?? '').trim();
+
+  // star predicate is not simple (handled by _splitStarPredicate path)
+  if (/\?\*\s*\[/.test(s)) return false;
+
+  // operators => not simple
+  if (/[=<>!]=|[=<>]/.test(s)) return false;
+
+  // function calls other than instance()/index() => not simple
+  const parens = s.match(/[a-zA-Z_][\w.-]*\s*\(/g) || [];
+  const otherCalls = parens.filter(m => !/^instance\s*\(/.test(m) && !/^index\s*\(/.test(m));
+  if (otherCalls.length) return false;
+
+  // bracket predicates allowed only as array access
+  if (/\[[\s\S]*\]/.test(s)) {
+    const steps = s.split('?').filter(Boolean);
+    for (const step of steps) {
+      const bm = step.match(/^(.*?)\[(.+)\]$/);
+      if (!bm) continue;
+      const inside = bm[2].trim();
+      if (/^\d+$/.test(inside)) continue;
+      if (_matchIndexExpr(inside)) continue;
+      // allow index("x") too
+      if (/^index\s*\(\s*(['"])(.*?)\1\s*\)\s*$/.test(inside)) continue;
+      return false;
+    }
+  }
+  return true;
+}
+function _parseSimpleLookupPath(expr) {
+  const s = String(expr ?? '').trim();
+  let instanceId = null;
+  let rest = s;
+  const instExplicit = s.match(/^instance\s*\(\s*(['"])(.*?)\1\s*\)\s*(\?.*)$/);
+  if (instExplicit) {
+    instanceId = instExplicit[2];
+    rest = instExplicit[3];
+  } else {
+    const instDefault = s.match(/^instance\s*\(\s*\)\s*(\?.*)$/);
+    if (instDefault) {
+      instanceId = 'default';
+      rest = instDefault[1];
+    } else if (s.startsWith('.?')) rest = s.slice(1);else if (!s.startsWith('?')) return null;
+  }
+  const steps = rest.split('?').filter(Boolean).map(part => part.trim()).filter(Boolean);
+  return {
+    instanceId,
+    steps,
+    hasExplicitInstance: !!instExplicit
+  };
+}
+function _getInstanceIdForLookupExpr(expr0, formElement) {
+  const parsed = _parseSimpleLookupPath(expr0);
+  if (parsed && parsed.instanceId) return parsed.instanceId;
+  return XPathUtil.getInstanceId(expr0, formElement);
+}
+function _isRelativeJsonLookup(expr0, contextNode) {
+  const s = String(expr0 ?? '').trim();
+  // relative lookup: starts with ? or .?
+  if (!(s.startsWith('?') || s.startsWith('.?'))) return false;
+  return _isJsonNode(contextNode);
+}
+function _resolveBracketIndex1(idxExpr, formElement) {
+  const t = String(idxExpr ?? '').trim();
+  if (/^\d+$/.test(t)) return Number(t);
+
+  // index('movies')
+  const rid = _matchIndexExpr(t);
+  if (rid) return tryResolveIndexExpr(`index('${rid}')`, formElement) ?? 1;
+
+  // index("movies")
+  const m = t.match(/^index\s*\(\s*(['"])(.*?)\1\s*\)\s*$/);
+  if (m) return tryResolveIndexExpr(`index('${m[2]}')`, formElement) ?? 1;
+  const n = Number(t);
+  return Number.isFinite(n) ? n : null;
+}
+function _resolveSimpleLookupToJsonNode(expr, contextNode, formElement) {
+  const parsed = _parseSimpleLookupPath(expr);
+  if (!parsed) return null;
+  const trimmed = String(expr ?? '').trim();
+  const isExplicitInstance = trimmed.startsWith('instance(');
+
+  // IMPORTANT: always return a NEW array for children (copy),
+  // otherwise fx-repeat may keep a cached reference and miss inserts/deletes.
+  const getChildren = n => {
+    if (!n) return [];
+    const kids = typeof n.getChildren === 'function' ? n.getChildren() || [] : Array.isArray(n.children) ? n.children : [];
+    return Array.from(kids);
+  };
+  let node = null;
+  if (parsed.instanceId) {
+    const instance = _getInstanceFromFormElement(formElement, parsed.instanceId);
+    if (!_isJsonInstance(instance)) return null;
+    node = _getJsonRootNode(instance);
+    if (!node) return null;
+  } else if (!isExplicitInstance && _isJsonNode(contextNode)) {
+    node = contextNode;
+  } else {
+    const fallbackId = XPathUtil.getInstanceId(expr, formElement) || 'default';
+    const instance = _getInstanceFromFormElement(formElement, fallbackId);
+    if (!_isJsonInstance(instance)) return null;
+    node = _getJsonRootNode(instance);
+    if (!node) return null;
+  }
+  for (const rawStep of parsed.steps) {
+    if (!node) return null;
+    const step = String(rawStep);
+    if (step === '*') {
+      return getChildren(node);
+    }
+    if (/^\d+$/.test(step)) {
+      const idx0 = Number(step) - 1;
+      node = node.get?.(idx0) || null;
+      continue;
+    }
+    const bm = step.match(/^(.*?)\[(.+)\]$/);
+    if (bm) {
+      const prop = bm[1].trim();
+      const idxExpr = bm[2].trim();
+      const container = prop ? typeof node.get === 'function' ? node.get(prop) : null : node;
+      if (!container) return null;
+      const arrVal = container.value;
+      if (!Array.isArray(arrVal)) return null;
+      const idx1 = _resolveBracketIndex1(idxExpr, formElement);
+      if (!Number.isFinite(idx1) || idx1 < 1) return null;
+      const idx0 = idx1 - 1;
+      node = container.get?.(idx0) || null;
+      continue;
+    }
+    node = node.get?.(step) || null;
+  }
+  if (!node) return null;
+  if (Array.isArray(node.value)) return getChildren(node);
+  return node;
+}
+// ------------------------------------------------------------
+// RAW JSON evaluation helpers (FontoXPath over JS values)
+// ------------------------------------------------------------
+
+function getVariablesInScope(formElement) {
+  let closestActualFormElement = formElement;
+  while (closestActualFormElement && !('inScopeVariables' in closestActualFormElement)) {
+    closestActualFormElement = closestActualFormElement.nodeType === Node.ATTRIBUTE_NODE ? closestActualFormElement.ownerElement : closestActualFormElement.parentNode;
+  }
+  const scopeNode = closestActualFormElement || formElement;
+  const fore = scopeNode && typeof scopeNode.getOwnerForm === 'function' && scopeNode.getOwnerForm() || _getOwningFore(scopeNode);
+  const variables = {};
+
+  // Helper: get :scope > fx-instance list from a fore's model without triggering instance getters
+  const getLocalInstances = aFore => {
+    if (!aFore) return [];
+    const model = typeof aFore.getModel === 'function' && aFore.getModel() || aFore.shadowRoot?.querySelector?.('fx-model') || aFore.querySelector?.('fx-model') || null;
+    if (!model) return [];
+    return Array.from(model.querySelectorAll(':scope > fx-instance'));
+  };
+  const buildBindingsFromInstances = instEls => {
+    if (!instEls || !instEls.length) return null;
+    const b = Object.create(null);
+
+    // default = first instance in doc order
+    const first = instEls[0];
+    const firstIsJson = _isJsonInstance(first);
+    b.default = firstIsJson ? _getRawJsonRootValue(first) : _getInstanceDefaultContextNoSideEffects(first);
+
+    // $<id> for explicitly id'ed instances
+    for (const inst of instEls) {
+      const id = inst.getAttribute && inst.getAttribute('id') || '';
+      if (!id) continue;
+      if (id === 'default') continue;
+      b[id] = _isJsonInstance(inst) ? _getRawJsonRootValue(inst) : _getInstanceDefaultContextNoSideEffects(inst);
+    }
+    return b;
+  };
+
+  // 1) Implicit instance vars: $default and $<id>
+  let instanceBindings = fore && fore._instanceVarBindings;
+
+  // Ensure we have at least a `default` binding; if not, build it.
+  if (fore && (!instanceBindings || !('default' in instanceBindings))) {
+    try {
+      const localInst = getLocalInstances(fore);
+      const built = buildBindingsFromInstances(localInst);
+      if (built && built.default !== undefined && built.default !== null) {
+        fore._instanceVarBindings = built;
+        instanceBindings = built;
+      } else {
+        // NEW: fallback to nearest ancestor fore that has a SHARED instance as default
+        let p = fore.parentNode?.nodeType === Node.DOCUMENT_FRAGMENT_NODE ? fore.parentNode.host : fore.parentNode;
+        while (p) {
+          const parentFore = p.closest ? p.closest('fx-fore') : null;
+          if (!parentFore) break;
+          const parentInst = getLocalInstances(parentFore).filter(i => i.hasAttribute && i.hasAttribute('shared'));
+          const parentBuilt = buildBindingsFromInstances(parentInst);
+          if (parentBuilt && parentBuilt.default !== undefined && parentBuilt.default !== null) {
+            // Do NOT cache this onto the child fore; it’s a fallback view, not ownership.
+            instanceBindings = parentBuilt;
+            break;
+          }
+          p = parentFore.parentNode?.nodeType === Node.DOCUMENT_FRAGMENT_NODE ? parentFore.parentNode.host : parentFore.parentNode;
+        }
+      }
+    } catch (_e) {
+      // ignore
+    }
+  }
+  if (instanceBindings) {
+    for (const [k, v] of Object.entries(instanceBindings)) {
+      variables[k] = _toXQueryMapItem(v);
+    }
+  }
+
+  // 2) Explicit in-scope variables (fx-var or other injectors) override implicit ones
+  if (closestActualFormElement && closestActualFormElement.inScopeVariables) {
+    for (const key of closestActualFormElement.inScopeVariables.keys()) {
+      const varElementOrValue = closestActualFormElement.inScopeVariables.get(key);
+      if (!varElementOrValue) continue;
+      if (varElementOrValue.nodeType) {
+        const el = varElementOrValue;
+
+        // Preserve implicit binding for $default when fx-var simply re-declares default instance
+        if (el.nodeName === 'FX-VAR' && fore && fore._instanceVarBindings && key in fore._instanceVarBindings) {
+          const vexpr = String(el.getAttribute('value') || '').trim();
+          const isDefaultInstanceExpr = /^instance\s*\(\s*\)\s*$/.test(vexpr) || /^instance\s*\(\s*(['"])default\1\s*\)\s*$/.test(vexpr);
+          if (isDefaultInstanceExpr) continue;
+        }
+        if (el.nodeName === 'FX-VAR') {
+          if (el._isRefreshing) continue;
+          if ('_value' in el) {
+            variables[key] = el._value;
+            continue;
+          }
+          if ('_computedValue' in el) {
+            variables[key] = el._computedValue;
+            continue;
+          }
+        }
+        variables[key] = el.value;
+      } else {
+        variables[key] = varElementOrValue;
+      }
+    }
+  }
+
+  // Prevent self-recursive fx-var evaluation
+  if (formElement && formElement.nodeName === 'FX-VAR') {
+    const selfName = (formElement.getAttribute('name') || '').trim();
+    if (selfName) delete variables[selfName];
+  }
+  return variables;
+}
+// ------------------------------------------------------------
+// Namespace resolver infra (XML only)
+// ------------------------------------------------------------
+
+const xhtmlNamespaceResolver = prefix => {
+  if (!prefix) return 'http://www.w3.org/1999/xhtml';
+  return undefined;
+};
 const xmlDocument = new DOMParser().parseFromString('<xml />', 'text/xml');
 const instanceReferencesByQuery = new Map();
 function findInstanceReferences(xpathQuery) {
-  if (!xpathQuery.includes('instance')) {
-    // No call to the instance function anyway: short-circuit and prevent AST processing
-    return [];
-  }
-  if (instanceReferencesByQuery.has(xpathQuery)) {
-    return instanceReferencesByQuery.get(xpathQuery);
-  }
+  if (!xpathQuery.includes('instance')) return [];
+  if (instanceReferencesByQuery.has(xpathQuery)) return instanceReferencesByQuery.get(xpathQuery);
   const xpathAST = parseScript(xpathQuery, {}, xmlDocument);
   const instanceReferences = evaluateXPathToStrings$1(`descendant::xqx:functionCallExpr
 				[xqx:functionName = "instance"]
@@ -38353,50 +38865,46 @@ function findInstanceReferences(xpathQuery) {
   instanceReferencesByQuery.set(xpathQuery, instanceReferences);
   return instanceReferences;
 }
-/**
- * @typedef {function(string):string} NamespaceResolver
- */
-
-/**
- * @function
- * Resolve a namespace. Needs a namespace prefix and the element that is most closely related to the
- * XPath in which the namespace is being resolved. The prefix will be resolved by using the
- * ancestry of said element.
- *
- * It has two ways of doing so:
- *
- * - If the prefix is defined in an `xmlns:XXX="YYY"` namespace declaration, it will return 'YYY'.
- * - If the prefix is the empty prefix and there is an `xpath-default-namespace="YYY"` attribute in
- * - the * ancestry, that attribute will be used and 'YYY' will be returned
- *
- * @param  {string} xpathQuery
- * @param  {HTMLElement} formElement
- * @returns {NamespaceResolver} The namespace resolver for this context
- */
+function getCachedNamespaceResolver(xpath, node) {
+  if (!createdNamespaceResolversByXPathQueryAndNode.has(xpath)) return null;
+  return createdNamespaceResolversByXPathQueryAndNode.get(xpath).get(node) || null;
+}
+function setCachedNamespaceResolver(xpath, node, resolver) {
+  if (!createdNamespaceResolversByXPathQueryAndNode.has(xpath)) {
+    createdNamespaceResolversByXPathQueryAndNode.set(xpath, new Map());
+  }
+  createdNamespaceResolversByXPathQueryAndNode.get(xpath).set(node, resolver);
+}
 function createNamespaceResolver(xpathQuery, formElement) {
   const cachedResolver = getCachedNamespaceResolver(xpathQuery, formElement);
-  if (cachedResolver) {
-    return cachedResolver;
-  }
+  if (cachedResolver) return cachedResolver;
+  const provisionalResolver = prefix => prefix ? undefined : '';
+  setCachedNamespaceResolver(xpathQuery, formElement, provisionalResolver);
   let instanceReferences = findInstanceReferences(xpathQuery);
+  const closestRefExcludingSelf = el => {
+    if (!el) return null;
+    let n = el;
+    if (n.nodeType === Node.ATTRIBUTE_NODE) n = n.ownerElement;
+    if (n?.parentNode?.nodeType === Node.DOCUMENT_FRAGMENT_NODE) n = n.parentNode.host;
+    let start = n?.parentNode;
+    if (start?.nodeType === Node.DOCUMENT_FRAGMENT_NODE) start = start.host;
+    return start?.closest ? start.closest('[ref]') : null;
+  };
   if (instanceReferences.length === 0) {
-    // No instance functions. Look up further in the hierarchy to see if we can deduce the intended context from there
-    const ancestorComponent = formElement.parentNode && formElement.parentNode.nodeType === formElement.ELEMENT_NODE && formElement.parentNode.closest('[ref]');
-    if (ancestorComponent) {
-      const resolver = createNamespaceResolver(ancestorComponent.getAttribute('ref'), ancestorComponent);
-      setCachedNamespaceResolver(xpathQuery, formElement, resolver);
-      return resolver;
+    const ancestorComponent = closestRefExcludingSelf(formElement);
+    if (ancestorComponent && ancestorComponent !== formElement) {
+      const ancestorRef = ancestorComponent.getAttribute('ref');
+      if (ancestorRef && ancestorRef !== xpathQuery) {
+        const resolver = createNamespaceResolver(ancestorRef, ancestorComponent);
+        setCachedNamespaceResolver(xpathQuery, formElement, resolver);
+        return resolver;
+      }
     }
-    // Nothing found: let's just assume we're supposed to use the `default` instance
     instanceReferences = ['default'];
   }
   if (instanceReferences.length === 1) {
-    // console.log(`resolving ${xpathQuery} with ${instanceReferences[0]}`);
     let instance;
     if (instanceReferences[0] === 'default') {
-      /**
-       * @type {HTMLElement}
-       */
       const actualForeElement = evaluateXPathToFirstNode$1('ancestor-or-self::fx-fore[1]', formElement, null, null, {
         namespaceResolver: xhtmlNamespaceResolver
       });
@@ -38406,46 +38914,14 @@ function createNamespaceResolver(xpathQuery, formElement) {
     }
     if (instance && instance.hasAttribute('xpath-default-namespace')) {
       const xpathDefaultNamespace = instance.getAttribute('xpath-default-namespace');
-      /*
-            console.log(
-              `Resolving the xpath ${xpathQuery} with the default namespace set to ${xpathDefaultNamespace}`,
-            );
-      */
-      /**
-       * @type {NamespaceResolver}
-       */
-      const resolveNamespacePrefix = prefix => {
-        if (!prefix) {
-          return xpathDefaultNamespace;
-        }
-        return undefined;
-      };
+      const resolveNamespacePrefix = prefix => !prefix ? xpathDefaultNamespace : undefined;
       setCachedNamespaceResolver(xpathQuery, formElement, resolveNamespacePrefix);
       return resolveNamespacePrefix;
     }
   }
-  /*
-  if (instanceReferences.length > 1) {
-    console.warn(
-      `More than one instance is used in the query "${xpathQuery}". The default namespace resolving will be used`,
-    );
-  }
-  */
-
   const xpathDefaultNamespace = evaluateXPathToString$1('ancestor-or-self::*/@xpath-default-namespace[last()]', formElement) || '';
-
-  /**
-   * @type {NamespaceResolver}
-   */
   const resolveNamespacePrefix = function resolveNamespacePrefix(prefix) {
-    if (prefix === '') {
-      return xpathDefaultNamespace;
-    }
-
-    // Note: ideally we should use Node#lookupNamespaceURI. However, the nodes we are passed are
-    // XML. The best we can do is emulate the `xmlns:xxx` namespace declarations by regarding them as
-    // attributes. Which they technically ARE NOT!
-
+    if (prefix === '') return xpathDefaultNamespace;
     return evaluateXPathToString$1('ancestor-or-self::*/@*[name() = "xmlns:" || $prefix][last()]', formElement, null, {
       prefix
     });
@@ -38455,23 +38931,21 @@ function createNamespaceResolver(xpathQuery, formElement) {
 }
 function createNamespaceResolverForNode(query, contextNode, formElement) {
   if ((contextNode && contextNode.ownerDocument || contextNode) === window.document) {
-    // Running a query on the HTML DOM. Don't bother resolving namespaces in any other way
     return xhtmlNamespaceResolver;
   }
   return createNamespaceResolver(query, formElement);
 }
 
-/**
- * Implementation of the functionNameResolver passed to FontoXPath to
- * redirect function resolving for unprefixed functions to either the fn or the xf namespace
- */
-// eslint-disable-next-line no-unused-vars
+// ------------------------------------------------------------
+// Function resolver
+// ------------------------------------------------------------
+
+const globallyDeclaredFunctionLocalNames = [];
 function functionNameResolver({
   prefix,
   localName
 }, _arity) {
   switch (localName) {
-    // TODO: put the full XForms library functions set here
     case 'context':
     case 'base64encode':
     case 'boolean-from-string':
@@ -38504,8 +38978,6 @@ function functionNameResolver({
       };
     default:
       if (prefix === '' && globallyDeclaredFunctionLocalNames.includes(localName)) {
-        // The function has been declared without a prefix and is called here without a prefix.
-        // Just make this work. It is the developer-friendly way
         return {
           namespaceURI: 'http://www.w3.org/2005/xquery-local-functions',
           localName
@@ -38527,87 +38999,441 @@ function functionNameResolver({
   }
 }
 
-/**
- * Get the variables in scope of the form element. These are the values of the variables that
- * logically precede the formElement that declares the XPath
- *
- * @param  {Node}  formElement  The element that declares the XPath
- *
- * @returns  {Object}  A key-value mapping of the variables
- */
-function getVariablesInScope(formElement) {
-  let closestActualFormElement = formElement;
-  while (closestActualFormElement && !('inScopeVariables' in closestActualFormElement)) {
-    closestActualFormElement = closestActualFormElement.nodeType === Node.ATTRIBUTE_NODE ? closestActualFormElement.ownerElement : closestActualFormElement.parentNode;
+// ------------------------------------------------------------
+// JSON star-predicate filtering using FontoXPath per item
+// ------------------------------------------------------------
+
+function _jsonAtomicFromResolved(resolved) {
+  if (resolved === null || resolved === undefined) return '';
+
+  // Arrays: join atomic values with spaces (XPath-ish).
+  if (Array.isArray(resolved)) {
+    return resolved.map(r => _jsonAtomicFromResolved(r)).filter(s => s !== null && s !== undefined && s !== '').join(' ');
   }
-  if (!closestActualFormElement) {
-    return {};
-  }
-  const variables = {};
-  if (closestActualFormElement.inScopeVariables) {
-    for (const key of closestActualFormElement.inScopeVariables.keys()) {
-      const varElementOrValue = closestActualFormElement.inScopeVariables.get(key);
-      if (!varElementOrValue) {
-        continue;
-      }
-      if (varElementOrValue.nodeType) {
-        // We are a var element, set the value to the value computed there
-        variables[key] = varElementOrValue.value;
-        // variables[key] = varElementOrValue.inScopeVariables.get(key);
-      } else {
-        // We are a direct value. This is used to leak in event variables
-        variables[key] = varElementOrValue;
-      }
+
+  // JSONNode: prefer getValue() if present.
+  if (_isJsonNode(resolved)) {
+    const v = typeof resolved.getValue === 'function' ? resolved.getValue() : resolved.value;
+    if (v === null || v === undefined) return '';
+    const t = typeof v;
+    if (t === 'string') return v;
+    if (t === 'number' || t === 'boolean' || t === 'bigint') return String(v);
+    try {
+      return JSON.stringify(v);
+    } catch (_e) {
+      return '';
     }
   }
-  return variables;
-}
 
-/**
- * Evaluate an XPath to _any_ type. When possible, prefer to use any other function to ensure the
- * type of the output is more predictable.
- *
- * @param  {string} xpath  The XPath to run
- * @param  {Node} contextNode The start of the XPath
- * @param  {import('./ForeElementMixin.js').default} formElement  The form element associated to the XPath
- * @param  {Object} variables  Any variables to pass to the XPath
- * @param  {Object} options  Any options to pass to the XPath
- *
- * @returns {any[]}
- */
-/*
-export function evaluateXPath(xpath, contextNode, formElement, variables = {}, options={}, domFacade = null) {
-    const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
-    const variablesInScope = getVariablesInScope(formElement);
+  // Primitives
+  const t = typeof resolved;
+  if (t === 'string') return resolved;
+  if (t === 'number' || t === 'boolean' || t === 'bigint') return String(resolved);
 
-    return fxEvaluateXPath(
-        xpath,
-        contextNode,
-        domFacade,
-        {...variablesInScope, ...variables},
-        fxEvaluateXPath.ALL_RESULTS_TYPE,
-        {
-			debug: true,
-            currentContext: {formElement, variables},
-            moduleImports: {
-                xf: XFORMS_NAMESPACE_URI,
-            },
-            functionNameResolver,
-            namespaceResolver,
-			language: options.language || evaluateXPath.XPATH_3_1
-        },
-    );
-}
-*/
-function evaluateXPath(xpath, contextNode, formElement, variables = {}, options = {}) {
+  // Other objects
   try {
-    const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
+    return JSON.stringify(resolved);
+  } catch (_e) {
+    return String(resolved);
+  }
+}
+// Paste this over the existing function in src/xpath-evaluation.js
+function _materializeInstanceLookupsInPredicate(predicateExpr, currentJsonNode, formElement) {
+  const src = String(predicateExpr ?? '');
+  let out = '';
+  const extraVars = {};
+  let varCount = 0;
+  const inScope = getVariablesInScope(formElement);
+  let inSingle = false;
+  let inDouble = false;
+  const isBoundary = ch => ch === undefined || ch === null || /\s/.test(ch) || ch === ',' || ch === ')' || ch === ']' || ch === '+' || ch === '-' || ch === '*' || ch === '=' || ch === '>' || ch === '<' || ch === '!' || ch === '|' || ch === '&';
+  function readLookupTail(start) {
+    let k = start;
+    if (src[k] === '.') {
+      if (src[k + 1] !== '?') return null;
+      k += 1;
+    }
+    if (src[k] !== '?') return null;
+    let bracketDepth = 0;
+    let inS = false;
+    let inD = false;
+    while (k < src.length) {
+      const ch = src[k];
+      if (ch === "'" && !inD) {
+        inS = !inS;
+        k += 1;
+        continue;
+      }
+      if (ch === '"' && !inS) {
+        inD = !inD;
+        k += 1;
+        continue;
+      }
+      if (inS || inD) {
+        k += 1;
+        continue;
+      }
+      if (ch === '[') bracketDepth += 1;else if (ch === ']') {
+        if (bracketDepth > 0) bracketDepth -= 1;else break;
+      }
+      if (bracketDepth === 0 && k !== start && isBoundary(ch)) break;
+      k += 1;
+    }
+    return {
+      raw: src.slice(start, k),
+      end: k
+    };
+  }
+  function readInstanceLensAt(start) {
+    if (!src.slice(start).match(/^instance\s*\(/)) return null;
+    let j = start;
+    let inS = false;
+    let inD = false;
+    let depth = 0;
+    while (j < src.length) {
+      const ch = src[j];
+      if (ch === "'" && !inD) {
+        inS = !inS;
+        j += 1;
+        continue;
+      }
+      if (ch === '"' && !inS) {
+        inD = !inD;
+        j += 1;
+        continue;
+      }
+      if (inS || inD) {
+        j += 1;
+        continue;
+      }
+      if (ch === '(') depth += 1;else if (ch === ')') {
+        depth -= 1;
+        if (depth === 0) break;
+      }
+      j += 1;
+    }
+    if (j >= src.length) return null;
+    let k = j + 1;
+    while (k < src.length && /\s/.test(src[k])) k += 1;
+    const tail = readLookupTail(k);
+    if (!tail) return null;
+    return {
+      raw: src.slice(start, tail.end),
+      end: tail.end
+    };
+  }
+  function readVariableLensAt(start) {
+    if (src[start] !== '$') return null;
+    let j = start + 1;
+    if (!/[A-Za-z_]/.test(src[j] || '')) return null;
+    j += 1;
+    while (j < src.length && /[\w.-]/.test(src[j])) j += 1;
+    let k = j;
+    while (k < src.length && /\s/.test(src[k])) k += 1;
+    const tail = readLookupTail(k);
+    if (!tail) {
+      return {
+        raw: src.slice(start, j),
+        end: j,
+        name: src.slice(start + 1, j),
+        tail: ''
+      };
+    }
+    return {
+      raw: src.slice(start, tail.end),
+      end: tail.end,
+      name: src.slice(start + 1, j),
+      tail: src.slice(k, tail.end)
+    };
+  }
+  function resolveVariableLens(rawVarExpr) {
+    const m = String(rawVarExpr).match(/^\$([A-Za-z_][\w.-]*)([\s\S]*)$/);
+    if (!m) return null;
+    const varName = m[1];
+    const rest = (m[2] || '').trim();
+    const base = Object.prototype.hasOwnProperty.call(inScope, varName) ? inScope[varName] : null;
+    if (rest && (rest.startsWith('?') || rest.startsWith('.?'))) {
+      if (base && _isJsonNode(base)) {
+        const resolved = _resolveSimpleLookupToJsonNode(rest, base, formElement);
+        return _jsonAtomicFromResolved(resolved);
+      }
+      const resolved = _resolveLookupOnMapItem(base, rest);
+      return _jsonAtomicFromResolved(resolved);
+    }
+    return _jsonAtomicFromResolved(base);
+  }
+  function resolveRelativeLookup(rawLookupExpr) {
+    const resolved = _resolveSimpleLookupToJsonNode(rawLookupExpr, currentJsonNode, formElement);
+    return _jsonAtomicFromResolved(resolved);
+  }
+  for (let i = 0; i < src.length; i += 1) {
+    const ch = src[i];
+    if (ch === "'" && !inDouble) {
+      inSingle = !inSingle;
+      out += ch;
+      continue;
+    }
+    if (ch === '"' && !inSingle) {
+      inDouble = !inDouble;
+      out += ch;
+      continue;
+    }
+    if (!inSingle && !inDouble) {
+      // 1) instance('x')?foo?bar
+      const instLens = readInstanceLensAt(i);
+      if (instLens && _looksLikeLookupExpr(instLens.raw) && _isSimpleLookupExpr(instLens.raw)) {
+        const vname = `__fxp${varCount++}`;
+        const resolved = _resolveSimpleLookupToJsonNode(instLens.raw, currentJsonNode, formElement);
+        extraVars[vname] = _jsonAtomicFromResolved(resolved);
+        out += `$${vname}`;
+        i = instLens.end - 1;
+        continue;
+      }
+
+      // 2) $default?ui?query (or plain $var)
+      const varLens = readVariableLensAt(i);
+      if (varLens) {
+        const vname = `__fxp${varCount++}`;
+        extraVars[vname] = resolveVariableLens(varLens.raw);
+        out += `$${vname}`;
+        i = varLens.end - 1;
+        continue;
+      }
+
+      // 3) relative lookup like ?title / .?title
+      const relLens = readLookupTail(i);
+      if (relLens && _looksLikeLookupExpr(relLens.raw) && _isSimpleLookupExpr(relLens.raw)) {
+        const vname = `__fxp${varCount++}`;
+        extraVars[vname] = resolveRelativeLookup(relLens.raw);
+        out += `$${vname}`;
+        i = relLens.end - 1;
+        continue;
+      }
+    }
+    out += ch;
+  }
+  return {
+    expr: out.trim(),
+    extraVars
+  };
+}
+function _filterJsonNodesByPredicate(nodes, predicateExpr, formElement, variables = {}) {
+  const pred = String(predicateExpr ?? '').trim();
+  if (pred === 'true()' || pred === 'true') return (nodes || []).filter(_isJsonNode);
+  if (pred === 'false()' || pred === 'false') return [];
+
+  // Keep the existing special fast-paths (they’re fine as an optimization)
+  const containsDot = pred.match(/^contains\s*\(\s*\.\s*,\s*([\s\S]+)\s*\)\s*$/);
+  if (containsDot) {
+    const rhs = containsDot[1].trim();
+    const inScope = getVariablesInScope(formElement);
+    const toPlain = v => {
+      if (v == null) return v;
+      if (_isJsonNode(v)) return toPlain(v.value);
+      if (Array.isArray(v)) return v.map(toPlain);
+      if (v instanceof Map) {
+        const o = Object.create(null);
+        for (const [k, vv] of v.entries()) o[String(k)] = toPlain(vv);
+        return o;
+      }
+      if (typeof v === 'object' && !v.nodeType) {
+        const o = Object.create(null);
+        for (const [k, vv] of Object.entries(v)) o[k] = toPlain(vv);
+        return o;
+      }
+      return v;
+    };
+    const toStringSafe = v => {
+      const vv = toPlain(v);
+      if (vv === null || vv === undefined) return '';
+      if (typeof vv === 'string' || typeof vv === 'number' || typeof vv === 'boolean') return String(vv);
+      try {
+        return JSON.stringify(vv);
+      } catch (_e) {
+        return String(vv);
+      }
+    };
+    const resolveExprToString = (rawExpr, itemNode) => {
+      const expr = String(rawExpr ?? '').trim();
+      const quoted = expr.match(/^(['"])([\s\S]*)\1$/);
+      if (quoted) return String(quoted[2] ?? '');
+      const varLens = expr.match(/^\$([A-Za-z_][\w.-]*)([\s\S]*)$/);
+      if (varLens) {
+        const varName = varLens[1];
+        const rest = (varLens[2] || '').trim();
+        const base = (variables && varName in variables ? variables[varName] : null) ?? (inScope && varName in inScope ? inScope[varName] : null);
+        if (rest && (rest.startsWith('?') || rest.startsWith('.?'))) {
+          if (base && _isJsonNode(base)) {
+            const resolved = _resolveSimpleLookupToJsonNode(rest, base, formElement);
+            return toStringSafe(_jsonAtomicFromResolved(resolved));
+          }
+          const resolved = _resolveLookupOnMapItem(base, rest);
+          return toStringSafe(_jsonAtomicFromResolved(resolved));
+        }
+        return toStringSafe(_jsonAtomicFromResolved(base));
+      }
+      if (expr === '.') {
+        const v = typeof itemNode.getValue === 'function' ? itemNode.getValue() : itemNode.value;
+        return toStringSafe(v);
+      }
+      if (_looksLikeLookupExpr(expr)) {
+        const resolved = _resolveSimpleLookupToJsonNode(expr, itemNode, formElement);
+        return toStringSafe(_jsonAtomicFromResolved(resolved));
+      }
+      if (expr.startsWith('$')) {
+        const key = expr.slice(1);
+        const v = (variables && key in variables ? variables[key] : null) ?? (inScope && key in inScope ? inScope[key] : null);
+        return toStringSafe(_jsonAtomicFromResolved(v));
+      }
+      return expr;
+    };
+    return (nodes || []).filter(n => {
+      if (!_isJsonNode(n)) return false;
+      const needle = resolveExprToString(rhs, n);
+      if (needle === '') return true;
+      const raw = typeof n.getValue === 'function' ? n.getValue() : n.value;
+      const haystack = toStringSafe(raw);
+      return String(haystack || '').includes(String(needle));
+    });
+  }
+
+  // --- GENERAL CASE (the important fix) ---
+  const inScope = getVariablesInScope(formElement);
+  const out = [];
+  for (const n of nodes || []) {
+    if (!_isJsonNode(n)) continue;
+    try {
+      const {
+        expr: predExpr,
+        extraVars
+      } = _materializeInstanceLookupsInPredicate(pred, n, formElement);
+      const mergedVars = {
+        ...inScope,
+        ...variables,
+        ...extraVars
+      };
+
+      // Evaluate predicate in RAW context (no JSONDomFacade).
+      // This avoids JSONDomFacade quirks and matches the behavior of the working instance() variant.
+      const rawContext = typeof n.getValue === 'function' ? n.getValue() : n.value;
+      const ok = evaluateXPathToBoolean$1(predExpr, rawContext, null, mergedVars, {
+        currentContext: {
+          formElement,
+          jsonMode: 'raw'
+        },
+        moduleImports: {
+          xf: XFORMS_NAMESPACE_URI
+        },
+        functionNameResolver,
+        namespaceResolver: null,
+        language: Language.XPATH_3_1_LANGUAGE,
+        xmlSerializer: new XMLSerializer()
+      });
+      if (ok) out.push(n);
+    } catch (e) {
+      // IMPORTANT: don't swallow silently — but keep it non-fatal.
+      // This will immediately show you if variable resolution or predicate rewriting is still wrong.
+    }
+  }
+  return out;
+}
+// ------------------------------------------------------------
+
+// Exported evaluation helpers
+// ------------------------------------------------------------
+
+function evaluateXPath(xpath, contextNode, formElement, variables = {}, options = {}, domFacade = null) {
+  const expr0 = String(xpath ?? '').trim();
+  try {
+    const idx = tryResolveIndexExpr(expr0, formElement);
+    if (idx !== null) return [idx];
+    if (_isJsonNode(contextNode) && expr0 === '.') {
+      return [contextNode];
+    }
+    if (_isJsonNode(contextNode) && !_looksLikeLookupExpr(expr0)) {
+      const variablesInScope = getVariablesInScope(formElement);
+      return evaluateXPath$1(expr0, contextNode, __jsonDomFacade, {
+        ...variablesInScope,
+        ...variables
+      }, evaluateXPath$1.ALL_RESULTS_TYPE, {
+        debug: true,
+        currentContext: {
+          formElement,
+          variables
+        },
+        moduleImports: {
+          xf: XFORMS_NAMESPACE_URI
+        },
+        functionNameResolver,
+        namespaceResolver: null,
+        language: Language.XPATH_3_1_LANGUAGE,
+        xmlSerializer: new XMLSerializer(),
+        ...options
+      });
+    }
+    if (_looksLikeLookupExpr(expr0)) {
+      // --- NEW: support variable lookups like $default?ui?query ---
+      const varLens = expr0.match(/^\$([A-Za-z_][\w.-]*)(.*)$/);
+      if (varLens) {
+        const varName = varLens[1];
+        const rest = varLens[2] || '';
+        const inScope = getVariablesInScope(formElement);
+        const base = (variables && Object.prototype.hasOwnProperty.call(variables, varName) ? variables[varName] : null) ?? (inScope && Object.prototype.hasOwnProperty.call(inScope, varName) ? inScope[varName] : null);
+        if (!rest) return base == null ? [] : [base];
+        if (rest.startsWith('?') || rest.startsWith('.?')) {
+          if (base && _isJsonNode(base)) {
+            const resolved = _resolveSimpleLookupToJsonNode(rest, base, formElement);
+            if (resolved === null) return [];
+            if (Array.isArray(resolved)) return resolved;
+            return [resolved];
+          }
+          if (typeof _resolveLookupOnMapItem === 'function') {
+            const resolved = _resolveLookupOnMapItem(base, rest);
+            if (resolved == null) return [];
+            return Array.isArray(resolved) ? resolved : [resolved];
+          }
+        }
+        return base == null ? [] : [base];
+      }
+      // --- END NEW ---
+
+      const relativeJson = _isRelativeJsonLookup(expr0, contextNode);
+      const instanceId = relativeJson ? null : _getInstanceIdForLookupExpr(expr0, formElement);
+      const instance = relativeJson ? null : _getInstanceFromFormElement(formElement, instanceId);
+      if (!relativeJson && !instance) {
+        formElement?.dispatchEvent?.(new CustomEvent('error', {
+          composed: false,
+          bubbles: true,
+          detail: {
+            origin: formElement,
+            message: `Instance with id '${instanceId}' not found for expression '${expr0}'`,
+            expr: expr0,
+            level: 'Error'
+          }
+        }));
+      }
+      if (relativeJson || _isJsonInstance(instance)) {
+        const sp = _splitStarPredicate(expr0);
+        if (sp) {
+          const baseResolved = _resolveSimpleLookupToJsonNode(sp.base, contextNode, formElement);
+          const baseNodes = Array.isArray(baseResolved) ? baseResolved : baseResolved ? [baseResolved] : [];
+          return _filterJsonNodesByPredicate(baseNodes, sp.predicate, formElement, variables);
+        }
+        if (_isSimpleLookupExpr(expr0)) {
+          const resolved = _resolveSimpleLookupToJsonNode(expr0, contextNode, formElement);
+          if (resolved === null) return [];
+          if (Array.isArray(resolved)) return resolved;
+          return [resolved];
+        }
+        return [];
+      }
+    }
+    const namespaceResolver = createNamespaceResolverForNode(expr0, contextNode, formElement);
     const variablesInScope = getVariablesInScope(formElement);
-    const result = evaluateXPath$1(xpath, contextNode, null, {
+    return evaluateXPath$1(expr0, contextNode, domFacade, {
       ...variablesInScope,
       ...variables
     }, evaluateXPath$1.ALL_RESULTS_TYPE, {
-      xmlSerializer: new XMLSerializer(),
       debug: true,
       currentContext: {
         formElement,
@@ -38618,12 +39444,12 @@ function evaluateXPath(xpath, contextNode, formElement, variables = {}, options 
       },
       functionNameResolver,
       namespaceResolver,
-      language: options.language || evaluateXPath$1.XPATH_3_1_LANGUAGE
+      language: Language.XPATH_3_1_LANGUAGE,
+      xmlSerializer: new XMLSerializer(),
+      ...options
     });
-    // console.log('evaluateXPath',xpath, result);
-    return result;
   } catch (e) {
-    formElement.dispatchEvent(new CustomEvent('error', {
+    formElement?.dispatchEvent?.(new CustomEvent('error', {
       composed: false,
       bubbles: true,
       detail: {
@@ -38633,53 +39459,67 @@ function evaluateXPath(xpath, contextNode, formElement, variables = {}, options 
         level: 'Error'
       }
     }));
-
-    /*
-        formElement.dispatchEvent(
-            new CustomEvent('error', {
-                composed: false,
-                bubbles: true,
-                cancelable:true,
-                detail: {
-                    origin: formElement,
-                    message: `Expression '${xpath}' failed`,
-                    expr:xpath,
-                    level:'Error'},
-            }),
-        );
-    */
-    // Return 'nothing' in hope the rest of the page can forgive this
     return [];
   }
 }
-/**
- * Evaluate an XPath to the first Node
- *
- * @param  {string} xpath  The XPath to run
- * @param  {Node} contextNode The start of the XPath
- * @param  {import('./ForeElementMixin.js').default} formElement  The form element associated to the XPath
- * @returns {Node} The first node found in the XPath
- */
 function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
+  const expr0 = String(xpath ?? '').trim();
   try {
-    const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
+    if (_isJsonNode(contextNode) && expr0 === '.') {
+      return contextNode;
+    }
+    if (_isJsonNode(contextNode) && !_looksLikeLookupExpr(expr0)) {
+      const variablesInScope = getVariablesInScope(formElement);
+      return evaluateXPathToFirstNode$1(expr0, contextNode, __jsonDomFacade, variablesInScope, {
+        currentContext: {
+          formElement
+        },
+        functionNameResolver,
+        moduleImports: {
+          xf: XFORMS_NAMESPACE_URI
+        },
+        namespaceResolver: null,
+        language: Language.XPATH_3_1_LANGUAGE,
+        xmlSerializer: new XMLSerializer()
+      });
+    }
+    if (_looksLikeLookupExpr(expr0)) {
+      const relativeJson = _isRelativeJsonLookup(expr0, contextNode);
+      const instanceId = relativeJson ? null : _getInstanceIdForLookupExpr(expr0, formElement);
+      const instance = relativeJson ? null : _getInstanceFromFormElement(formElement, instanceId);
+      if (relativeJson || _isJsonInstance(instance)) {
+        const sp = _splitStarPredicate(expr0);
+        if (sp) {
+          const baseResolved = _resolveSimpleLookupToJsonNode(sp.base, contextNode, formElement);
+          const baseNodes = Array.isArray(baseResolved) ? baseResolved : baseResolved ? [baseResolved] : [];
+          const filtered = _filterJsonNodesByPredicate(baseNodes, sp.predicate, formElement);
+          return filtered[0] || null;
+        }
+        if (_isSimpleLookupExpr(expr0)) {
+          const resolved = _resolveSimpleLookupToJsonNode(expr0, contextNode, formElement);
+          if (!resolved) return null;
+          if (Array.isArray(resolved)) return resolved[0] || null;
+          return resolved;
+        }
+        return null;
+      }
+    }
+    const namespaceResolver = createNamespaceResolverForNode(expr0, contextNode, formElement);
     const variablesInScope = getVariablesInScope(formElement);
-    const result = evaluateXPathToFirstNode$1(xpath, contextNode, null, variablesInScope, {
-      defaultFunctionNamespaceURI: XFORMS_NAMESPACE_URI,
-      moduleImports: {
-        xf: XFORMS_NAMESPACE_URI
-      },
+    return evaluateXPathToFirstNode$1(expr0, contextNode, null, variablesInScope, {
       currentContext: {
         formElement
       },
       functionNameResolver,
+      moduleImports: {
+        xf: XFORMS_NAMESPACE_URI
+      },
       namespaceResolver,
+      language: Language.XPATH_3_1_LANGUAGE,
       xmlSerializer: new XMLSerializer()
     });
-    // console.log('evaluateXPathToFirstNode',xpath, result);
-    return result;
   } catch (e) {
-    formElement.dispatchEvent(new CustomEvent('error', {
+    formElement?.dispatchEvent?.(new CustomEvent('error', {
       composed: false,
       bubbles: true,
       detail: {
@@ -38689,23 +39529,53 @@ function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
         level: 'Error'
       }
     }));
+    return null;
   }
-  return null;
 }
-
-/**
- * Evaluate an XPath to all nodes
- *
- * @param  {string} xpath  The XPath to run
- * @param  {Node} contextNode The start of the XPath
- * @param  {import('./ForeElementMixin.js').default} formElement  The form element associated to the XPath
- * @return {Node[]}  All nodes
- */
 function evaluateXPathToNodes(xpath, contextNode, formElement) {
+  const expr0 = String(xpath ?? '').trim();
   try {
-    const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
+    if (_isJsonNode(contextNode) && expr0 === '.') {
+      return [contextNode];
+    }
+    if (_isJsonNode(contextNode) && !_looksLikeLookupExpr(expr0)) {
+      const variablesInScope = getVariablesInScope(formElement);
+      return evaluateXPathToNodes$1(expr0, contextNode, __jsonDomFacade, variablesInScope, {
+        currentContext: {
+          formElement
+        },
+        functionNameResolver,
+        moduleImports: {
+          xf: XFORMS_NAMESPACE_URI
+        },
+        namespaceResolver: null,
+        language: Language.XPATH_3_1_LANGUAGE,
+        xmlSerializer: new XMLSerializer()
+      });
+    }
+    if (_looksLikeLookupExpr(expr0)) {
+      const relativeJson = _isRelativeJsonLookup(expr0, contextNode);
+      const instanceId = relativeJson ? null : _getInstanceIdForLookupExpr(expr0, formElement);
+      const instance = relativeJson ? null : _getInstanceFromFormElement(formElement, instanceId);
+      if (relativeJson || _isJsonInstance(instance)) {
+        const sp = _splitStarPredicate(expr0);
+        if (sp) {
+          const baseResolved = _resolveSimpleLookupToJsonNode(sp.base, contextNode, formElement);
+          const baseNodes = Array.isArray(baseResolved) ? baseResolved : baseResolved ? [baseResolved] : [];
+          return _filterJsonNodesByPredicate(baseNodes, sp.predicate, formElement);
+        }
+        if (_isSimpleLookupExpr(expr0)) {
+          const resolved = _resolveSimpleLookupToJsonNode(expr0, contextNode, formElement);
+          if (!resolved) return [];
+          if (Array.isArray(resolved)) return resolved;
+          return [resolved];
+        }
+        return [];
+      }
+    }
+    const namespaceResolver = createNamespaceResolverForNode(expr0, contextNode, formElement);
     const variablesInScope = getVariablesInScope(formElement);
-    const result = evaluateXPathToNodes$1(xpath, contextNode, null, variablesInScope, {
+    return evaluateXPathToNodes$1(expr0, contextNode, null, variablesInScope, {
       currentContext: {
         formElement
       },
@@ -38714,12 +39584,11 @@ function evaluateXPathToNodes(xpath, contextNode, formElement) {
         xf: XFORMS_NAMESPACE_URI
       },
       namespaceResolver,
+      language: Language.XPATH_3_1_LANGUAGE,
       xmlSerializer: new XMLSerializer()
     });
-    // console.log('evaluateXPathToNodes',xpath, result);
-    return result;
   } catch (e) {
-    formElement.dispatchEvent(new CustomEvent('error', {
+    formElement?.dispatchEvent?.(new CustomEvent('error', {
       composed: false,
       bubbles: true,
       detail: {
@@ -38729,22 +39598,85 @@ function evaluateXPathToNodes(xpath, contextNode, formElement) {
         level: 'Error'
       }
     }));
+    return [];
   }
 }
-
-/**
- * Evaluate an XPath to a boolean
- *
- * @param  {string} xpath  The XPath to run
- * @param  {Node} contextNode The start of the XPath
- * @param  {import('./ForeElementMixin.js').default} formElement  The form element associated to the XPath
- * @return {boolean}
- */
 function evaluateXPathToBoolean(xpath, contextNode, formElement) {
+  const expr0 = String(xpath ?? '').trim();
   try {
-    const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
+    const idx = tryResolveIndexExpr(expr0, formElement);
+    if (idx !== null) return Boolean(idx);
+    if (_isJsonNode(contextNode) && expr0 === '.') {
+      return true;
+    }
+
+    // ------------------------------------------------------------
+    // JSON CONTEXT
+    // ------------------------------------------------------------
+    if (_isJsonNode(contextNode)) {
+      // 1) Star predicate (repeat filtering style): ?movies?*[ ... ]
+      if (_looksLikeLookupExpr(expr0)) {
+        const sp = _splitStarPredicate(expr0);
+        if (sp) {
+          const baseResolved = _resolveSimpleLookupToJsonNode(sp.base, contextNode, formElement);
+          const baseNodes = Array.isArray(baseResolved) ? baseResolved : baseResolved ? [baseResolved] : [];
+          return _filterJsonNodesByPredicate(baseNodes, sp.predicate, formElement).length > 0;
+        }
+
+        // 2) Simple navigation lookup: ?title, instance('data')?ui?query, etc.
+        if (_isSimpleLookupExpr(expr0)) {
+          const resolved = _resolveSimpleLookupToJsonNode(expr0, contextNode, formElement);
+          if (!resolved) return false;
+          const node = Array.isArray(resolved) ? resolved[0] : resolved;
+          return Boolean(_isJsonNode(node) ? node.value : node);
+        }
+
+        // 3) ✅ Complex expressions containing lookup operator, e.g.
+        //    contains(?title, instance('data')?ui?query)
+        //
+        // Important: XPath 3.1 lookup operator works on map(*) / array(*) items.
+        // A JSON lens node is not a map(*) to the XPath engine.
+        // So evaluate against the RAW JS value of the current JSON node.
+        // Also enable jsonMode:'raw' so instance('data') returns raw JS root without recursion.
+        const rawContext = typeof contextNode.getValue === 'function' ? contextNode.getValue() : contextNode.value;
+        const variablesInScope = getVariablesInScope(formElement);
+        return evaluateXPathToBoolean$1(expr0, rawContext, null, variablesInScope, {
+          currentContext: {
+            formElement,
+            jsonMode: 'raw'
+          },
+          functionNameResolver,
+          moduleImports: {
+            xf: XFORMS_NAMESPACE_URI
+          },
+          namespaceResolver: null,
+          language: Language.XPATH_3_1_LANGUAGE,
+          xmlSerializer: new XMLSerializer()
+        });
+      }
+
+      // 4) Non-lookup XPath in JSON context: evaluate via JSONDomFacade
+      const variablesInScope = getVariablesInScope(formElement);
+      return evaluateXPathToBoolean$1(expr0, contextNode, __jsonDomFacade, variablesInScope, {
+        currentContext: {
+          formElement
+        },
+        functionNameResolver,
+        moduleImports: {
+          xf: XFORMS_NAMESPACE_URI
+        },
+        namespaceResolver: null,
+        language: Language.XPATH_3_1_LANGUAGE,
+        xmlSerializer: new XMLSerializer()
+      });
+    }
+
+    // ------------------------------------------------------------
+    // XML / normal evaluation
+    // ------------------------------------------------------------
+    const namespaceResolver = createNamespaceResolverForNode(expr0, contextNode, formElement);
     const variablesInScope = getVariablesInScope(formElement);
-    return evaluateXPathToBoolean$1(xpath, contextNode, null, variablesInScope, {
+    return evaluateXPathToBoolean$1(expr0, contextNode, null, variablesInScope, {
       currentContext: {
         formElement
       },
@@ -38753,10 +39685,11 @@ function evaluateXPathToBoolean(xpath, contextNode, formElement) {
         xf: XFORMS_NAMESPACE_URI
       },
       namespaceResolver,
+      language: Language.XPATH_3_1_LANGUAGE,
       xmlSerializer: new XMLSerializer()
     });
   } catch (e) {
-    formElement.dispatchEvent(new CustomEvent('error', {
+    formElement?.dispatchEvent?.(new CustomEvent('error', {
       composed: false,
       bubbles: true,
       detail: {
@@ -38766,25 +39699,103 @@ function evaluateXPathToBoolean(xpath, contextNode, formElement) {
         level: 'Error'
       }
     }));
+    return false;
   }
 }
-
-/**
- * Evaluate an XPath to a string
- *
- * @param  {string}     xpath             The XPath to run
- * @param  {Node}       contextNode       The start of the XPath
- * @param  {Node}       formElement       The form element associated to the XPath
- * @param  {Node}       formElement       The element where the XPath is defined: used for namespace resolving
- * @param  {import('fontoxpath').IDomFacade}  [domFacade=null]  A DomFacade is used in bindings to intercept DOM
- * access. This is used to determine dependencies between bind elements.
- * @return {string}
- */
 function evaluateXPathToString(xpath, contextNode, formElement, domFacade = null) {
+  const expr0 = String(xpath ?? '').trim();
+  const stringify = v => {
+    if (v === null || v === undefined) return '';
+    if (typeof v === 'string' || typeof v === 'number' || typeof v === 'boolean') return String(v);
+    if (v?.nodeType) {
+      if (v.nodeType === Node.ATTRIBUTE_NODE) return String(v.nodeValue ?? '');
+      return String(v.textContent ?? '');
+    }
+    if (_isJsonNode(v)) {
+      const vv = v.value;
+      if (vv === null || vv === undefined) return '';
+      if (typeof vv === 'string' || typeof vv === 'number' || typeof vv === 'boolean') return String(vv);
+      try {
+        return JSON.stringify(vv);
+      } catch (_e) {
+        return '';
+      }
+    }
+    try {
+      return JSON.stringify(v);
+    } catch (_e) {
+      return '';
+    }
+  };
   try {
-    const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
+    const idx = tryResolveIndexExpr(expr0, formElement);
+    if (idx !== null) return String(idx);
+    if (_isJsonNode(contextNode) && expr0 === '.') {
+      return stringify(contextNode);
+    }
+
+    // JSON context, non-lookup => evaluate via JSON facade
+    if (_isJsonNode(contextNode) && !_looksLikeLookupExpr(expr0)) {
+      const variablesInScope = getVariablesInScope(formElement);
+      const res = evaluateXPathToString$1(expr0, contextNode, __jsonDomFacade, variablesInScope, {
+        currentContext: {
+          formElement
+        },
+        functionNameResolver,
+        moduleImports: {
+          xf: XFORMS_NAMESPACE_URI
+        },
+        namespaceResolver: null,
+        language: Language.XPATH_3_1_LANGUAGE,
+        xmlSerializer: new XMLSerializer()
+      });
+      return stringify(res);
+    }
+
+    // ✅ Lookup expressions (JSON lens / XQuery map lookups)
+    if (_looksLikeLookupExpr(expr0)) {
+      // --- NEW: support variable lookups like $default?ui?query ---
+      const varLens = expr0.match(/^\$([A-Za-z_][\w.-]*)(.*)$/);
+      if (varLens) {
+        const varName = varLens[1];
+        const rest = varLens[2] || '';
+        const inScope = getVariablesInScope(formElement);
+        const base = inScope && Object.prototype.hasOwnProperty.call(inScope, varName) ? inScope[varName] : null;
+        if (!rest) return stringify(base);
+        if (rest.startsWith('?') || rest.startsWith('.?')) {
+          if (base && _isJsonNode(base)) {
+            const resolved = _resolveSimpleLookupToJsonNode(rest, base, formElement);
+            return stringify(resolved);
+          }
+          // Map/array/plain object lookup
+          if (typeof _resolveLookupOnMapItem === 'function') {
+            const resolved = _resolveLookupOnMapItem(base, rest);
+            return stringify(resolved);
+          }
+        }
+        return stringify(base);
+      }
+      // --- END NEW ---
+
+      const relativeJson = _isRelativeJsonLookup(expr0, contextNode);
+      const instanceId = relativeJson ? null : _getInstanceIdForLookupExpr(expr0, formElement);
+      const instance = relativeJson ? null : _getInstanceFromFormElement(formElement, instanceId);
+      if (relativeJson || _isJsonInstance(instance)) {
+        if (_isSimpleLookupExpr(expr0)) {
+          const resolved = _resolveSimpleLookupToJsonNode(expr0, contextNode, formElement);
+          if (!resolved) return '';
+          const node = Array.isArray(resolved) ? resolved[0] : resolved;
+          return stringify(node);
+        }
+        // for now, keep string conversions conservative
+        return '';
+      }
+    }
+
+    // Normal XPath path
+    const namespaceResolver = createNamespaceResolverForNode(expr0, contextNode, formElement);
     const variablesInScope = getVariablesInScope(formElement);
-    return evaluateXPathToString$1(xpath, contextNode, domFacade, variablesInScope, {
+    const res = evaluateXPathToString$1(expr0, contextNode, domFacade, variablesInScope, {
       currentContext: {
         formElement
       },
@@ -38793,10 +39804,12 @@ function evaluateXPathToString(xpath, contextNode, formElement, domFacade = null
         xf: XFORMS_NAMESPACE_URI
       },
       namespaceResolver,
+      language: Language.XPATH_3_1_LANGUAGE,
       xmlSerializer: new XMLSerializer()
     });
+    return stringify(res);
   } catch (e) {
-    formElement.dispatchEvent(new CustomEvent('error', {
+    formElement?.dispatchEvent?.(new CustomEvent('error', {
       composed: false,
       bubbles: true,
       detail: {
@@ -38806,24 +39819,62 @@ function evaluateXPathToString(xpath, contextNode, formElement, domFacade = null
         level: 'Error'
       }
     }));
+    return '';
   }
 }
-
-/**
- * Evaluate an XPath to a set of strings
- *
- * @param  {string}     xpath             The XPath to run
- * @param  {Node}       contextNode       The start of the XPath
- * @param  {Node}       formElement       The form element associated to the XPath
- * @param  {Node}       formElement       The element where the XPath is defined: used for namespace resolving
- * @param  {import('fontoxpath').IDomFacade}  [domFacade=null]  A DomFacade is used in bindings to intercept DOM
- * access. This is used to determine dependencies between bind elements.
- * @return {string[]}
- */
 function evaluateXPathToStrings(xpath, contextNode, formElement, domFacade = null) {
+  const expr0 = String(xpath ?? '').trim();
+  const stringify = v => {
+    if (v === null || v === undefined) return '';
+    if (typeof v === 'string' || typeof v === 'number' || typeof v === 'boolean' || typeof v === 'bigint') return String(v);
+    if (v?.nodeType) {
+      if (v.nodeType === Node.ATTRIBUTE_NODE) return String(v.nodeValue ?? '');
+      return String(v.textContent ?? '');
+    }
+    if (_isJsonNode(v)) return stringify(v.value);
+    try {
+      return JSON.stringify(v);
+    } catch (_e) {
+      return '';
+    }
+  };
   try {
-    const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
-    return evaluateXPathToStrings$1(xpath, contextNode, domFacade, {}, {
+    const idx = tryResolveIndexExpr(expr0, formElement);
+    if (idx !== null) return [String(idx)];
+    if (_isJsonNode(contextNode) && expr0 === '.') {
+      return [stringify(contextNode)];
+    }
+    if (_isJsonNode(contextNode) && !_looksLikeLookupExpr(expr0)) {
+      const res = evaluateXPathToStrings$1(expr0, contextNode, __jsonDomFacade, getVariablesInScope(formElement), {
+        currentContext: {
+          formElement
+        },
+        functionNameResolver,
+        moduleImports: {
+          xf: XFORMS_NAMESPACE_URI
+        },
+        namespaceResolver: null,
+        language: Language.XPATH_3_1_LANGUAGE,
+        xmlSerializer: new XMLSerializer()
+      });
+      return Array.isArray(res) ? res.map(stringify) : [stringify(res)];
+    }
+    if (_looksLikeLookupExpr(expr0)) {
+      const relativeJson = _isRelativeJsonLookup(expr0, contextNode);
+      const instanceId = relativeJson ? null : _getInstanceIdForLookupExpr(expr0, formElement);
+      const instance = relativeJson ? null : _getInstanceFromFormElement(formElement, instanceId);
+      if (relativeJson || _isJsonInstance(instance)) {
+        if (_isSimpleLookupExpr(expr0)) {
+          const resolved = _resolveSimpleLookupToJsonNode(expr0, contextNode, formElement);
+          if (!resolved) return [];
+          const arr = Array.isArray(resolved) ? resolved : [resolved];
+          return arr.map(stringify);
+        }
+        return [];
+      }
+    }
+    const namespaceResolver = createNamespaceResolverForNode(expr0, contextNode, formElement);
+    const res = evaluateXPathToStrings$1(expr0, contextNode, domFacade, getVariablesInScope(formElement), {
       currentContext: {
         formElement
       },
@@ -38832,10 +39883,12 @@ function evaluateXPathToStrings(xpath, contextNode, formElement, domFacade = nul
         xf: XFORMS_NAMESPACE_URI
       },
       namespaceResolver,
+      language: Language.XPATH_3_1_LANGUAGE,
       xmlSerializer: new XMLSerializer()
     });
+    return Array.isArray(res) ? res.map(stringify) : [stringify(res)];
   } catch (e) {
-    formElement.dispatchEvent(new CustomEvent('error', {
+    formElement?.dispatchEvent?.(new CustomEvent('error', {
       composed: false,
       bubbles: true,
       detail: {
@@ -38845,97 +39898,105 @@ function evaluateXPathToStrings(xpath, contextNode, formElement, domFacade = nul
         level: 'Error'
       }
     }));
+    return [];
+  }
+}
+function evaluateXPathToNumber(xpath, contextNode, formElement, domFacade = null) {
+  const expr0 = String(xpath ?? '').trim();
+  try {
+    const idx = tryResolveIndexExpr(expr0, formElement);
+    if (idx !== null) return idx;
+    if (_isJsonNode(contextNode) && expr0 === '.') {
+      const s = String(contextNode?.value ?? '');
+      const n = Number(s);
+      return Number.isFinite(n) ? n : NaN;
+    }
+    if (_isJsonNode(contextNode) && !_looksLikeLookupExpr(expr0)) {
+      const variablesInScope = getVariablesInScope(formElement);
+      return evaluateXPathToNumber$1(expr0, contextNode, __jsonDomFacade, variablesInScope, {
+        currentContext: {
+          formElement
+        },
+        functionNameResolver,
+        moduleImports: {
+          xf: XFORMS_NAMESPACE_URI
+        },
+        namespaceResolver: null,
+        language: Language.XPATH_3_1_LANGUAGE,
+        xmlSerializer: new XMLSerializer()
+      });
+    }
+    if (_looksLikeLookupExpr(expr0)) {
+      const relativeJson = _isRelativeJsonLookup(expr0, contextNode);
+      const instanceId = relativeJson ? null : _getInstanceIdForLookupExpr(expr0, formElement);
+      const instance = relativeJson ? null : _getInstanceFromFormElement(formElement, instanceId);
+      if (relativeJson || _isJsonInstance(instance)) {
+        // numbers for JSON are not a priority for now; keep conservative
+        return NaN;
+      }
+    }
+    const namespaceResolver = createNamespaceResolverForNode(expr0, contextNode, formElement);
+    const variablesInScope = getVariablesInScope(formElement);
+    return evaluateXPathToNumber$1(expr0, contextNode, domFacade, variablesInScope, {
+      currentContext: {
+        formElement
+      },
+      functionNameResolver,
+      moduleImports: {
+        xf: XFORMS_NAMESPACE_URI
+      },
+      namespaceResolver,
+      language: Language.XPATH_3_1_LANGUAGE,
+      xmlSerializer: new XMLSerializer()
+    });
+  } catch (e) {
+    formElement?.dispatchEvent?.(new CustomEvent('error', {
+      composed: false,
+      bubbles: true,
+      detail: {
+        origin: formElement,
+        message: `Expression '${xpath}' failed: ${e}`,
+        expr: xpath,
+        level: 'Error'
+      }
+    }));
+    return NaN;
   }
 }
 
-/**
- * Evaluate an XPath to a number
- *
- * @param  {string}     xpath             The XPath to run
- * @param  {Node}       contextNode       The start of the XPath
- * @param  {Node}       formElement       The form element associated to the XPath
- * @param  {Node}       formElement       The element where the XPath is defined: used for namespace resolving
- * @param  {import('fontoxpath').IDomFacade}  [domFacade=null]  A DomFacade is used in bindings to intercept DOM
- * access. This is used to determine dependencies between bind elements.
- * @return {number}
- */
-function evaluateXPathToNumber(xpath, contextNode, formElement, domFacade = null) {
-  try {
-    const namespaceResolver = createNamespaceResolverForNode(xpath, contextNode, formElement);
-    const variablesInScope = getVariablesInScope(formElement);
-    return evaluateXPathToNumber$1(xpath, contextNode, domFacade, variablesInScope, {
-      currentContext: {
-        formElement
-      },
-      functionNameResolver,
-      moduleImports: {
-        xf: XFORMS_NAMESPACE_URI
-      },
-      namespaceResolver,
-      xmlSerializer: new XMLSerializer()
-    });
-  } catch (e) {
-    formElement.dispatchEvent(new CustomEvent('error', {
-      composed: false,
-      bubbles: true,
-      detail: {
-        origin: formElement,
-        message: `Expression '${xpath}' failed: ${e}`,
-        expr: xpath,
-        level: 'Error'
-      }
-    }));
-  }
-}
+// ------------------------------------------------------------
+// Custom functions (XForms/Fore)
+// ------------------------------------------------------------
+
+// context()
 const contextFunction = (dynamicContext, string) => {
   const caller = dynamicContext.currentContext.formElement;
-  let instance = null;
-  if (string) {
-    instance = resolveId(string, caller);
-  } else {
-    instance = XPathUtil.getParentBindingElement(caller);
-  }
-  if (instance) {
-    if (instance.nodeName === 'FX-REPEAT') {
+  let instanceEl = null;
+  if (string) instanceEl = resolveId(string, caller);else instanceEl = XPathUtil.getParentBindingElement(caller);
+  if (instanceEl) {
+    if (instanceEl.nodeName === 'FX-REPEAT') {
       const {
         nodeset
-      } = instance;
+      } = instanceEl;
       for (let parent = caller; parent; parent = parent.parentNode) {
-        if (parent.parentNode === instance) {
+        if (parent.parentNode === instanceEl) {
           const offset = Array.from(parent.parentNode.children).indexOf(parent);
           return nodeset[offset];
         }
       }
     }
-    return instance.nodeset;
+    return instanceEl.nodeset;
   }
   return caller.getInScopeContext();
 };
 
-// todo: implement
-const currentFunction = (dynamicContext, string) => {
-  dynamicContext.currentContext.formElement;
-  return null;
-};
-const elementFunction = (dynamicContext, string) => {
-  dynamicContext.currentContext.formElement;
-  const newElement = document.createElement(string);
-  return newElement;
-};
-
-/**
- * @param id as string
- * @return instance data for given id serialized to string.
- */
+// current() - todo
+const currentFunction = (_dynamicContext, _string) => null;
+const elementFunction = (_dynamicContext, string) => document.createElement(string);
 registerCustomXPathFunction({
   namespaceURI: XFORMS_NAMESPACE_URI,
   localName: 'context'
 }, [], 'item()?', contextFunction);
-
-/**
- * @param id as string
- * @return instance data for given id serialized to string.
- */
 registerCustomXPathFunction({
   namespaceURI: XFORMS_NAMESPACE_URI,
   localName: 'context'
@@ -38948,11 +40009,6 @@ registerCustomXPathFunction({
   namespaceURI: XFORMS_NAMESPACE_URI,
   localName: 'element'
 }, ['xs:string'], 'item()?', elementFunction);
-
-/**
- * @param id as string
- * @return instance data for given id serialized to string.
- */
 registerCustomXPathFunction({
   namespaceURI: XFORMS_NAMESPACE_URI,
   localName: 'log'
@@ -38960,12 +40016,13 @@ registerCustomXPathFunction({
   const {
     formElement
   } = dynamicContext.currentContext;
-  const instance = resolveId(string, formElement, 'fx-instance');
-  if (instance) {
-    if (instance.getAttribute('type') === 'json') ; else {
-      const def = new XMLSerializer().serializeToString(instance.getDefaultContext());
-      return prettifyXml(def);
+  const instanceEl = resolveId(string, formElement, 'fx-instance');
+  if (instanceEl) {
+    if (instanceEl.getAttribute('type') === 'json') {
+      return JSON.stringify(instanceEl.getDefaultContext());
     }
+    const def = new XMLSerializer().serializeToString(instanceEl.getDefaultContext());
+    return prettifyXml(def);
   }
   return null;
 });
@@ -38977,13 +40034,9 @@ registerCustomXPathFunction({
     formElement
   } = dynamicContext.currentContext;
   let parent = formElement;
-  if (formElement.nodeType === Node.TEXT_NODE) {
-    parent = formElement.parentNode;
-  }
+  if (formElement.nodeType === Node.TEXT_NODE) parent = formElement.parentNode;
   const foreElement = parent.closest('fx-fore');
-  if (foreElement.hasAttribute(string)) {
-    return foreElement.getAttribute(string);
-  }
+  if (foreElement.hasAttribute(string)) return foreElement.getAttribute(string);
   return null;
 });
 registerCustomXPathFunction({
@@ -38992,70 +40045,34 @@ registerCustomXPathFunction({
 }, ['xs:string?'], 'element()?', (_dynamicContext, string) => {
   const parser = new DOMParser();
   const out = parser.parseFromString(string, 'application/xml');
-
-  /*
-              const {formElement} = dynamicContext.currentContext;
-              const instance = resolveId(string, formElement, 'fx-instance');
-              if (instance) {
-                  if (instance.getAttribute('type') === 'json') {
-                      console.warn('log() does not work for JSON yet');
-                      // return JSON.stringify(instance.getDefaultContext());
-                  } else {
-                      const def = new XMLSerializer().serializeToString(instance.getDefaultContext());
-                      return Fore.prettifyXml(def);
-                  }
-              }
-      */
   return out.firstElementChild;
 });
 function buildTree(tree, data) {
   if (!data) return;
-  if (data.nodeType === Node.ELEMENT_NODE) {
-    if (data.children) {
-      const details = document.createElement('details');
-      details.setAttribute('data-path', data.nodeName);
-      const summary = document.createElement('summary');
-      let display = ` <${data.nodeName}`;
-      Array.from(data.attributes).forEach(attr => {
-        display += ` ${attr.nodeName}="${attr.nodeValue}"`;
-      });
-      let contents;
-      if (data.firstChild && data.firstChild.nodeType === Node.TEXT_NODE && data.firstChild.data.trim() !== '') {
-        // console.log('whoooooooooopp');
-        contents = data.firstChild.nodeValue;
-        display += `>${contents}</${data.nodeName}>`;
-      } else {
-        display += '>';
-      }
-      summary.textContent = display;
-      details.appendChild(summary);
-      if (data.childElementCount !== 0) {
-        details.setAttribute('open', 'open');
-      } else {
-        summary.setAttribute('style', 'list-style:none;');
-      }
-      tree.appendChild(details);
-      Array.from(data.children).forEach(child => {
-        // if(child.nodeType === Node.ELEMENT_NODE){
-        // child.parentNode.appendChild(buildTree(child));
-        buildTree(details, child);
-        // }
-      });
-    }
-  } /* else if(data.nodeType === Node.ATTRIBUTE_NODE){
-        //create span for now
-        // const span = document.createElement('span');
-        // span.style.background = 'grey';
-        // span.textContent = data.value;
-        // tree.appendChild(span);
-        tree.setAttribute(data.nodeName,data.value);
-    }else {
-        tree.textContent = data;
-    } */
-
-  // return tree;
+  if (data.nodeType !== Node.ELEMENT_NODE) return;
+  const details = document.createElement('details');
+  details.setAttribute('data-path', data.nodeName);
+  const summary = document.createElement('summary');
+  let display = ` <${data.nodeName}`;
+  Array.from(data.attributes).forEach(attr => {
+    display += ` ${attr.nodeName}="${attr.nodeValue}"`;
+  });
+  if (data.firstChild && data.firstChild.nodeType === Node.TEXT_NODE && data.firstChild.data.trim() !== '') {
+    const contents = data.firstChild.nodeValue;
+    display += `>${contents}</${data.nodeName}>`;
+  } else {
+    display += '>';
+  }
+  summary.textContent = display;
+  details.appendChild(summary);
+  if (data.childElementCount !== 0) {
+    details.setAttribute('open', 'open');
+    Array.from(data.children).forEach(child => buildTree(details, child));
+  } else {
+    summary.setAttribute('style', 'list-style:none;');
+  }
+  tree.appendChild(details);
 }
-
 registerCustomXPathFunction({
   namespaceURI: XFORMS_NAMESPACE_URI,
   localName: 'logtree'
@@ -39063,60 +40080,65 @@ registerCustomXPathFunction({
   const {
     formElement
   } = dynamicContext.currentContext;
-  const instance = resolveId(string, formElement, 'fx-instance');
-  if (instance) {
-    // const def = new XMLSerializer().serializeToString(instance.getDefaultContext());
-    // const def = JSON.stringify(instance.getDefaultContext());
-
-    const treeDiv = document.createElement('div');
-    treeDiv.setAttribute('class', 'logtree');
-    // const datatree = buildTree(tree,instance.getDefaultContext());
-    // return tree.appendChild(datatree);
-    // return  buildTree(root,instance.getDefaultContext());;
-    const form = dynamicContext.currentContext.formElement;
-    const logtree = form.querySelector('.logtree');
-    if (logtree) {
-      logtree.parentNode.removeChild(logtree);
-    }
-    const tree = buildTree(treeDiv, instance.getDefaultContext());
-    if (tree) {
-      form.appendChild(tree);
-    }
-  }
+  const instanceEl = resolveId(string, formElement, 'fx-instance');
+  if (!instanceEl) return null;
+  const treeDiv = document.createElement('div');
+  treeDiv.setAttribute('class', 'logtree');
+  const form = dynamicContext.currentContext.formElement;
+  const logtree = form.querySelector('.logtree');
+  if (logtree) logtree.parentNode.removeChild(logtree);
+  buildTree(treeDiv, instanceEl.getDefaultContext());
+  form.appendChild(treeDiv);
   return null;
 });
-const instance = (dynamicContext, string) => {
-  // Spec: https://www.w3.org/TR/xforms-xpath/#The_XForms_Function_Library#The_instance.28.29_Function
-  // TODO: handle no string passed (null will be passed instead)
+function _getInstanceDefaultContextNoSideEffects(instEl) {
+  if (!instEl) return null;
+  const type = typeof instEl.getAttribute === 'function' && instEl.getAttribute('type') || instEl.type || '';
+  const isJson = type === 'json';
+  if (isJson) {
+    // Prefer already-built lens root
+    if (instEl.nodeset && instEl.nodeset.__jsonlens__ === true) return instEl.nodeset;
+    // As a fallback, try to wrap raw if present (should be rare here)
+    return instEl.nodeset || null;
+  }
 
-  /**
-   * @type {import('./fx-fore.js').FxFore}
-   */
-  const formElement = evaluateXPathToFirstNode$1('ancestor-or-self::fx-fore[1]', dynamicContext.currentContext.formElement, null, null, {
-    namespaceResolver: xhtmlNamespaceResolver
-  });
-  let lookup = null;
-  if (string === null || string === 'default') {
-    lookup = formElement.getModel().getDefaultInstance();
-  } else {
-    lookup = formElement.getModel().getInstance(string);
-    if (!lookup) {
-      document.querySelector('fx-fore').dispatchEvent(new CustomEvent('error', {
-        composed: true,
-        bubbles: true,
-        detail: {
-          origin: 'functions',
-          message: `Instance not found '${string}'`,
-          level: 'Error'
-        }
-      }));
+  // XML/HTML: prefer backing document without calling getters
+  const doc = instEl._instanceData || instEl.nodeset || null;
+  if (doc && doc.nodeType === Node.DOCUMENT_NODE) return doc.firstElementChild;
+  if (doc && doc.nodeType === Node.ELEMENT_NODE) return doc;
+  return null;
+}
+
+// instance() — supports RAW JSON mode for predicates/filters
+const instance = (dynamicContext, string) => {
+  let caller = dynamicContext?.currentContext?.formElement || null;
+  if (caller && caller.nodeType === Node.TEXT_NODE) caller = caller.parentNode;
+  const fore = caller && typeof caller.getOwnerForm === 'function' && caller.getOwnerForm() || _getOwningFore(caller) || null;
+  if (!fore) return null;
+  const modelEl = typeof fore.getModel === 'function' && fore.getModel() || fore.shadowRoot?.querySelector?.('fx-model') || fore.querySelector?.('fx-model') || null;
+  if (!modelEl) return null;
+  const id = string === null || string === undefined || String(string).trim() === '' ? 'default' : String(string);
+  let instEl = typeof modelEl.getInstance === 'function' ? modelEl.getInstance(id) : null;
+  if (!instEl) {
+    if (id === 'default') {
+      instEl = modelEl.querySelector?.('fx-instance:not([id])') || modelEl.querySelector?.("fx-instance[id='default']") || modelEl.querySelector?.('fx-instance') || null;
+    } else {
+      instEl = resolveId(id, caller, 'fx-instance') || modelEl.querySelector?.(`#${CSS.escape(id)}`) || modelEl.querySelector?.(`fx-instance[id="${id}"]`) || null;
     }
   }
-  const context = lookup.getDefaultContext();
-  if (!context) {
-    return null;
+  if (!instEl) return null;
+  const type = typeof instEl.getAttribute === 'function' && instEl.getAttribute('type') || instEl.type || '';
+  const isJson = type === 'json';
+
+  // RAW JSON mode: return raw JS root (maps/arrays)
+  if (dynamicContext?.currentContext?.jsonMode === 'raw' && isJson) {
+    return _getRawJsonRootValue(instEl);
   }
-  return context;
+
+  // Normal mode (side-effect free): do NOT call instEl.getDefaultContext() here.
+  // FxInstance getters may rebuild lenses / dispatch events that re-enter evaluation.
+  const ctx = _getInstanceDefaultContextNoSideEffects(instEl);
+  return ctx;
 };
 registerCustomXPathFunction({
   namespaceURI: XFORMS_NAMESPACE_URI,
@@ -39125,199 +40147,55 @@ registerCustomXPathFunction({
   const {
     formElement
   } = dynamicContext.currentContext;
-  if (string === null) {
-    return 1;
-  }
+  if (string === null) return 1;
   const repeat = resolveId(string, formElement, 'fx-repeat');
-
-  // const def = instance.getInstanceData();
-  if (repeat) {
-    return repeat.getAttribute('index');
-  }
-  return Number(1);
+  if (!repeat) return 1;
+  const attr = repeat.getAttribute('index');
+  const attrNum = Number(attr);
+  if (Number.isFinite(attrNum) && attrNum > 0) return attrNum;
+  const propNum = Number(repeat.index);
+  if (Number.isFinite(propNum) && propNum > 0) return propNum;
+  return 1;
 });
-
-// Note that this is not to spec. The spec enforces elements to be returned from the
-// instance. However, we allow instances to actually be JSON!
 registerCustomXPathFunction({
   namespaceURI: XFORMS_NAMESPACE_URI,
   localName: 'instance'
-}, [], 'item()?', domFacade => instance(domFacade, null));
+}, [], 'item()?', dynamicContext => instance(dynamicContext, null));
 registerCustomXPathFunction({
   namespaceURI: XFORMS_NAMESPACE_URI,
   localName: 'instance'
 }, ['xs:string?'], 'item()?', instance);
-const jsonToXml = (_dynamicContext, json) => {
-  const escapeXml = str => str.replace(/[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD]/g, char => `\\u${char.charCodeAt(0).toString(16).padStart(4, '0')}`);
-  const convert = (obj, parent) => {
-    const type = typeof obj;
-    if (type === 'number') {
-      parent.setAttribute('type', 'number');
-      parent.textContent = obj.toString();
-    } else if (type === 'boolean') {
-      parent.setAttribute('type', 'boolean');
-      parent.textContent = obj.toString();
-    } else if (obj === null) {
-      const node = document.createElement('_');
-      node.setAttribute('type', 'null');
-      parent.appendChild(node);
-    } else if (type === 'string') {
-      parent.textContent = escapeXml(obj);
-    } else if (Array.isArray(obj)) {
-      parent.setAttribute('type', 'array');
-      obj.forEach(item => {
-        const node = document.createElement('_');
-        convert(item, node);
-        node.textContent = item;
-        parent.appendChild(node);
-      });
-    } else if (type === 'object') {
-      parent.setAttribute('type', 'object');
-      Object.entries(obj).forEach(([key, value]) => {
-        if (value) {
-          const childNode = document.createElement(key.replace(/[^a-zA-Z0-9_]/g, '_'));
-          convert(value, childNode);
-          parent.appendChild(childNode);
-        }
-      });
-    }
-  };
-  const root = document.createElement('json');
-  if (Array.isArray(json)) {
-    root.setAttribute('type', 'array');
-  } else {
-    root.setAttribute('type', 'object');
-  }
-  convert(json, root);
-  // return root.outerHTML;
-  return root;
-};
-registerCustomXPathFunction({
-  namespaceURI: XFORMS_NAMESPACE_URI,
-  localName: 'json2xml'
-}, ['item()?'], 'item()?', jsonToXml);
-const xmlToJson = (_dynamicContext, xml) => {
-  const isElementNode = node => node.nodeType === Node.ELEMENT_NODE;
-  const isTextNode = node => node.nodeType === Node.TEXT_NODE;
-  const parseNode = node => {
-    if (isElementNode(node)) {
-      const obj = {};
-      if (node.hasAttributes()) {
-        obj.type = node.getAttribute('type');
-      }
-      if (node.childNodes.length === 1 && isTextNode(node.firstChild)) {
-        return node.textContent;
-      }
-      for (const child of node.childNodes) {
-        const childName = child.nodeName;
-        const childValue = parseNode(child);
-        if (obj[childName]) {
-          if (!Array.isArray(obj[childName])) {
-            obj[childName] = [obj[childName]];
-          }
-          obj[childName].push(childValue);
-        } else {
-          obj[childName] = childValue;
-        }
-      }
-      return obj;
-    }
-    if (isTextNode(node)) {
-      return node.textContent;
-    }
-    return undefined;
-  };
-  const parser = new DOMParser();
-  const xmlDoc = parser.parseFromString(xml, 'application/xml');
-  const root = xmlDoc.documentElement;
-  return parseNode(root);
-};
-registerCustomXPathFunction({
-  namespaceURI: XFORMS_NAMESPACE_URI,
-  localName: 'xmltoJson'
-}, ['item()?'], 'item()?', xmlToJson);
-
-/*
-// Example usage:
-const xml = '<json type="object"><given>Mark</given><family>Smith</family></json>';
-console.log(xmlToJson(xml));
-*/
-
 registerCustomXPathFunction({
   namespaceURI: XFORMS_NAMESPACE_URI,
   localName: 'depends'
-}, ['node()*'], 'item()?', (_dynamicContext, nodes) =>
-// console.log('depends on : ', nodes[0]);
-nodes[0]);
+}, ['node()*'], 'item()?', (_dynamicContext, nodes) => nodes[0]);
 registerCustomXPathFunction({
   namespaceURI: XFORMS_NAMESPACE_URI,
   localName: 'event'
 }, ['xs:string?'], 'item()?', (dynamicContext, arg) => {
   if (!arg) return null;
   for (let ancestor = dynamicContext.currentContext.formElement; ancestor; ancestor = ancestor.parentNode) {
-    if (!ancestor.currentEvent) {
-      continue;
-    }
-
-    // We have a current event. read the property either from detail, or from the event
-    // itself.
-    // Check detail for custom events! This is how that is passed along
+    if (!ancestor.currentEvent) continue;
     if (ancestor.currentEvent.detail && typeof ancestor.currentEvent.detail === 'object' && arg in ancestor.currentEvent.detail) {
       return ancestor.currentEvent.detail[arg];
     }
-
-    // arg might be `code`, so currentEvent.code should work
-    if (arg.includes('.')) {
-      return _propertyLookup(ancestor.currentEvent, arg);
-    }
+    if (arg.includes('.')) return _propertyLookup(ancestor.currentEvent, arg);
     return ancestor.currentEvent[arg] || null;
   }
   return null;
 });
 function _propertyLookup(obj, path) {
   const parts = path.split('.');
-  if (parts.length == 1) {
-    return obj[parts[0]];
-  }
+  if (parts.length === 1) return obj[parts[0]];
   return _propertyLookup(obj[parts[0]], parts.slice(1).join('.'));
 }
-
-// Implement the XForms standard functions here.
 registerXQueryModule(`
-    module namespace xf="${XFORMS_NAMESPACE_URI}";
+  module namespace xf="${XFORMS_NAMESPACE_URI}";
 
-    declare %public function xf:boolean-from-string($str as xs:string) as xs:boolean {
-        lower-case($str) = "true" or $str = "1"
-    };
+  declare %public function xf:boolean-from-string($str as xs:string) as xs:boolean {
+      lower-case($str) = "true" or $str = "1"
+  };
 `);
-
-// How to run XQUERY:
-/**
- registerXQueryModule(`
- module namespace my-custom-namespace = "my-custom-uri";
- (:~
- Insert attribute somewhere
- ~:)
- declare %public %updating function my-custom-namespace:do-something ($ele as element()) as xs:boolean {
-	if ($ele/@done) then false() else
-	(insert node
-	attribute done {"true"}
-	into $ele, true())
-};
- `)
- // At some point:
- const contextNode = null;
- const pendingUpdatesAndXdmValue = evaluateUpdatingExpressionSync('ns:do-something(.)', contextNode, null, null, {moduleImports: {'ns': 'my-custom-uri'}})
-
- console.log(pendingUpdatesAndXdmValue.xdmValue); // this is true or false, see function
-
- executePendingUpdateList(pendingUpdatesAndXdmValue.pendingUpdateList, null, null, null);
- */
-
-/**
- * @param input as string
- * @return {string}
- */
 registerCustomXPathFunction({
   namespaceURI: XFORMS_NAMESPACE_URI,
   localName: 'base64encode'
@@ -39325,78 +40203,61 @@ registerCustomXPathFunction({
 registerCustomXPathFunction({
   namespaceURI: XFORMS_NAMESPACE_URI,
   localName: 'local-date'
-}, [], 'xs:string?', (_dynamicContext, _string) => new Date().toLocaleDateString());
+}, [], 'xs:string?', () => new Date().toLocaleDateString());
 registerCustomXPathFunction({
   namespaceURI: XFORMS_NAMESPACE_URI,
   localName: 'local-dateTime'
-}, [], 'xs:string?', (_dynamicContext, _string) => new Date().toLocaleString());
+}, [], 'xs:string?', () => new Date().toLocaleString());
 registerCustomXPathFunction({
   namespaceURI: XFORMS_NAMESPACE_URI,
   localName: 'uri'
-}, [], 'xs:string?', (_dynamicContext, _string) => window.location.href);
+}, [], 'xs:string?', () => window.location.href);
 registerCustomXPathFunction({
   namespaceURI: XFORMS_NAMESPACE_URI,
   localName: 'uri-fragment'
-}, [], 'xs:string?', (_dynamicContext, _arg) => window.location.hash);
+}, [], 'xs:string?', () => window.location.hash);
 registerCustomXPathFunction({
   namespaceURI: XFORMS_NAMESPACE_URI,
   localName: 'uri-host'
-}, [], 'xs:string?', (_dynamicContext, _arg) => window.location.host);
+}, [], 'xs:string?', () => window.location.host);
 registerCustomXPathFunction({
   namespaceURI: XFORMS_NAMESPACE_URI,
   localName: 'uri-query'
-}, [], 'xs:string?', (_dynamicContext, _arg) => window.location.search);
+}, [], 'xs:string?', () => window.location.search);
 registerCustomXPathFunction({
   namespaceURI: XFORMS_NAMESPACE_URI,
   localName: 'uri-relpath'
-}, [], 'xs:string?', (_dynamicContext, _arg) => {
+}, [], 'xs:string?', () => {
   const path = new URL(window.location.href).pathname;
   return path.substring(0, path.lastIndexOf('/') + 1);
 });
 registerCustomXPathFunction({
   namespaceURI: XFORMS_NAMESPACE_URI,
   localName: 'uri-path'
-}, [], 'xs:string?', (_dynamicContext, _arg) => new URL(window.location.href).pathname);
+}, [], 'xs:string?', () => new URL(window.location.href).pathname);
 registerCustomXPathFunction({
   namespaceURI: XFORMS_NAMESPACE_URI,
   localName: 'uri-port'
-}, [], 'xs:string?', (_dynamicContext, _arg) => window.location.port);
+}, [], 'xs:string?', () => window.location.port);
 registerCustomXPathFunction({
   namespaceURI: XFORMS_NAMESPACE_URI,
   localName: 'uri-param'
 }, ['xs:string?'], 'xs:string?', (_dynamicContext, arg) => {
   if (!arg) return null;
-  const {
-    search
-  } = window.location;
-  const urlparams = new URLSearchParams(search);
-  const param = urlparams.get(arg);
-  return param || '';
+  const urlparams = new URLSearchParams(window.location.search);
+  return urlparams.get(arg) || '';
 });
 registerCustomXPathFunction({
   namespaceURI: XFORMS_NAMESPACE_URI,
   localName: 'uri-scheme'
-}, [], 'xs:string?', (_dynamicContext, _arg) => new URL(window.location.href).protocol);
+}, [], 'xs:string?', () => new URL(window.location.href).protocol);
 registerCustomXPathFunction({
   namespaceURI: XFORMS_NAMESPACE_URI,
   localName: 'uri-scheme-specific-part'
-}, [], 'xs:string?', (_dynamicContext, _arg) => {
+}, [], 'xs:string?', () => {
   const uri = window.location.href;
-  return uri.substring(uri.indexOf(':') + 1, uri.length);
+  return uri.substring(uri.indexOf(':') + 1);
 });
-
-/**
- * @param {Node} node
- * @returns string
- */
-/*
-export static getDocPath(node) {
-  const path = fx.evaluateXPathToString('path()', node);
-  // Path is like `$default/x[1]/y[1]`
-  const shortened = XPathUtil.shortenPath(path);
-  return shortened.startsWith('/') ? `${shortened}` : `/${shortened}`;
-}
-*/
 
 /**
  * @param {Node} node
@@ -39748,80 +40609,36 @@ class Fore {
    * @returns {Promise<void>}
    */
   static async refreshChildren(startElement, force) {
-    const refreshed = new Promise(resolve => {
-      /*
-      if there's an 'refresh-on-view' attribute the element wants to be handled by
-      handleIntersect function that calls the refresh of the respective element and
-      not the global one.
-       */
-      // if(!force && startElement.hasAttribute('refresh-on-view')) return;
+    const children = startElement?.children ? Array.from(startElement.children) : [];
+    for (const element of children) {
+      // Do not cross into nested fore roots
+      if (element.nodeName.toUpperCase() === 'FX-FORE') {
+        break;
+      }
+      if (Fore.isUiElement(element.nodeName) && typeof element.refresh === 'function') {
+        /** @type {import('./ForeElementMixin.js').default} */
+        const bound = element;
 
-      /*  ### attempt with querySelectorAll is even slower than iterating recursively
-       const children = startElement.querySelectorAll('[ref]');
-      Array.from(children).forEach(uiElement => {
-        if (Fore.isUiElement(uiElement.nodeName) && typeof uiElement.refresh === 'function') {
-          uiElement.refresh();
-        }
-      });
-      */
-      const {
-        children
-      } = startElement;
-      if (children) {
-        for (const element of Array.from(children)) {
-          if (element.nodeName.toUpperCase() === 'FX-FORE') {
-            break;
+        // Keep old behavior: only refresh UI elements during full/forced refresh
+        if (!force) ; else if (force === true) {
+          const maybePromise = bound.refresh(force);
+          if (maybePromise && typeof maybePromise.then === 'function') {
+            await maybePromise;
           }
-          if (Fore.isUiElement(element.nodeName) && typeof element.refresh === 'function') {
-            /**
-             * @type {import('./ForeElementMixin.js').default}
-             */
-            const bound = element;
-            if (!force) {
-              continue;
-            }
-            /*
-                        if(element.nodeName === 'FX-CASE') {
-                          console.log('hey - got a case', element);
-                        }
-            */
-            if (force === true) {
-              // console.log('🔄 refreshing ', element);
-              // Unconditional force refresh
-              bound.refresh(force);
-              continue;
-            }
-            if (typeof force !== 'object') {
-              continue;
-            }
-            /*
-            if (
-              force.reason === 'index-function' &&
-              bound.dependencies.isInvalidatedByIndexFunction()
-            ) {
-              console.log('🔄 refreshing ', element);
-               bound.refresh(force);
-              continue;
-            }
-             if (
-              bound.dependencies.isInvalidatedByChildlistChanges(force.elementLocalnamesWithChanges)
-            ) {
-              console.log('🔄 refreshing ', element);
-               bound.refresh(force);
-              continue;
-            }
-            */
-          }
-
-          if (!(element.inert === true)) {
-            // testing for inert catches model and action elements and should just leave updateable html elements
-            Fore.refreshChildren(element, force);
+        } else if (typeof force === 'object') {
+          // future selective refresh logic can live here if you re-enable it
+          const maybePromise = bound.refresh(force);
+          if (maybePromise && typeof maybePromise.then === 'function') {
+            await maybePromise;
           }
         }
       }
-      resolve('done');
-    });
-    return refreshed;
+
+      // Traverse DOM unless inert
+      if (!(element.inert === true)) {
+        await Fore.refreshChildren(element, force);
+      }
+    }
   }
   static copyDom(inputElement) {
     const target = new DOMParser().parseFromString('<fx-fore></fx-fore>', 'text/html');
@@ -40113,37 +40930,251 @@ Fore.RELEVANT_DEFAULT = true;
 Fore.CONSTRAINT_DEFAULT = true;
 Fore.TYPE_DEFAULT = 'xs:string';
 
+// json-node.js
+
+class JSONNode {
+  constructor(value, parent = null, keyOrIndex = null, instanceId = 'default') {
+    this.value = value;
+    this.parent = parent;
+    this.keyOrIndex = keyOrIndex;
+    this.instanceId = instanceId;
+    this.__jsonlens__ = true;
+    if (Array.isArray(value)) {
+      this.children = value.map((child, index) => new JSONNode(child, this, index, instanceId));
+    } else if (typeof value === 'object' && value !== null) {
+      this.children = Object.entries(value).map(([key, val]) => new JSONNode(val, this, key, instanceId));
+    } else {
+      this.children = [];
+    }
+  }
+
+  // Methods for JSONDomFacade compatibility
+  getParent() {
+    return this.parent;
+  }
+  getChildren() {
+    return this.children;
+  }
+  getKey() {
+    return this.keyOrIndex;
+  }
+  getValue() {
+    return this.value;
+  }
+
+  /**
+   * Get the value of this node or a child node by key.
+   * @param {string|number} [key] - Optional key or index to get a child node
+   * @returns {*|JSONNode|undefined} The raw value of this node or a child node
+   */
+  get(key) {
+    // If no key is provided, return the raw value of this node
+    if (arguments.length === 0) {
+      return this.value;
+    }
+
+    // Otherwise, get child node by key or index
+    if (Array.isArray(this.value) && typeof key === 'number') {
+      return this.children[key];
+    }
+    if (typeof this.value === 'object' && this.value !== null) {
+      return this.children.find(c => c.keyOrIndex === key);
+    }
+    return undefined;
+  }
+
+  /**
+   * Get the XPath-style path to this node including instance prefix.
+   * @returns {string|null}
+   */
+  getPath() {
+    // Detached: no parent and no key
+    const isDetached = this.parent === null && this.keyOrIndex === null;
+
+    // Special case: this is NOT the original root (value-only root has no children)
+    if (isDetached && this.children?.length === 0) {
+      return null;
+    }
+    const segments = [];
+    let node = this;
+    while (node.parent !== null) {
+      const key = node.keyOrIndex;
+      if (key === null || key === undefined) return null;
+      if (typeof key === 'number') {
+        segments.unshift(`[${key + 1}]`);
+      } else if (/^[a-zA-Z_][\w\-]*$/.test(key)) {
+        segments.unshift(`/${key}`);
+      } else {
+        const escaped = String(key).replace(/'/g, `''`);
+        segments.unshift(`/'${escaped}'`);
+      }
+      node = node.parent;
+    }
+    return `$${this.instanceId}${segments.join('')}`;
+  }
+
+  /**
+   * Set the raw value of this node.
+   * @param {*} value
+   */
+  set(value) {
+    this.value = value;
+
+    // Update the parent's data structure if this is a child node
+    if (this.parent && this.keyOrIndex !== null && this.keyOrIndex !== undefined) {
+      this.parent.value[this.keyOrIndex] = value;
+    }
+    this.children = [];
+    if (Array.isArray(value)) {
+      this.children = value.map((child, index) => new JSONNode(child, this, index, this.instanceId));
+    } else if (typeof value === 'object' && value !== null) {
+      this.children = Object.entries(value).map(([key, val]) => new JSONNode(val, this, key, this.instanceId));
+    }
+  }
+
+  /**
+   * Insert into array or object node.
+   * @param {*} value
+   * @param {string|number|null} keyOrIndex
+   */
+  insert(value, keyOrIndex = null) {
+    if (Array.isArray(this.value)) {
+      const index = keyOrIndex === null ? this.value.length : keyOrIndex;
+      this.value.splice(index, 0, value);
+      this.children.splice(index, 0, new JSONNode(value, this, index, this.instanceId));
+      // update keyOrIndex of all children after insertion
+      for (let i = index + 1; i < this.children.length; i++) {
+        this.children[i].keyOrIndex = i;
+      }
+    } else if (typeof this.value === 'object') {
+      if (typeof keyOrIndex !== 'string') {
+        throw new Error('Insert into object requires a string key.');
+      }
+      this.value[keyOrIndex] = value;
+      this.children.push(new JSONNode(value, this, keyOrIndex, this.instanceId));
+    } else {
+      throw new Error('Cannot insert into primitive value.');
+    }
+  }
+  delete() {
+    if (!this.parent || this.keyOrIndex == null) return;
+    const parentVal = this.parent.value;
+    if (Array.isArray(parentVal)) {
+      parentVal.splice(this.keyOrIndex, 1);
+      this.parent.set(parentVal);
+    } else if (typeof parentVal === 'object' && parentVal !== null) {
+      delete parentVal[this.keyOrIndex];
+      this.parent.set(parentVal);
+    } else {
+      // Parent is not deletable (primitive etc.)
+      throw new Error('Parent is not an object or array — cannot delete child');
+    }
+  }
+}
+
+/**
+ * Wrap a raw JSON value as a lensable node tree.
+ * @param {*} value
+ * @param {*} parent
+ * @param {*} keyOrIndex
+ * @param {string} instanceId
+ * @returns {JSONNode}
+ */
+function wrapJson(value, parent = null, keyOrIndex = null, instanceId = 'default') {
+  const jsonNode = new JSONNode(value, parent, keyOrIndex, instanceId);
+  return jsonNode;
+  // return new JSONNode(value, parent, keyOrIndex, instanceId);
+}
+
+/**
+ * Returns the correct lens for a JSON node based on its parent and key/index.
+ * Assumes the node is already in a wrapped structure, or retrievable via parent.
+ *
+ * @param {any} node - The JSON node (primitive value or structure)
+ * @param {JSONNode} parent - The parent JSONNode
+ * @param {string|number} keyOrIndex - The key (for objects) or index (for arrays)
+ * @returns {JSONNode} A JSONNode wrapping the value with lens and context
+ */
+
+/**
+ * Returns the correct lens for a JSON node based on its parent and key/index.
+ * Assumes the node is already in a wrapped structure, or retrievable via parent.
+ *
+ * @param {any} node - The JSON node (primitive value or structure)
+ * @param {JSONNode} parent - The parent JSONNode
+ * @param {string|number} keyOrIndex - The key (for objects) or index (for arrays)
+ * @returns {JSONNode} A JSONNode wrapping the value with lens and context
+ */
+/*
+export function getLensForNode(node, parent, keyOrIndex) {
+  if (!parent || !parent.__jsonlens__) {
+    console.warn('getLensForNode called without proper parent lens');
+    return node;
+  }
+
+  const lens = parent.__jsonlens__.lens;
+  const wrapped = lens.get(parent.value, keyOrIndex);
+  return wrapped;
+}
+*/
+
+/**
+ * Attempts to wrap a raw value into a JSONNode, using fallback logic if needed.
+ * @param {any} value - The raw value to wrap.
+ * @param {JSONNode|null} parent - The parent JSONNode (if known).
+ * @param {string|number|null} key - The key/index in the parent (if known).
+ * @param {string} instanceId - The ID of the instance.
+ * @param {Object} instanceRoot - The full wrapped instance root, to help recover parent/key.
+ * @returns {JSONNode|any}
+ */
+function getLensForNode(value, parent = null, key = null, instanceId, instanceRoot = null) {
+  if (value?.__jsonlens__) return value;
+
+  // Attempt fallback recovery if key or parent missing
+  if ((!parent || typeof key === 'undefined') && instanceRoot) {
+    const queue = [instanceRoot];
+    while (queue.length) {
+      const current = queue.shift();
+      if (!current?.children) continue;
+      for (const child of current.children) {
+        if (child.value === value) {
+          parent = current;
+          key = child.keyOrIndex;
+          break;
+        } else {
+          queue.push(child);
+        }
+      }
+      if (parent) break;
+    }
+    if (!parent || typeof key === 'undefined') {
+      return value; // Bail out, return raw value
+    }
+  }
+
+  return new JSONNode(value, parent, key, instanceId);
+}
+
 async function handleResponse(fxInstance, response) {
   const {
     status
   } = response;
   if (status >= 400) {
-    // console.log('response status', status);
     alert(`response status:  ${status} - failed to load data for '${fxInstance.src}' - stopping.`);
     throw new Error(`failed to load data - status: ${status}`);
   }
   let responseContentType = response.headers.get('content-type').split(';')[0].trim().toLowerCase();
-  // console.log('********** responseContentType *********', responseContentType);
   if (responseContentType.startsWith('text/html')) {
-    // const htmlResponse = response.text();
-    // return new DOMParser().parseFromString(htmlResponse, 'text/html');
-    // return response.text();
-    return response.text().then(result =>
-    // console.log('xml ********', result);
-    new DOMParser().parseFromString(result, 'text/html'));
+    return response.text().then(result => new DOMParser().parseFromString(result, 'text/html'));
   }
   if (responseContentType.endsWith('/json') || responseContentType.endsWith('+json')) {
-    // console.log("********** inside res json *********");
     return response.json();
   }
   if (responseContentType.endsWith('/xml') || responseContentType.endsWith('+xml')) {
-    // See https://www.rfc-editor.org/rfc/rfc7303
     const text = await response.text();
-    // console.log('xml ********', result);
     return new DOMParser().parseFromString(text, 'application/xml');
   }
   if (responseContentType.startsWith('text/')) {
-    // console.log("********** inside  res plain *********");
     return response.text();
   }
   throw new Error(`unable to handle response content type: ${responseContentType}`);
@@ -40151,9 +41182,6 @@ async function handleResponse(fxInstance, response) {
 
 /**
  * Container for data instances.
- *
- * Offers several ways of loading data from either inline content or via 'src' attribute which will use the fetch
- * API to resolve data.
  */
 class FxInstance extends HTMLElement {
   constructor() {
@@ -40165,16 +41193,47 @@ class FxInstance extends HTMLElement {
     this.originalInstance = null;
     this.partialInstance = null;
     this.credentials = '';
+
+    // IMPORTANT: keep backing store private so setter can intercept updates
+    this._instanceData = null;
+
+    // Lens nodeset for JSON, DOM Document for XML
+    this.nodeset = null;
+
+    // JSON facade (only relevant for JSON instances)
+    this.domFacade = null;
   }
   connectedCallback() {
-    // console.log('connectedCallback ', this);
     if (this.hasAttribute('src')) {
       this.src = this.getAttribute('src');
     }
-    if (this.hasAttribute('id')) {
-      this.id = this.getAttribute('id');
+
+    // Default instance selection is positional:
+    // The first <fx-instance> child (doc order) of the owning <fx-model> is the default instance.
+    // If the author did not provide an id on that first instance, we set id="default".
+    // If the author provided an id on that first instance, we use that id instead.
+    const parentModel = this.parentNode && this.parentNode.nodeName && this.parentNode.nodeName.toUpperCase() === 'FX-MODEL' ? this.parentNode : null;
+    const explicitId = (this.getAttribute('id') || '').trim();
+    let isFirstInModel = false;
+    if (parentModel) {
+      const instances = Array.from(parentModel.children).filter(el => el && el.nodeType === Node.ELEMENT_NODE && el.localName === 'fx-instance');
+      isFirstInModel = instances.length > 0 && instances[0] === this;
     } else {
-      this.id = 'default';
+      // Standalone <fx-instance> in tests/fixtures: treat as default.
+      isFirstInModel = true;
+    }
+    if (isFirstInModel) {
+      // First instance defines the default instance
+      const effectiveId = explicitId || 'default';
+      this.instanceId = effectiveId;
+      // For backwards compatibility/tests, reflect as DOM id.
+      this.id = effectiveId;
+    } else {
+      // Non-first instances are only addressable by id if explicitly provided.
+      this.instanceId = explicitId || '';
+      if (explicitId) {
+        this.id = explicitId;
+      }
     }
     this.credentials = this.hasAttribute('credentials') ? this.getAttribute('credentials') : 'same-origin';
     if (!['same-origin', 'include', 'omit'].includes(this.credentials)) ;
@@ -40185,35 +41244,50 @@ class FxInstance extends HTMLElement {
       this.setAttribute('type', this.type);
     }
     const style = `
-            :host {
-                display: none;
-            }
-            :host * {
-                display:none;
-            }
-            ::slotted(*){
-                display:none;
-            }
-        `;
-    const html = `
-        `;
-    this.shadowRoot.innerHTML = `
-            <style>
-                ${style}
-            </style>
-            ${html}
-        `;
+      :host { display: none; }
+      :host * { display:none; }
+      ::slotted(*){ display:none; }
+    `;
+    this.shadowRoot.innerHTML = `<style>${style}</style>`;
     this.partialInstance = {};
   }
 
   /**
+   * Logical Fore instance identifier (NOT the HTML id).
+   * Prefer `instanceId` internally.
+   */
+  get foreId() {
+    return this.instanceId || (this.hasAttribute('id') ? this.getAttribute('id') : 'default');
+  }
+
+  /**
+   * IMPORTANT: canonical accessor for instance data.
+   * Any code that assigns `instance.instanceData = ...` will now rebuild nodeset correctly.
+   */
+  get instanceData() {
+    return this._instanceData;
+  }
+  set instanceData(data) {
+    if (!data) {
+      this.createInstanceData();
+      return;
+    }
+
+    // Route ALL updates through _setInitialData so nodeset + originalInstance stay consistent
+    this._setInitialData(data);
+
+    // Signal structure mutation (used by fx-fore for refresh decisions)
+    this.dispatchEvent(new CustomEvent('path-mutated', {
+      bubbles: true,
+      composed: true
+    }));
+  }
+
+  /**
    * Is called by fx-model during initialization phase (model-construct)
-   * @returns {Promise<void>}
    */
   async init() {
-    // console.log('fx-instance init');
     await this._initInstance();
-    // console.log(`### <<<<< instance ${this.id} loaded >>>>> `);
     this.dispatchEvent(new CustomEvent('instance-loaded', {
       composed: true,
       bubbles: true,
@@ -40224,8 +41298,15 @@ class FxInstance extends HTMLElement {
     return this;
   }
   reset() {
-    // this._useInlineData();
-    this.instanceData = this.originalInstance.cloneNode(true);
+    // use the setter so nodeset is rebuilt for JSON too
+    if (this.originalInstance && this.type === 'xml') {
+      this.instanceData = this.originalInstance.cloneNode(true);
+    } else if (this.originalInstance && this.type === 'json') {
+      this.instanceData = structuredClone(this.originalInstance);
+    } else {
+      // fallback
+      this.instanceData = this.originalInstance;
+    }
   }
   evalXPath(xpath) {
     const formElement = this.parentElement.parentElement;
@@ -40235,8 +41316,6 @@ class FxInstance extends HTMLElement {
 
   /**
    * returns the current instance data
-   *
-   * @returns {Document | T | any}
    */
   getInstanceData() {
     if (!this.instanceData) {
@@ -40244,44 +41323,27 @@ class FxInstance extends HTMLElement {
     }
     return this.instanceData;
   }
+
+  /**
+   * legacy setter API: keep it, but forward to instanceData setter
+   */
   setInstanceData(data) {
-    if (!data) {
-      this.createInstanceData();
-      return;
-    }
-    this._setInitialData(data);
-    // this.instanceData = data;
+    this.instanceData = data;
   }
 
   /**
-   * return the default context (root node of respective instance) for XPath evalution.
-   *
-   * @returns {Document|T|any|Element}
+   * return the default context (root node of respective instance) for XPath evaluation.
    */
   getDefaultContext() {
-    // Note: use the getter here: it might provide us with stubbed data if anything async is racing,
-    // such as an @src attribute
     const instanceData = this.getInstanceData();
     if (this.type === 'xml' || this.type === 'html') {
-      return instanceData.firstElementChild;
+      return instanceData?.firstElementChild;
     }
-    return this.instanceData;
+    // JSON: use wrapped tree as context item
+    return this.nodeset;
   }
-
-  /**
-   * does the actual loading of data. Handles inline data, data loaded via fetch() or data constructed from
-   * querystring.
-   *
-   * @returns {Promise<void>}
-   * @private
-   */
   async _initInstance() {
     if (this.src === '#querystring') {
-      /*
-       * generate XML data from URL querystring
-       * todo: there's no variant to generate JSON yet
-       */
-      // eslint-disable-next-line no-restricted-globals
       const query = new URLSearchParams(location.search);
       const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
       const root = doc.firstElementChild;
@@ -40299,20 +41361,25 @@ class FxInstance extends HTMLElement {
   }
   createInstanceData() {
     if (this.type === 'xml') {
-      // const doc = new DOMParser().parseFromString('<data data-id="default"></data>', 'application/xml');
       const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
-      this.instanceData = doc;
-      this.originalInstance = this.instanceData.cloneNode(true);
+      this._instanceData = doc;
+      this.originalInstance = doc.cloneNode(true);
+      this.nodeset = doc;
+      return;
     }
     if (this.type === 'json') {
-      this.instanceData = {};
+      this._instanceData = {};
       this.originalInstance = {
-        ...this.instanceData
+        ...this._instanceData
       };
+      this.nodeset = wrapJson(this._instanceData, null, null, this.foreId);
+      this.domFacade = new JSONDomFacade();
+      return;
     }
     if (this.type === 'text') {
-      this.instanceData = this.innerText;
+      this._instanceData = this.innerText;
       this.originalInstance = this.innerText;
+      this.nodeset = null;
     }
   }
   async _loadData() {
@@ -40320,9 +41387,7 @@ class FxInstance extends HTMLElement {
     if (url.startsWith('localStore')) {
       const key = url.substring(url.indexOf(':') + 1);
       const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
-      this.instanceData = doc;
-      // ### does it make sense to store originalData here?
-
+      this._instanceData = doc;
       if (!key) {
         return;
       }
@@ -40332,8 +41397,9 @@ class FxInstance extends HTMLElement {
         return;
       }
       const data = new DOMParser().parseFromString(serialized, 'application/xml');
-      // let data = this._parse(serialized, instance);
       doc.firstElementChild.replaceWith(data.firstElementChild);
+      // IMPORTANT: keep nodeset consistent
+      this._setInitialData(doc);
       return;
     }
     const contentType = Fore.getContentType(this, 'get');
@@ -40348,82 +41414,44 @@ class FxInstance extends HTMLElement {
       });
       const data = await handleResponse(this, response);
       this._setInitialData(data);
-      /*
-      if (data.nodeType) {
-        this._setInitialData(data);
-        this.instanceData = data;
-        this.originalInstance = this.instanceData.cloneNode(true);
-        console.log('instanceData loaded: ', this.id, this.instanceData);
-        return;
-      }
-      this.instanceData = data;
-      this.originalInstance = [...data];
-      */
     } catch (error) {
       throw new Error(`failed loading data ${error}`);
     }
   }
   _setInitialData(data) {
-    this.instanceData = data;
-    if (data.nodeType) {
-      this.originalInstance = this.instanceData.cloneNode(true);
-    } else {
-      this.originalInstance = {
-        ...this.instanceData
-      };
-    }
-  }
-  _getContentType() {
-    if (this.type === 'xml') {
-      return 'application/xml';
+    // IMPORTANT: always store in backing field so getter/setter stays consistent
+    this._instanceData = data;
+    if (data?.nodeType) {
+      // XML/HTML instance
+      this.originalInstance = this._instanceData.cloneNode(true);
+      this.nodeset = this._instanceData;
+      // domFacade irrelevant
+      return;
     }
     if (this.type === 'json') {
-      return 'application/json';
+      // JSON instance
+      this.originalInstance = structuredClone(this._instanceData);
+      this.nodeset = wrapJson(this._instanceData, null, null, this.foreId);
+      if (!this.domFacade) this.domFacade = new JSONDomFacade();
+      return;
     }
-    return null;
+
+    // text (or unknown)
+    this.nodeset = null;
   }
   _useInlineData() {
     if (this.type === 'xml') {
-      // console.log('innerHTML ', this.innerHTML);
       const instanceData = new DOMParser().parseFromString(this.innerHTML, 'application/xml');
-
-      // console.log('fx-instance init id:', this.id);
-      // this.instanceData = instanceData;
       this._setInitialData(instanceData);
-      // console.log('instanceData ', this.instanceData);
-      // console.log('instanceData ', this.instanceData.firstElementChild);
-
-      // console.log('fx-instance data: ', this.instanceData);
-      // this.instanceData.firstElementChild.setAttribute('id', this.id);
-      // todo: move innerHTML out to shadowDOM (for later reset)
     } else if (this.type === 'json') {
-      // this.instanceData = JSON.parse(this.textContent);
       this._setInitialData(JSON.parse(this.textContent));
     } else if (this.type === 'html') {
-      // this.instanceData = this.firstElementChild.children;
       this._setInitialData(this.firstElementChild.children);
     } else if (this.type === 'text') {
-      // this.instanceData = this.textContent;
       this._setInitialData(this.textContent);
     } else ;
   }
-
-  // _handleResponse() {
-  //   console.log('_handleResponse ');
-  //   const ajax = this.shadowRoot.getElementById('loader');
-  //   const instanceData = new DOMParser().parseFromString(ajax.lastResponse, 'application/xml');
-  //   this.instanceData = instanceData;
-  //   console.log('data: ', this.instanceData);
-  // }
-
-  /*
-  _handleError() {
-    const loader = this.shadowRoot.getElementById('loader');
-    console.log('_handleResponse ', loader.lastError);
-  }
-  */
 }
-
 if (!customElements.get('fx-instance')) {
   customElements.define('fx-instance', FxInstance);
 }
@@ -40445,7 +41473,7 @@ class ModelItem {
    * @param {string} instance - The fx-instance id having created this ModelItem
    * @param {import('./fx-fore').FxFore} fore - The fx-fore element this ModelItem belongs to
    */
-  constructor(path, ref, node, bind, instance, fore) {
+  constructor(path, ref, nodeOrLens, bind, instance, fore) {
     this.path = path;
     this.ref = ref;
     this.readonly = ModelItem.READONLY_DEFAULT;
@@ -40453,7 +41481,13 @@ class ModelItem {
     this.required = ModelItem.REQUIRED_DEFAULT;
     this.constraint = ModelItem.CONSTRAINT_DEFAULT;
     this.type = ModelItem.TYPE_DEFAULT;
-    this.node = node;
+    this.node = null;
+    this.lens = null;
+    if (nodeOrLens?.get && nodeOrLens?.set) {
+      this.lens = nodeOrLens;
+    } else {
+      this.node = nodeOrLens;
+    }
     this.bind = bind;
     this.instanceId = instance;
     this.fore = fore;
@@ -40479,6 +41513,7 @@ class ModelItem {
   }
 
   get value() {
+    if (this.lens) return this.lens.get();
     if (!this.node) return null;
     if (!this.node.nodeType) return this.node;
     if (this.node.nodeType === Node.ATTRIBUTE_NODE) {
@@ -40487,6 +41522,12 @@ class ModelItem {
     return this.node.textContent;
   }
   set value(newVal) {
+    if (this.lens) {
+      const oldVal = this.lens.get();
+      this.lens.set(newVal);
+      if (oldVal !== newVal) this.notify();
+      return;
+    }
     if (!this.node) return;
     const oldVal = this.value;
     if (newVal?.nodeType && newVal.nodeType === Node.DOCUMENT_NODE) {
@@ -40703,11 +41744,135 @@ function getDocPath(node) {
  * @param {string} instanceId
  * @returns string
  */
-function getPath(node, instanceId) {
+/**
+ * @param {Node} node
+ * @param {string} instanceId
+ * @returns string
+ */
+/**
+ * Compute a stable Fore path for a node.
+ *
+ * NOTE:
+ * During bind graph build we often deal with XML nodes that live in a separate XML Document
+ * (instance document). Those nodes are not in the HTML DOM and therefore cannot "see" <fx-instance>
+ * via ancestor traversal, shadow root, or document.querySelector.
+ *
+ * For that reason, getPath MUST be able to compute $default/... without requiring that an
+ * <fx-instance id="default"> element exists in the HTML DOM.
+ *
+ * @param {Node|any} node
+ * @param {string} instanceId
+ * @returns {string}
+ */
+function getPath(node, instanceId = 'default') {
+  const wantedId = (instanceId ?? 'default').trim() || 'default';
+
+  // JSON lens nodes carry their own path – no need to resolve <fx-instance>
+  if (node && node.__jsonlens__ === true) {
+    return getJsonPath(node);
+  }
+
+  // Try to find the corresponding fx-instance in the current HTML document.
+  // This is useful for sanity checks / detecting JSON instances, but MUST NOT be required
+  // for computing an XML path (especially for the default instance).
+  let instanceEl = null;
+  try {
+    instanceEl = document.querySelector(`fx-instance[id='${wantedId}']`);
+
+    // Many Fore documents use an id-less first instance as the default instance.
+    if (!instanceEl && (wantedId === 'default' || wantedId === '')) {
+      instanceEl = document.querySelector('fx-instance:not([id])') || document.querySelector("fx-instance[id='default']");
+    }
+  } catch (_e) {
+    // ignore
+  }
+
+  // If we *did* find an instance element and it is JSON, then the caller is using the wrong node type.
+  // (JSON instances are addressed via JSON lens nodes.)
+  if (instanceEl) {
+    const isJson = instanceEl.getAttribute('type') === 'json' || instanceEl.type === 'json';
+    if (isJson) {
+      throw new Error(`getPath: Instance '${wantedId}' is JSON but node is not a JSON lens node.`);
+    }
+  } else {
+    // IMPORTANT BEHAVIOR CHANGE:
+    // - If default instance element can't be found (common for detached XML documents),
+    //   we still compute an XML path. Do NOT throw.
+    // - For non-default ids, keep the old strict behavior.
+    if (wantedId !== 'default') {
+      throw new Error(`Instance with id '${wantedId}' not found.`);
+    }
+  }
+
+  // XML nodes: compute path purely from the XML tree
+  if (node && node.nodeType !== undefined) {
+    return getXmlPath(node, wantedId);
+  }
+  throw new Error('Unsupported node type for getPath');
+}
+function getXmlPath(node, instanceId) {
   const path = evaluateXPathToString$1('path()', node);
   // Path is like `$default/x[1]/y[1]`
   const shortened = shortenPath(path);
   return shortened.startsWith('/') ? `$${instanceId}${shortened}` : `$${instanceId}/${shortened}`;
+}
+function getJsonPath(node) {
+  if (!node || !node.__jsonlens__) {
+    throw new Error('getJsonPath called on non-JSONLens node');
+  }
+  const pathSegments = [];
+  let current = node;
+  const instanceId = node.instanceId || 'default';
+  while (current && current.parent) {
+    const {
+      keyOrIndex,
+      parent
+    } = current;
+    if (typeof keyOrIndex === 'number') {
+      pathSegments.unshift(`[${keyOrIndex + 1}]`); // XPath is 1-based
+    } else {
+      pathSegments.unshift(`/${keyOrIndex}`);
+    }
+    current = parent;
+  }
+  return pathSegments.length > 0 ? `$${instanceId}${pathSegments.join('')}` : `$${instanceId}/`;
+}
+
+/**
+ * Parses a JSON-style binding expression like `?automobiles?1?maker`
+ * into a list of steps: ['automobiles', 0, 'maker']
+ *
+ * @param {string} ref
+ * @returns {Array<string|number>}
+ */
+// returns null if it's not a JSON-lens style ref
+// otherwise returns { instanceId: string, steps: Array<string|number> }
+function parseJsonRef(ref, defaultInstanceId = 'default') {
+  if (!ref) return null;
+  const s = String(ref).trim();
+
+  // Optional leading instance('id') / instance("id")
+  const instMatch = s.match(/^instance\s*\(\s*(['"])(.*?)\1\s*\)\s*(\?.*)?$/);
+  let instanceId;
+  let lensPart;
+  if (instMatch) {
+    instanceId = instMatch[2];
+    lensPart = instMatch[3] || '';
+  } else {
+    // No instance(...): must be a lens ref starting with '?'
+    if (!s.startsWith('?')) return null;
+    instanceId = defaultInstanceId;
+    lensPart = s;
+  }
+  const steps = lensPart.split('?').filter(Boolean).map(part => {
+    if (part === '*') return '*';
+    if (/^\d+$/.test(part)) return Number(part) - 1; // 1-based -> 0-based
+    return part;
+  });
+  return {
+    instanceId,
+    steps
+  };
 }
 
 /**
@@ -40828,6 +41993,7 @@ class FxModel extends HTMLElement {
    */
   static lazyCreateModelItem(model, ref, node, formElement) {
     const instanceId = XPathUtil.resolveInstance(formElement, ref);
+    const instance = model.getInstance(instanceId);
     const fore = model.formElement;
     if (fore?.createNodes && (node === null || node === undefined)) {
       const mi = new ModelItem(undefined, ref, null, null, instanceId, fore);
@@ -40836,31 +42002,48 @@ class FxModel extends HTMLElement {
       return mi;
     }
     if (node === null || node === undefined) return null;
-    let targetNode = node.nodeType === Node.TEXT_NODE ? node.parentNode : node;
-    let path = null;
-    if (targetNode?.nodeType) {
-      path = getPath(targetNode, instanceId);
+    let targetNode = Array.isArray(node) ? node[0] : node;
+
+    // Wrap JSON primitives / raw values into a lens node when needed
+    if (instance.type === 'json') {
+      const parentLens = instance.nodeset;
+      const parsedRef = parseJsonRef(ref);
+      if (parsedRef && parsedRef.steps && parsedRef.steps.length > 0) {
+        const key = parsedRef.steps[parsedRef.steps.length - 1];
+        targetNode = getLensForNode(targetNode, parentLens, key, instanceId);
+      }
     }
 
-    // Check if a ModelItem with the same path already exists
+    // Compute canonical path
+    let path = null;
+    if (targetNode?.nodeType || targetNode?.__jsonlens__) {
+      path = getPath(targetNode, instanceId);
+    }
+    const isLensObject = !!targetNode && typeof targetNode === 'object' && typeof targetNode.get === 'function' && typeof targetNode.set === 'function';
+
+    // If ModelItem for same path exists, RETARGET it (node OR lens)
     if (path) {
       const existingModelItem = model.modelItems.find(mi => mi.path === path);
       if (existingModelItem) {
-        // Update the node reference if needed
-        if (existingModelItem.node !== targetNode) {
-          existingModelItem.node = targetNode;
+        if (isLensObject) {
+          if (existingModelItem.lens !== targetNode) {
+            existingModelItem.lens = targetNode;
+            existingModelItem.node = null;
+          }
+        } else {
+          if (existingModelItem.node !== targetNode) {
+            existingModelItem.node = targetNode;
+            existingModelItem.lens = null;
+          }
         }
         return existingModelItem;
       }
     }
     const mi = new ModelItem(path, ref, targetNode, model.getBindForElement(targetNode), instanceId, fore);
     mi.isSynthetic = true;
-
-    // console.log('new ModelItem is instanceof ModelItem ', mi instanceof ModelItem);
     model.registerModelItem(mi);
     return mi;
   }
-
   /**
    * modelConstruct starts actual processing of the model by
    *
@@ -40888,6 +42071,33 @@ class FxModel extends HTMLElement {
       // Wait until all the instances are built
       await Promise.all(promises);
       this.instances = Array.from(instances);
+      // Build in-memory variable bindings for instances (Variant A: no <fx-var> DOM nodes).
+      // These bindings are merged into XPath variable resolution by xpath-evaluation.js.
+      if (this.formElement) {
+        const bindings = Object.create(null);
+
+        // $default always points to the model's default instance (first instance)
+        // IMPORTANT: For JSON instances, bind RAW JS root so `?` lookup works.
+        try {
+          const defInst = this.getDefaultInstance();
+          if (defInst) {
+            const t = defInst.getAttribute && defInst.getAttribute('type') || defInst.type;
+            bindings.default = t === 'json' ? defInst.getInstanceData() : defInst.getDefaultContext();
+          }
+        } catch (_e) {
+          // ignore
+        }
+        // Also expose $<id> for explicitly id'ed instances
+        this.instances.forEach(inst => {
+          const explicitId = inst.getAttribute('id');
+          if (!explicitId) return;
+          // Do not overwrite $default binding; $default remains the first instance
+          if (explicitId === 'default') return;
+          const t = inst.getAttribute && inst.getAttribute('type') || inst.type;
+          bindings[explicitId] = t === 'json' ? inst.getInstanceData() : inst.getDefaultContext();
+        });
+        this.formElement._instanceVarBindings = bindings;
+      }
       // console.log('_modelConstruct this.instances ', this.instances);
       // Await until the model-construct-done event is handled off
       this.modelConstructed = true;
@@ -40913,10 +42123,80 @@ class FxModel extends HTMLElement {
     this.inited = true;
   }
   registerModelItem(modelItem) {
-    // console.log('ModelItem registered ', modelItem);
-    this.modelItems.push(modelItem);
-  }
+    if (!modelItem) return null;
+    const path = modelItem.path;
+    const resetComputedState = mi => {
+      // Tabula rasa for computed facets; keep identity (boundControls/observers)
+      mi.readonly = ModelItem.READONLY_DEFAULT;
+      mi.relevant = ModelItem.RELEVANT_DEFAULT;
+      mi.required = ModelItem.REQUIRED_DEFAULT;
+      mi.constraint = ModelItem.CONSTRAINT_DEFAULT;
+      mi.type = ModelItem.TYPE_DEFAULT;
 
+      // common extras in Fore's ModelItem
+      if ('valid' in mi) mi.valid = true;
+      if ('enabled' in mi) mi.enabled = true;
+      mi.changed = false;
+
+      // observer/dependency bookkeeping (safe to reset; will be rebuilt)
+      if (mi.dependencies && typeof mi.dependencies.clear === 'function') mi.dependencies.clear();
+      if (mi.stateExpressions) mi.stateExpressions = {};
+      if (mi.state) mi.state = {};
+    };
+    const retarget = (target, source) => {
+      // point to current backing node/lens
+      if (source.lens) {
+        target.lens = source.lens;
+        target.node = null;
+      } else if (source.node) {
+        target.node = source.node;
+        target.lens = null;
+      }
+
+      // keep metadata current
+      if (source.ref) target.ref = source.ref;
+      if (source.bind) target.bind = source.bind;
+      if (source.instanceId) target.instanceId = source.instanceId;
+      if (source.fore) target.fore = source.fore;
+
+      // ✅ IMPORTANT: do NOT copy value!
+      // For XML nodes, assigning `value` sets `node.textContent` and can delete child elements.
+
+      resetComputedState(target);
+      if (!target.boundControls) target.boundControls = [];
+    };
+
+    // ---- rebuild reuse-by-path (approach A) ----
+    if (path && this._prevModelItemsByPath) {
+      const prev = this._prevModelItemsByPath.get(path);
+      if (prev) {
+        retarget(prev, modelItem);
+        if (!this.modelItems.includes(prev)) {
+          this.modelItems.push(prev);
+        }
+        this._prevModelItemsByPath.delete(path);
+        return prev;
+      }
+    }
+
+    // ---- normal path ----
+    if (!path) {
+      // No path => can't reuse; keep as-is
+      this.modelItems.push(modelItem);
+      return modelItem;
+    }
+    const existing = this.modelItems.find(mi => mi.path === path);
+    if (!existing) {
+      // New canonical item
+      resetComputedState(modelItem);
+      this.modelItems.push(modelItem);
+      return modelItem;
+    }
+
+    // Re-target canonical item
+    retarget(existing, modelItem);
+    return existing;
+  }
   /**
    * update action triggering the update cycle
    */
@@ -40941,43 +42221,69 @@ class FxModel extends HTMLElement {
    * @param {Node} node - The node for which to remove the model item
    */
   removeModelItem(node) {
-    const index = this.modelItems.findIndex(mi => mi.node === node);
-    // The model item is not always there. Might be the case if a node is 'skipped' during rendering. All paths jump over it.
-    // It may still have descendants that can have model items
+    if (!node) return;
+
+    // Support both XML nodes (mi.node) and JSON lens nodes (mi.lens)
+    const index = this.modelItems.findIndex(mi => mi.node === node || mi.lens === node);
+
+    // The model item is not always there. Might be the case if a node is 'skipped' during rendering.
+    // It may still have descendants that can have model items.
     if (index !== -1) {
+      const mi = this.modelItems[index];
+
+      // IMPORTANT:
+      // Before removing the ModelItem, enqueue all observers (bound UI controls) for refresh.
+      // Otherwise, deleting a bound node can orphan controls (eg. fx-group) because their ModelItem
+      // disappears before the refresh scheduler can reach them.
+      try {
+        const fore = this.formElement || this.parentNode || mi.fore;
+        if (fore && typeof fore.addToBatchedNotifications === 'function' && mi && mi.observers) {
+          mi.observers.forEach(observer => {
+            if (observer && typeof observer.refresh === 'function') {
+              fore.addToBatchedNotifications(observer);
+            }
+          });
+        }
+      } catch (_e) {
+        // ignore
+      }
       this.modelItems.splice(index, 1);
     }
-    for (const child of Array.from(node.childNodes)) {
-      this.removeModelItem(child);
+
+    // Recurse for XML descendants only
+    if (node.childNodes) {
+      for (const child of Array.from(node.childNodes)) {
+        this.removeModelItem(child);
+      }
     }
   }
   rebuild() {
-    this.mainGraph = new DepGraph(false); // do: should be moved down below binds.length check but causes errors in tests.
-    this.modelItems = [];
 
-    // trigger recursive initialization of the fx-bind elements
+    // Build a lookup for existing ModelItems so we can reuse them by path (approach A)
+    const prevItems = Array.isArray(this.modelItems) ? this.modelItems : [];
+    this._prevModelItemsByPath = new Map();
+    prevItems.forEach(mi => {
+      if (mi && mi.path) this._prevModelItemsByPath.set(mi.path, mi);
+    });
+    this.mainGraph = new DepGraph(false);
+    this.modelItems = [];
     const binds = this.querySelectorAll('fx-model > fx-bind');
     if (binds.length === 0) {
-      // console.log('skipped model update');
       this.skipUpdate = true;
+      this._prevModelItemsByPath = null;
       return;
     }
-    binds.forEach(bind => {
-      bind.init(this);
-    });
+    binds.forEach(bind => bind.init(this));
     if (this.formElement.createNodes) {
-      // initData should be running here as well: we just got a whole new instance that may be
-      // incomplete
       this.formElement.initData();
     }
 
-    // this.dispatchEvent(new CustomEvent('rebuild-done', {detail: {maingraph: this.mainGraph}}));
+    // Drop unused previous ModelItems (not re-registered this rebuild)
+    this._prevModelItemsByPath = null;
     Fore.dispatch(this, 'rebuild-done', {
       maingraph: this.mainGraph
     });
-    // console.log('mainGraph', this.mainGraph);
   }
-
   /**
    * recalculation of all modelItems. Uses dependency graph to determine order of computation.
    *
@@ -41092,59 +42398,60 @@ class FxModel extends HTMLElement {
    * @param {string} path - the canonical XPath of the node
    */
   compute(node, path) {
-    const modelItem = this.getModelItem(node);
-    if (modelItem && path.includes(':')) {
-      const property = path.split(':')[1];
-      if (property) {
-        /*
-                        if (property === 'readonly') {
-                            // make sure that calculated items are always readonly
-                            if(modelItem.bind['calculate']){
-                                modelItem.readonly =  true;
-                            }else {
-                                const expr = modelItem.bind[property];
-                                const compute = evaluateXPathToBoolean(expr, modelItem.node, this);
-                                modelItem.readonly = compute;
-                            }
-                        }
-        */
-        const expr = modelItem.bind[property];
-        if (property === 'calculate') {
-          const compute = evaluateXPath(expr, modelItem.node, this);
-          modelItem.value = compute;
-          modelItem.readonly = true; // calculated nodes are always readonly
-          modelItem.notify(); // Notify observers directly
-        } else if (property !== 'constraint' && property !== 'type') {
-          /*
-          console.log(
-            'recalculating path ',
-            path,
-            ' Expr:',
-            expr,
-            'modelitem value',
-            modelItem.node.textContent,
-          );
-          */
-          // ### re-compute the Boolean value of all facets expect 'constraint' and 'type' which are handled in revalidate()
-          if (expr) {
-            const compute = evaluateXPathToBoolean(expr, modelItem.node, this);
-            modelItem[property] = compute;
-            // modelItem.notify(); // Notify observers directly
-            this.fore.addToBatchedNotifications(modelItem);
-            /*
-                                    console.log(
-                                      `recalculating path ${path} - Expr:'${expr}' computed`,
-                                      modelItem[property],
-                                    );
-                        */
-          }
+    // Nodes in dep graphs can be transient during JSON insert/rebuild windows.
+    // Preserve depGraph semantics, but avoid crashing when a ModelItem is momentarily missing.
+
+    // Resolve facet property (eg. "$data/movies[3]/title:relevant")
+    const isFacetPath = typeof path === 'string' && path.includes(':');
+    if (!isFacetPath) return;
+    const property = path.split(':')[1];
+    if (!property) return;
+
+    // Try to resolve the model item primarily by node, but fall back to canonical path.
+    // The depGraph stores node data that may not be the same object identity after lens rebuild.
+    let modelItem = this.getModelItem(node);
+    if (!modelItem && node && (node.__jsonlens__ === true || typeof node.getPath === 'function')) {
+      try {
+        const instanceId = node.instanceId || XPathUtil.resolveInstance(this, path);
+        const canonical = getPath(node, instanceId);
+        modelItem = this.getModelItem(canonical);
+      } catch (_e) {
+        // ignore
+      }
+    }
+
+    // If still missing, fall back to the prefix path of the facet node.
+    // eg. "$data/movies[3]/title:relevant" => "$data/movies[3]/title"
+    if (!modelItem) {
+      const basePath = path.substring(0, path.indexOf(':'));
+      modelItem = this.getModelItem(basePath);
+    }
+
+    // ✅ Minimal fix: don't crash the update cycle if the ModelItem doesn't exist.
+    // This can happen during insert/delete when rebuild retargeting is in progress.
+    if (!modelItem) {
+      return;
+    }
+    if (modelItem && typeof path === 'string') {
+      const expr = modelItem.bind ? modelItem.bind[property] : null;
+      const context = modelItem.node || modelItem.lens;
+      if (property === 'calculate') {
+        const compute = evaluateXPath(expr, context, this);
+        modelItem.value = compute;
+        modelItem.readonly = true; // calculated nodes are always readonly
+        modelItem.notify(); // Notify observers directly
+      } else if (property !== 'constraint' && property !== 'type') {
+        // ### re-compute the Boolean value of all facets expect 'constraint' and 'type' which are handled in revalidate()
+        if (expr) {
+          const compute = evaluateXPathToBoolean(expr, context, this);
+          modelItem[property] = compute;
+          // modelItem.notify(); // Notify observers directly
+          this.fore.addToBatchedNotifications(modelItem);
         }
       }
-
       this.computes += 1;
     }
   }
-
   /**
    * Iterates all modelItems to calculate the validation status.
    *
@@ -41235,7 +42542,16 @@ class FxModel extends HTMLElement {
    * @returns {ModelItem|null}
    */
   getModelItem(nodeOrPath) {
-    return this.modelItems.find(mi => mi.node === nodeOrPath || mi.path === nodeOrPath) || null;
+    if (nodeOrPath == null) return null;
+
+    // Path lookup
+    if (typeof nodeOrPath === 'string') {
+      const key = nodeOrPath.includes(':') ? nodeOrPath.substring(0, nodeOrPath.indexOf(':')) : nodeOrPath;
+      return this.modelItems.find(mi => mi.path === key) || null;
+    }
+
+    // Node/lens lookup
+    return this.modelItems.find(mi => mi.node === nodeOrPath || mi.lens === nodeOrPath) || null;
   }
 
   /**
@@ -41268,43 +42584,57 @@ class FxModel extends HTMLElement {
    * @returns {import('./fx-instance.js').FxInstance}
    */
   getInstance(id) {
-    // console.log('getInstance ', id);
-    // console.log('instances ', this.instances);
-    // console.log('instances array ',Array.from(this.instances));
+    let found = null;
 
-    let found;
+    // default instance is first instance in this model
     if (id === 'default') {
       found = this.instances[0];
     }
+
     // ### lookup in local instances first
     if (!found) {
       const instArray = Array.from(this.instances);
       found = instArray.find(inst => inst.id === id);
     }
-    // ### lookup in parent Fore if present
+
+    // ### lookup in parent Fore if present (shared instances)
     if (!found) {
-      // const parentFore = this.fore.parentNode.closest('fx-fore');
       const parentFore = this.fore.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE ? this.fore.parentNode.host.closest('fx-fore') : this.fore.parentNode.closest('fx-fore');
       if (parentFore) {
-        // console.log('shared instances from parent', this.parentNode.id);
         const parentInstances = parentFore.getModel().instances;
-        const shared = parentInstances.filter(shared => shared.hasAttribute('shared'));
-        found = shared.find(found => found.id === id);
+        const shared = parentInstances.filter(inst => inst.hasAttribute('shared'));
+        found = shared.find(inst => inst.id === id);
       }
     }
-    // search for shared instances in the whole document
+
+    // ### search for shared instances in the light DOM (legacy)
     if (!found) {
       found = document.querySelector(`fx-instance[id="${id}"][shared]`);
     }
-    if (found) {
-      return found;
-    }
-    if (id === 'default') {
-      return this.getDefaultInstance(); // if id is not found always defaults to first in doc order
-    }
 
+    // ### NEW: search for shared instances inside other fx-fore shadowRoots
+    // This is required when a fore keeps its model/instances in its own shadow DOM
+    // and sibling fores want to consume that instance via instance('id').
+    if (!found) {
+      const allFores = Array.from(document.querySelectorAll('fx-fore'));
+      for (const fore of allFores) {
+        // light DOM inside fore (in case someone authoring without shadow)
+        const light = fore.querySelector?.(`fx-instance[id="${id}"][shared]`);
+        if (light) {
+          found = light;
+          break;
+        }
+
+        // shadow DOM inside fore (common in your demos)
+        const shadow = fore.shadowRoot?.querySelector?.(`fx-instance[id="${id}"][shared]`);
+        if (shadow) {
+          found = shadow;
+          break;
+        }
+      }
+    }
+    if (found) return found;
     if (!found && this.fore.strict) {
-      // return this.getDefaultInstance(); // if id is not found always defaults to first in doc order
       Fore.dispatch(this, 'error', {
         origin: this,
         message: `Instance '${id}' does not exist`,
@@ -41347,7 +42677,7 @@ class DependentXPathQueries {
       }
     }
 
-    // We can also depend on the index function if it was used in our ancestry
+    // We can also depend on the index functioxn if it was used in our ancestry
     return !!this._parentDependencies?.isInvalidatedByIndexFunction();
   }
 
@@ -41379,8 +42709,40 @@ class DependentXPathQueries {
    *
    * @param {string} xpath the XPath to add
    */
+  /**
+   * Add an XPath to the dependencies
+   *
+   * @param {string} xpath the XPath to add
+   */
   addXPath(xpath) {
-    this._xpaths.add(xpath);
+    const expr = String(xpath ?? '');
+    if (!expr) return;
+
+    // Always keep the original expression
+    this._xpaths.add(expr);
+
+    // --- NEW: extract implicit JSON lookup deps hidden behind variables ---
+    //
+    // Examples:
+    //   contains(., $default?ui?query)  -> adds ?ui?query
+    //   $foo.?ui?query                 -> adds ?ui?query
+    //
+    // We only add lookup tails that start with ? or .? and then a key.
+    // This is intentionally conservative and string-based.
+    const varLookupRe = /\$[A-Za-z_][\w.-]*\s*(\.\?)?(\?[\w$.-]+(?:\[[^\]]+\])?)(\?[\w$.-]+(?:\[[^\]]+\])?)*(\?\*)?/g;
+
+    // We want the full tail beginning at the first '?' (ignore optional '.')
+    // so: ".?ui?query" => "?ui?query"
+    let m;
+    while ((m = varLookupRe.exec(expr)) !== null) {
+      const fullMatch = m[0] || '';
+      const qpos = fullMatch.indexOf('?');
+      if (qpos === -1) continue;
+      const tail = fullMatch.slice(qpos); // e.g. "?ui?query"
+      // Only record meaningful deps (ignore just "?*")
+      if (tail === '?*') continue;
+      this._xpaths.add(tail);
+    }
   }
 
   /**
@@ -41570,7 +42932,7 @@ class ForeElementMixin extends HTMLElement {
         // console.log('match ', match);
         const naked = match.substring(1, match.length - 1);
         const inscope = getInScopeContext(node, naked);
-        const result = evaluateXPathToString(naked, inscope, this);
+        const result = evaluateXPathToString(naked, inscope, this.getOwnerForm());
         const replaced = expr.replaceAll(match, result);
         // console.log('replacing ', expr, ' with ', replaced);
         expr = replaced;
@@ -41627,52 +42989,78 @@ class ForeElementMixin extends HTMLElement {
   /**
    * @returns {import('./modelitem.js').ModelItem}
    */
+  /**
+   * @returns {import('./modelitem.js').ModelItem}
+   */
   getModelItem() {
-    if (!this.getModel()) return;
+    if (!this.getModel()) return null;
+    const model = this.getModel();
 
-    // First try to find by node reference
-    const mi = this.getModel().getModelItem(this.nodeset);
-    if (mi) {
-      this.modelItem = mi;
-    }
+    // Resolve the effective bound node for repeated contexts
     const repeated = XPathUtil.getClosest('fx-repeatitem', this);
-    let existed;
+    let effectiveNode = this.nodeset;
     if (repeated) {
       const {
         index
       } = repeated;
-      if (Array.isArray(this.nodeset)) {
-        existed = this.getModel().getModelItem(this.nodeset[index - 1]);
-      } else {
-        existed = this.getModel().getModelItem(this.nodeset);
+      if (Array.isArray(effectiveNode)) {
+        effectiveNode = effectiveNode[index - 1];
       }
-    } else {
-      existed = this.nodeset ? this.getModel().getModelItem(this.nodeset) : null;
     }
 
-    // If we couldn't find by node reference, try to find by path
-    if (!existed && this.nodeset) {
-      // Get the path for the current nodeset
-      const instanceId = XPathUtil.resolveInstance(this, this.ref);
-      let targetNode = this.nodeset.nodeType === Node.TEXT_NODE ? this.nodeset.parentNode : this.nodeset;
-      if (targetNode?.nodeType) {
-        const path = getPath(targetNode, instanceId);
+    // 1) Try exact lookup by node OR lens object (model.getModelItem was updated earlier)
+    let existed = effectiveNode ? model.getModelItem(effectiveNode) : null;
+    if (existed) {
+      this.modelItem = existed;
+      return existed;
+    }
 
-        // Try to find a ModelItem with this path
-        existed = this.getModel().modelItems.find(item => item.path === path);
-        if (existed) {
-          // Update the node reference in the existing ModelItem
+    // 2) Try lookup by canonical path (XML + JSON)
+    const instanceId = XPathUtil.resolveInstance(this, this.ref);
+
+    // Normalize XML text node -> parent
+    let targetNode = effectiveNode;
+    if (targetNode?.nodeType === Node.TEXT_NODE) targetNode = targetNode.parentNode;
+    let path = null;
+
+    // XML node path
+    if (targetNode?.nodeType) {
+      path = getPath(targetNode, instanceId);
+    }
+    // JSON lens node path (preferred)
+    else if (targetNode?.__jsonlens__ && typeof targetNode.getPath === 'function') {
+      // JSONNode.getPath() already returns the canonical path you want
+      path = targetNode.getPath();
+    }
+    // As a last resort: try getPath() util for JSON lens nodes if it supports them
+    else if (targetNode?.__jsonlens__) {
+      try {
+        path = getPath(targetNode, instanceId);
+      } catch (_e) {
+        // ignore
+      }
+    }
+    if (path) {
+      existed = model.modelItems.find(item => item.path === path) || null;
+      if (existed) {
+        // CRITICAL: retarget existing ModelItem to the current backing object
+        const isLensObject = targetNode && typeof targetNode === 'object' && typeof targetNode.get === 'function' && typeof targetNode.set === 'function';
+        if (isLensObject) {
+          existed.lens = targetNode;
+          existed.node = null;
+        } else {
           existed.node = targetNode;
+          existed.lens = null;
         }
-      }
-      if (!existed) {
-        const lazyCreatedModelItem = FxModel.lazyCreateModelItem(this.getModel(), this.ref, this.nodeset, this);
-        this.modelItem = lazyCreatedModelItem;
-        return lazyCreatedModelItem;
+        this.modelItem = existed;
+        return existed;
       }
     }
-    this.modelItem = existed;
-    return existed;
+
+    // 3) Not found: lazily create (lazyCreateModelItem now dedupes/retargets by path)
+    const lazyCreatedModelItem = FxModel.lazyCreateModelItem(model, this.ref, effectiveNode, this);
+    this.modelItem = lazyCreatedModelItem;
+    return lazyCreatedModelItem;
   }
   /**
    * Returns the effective value for the element.
@@ -41712,6 +43100,61 @@ class ForeElementMixin extends HTMLElement {
    */
   setInScopeVariables(inScopeVariables) {
     this.inScopeVariables = inScopeVariables;
+  }
+}
+
+// json-lens.js
+class JSONLens {
+  constructor(root, path = []) {
+    this.root = root; // the raw JSON object
+    this.path = path; // path to target node, e.g., ['invoice', 'items', 0]
+  }
+
+  _resolveParent() {
+    const lastKey = this.path[this.path.length - 1];
+    const parentPath = this.path.slice(0, -1);
+    const parent = parentPath.reduce((obj, key) => obj?.[key], this.root);
+    return [parent, lastKey];
+  }
+  get() {
+    return this.path.reduce((obj, key) => obj?.[key], this.root);
+  }
+  set(value) {
+    const [parent, key] = this._resolveParent();
+    if (parent !== undefined) {
+      parent[key] = value;
+    }
+  }
+  delete() {
+    const [parent, key] = this._resolveParent();
+    if (Array.isArray(parent)) {
+      parent.splice(key, 1);
+    } else if (parent && typeof parent === 'object') {
+      delete parent[key];
+    }
+  }
+  insert(value, keyOrIndex = null) {
+    const target = this.get();
+    if (Array.isArray(target)) {
+      if (keyOrIndex === null || keyOrIndex >= target.length) {
+        target.push(value); // append
+      } else {
+        target.splice(keyOrIndex, 0, value); // insert at index
+      }
+    } else if (target && typeof target === 'object') {
+      if (typeof keyOrIndex !== 'string') {
+        throw new Error('Inserting into an object requires a string key.');
+      }
+      target[keyOrIndex] = value;
+    } else {
+      throw new Error('Target is not insertable (must be object or array).');
+    }
+  }
+  lensForChild(key) {
+    return new JSONLens(this.root, this.path.concat(key));
+  }
+  pathString() {
+    return '/' + this.path.map(k => typeof k === 'number' ? `[${k}]` : k).join('/');
   }
 }
 
@@ -41828,78 +43271,66 @@ class FxBind extends ForeElementMixin {
    */
   init(model) {
     this.model = model;
-    // console.log('init binding ', this);
     this._getInstanceId();
     this.bindType = this.getModel().getInstance(this.instanceId).type;
-    // console.log('binding type ', this.bindType);
 
+    // ✅ Always evaluate nodeset first (XML + JSON)
+    this._evalInContext();
+
+    // ✅ Build dependency graph for both types
+    this._buildBindGraph();
+
+    // ✅ Create modelitems for both types
     if (this.bindType === 'xml') {
-      this._evalInContext();
-      this._buildBindGraph();
       this._createModelItems();
+    } else if (this.bindType === 'json') {
+      this._createModelItemsForJSON();
     }
-    // todo: support json
-
-    // ### process child bindings
     this._processChildren(model);
   }
   _buildBindGraph() {
-    if (this.bindType === 'xml') {
-      this.nodeset.forEach(node => {
-        const instance = XPathUtil.resolveInstance(this, this.ref);
-        const path = getPath(node, instance);
-        this.model.mainGraph.addNode(path, node);
-
-        /* ### catching references in the 'ref' itself...
-        todo: investigate cases where 'ref' attributes use predicates pointing to other nodes. These would not be handled
-        in current implementation.
-         General question: are there valid use-cases for using a 'filter' expression to narrow the nodeset
-          where to apply constraints? Guess yes and if it's 'just' for reducing the amount of necessary modelItem objects.
-         */
-        // const foreignRefs = this.getReferences(this.ref);
-
-        if (this.calculate) {
-          this.model.mainGraph.addNode(`${path}:calculate`, node);
-          // Calculated values are a dependency of the model item.
-          this.model.mainGraph.addDependency(path, `${path}:calculate`);
+    // ✅ Works for XML and JSON (JSON nodes have getPath()/getPath() handles __jsonlens__)
+    this.nodeset.forEach(node => {
+      const instanceId = XPathUtil.resolveInstance(this, this.ref);
+      const path = getPath(node, instanceId);
+      this.model.mainGraph.addNode(path, node);
+      if (this.calculate) {
+        this.model.mainGraph.addNode(`${path}:calculate`, node);
+        this.model.mainGraph.addDependency(path, `${path}:calculate`);
+      }
+      const calculateRefs = this._getReferencesForProperty(this.calculate, node);
+      if (calculateRefs.length !== 0) {
+        this._addDependencies(calculateRefs, node, path, 'calculate', instanceId);
+      }
+      if (!this.calculate) {
+        const readonlyRefs = this._getReferencesForProperty(this.readonly, node);
+        if (readonlyRefs.length !== 0) {
+          this._addDependencies(readonlyRefs, node, path, 'readonly', instanceId);
+        } else if (this.readonly) {
+          this.model.mainGraph.addNode(`${path}:readonly`, node);
         }
-        const calculateRefs = this._getReferencesForProperty(this.calculate, node);
-        if (calculateRefs.length !== 0) {
-          this._addDependencies(calculateRefs, node, path, 'calculate');
-        }
-        if (!this.calculate) {
-          const readonlyRefs = this._getReferencesForProperty(this.readonly, node);
-          if (readonlyRefs.length !== 0) {
-            this._addDependencies(readonlyRefs, node, path, 'readonly');
-          } else if (this.readonly) {
-            this.model.mainGraph.addNode(`${path}:readonly`, node);
-          }
-        }
-
-        // const requiredRefs = this.requiredReferences;
-        const requiredRefs = this._getReferencesForProperty(this.required, node);
-        if (requiredRefs.length !== 0) {
-          this._addDependencies(requiredRefs, node, path, 'required');
-        } else if (this.required) {
-          this.model.mainGraph.addNode(`${path}:required`, node);
-        }
-        const relevantRefs = this._getReferencesForProperty(this.relevant, node);
-        if (relevantRefs.length !== 0) {
-          this._addDependencies(relevantRefs, node, path, 'relevant');
-        } else if (this.relevant) {
-          this.model.mainGraph.addNode(`${path}:relevant`, node);
-        }
-        const constraintRefs = this._getReferencesForProperty(this.constraint, node);
-        if (constraintRefs.length !== 0) {
-          this._addDependencies(constraintRefs, node, path, 'constraint');
-        } else if (this.constraint) {
-          this.model.mainGraph.addNode(`${path}:constraint`, node);
-          this.model.mainGraph.addDependency(path, `${path}:constraint`);
-        }
-      });
-    }
+      }
+      const requiredRefs = this._getReferencesForProperty(this.required, node);
+      if (requiredRefs.length !== 0) {
+        this._addDependencies(requiredRefs, node, path, 'required', instanceId);
+      } else if (this.required) {
+        this.model.mainGraph.addNode(`${path}:required`, node);
+      }
+      const relevantRefs = this._getReferencesForProperty(this.relevant, node);
+      if (relevantRefs.length !== 0) {
+        this._addDependencies(relevantRefs, node, path, 'relevant', instanceId);
+      } else if (this.relevant) {
+        this.model.mainGraph.addNode(`${path}:relevant`, node);
+      }
+      const constraintRefs = this._getReferencesForProperty(this.constraint, node);
+      if (constraintRefs.length !== 0) {
+        this._addDependencies(constraintRefs, node, path, 'constraint', instanceId);
+      } else if (this.constraint) {
+        this.model.mainGraph.addNode(`${path}:constraint`, node);
+        this.model.mainGraph.addDependency(path, `${path}:constraint`);
+      }
+    });
   }
-
   /**
    * Resolves a referenced ModelItem using the model's graph and node registry.
    * @param {string} refName
@@ -41926,25 +43357,21 @@ class FxBind extends ForeElementMixin {
    * @param  {string}  path The path to the start of the reference
    * @param  {string}  property The property with this dependency
    */
-  _addDependencies(refs, node, path, property) {
-    // console.log('_addDependencies',path);
+  _addDependencies(refs, node, path, property, instanceId) {
     const nodeHash = `${path}:${property}`;
     if (refs.length !== 0) {
       if (!this.model.mainGraph.hasNode(nodeHash)) {
         this.model.mainGraph.addNode(nodeHash, node);
       }
       refs.forEach(ref => {
-        const instance = XPathUtil.resolveInstance(this, path);
-        const otherPath = getPath(ref, instance);
-        // console.log('otherPath', otherPath)
+        const otherPath = getPath(ref, instanceId);
 
-        // todo: nasty hack to prevent duplicate pathes like 'a[1]' and 'a[1]/text()[1]' to end up as separate nodes in the graph
-        if (!otherPath.endsWith('text()[1]')) {
-          if (!this.model.mainGraph.hasNode(otherPath)) {
-            this.model.mainGraph.addNode(otherPath, ref);
-          }
-          this.model.mainGraph.addDependency(nodeHash, otherPath);
+        // keep old XML-only hack
+        if (this.bindType === 'xml' && otherPath.endsWith('text()[1]')) return;
+        if (!this.model.mainGraph.hasNode(otherPath)) {
+          this.model.mainGraph.addNode(otherPath, ref);
         }
+        this.model.mainGraph.addDependency(nodeHash, otherPath);
       });
     } else {
       this.model.mainGraph.addNode(nodeHash, node);
@@ -41966,6 +43393,19 @@ class FxBind extends ForeElementMixin {
       return alertChild.innerHTML;
     }
     return null;
+  }
+  _createModelItemsForJSON() {
+    const fore = this.closest('fx-fore');
+    const instanceId = this.instanceId;
+    this.nodeset.forEach(jsonNode => {
+      const path = getPath(jsonNode, instanceId);
+
+      // ✅ ModelItem node should be the JSONNode itself (lens), NOT JSONLens
+      const newItem = new ModelItem(path, this.getBindingExpr(), jsonNode, this, instanceId, fore);
+      const alert = this.getAlert();
+      if (alert) newItem.addAlert(alert);
+      this.getModel().registerModelItem(newItem);
+    });
   }
 
   /**
@@ -42002,8 +43442,11 @@ class FxBind extends ForeElementMixin {
       const inst = this.getModel().getInstance(this.instanceId);
       if (inst.type === 'xml') {
         this.nodeset = evaluateXPathToNodes(this.ref, inscopeContext, this);
+      } else if (inst.type === 'json') {
+        // ✅ JSON must also resolve the nodeset via XPath evaluation
+        this.nodeset = evaluateXPathToNodes(this.ref, inscopeContext, this);
       } else {
-        this.nodeset = this.ref;
+        this.nodeset = [];
       }
     }
   }
@@ -42106,12 +43549,57 @@ class FxBind extends ForeElementMixin {
     return [];
   }
   getReferences(propertyExpr) {
+    // For XML, DependencyNotifyingDomFacade reliably reports the nodes touched during evaluation.
+    // For JSON lens nodes, the domFacade hook does not fire (evaluation goes through our lens resolver),
+    // so we must extract lookup tokens and resolve them explicitly.
+
+    if (!propertyExpr) return [];
+
+    // JSON path: resolve dependencies by parsing lens lookups in the expression.
+    if (this.bindType === 'json') {
+      const touchedNodes = new Set();
+      const tokens = this._extractJsonLookupTokens(propertyExpr);
+
+      // Evaluate each token in the *current* context node (each item in nodeset)
+      this.nodeset.forEach(node => {
+        tokens.forEach(token => {
+          try {
+            const refs = evaluateXPathToNodes(token, node, this);
+            refs.forEach(r => touchedNodes.add(r));
+          } catch (_e) {
+            // ignore: dependency extraction must never break bind initialization
+          }
+        });
+      });
+      return Array.from(touchedNodes.values());
+    }
+
+    // XML path: use dom facade for accurate dependency tracking
     const touchedNodes = new Set();
     const domFacade = new DependencyNotifyingDomFacade(otherNode => touchedNodes.add(otherNode));
     this.nodeset.forEach(node => {
       evaluateXPathToString(propertyExpr, node, this, domFacade);
     });
     return Array.from(touchedNodes.values());
+  }
+  _extractJsonLookupTokens(expr) {
+    if (!expr) return [];
+    const src = String(expr);
+    const tokens = new Set();
+
+    // instance('id')?a?b?c  or instance('id')?*
+    const instRe = /instance\s*\([^)]*\)\s*(?:\?\s*\*|\?\s*[a-zA-Z_][\w-]*)+/g;
+    let m;
+    while ((m = instRe.exec(src)) !== null) {
+      if (m[0]) tokens.add(m[0].replace(/\s+/g, ''));
+    }
+
+    // relative lookups like ?title, ?year, ?ui, ?query (ignore ?*)
+    const relRe = /\?[a-zA-Z_][\w-]*/g;
+    while ((m = relRe.exec(src)) !== null) {
+      if (m[0] && m[0] !== '?*') tokens.add(m[0]);
+    }
+    return Array.from(tokens);
   }
 
   /*
@@ -43137,7 +44625,6 @@ class DraggableComponent extends superclass {
     }
 
     // Note: full refresh needed since multiple model items may be affected.
-    // TODO: Leverage the changedPaths trick
     this.getOwnerForm().getModel().updateModel();
     this.getOwnerForm().refresh(true);
   }
@@ -43245,14 +44732,29 @@ class UIElement extends ForeElementMixin {
    * Called by ModelItem when it changes
    * @param {import('../modelitem.js').ModelItem} modelItem - The ModelItem that changed
    */
-  update(modelItem) {
-    if (this.isBound()) {
-      // console.log('[UIElement] update()', modelItem);
-      // this.getOwnerForm().addToBatchedNotifications(modelItem);
+
+  /*
+    update(modelItem) {
+      if (this.isBound()) {
+        // console.log('[UIElement] update()', modelItem);
+        // this.getOwnerForm().addToBatchedNotifications(modelItem);
+        this.refresh();
+      }
+    }
+  */
+
+  update(_modelItem) {
+    if (!this.isBound()) return;
+    const fore = this.getOwnerForm();
+    if (!fore) return;
+
+    // Preserve legacy eager updates unless we're already in a refresh phase.
+    if (fore.isRefreshPhase) {
+      fore.addToBatchedNotifications(this);
+    } else {
       this.refresh();
     }
   }
-
   // init() {
   //   throw new Error('You have to implement the method init!');
   // }
@@ -43494,10 +44996,14 @@ class RepeatBase extends withDraggability(UIElement) {
 
     // Generate the parent `modelItem` for the new repeat item
     this.opNum++;
-    const parentModelItem = FxBind.createModelItem(this.ref, node, this, this.opNum);
+    let parentModelItem = FxBind.createModelItem(this.ref, node, this, this.opNum);
+    // IMPORTANT: registerModelItem may return an existing canonical ModelItem for the same path.
+    // Always keep using the returned instance to avoid "ghost" ModelItems that still notify.
+    parentModelItem = this.getModel().registerModelItem(parentModelItem);
     newRepeatItem.modelItem = parentModelItem;
     this.setIndex(insertionIndex);
-    this.getModel().registerModelItem(parentModelItem);
+
+    // parentModelItem already registered above
 
     // Step 5: Create modelItems recursively for child elements
     this._createModelItemsRecursively(newRepeatItem, parentModelItem);
@@ -43506,7 +45012,6 @@ class RepeatBase extends withDraggability(UIElement) {
     this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh();
     this.getOwnerForm().addToBatchedNotifications(newRepeatItem);
   }
-
   /**
    * @abstract
    *
@@ -43740,7 +45245,9 @@ class RepeatBase extends withDraggability(UIElement) {
               // Create a ModelItem only for the final node; children never get their own opNum
               modelItem = FxBind.createModelItem(ref, node, child, null);
               modelItem.parentModelItem = parentModelItem;
-              this.getModel().registerModelItem(modelItem);
+              // IMPORTANT: keep using the canonical instance returned by registerModelItem.
+              // Otherwise a throwaway ModelItem can leak into observer graphs and be notified.
+              modelItem = this.getModel().registerModelItem(modelItem);
             }
 
             // Always apply Dewey rewrite (handles both $inst and instance('inst') forms)
@@ -44421,7 +45928,7 @@ class FxFore extends HTMLElement {
       this._createRepeatsFromAttributes();
       this.inited = true;
     };
-    this.version = 'Version: 2.9.0 - built on January 21, 2026 15:50:40';
+    this.version = 'Version: 3.0.0 - built on March 13, 2026 15:43:35';
 
     /**
      * @type {import('./fx-model.js').FxModel}
@@ -44568,6 +46075,7 @@ class FxFore extends HTMLElement {
     this.createNodes = this.hasAttribute('create-nodes') ? true : false;
     this._localNamesWithChanges = new Set();
     this.setAttribute('role', 'form'); // set aria role
+    this._pendingRefresh = false;
   }
 
   /**
@@ -44837,6 +46345,67 @@ class FxFore extends HTMLElement {
       this.showConfirmation = true;
     }
   }
+
+  /**
+   * Ensure there is an fx-var for each fx-instance in this fx-fore's fx-model scope.
+   *
+   * - For instances with an @id, create `$id` with value `instance('id')`.
+   * - For the first instance WITHOUT an @id, create `$default` with value `instance()`.
+   * - IMPORTANT: if an instance has id="default", we STILL bind `$default` to `instance()`
+   *   (avoids recursion / stack overflow during fx-var refresh in some cycles).
+   *
+   * Vars are inserted as direct children of `<fx-fore>` immediately before `<fx-model>`.
+   * The method is idempotent.
+   */
+  _ensureInstanceVars() {
+    if (this.__instanceVarsEnsured) return;
+    this.__instanceVarsEnsured = true;
+
+    // Resolve this fx-fore's own fx-model (not nested ones)
+    const model = this.querySelector(':scope > fx-model');
+    if (!model) return;
+
+    // Collect instances that are direct children of this model (doc order)
+    const instances = Array.from(model.querySelectorAll(':scope > fx-instance'));
+
+    // Collect existing fx-var names at fx-fore scope (author-defined and previously generated)
+    const existingVars = new Set(Array.from(this.querySelectorAll(':scope > fx-var')).map(v => (v.getAttribute('name') || '').trim()).filter(Boolean));
+    let defaultAssigned = false;
+    for (const inst of instances) {
+      const rawId = (inst.getAttribute('id') || '').trim();
+
+      // First id-less instance => $default = instance()
+      if (!rawId) {
+        if (defaultAssigned) continue;
+        defaultAssigned = true;
+        const name = 'default';
+        if (existingVars.has(name)) continue;
+        const fxVar = document.createElement('fx-var');
+        fxVar.setAttribute('name', name);
+        fxVar.setAttribute('value', 'instance()');
+        fxVar.setAttribute('data-generated', 'instance-var');
+        this.insertBefore(fxVar, model);
+        existingVars.add(name);
+        continue;
+      }
+
+      // Normal id-based instance var
+      const name = rawId;
+      if (existingVars.has(name)) continue;
+      const fxVar = document.createElement('fx-var');
+      fxVar.setAttribute('name', name);
+
+      // IMPORTANT: avoid `instance('default')` recursion in fx-var refresh
+      if (name === 'default') {
+        fxVar.setAttribute('value', 'instance()');
+      } else {
+        fxVar.setAttribute('value', `instance('${name}')`);
+      }
+      fxVar.setAttribute('data-generated', 'instance-var');
+      this.insertBefore(fxVar, model);
+      existingVars.add(name);
+    }
+  }
   _injectDevtools() {
     if (this.ownerDocument.querySelector('fx-devtools')) {
       // There's already a devtools, so we can ignore this one.
@@ -44885,6 +46454,7 @@ class FxFore extends HTMLElement {
     });
     this.dirtyState = dirtyStates.CLEAN;
     this.classList.remove('fx-modified');
+    this.querySelectorAll('.visited').forEach(el => el.classList.remove('visited'));
   }
 
   /**
@@ -44954,75 +46524,60 @@ class FxFore extends HTMLElement {
   /**
    * @param {(boolean|{reason:'index-function'})} [force]fx-fore
    */
+  /**
+   * @param {(boolean|{reason:'index-function'})} [force]
+   */
+  /**
+   * @param {(boolean|{reason:'index-function'})} [force]
+   */
   async refresh(force) {
+    // If we're already refreshing, do NOT drop the request.
+    // Queue a hard refresh and return a promise that resolves when the next refresh finishes.
     if (this.isRefreshing) {
-      return;
+      // keep "strongest" request: any true means hard refresh
+      this._pendingRefresh = this._pendingRefresh || force === true;
+      return new Promise(resolve => {
+        this.addEventListener('refresh-done', () => resolve(), {
+          once: true
+        });
+      });
     }
-
-    /*
-    if (force !== true && this._localNamesWithChanges.size > 0) {
-      force = {
-        ...(force || { reason: undefined }),
-        elementLocalnamesWithChanges: Array.from(this._localNamesWithChanges),
-      };
-      this._localNamesWithChanges.clear();
-    }
-    */
-
     this.isRefreshing = true;
     this.isRefreshPhase = true;
-
-    // refresh () {
-    // ### refresh Fore UI elements
-    // if (!this.initialRun && this.toRefresh.length !== 0) {
-    // if (!this.initialRun && this.toRefresh.length !== 0) {
-    // if (!force && !this.initialRun && this.toRefresh.length !== 0) {
-    if (force === true || this.initialRun) {
-      Fore.refreshChildren(this, force);
-    } else {
-      // Process all batched no tifications at the end of the refresh phase
-      await this._processBatchedNotifications();
-    }
-
-    // ### refresh template expressions
-    if (force === true || this.initialRun || this._scanForNewTemplateExpressionsNextRefresh) {
-      this._updateTemplateExpressions();
-      this._scanForNewTemplateExpressionsNextRefresh = false; // reset
-    }
-
-    this._processTemplateExpressions();
-    this.isRefreshPhase = false;
-
-    // console.log('### <<<<< dispatching refresh-done - end of UI update cycle >>>>>');
-    // this.dispatchEvent(new CustomEvent('refresh-done'));
-    this.initialRun = false;
-    this.style.visibility = 'visible';
-    Fore.dispatch(this, 'refresh-done', {});
-    const subFores = Array.from(this.querySelectorAll('fx-fore'));
-    /*
-        calling the parent to refresh causes errors and inconsistent state. Also it is questionable
-        if a child should actually interact with its parent in this way.
-         This only affects the refreshing NOT the data mutation itself which is happening as expected.
-         Current solution is that a child that wants the parent to refresh must do so by adding an additional
-        event handler that dispatches an event upwards and having a handler in the parent to refresh itself.
-         So refreshed propagate downwards but not upwards which is at least an option to consider.
-         if(this.parentNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE){
-            // await this.parentNode.closest('fx-fore')?.refresh(false);
+    try {
+      if (force === true || this.initialRun) {
+        await Fore.refreshChildren(this, force);
+      } else {
+        await this._processBatchedNotifications();
+      }
+      if (force === true || this.initialRun || this._scanForNewTemplateExpressionsNextRefresh) {
+        this._updateTemplateExpressions();
+        this._scanForNewTemplateExpressionsNextRefresh = false;
+      }
+      this._processTemplateExpressions();
+      this.isRefreshPhase = false;
+      this.initialRun = false;
+      this.style.visibility = 'visible';
+      Fore.dispatch(this, 'refresh-done', {});
+      const subFores = Array.from(this.querySelectorAll('fx-fore'));
+      for (const subFore of subFores) {
+        if (subFore.ready) {
+          await subFore.refresh(true);
         }
-    */
-    for (const subFore of subFores) {
-      // subFore.refresh(false, changedPaths);
-      if (subFore.ready) {
-        // Do an unconditional hard refresh: there might be changes that are relevant
-        // todo: investigate impact of observer architecture - do we really want to refresh all subfore elements with a hard refresh?
-        await subFore.refresh(true);
+      }
+    } finally {
+      this.isRefreshing = false;
+
+      // If anything requested a refresh while we were refreshing, run exactly one more.
+      // This prevents "dropped" refresh requests (your timeout).
+      if (this._pendingRefresh) {
+        const pendingHard = this._pendingRefresh === true;
+        this._pendingRefresh = false;
+        // Important: do NOT await in finally without clearing flags first.
+        await this.refresh(pendingHard);
       }
     }
-    this.isRefreshing = false;
-    // Clear the batch
-    // this.batchedNotifications.clear();
   }
-
   /**
    * Add a ModelItem to the batch of notifications to be processed at the end of the refresh phase
    * @param {ModelItem | import('./ui/UIElement.js').UIElement} item - The ModelItem or UI Element to add to the batch
@@ -45039,6 +46594,7 @@ class FxFore extends HTMLElement {
    */
   _processBatchedNotifications() {
     if (this.batchedNotifications.size > 0) {
+
       // console.log(`🔍 Processing ${this.batchedNotifications.size} batched notifications`);
 
       // Process all batched notifications
@@ -45079,6 +46635,10 @@ class FxFore extends HTMLElement {
         }
       });
 
+      // Update template expressions after processing batched notifications
+      // This ensures template expressions are re-evaluated when data changes
+      this._processTemplateExpressions();
+
       // Clear the batch
       this.batchedNotifications.clear();
     }
@@ -45103,6 +46663,7 @@ class FxFore extends HTMLElement {
 
     // console.log('######### storedTemplateExpressions', this.storedTemplateExpressions.length);
 
+    if (!tmplExpressions) return;
     /*
     storing expressions and their nodes for re-evaluation
     */
@@ -45169,37 +46730,49 @@ class FxFore extends HTMLElement {
    * @param {Node} node the node which will get updated with evaluation result
    */
   evaluateTemplateExpression(expr, node) {
-    // ### do not evaluate template expressions with nonrelevant sections
+    // ### do not evaluate template expressions within nonrelevant sections
     if (node.nodeType === Node.ATTRIBUTE_NODE && node.ownerElement.closest('[nonrelevant]')) return;
     if (node.nodeType === Node.TEXT_NODE && node.parentNode.closest('[nonrelevant]')) return;
     if (node.nodeType === Node.ELEMENT_NODE && node.closest('[nonrelevant]')) return;
 
-    // if(node.closest('[nonrelevant]')) return;
-    const replaced = expr.replace(/{[^}]*}/g, match => {
+    // ---- IMPORTANT GUARD ----
+    // Prevent JSON object/array literals in fx-insert@origin from being treated as
+    // template expressions (they contain {...} but are not XPath templates).
+    if (node.nodeType === Node.ATTRIBUTE_NODE) {
+      const el = node.ownerElement;
+      if (el && el.localName === 'fx-insert' && node.name === 'origin') {
+        const v = String(node.value ?? '').trim();
+        const isJsonLiteral = v.startsWith('{') && v.endsWith('}') || v.startsWith('[') && v.endsWith(']');
+        if (isJsonLiteral) return;
+      }
+    }
+    // -------------------------
+
+    // The element that "defines" the template expression is the correct basis for:
+    // - namespace resolution (xmlns lookup)
+    // - fx-var scoping (in-scope variables)
+    // - context() in repeats (repeat item detection)
+    const definitionElement = node.nodeType === Node.ATTRIBUTE_NODE ? node.ownerElement : node.nodeType === Node.TEXT_NODE ? node.parentElement || node.parentNode : node;
+    const formElement = definitionElement && definitionElement.nodeType === Node.ELEMENT_NODE ? definitionElement : this;
+    const replaced = String(expr ?? '').replace(/{[^}]*}/g, match => {
       if (match === '{}') return match;
       const naked = match.substring(1, match.length - 1);
       const inscope = getInScopeContext(node, naked);
       if (!inscope) {
-        node.nodeType === Node.TEXT_NODE || node.nodeType === Node.ATTRIBUTE_NODE ? node.parentNode : node;
         return match;
       }
-      // Templates are special: they use the namespace configuration from the place where they are
-      // being defined
-      const instanceId = XPathUtil.getInstanceId(naked, node);
-
-      // If there is an instance referred
-      const inst = instanceId ? this.getModel().getInstance(instanceId) : this.getModel().getDefaultInstance();
       try {
-        const result = evaluateXPathToString(naked, inscope, node, null, inst);
-        // console.log(`template expression result for ${naked}=${result}`);
-        return result;
+        // IMPORTANT:
+        // Do NOT pass `null` as the 4th argument here.
+        // Passing `null` suppresses variable collection, which hides implicit vars
+        // like `$default`.
+        return evaluateXPathToString(naked, inscope, formElement);
       } catch (error) {
         return match;
       }
     });
 
-    // Update to the new value. Don't do it though if nothing changed to prevent iframes or
-    // images from reloading for example
+    // Update to the new value only if it changed (avoid iframe/image reload etc.)
     if (node.nodeType === Node.ATTRIBUTE_NODE) {
       const parent = node.ownerElement;
       if (parent.getAttribute(node.nodeName) !== replaced) {
@@ -45210,9 +46783,7 @@ class FxFore extends HTMLElement {
         node.textContent = replaced;
       }
     }
-  }
-
-  // eslint-disable-next-line class-methods-use-this
+  } // eslint-disable-next-line class-methods-use-this
   _getTemplateExpression(node) {
     if (this.ignoredNodes) {
       if (node.nodeType === Node.ATTRIBUTE_NODE) {
@@ -45491,7 +47062,6 @@ class FxFore extends HTMLElement {
     // Insert after the previous control
     return referenceNode;
   }
-
   /**
    * @param  {HTMLElement}  root The root of the data initialization. fx-repeat overrides this when it makes new repeat items
    *
@@ -45741,11 +47311,21 @@ class FxFore extends HTMLElement {
     toast.showToast(`WARN: ${path}:${msg}`);
   }
   _logError(e) {
+    // Prevent the error event from bubbling up and potentially triggering
+    // parent error handlers that might call refresh() again
     e.stopPropagation();
+    e.stopImmediatePropagation(); // Added to stop other listeners on this element
     e.preventDefault();
-    if (e.detail.expr) ;
-    if (this.strict) {
-      this._displayError(e);
+
+    // Guard the display logic: if showing the error causes another error,
+    // we must break the cycle.
+    if (this.strict && !this._isLogging) {
+      this._isLogging = true;
+      try {
+        this._displayError(e);
+      } finally {
+        this._isLogging = false;
+      }
     }
   }
   _copyToClipboard(target) {
@@ -46016,68 +47596,42 @@ class FxSubmission extends ForeElementMixin {
   async _serializeAndSend() {
     const url = this._getProperty('url');
     const resolvedUrl = this.evaluateAttributeTemplateExpression(url, this);
-    // console.log('resolvedUrl', resolvedUrl);
     const instance = this.getInstance();
     if (!instance) {
       Fore.dispatch(this, 'warn', {
-        message: `instance not found ${instance.getAttribute('id')}`
+        message: `instance not found ${instance?.getAttribute?.('id')}`
       });
     }
     const instType = instance.getAttribute('type');
-    // console.log('instance type', instance.type);
-
     let serialized;
     if (this.serialization === 'none') {
       serialized = undefined;
     } else {
-      // const relevant = this.selectRelevant(instance.type);
       const relevant = Relevance.selectRelevant(this, instType);
-      serialized = this._serialize(instType, relevant);
+      serialized = this._serialize(instance, relevant);
     }
-
-    // let serialized = serializer.serializeToString(relevant);
     if (this.method.toLowerCase() === 'get') {
-      /*
-             todo: serialize the bound instance element names as get parameters and using their text values
-             as param values. leave out empty params and create querystring from the result.Elements may
-             have exactly level deep or are otherwise ignored.
-             <data>
-                <id>1234</id>
-                <name>john</name>
-                <zip></zip>
-                <!-- ignored as no direct text value -->
-                <phone>
-                    <mobile></mobile>
-                <phone>
-              </data>
-              results in: ?id=1234&name=john to be appended to this.url on fetch
-      */
-
       serialized = undefined;
     }
-    // console.log('data being send', serialized);
-    // console.log('submitting data',serialized);
 
-    // if (resolvedUrl === '#echo') {
+    // --- echo / localStore shortcuts ---
     if (resolvedUrl.startsWith('#echo')) {
       if (this.replace === 'download') {
-        this._handleResponse(serialized, resolvedUrl, 'application/xml');
+        await this._handleResponse(serialized, resolvedUrl, 'application/xml');
       } else {
         const data = this._parse(serialized, instance);
-        this._handleResponse(data, resolvedUrl, 'application/xml');
+        await this._handleResponse(data, resolvedUrl, 'application/xml');
       }
-      // this.dispatch('submit-done', {});
       Fore.dispatch(this, 'submit-done', {});
       this.parameters.clear();
       return;
     }
     if (resolvedUrl.startsWith('localStore:')) {
       if (this.method === 'get' || this.method === 'consume') {
-        // let data = this._parse(serialized, instance);
         this.replace = 'instance';
         const key = resolvedUrl.substring(resolvedUrl.indexOf(':') + 1);
-        const serialized = localStorage.getItem(key);
-        if (!serialized) {
+        const stored = localStorage.getItem(key);
+        if (!stored) {
           Fore.dispatch(this, 'submit-error', {
             status: 400,
             message: `Error reading key ${key} from localstorage`
@@ -46085,18 +47639,17 @@ class FxSubmission extends ForeElementMixin {
           this.parameters.clear();
           return;
         }
-        const data = this._parse(serialized, instance);
-        this._handleResponse(data);
+        const data = this._parse(stored, instance);
+        await this._handleResponse(data);
         if (this.method === 'consume') {
           localStorage.removeItem(key);
         }
         Fore.dispatch(this, 'submit-done', {});
       }
       if (this.method === 'post') {
-        // let data = this._parse(serialized, instance);
         const key = resolvedUrl.substring(resolvedUrl.indexOf(':') + 1);
         localStorage.setItem(key, serialized);
-        this._handleResponse(instance.instanceData);
+        await this._handleResponse(instance.instanceData);
         Fore.dispatch(this, 'submit-done', {});
       }
       if (this.method === 'delete') {
@@ -46104,16 +47657,15 @@ class FxSubmission extends ForeElementMixin {
         localStorage.removeItem(key);
         const newInst = new DOMParser().parseFromString('<data></data>', 'application/xml');
         this.replace = 'instance';
-        this._handleResponse(newInst);
+        await this._handleResponse(newInst);
         Fore.dispatch(this, 'submit-done', {});
       }
       return;
     }
 
-    // ### setting headers
+    // --- network fetch ---
     const headers = this._getHeaders();
     if (!this.methods.includes(this.method.toLowerCase())) {
-      // this.dispatch('error', { message: `Unknown method ${this.method}` });
       Fore.dispatch(this, 'error', {
         message: `Unknown method ${this.method}`
       });
@@ -46128,7 +47680,6 @@ class FxSubmission extends ForeElementMixin {
         body: serialized
       });
       if (!response.ok || response.status > 400) {
-        // this.dispatch('submit-error', { message: `Error while submitting ${this.id}` });
         Fore.dispatch(this, 'submit-error', {
           status: response.status,
           message: `Error during submit ${this.id}`
@@ -46139,27 +47690,18 @@ class FxSubmission extends ForeElementMixin {
       if (contentType.endsWith('/xml') || contentType.endsWith('+xml')) {
         const text = await response.text();
         const xml = new DOMParser().parseFromString(text, 'application/xml');
-        this._handleResponse(xml, resolvedUrl, contentType);
+        await this._handleResponse(xml, resolvedUrl, contentType);
       } else if (contentType.startsWith('text/')) {
         const text = await response.text();
-        this._handleResponse(text, resolvedUrl, contentType);
+        await this._handleResponse(text, resolvedUrl, contentType);
       } else if (contentType.endsWith('/json') || contentType.endsWith('+json')) {
         const json = await response.json();
-        this._handleResponse(json, resolvedUrl, contentType);
+        await this._handleResponse(json, resolvedUrl, contentType);
       } else {
         const blob = await response.blob();
-        this._handleResponse(blob, resolvedUrl, contentType);
+        await this._handleResponse(blob, resolvedUrl, contentType);
       }
-
-      // this.dispatch('submit-done', {});
-      // console.log(`### <<<<< ${this.id} submit-done >>>>>`);
       Fore.dispatch(this, 'submit-done', {});
-      /*
-      console.info(
-          `%csubmit-done #${this.id}`,
-          'background:green; color:white; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
-      );
-      */
     } catch (error) {
       Fore.dispatch(this, 'submit-error', {
         status: 500,
@@ -46186,28 +47728,150 @@ class FxSubmission extends ForeElementMixin {
     }
     return data;
   }
-  _serialize(instanceType, relevantNodes) {
-    if (this.serialization === 'application/x-www-form-urlencoded') {
-      // this.method = 'post';
-      const params = new URLSearchParams();
-      // console.log('nodes to serialize', relevantNodes);
-      Array.from(relevantNodes.children).forEach(child => {
-        params.append(child.nodeName, child.textContent);
-      });
-      return params;
+
+  /**
+   * Serialize the submission payload depending on instance type.
+   *
+   * - XML instances => XML serialization (existing behavior)
+   * - JSON instances => JSON serialization from plain JS (NOT from JSONNode lens objects)
+   *
+   * @param {import('./fx-instance.js').FxInstance | null} instanceEl
+   * @param {any} data
+   * @returns {string}
+   */
+  _serialize(instanceEl, data) {
+    // If the caller passed an explicit "data", prefer it; otherwise serialize the instance.
+    let payload = data;
+
+    // Resolve instance if not provided explicitly
+    if (!instanceEl) {
+      const model = this.getOwnerForm()?.getModel?.();
+      const instanceId = this.getAttribute('instance') || 'default';
+      instanceEl = model?.getInstance?.(instanceId) || null;
     }
-    if (instanceType === 'xml') {
-      const serializer = new XMLSerializer();
-      return serializer.serializeToString(relevantNodes);
+
+    // If no payload was passed, derive it from instance default context/nodeset
+    if (payload == null && instanceEl) {
+      payload = typeof instanceEl.getDefaultContext === 'function' && instanceEl.getDefaultContext() || instanceEl.nodeset || null;
     }
-    if (instanceType === 'json') {
-      // console.warn('JSON serialization is not yet supported')
-      return JSON.stringify(relevantNodes);
+
+    // Decide JSON vs XML by instance type (NOT by ref expression)
+    const isJsonInstance = instanceEl?.getAttribute?.('type') === 'json' || instanceEl?.type === 'json';
+    if (isJsonInstance) {
+      // Convert JSON lens nodes to plain JS before stringify
+      const plain = this._toPlainJson(payload);
+      // NOTE: you can pass spacing here if you want pretty output:
+      // return JSON.stringify(plain, null, 2);
+      return JSON.stringify(plain);
     }
-    if (instanceType === 'text') {
-      return relevantNodes;
+
+    // --- XML / default path ---
+    // Keep existing XML behavior: if payload is a DOM node/document, serialize as XML.
+    // If payload is a string, return as-is.
+    if (typeof payload === 'string') return payload;
+    try {
+      if (payload && payload.nodeType) {
+        // Document => serialize documentElement, Node => serialize node
+        const node = payload.nodeType === Node.DOCUMENT_NODE ? payload.documentElement : payload;
+        return new XMLSerializer().serializeToString(node);
+      }
+    } catch (_e) {
+      // fallthrough
     }
-    throw new Error('unknown instance type ', instanceType);
+
+    // As a last resort for non-XML odd payloads:
+    return String(payload ?? '');
+  }
+
+  /**
+   * Convert a JSON lens node (JSONNode) or other value into plain JSON (no circular refs).
+   * This must NEVER return JSONNode objects.
+   *
+   * @param {any} v
+   * @returns {any} plain JSON value
+   */
+  _toPlainJson(v) {
+    if (v == null) return null;
+
+    // If it's already a plain primitive, keep it
+    const t = typeof v;
+    if (t === 'string' || t === 'number' || t === 'boolean') return v;
+
+    // JSON lens node (your JSONNode objects)
+    if (v.__jsonlens__ === true) {
+      return this._jsonLensNodeToPlain(v);
+    }
+
+    // Arrays: convert elements
+    if (Array.isArray(v)) {
+      return v.map(x => this._toPlainJson(x));
+    }
+
+    // Plain objects: best-effort convert (should be rare here)
+    // Avoid circular refs by only copying own enumerable props.
+    const out = {};
+    for (const [k, val] of Object.entries(v)) {
+      out[k] = this._toPlainJson(val);
+    }
+    return out;
+  }
+
+  /**
+   * Convert a single JSON lens node (JSONNode) into a plain JS value by traversing children.
+   *
+   * Assumptions (based on your JSON lens structure):
+   * - node.value holds the underlying JS value for leaf nodes
+   * - node.children is an array for arrays/objects
+   * - node.get(keyOrIndex) returns child node for objects/arrays
+   *
+   * This function intentionally does NOT touch node.parent.
+   *
+   * @param {any} node JSONNode
+   * @returns {any}
+   */
+  _jsonLensNodeToPlain(node) {
+    // If node.value is a primitive or null, return it
+    // (Many JSON lens implementations store actual scalar in .value)
+    const val = node.value;
+    if (val === null || val === undefined || typeof val === 'string' || typeof val === 'number' || typeof val === 'boolean') {
+      return val ?? null;
+    }
+
+    // If the node represents an array
+    if (Array.isArray(val)) {
+      // Prefer node.children if present; fall back to val (might be raw JS)
+      const kids = Array.isArray(node.children) ? node.children : val;
+      return kids.map(child => this._toPlainJson(child));
+    }
+
+    // If the node represents an object
+    if (typeof val === 'object') {
+      // If this is already a plain JS object (not a JSONNode), convert it
+      // but in lens setups val might be plain object while children are lens nodes.
+      const result = {};
+
+      // Prefer iterating keys from val
+      for (const key of Object.keys(val)) {
+        // Try lens navigation first
+        if (typeof node.get === 'function') {
+          const child = node.get(key);
+          result[key] = this._toPlainJson(child ?? val[key]);
+        } else {
+          result[key] = this._toPlainJson(val[key]);
+        }
+      }
+      return result;
+    }
+    // Fallback: last-resort scalar conversion
+    try {
+      if (typeof node.get === 'function') {
+        // Some lens nodes return scalar via get()
+        return this._toPlainJson(node.get());
+      }
+    } catch (_e) {
+      // ignore
+    }
+    return String(val);
   }
   _getHeaders() {
     const headers = new Headers();
@@ -46256,64 +47920,66 @@ class FxSubmission extends ForeElementMixin {
    * @param data
    * @private
    */
-  _handleResponse(data, resolvedUrl, contentType) {
-    // console.log('_handleResponse ', data);
-
-    this._getTargetInstance();
+  async _handleResponse(data, resolvedUrl, contentType) {
+    const targetInstance = this._getTargetInstance();
     if (this.replace === 'instance') {
-      const targetInstance = this._getTargetInstance();
-
-      // ### contentType handling
-
-      if (contentType.includes('html')) {
-        let effectiveData;
-        if (data.nodeType) {
-          effectiveData = data;
-        }
-        // ## try parsing
-        try {
-          effectiveData = new DOMParser().parseFromString(data, 'text/html');
-        } catch {
-          Fore.dispatch(this, 'error', {
-            message: 'could not parse data as HTML'
-          });
+      // ### contentType handling (HTML special-case)
+      if (contentType && contentType.includes('html')) {
+        let effectiveData = data;
+        if (!data?.nodeType) {
+          try {
+            effectiveData = new DOMParser().parseFromString(data, 'text/html');
+          } catch {
+            Fore.dispatch(this, 'error', {
+              message: 'could not parse data as HTML'
+            });
+          }
         }
         targetInstance.instanceData = effectiveData;
       }
-      if (targetInstance) {
-        if (this.targetref) {
-          const [theTarget] = evaluateXPath(this.targetref, targetInstance.instanceData.firstElementChild, this);
-          if (this.responseMediatype === 'application/xml' || this.responseMediatype === 'text/html') {
-            const clone = data.firstElementChild;
-            const parent = theTarget.parentNode;
-            parent.replaceChild(clone, theTarget);
-          }
-          if (this.responseMediatype.startsWith('text/')) {
-            theTarget.textContent = data;
-          }
-          if (this.responseMediatype === 'application/json') ;
-        } else if (this.into) {
-          const [theTarget] = evaluateXPath(this.into, targetInstance.instanceData.firstElementChild, this);
-          if (data.nodeType === Node.DOCUMENT_NODE) {
-            theTarget.appendChild(data.firstElementChild);
-          } else {
-            theTarget.innerHTML = data;
-          }
-        } else {
-          const instanceData = data;
-          targetInstance.instanceData = instanceData;
-          // console.log('### replaced instance ', this.getModel().instances);
-          // console.log('### replaced instance ', targetInstance.instanceData);
-        }
-
-        // Skip any refreshes if the model is not yet inited
-        if (this.model.inited) {
-          this.model.updateModel(); // force update
-          this.getOwnerForm().refresh(true);
-        }
-      } else {
+      if (!targetInstance) {
         throw new Error(`target instance not found: ${targetInstance}`);
       }
+      if (this.targetref) {
+        const [theTarget] = evaluateXPath(this.targetref, targetInstance.instanceData.firstElementChild, this);
+        if (this.responseMediatype === 'application/xml' || this.responseMediatype === 'text/html') {
+          const clone = data.firstElementChild;
+          const parent = theTarget.parentNode;
+          parent.replaceChild(clone, theTarget);
+        }
+        if (this.responseMediatype && this.responseMediatype.startsWith('text/')) {
+          theTarget.textContent = data;
+        }
+        if (this.responseMediatype === 'application/json') ;
+      } else if (this.into) {
+        const [theTarget] = evaluateXPath(this.into, targetInstance.instanceData.firstElementChild, this);
+        if (data?.nodeType === Node.DOCUMENT_NODE) {
+          theTarget.appendChild(data.firstElementChild);
+        } else {
+          theTarget.innerHTML = data;
+        }
+      } else {
+        // ✅ This is the critical replace="instance" case
+        targetInstance.instanceData = data;
+      }
+
+      // Skip any refreshes if the model is not yet inited
+      if (this.model.inited) {
+        // Rebuild model items / binds against the new instance root
+        this.model.updateModel();
+
+        // ✅ treat instance replacement as a structural change
+        const fore = typeof this.getOwnerForm === 'function' && this.getOwnerForm() || this.closest('fx-fore') || this.getModel()?.parentNode;
+        if (fore) {
+          fore.someInstanceDataStructureChanged = true;
+          if (typeof fore.scanForNewTemplateExpressionsNextRefresh === 'function') {
+            fore.scanForNewTemplateExpressionsNextRefresh();
+          }
+          // ✅ IMPORTANT: await, otherwise tests/action-pipeline can out-run the refresh
+          await fore.refresh(true);
+        }
+      }
+      return;
     }
     if (this.replace === 'download') {
       const target = this._getProperty('target');
@@ -46325,6 +47991,7 @@ class FxSubmission extends ForeElementMixin {
       downloadLink.setAttribute('href', `data:${contentType},${encodeURIComponent(data)}`);
       document.body.appendChild(downloadLink);
       downloadLink.click();
+      return;
     }
     if (this.replace === 'all') {
       const target = this._getProperty('target');
@@ -46338,20 +48005,16 @@ class FxSubmission extends ForeElementMixin {
         document.close();
         window.location.href = resolvedUrl;
       }
-      // document.getElementsByTagName('html')[0].innerHTML = data;
+      return;
     }
-
     if (this.replace === 'target') {
-      // const target = this.getAttribute('target');
       const target = this._getProperty('target');
       const targetNode = document.querySelector(target);
       if (targetNode) {
-        if (contentType.startsWith('text/html')) {
+        if (contentType && contentType.startsWith('text/html')) {
           targetNode.innerHTML = data;
         }
-        if (this.responseMediatype.startsWith('image/svg')) {
-          const parser = new DOMParser();
-          parser.parseFromString(data, 'image/svg+xml');
+        if (this.responseMediatype && this.responseMediatype.startsWith('image/svg')) {
           const objectURL = URL.createObjectURL(data);
           targetNode.src = objectURL;
         }
@@ -46360,12 +48023,12 @@ class FxSubmission extends ForeElementMixin {
           message: `targetNode for selector ${target} not found`
         });
       }
+      return;
     }
     if (this.replace === 'redirect') {
       window.location.href = data;
     }
   }
-
   /*
   _handleError() {
     // this.dispatch('submit-error', {});
@@ -46452,15 +48115,34 @@ class FxVariable extends ForeElementMixin {
     this.valueQuery = '';
     this.value = null;
     this.precedingVariables = [];
+    // Re-entrancy guard for variable evaluation
+    this._isRefreshing = false;
+    // Cached typed value (Fonto sequence wrapper)
+    this._value = null;
   }
   connectedCallback() {
+    super.connectedCallback();
     this.name = this.getAttribute('name');
     this.valueQuery = this.getAttribute('value');
   }
   refresh() {
-    const inscope = getInScopeContext(this, this.valueQuery);
-    const values = evaluateXPath(this.valueQuery, inscope, this, this.precedingVariables);
-    this.value = typedValueFactory(values, domFacade);
+    // Prevent re-entrant refresh loops (variable evaluation can consult variables again)
+    if (this._isRefreshing) return;
+    this._isRefreshing = true;
+    try {
+      // Ensure we have the current expression
+      this.valueQuery = this.getAttribute('value') || this.valueQuery || '';
+      const inscope = getInScopeContext(this, this.valueQuery);
+
+      // Evaluate using the preceding variables snapshot (do NOT pull live variables here)
+      const values = evaluateXPath(this.valueQuery, inscope, this, this.precedingVariables);
+
+      // Cache typed value for other computations to consume without triggering evaluation
+      this._value = typedValueFactory(values, domFacade);
+      this.value = this._value;
+    } finally {
+      this._isRefreshing = false;
+    }
   }
 
   /**
@@ -46478,9 +48160,16 @@ class FxVariable extends ForeElementMixin {
 
     // Set precedingVariables based on inScopeVariables
     this.precedingVariables = Array.from(inScopeVariables.entries()).map(([name, variable]) => {
+      // IMPORTANT: do not trigger evaluation while taking the snapshot
+      if (variable && variable._isRefreshing) {
+        return {
+          name,
+          value: null
+        };
+      }
       return {
         name,
-        value: variable.value
+        value: variable?._value ?? variable?.value ?? null
       };
     });
   }
@@ -48237,13 +49926,16 @@ class FxRepeatitem extends withDraggability(UIElement) {
             ${html}
         `;
     this.getOwnerForm().registerLazyElement(this);
+
+    // Keep ref as a *property only* so repeatitem does not become the nearest [ref] for its children.
+    // Its children already get their context from the repeatitem via getInScopeContext().
     this.ref = `${this.parentNode.ref}`;
     this.tabindex = 0;
   }
   disconnectedCallback() {
     super.disconnectedCallback();
     this.removeEventListener('click', this._dispatchIndexChange);
-    this.removeEventListener('focusin', this._handleFocus);
+    this.removeEventListener('focusin', this._dispatchIndexChange);
   }
   init() {
     // console.log('repeatitem init model ', this.nodeset);
@@ -48280,6 +49972,17 @@ class FxRepeatitem extends withDraggability(UIElement) {
     // Refresh after all of the listeners for that item-changed have had their turn to update!
     this.getOwnerForm().refresh();
   }
+  update(_modelItem) {
+    // Repeatitems must refresh when their ModelItem facets (e.g. relevant) change,
+    // but they should NOT have a `ref` attribute (that would change inscope context resolution).
+    const fore = this.getOwnerForm();
+    if (!fore) return;
+    if (fore.isRefreshPhase) {
+      fore.addToBatchedNotifications(this);
+    } else {
+      this.refresh();
+    }
+  }
   async refresh(force = false) {
     // this.modelItem = this.getModelItem();
     this.attachObserver();
@@ -48299,8 +50002,6 @@ if (!customElements.get('fx-repeatitem')) {
   window.customElements.define('fx-repeatitem', FxRepeatitem);
 }
 
-// import {DependencyNotifyingDomFacade} from '../DependencyNotifyingDomFacade';
-
 /**
  * `fx-repeat`
  *
@@ -48309,12 +50010,7 @@ if (!customElements.get('fx-repeatitem')) {
  * Template is a standard HTML `<template>` element. Once instanciated the template
  * is moved to the shadowDOM of the repeat for safe re-use.
  *
- *
- *
  * @customElement
- * @demo demo/todo.html
- *
- * todo: it should be seriously be considered to extend FxContainer instead but needs refactoring first.
  * @extends {ForeElementMixin}
  */
 class FxRepeat extends withDraggability(UIElement) {
@@ -48359,117 +50055,194 @@ class FxRepeat extends withDraggability(UIElement) {
       delegatesFocus: true
     });
     this.opNum = 0; // global number of operations
+
+    this.handleInsertHandler = null;
+    this.handleDeleteHandler = null;
+
+    // Tracks ModelItems we observe due to JSON lens lookups inside predicate expressions
+    // (e.g. instance('data')?ui?query). Needed so the repeat refreshes when the query changes.
+    this._jsonPredicateDeps = new Set();
+    this._jsonPredicateDepsObserved = false;
+
+    // Flag used to suppress "programmatic index changed" notifications when setIndex()
+    // is called as a direct reaction to a repeatitem's item-changed event.
+    this._settingIndexFromItemChanged = false;
   }
 
+  // ------------------------------------------------------------
+  // JSON ref helpers (for routing insert/delete events correctly)
+  // ------------------------------------------------------------
+
+  _stripJsonRefToContainer(ref) {
+    let s = String(ref || '').trim();
+    if (!s) return '';
+
+    // If this is a repeat nodeset ref like: instance('data')?movies?*[...]
+    // strip everything from "?*" onward => instance('data')?movies
+    const starPos = s.indexOf('?*');
+    if (starPos >= 0) s = s.slice(0, starPos).trim();
+
+    // Also strip trailing predicates if someone wrote ...?movies[...]
+    // (not common for lens refs, but keep it safe)
+    s = s.replace(/\[[\s\S]*\]\s*$/g, '').trim();
+    return s;
+  }
+  _inferArrayKeyFromRef() {
+    const r = String(this.ref || this.getAttribute('ref') || '').trim();
+
+    // instance('data')?movies?*...
+    let m = r.match(/\?([^?\[\]]+)\?\*\s*/);
+    if (m) return m[1];
+
+    // instance('data')?movies  (no ?*)
+    m = r.match(/\?([^?\[\]]+)\s*$/);
+    if (m) return m[1];
+    return null;
+  }
+  _sameJsonContainer(detailRef) {
+    const myContainer = this._stripJsonRefToContainer(this.ref);
+    const evContainer = this._stripJsonRefToContainer(detailRef);
+    if (!myContainer || !evContainer) return false;
+    return myContainer === evContainer;
+  }
+  _matchesJsonParent(detail) {
+    // Fallback routing based on insertedParent / insertedNodes.parent
+    const parent = detail?.insertedParent || detail?.insertedNodes?.parent || detail?.insertedNodes?.insertedParent || null;
+    if (!parent || !parent.__jsonlens__) return false;
+    const myKey = this._inferArrayKeyFromRef();
+    if (myKey && String(parent.keyOrIndex) !== String(myKey)) return false;
+
+    // If instance is known on both sides, ensure it matches
+    const myInstanceId = XPathUtil.resolveInstance(this, this.ref);
+    if (myInstanceId && parent.instanceId && String(myInstanceId) !== String(parent.instanceId)) {
+      return false;
+    }
+    return true;
+  }
   connectedCallback() {
     super.connectedCallback();
     this.template = this.querySelector('template');
-
-    // console.log('connectedCallback',this);
-    // this.display = window.getComputedStyle(this, null).getPropertyValue("display");
     this.ref = this.getAttribute('ref');
     this.dependencies.addXPath(this.ref);
-    // this.ref = this._getRef();
-    // console.log('### fx-repeat connected ', this.id);
     this.addEventListener('item-changed', e => {
+      // IMPORTANT: when *we* emit item-changed from the repeat (programmatic setIndex),
+      // we must not react to it (would recurse).
+      if (e && e.target === this) return;
+      if (e?.detail?.source === 'repeat') return;
       const {
         item
       } = e.detail;
-      this.setIndex(item.index);
+      this._settingIndexFromItemChanged = true;
+      try {
+        this.setIndex(item.index);
+      } finally {
+        this._settingIndexFromItemChanged = false;
+      }
     });
 
-    // Listen for insertion events
+    // ----------------
+    // INSERT handler
+    // ----------------
     this.handleInsertHandler = event => {
       const {
         detail
       } = event;
       const myForeId = this.getOwnerForm().id;
-      if (myForeId !== detail.foreId) {
+      if (myForeId !== detail.foreId) return;
+      const fore = this.getOwnerForm();
+
+      // Detect JSON insert (robust)
+      const insertedParent = detail?.insertedParent;
+      const insertedNode = detail?.insertedNodes;
+      const isJson = !!detail?.isJson || !!insertedParent?.__jsonlens__ || !!insertedNode?.__jsonlens__ || !!insertedNode?.parent?.__jsonlens__;
+      if (isJson) {
+        // IMPORTANT FIX:
+        // The old code compared detail.ref strictly to a computed container ref.
+        // For repeats like instance('data')?movies?*[predicate] the container is "instance('data')?movies"
+        // while detail.ref is usually exactly that container. But if we keep the predicate in this.ref,
+        // a strict string compare will FAIL and the insert never updates the DOM -> stays at 12.
+        //
+        // We accept the event if either:
+        //  1) detail.ref matches our container (predicate stripped), OR
+        //  2) insertedParent / insertedNode.parent matches our array key + instance.
+        const okByRef = this._sameJsonContainer(detail?.ref);
+        const okByParent = this._matchesJsonParent(detail);
+        if (!okByRef && !okByParent) return;
+        this._handleJsonInserted(detail);
         return;
       }
-      // todo: early out if this.ref does not match the ref of the inserted node. Avoid re-evaluating the nodeset
-      // if (this.ref !== detail.ref) return;
 
-      // Step 1: Refresh/re-evaluate the nodeset
+      // ----------------
+      // XML insert: keep existing behavior
+      // ----------------
       const oldNodesetLength = this.nodeset.length;
       this._evalNodeset();
       const newNodesetLength = this.nodeset.length;
-      if (oldNodesetLength === newNodesetLength) {
-        return;
-      }
+      if (oldNodesetLength === newNodesetLength) return;
+      const inserted = detail.insertedNodes;
+      const insertionIndex = this.nodeset.indexOf(inserted) + 1; // 1-based
 
-      /**
-       * @type {number}
-       */
-      //      const insertionIndex = detail.index;
-      /**
-       * The newly inserted node. TODO: handle multiple?
-       * @type {Node}
-       */
-      const insertedNode = detail.insertedNodes;
-      const insertionIndex = this.nodeset.indexOf(insertedNode) + 1;
-      // Step 2: Get current repeat items and create a new item
-      /**
-       * @type {import('./fx-repeatitem.js').FxRepeatitem[]}
-       */
       const repeatItems = Array.from(this.querySelectorAll(':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item'));
-
-      // todo: search fx-bind elements with same nodeset as this repeat - if present update modelItem instead of creating one
       const newRepeatItem = this._createNewRepeatItem();
-
-      // Step 3: Insert the new repeatItem at the correct position
-      const beforeNode = repeatItems[insertionIndex - 1] ?? null; // Null appends by default
+      const beforeNode = repeatItems[insertionIndex - 1] ?? null;
       this.insertBefore(newRepeatItem, beforeNode);
       newRepeatItem.index = insertionIndex;
       this._initVariables(newRepeatItem);
-
-      // Step 4: Assign the inserted nodeset to the new `repeatItem`
-      newRepeatItem.nodeset = detail.insertedNodes;
-
-      // Update all the indices following here
+      newRepeatItem.nodeset = inserted;
       for (let i = insertionIndex - 1; i < repeatItems.length; ++i) {
-        const sibling = repeatItems[i];
-        // TODO: handle the next ones
-        sibling.index += 1;
+        repeatItems[i].index += 1;
       }
-      this.setIndex(insertionIndex); // sets attribute + applies repeat-index + refresh
-
-      // Generate the parent `modelItem` for the new repeat item
+      this.setIndex(insertionIndex);
       this.opNum++;
-      const parentModelItem = FxBind.createModelItem(this.ref, detail.insertedNodes, newRepeatItem, this.opNum);
+      let parentModelItem = FxBind.createModelItem(this.ref, inserted, newRepeatItem, this.opNum);
+      // IMPORTANT: registerModelItem may return an existing canonical ModelItem for the same path.
+      // Always keep using the returned instance to avoid "ghost" ModelItems that still notify.
+      parentModelItem = this.getModel().registerModelItem(parentModelItem);
       newRepeatItem.modelItem = parentModelItem;
-      this.getModel().registerModelItem(parentModelItem);
-
-      // Step 5: Create modelItems recursively for child elements
       this._createModelItemsRecursively(newRepeatItem, parentModelItem);
-      // Step 6: Notify and refresh the UI
-      this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh();
-      this.getOwnerForm().addToBatchedNotifications(newRepeatItem);
+      fore.scanForNewTemplateExpressionsNextRefresh();
+      fore.addToBatchedNotifications(newRepeatItem);
     };
+
+    // ----------------
+    // DELETE handler
+    // ----------------
     this.handleDeleteHandler = event => {
       const {
         detail
       } = event;
-      if (!detail || !detail.deletedNodes) {
+      if (!detail || !detail.deletedNodes || detail.deletedNodes.length === 0) return;
+      const fore = this.getOwnerForm();
+      const myForeId = fore?.id;
+      if (detail.foreId && myForeId !== detail.foreId) return;
+      const deletedNodes = Array.from(detail.deletedNodes || []);
+      const first = deletedNodes[0];
+      const isJson = !!detail.isJson || !!first?.__jsonlens__ || !!first?.parent?.__jsonlens__ || deletedNodes.some(n => n?.__jsonlens__ || n?.parent?.__jsonlens__);
+      if (isJson) {
+        // Route by parent array container, NOT by detail.ref string.
+        const parent = detail.parent && Array.isArray(detail.parent.value) && detail.parent || (first?.parent && Array.isArray(first.parent.value) ? first.parent : null);
+        if (!parent) return;
+        const myKey = this._inferArrayKeyFromRef();
+        if (myKey && String(parent.keyOrIndex) !== String(myKey)) return;
+        if (detail.instanceId && parent.instanceId && String(detail.instanceId) !== String(parent.instanceId)) {
+          return;
+        }
+        this._handleJsonDeleted(detail);
         return;
       }
 
-      // Remove corresponding repeat items for deleted nodes
+      // XML delete: keep existing behavior
       detail.deletedNodes.forEach(node => {
         this.handleDelete(node);
-        //        this.removeRepeatItemForNode(node);
       });
-
-      this.getOwnerForm().addToBatchedNotifications(this);
+      fore?.addToBatchedNotifications?.(this);
     };
-    // inside connectedCallback()
     document.addEventListener('insert', this.handleInsertHandler, true);
     document.addEventListener('deleted', this.handleDeleteHandler, true);
 
-    // if (this.getOwnerForm().lazyRefresh) {
-    /**
-     * @type {MutationRecord[]}
-     */
+    // ----------------
+    // Mutation observer (XML only)
+    // ----------------
     let bufferedMutationRecords = [];
     let debouncedOnMutations = null;
     this.mutationObserver = new MutationObserver(mutations => {
@@ -48497,12 +50270,7 @@ class FxRepeat extends withDraggability(UIElement) {
     });
     this.getOwnerForm().registerLazyElement(this);
     const style = `
-      :host{
-      }
-       .fade-out-bottom {
-          -webkit-animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-          animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-      }
+      :host{ }
       .fade-out-bottom {
           -webkit-animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
           animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
@@ -48511,19 +50279,89 @@ class FxRepeat extends withDraggability(UIElement) {
     const html = `
           <slot name="header"></slot>
           <slot></slot>
-          <slot name="footer"></slot>
-        `;
+  `;
     this.shadowRoot.innerHTML = `
-            <style>
-                ${style}
-            </style>
-            ${html}
-        `;
-
-    // this.init();
+      <style>${style}</style>
+      ${html}
+  `;
   }
 
+  /**
+   * JSON insert (incremental):
+   * - re-evaluate nodeset once to get authoritative post-insert ordering
+   * - insert one new repeatitem at the correct position (using detail.index)
+   * - rebind only shifted repeatitems (pos..end) and refresh them
+   */
+  _handleJsonInserted(detail) {
+    const fore = this.getOwnerForm();
+    const repeatItems = () => Array.from(this.querySelectorAll(':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item'));
+
+    // 1) Determine insertion index (1-based) from the event.
+    // Do NOT use indexOf(insertedNodes) for JSON.
+    let insertionIndex1 = Number(detail.index);
+    if (!Number.isFinite(insertionIndex1) || insertionIndex1 < 1) {
+      const ki = detail.insertedNodes?.keyOrIndex;
+      if (typeof ki === 'number') insertionIndex1 = ki + 1;
+    }
+    if (!Number.isFinite(insertionIndex1) || insertionIndex1 < 1) insertionIndex1 = 1;
+
+    // 2) Re-evaluate nodeset AFTER mutation to get correct order.
+    const oldLen = Array.isArray(this.nodeset) ? this.nodeset.length : 0;
+    this._evalNodeset();
+    const newLen = Array.isArray(this.nodeset) ? this.nodeset.length : 0;
+    if (newLen === oldLen) return;
+
+    // Clamp
+    insertionIndex1 = Math.max(1, Math.min(insertionIndex1, newLen));
+    const pos0 = insertionIndex1 - 1;
+
+    // 3) Insert DOM row: set nodeset/index BEFORE inserting into DOM.
+    const before = repeatItems();
+    const beforeNode = before[pos0] ?? null;
+    const newRepeatItem = this._createNewRepeatItem();
+    newRepeatItem.index = pos0 + 1;
+    this._initVariables(newRepeatItem);
+    newRepeatItem.nodeset = this.nodeset[pos0];
+    this.insertBefore(newRepeatItem, beforeNode);
+
+    // Ensure it gets initialized/rendered
+    fore.registerLazyElement(newRepeatItem);
+    if (fore.createNodes) {
+      fore.initData(newRepeatItem);
+    }
+    fore.scanForNewTemplateExpressionsNextRefresh();
+    fore.addToBatchedNotifications(newRepeatItem);
+
+    // 4) Rebind shifted rows (pos0+1..end) and refresh only those.
+    const after = repeatItems();
+    for (let i = pos0 + 1; i < after.length; i++) {
+      const ri = after[i];
+      ri.index = i + 1;
+      const newNode = this.nodeset[i];
+      if (ri.nodeset !== newNode) {
+        ri.nodeset = newNode;
+        if (fore.createNodes) fore.initData(ri);
+      }
+      fore.addToBatchedNotifications(ri);
+    }
+
+    // Select inserted row
+    this.setIndex(pos0 + 1);
+  }
   disconnectedCallback() {
+    // Ensure UIElement cleanup runs (removes observer for primary binding, etc.)
+    if (super.disconnectedCallback) super.disconnectedCallback();
+
+    // Remove observers that were added for predicate dependencies
+    if (this._jsonPredicateDeps && this._jsonPredicateDeps.size) {
+      for (const mi of this._jsonPredicateDeps) {
+        if (mi && typeof mi.removeObserver === 'function') {
+          mi.removeObserver(this);
+        }
+      }
+      this._jsonPredicateDeps.clear();
+    }
+    this._jsonPredicateDepsObserved = false;
     document.removeEventListener('deleted', this.handleDeleteHandler, true);
     document.removeEventListener('insert', this.handleInsertHandler, true);
   }
@@ -48534,15 +50372,28 @@ class FxRepeat extends withDraggability(UIElement) {
     this.size = size;
   }
   setIndex(index) {
-    // console.log('new repeat index ', index);
     this.index = index;
     const rItems = this.querySelectorAll(':scope > fx-repeatitem');
-    this.applyIndex(rItems[this.index - 1]);
+    const selected = rItems[this.index - 1];
+    this.applyIndex(selected);
 
-    // trying to do without
-    // this.getOwnerForm().refresh({ reason: 'index-function', elementLocalnamesWithChanges: [] });
+    // If setIndex is called programmatically (insert/delete), we must notify dependents
+    // (fx-group/fx-control/fx-output with index('repeatId') in ref).
+    //
+    // When setIndex is invoked as a reaction to a repeatitem click/focus,
+    // the repeatitem already dispatched item-changed and dependents already react.
+    if (!this._settingIndexFromItemChanged) {
+      this.dispatchEvent(new CustomEvent('item-changed', {
+        composed: false,
+        bubbles: false,
+        detail: {
+          item: selected || null,
+          index: this.index,
+          source: 'repeat'
+        }
+      }));
+    }
   }
-
   applyIndex(repeatItem) {
     this._removeIndexMarker();
     if (repeatItem) {
@@ -48559,88 +50410,94 @@ class FxRepeat extends withDraggability(UIElement) {
     return this.getAttribute('ref');
   }
   _createModelItemsRecursively(parentNode, parentModelItem) {
-    const parentWithDewey = parentModelItem?.path || null; // e.g. $default/AllowanceCharge[2]_1
-    parentWithDewey ? parentWithDewey.replace(/_\d+$/, '') : null; // e.g. $default/AllowanceCharge[2]
-
-    // Robust Dewey rewrite that tolerates $inst vs instance('inst') forms
+    parentModelItem?.path || null;
     const __applyDeweyRewrite = mi => {
       if (!mi || typeof mi.path !== 'string' || !parentModelItem?.path) return;
-      const pWith = parentModelItem.path; // e.g. $default/AllowanceCharge[2]_1  or  instance('default')/AllowanceCharge[2]_1
+      const pWith = parentModelItem.path;
       const opMatch = pWith.match(/_(\d+)$/);
       if (!opMatch) return;
       const op = opMatch[1];
-
-      // Normalize to $name/ and strip _n on parent; normalize child for prefix test only
       const toDollar = s => s.replace(/^instance\('([^']+)'\)\//, (_m, g1) => `$${g1}/`);
-      const parentBaseNorm = toDollar(pWith).replace(/_\d+$/, ''); // $default/AllowanceCharge[2]
+      const parentBaseNorm = toDollar(pWith).replace(/_\d+$/, '');
       const childNorm = toDollar(mi.path);
-      if (!childNorm.startsWith(parentBaseNorm)) return; // unrelated subtree
-
-      // Preserve original style of child's instance prefix
+      if (!childNorm.startsWith(parentBaseNorm)) return;
       const childUsesInstanceFn = /^instance\('/.test(mi.path);
       const parentBaseInChildStyle = childUsesInstanceFn ? parentBaseNorm.replace(/^\$([A-Za-z0-9_-]+)\//, `instance('$1')/`) : parentBaseNorm;
-
-      // If already suffixed for this parent, nothing to do
       if (mi.path.startsWith(`${parentBaseInChildStyle}_`)) return;
-
-      // Inject _op immediately after the parent base segment
       mi.path = `${parentBaseInChildStyle}_${op}${mi.path.slice(parentBaseInChildStyle.length)}`;
     };
     Array.from(parentNode.children).forEach(child => {
       const nextParentMI = parentModelItem;
-
-      // Skip native/embedded widgets that may carry a 'ref' but are UI only
       const isWidgetEl = child && (child.classList && child.classList.contains('widget') || typeof Fore !== 'undefined' && Fore.isWidget && Fore.isWidget(child) || child.tagName && ['INPUT', 'SELECT', 'TEXTAREA', 'OPTION', 'DATALIST'].includes(child.tagName));
       if (!isWidgetEl && child.hasAttribute('ref')) {
         const ref = child.getAttribute('ref').trim();
         if (ref && ref !== '.') {
-          // Evaluate the FULL ref once — this yields the terminal (last) node(s)
           let node = evaluateXPath(ref, parentModelItem.node, this);
           if (Array.isArray(node)) node = node[0];
           if (node) {
             let modelItem = this.getModel().getModelItem(node);
             if (!modelItem) {
-              // Create a ModelItem only for the final node; children never get their own opNum
               modelItem = FxBind.createModelItem(ref, node, child, null);
               modelItem.parentModelItem = parentModelItem;
-              this.getModel().registerModelItem(modelItem);
+              // IMPORTANT: keep using the canonical instance returned by registerModelItem.
+              // Otherwise a throwaway ModelItem can leak into observer graphs and be notified.
+              modelItem = this.getModel().registerModelItem(modelItem);
             }
-
-            // Always apply Dewey rewrite (handles both $inst and instance('inst') forms)
             __applyDeweyRewrite(modelItem);
             child.nodeset = node;
             if (child.attachObserver) child.attachObserver();
           }
         }
       }
-
-      // Recurse into non-widget subtrees
       if (!isWidgetEl) this._createModelItemsRecursively(child, nextParentMI);
     });
   }
-
-  /**
-   * Removes the repeat item corresponding to a deleted node.
-   * Cleans up its observers and notifies the parent form.
-   * @param {Node} node - The deleted node
-   */
-  removeRepeatItemForNode(node) {
-    const index = this.nodeset.indexOf(node);
-    if (index === -1) return;
-    const repeatItem = this.querySelector(`fx-repeatitem:nth-of-type(${index + 1})`);
-    if (repeatItem) {
-      this.removeChild(repeatItem);
-      this.getOwnerForm().addToBatchedNotifications(this);
+  _handleJsonDeleted(detail) {
+    const fore = this.getOwnerForm();
+    const repeatItems = () => Array.from(this.querySelectorAll(':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item'));
+    let indices0 = Array.isArray(detail.deletedIndexes0) ? detail.deletedIndexes0.slice() : Array.from(detail.deletedNodes || []).map(n => n && typeof n.keyOrIndex === 'number' ? n.keyOrIndex : -1).filter(i => i >= 0);
+    indices0 = Array.from(new Set(indices0)).sort((a, b) => b - a);
+    if (indices0.length === 0) return;
+    let currentIndex1 = Number(this.getAttribute('index') || this.index || 1);
+    if (!Number.isFinite(currentIndex1) || currentIndex1 < 1) currentIndex1 = 1;
+    const deletedIdx1Asc = indices0.map(i0 => i0 + 1).sort((a, b) => a - b);
+    let nextIndex1 = currentIndex1;
+    for (const d1 of deletedIdx1Asc) {
+      if (nextIndex1 > d1) nextIndex1 -= 1;
     }
-
-    // Remove the node from the nodeset
-    this.nodeset.splice(index, 1);
+    const before = repeatItems();
+    for (const idx0 of indices0) {
+      const itemEl = before[idx0];
+      if (!itemEl) continue;
+      try {
+        fore?.unRegisterLazyElement?.(itemEl);
+      } catch (_e) {}
+      itemEl.remove();
+    }
+    this._evalNodeset();
+    const start0 = Math.min(...indices0);
+    const after = repeatItems();
+    for (let i = start0; i < after.length; i++) {
+      const ri = after[i];
+      ri.index = i + 1;
+      const newNode = Array.isArray(this.nodeset) ? this.nodeset[i] : null;
+      if (ri.nodeset !== newNode) {
+        ri.nodeset = newNode;
+        if (fore?.createNodes) fore.initData(ri);
+      }
+      fore?.addToBatchedNotifications?.(ri);
+    }
+    const newLen = after.length;
+    if (newLen === 0) {
+      this.setAttribute('index', '0');
+      this.index = 0;
+      this._removeIndexMarker?.();
+      return;
+    }
+    nextIndex1 = Math.max(1, Math.min(nextIndex1, newLen));
+    this.setIndex(nextIndex1);
   }
   handleDelete(deleted) {
-    // grab the current repeat items (tweak selector if yours differs)
-    /**
-     * @type {import('./fx-repeatitem.js').FxRepeatitem[]}
-     */
     const items = Array.from(this.querySelectorAll(':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item'));
     this._evalNodeset();
     const indexToRemove = items.findIndex(item => item.nodeset === deleted);
@@ -48649,22 +50506,15 @@ class FxRepeat extends withDraggability(UIElement) {
     }
     const itemToRemove = items[indexToRemove];
     itemToRemove.remove();
-
-    // If the list is now empty, clear selection (0). Adjust if you prefer 1-based only.
     const newLength = this.querySelectorAll(':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item').length;
-    let nextIndex = indexToRemove + 1; // 1-based index at the deleted slot
+    let nextIndex = indexToRemove + 1;
     if (newLength === 0) {
-      nextIndex = 0; // nothing left; clear selection
+      nextIndex = 0;
     } else if (nextIndex > newLength) {
-      nextIndex = newLength; // deleted the last one; move to new last
+      nextIndex = newLength;
     }
-
     this.setIndex(nextIndex);
   }
-
-  /**
-   * @returns {import('./fx-repeatitem.js').FxRepeatitem}
-   */
   _createNewRepeatItem() {
     const newItem = document.createElement('fx-repeatitem');
     if (this.isDraggable) {
@@ -48676,29 +50526,220 @@ class FxRepeat extends withDraggability(UIElement) {
     return newItem;
   }
   init() {
-    // ### there must be a single 'template' child
-    // console.log('##### repeat init ', this.id);
-    // if(!this.inited) this.init();
-    // does not use this.evalInContext as it is expecting a nodeset instead of single node
     this._evalNodeset();
-    // console.log('##### ',this.id, this.nodeset);
-
     this._initTemplate();
     this._initRepeatItems();
     this.setAttribute('index', this.index);
     this.inited = true;
   }
+  _observeJsonPredicateDependencies(contextNode) {
+    if (this._jsonPredicateDepsObserved) return;
+    const ref = String(this.ref || this.getAttribute('ref') || '').trim();
+    if (!ref || !ref.includes('[') || !ref.includes('?')) return;
+    const model = this.getModel && this.getModel();
+    if (!model) return;
 
-  /**
-   * repeat has no own modelItems
-   * @private
-   */
+    // Collect predicate bodies [...]
+    const predicates = [];
+    const predRe = /\[([\s\S]+?)\]/g;
+    let pm;
+    while ((pm = predRe.exec(ref)) !== null) {
+      if (pm[1]) predicates.push(pm[1]);
+    }
+    if (predicates.length === 0) return;
+    const isBoundary = ch => ch === undefined || ch === null || /\s/.test(ch) || ch === ',' || ch === ')' || ch === ']' || ch === '+' || ch === '-' || ch === '*' || ch === '=' || ch === '>' || ch === '<' || ch === '!' || ch === '|' || ch === '&';
+    const lookups = new Set();
+    const readInstanceLensAt = (src, start) => {
+      if (!src.slice(start).match(/^instance\s*\(/)) return null;
+      let j = start;
+      let inS = false;
+      let inD = false;
+      let depth = 0;
+      while (j < src.length) {
+        const ch = src[j];
+        if (ch === "'" && !inD) {
+          inS = !inS;
+          j += 1;
+          continue;
+        }
+        if (ch === '"' && !inS) {
+          inD = !inD;
+          j += 1;
+          continue;
+        }
+        if (inS || inD) {
+          j += 1;
+          continue;
+        }
+        if (ch === '(') depth += 1;else if (ch === ')') {
+          depth -= 1;
+          if (depth === 0) break;
+        }
+        j += 1;
+      }
+      if (j >= src.length) return null;
+      let k = j + 1;
+      while (k < src.length && /\s/.test(src[k])) k += 1;
+      if (src[k] !== '?') return null;
+      k += 1;
+      let bracketDepth = 0;
+      inS = false;
+      inD = false;
+      while (k < src.length) {
+        const ch = src[k];
+        if (ch === "'" && !inD) {
+          inS = !inS;
+          k += 1;
+          continue;
+        }
+        if (ch === '"' && !inS) {
+          inD = !inD;
+          k += 1;
+          continue;
+        }
+        if (inS || inD) {
+          k += 1;
+          continue;
+        }
+        if (ch === '[') bracketDepth += 1;else if (ch === ']') {
+          if (bracketDepth > 0) bracketDepth -= 1;else break;
+        }
+        if (bracketDepth === 0 && isBoundary(ch)) break;
+        k += 1;
+      }
+      return {
+        raw: src.slice(start, k),
+        end: k
+      };
+    };
+    const readVarLensAt = (src, start) => {
+      if (src[start] !== '$') return null;
+      let j = start + 1;
+      if (!/[A-Za-z_]/.test(src[j] || '')) return null;
+      j += 1;
+      while (j < src.length && /[\w.-]/.test(src[j])) j += 1;
+      const varName = src.slice(start + 1, j);
+      let k = j;
+      while (k < src.length && /\s/.test(src[k])) k += 1;
+
+      // We only care if a lookup tail follows: ?foo?bar OR /foo/bar
+      const next = src[k];
+      if (next !== '?' && next !== '.' && next !== '/') {
+        return {
+          raw: src.slice(start, j),
+          end: j,
+          varName,
+          tail: ''
+        };
+      }
+
+      // normalize .?foo?bar => ?foo?bar
+      if (next === '.' && src[k + 1] === '?') k += 1;
+
+      // read until boundary
+      let p = k;
+      let bracketDepth = 0;
+      let inS = false;
+      let inD = false;
+      while (p < src.length) {
+        const ch = src[p];
+        if (ch === "'" && !inD) {
+          inS = !inS;
+          p += 1;
+          continue;
+        }
+        if (ch === '"' && !inS) {
+          inD = !inD;
+          p += 1;
+          continue;
+        }
+        if (inS || inD) {
+          p += 1;
+          continue;
+        }
+        if (ch === '[') bracketDepth += 1;else if (ch === ']') {
+          if (bracketDepth > 0) bracketDepth -= 1;else break;
+        }
+        if (bracketDepth === 0 && p !== k && isBoundary(ch)) break;
+        p += 1;
+      }
+      return {
+        raw: src.slice(start, p),
+        end: p,
+        varName,
+        tail: src.slice(k, p)
+      };
+    };
+
+    // Collect lookups used inside predicates
+    for (const predicate of predicates) {
+      const src = String(predicate ?? '');
+      let inSingle = false;
+      let inDouble = false;
+      for (let i = 0; i < src.length; i += 1) {
+        const ch = src[i];
+        if (ch === "'" && !inDouble) {
+          inSingle = !inSingle;
+          continue;
+        }
+        if (ch === '"' && !inSingle) {
+          inDouble = !inDouble;
+          continue;
+        }
+        if (inSingle || inDouble) continue;
+
+        // instance('x')?foo?bar
+        const instLens = readInstanceLensAt(src, i);
+        if (instLens && instLens.raw && instLens.raw.includes('?')) {
+          lookups.add(instLens.raw.trim());
+          i = instLens.end - 1;
+          continue;
+        }
+
+        // $default?ui?query or $foo?bar  (rewrite to instance() / instance('foo'))
+        const varLens = readVarLensAt(src, i);
+        if (varLens && varLens.tail && (varLens.tail.startsWith('?') || varLens.tail.startsWith('/'))) {
+          const v = varLens.varName;
+          const {
+            tail
+          } = varLens;
+
+          // $default must follow your semantics: first instance in doc order => instance()
+          const rewritten = v === 'default' ? `instance()${tail.startsWith('?') ? tail : tail}` : `instance('${v}')${tail}`;
+          lookups.add(rewritten.trim());
+          i = varLens.end - 1;
+        }
+      }
+    }
+    if (lookups.size === 0) return;
+
+    // Resolve lookups to actual nodes and observe them
+    for (const lookup of lookups) {
+      try {
+        const resolved = evaluateXPath(lookup, contextNode, this);
+        let node = null;
+        if (Array.isArray(resolved)) {
+          const first = resolved[0];
+          node = Array.isArray(first) ? first[0] : first;
+        } else {
+          node = resolved;
+        }
+        if (!node) continue;
+        const mi = FxModel.lazyCreateModelItem(model, lookup, node, this);
+        if (mi && typeof mi.addObserver === 'function') {
+          if (!this._jsonPredicateDeps.has(mi)) {
+            mi.addObserver(this);
+            this._jsonPredicateDeps.add(mi);
+          }
+        }
+      } catch (_e) {
+        // ignore
+      }
+    }
+    this._jsonPredicateDepsObserved = true;
+  }
   _evalNodeset() {
-    // const inscope = this.getInScopeContext();
     const inscope = getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
-    // console.log('##### inscope ', inscope);
-    // console.log('##### ref ', this.ref);
-    // now we got a nodeset and attach MutationObserver to it
     if (!inscope) return;
     if (this.mutationObserver && inscope.nodeName) {
       this.mutationObserver.observe(inscope, {
@@ -48706,59 +50747,52 @@ class FxRepeat extends withDraggability(UIElement) {
         subtree: true
       });
     }
-
-    /*
-              this.touchedPaths = new Set();
-              const instance = XPathUtil.resolveInstance(this, this.ref);
-              const depTrackDomfacade = new DependencyNotifyingDomFacade((node) => {
-                  this.touchedPaths.add(XPathUtil.getPath(node, instance));
-              });
-              const rawNodeset = evaluateXPath(this.ref, inscope, this, {}, {}, depTrackDomfacade );
-        */
     const rawNodeset = evaluateXPath(this.ref, inscope, this);
-
-    // console.log('Touched!', this.ref, [...this.touchedPaths].join(', '));
+    this._observeJsonPredicateDependencies(inscope);
     if (rawNodeset.length === 1 && Array.isArray(rawNodeset[0])) {
-      // This XPath likely returned an XPath array. Just collapse to that array
       this.nodeset = rawNodeset[0];
       return;
     }
     this.nodeset = rawNodeset;
   }
+
+  /**
+   * Observer callback for ModelItem notifications.
+   * When a predicate dependency changes (eg. $default?ui?query),
+   * schedule this repeat for refresh so its nodeset/predicate is re-evaluated.
+   */
+  update(_modelItem) {
+    const fore = this.getOwnerForm && this.getOwnerForm();
+    if (fore && typeof fore.addToBatchedNotifications === 'function') {
+      fore.addToBatchedNotifications(this);
+      return;
+    }
+    // Fallback (should rarely happen)
+    this.refresh(true);
+  }
   async refresh(force) {
     if (!this.inited) this.init();
-    // console.time('repeat-refresh', this);
     this._evalNodeset();
-
-    // console.log('repeat refresh nodeset ', this.nodeset);
-    // console.log('repeatCount', this.repeatCount);
-
-    const repeatItems = this.querySelectorAll(':scope > fx-repeatitem');
-    const repeatItemCount = repeatItems.length;
+    let repeatItems = this.querySelectorAll(':scope > fx-repeatitem');
+    let repeatItemCount = repeatItems.length;
     let nodeCount = 1;
     if (Array.isArray(this.nodeset)) {
       nodeCount = this.nodeset.length;
     }
-
-    // const contextSize = this.nodeset.length;
     const contextSize = nodeCount;
-    // todo: review - cant the context really never be smaller than the repeat count?
-    // todo: this code can be deprecated probably but check first
     if (contextSize < repeatItemCount) {
       for (let position = repeatItemCount; position > contextSize; position -= 1) {
-        // remove repeatitem
         const itemToRemove = repeatItems[position - 1];
         itemToRemove.parentNode.removeChild(itemToRemove);
         this.getOwnerForm().unRegisterLazyElement(itemToRemove);
-        // this._fadeOut(itemToRemove);
-        // Fore.fadeOutElement(itemToRemove)
       }
     }
 
+    // DOM changed: re-query repeatitems
+    repeatItems = this.querySelectorAll(':scope > fx-repeatitem');
+    repeatItemCount = repeatItems.length;
     if (contextSize > repeatItemCount) {
       for (let position = repeatItemCount + 1; position <= contextSize; position += 1) {
-        // add new repeatitem
-
         const newItem = this._createNewRepeatItem();
         this.appendChild(newItem);
         this._initVariables(newItem);
@@ -48767,14 +50801,14 @@ class FxRepeat extends withDraggability(UIElement) {
         if (this.getOwnerForm().createNodes) {
           this.getOwnerForm().initData(newItem);
         }
-
-        // Tell the owner form we might have new template expressions here
         this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh();
         newItem.refresh(true);
       }
     }
 
-    // ### update nodeset of repeatitems
+    // DOM changed: re-query repeatitems
+    repeatItems = this.querySelectorAll(':scope > fx-repeatitem');
+    repeatItemCount = repeatItems.length;
     for (let position = 0; position < repeatItemCount; position += 1) {
       const item = repeatItems[position];
       this.getOwnerForm().registerLazyElement(item);
@@ -48785,62 +50819,20 @@ class FxRepeat extends withDraggability(UIElement) {
         }
       }
     }
-
-    // Fore.refreshChildren(clone, true);
     const fore = this.getOwnerForm();
-    // if (!fore.lazyRefresh || force) {
     if (!fore.lazyRefresh || force) {
-      // Turn the possibly conditional force refresh into a forced one: we changed our children
       Fore.refreshChildren(this, force);
     }
-    // this.style.display = 'block';
-    // this.style.display = this.display;
     this.setIndex(this.index);
-    // console.timeEnd('repeat-refresh');
-
-    // this.replaceWith(clone);
-
-    // this.repeatCount = contextSize;
-    // console.log('repeatCount', this.repeatCount);
   }
-
-  // eslint-disable-next-line class-methods-use-this
-  _fadeOut(el) {
-    el.style.opacity = 1;
-    (function fade() {
-      // eslint-disable-next-line no-cond-assign
-      if ((el.style.opacity -= 0.1) < 0) {
-        el.style.display = 'none';
-      } else {
-        requestAnimationFrame(fade);
-      }
-    })();
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  _fadeIn(el) {
-    if (!el) return;
-    el.style.opacity = 0;
-    el.style.display = this.display;
-    (function fade() {
-      // setTimeout(() => {
-      let val = parseFloat(el.style.opacity);
-      // eslint-disable-next-line no-cond-assign
-      if (!((val += 0.1) > 1)) {
-        el.style.opacity = val;
-        requestAnimationFrame(fade);
-      }
-      // }, 40);
-    })();
-  }
-
   _initTemplate() {
-    // console.log('### init template for repeat ', this.id, this.template);
-    // todo: this.dropTarget not needed?
-    this.dropTarget = this.template.getAttribute('drop-target');
-    this.isDraggable = this.template.hasAttribute('draggable') ? this.template.getAttribute('draggable') : null;
+    // Template can be missing during early init (slot timing / nested repeats).
+    // Never dereference it before we have it.
+    if (!this.template) {
+      // Prefer a direct child template, then any descendant template.
+      this.template = Array.from(this.children).find(c => c && c.localName === 'template') || this.querySelector('template') || this.shadowRoot && this.shadowRoot.querySelector('template') || null;
+    }
     if (this.template === null) {
-      // todo: catch this on form element
       this.dispatchEvent(new CustomEvent('no-template-error', {
         composed: true,
         bubbles: true,
@@ -48848,32 +50840,34 @@ class FxRepeat extends withDraggability(UIElement) {
           message: `no template found for repeat:${this.id}`
         }
       }));
+      return;
     }
-    this.shadowRoot.appendChild(this.template);
+    this.dropTarget = this.template.getAttribute('drop-target');
+    this.isDraggable = this.template.hasAttribute('draggable') ? this.template.getAttribute('draggable') : null;
+
+    // Move template to shadow for safe reuse.
+    // If it's already in the shadowRoot, don't append again.
+    if (this.template.parentNode !== this.shadowRoot) {
+      this.shadowRoot.appendChild(this.template);
+    }
   }
   _initRepeatItems() {
     this.nodeset.forEach((item, index) => {
       const repeatItem = this._createNewRepeatItem();
       repeatItem.nodeset = this.nodeset[index];
-      repeatItem.index = index + 1; // 1-based index
-
+      repeatItem.index = index + 1;
       this.appendChild(repeatItem);
       if (this.getOwnerForm().createNodes) {
         this.getOwnerForm().initData(repeatItem);
         if (repeatItem.nodeset.nodeType) {
-          // Do not try to d things with repeats that do not reason over nodes
           const repeatItemClone = repeatItem.nodeset.cloneNode(true);
           this.clearTextValues(repeatItemClone);
-          // this.createdNodeset = repeatItem.nodeset.cloneNode(true);
           this.createdNodeset = repeatItemClone;
         }
-        // console.log('createdNodeset', this.createdNodeset)
       }
-
       if (repeatItem.index === 1) {
         this.applyIndex(repeatItem);
       }
-      // console.log('*********repeat item created', repeatItem.nodeset);
       Fore.dispatch(this, 'item-created', {
         nodeset: repeatItem.nodeset,
         pos: index + 1
@@ -48883,20 +50877,14 @@ class FxRepeat extends withDraggability(UIElement) {
   }
   clearTextValues(node) {
     if (!node) return;
-
-    // Clear text node content
     if (node.nodeType === Node.TEXT_NODE) {
       node.nodeValue = '';
     }
-
-    // Clear all attribute values
     if (node.nodeType === Node.ELEMENT_NODE) {
       for (const attr of Array.from(node.attributes)) {
-        attr.value = ''; // Clear attribute value
+        attr.value = '';
       }
     }
-
-    // Recursively clear child nodes
     for (const child of node.childNodes) {
       this.clearTextValues(child);
     }
@@ -48913,18 +50901,7 @@ class FxRepeat extends withDraggability(UIElement) {
       }
     })(newRepeatItem);
   }
-
-  /*
   _clone() {
-    // const content = this.template.content.cloneNode(true);
-    this.template = this.shadowRoot.querySelector('template');
-    const content = this.template.content.cloneNode(true);
-    return document.importNode(content, true);
-  }
-  */
-
-  _clone() {
-    // Prefer the cached template set in _initTemplate; fall back to either DOM.
     const tpl = this.template || this.shadowRoot && this.shadowRoot.querySelector('template') || this.querySelector('template');
     if (!tpl) {
       return document.createDocumentFragment();
@@ -48938,8 +50915,6 @@ class FxRepeat extends withDraggability(UIElement) {
     });
   }
   setInScopeVariables(inScopeVariables) {
-    // Repeats are interesting: the variables should be scoped per repeat item, they should not be
-    // able to see the variables in adjacent repeat items!
     this.inScopeVariables = new Map(inScopeVariables);
   }
 }
@@ -49535,8 +51510,6 @@ if (!customElements.get('fx-dialog')) {
  * FxItems provides a templated list over its bound nodes. It is not standalone but expects to be used
  * within an fx-control element.
  *
- *
- *
  * @demo demo/selects3.html
  */
 class FxItems extends FxControl {
@@ -49581,21 +51554,16 @@ class FxItems extends FxControl {
       }
     });
     this.addEventListener('click', e => {
-      e.preventDefault;
+      e.preventDefault; // keep as-is (do not change behavior here)
       e.stopPropagation();
       const items = this.querySelectorAll('[value]');
-      /*
-      let target;
-      if (e.target.nodeName === 'LABEL') {
-        target = resolveId(e.target.getAttribute('for'), this);
-        target.checked = !target.checked;
-      }
-      */
-
       let val = '';
       Array.from(items).forEach(item => {
         if (item.checked) {
-          val += ` ${item.getAttribute('value')}`;
+          // ROOT FIX: for generated inputs, attribute "value" may still be "{value}".
+          // The DOM property .value is the authoritative one.
+          const v = item.value != null ? item.value : item.getAttribute('value');
+          val += ` ${v}`;
         }
       });
       this.setAttribute('value', val.trim());
@@ -49612,6 +51580,11 @@ class FxItems extends FxControl {
   getWidget() {
     return this;
   }
+  async refresh(force = false) {
+    super.refresh(force);
+    // console.log('fx-items.refresh() called');
+  }
+
   async updateWidgetValue() {
     // console.log('setting items value');
 
@@ -49630,8 +51603,6 @@ class FxItems extends FxControl {
    * attention: limitations here: assumes that there's an `label` element plus an element with an `value`
    * attribute which it will update.
    *
-   *
-   *
    * @param newEntry
    * @param node
    */
@@ -49645,14 +51616,11 @@ class FxItems extends FxControl {
     const label = newEntry.querySelector('label');
     const lblExpr = Fore.getExpression(label.textContent);
 
-    // ### xml / JSON
-    if (node.nodeType) {
-      const lblEvaluated = evaluateXPathToString(lblExpr, node, this);
-      label.textContent = lblEvaluated;
-    } else {
-      const labelExpr = Fore.getExpression(lblExpr);
-      label.textContent = node[labelExpr];
-    }
+    // ROOT FIX: JSON lens nodes are objects; do NOT use direct JS property access.
+    // Always go through evaluateXPathToString() for JSON too.
+    const lblEvaluated = evaluateXPathToString(lblExpr, node, this);
+    // console.log('lblEvaluated ', lblEvaluated);
+    label.textContent = lblEvaluated;
     label.setAttribute('for', id);
 
     // ### handle the 'value'
@@ -49660,23 +51628,21 @@ class FxItems extends FxControl {
     const input = newEntry.querySelector('[value]');
     // getting expr
     const expr = input.value;
-    // const cutted = expr.substring(1, expr.length - 1);
     const cutted = Fore.getExpression(expr);
-    let evaluated;
-    if (node.nodeType) {
-      evaluated = evaluateXPathToString(cutted, node, newEntry);
-    } else {
-      evaluated = node[cutted];
-    }
+
+    // ROOT FIX: same here
+    const evaluated = evaluateXPathToString(cutted, node, this);
+    // console.log('evaluated ', lblEvaluated);
+
+    // Set both property and attribute so *any* downstream code path works
     input.value = evaluated;
+    input.setAttribute('value', evaluated);
     input.setAttribute('id', id);
+
     // Normalize the current value (remove newlines, tabs, excessive spaces)
     const currentValue = (this.getAttribute('value') || '').replace(/\s+/g, ' ').trim();
     const valueList = currentValue.split(/\s+/); // Split on whitespace
 
-    // Check if the value is in the space-separated list of values
-    // const currentValue = this.getAttribute('value') || '';
-    // const valueList = currentValue.split(/\s+/);
     if (valueList.includes(evaluated)) {
       input.checked = true;
     }
@@ -50902,7 +52868,7 @@ class FxActionLog extends HTMLElement {
    */
   _logDetails(e) {
     const eventType = e.type;
-    const path = getPath(e.target, '');
+    const path = getDocPath(e.target);
     // console.log('>>>> _logDetails', path);
     const cut = path.substring(path.indexOf('/fx-fore'), path.length);
     const xpath = `/${cut}`;
@@ -54576,13 +56542,18 @@ if (!customElements.get('fx-append')) {
   window.customElements.define('fx-append', FxAppend);
 }
 
+// src/actions/fx-delete.js
+
 /**
- * `fx-delete`
- * deletes nodes from instance data.
+ * fx-delete
  *
- * @fires deleted event
- * @customElement
- * @demo demo/todo.html
+ * XML: remove DOM nodes using XPath.
+ * JSON: delete JSONNode(s) (node.__jsonlens__ === true) without calling FontoXPath.
+ *
+ * Key requirement for JSON:
+ * - do NOT trigger full refresh
+ * - emit 'deleted' with stable pre-delete indices so repeats can update incrementally
+ * - update parent via parent.set(nextValue) so children are rebuilt (no "zombie rows")
  */
 class FxDelete extends AbstractAction {
   static get properties() {
@@ -54593,25 +56564,134 @@ class FxDelete extends AbstractAction {
       }
     };
   }
-
-  /**
-   * deletes nodes from instance data.
-   *
-   * Will NOT perform delete if nodeset is pointing to document node, document fragment, root node or being readonly.
-   */
   async perform() {
-    const inscopeContext = getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
-    this.nodeset = evaluateXPathToNodes(this.ref, inscopeContext, this);
+    const fore = this.getOwnerForm();
+    const ref = (this.getAttribute('ref') || this.ref || '.').trim() || '.';
 
-    // console.log('delete nodeset ', this.nodeset);
+    // IMPORTANT: keep correct scoping for vars/templates/repeats
+    const inscope = getInScopeContext(this.getAttributeNode('ref') || this, ref);
+    const instanceId = XPathUtil.resolveInstance(this, ref);
+    const model = this.getModel();
+    const instance = model.getInstance(instanceId);
+    const isJson = !!instance && (instance.type === 'json' || typeof instance.getAttribute === 'function' && instance.getAttribute('type') === 'json');
+    if (isJson) {
+      // JSON path stays as-is
+      return this._performJsonDelete(ref, inscope, instance, instanceId, fore);
+    }
 
-    const instanceId = XPathUtil.resolveInstance(this, this.ref);
-    const instance = this.getModel().getInstance(instanceId);
+    // XML path restored to proper semantics (readonly + modelItems + root safety)
+    return this._performXmlDelete(ref, inscope, instance, instanceId, fore);
+  }
+  async _performXmlDelete(ref, inscopeContext, instance, instanceId, fore) {
+    const nodesToDelete = evaluateXPathToNodes(ref, inscopeContext, this);
+    this.nodeset = nodesToDelete;
 
-    // const path = instance && this.nodeset.length !== 0 ? evaluateXPathToString('path()', this.nodeset[0], instance) : '';
+    // Nothing to do
+    if (!nodesToDelete || Array.isArray(nodesToDelete) && nodesToDelete.length === 0) {
+      return [];
+    }
 
-    const path = Fore.getDomNodeIndexString(this.nodeset);
-    const nodesToDelete = this.nodeset;
+    // Normalize to array
+    const nodes = Array.isArray(nodesToDelete) ? nodesToDelete : [nodesToDelete];
+
+    // Never delete instance(), document nodes, or instance root element
+    // (matches expectations in delete.test.js)
+    const instRoot = instance && instance.instanceData && instance.instanceData.documentElement ? instance.instanceData.documentElement : null;
+    const removedNodes = [];
+    let parent = null;
+    for (const node of nodes) {
+      if (!node) continue;
+
+      // hard stop: never delete document-ish nodes
+      if (node.nodeType === Node.DOCUMENT_NODE || node.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+        continue;
+      }
+
+      // hard stop: never delete instance root element
+      if (instRoot && node === instRoot) {
+        continue;
+      }
+
+      // Determine parent now (needed for event + safety checks)
+      const p = node.parentNode;
+      if (!p) continue;
+
+      // Use the guarded delete helper (checks readonly + safety)
+      if (this._deleteXmlNode(p, node)) {
+        removedNodes.push(node);
+        parent = p;
+
+        // keep Fore’s change signaling (helps recalculation / refresh)
+        try {
+          if (node.localName) fore?.signalChangeToElement?.(node.localName);
+        } catch (_e) {}
+      }
+    }
+    if (removedNodes.length === 0) {
+      // delete failed (eg readonly) => no refresh requested by tests
+      return [];
+    }
+
+    // also signal parent changed
+    try {
+      if (parent?.localName) fore?.signalChangeToElement?.(parent.localName);
+    } catch (_e) {}
+
+    // Dispatch deleted event
+    await Fore.dispatch(instance, 'deleted', {
+      ref,
+      deletedNodes: removedNodes,
+      instanceId,
+      parent,
+      foreId: fore?.id,
+      isJson: false
+    });
+    this.needsUpdate = true;
+
+    // return paths (not asserted by tests, but useful)
+    try {
+      return removedNodes.map(n => getPath(n, instanceId));
+    } catch (_e) {
+      return [];
+    }
+  }
+  _deleteXmlNode(parent, node) {
+    if (!parent || !node) return false;
+
+    // Safety: do not delete documents / fragments / detached
+    if (parent.nodeType === Node.DOCUMENT_NODE || node.nodeType === Node.DOCUMENT_NODE || node.nodeType === Node.DOCUMENT_FRAGMENT_NODE || node.parentNode === null) {
+      return false;
+    }
+
+    // Respect readonly facet
+    const mi = this.getModel().getModelItem(node);
+    if (mi?.readonly) return false;
+
+    // Execute deletion
+    parent.removeChild(node);
+
+    // Remove ModelItems for the deleted subtree (this is what your failing tests assert)
+    this.getModel().removeModelItem(node);
+    return true;
+  }
+  // -----------------
+  // JSON delete branch
+  // -----------------
+
+  async _performJsonDelete(ref, inscopeContext, instance, instanceId, fore) {
+    const nodesToDelete = this._resolveJsonNodeset(ref, inscopeContext, instance);
+    this.nodeset = nodesToDelete;
+    if (!nodesToDelete || nodesToDelete.length === 0) {
+      this.needsUpdate = true;
+      return [];
+    }
+
+    // Snapshot stable info BEFORE mutation
+    const deletedIndexes0 = Array.from(nodesToDelete).map(n => n && typeof n.keyOrIndex === 'number' ? n.keyOrIndex : -1).filter(i => i >= 0);
+    const parentBefore = nodesToDelete?.[0]?.parent || null;
+
+    // For logging / execute-action
+    const path = this._jsonNodesetPath(nodesToDelete);
     this.dispatchEvent(new CustomEvent('execute-action', {
       composed: true,
       bubbles: true,
@@ -54619,67 +56699,244 @@ class FxDelete extends AbstractAction {
       detail: {
         action: this,
         event: this.event,
-        path
+        path,
+        isJson: true
       }
     }));
-    const fore = this.getOwnerForm();
-    let parent;
-    const removedNodes = [];
-    if (Array.isArray(nodesToDelete)) {
-      if (nodesToDelete.length === 0) {
-        return;
-      }
-      parent = nodesToDelete[0].parentNode;
-      nodesToDelete.forEach(item => {
-        if (this._deleteNode(parent, item)) {
-          fore.signalChangeToElement(item.localName);
-          removedNodes.push(item);
-        }
-      });
-      if (removedNodes.length) {
-        fore.signalChangeToElement(parent.localName);
-      }
-    } else {
-      parent = nodesToDelete.parentNode;
-      if (this._deleteNode(parent, nodesToDelete)) {
-        fore.signalChangeToElement(parent.localName);
-        fore.signalChangeToElement(nodesToDelete.localName);
-        removedNodes.push(nodesToDelete);
-      }
-    }
-    if (removedNodes.length) {
-      await Fore.dispatch(instance, 'deleted', {
-        ref: path,
-        deletedNodes: removedNodes,
-        instanceId,
-        parent,
-        foreId: fore.id
-      });
+
+    // Perform deletion (mutates via parent.set to rebuild children)
+    const removed = this._deleteJsonNodes(nodesToDelete);
+    if (!removed || removed.length === 0) {
       this.needsUpdate = true;
+      return [];
     }
+
+    // Build a repeat-routable ref so your repeat filter works:
+    // repeat ref container is like: instance('data')?movies
+    const repeatRef = this._buildRepeatContainerRef(ref, instanceId, parentBefore);
+    await Fore.dispatch(instance, 'deleted', {
+      // This MUST match repeat's container ref (not a $path)
+      ref: repeatRef,
+      // keep path for debugging
+      path,
+      deletedNodes: removed,
+      deletedIndexes0,
+      instanceId,
+      parent: parentBefore,
+      foreId: fore?.id,
+      isJson: true
+    });
+
+    // CRITICAL: do NOT trigger full refresh for JSON deletes
+    this.needsUpdate = true;
+
+    // return useful paths (optional)
+    return removed.map(n => typeof n.getPath === 'function' ? n.getPath() : '').filter(Boolean);
+  }
+  _isJsonNode(n) {
+    return !!n && n.__jsonlens__ === true;
+  }
+  _buildRepeatContainerRef(originalRef, instanceId, parent) {
+    // If we deleted from an array container with a key like "movies", use that.
+    if (parent && Array.isArray(parent.value) && typeof parent.keyOrIndex === 'string') {
+      return `instance('${instanceId}')?${parent.keyOrIndex}`;
+    }
+
+    // Otherwise normalize the original ref:
+    // - strip predicates/brackets
+    // - strip trailing ?*
+    // - strip trailing whitespace
+    let s = String(originalRef || '').trim();
+    s = s.replace(/\[[^\]]*\]/g, '');
+    if (s.endsWith('?*')) s = s.slice(0, -2);
+    return s || `instance('${instanceId}')`;
   }
 
   /**
-   * Delete a node (if allowed). Does not hold for JSON
-   *
-   * @param {ParentNode}  parent - The parent of the node to remove
-   * @param {ChildNode}   node   - The child to remove
-   *
-   * @returns {boolean} Whether the delete is allowed and succeeded
+   * Resolve ref to JSONNode(s) without calling fontoxpath.
+   * Supports:
+   *  - '.'
+   *  - '?a?b'
+   *  - "instance('id')?a?b"
+   *  - '?*' (returns children)
+   *  - bracket steps: '?movies[2]' and '?movies[index(\"movies\")]'
    */
-  _deleteNode(parent, node) {
-    if (parent.nodeType === Node.DOCUMENT_NODE || node.nodeType === Node.DOCUMENT_NODE || node.nodeType === Node.DOCUMENT_FRAGMENT_NODE || node.parentNode === null) {
-      return false;
+  _resolveJsonNodeset(ref, inscopeContext, instance) {
+    const resolveIndexFunction = expr => {
+      const s = String(expr ?? '').trim();
+      const m = s.match(/^index\s*\(\s*(['"])(.*?)\1\s*\)\s*$/);
+      if (!m) return null;
+      const repeatId = m[2];
+      const fore = this.getOwnerForm();
+      if (!fore) return 1;
+      let repeat = null;
+      try {
+        repeat = fore.querySelector(`#${CSS.escape(repeatId)}`);
+      } catch (_e) {
+        repeat = fore.querySelector(`#${repeatId}`);
+      }
+      if (!repeat) return 1;
+      const attr = repeat.getAttribute('index');
+      let idx = Number(attr);
+      if (!Number.isFinite(idx) || idx < 1) idx = Number(repeat.index);
+      return Number.isFinite(idx) && idx >= 1 ? idx : 1;
+    };
+    const resolveBracketIndex1 = idxExpr => {
+      const t = String(idxExpr ?? '').trim();
+      if (/^\d+$/.test(t)) return Number(t);
+      const viaIndex = resolveIndexFunction(t);
+      if (viaIndex !== null) return viaIndex;
+      const n = Number(t);
+      return Number.isFinite(n) ? n : null;
+    };
+    if (ref === '.') {
+      if (this._isJsonNode(inscopeContext)) return [inscopeContext];
+      if (this._isJsonNode(instance?.nodeset)) return [instance.nodeset];
+      return [];
     }
-    const mi = this.getModel().getModelItem(node);
-    // Note that the model item can be absent, For elements that had no controls on them.
-    // In that case, allow removals
-    if (mi?.readonly) {
-      return false;
+    const parsed = this._parseJsonLensRef(ref);
+    if (!parsed) return [];
+    const model = this.getModel();
+    const targetInstance = model?.getInstance?.(parsed.instanceId) || instance;
+    const root = targetInstance?.nodeset;
+    if (!this._isJsonNode(root)) return [];
+    let node = parsed.hasExplicitInstance ? root : this._isJsonNode(inscopeContext) ? inscopeContext : root;
+    for (const step of parsed.steps) {
+      if (!node) return [];
+      if (step === '*') return Array.isArray(node.children) ? node.children : [];
+      if (typeof step === 'number') {
+        node = node.get(step) || null;
+        continue;
+      }
+      if (typeof step === 'string') {
+        const bm = step.match(/^(.*?)\[(.+)\]$/);
+        if (bm) {
+          const prop = bm[1].trim();
+          const idxExpr = bm[2].trim();
+          const container = prop ? typeof node.get === 'function' ? node.get(prop) : null : node;
+          if (!container) return [];
+          if (!Array.isArray(container.value)) return [];
+          const idx1 = resolveBracketIndex1(idxExpr);
+          if (!Number.isFinite(idx1) || idx1 < 1) return [];
+          const idx0 = idx1 - 1;
+          node = container.get(idx0) || null;
+          continue;
+        }
+        node = typeof node.get === 'function' ? node.get(step) : null;
+        continue;
+      }
+      return [];
     }
-    parent.removeChild(node);
-    this.getModel().removeModelItem(node);
-    return true;
+    if (!node) return [];
+    if (Array.isArray(node.value)) return node.children || [];
+    return [node];
+  }
+  _parseJsonLensRef(ref, defaultInstanceId = 'default') {
+    if (!ref) return null;
+    const s = String(ref).trim();
+    const instMatch = s.match(/^instance\s*\(\s*(['"])(.*?)\1\s*\)\s*(\?.*)?$/);
+    let instanceId;
+    let lensPart;
+    if (instMatch) {
+      instanceId = instMatch[2];
+      lensPart = instMatch[3] || '';
+    } else {
+      if (!s.startsWith('?')) return null;
+      instanceId = defaultInstanceId;
+      lensPart = s;
+    }
+    const steps = lensPart.split('?').filter(Boolean).map(part => {
+      if (part === '*') return '*';
+      if (/^\d+$/.test(part)) return Number(part) - 1; // 1-based -> 0-based
+      return part;
+    });
+    return {
+      instanceId,
+      steps,
+      hasExplicitInstance: !!instMatch
+    };
+  }
+  _jsonNodesetPath(nodes) {
+    const first = nodes?.[0];
+    if (!first) return '';
+    if (typeof first.getPath === 'function') return first.getPath();
+    const inst = first.instanceId || 'default';
+    return `$${inst}/`;
+  }
+
+  /**
+   * Delete JSON nodes by updating their parent via parent.set(nextValue).
+   * This is the ONLY reliable way to prevent stale parent.children (zombie rows).
+   */
+  _deleteJsonNodes(nodes) {
+    const model = this.getModel();
+    const removed = [];
+    const candidates = Array.from(nodes || []).filter(n => this._isJsonNode(n) && n.parent);
+
+    // Group by parent so we can apply one parent.set per parent
+    const byParent = new Map();
+    for (const n of candidates) {
+      const p = n.parent;
+      if (!byParent.has(p)) byParent.set(p, []);
+      byParent.get(p).push(n);
+    }
+    const canDelete = n => {
+      try {
+        const mi = model?.getModelItem?.(n);
+        return !mi?.readonly;
+      } catch (_e) {
+        return true;
+      }
+    };
+    for (const [parent, nodesForParent] of byParent.entries()) {
+      const allowed = nodesForParent.filter(canDelete);
+      if (allowed.length === 0) continue;
+
+      // Array parent
+      if (Array.isArray(parent.value)) {
+        const indices = allowed.map(n => typeof n.keyOrIndex === 'number' ? n.keyOrIndex : -1).filter(i => i >= 0).sort((a, b) => b - a);
+        if (indices.length === 0) continue;
+        const idxSet = new Set(indices);
+        const next = parent.value.filter((_v, i) => !idxSet.has(i));
+        if (typeof parent.set === 'function') {
+          parent.set(next);
+        } else {
+          // Fallback: mutate (may still be stale if no set exists)
+          indices.forEach(i => parent.value.splice(i, 1));
+        }
+
+        // record removed nodes (old node identities are fine for repeat removal)
+        allowed.forEach(n => {
+          removed.push(n);
+          try {
+            model?.removeModelItem?.(n);
+          } catch (_e) {}
+        });
+        continue;
+      }
+
+      // Object parent
+      if (parent.value && typeof parent.value === 'object') {
+        const keys = allowed.map(n => typeof n.keyOrIndex === 'string' ? n.keyOrIndex : null).filter(Boolean);
+        if (keys.length === 0) continue;
+        const next = {
+          ...parent.value
+        };
+        keys.forEach(k => delete next[k]);
+        if (typeof parent.set === 'function') {
+          parent.set(next);
+        } else {
+          keys.forEach(k => delete parent.value[k]);
+        }
+        allowed.forEach(n => {
+          removed.push(n);
+          try {
+            model?.removeModelItem?.(n);
+          } catch (_e) {}
+        });
+      }
+    }
+    return removed;
   }
 }
 if (!customElements.get('fx-delete')) {
@@ -54779,7 +57036,7 @@ class FxInsert extends AbstractAction {
         type: Number
       },
       position: {
-        type: Number
+        type: String
       },
       origin: {
         type: Object
@@ -54815,28 +57072,343 @@ class FxInsert extends AbstractAction {
     this.origin = this.hasAttribute('origin') ? this.getAttribute('origin') : null; // last item of context seq
     this.keepValues = !!this.hasAttribute('keep-values');
   }
+
+  // -------------------------
+  // JSON helpers
+  // -------------------------
+  _getValueAtLensSteps(rootValue, steps) {
+    let cur = rootValue;
+    for (const step of steps || []) {
+      if (cur === null || cur === undefined) return undefined;
+
+      // keyOrIndex can be string (object key) or number (array index)
+      if (typeof step === 'number') {
+        if (!Array.isArray(cur)) return undefined;
+        cur = cur[step];
+      } else {
+        cur = cur[step];
+      }
+    }
+    return cur;
+  }
+  _getInlineTemplateElement() {
+    // Prefer a direct child <template>, otherwise any descendant <template> within fx-insert
+    const direct = Array.from(this.children).find(c => c?.localName === 'template');
+    if (direct) return direct;
+    return this.querySelector('template');
+  }
+  _getTemplateElementById(templateId) {
+    if (!templateId) return null;
+
+    // Try within the same fore first (shadow + light)
+    const fore = this.getOwnerForm?.() || this.closest('fx-fore');
+    const sel = `template#${CSS.escape(templateId)}`;
+    if (fore) {
+      const inLight = fore.querySelector(sel);
+      if (inLight) return inLight;
+      const inShadow = fore.shadowRoot?.querySelector?.(sel);
+      if (inShadow) return inShadow;
+    }
+
+    // Global fallback
+    const el = document.getElementById(templateId);
+    return el && el.localName === 'template' ? el : null;
+  }
+  _getJsonTemplateTextFromTemplateEl(tplEl) {
+    if (!tplEl) return null;
+
+    // Keep it robust against whitespace/formatting
+    const raw = String(tplEl.textContent || '').trim();
+    if (!raw) return null;
+    return raw;
+  }
+  _tryParseJsonFromTemplateEl(tplEl, errorLabel) {
+    const txt = this._getJsonTemplateTextFromTemplateEl(tplEl);
+    if (!txt) return null;
+    try {
+      return JSON.parse(txt);
+    } catch (_e) {
+      throw new Error(`fx-insert: ${errorLabel} does not contain valid JSON`);
+    }
+  }
+  _isJsonLiteral(value) {
+    if (value === null || value === undefined) return false;
+    const t = String(value).trim();
+    return t.startsWith('{') && t.endsWith('}') || t.startsWith('[') && t.endsWith(']');
+  }
+  _parseJsonLiteral(value) {
+    const t = String(value ?? '').trim();
+    return JSON.parse(t);
+  }
+  _matchIndexRepeatId(expr) {
+    const t = String(expr ?? '').trim();
+    const m = t.match(/^index\s*\(\s*(['"])(.*?)\1\s*\)\s*$/);
+    return m ? m[2] : null;
+  }
+  _resolveRepeatById(repeatId, fore) {
+    if (!repeatId || !fore) return null;
+    try {
+      return fore.querySelector(`#${CSS.escape(repeatId)}`);
+    } catch (_e) {
+      // CSS.escape not available or invalid selector; fall back
+      return fore.querySelector(`#${repeatId}`);
+    }
+  }
+  _isJsonLensRef(ref) {
+    if (!ref) return false;
+    const t = String(ref).trim();
+    return t.startsWith('?') || /^instance\s*\(/.test(t);
+  }
+  _deepClone(value) {
+    // Prefer structuredClone when available
+    if (typeof structuredClone === 'function') return structuredClone(value);
+    return JSON.parse(JSON.stringify(value));
+  }
+  _clearJsonValues(value) {
+    // Produce an “empty” structure with same keys/shape.
+    if (Array.isArray(value)) return value.map(v => this._clearJsonValues(v));
+    if (value && typeof value === 'object') {
+      const out = {};
+      for (const [k, v] of Object.entries(value)) {
+        out[k] = this._clearJsonValues(v);
+      }
+      return out;
+    }
+    // primitives: clear to empty string (inputs render blank)
+    return '';
+  }
+  _jsonNodeToLensSteps(node) {
+    // Build JSONLens path array from a JSONNode by walking parents.
+    const steps = [];
+    let cur = node;
+    while (cur && cur.parent !== null && cur.keyOrIndex !== null && cur.keyOrIndex !== undefined) {
+      steps.unshift(cur.keyOrIndex);
+      cur = cur.parent;
+    }
+    return steps;
+  }
+  _resolveRepeatElement() {
+    // Don’t use XPathUtil.getClosest here: it can receive non-Elements and then `.matches()` explodes.
+    return this && this.nodeType === Node.ELEMENT_NODE && typeof this.closest === 'function' ? this.closest('fx-repeat') : null;
+  }
+  _performJsonInsert(inscope, fore) {
+    // We need the ARRAY CONTAINER node, not the array children.
+    // IMPORTANT: do not rely on xpath-evaluation here because action in-scope context
+    // can be a DOM node (trigger/button), not a JSON lens node.
+    const target = this._resolveJsonRefToNode(this.ref);
+    if (!target || !target.__jsonlens__) {
+      throw new Error('fx-insert JSON mode: ref did not resolve to a JSON lens node');
+    }
+
+    // Determine array container + insertion index
+    let arrayNode = target;
+    let insertIndex = 0;
+
+    // If ref points to an array item, insert relative to its parent array
+    if (!Array.isArray(arrayNode.value) && arrayNode.parent && Array.isArray(arrayNode.parent.value)) {
+      const itemNode = arrayNode;
+      arrayNode = itemNode.parent;
+      const base = typeof itemNode.keyOrIndex === 'number' ? itemNode.keyOrIndex : arrayNode.value.length;
+      if (this.position === 'before') insertIndex = base;else insertIndex = base + 1; // after (default)
+    } else {
+      // ref points to the array itself
+      if (!Array.isArray(arrayNode.value)) {
+        throw new Error('fx-insert JSON mode: target is not an array');
+      }
+      const len = arrayNode.value.length;
+      if (this.hasAttribute('at')) {
+        // `at` is 1-based like XForms/XPath.
+        // When combined with position="after", we insert *after* the item at `at`.
+        const atExpr = this.getAttribute('at');
+        let at1;
+        if (/^\s*-?\d+(?:\.\d+)?\s*$/.test(atExpr)) {
+          at1 = Number(atExpr);
+        } else {
+          at1 = Number(evaluateXPathToNumber(atExpr, inscope, this));
+        }
+        if (Number.isNaN(at1) || at1 < 1) at1 = 1;
+        const base0 = Math.min(len, Math.max(0, at1 - 1));
+        if (this.position === 'after') {
+          insertIndex = Math.min(len, base0 + 1);
+        } else {
+          // before (and any other value): insert at the computed base index
+          insertIndex = base0;
+        }
+      } else if (this.position === 'first') {
+        insertIndex = 0;
+      } else if (this.position === 'last') {
+        insertIndex = len; // append
+      } else {
+        // default behavior: append
+        insertIndex = len;
+      }
+    }
+
+    // ------------------------------------------------------------
+    // IMPORTANT: update repeat index even if action is outside repeat
+    // ------------------------------------------------------------
+    // If at="index('movies')" (like in your demo), ensure index('movies')
+    // points at the new row BEFORE subsequent actions run.
+    const atExpr = this.getAttribute('at');
+    const repeatId = this._matchIndexRepeatId(atExpr);
+    const repeatFromAt = repeatId ? this._resolveRepeatById(repeatId, fore) : null;
+
+    // If action *is* inside a repeat, keep existing behavior as fallback
+    const repeatLocal = this._resolveRepeatElement();
+    const repeat = repeatFromAt || repeatLocal;
+    if (repeat) {
+      const newIndex1 = insertIndex + 1;
+      repeat.setAttribute('index', String(newIndex1));
+      if (typeof repeat.setIndex === 'function') {
+        try {
+          repeat.setIndex(newIndex1);
+        } catch (_e) {
+          // ignore
+        }
+      }
+    }
+
+    // ----------------------
+    // Compute insert value
+    // ----------------------
+    // Goal:
+    // - origin attribute OR <template> (inline or referenced) are AUTHOR-DEFINED defaults -> keep as-is
+    // - only the implicit fallback (clone last item) is cleared unless keep-values is set
+
+    let templateValue = null;
+    let hasExplicitOriginOrTemplate = false;
+    if (this.origin) {
+      // origin attribute is always explicit
+      hasExplicitOriginOrTemplate = true;
+
+      // 1) JSON literal origin (existing behavior): origin="{ ... }"
+      if (this._isJsonLiteral(this.origin)) {
+        templateValue = this._parseJsonLiteral(this.origin);
+      } else {
+        // 2) lens origin: origin="?foo?bar" OR 3) XPath origin
+        const originNode = this._isJsonLensRef(this.origin) ? this._resolveJsonRefToNode(this.origin) : evaluateXPathToFirstNode(this.origin, inscope, this);
+        if (originNode && originNode.__jsonlens__) {
+          templateValue = this._deepClone(originNode.value);
+        } else {
+          // origin was present but did not resolve -> keep old behavior: fall back
+          templateValue = null;
+          hasExplicitOriginOrTemplate = false;
+        }
+      }
+    } else {
+      // No origin attribute: allow JSON via template="id" or inline <template>...</template>
+      const templateId = this.getAttribute('template');
+      if (templateId) {
+        const tplEl = this._getTemplateElementById(templateId);
+        const parsed = this._tryParseJsonFromTemplateEl(tplEl, `template=\"${templateId}\"`);
+        if (parsed !== null) {
+          templateValue = parsed;
+          hasExplicitOriginOrTemplate = true;
+        }
+      }
+      if (templateValue === null) {
+        const inlineTpl = this._getInlineTemplateElement();
+        const parsed = this._tryParseJsonFromTemplateEl(inlineTpl, 'inline <template>');
+        if (parsed !== null) {
+          templateValue = parsed;
+          hasExplicitOriginOrTemplate = true;
+        }
+      }
+    }
+    if (templateValue === null) {
+      // Fallback: clone last item if it exists, else insert empty object
+      const len = arrayNode.value.length;
+      if (len > 0) {
+        templateValue = this._deepClone(arrayNode.value[len - 1]);
+      } else {
+        templateValue = {};
+      }
+      hasExplicitOriginOrTemplate = false;
+    }
+
+    // Explicit origin/template values must be preserved as-is.
+    // Only the implicit fallback clone gets cleared (unless keep-values is set).
+    const newValue = this.keepValues || hasExplicitOriginOrTemplate ? this._deepClone(templateValue) : this._clearJsonValues(templateValue);
+
+    // Mutate raw JSON via JSONLens
+    // Mutate JSON in a way that keeps JSONNode.children in sync
+    const instanceId = XPathUtil.resolveInstance(this, this.ref);
+    const model = this.getModel();
+    const instance = model.getInstance(instanceId);
+
+    // 1) BEST: use the JSONNode API if available (it should update children)
+    if (arrayNode && typeof arrayNode.insert === 'function') {
+      arrayNode.insert(newValue, insertIndex);
+    } else {
+      // 2) Fallback: mutate raw data via JSONLens
+      const steps = this._jsonNodeToLensSteps(arrayNode);
+      const lens = new JSONLens(instance.instanceData, steps);
+      lens.insert(newValue, insertIndex);
+
+      // Force the array node to notice the change and rebuild children:
+      // IMPORTANT: change reference so set() can't short-circuit on sameRef=true
+      const nextArr = Array.isArray(arrayNode.value) ? arrayNode.value.slice() : [];
+      if (typeof arrayNode.set === 'function') {
+        arrayNode.set(nextArr);
+      } else {
+        // last resort
+        arrayNode.value = nextArr;
+        if (typeof arrayNode._buildChildren === 'function') arrayNode._buildChildren();
+      }
+    }
+
+    // At this point, children MUST match value length
+    if (Array.isArray(arrayNode.value) && Array.isArray(arrayNode.children)) {
+      if (arrayNode.children.length !== arrayNode.value.length) {
+        // One more forced rebuild to be safe
+        const nextArr = arrayNode.value.slice();
+        if (typeof arrayNode.set === 'function') arrayNode.set(nextArr);else if (typeof arrayNode._buildChildren === 'function') arrayNode._buildChildren();
+      }
+    }
+    const insertedNode = arrayNode.children?.[insertIndex] || null;
+
+    // Dispatch Fore insert event similarly to XML branch
+    const xpath = insertedNode?.getPath ? insertedNode.getPath() : '';
+    Fore.dispatch(instance, 'insert', {
+      insertedNodes: insertedNode,
+      insertedParent: arrayNode,
+      ref: this.ref,
+      location: insertedNode,
+      position: this.position,
+      instanceId,
+      foreId: fore.id,
+      index: insertIndex + 1,
+      xpath
+    });
+    document.dispatchEvent(new CustomEvent('index-changed', {
+      composed: true,
+      bubbles: true,
+      detail: {
+        insertedNodes: insertedNode,
+        index: insertIndex + 1
+      }
+    }));
+
+    // Ensure UI updates
+    this.needsUpdate = true;
+    return [xpath];
+  }
+  // -------------------------
+  // Existing XML clone helpers
+  // -------------------------
+
   _cloneOriginSequence(inscope, targetSequence) {
     let originSequenceClone;
     if (this.origin) {
       // ### if there's an origin attribute use it
       let originTarget;
       try {
-        /*
-        todo: discuss where to pass vars from event.detail into function context
-         */
-        // this.setInScopeVariables(this.detail);
-
-        /*
-        if in 'create-nodes' mode and origin targets a repeat, the repeat
-        we use the already during initData() created nodeset as a template for insertion
-         */
         if (this.origin.startsWith('#') && this.getOwnerForm().createNodes) {
           const repeat = this.getOwnerForm().querySelector(this.origin);
           originSequenceClone = repeat.createdNodeset.cloneNode(true);
           if (!originSequenceClone) {
           }
         } else {
-          // originTarget = evaluateXPathToFirstNode(this.origin, inscope, this);
           originTarget = evaluateXPathToFirstNode(this.origin, inscope, this);
           if (Array.isArray(originTarget) && originTarget.length === 0) {
             originSequenceClone = null;
@@ -54863,18 +57435,79 @@ class FxInsert extends AbstractAction {
     }
     return targetSequence.length;
   }
+  _parseJsonLensRef(ref, defaultInstanceId = 'default') {
+    if (!ref) return null;
+    const s = String(ref).trim();
+
+    // instance('id')?a?b
+    const instMatch = s.match(/^instance\s*\(\s*(['"])(.*?)\1\s*\)\s*(\?.*)?$/);
+    let instanceId;
+    let lensPart;
+    if (instMatch) {
+      instanceId = instMatch[2];
+      lensPart = instMatch[3] || '';
+    } else {
+      if (!s.startsWith('?')) return null;
+      instanceId = defaultInstanceId;
+      lensPart = s;
+    }
+    const steps = lensPart.split('?').filter(Boolean).map(part => {
+      if (part === '*') return '*';
+      if (/^\d+$/.test(part)) return Number(part) - 1; // 1-based -> 0-based
+      return part;
+    });
+    return {
+      instanceId,
+      steps
+    };
+  }
+  _resolveJsonRefToNode(ref) {
+    const parsed = this._parseJsonLensRef(ref, 'default');
+    if (!parsed) return null;
+    const model = this.getModel();
+    const instance = model?.getInstance?.(parsed.instanceId) || model?.getInstance?.('default');
+    const root = instance?.nodeset;
+    if (!root || !root.__jsonlens__) return null;
+    let node = root;
+    for (const step of parsed.steps) {
+      if (step === '*') {
+        // For insert we require a concrete container; callers should not use wildcard here.
+        return null;
+      }
+      node = node?.get?.(step);
+      if (!node) return null;
+    }
+    return node;
+  }
   async perform() {
-    // We have a few terms here: `inScope` is the 'current item' we have. It is the item we're
-    // copying and inserting elsewhere.  If we have a `ref`, one of the nodes returned will
-    // become the sibling of this copy.  The `context` is the new parent of the copied
-    // element. It's usually better to add a `context` because that deals with empty elements.
     let inscope;
     let context;
     let targetSequence = [];
-    const inscopeContext = getInScopeContext(this);
     const fore = this.getOwnerForm();
+    const inscopeContext = getInScopeContext(this);
 
-    // ### 'context' attribute takes precedence over 'ref'
+    // -----------------------------------------
+    // Decide mode ONLY by instance type (NOT ref)
+    // -----------------------------------------
+    const exprForInstanceResolution = this.hasAttribute('ref') && this.ref || this.hasAttribute('context') && this.getAttribute('context') || "instance('default')";
+    const instanceId = XPathUtil.resolveInstance(this, exprForInstanceResolution);
+    const inst = this.getModel()?.getInstance?.(instanceId);
+    const isJsonInstance = !!inst && (inst.type === 'json' || typeof inst.getAttribute === 'function' && inst.getAttribute('type') === 'json');
+    if (isJsonInstance) {
+      // In JSON mode we only support lens refs that start with '?'
+      if (this.hasAttribute('ref') && !this._isJsonLensRef(this.ref)) {
+        throw new Error(`fx-insert JSON mode: ref must be a JSON lens path starting with '?' (got: ${this.ref})`);
+      }
+      // For JSON inserts your implementation expects to work from the in-scope lens context
+      inscope = inscopeContext;
+      return this._performJsonInsert(inscope, fore);
+    }
+
+    // -------------------------
+    // XML branch (normal XPath)
+    // -------------------------
+
+    // context takes precedence over ref
     if (this.hasAttribute('context')) {
       [context] = evaluateXPathToNodes(this.getAttribute('context'), inscopeContext, this);
       inscope = inscopeContext;
@@ -54887,21 +57520,10 @@ class FxInsert extends AbstractAction {
         targetSequence = evaluateXPathToNodes(this.ref, inscope, this);
       }
     }
-    // const originSequenceClone = this._cloneOriginSequence(inscope, targetSequence);
-
     const originSequenceClone = this._cloneOriginSequence(inscope, targetSequence);
-    if (!originSequenceClone) return; // if no origin back out without effect
-
-    /**
-     * @type {Node}
-     */
+    if (!originSequenceClone) return;
     let insertLocationNode;
-    /**
-     * @type {number}
-     */
     let index;
-
-    // if the targetSequence is empty but we got an originSequence use inscope as context and ignore 'at' and 'position'
     if (targetSequence.length === 0) {
       if (context) {
         insertLocationNode = context;
@@ -54909,57 +57531,39 @@ class FxInsert extends AbstractAction {
         fore.signalChangeToElement(insertLocationNode.localName);
         fore.signalChangeToElement(originSequenceClone.localName);
         index = 1;
+      } else if (!inscope && this.getOwnerForm().createNodes) {
+        const repeat = this.getOwnerForm().querySelector(this.origin);
+        inscope = getInScopeContext(repeat, repeat.ref);
+        insertLocationNode = inscope;
+        inscope.appendChild(originSequenceClone);
+        index = inscope.length - 1;
       } else {
-        // No context but creating nodes from UI
-        if (!inscope && this.getOwnerForm().createNodes) {
-          const repeat = this.getOwnerForm().querySelector(this.origin);
-          inscope = getInScopeContext(repeat, repeat.ref);
-          insertLocationNode = inscope;
-          inscope.appendChild(originSequenceClone);
-          index = inscope.length - 1;
-        } else {
-          insertLocationNode = inscope;
-          inscope.appendChild(originSequenceClone);
-          index = 1;
-        }
+        insertLocationNode = inscope;
+        inscope.appendChild(originSequenceClone);
+        index = 1;
       }
     } else {
-      /* ### insert at position given by 'at' or use the last item in the targetSequence ### */
       if (this.hasAttribute('at')) {
-        // todo: eval 'at'
-        // index = this.at;
-        // insertLocationNode = targetSequence[this.at - 1];
-
         index = evaluateXPathToNumber(this.getAttribute('at'), inscope, this);
-        insertLocationNode = targetSequence[index - 1];
+        insertLocationNode = targetSequence[index - 1]; // 1-based
       } else {
-        // this.at = targetSequence.length;
         index = targetSequence.length;
         insertLocationNode = targetSequence[targetSequence.length - 1];
       }
-
-      // ### if the insertLocationNode is undefined use the targetSequence - usually the case when the targetSequence just contains a single node
       if (!insertLocationNode) {
         index = 1;
         insertLocationNode = targetSequence;
-        const context = evaluateXPathToNumber('count(preceding::*)', targetSequence, this.getOwnerForm());
-        // console.log('context', context);
-        index = context + 1;
-        // index = targetSequence.findIndex(insertLocationNode);
+        const ctxIndex = evaluateXPathToNumber('count(preceding::*)', targetSequence, this.getOwnerForm());
+        index = ctxIndex + 1;
       }
-
       if (this.position && this.position === 'before') {
-        // this.at -= 1;
         insertLocationNode.parentNode.insertBefore(originSequenceClone, insertLocationNode);
         fore.signalChangeToElement(insertLocationNode.parentNode);
         fore.signalChangeToElement(originSequenceClone.localName);
       }
       if (this.position && this.position === 'after') {
-        // insertLocationNode.parentNode.append(originSequence);
-        // const nextSibl = insertLocationNode.nextSibling;
         index += 1;
         if (this.hasAttribute('context') && this.hasAttribute('ref')) {
-          // index=1;
           inscope.append(originSequenceClone);
           fore.signalChangeToElement(insertLocationNode);
           fore.signalChangeToElement(originSequenceClone.localName);
@@ -54975,19 +57579,6 @@ class FxInsert extends AbstractAction {
         }
       }
     }
-    // instance('default')/items/item[index()]
-
-    // console.log('insert context item ', insertLocationNode);
-    // console.log('parent ', insertLocationNode.parentNode);
-    // console.log('instance ', this.getModel().getDefaultContext());
-    // Fore.dispatch()
-
-    // const instanceId = XPathUtil.resolveInstance(this, this.getAttribute('context'));
-    const instanceId = XPathUtil.resolveInstance(this, this.ref);
-    const inst = this.getModel().getInstance(instanceId);
-    // console.log('<<<<<<< resolved instance', inst);
-    // Note: the parent to insert under is always the parent of the inserted node. The 'context' is not always the parent if the sequence is empty, or the position is different
-    // const xpath = XPathUtil.getPath(originSequenceClone.parentNode, instanceId);
     const xpath = getPath(insertLocationNode, instanceId);
     const path = Fore.getDomNodeIndexString(originSequenceClone);
     this.dispatchEvent(new CustomEvent('execute-action', {
@@ -55011,11 +57602,7 @@ class FxInsert extends AbstractAction {
       index,
       xpath
     });
-
-    // todo: this actually should dispatch to respective instance
-    document.dispatchEvent(
-    // new CustomEvent('insert', {
-    new CustomEvent('index-changed', {
+    document.dispatchEvent(new CustomEvent('index-changed', {
       composed: true,
       bubbles: true,
       detail: {
@@ -55038,8 +57625,6 @@ class FxInsert extends AbstractAction {
     return null;
   }
   actionPerformed(changedPaths) {
-    // ### make sure the necessary modelItems will get created
-    // this.getModel().rebuild();
     super.actionPerformed();
   }
 
@@ -55053,7 +57638,6 @@ class FxInsert extends AbstractAction {
 
     // clear attrs
     for (let i = 0; i < attrs.length; i += 1) {
-      // n.setAttribute(attrs[i].name,'');
       attrs[i].value = '';
     }
     // clear text content
@@ -55245,12 +57829,16 @@ class FxSetvalue extends AbstractAction {
    * which call setvalue directly without perform().
    */
   dispatchExecute() {}
+
+  // Adjustment in setValue logic to ensure we work with JSONNode, not just raw values
   setValue(modelItem, newVal) {
     const item = modelItem;
     if (!item) return;
+
+    // Check if current node is a JSONNode
+    const node = Array.isArray(item.node) ? item.node[0] : item.node;
     if (item.value !== newVal) {
-      // const path = XPathUtil.getPath(modelItem.node);
-      const path = Fore.getDomNodeIndexString(modelItem.node);
+      const path = Fore.getDomNodeIndexString(node);
       const ev = this.event;
       const targetElem = this;
       this.dispatchEvent(new CustomEvent('execute-action', {
@@ -55264,19 +57852,18 @@ class FxSetvalue extends AbstractAction {
           path
         }
       }));
+
+      // Use ModelItem's value setter which handles both DOM nodes and JSON lenses
       if (newVal?.nodeType) {
         if (newVal.nodeType === Node.ELEMENT_NODE) {
           item.value = newVal;
-        }
-        if (newVal.nodeType === Node.ATTRIBUTE_NODE) {
-          item.value = newVal.getValue();
-        }
-        if (newVal.nodeType === Node.TEXT_NODE) {
+        } else if (newVal.nodeType === Node.ATTRIBUTE_NODE) {
+          item.value = newVal.nodeValue;
+        } else if (newVal.nodeType === Node.TEXT_NODE) {
           item.value = newVal.textContent;
         }
       } else {
         item.value = newVal;
-        item.node.textContent = newVal;
       }
       this.getModel().changed.push(modelItem);
       this.needsUpdate = true;
@@ -56398,10 +58985,12 @@ class FxSetattribute extends AbstractAction {
     }
     mi.node.setAttribute(this.attrName, this.attrValue);
     const newModelItem = FxBind.createModelItem(`${this.ref}/@${this.attrName}`, mi.node.getAttributeNode(this.attrName), this, null);
-    this.getOwnerForm().getModel().registerModelItem(newModelItem);
-    this.getOwnerForm().addToBatchedNotifications(newModelItem);
+    // IMPORTANT: registerModelItem may return an existing canonical ModelItem for the same path.
+    // Always use the returned instance for notifications.
+    const canonical = this.getOwnerForm().getModel().registerModelItem(newModelItem);
+    this.getOwnerForm().addToBatchedNotifications(canonical);
     this.needsUpdate = true;
-    newModelItem.notify();
+    canonical.notify();
   }
 }
 if (!customElements.get('fx-setattribute')) {
@@ -56639,8 +59228,25 @@ if (!customElements.get('fx-control-menu')) {
   customElements.define('fx-control-menu', FxControlMenu);
 }
 
+// FontoXPath custom functions are registered globally. If multiple <fx-functionlib> (or multiple
+// <fx-fore> instances) register the same function name+arity, later registrations would overwrite
+// earlier ones across the whole page. We enforce "first wins".
+const _registeredFunctionKeys = new Set();
+function _makeFunctionKey(functionIdentifier, arity) {
+  if (typeof functionIdentifier === 'string') {
+    return `str:${functionIdentifier}#${arity}`;
+  }
+  return `{${functionIdentifier.namespaceURI}}${functionIdentifier.localName}#${arity}`;
+}
+function _ensureGlobalUnprefixedName(localName) {
+  // Keep this list unique to avoid unbounded growth across tests
+  if (!globallyDeclaredFunctionLocalNames.includes(localName)) {
+    globallyDeclaredFunctionLocalNames.push(localName);
+  }
+}
+
 /**
- * @param functionObject {{signature: string, type: string|null, functionBody: string}}
+ * @param functionObject {{signature: string, type: string|null, functionBody: string, implementation?: Function}}
  * @param formElement {HTMLElement} The form element connected to this function. Used to determine inscope context
  * @returns {undefined}
  */
@@ -56666,13 +59272,7 @@ function registerFunction(functionObject, formElement) {
     namespaceURI: 'http://www.w3.org/2005/xquery-local-functions',
     localName
   } : `${prefix}:${localName}`;
-
-  // Make the function available globally w/o a prefix. See the functionNameResolver for for how
-  // functionObject is picked up
-  if (!prefix) {
-    globallyDeclaredFunctionLocalNames.push(localName);
-  }
-  const paramParts = params ? params.split(',').map(param => {
+  const paramParts = params ? params.split(',').map(param => param.trim()).filter(Boolean).map(param => {
     const match = param.match(/(?<variableName>\$[^\s]+)(?:\sas\s(?<varType>[^\s]+))/);
     if (!match) {
       throw new Error(`Param ${param} could not be parsed`);
@@ -56686,10 +59286,31 @@ function registerFunction(functionObject, formElement) {
       variableType: varType || 'item()*'
     };
   }) : [];
+  const arity = paramParts.length;
+
+  // -------------------------------------------------
+  // FIRST-WINS GUARD (name + arity) WITH NAME EXPORT
+  // -------------------------------------------------
+  const key = _makeFunctionKey(functionIdentifier, arity);
+  if (_registeredFunctionKeys.has(key)) {
+    // If this registration is unprefixed, we must still make it callable without prefix.
+    // This fixes the unit test case where local:hello-world() was registered earlier and
+    // hello-world() should resolve to that implementation.
+    if (!prefix) {
+      _ensureGlobalUnprefixedName(localName);
+    }
+    return;
+  }
+  _registeredFunctionKeys.add(key);
+
+  // Make the function available globally w/o a prefix.
+  if (!prefix) {
+    _ensureGlobalUnprefixedName(localName);
+  }
   switch (type) {
     case 'text/javascript':
       {
-        // NEW: if a real JS function is provided (module libs), register it directly.
+        // If a real JS function is provided (module libs), register it directly.
         if (typeof functionObject.implementation === 'function') {
           const impl = functionObject.implementation;
           registerCustomXPathFunction(functionIdentifier, paramParts.map(paramPart => paramPart.variableType), returnType || 'item()*', (domFacade, ...values) => impl.apply(formElement.getInScopeContext(), [...values, formElement.getOwnerForm()]));
@@ -56709,7 +59330,6 @@ function registerFunction(functionObject, formElement) {
         const typedValueFactories = paramParts.map(param => createTypedValueFactory(param.variableType));
         const language = type === 'text/xpath' ? 'XPath3.1' : type === 'text/xquery' ? 'XQuery3.1' : 'XQueryUpdate3.1';
         const fun = (domFacade, ...args) => evaluateXPath(functionObject.functionBody, formElement.getInScopeContext(), formElement.getOwnerForm(), paramParts.reduce((variablesByName, paramPart, i) => {
-          // Because we know the XPath type here (from the function declaration) we do not have to depend on the implicit typings
           variablesByName[paramPart.variableName.replace('$', '')] = typedValueFactories[i](args[i], domFacade);
           return variablesByName;
         }, {}), {
