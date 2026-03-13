@@ -1,20 +1,25 @@
-<!doctype html>
+d<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
 
   <title>JSON Lazy Binding Test</title>
-  <link href="../resources/demo.css" rel="stylesheet">
+  <link href="../../resources/demo.css" rel="stylesheet">
+  <style>
+    [repeat-index]{
+        background: #eee;
+    }
+  </style>
 </head>
 <body>
 <div class="wrapper">
-  <h1>JSON Lazy Binding Test</h1>
+  <h1>JSON Binding</h1>
   <p>This test demonstrates binding to JSON values without explicit fx-bind elements.</p>
 
   <fx-fore>
     <fx-model id="model1">
-      <fx-instance id="test-json" type="json">
+      <fx-instance type="json">
         {
           "person": {
             "name": "John Doe",
@@ -33,27 +38,27 @@
       </fx-instance>
     </fx-model>
 
-    <h2>Simple JSON Values</h2>
-    
-    <fx-control ref="?person?name">
+    <h2>Updating json</h2>
+
+    <fx-control ref="?person?name" update-event="input">
       <label>Name:</label>
     </fx-control>
-    
+
     <fx-control ref="?person?age">
       <label>Age:</label>
     </fx-control>
-    
+
     <fx-control ref="?person?address?street">
       <label>Street:</label>
     </fx-control>
-    
+
     <fx-control ref="?person?address?city">
       <label>City:</label>
     </fx-control>
 
     <h2>Array Items</h2>
-    
-    <fx-repeat ref="?items">
+
+    <fx-repeat id="items" ref="?items">
       <template>
         <div style="margin-bottom: 10px; padding: 10px; border: 1px solid #ccc;">
           <fx-control ref="?id">
@@ -62,12 +67,37 @@
           <fx-control ref="?name">
             <label>Item Name:</label>
           </fx-control>
+          <fx-trigger>
+            <button title="delete">x</button>
+            <fx-delete ref="."></fx-delete>
+          </fx-trigger>
         </div>
       </template>
     </fx-repeat>
+    <fx-trigger>
+      <button>append</button>
+      <fx-insert ref="?items"></fx-insert>
+    </fx-trigger>
+    <fx-trigger>
+      <button>insert as first</button>
+      <fx-insert ref="?items" position="before" at="1"></fx-insert>
+    </fx-trigger>
+    <fx-trigger>
+      <button>insert after first</button>
+      <fx-insert ref="?items" position="after" at="1"></fx-insert>
+      <fx-setvalue ref="?items[index('items')]?name">newItemAfterFirst</fx-setvalue>
+<!--      <fx-setvalue ref="?items?2?name">newItemAfterFirst</fx-setvalue>-->
+    </fx-trigger>
+    <fx-trigger>
+      <button>insert after current</button>
+      <fx-insert ref="?items" position="after" at="index('items')"></fx-insert>
+    </fx-trigger>
+
+
   </fx-fore>
 </div>
 
-<script type="module" src="../demo/demo.js"></script>
+<script type="module" src="../demo.js"></script>
+<script type="module" src="../../tools/fx-lens.js"></script>
 </body>
 </html>

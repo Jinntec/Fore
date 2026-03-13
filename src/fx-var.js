@@ -18,18 +18,38 @@ export class FxVariable extends ForeElementMixin {
     this.valueQuery = '';
     this.value = null;
     this.precedingVariables = [];
+    // Re-entrancy guard for variable evaluation
+    this._isRefreshing = false;
+    // Cached typed value (Fonto sequence wrapper)
+    this._value = null;
   }
 
   connectedCallback() {
+    super.connectedCallback();
     this.name = this.getAttribute('name');
     this.valueQuery = this.getAttribute('value');
   }
 
   refresh() {
-    const inscope = getInScopeContext(this, this.valueQuery);
+    // Prevent re-entrant refresh loops (variable evaluation can consult variables again)
+    if (this._isRefreshing) return;
 
-    const values = evaluateXPath(this.valueQuery, inscope, this, this.precedingVariables);
-    this.value = typedValueFactory(values, domFacade);
+    this._isRefreshing = true;
+    try {
+      // Ensure we have the current expression
+      this.valueQuery = this.getAttribute('value') || this.valueQuery || '';
+
+      const inscope = getInScopeContext(this, this.valueQuery);
+
+      // Evaluate using the preceding variables snapshot (do NOT pull live variables here)
+      const values = evaluateXPath(this.valueQuery, inscope, this, this.precedingVariables);
+
+      // Cache typed value for other computations to consume without triggering evaluation
+      this._value = typedValueFactory(values, domFacade);
+      this.value = this._value;
+    } finally {
+      this._isRefreshing = false;
+    }
   }
 
   /**
@@ -48,7 +68,11 @@ export class FxVariable extends ForeElementMixin {
 
     // Set precedingVariables based on inScopeVariables
     this.precedingVariables = Array.from(inScopeVariables.entries()).map(([name, variable]) => {
-      return { name, value: variable.value };
+      // IMPORTANT: do not trigger evaluation while taking the snapshot
+      if (variable && variable._isRefreshing) {
+        return { name, value: null };
+      }
+      return { name, value: variable?._value ?? variable?.value ?? null };
     });
   }
 }

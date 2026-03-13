@@ -5,9 +5,12 @@ import {
   evaluateXPathToFirstNode,
   evaluateXPathToNumber,
 } from '../xpath-evaluation.js';
-import { XPathUtil } from '../xpath-util';
+import { XPathUtil } from '../xpath-util.js';
 import { Fore } from '../fore.js';
 import { getPath } from '../xpath-path.js';
+
+// JSON support
+import { JSONLens } from '../json/JSONLens.js';
 
 /**
  * `fx-insert`
@@ -23,7 +26,7 @@ export class FxInsert extends AbstractAction {
         type: Number,
       },
       position: {
-        type: Number,
+        type: String,
       },
       origin: {
         type: Object,
@@ -61,21 +64,379 @@ export class FxInsert extends AbstractAction {
     this.keepValues = !!this.hasAttribute('keep-values');
   }
 
+  // -------------------------
+  // JSON helpers
+  // -------------------------
+  _getValueAtLensSteps(rootValue, steps) {
+    let cur = rootValue;
+    for (const step of steps || []) {
+      if (cur === null || cur === undefined) return undefined;
+
+      // keyOrIndex can be string (object key) or number (array index)
+      if (typeof step === 'number') {
+        if (!Array.isArray(cur)) return undefined;
+        cur = cur[step];
+      } else {
+        cur = cur[step];
+      }
+    }
+    return cur;
+  }
+  _getInlineTemplateElement() {
+    // Prefer a direct child <template>, otherwise any descendant <template> within fx-insert
+    const direct = Array.from(this.children).find(c => c?.localName === 'template');
+    if (direct) return direct;
+    return this.querySelector('template');
+  }
+
+  _getTemplateElementById(templateId) {
+    if (!templateId) return null;
+
+    // Try within the same fore first (shadow + light)
+    const fore = this.getOwnerForm?.() || this.closest('fx-fore');
+    const sel = `template#${CSS.escape(templateId)}`;
+
+    if (fore) {
+      const inLight = fore.querySelector(sel);
+      if (inLight) return inLight;
+      const inShadow = fore.shadowRoot?.querySelector?.(sel);
+      if (inShadow) return inShadow;
+    }
+
+    // Global fallback
+    const el = document.getElementById(templateId);
+    return el && el.localName === 'template' ? el : null;
+  }
+
+  _getJsonTemplateTextFromTemplateEl(tplEl) {
+    if (!tplEl) return null;
+
+    // Keep it robust against whitespace/formatting
+    const raw = String(tplEl.textContent || '').trim();
+    if (!raw) return null;
+    return raw;
+  }
+
+  _tryParseJsonFromTemplateEl(tplEl, errorLabel) {
+    const txt = this._getJsonTemplateTextFromTemplateEl(tplEl);
+    if (!txt) return null;
+    try {
+      return JSON.parse(txt);
+    } catch (_e) {
+      throw new Error(`fx-insert: ${errorLabel} does not contain valid JSON`);
+    }
+  }
+  _isJsonLiteral(value) {
+    if (value === null || value === undefined) return false;
+    const t = String(value).trim();
+    return (t.startsWith('{') && t.endsWith('}')) || (t.startsWith('[') && t.endsWith(']'));
+  }
+
+  _parseJsonLiteral(value) {
+    const t = String(value ?? '').trim();
+    return JSON.parse(t);
+  }
+
+  _matchIndexRepeatId(expr) {
+    const t = String(expr ?? '').trim();
+    const m = t.match(/^index\s*\(\s*(['"])(.*?)\1\s*\)\s*$/);
+    return m ? m[2] : null;
+  }
+
+  _resolveRepeatById(repeatId, fore) {
+    if (!repeatId || !fore) return null;
+    try {
+      return fore.querySelector(`#${CSS.escape(repeatId)}`);
+    } catch (_e) {
+      // CSS.escape not available or invalid selector; fall back
+      return fore.querySelector(`#${repeatId}`);
+    }
+  }
+  _isJsonLensRef(ref) {
+    if (!ref) return false;
+    const t = String(ref).trim();
+    return t.startsWith('?') || /^instance\s*\(/.test(t);
+  }
+
+  _deepClone(value) {
+    // Prefer structuredClone when available
+    if (typeof structuredClone === 'function') return structuredClone(value);
+    return JSON.parse(JSON.stringify(value));
+  }
+
+  _clearJsonValues(value) {
+    // Produce an “empty” structure with same keys/shape.
+    if (Array.isArray(value)) return value.map(v => this._clearJsonValues(v));
+    if (value && typeof value === 'object') {
+      const out = {};
+      for (const [k, v] of Object.entries(value)) {
+        out[k] = this._clearJsonValues(v);
+      }
+      return out;
+    }
+    // primitives: clear to empty string (inputs render blank)
+    return '';
+  }
+
+  _jsonNodeToLensSteps(node) {
+    // Build JSONLens path array from a JSONNode by walking parents.
+    const steps = [];
+    let cur = node;
+    while (cur && cur.parent !== null && cur.keyOrIndex !== null && cur.keyOrIndex !== undefined) {
+      steps.unshift(cur.keyOrIndex);
+      cur = cur.parent;
+    }
+    return steps;
+  }
+
+  _resolveRepeatElement() {
+    // Don’t use XPathUtil.getClosest here: it can receive non-Elements and then `.matches()` explodes.
+    return this && this.nodeType === Node.ELEMENT_NODE && typeof this.closest === 'function'
+      ? this.closest('fx-repeat')
+      : null;
+  }
+
+  _performJsonInsert(inscope, fore) {
+    // We need the ARRAY CONTAINER node, not the array children.
+    // IMPORTANT: do not rely on xpath-evaluation here because action in-scope context
+    // can be a DOM node (trigger/button), not a JSON lens node.
+    const target = this._resolveJsonRefToNode(this.ref);
+    if (!target || !target.__jsonlens__) {
+      throw new Error('fx-insert JSON mode: ref did not resolve to a JSON lens node');
+    }
+
+    // Determine array container + insertion index
+    let arrayNode = target;
+    let insertIndex = 0;
+
+    // If ref points to an array item, insert relative to its parent array
+    if (
+        !Array.isArray(arrayNode.value) &&
+        arrayNode.parent &&
+        Array.isArray(arrayNode.parent.value)
+    ) {
+      const itemNode = arrayNode;
+      arrayNode = itemNode.parent;
+
+      const base =
+          typeof itemNode.keyOrIndex === 'number' ? itemNode.keyOrIndex : arrayNode.value.length;
+
+      if (this.position === 'before') insertIndex = base;
+      else insertIndex = base + 1; // after (default)
+    } else {
+      // ref points to the array itself
+      if (!Array.isArray(arrayNode.value)) {
+        throw new Error('fx-insert JSON mode: target is not an array');
+      }
+
+      const len = arrayNode.value.length;
+
+      if (this.hasAttribute('at')) {
+        // `at` is 1-based like XForms/XPath.
+        // When combined with position="after", we insert *after* the item at `at`.
+        const atExpr = this.getAttribute('at');
+
+        let at1;
+        if (/^\s*-?\d+(?:\.\d+)?\s*$/.test(atExpr)) {
+          at1 = Number(atExpr);
+        } else {
+          at1 = Number(evaluateXPathToNumber(atExpr, inscope, this));
+        }
+        if (Number.isNaN(at1) || at1 < 1) at1 = 1;
+
+        const base0 = Math.min(len, Math.max(0, at1 - 1));
+
+        if (this.position === 'after') {
+          insertIndex = Math.min(len, base0 + 1);
+        } else {
+          // before (and any other value): insert at the computed base index
+          insertIndex = base0;
+        }
+      } else if (this.position === 'first') {
+        insertIndex = 0;
+      } else if (this.position === 'last') {
+        insertIndex = len; // append
+      } else {
+        // default behavior: append
+        insertIndex = len;
+      }
+    }
+
+    // ------------------------------------------------------------
+    // IMPORTANT: update repeat index even if action is outside repeat
+    // ------------------------------------------------------------
+    // If at="index('movies')" (like in your demo), ensure index('movies')
+    // points at the new row BEFORE subsequent actions run.
+    const atExpr = this.getAttribute('at');
+    const repeatId = this._matchIndexRepeatId(atExpr);
+    const repeatFromAt = repeatId ? this._resolveRepeatById(repeatId, fore) : null;
+
+    // If action *is* inside a repeat, keep existing behavior as fallback
+    const repeatLocal = this._resolveRepeatElement();
+    const repeat = repeatFromAt || repeatLocal;
+
+    if (repeat) {
+      const newIndex1 = insertIndex + 1;
+      repeat.setAttribute('index', String(newIndex1));
+      if (typeof repeat.setIndex === 'function') {
+        try {
+          repeat.setIndex(newIndex1);
+        } catch (_e) {
+          // ignore
+        }
+      }
+    }
+
+    // ----------------------
+    // Compute insert value
+    // ----------------------
+    // Goal:
+    // - origin attribute OR <template> (inline or referenced) are AUTHOR-DEFINED defaults -> keep as-is
+    // - only the implicit fallback (clone last item) is cleared unless keep-values is set
+
+    let templateValue = null;
+    let hasExplicitOriginOrTemplate = false;
+
+    if (this.origin) {
+      // origin attribute is always explicit
+      hasExplicitOriginOrTemplate = true;
+
+      // 1) JSON literal origin (existing behavior): origin="{ ... }"
+      if (this._isJsonLiteral(this.origin)) {
+        templateValue = this._parseJsonLiteral(this.origin);
+      } else {
+        // 2) lens origin: origin="?foo?bar" OR 3) XPath origin
+        const originNode = this._isJsonLensRef(this.origin)
+          ? this._resolveJsonRefToNode(this.origin)
+          : evaluateXPathToFirstNode(this.origin, inscope, this);
+
+        if (originNode && originNode.__jsonlens__) {
+          templateValue = this._deepClone(originNode.value);
+        } else {
+          // origin was present but did not resolve -> keep old behavior: fall back
+          templateValue = null;
+          hasExplicitOriginOrTemplate = false;
+        }
+      }
+    } else {
+      // No origin attribute: allow JSON via template="id" or inline <template>...</template>
+      const templateId = this.getAttribute('template');
+      if (templateId) {
+        const tplEl = this._getTemplateElementById(templateId);
+        const parsed = this._tryParseJsonFromTemplateEl(tplEl, `template=\"${templateId}\"`);
+        if (parsed !== null) {
+          templateValue = parsed;
+          hasExplicitOriginOrTemplate = true;
+        }
+      }
+
+      if (templateValue === null) {
+        const inlineTpl = this._getInlineTemplateElement();
+        const parsed = this._tryParseJsonFromTemplateEl(inlineTpl, 'inline <template>');
+        if (parsed !== null) {
+          templateValue = parsed;
+          hasExplicitOriginOrTemplate = true;
+        }
+      }
+    }
+
+    if (templateValue === null) {
+      // Fallback: clone last item if it exists, else insert empty object
+      const len = arrayNode.value.length;
+      if (len > 0) {
+        templateValue = this._deepClone(arrayNode.value[len - 1]);
+      } else {
+        templateValue = {};
+      }
+      hasExplicitOriginOrTemplate = false;
+    }
+
+    // Explicit origin/template values must be preserved as-is.
+    // Only the implicit fallback clone gets cleared (unless keep-values is set).
+    const newValue =
+      this.keepValues || hasExplicitOriginOrTemplate
+        ? this._deepClone(templateValue)
+        : this._clearJsonValues(templateValue);
+
+    // Mutate raw JSON via JSONLens
+// Mutate JSON in a way that keeps JSONNode.children in sync
+    const instanceId = XPathUtil.resolveInstance(this, this.ref);
+    const model = this.getModel();
+    const instance = model.getInstance(instanceId);
+
+// 1) BEST: use the JSONNode API if available (it should update children)
+    if (arrayNode && typeof arrayNode.insert === 'function') {
+      arrayNode.insert(newValue, insertIndex);
+    } else {
+      // 2) Fallback: mutate raw data via JSONLens
+      const steps = this._jsonNodeToLensSteps(arrayNode);
+      const lens = new JSONLens(instance.instanceData, steps);
+      lens.insert(newValue, insertIndex);
+
+      // Force the array node to notice the change and rebuild children:
+      // IMPORTANT: change reference so set() can't short-circuit on sameRef=true
+      const nextArr = Array.isArray(arrayNode.value) ? arrayNode.value.slice() : [];
+      if (typeof arrayNode.set === 'function') {
+        arrayNode.set(nextArr);
+      } else {
+        // last resort
+        arrayNode.value = nextArr;
+        if (typeof arrayNode._buildChildren === 'function') arrayNode._buildChildren();
+      }
+    }
+
+// At this point, children MUST match value length
+    if (Array.isArray(arrayNode.value) && Array.isArray(arrayNode.children)) {
+      if (arrayNode.children.length !== arrayNode.value.length) {
+        // One more forced rebuild to be safe
+        const nextArr = arrayNode.value.slice();
+        if (typeof arrayNode.set === 'function') arrayNode.set(nextArr);
+        else if (typeof arrayNode._buildChildren === 'function') arrayNode._buildChildren();
+      }
+    }
+
+    const insertedNode = arrayNode.children?.[insertIndex] || null;
+
+    // Dispatch Fore insert event similarly to XML branch
+    const xpath = insertedNode?.getPath ? insertedNode.getPath() : '';
+
+    Fore.dispatch(instance, 'insert', {
+      insertedNodes: insertedNode,
+      insertedParent: arrayNode,
+      ref: this.ref,
+      location: insertedNode,
+      position: this.position,
+      instanceId,
+      foreId: fore.id,
+      index: insertIndex + 1,
+      xpath,
+    });
+
+    document.dispatchEvent(
+        new CustomEvent('index-changed', {
+          composed: true,
+          bubbles: true,
+          detail: {
+            insertedNodes: insertedNode,
+            index: insertIndex + 1,
+          },
+        }),
+    );
+
+    // Ensure UI updates
+    this.needsUpdate = true;
+    return [xpath];
+  }
+  // -------------------------
+  // Existing XML clone helpers
+  // -------------------------
+
   _cloneOriginSequence(inscope, targetSequence) {
     let originSequenceClone;
     if (this.origin) {
       // ### if there's an origin attribute use it
       let originTarget;
       try {
-        /*
-        todo: discuss where to pass vars from event.detail into function context
-         */
-        // this.setInScopeVariables(this.detail);
-
-        /*
-        if in 'create-nodes' mode and origin targets a repeat, the repeat
-        we use the already during initData() created nodeset as a template for insertion
-         */
         if (this.origin.startsWith('#') && this.getOwnerForm().createNodes) {
           const repeat = this.getOwnerForm().querySelector(this.origin);
           originSequenceClone = repeat.createdNodeset.cloneNode(true);
@@ -83,7 +444,6 @@ export class FxInsert extends AbstractAction {
             console.error(`createdNodeset for repeat ${this.origin} does not exist`);
           }
         } else {
-          // originTarget = evaluateXPathToFirstNode(this.origin, inscope, this);
           originTarget = evaluateXPathToFirstNode(this.origin, inscope, this);
           if (Array.isArray(originTarget) && originTarget.length === 0) {
             console.warn('invalid origin for this insert action - ignoring...', this);
@@ -114,19 +474,98 @@ export class FxInsert extends AbstractAction {
     return targetSequence.length;
   }
 
+  _parseJsonLensRef(ref, defaultInstanceId = 'default') {
+    if (!ref) return null;
+    const s = String(ref).trim();
+
+    // instance('id')?a?b
+    const instMatch = s.match(/^instance\s*\(\s*(['"])(.*?)\1\s*\)\s*(\?.*)?$/);
+    let instanceId;
+    let lensPart;
+
+    if (instMatch) {
+      instanceId = instMatch[2];
+      lensPart = instMatch[3] || '';
+    } else {
+      if (!s.startsWith('?')) return null;
+      instanceId = defaultInstanceId;
+      lensPart = s;
+    }
+
+    const steps = lensPart
+      .split('?')
+      .filter(Boolean)
+      .map(part => {
+        if (part === '*') return '*';
+        if (/^\d+$/.test(part)) return Number(part) - 1; // 1-based -> 0-based
+        return part;
+      });
+
+    return { instanceId, steps };
+  }
+
+  _resolveJsonRefToNode(ref) {
+    const parsed = this._parseJsonLensRef(ref, 'default');
+    if (!parsed) return null;
+
+    const model = this.getModel();
+    const instance = model?.getInstance?.(parsed.instanceId) || model?.getInstance?.('default');
+    const root = instance?.nodeset;
+    if (!root || !root.__jsonlens__) return null;
+
+    let node = root;
+    for (const step of parsed.steps) {
+      if (step === '*') {
+        // For insert we require a concrete container; callers should not use wildcard here.
+        return null;
+      }
+      node = node?.get?.(step);
+      if (!node) return null;
+    }
+    return node;
+  }
+
   async perform() {
-    // We have a few terms here: `inScope` is the 'current item' we have. It is the item we're
-    // copying and inserting elsewhere.  If we have a `ref`, one of the nodes returned will
-    // become the sibling of this copy.  The `context` is the new parent of the copied
-    // element. It's usually better to add a `context` because that deals with empty elements.
     let inscope;
     let context;
     let targetSequence = [];
-    const inscopeContext = getInScopeContext(this);
 
     const fore = this.getOwnerForm();
+    const inscopeContext = getInScopeContext(this);
 
-    // ### 'context' attribute takes precedence over 'ref'
+    // -----------------------------------------
+    // Decide mode ONLY by instance type (NOT ref)
+    // -----------------------------------------
+    const exprForInstanceResolution =
+      (this.hasAttribute('ref') && this.ref) ||
+      (this.hasAttribute('context') && this.getAttribute('context')) ||
+      "instance('default')";
+
+    const instanceId = XPathUtil.resolveInstance(this, exprForInstanceResolution);
+    const inst = this.getModel()?.getInstance?.(instanceId);
+
+    const isJsonInstance =
+      !!inst &&
+      (inst.type === 'json' ||
+        (typeof inst.getAttribute === 'function' && inst.getAttribute('type') === 'json'));
+
+    if (isJsonInstance) {
+      // In JSON mode we only support lens refs that start with '?'
+      if (this.hasAttribute('ref') && !this._isJsonLensRef(this.ref)) {
+        throw new Error(
+          `fx-insert JSON mode: ref must be a JSON lens path starting with '?' (got: ${this.ref})`,
+        );
+      }
+      // For JSON inserts your implementation expects to work from the in-scope lens context
+      inscope = inscopeContext;
+      return this._performJsonInsert(inscope, fore);
+    }
+
+    // -------------------------
+    // XML branch (normal XPath)
+    // -------------------------
+
+    // context takes precedence over ref
     if (this.hasAttribute('context')) {
       [context] = evaluateXPathToNodes(this.getAttribute('context'), inscopeContext, this);
       inscope = inscopeContext;
@@ -140,21 +579,13 @@ export class FxInsert extends AbstractAction {
         targetSequence = evaluateXPathToNodes(this.ref, inscope, this);
       }
     }
-    // const originSequenceClone = this._cloneOriginSequence(inscope, targetSequence);
 
     const originSequenceClone = this._cloneOriginSequence(inscope, targetSequence);
-    if (!originSequenceClone) return; // if no origin back out without effect
+    if (!originSequenceClone) return;
 
-    /**
-     * @type {Node}
-     */
     let insertLocationNode;
-    /**
-     * @type {number}
-     */
     let index;
 
-    // if the targetSequence is empty but we got an originSequence use inscope as context and ignore 'at' and 'position'
     if (targetSequence.length === 0) {
       if (context) {
         insertLocationNode = context;
@@ -162,63 +593,46 @@ export class FxInsert extends AbstractAction {
         fore.signalChangeToElement(insertLocationNode.localName);
         fore.signalChangeToElement(originSequenceClone.localName);
         index = 1;
+      } else if (!inscope && this.getOwnerForm().createNodes) {
+        const repeat = this.getOwnerForm().querySelector(this.origin);
+        inscope = getInScopeContext(repeat, repeat.ref);
+        insertLocationNode = inscope;
+        inscope.appendChild(originSequenceClone);
+        index = inscope.length - 1;
       } else {
-        // No context but creating nodes from UI
-        if (!inscope && this.getOwnerForm().createNodes) {
-          const repeat = this.getOwnerForm().querySelector(this.origin);
-          inscope = getInScopeContext(repeat, repeat.ref);
-          insertLocationNode = inscope;
-          inscope.appendChild(originSequenceClone);
-          index = inscope.length - 1;
-        } else {
-          insertLocationNode = inscope;
-          inscope.appendChild(originSequenceClone);
-          index = 1;
-        }
+        insertLocationNode = inscope;
+        inscope.appendChild(originSequenceClone);
+        index = 1;
       }
     } else {
-      /* ### insert at position given by 'at' or use the last item in the targetSequence ### */
       if (this.hasAttribute('at')) {
-        // todo: eval 'at'
-        // index = this.at;
-        // insertLocationNode = targetSequence[this.at - 1];
-
         index = evaluateXPathToNumber(this.getAttribute('at'), inscope, this);
-        insertLocationNode = targetSequence[index - 1];
+        insertLocationNode = targetSequence[index - 1]; // 1-based
       } else {
-        // this.at = targetSequence.length;
         index = targetSequence.length;
         insertLocationNode = targetSequence[targetSequence.length - 1];
       }
 
-      // ### if the insertLocationNode is undefined use the targetSequence - usually the case when the targetSequence just contains a single node
       if (!insertLocationNode) {
         index = 1;
-
         insertLocationNode = targetSequence;
-        const context = evaluateXPathToNumber(
+        const ctxIndex = evaluateXPathToNumber(
           'count(preceding::*)',
           targetSequence,
           this.getOwnerForm(),
         );
-        // console.log('context', context);
-        index = context + 1;
-        // index = targetSequence.findIndex(insertLocationNode);
+        index = ctxIndex + 1;
       }
 
       if (this.position && this.position === 'before') {
-        // this.at -= 1;
         insertLocationNode.parentNode.insertBefore(originSequenceClone, insertLocationNode);
         fore.signalChangeToElement(insertLocationNode.parentNode);
         fore.signalChangeToElement(originSequenceClone.localName);
       }
 
       if (this.position && this.position === 'after') {
-        // insertLocationNode.parentNode.append(originSequence);
-        // const nextSibl = insertLocationNode.nextSibling;
         index += 1;
         if (this.hasAttribute('context') && this.hasAttribute('ref')) {
-          // index=1;
           inscope.append(originSequenceClone);
           fore.signalChangeToElement(insertLocationNode);
           fore.signalChangeToElement(originSequenceClone.localName);
@@ -234,19 +648,7 @@ export class FxInsert extends AbstractAction {
         }
       }
     }
-    // instance('default')/items/item[index()]
 
-    // console.log('insert context item ', insertLocationNode);
-    // console.log('parent ', insertLocationNode.parentNode);
-    // console.log('instance ', this.getModel().getDefaultContext());
-    // Fore.dispatch()
-
-    // const instanceId = XPathUtil.resolveInstance(this, this.getAttribute('context'));
-    const instanceId = XPathUtil.resolveInstance(this, this.ref);
-    const inst = this.getModel().getInstance(instanceId);
-    // console.log('<<<<<<< resolved instance', inst);
-    // Note: the parent to insert under is always the parent of the inserted node. The 'context' is not always the parent if the sequence is empty, or the position is different
-    // const xpath = XPathUtil.getPath(originSequenceClone.parentNode, instanceId);
     const xpath = getPath(insertLocationNode, instanceId);
 
     const path = Fore.getDomNodeIndexString(originSequenceClone);
@@ -258,6 +660,7 @@ export class FxInsert extends AbstractAction {
         detail: { action: this, event: this.event, path },
       }),
     );
+
     Fore.dispatch(inst, 'insert', {
       insertedNodes: originSequenceClone,
       insertedParent: insertLocationNode.parentNode,
@@ -270,9 +673,7 @@ export class FxInsert extends AbstractAction {
       xpath,
     });
 
-    // todo: this actually should dispatch to respective instance
     document.dispatchEvent(
-      // new CustomEvent('insert', {
       new CustomEvent('index-changed', {
         composed: true,
         bubbles: true,
@@ -299,8 +700,6 @@ export class FxInsert extends AbstractAction {
   }
 
   actionPerformed(changedPaths) {
-    // ### make sure the necessary modelItems will get created
-    // this.getModel().rebuild();
     super.actionPerformed();
   }
 
@@ -314,7 +713,6 @@ export class FxInsert extends AbstractAction {
 
     // clear attrs
     for (let i = 0; i < attrs.length; i += 1) {
-      // n.setAttribute(attrs[i].name,'');
       attrs[i].value = '';
     }
     // clear text content

@@ -120,56 +120,33 @@ export class FxSubmission extends ForeElementMixin {
   async _serializeAndSend() {
     const url = this._getProperty('url');
     const resolvedUrl = this.evaluateAttributeTemplateExpression(url, this);
-    // console.log('resolvedUrl', resolvedUrl);
+
     const instance = this.getInstance();
     if (!instance) {
-      Fore.dispatch(this, 'warn', { message: `instance not found ${instance.getAttribute('id')}` });
+      Fore.dispatch(this, 'warn', { message: `instance not found ${instance?.getAttribute?.('id')}` });
     }
     const instType = instance.getAttribute('type');
-    // console.log('instance type', instance.type);
 
     let serialized;
     if (this.serialization === 'none') {
       serialized = undefined;
     } else {
-      // const relevant = this.selectRelevant(instance.type);
       const relevant = Relevance.selectRelevant(this, instType);
-      serialized = this._serialize(instType, relevant);
+      serialized = this._serialize(instance, relevant);
     }
 
-    // let serialized = serializer.serializeToString(relevant);
     if (this.method.toLowerCase() === 'get') {
-      /*
-             todo: serialize the bound instance element names as get parameters and using their text values
-             as param values. leave out empty params and create querystring from the result.Elements may
-             have exactly level deep or are otherwise ignored.
-             <data>
-                <id>1234</id>
-                <name>john</name>
-                <zip></zip>
-                <!-- ignored as no direct text value -->
-                <phone>
-                    <mobile></mobile>
-                <phone>
-              </data>
-              results in: ?id=1234&name=john to be appended to this.url on fetch
-
-*/
-
       serialized = undefined;
     }
-    // console.log('data being send', serialized);
-    // console.log('submitting data',serialized);
 
-    // if (resolvedUrl === '#echo') {
+    // --- echo / localStore shortcuts ---
     if (resolvedUrl.startsWith('#echo')) {
       if (this.replace === 'download') {
-        this._handleResponse(serialized, resolvedUrl, 'application/xml');
+        await this._handleResponse(serialized, resolvedUrl, 'application/xml');
       } else {
         const data = this._parse(serialized, instance);
-        this._handleResponse(data, resolvedUrl, 'application/xml');
+        await this._handleResponse(data, resolvedUrl, 'application/xml');
       }
-      // this.dispatch('submit-done', {});
       console.log('### <<<<< submit-done >>>>>');
       Fore.dispatch(this, 'submit-done', {});
       this.parameters.clear();
@@ -178,11 +155,10 @@ export class FxSubmission extends ForeElementMixin {
 
     if (resolvedUrl.startsWith('localStore:')) {
       if (this.method === 'get' || this.method === 'consume') {
-        // let data = this._parse(serialized, instance);
         this.replace = 'instance';
         const key = resolvedUrl.substring(resolvedUrl.indexOf(':') + 1);
-        const serialized = localStorage.getItem(key);
-        if (!serialized) {
+        const stored = localStorage.getItem(key);
+        if (!stored) {
           Fore.dispatch(this, 'submit-error', {
             status: 400,
             message: `Error reading key ${key} from localstorage`,
@@ -190,28 +166,29 @@ export class FxSubmission extends ForeElementMixin {
           this.parameters.clear();
           return;
         }
-        const data = this._parse(serialized, instance);
-        this._handleResponse(data);
+        const data = this._parse(stored, instance);
+        await this._handleResponse(data);
         if (this.method === 'consume') {
           localStorage.removeItem(key);
         }
         console.log('### <<<<< submit-done >>>>>');
         Fore.dispatch(this, 'submit-done', {});
       }
+
       if (this.method === 'post') {
-        // let data = this._parse(serialized, instance);
         const key = resolvedUrl.substring(resolvedUrl.indexOf(':') + 1);
         localStorage.setItem(key, serialized);
-        this._handleResponse(instance.instanceData);
+        await this._handleResponse(instance.instanceData);
         console.log('### <<<<< submit-done >>>>>');
         Fore.dispatch(this, 'submit-done', {});
       }
+
       if (this.method === 'delete') {
         const key = resolvedUrl.substring(resolvedUrl.indexOf(':') + 1);
         localStorage.removeItem(key);
         const newInst = new DOMParser().parseFromString('<data></data>', 'application/xml');
         this.replace = 'instance';
-        this._handleResponse(newInst);
+        await this._handleResponse(newInst);
         console.log('### <<<<< submit-done >>>>>');
         Fore.dispatch(this, 'submit-done', {});
       }
@@ -219,14 +196,14 @@ export class FxSubmission extends ForeElementMixin {
       return;
     }
 
-    // ### setting headers
+    // --- network fetch ---
     const headers = this._getHeaders();
 
     if (!this.methods.includes(this.method.toLowerCase())) {
-      // this.dispatch('error', { message: `Unknown method ${this.method}` });
       Fore.dispatch(this, 'error', { message: `Unknown method ${this.method}` });
       return;
     }
+
     try {
       const response = await fetch(resolvedUrl, {
         method: this.method,
@@ -237,10 +214,9 @@ export class FxSubmission extends ForeElementMixin {
       });
 
       if (!response.ok || response.status > 400) {
-        // this.dispatch('submit-error', { message: `Error while submitting ${this.id}` });
         console.info(
-          `%csubmit-error #${this.id}`,
-          'background:red; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+            `%csubmit-error #${this.id}`,
+            'background:red; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
         );
 
         Fore.dispatch(this, 'submit-error', {
@@ -251,30 +227,23 @@ export class FxSubmission extends ForeElementMixin {
       }
 
       const contentType = response.headers.get('content-type').split(';')[0].trim().toLowerCase();
+
       if (contentType.endsWith('/xml') || contentType.endsWith('+xml')) {
         const text = await response.text();
         const xml = new DOMParser().parseFromString(text, 'application/xml');
-        this._handleResponse(xml, resolvedUrl, contentType);
+        await this._handleResponse(xml, resolvedUrl, contentType);
       } else if (contentType.startsWith('text/')) {
         const text = await response.text();
-        this._handleResponse(text, resolvedUrl, contentType);
+        await this._handleResponse(text, resolvedUrl, contentType);
       } else if (contentType.endsWith('/json') || contentType.endsWith('+json')) {
         const json = await response.json();
-        this._handleResponse(json, resolvedUrl, contentType);
+        await this._handleResponse(json, resolvedUrl, contentType);
       } else {
         const blob = await response.blob();
-        this._handleResponse(blob, resolvedUrl, contentType);
+        await this._handleResponse(blob, resolvedUrl, contentType);
       }
 
-      // this.dispatch('submit-done', {});
-      // console.log(`### <<<<< ${this.id} submit-done >>>>>`);
       Fore.dispatch(this, 'submit-done', {});
-      /*
-      console.info(
-          `%csubmit-done #${this.id}`,
-          'background:green; color:white; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
-      );
-*/
     } catch (error) {
       Fore.dispatch(this, 'submit-error', { status: 500, error: error.message });
     } finally {
@@ -300,28 +269,165 @@ export class FxSubmission extends ForeElementMixin {
     return data;
   }
 
-  _serialize(instanceType, relevantNodes) {
-    if (this.serialization === 'application/x-www-form-urlencoded') {
-      // this.method = 'post';
-      const params = new URLSearchParams();
-      // console.log('nodes to serialize', relevantNodes);
-      Array.from(relevantNodes.children).forEach(child => {
-        params.append(child.nodeName, child.textContent);
-      });
-      return params;
+  /**
+   * Serialize the submission payload depending on instance type.
+   *
+   * - XML instances => XML serialization (existing behavior)
+   * - JSON instances => JSON serialization from plain JS (NOT from JSONNode lens objects)
+   *
+   * @param {import('./fx-instance.js').FxInstance | null} instanceEl
+   * @param {any} data
+   * @returns {string}
+   */
+  _serialize(instanceEl, data) {
+    // If the caller passed an explicit "data", prefer it; otherwise serialize the instance.
+    let payload = data;
+
+    // Resolve instance if not provided explicitly
+    if (!instanceEl) {
+      const model = this.getOwnerForm()?.getModel?.();
+      const instanceId = this.getAttribute('instance') || 'default';
+      instanceEl = model?.getInstance?.(instanceId) || null;
     }
-    if (instanceType === 'xml') {
-      const serializer = new XMLSerializer();
-      return serializer.serializeToString(relevantNodes);
+
+    // If no payload was passed, derive it from instance default context/nodeset
+    if (payload == null && instanceEl) {
+      payload =
+          (typeof instanceEl.getDefaultContext === 'function' && instanceEl.getDefaultContext()) ||
+          instanceEl.nodeset ||
+          null;
     }
-    if (instanceType === 'json') {
-      // console.warn('JSON serialization is not yet supported')
-      return JSON.stringify(relevantNodes);
+
+    // Decide JSON vs XML by instance type (NOT by ref expression)
+    const isJsonInstance = instanceEl?.getAttribute?.('type') === 'json' || instanceEl?.type === 'json';
+
+    if (isJsonInstance) {
+      // Convert JSON lens nodes to plain JS before stringify
+      const plain = this._toPlainJson(payload);
+      // NOTE: you can pass spacing here if you want pretty output:
+      // return JSON.stringify(plain, null, 2);
+      return JSON.stringify(plain);
     }
-    if (instanceType === 'text') {
-      return relevantNodes;
+
+    // --- XML / default path ---
+    // Keep existing XML behavior: if payload is a DOM node/document, serialize as XML.
+    // If payload is a string, return as-is.
+    if (typeof payload === 'string') return payload;
+
+    try {
+      if (payload && payload.nodeType) {
+        // Document => serialize documentElement, Node => serialize node
+        const node =
+            payload.nodeType === Node.DOCUMENT_NODE ? payload.documentElement : payload;
+        return new XMLSerializer().serializeToString(node);
+      }
+    } catch (_e) {
+      // fallthrough
     }
-    throw new Error('unknown instance type ', instanceType);
+
+    // As a last resort for non-XML odd payloads:
+    return String(payload ?? '');
+  }
+
+  /**
+   * Convert a JSON lens node (JSONNode) or other value into plain JSON (no circular refs).
+   * This must NEVER return JSONNode objects.
+   *
+   * @param {any} v
+   * @returns {any} plain JSON value
+   */
+  _toPlainJson(v) {
+    if (v == null) return null;
+
+    // If it's already a plain primitive, keep it
+    const t = typeof v;
+    if (t === 'string' || t === 'number' || t === 'boolean') return v;
+
+    // JSON lens node (your JSONNode objects)
+    if (v.__jsonlens__ === true) {
+      return this._jsonLensNodeToPlain(v);
+    }
+
+    // Arrays: convert elements
+    if (Array.isArray(v)) {
+      return v.map(x => this._toPlainJson(x));
+    }
+
+    // Plain objects: best-effort convert (should be rare here)
+    // Avoid circular refs by only copying own enumerable props.
+    const out = {};
+    for (const [k, val] of Object.entries(v)) {
+      out[k] = this._toPlainJson(val);
+    }
+    return out;
+  }
+
+  /**
+   * Convert a single JSON lens node (JSONNode) into a plain JS value by traversing children.
+   *
+   * Assumptions (based on your JSON lens structure):
+   * - node.value holds the underlying JS value for leaf nodes
+   * - node.children is an array for arrays/objects
+   * - node.get(keyOrIndex) returns child node for objects/arrays
+   *
+   * This function intentionally does NOT touch node.parent.
+   *
+   * @param {any} node JSONNode
+   * @returns {any}
+   */
+  _jsonLensNodeToPlain(node) {
+    // If node.value is a primitive or null, return it
+    // (Many JSON lens implementations store actual scalar in .value)
+    const val = node.value;
+
+    if (
+        val === null ||
+        val === undefined ||
+        typeof val === 'string' ||
+        typeof val === 'number' ||
+        typeof val === 'boolean'
+    ) {
+      return val ?? null;
+    }
+
+    // If the node represents an array
+    if (Array.isArray(val)) {
+      // Prefer node.children if present; fall back to val (might be raw JS)
+      const kids = Array.isArray(node.children) ? node.children : val;
+      return kids.map(child => this._toPlainJson(child));
+    }
+
+    // If the node represents an object
+    if (typeof val === 'object') {
+      // If this is already a plain JS object (not a JSONNode), convert it
+      // but in lens setups val might be plain object while children are lens nodes.
+      const result = {};
+
+      // Prefer iterating keys from val
+      for (const key of Object.keys(val)) {
+        // Try lens navigation first
+        if (typeof node.get === 'function') {
+          const child = node.get(key);
+          result[key] = this._toPlainJson(child ?? val[key]);
+        } else {
+          result[key] = this._toPlainJson(val[key]);
+        }
+      }
+
+      return result;
+    }
+1
+    // Fallback: last-resort scalar conversion
+    try {
+      if (typeof node.get === 'function') {
+        // Some lens nodes return scalar via get()
+        return this._toPlainJson(node.get());
+      }
+    } catch (_e) {
+      // ignore
+    }
+
+    return String(val);
   }
 
   _getHeaders() {
@@ -371,80 +477,86 @@ export class FxSubmission extends ForeElementMixin {
    * @param data
    * @private
    */
-  _handleResponse(data, resolvedUrl, contentType) {
-    // console.log('_handleResponse ', data);
-
+  async _handleResponse(data, resolvedUrl, contentType) {
     const targetInstance = this._getTargetInstance();
 
     if (this.replace === 'instance') {
-      const targetInstance = this._getTargetInstance();
-
-      // ### contentType handling
-
-      if (contentType.includes('html')) {
-        let effectiveData;
-        if (data.nodeType) {
-          effectiveData = data;
+      // ### contentType handling (HTML special-case)
+      if (contentType && contentType.includes('html')) {
+        let effectiveData = data;
+        if (!data?.nodeType) {
+          try {
+            effectiveData = new DOMParser().parseFromString(data, 'text/html');
+          } catch {
+            Fore.dispatch(this, 'error', { message: 'could not parse data as HTML' });
+          }
         }
-        // ## try parsing
-        try {
-          effectiveData = new DOMParser().parseFromString(data, 'text/html');
-        } catch {
-          Fore.dispatch(this, 'error', { message: 'could not parse data as HTML' });
-        }
-
         targetInstance.instanceData = effectiveData;
       }
-      if (targetInstance) {
-        if (this.targetref) {
-          const [theTarget] = evaluateXPath(
+
+      if (!targetInstance) {
+        throw new Error(`target instance not found: ${targetInstance}`);
+      }
+
+      if (this.targetref) {
+        const [theTarget] = evaluateXPath(
             this.targetref,
             targetInstance.instanceData.firstElementChild,
             this,
-          );
-          console.log('theTarget', theTarget);
-          if (
+        );
+
+        if (
             this.responseMediatype === 'application/xml' ||
             this.responseMediatype === 'text/html'
-          ) {
-            const clone = data.firstElementChild;
-            const parent = theTarget.parentNode;
-            parent.replaceChild(clone, theTarget);
-            console.log('finally ', parent);
-          }
-          if (this.responseMediatype.startsWith('text/')) {
-            theTarget.textContent = data;
-          }
-          if (this.responseMediatype === 'application/json') {
-            console.warn('targetref is not supported for application/json responses');
-          }
-        } else if (this.into) {
-          const [theTarget] = evaluateXPath(
+        ) {
+          const clone = data.firstElementChild;
+          const parent = theTarget.parentNode;
+          parent.replaceChild(clone, theTarget);
+        }
+        if (this.responseMediatype && this.responseMediatype.startsWith('text/')) {
+          theTarget.textContent = data;
+        }
+        if (this.responseMediatype === 'application/json') {
+          console.warn('targetref is not supported for application/json responses');
+        }
+      } else if (this.into) {
+        const [theTarget] = evaluateXPath(
             this.into,
             targetInstance.instanceData.firstElementChild,
             this,
-          );
-          console.log('theTarget', theTarget);
-          if (data.nodeType === Node.DOCUMENT_NODE) {
-            theTarget.appendChild(data.firstElementChild);
-          } else {
-            theTarget.innerHTML = data;
-          }
+        );
+        if (data?.nodeType === Node.DOCUMENT_NODE) {
+          theTarget.appendChild(data.firstElementChild);
         } else {
-          const instanceData = data;
-          targetInstance.instanceData = instanceData;
-          // console.log('### replaced instance ', this.getModel().instances);
-          // console.log('### replaced instance ', targetInstance.instanceData);
-        }
-
-        // Skip any refreshes if the model is not yet inited
-        if (this.model.inited) {
-          this.model.updateModel(); // force update
-          this.getOwnerForm().refresh(true);
+          theTarget.innerHTML = data;
         }
       } else {
-        throw new Error(`target instance not found: ${targetInstance}`);
+        // ✅ This is the critical replace="instance" case
+        targetInstance.instanceData = data;
       }
+
+      // Skip any refreshes if the model is not yet inited
+      if (this.model.inited) {
+        // Rebuild model items / binds against the new instance root
+        this.model.updateModel();
+
+        // ✅ treat instance replacement as a structural change
+        const fore =
+            (typeof this.getOwnerForm === 'function' && this.getOwnerForm()) ||
+            this.closest('fx-fore') ||
+            this.getModel()?.parentNode;
+
+        if (fore) {
+          fore.someInstanceDataStructureChanged = true;
+          if (typeof fore.scanForNewTemplateExpressionsNextRefresh === 'function') {
+            fore.scanForNewTemplateExpressionsNextRefresh();
+          }
+          // ✅ IMPORTANT: await, otherwise tests/action-pipeline can out-run the refresh
+          await fore.refresh(true);
+        }
+      }
+
+      return;
     }
 
     if (this.replace === 'download') {
@@ -457,6 +569,7 @@ export class FxSubmission extends ForeElementMixin {
       downloadLink.setAttribute('href', `data:${contentType},${encodeURIComponent(data)}`);
       document.body.appendChild(downloadLink);
       downloadLink.click();
+      return;
     }
 
     if (this.replace === 'all') {
@@ -471,20 +584,17 @@ export class FxSubmission extends ForeElementMixin {
         document.close();
         window.location.href = resolvedUrl;
       }
-      // document.getElementsByTagName('html')[0].innerHTML = data;
+      return;
     }
+
     if (this.replace === 'target') {
-      // const target = this.getAttribute('target');
       const target = this._getProperty('target');
       const targetNode = document.querySelector(target);
       if (targetNode) {
-        if (contentType.startsWith('text/html')) {
+        if (contentType && contentType.startsWith('text/html')) {
           targetNode.innerHTML = data;
         }
-        if (this.responseMediatype.startsWith('image/svg')) {
-          const parser = new DOMParser();
-          const svgDoc = parser.parseFromString(data, 'image/svg+xml');
-
+        if (this.responseMediatype && this.responseMediatype.startsWith('image/svg')) {
           const objectURL = URL.createObjectURL(data);
           targetNode.src = objectURL;
         }
@@ -493,12 +603,13 @@ export class FxSubmission extends ForeElementMixin {
           message: `targetNode for selector ${target} not found`,
         });
       }
+      return;
     }
+
     if (this.replace === 'redirect') {
       window.location.href = data;
     }
   }
-
   /*
   _handleError() {
     // this.dispatch('submit-error', {});

@@ -10,6 +10,7 @@ import { XPathUtil } from './xpath-util.js';
 import getInScopeContext from './getInScopeContext.js';
 import { getPath } from './xpath-path.js';
 import { evaluateXPathToFirstNode } from 'fontoxpath';
+import { JSONLens } from './json/JSONLens.js';
 
 /**
  * FxBind declaratively attaches constraints to nodes in the data (instances).
@@ -157,86 +158,75 @@ export class FxBind extends ForeElementMixin {
    */
   init(model) {
     this.model = model;
-    // console.log('init binding ', this);
     this._getInstanceId();
     this.bindType = this.getModel().getInstance(this.instanceId).type;
-    // console.log('binding type ', this.bindType);
 
+    // ✅ Always evaluate nodeset first (XML + JSON)
+    this._evalInContext();
+
+    // ✅ Build dependency graph for both types
+    this._buildBindGraph();
+
+    // ✅ Create modelitems for both types
     if (this.bindType === 'xml') {
-      this._evalInContext();
-      this._buildBindGraph();
       this._createModelItems();
+    } else if (this.bindType === 'json') {
+      this._createModelItemsForJSON();
     }
-    // todo: support json
 
-    // ### process child bindings
     this._processChildren(model);
   }
 
   _buildBindGraph() {
-    if (this.bindType === 'xml') {
-      this.nodeset.forEach(node => {
-        const instance = XPathUtil.resolveInstance(this, this.ref);
+    // ✅ Works for XML and JSON (JSON nodes have getPath()/getPath() handles __jsonlens__)
+    this.nodeset.forEach(node => {
+      const instanceId = XPathUtil.resolveInstance(this, this.ref);
+      const path = getPath(node, instanceId);
 
-        const path = getPath(node, instance);
-        this.model.mainGraph.addNode(path, node);
+      this.model.mainGraph.addNode(path, node);
 
-        /* ### catching references in the 'ref' itself...
-        todo: investigate cases where 'ref' attributes use predicates pointing to other nodes. These would not be handled
-        in current implementation.
+      if (this.calculate) {
+        this.model.mainGraph.addNode(`${path}:calculate`, node);
+        this.model.mainGraph.addDependency(path, `${path}:calculate`);
+      }
 
-        General question: are there valid use-cases for using a 'filter' expression to narrow the nodeset
-          where to apply constraints? Guess yes and if it's 'just' for reducing the amount of necessary modelItem objects.
+      const calculateRefs = this._getReferencesForProperty(this.calculate, node);
+      if (calculateRefs.length !== 0) {
+        this._addDependencies(calculateRefs, node, path, 'calculate', instanceId);
+      }
 
-        */
-        // const foreignRefs = this.getReferences(this.ref);
-
-        if (this.calculate) {
-          this.model.mainGraph.addNode(`${path}:calculate`, node);
-          // Calculated values are a dependency of the model item.
-          this.model.mainGraph.addDependency(path, `${path}:calculate`);
+      if (!this.calculate) {
+        const readonlyRefs = this._getReferencesForProperty(this.readonly, node);
+        if (readonlyRefs.length !== 0) {
+          this._addDependencies(readonlyRefs, node, path, 'readonly', instanceId);
+        } else if (this.readonly) {
+          this.model.mainGraph.addNode(`${path}:readonly`, node);
         }
+      }
 
-        const calculateRefs = this._getReferencesForProperty(this.calculate, node);
-        if (calculateRefs.length !== 0) {
-          this._addDependencies(calculateRefs, node, path, 'calculate');
-        }
+      const requiredRefs = this._getReferencesForProperty(this.required, node);
+      if (requiredRefs.length !== 0) {
+        this._addDependencies(requiredRefs, node, path, 'required', instanceId);
+      } else if (this.required) {
+        this.model.mainGraph.addNode(`${path}:required`, node);
+      }
 
-        if (!this.calculate) {
-          const readonlyRefs = this._getReferencesForProperty(this.readonly, node);
-          if (readonlyRefs.length !== 0) {
-            this._addDependencies(readonlyRefs, node, path, 'readonly');
-          } else if (this.readonly) {
-            this.model.mainGraph.addNode(`${path}:readonly`, node);
-          }
-        }
+      const relevantRefs = this._getReferencesForProperty(this.relevant, node);
+      if (relevantRefs.length !== 0) {
+        this._addDependencies(relevantRefs, node, path, 'relevant', instanceId);
+      } else if (this.relevant) {
+        this.model.mainGraph.addNode(`${path}:relevant`, node);
+      }
 
-        // const requiredRefs = this.requiredReferences;
-        const requiredRefs = this._getReferencesForProperty(this.required, node);
-        if (requiredRefs.length !== 0) {
-          this._addDependencies(requiredRefs, node, path, 'required');
-        } else if (this.required) {
-          this.model.mainGraph.addNode(`${path}:required`, node);
-        }
-
-        const relevantRefs = this._getReferencesForProperty(this.relevant, node);
-        if (relevantRefs.length !== 0) {
-          this._addDependencies(relevantRefs, node, path, 'relevant');
-        } else if (this.relevant) {
-          this.model.mainGraph.addNode(`${path}:relevant`, node);
-        }
-
-        const constraintRefs = this._getReferencesForProperty(this.constraint, node);
-        if (constraintRefs.length !== 0) {
-          this._addDependencies(constraintRefs, node, path, 'constraint');
-        } else if (this.constraint) {
-          this.model.mainGraph.addNode(`${path}:constraint`, node);
-          this.model.mainGraph.addDependency(path, `${path}:constraint`);
-        }
-      });
-    }
+      const constraintRefs = this._getReferencesForProperty(this.constraint, node);
+      if (constraintRefs.length !== 0) {
+        this._addDependencies(constraintRefs, node, path, 'constraint', instanceId);
+      } else if (this.constraint) {
+        this.model.mainGraph.addNode(`${path}:constraint`, node);
+        this.model.mainGraph.addDependency(path, `${path}:constraint`);
+      }
+    });
   }
-
   /**
    * Resolves a referenced ModelItem using the model's graph and node registry.
    * @param {string} refName
@@ -266,26 +256,25 @@ export class FxBind extends ForeElementMixin {
    * @param  {string}  path The path to the start of the reference
    * @param  {string}  property The property with this dependency
    */
-  _addDependencies(refs, node, path, property) {
-    // console.log('_addDependencies',path);
+  _addDependencies(refs, node, path, property, instanceId) {
     const nodeHash = `${path}:${property}`;
+
     if (refs.length !== 0) {
       if (!this.model.mainGraph.hasNode(nodeHash)) {
         this.model.mainGraph.addNode(nodeHash, node);
       }
+
       refs.forEach(ref => {
-        const instance = XPathUtil.resolveInstance(this, path);
+        const otherPath = getPath(ref, instanceId);
 
-        const otherPath = getPath(ref, instance);
-        // console.log('otherPath', otherPath)
+        // keep old XML-only hack
+        if (this.bindType === 'xml' && otherPath.endsWith('text()[1]')) return;
 
-        // todo: nasty hack to prevent duplicate pathes like 'a[1]' and 'a[1]/text()[1]' to end up as separate nodes in the graph
-        if (!otherPath.endsWith('text()[1]')) {
-          if (!this.model.mainGraph.hasNode(otherPath)) {
-            this.model.mainGraph.addNode(otherPath, ref);
-          }
-          this.model.mainGraph.addDependency(nodeHash, otherPath);
+        if (!this.model.mainGraph.hasNode(otherPath)) {
+          this.model.mainGraph.addNode(otherPath, ref);
         }
+
+        this.model.mainGraph.addDependency(nodeHash, otherPath);
       });
     } else {
       this.model.mainGraph.addNode(nodeHash, node);
@@ -309,6 +298,23 @@ export class FxBind extends ForeElementMixin {
       return alertChild.innerHTML;
     }
     return null;
+  }
+
+  _createModelItemsForJSON() {
+    const fore = this.closest('fx-fore');
+    const instanceId = this.instanceId;
+
+    this.nodeset.forEach(jsonNode => {
+      const path = getPath(jsonNode, instanceId);
+
+      // ✅ ModelItem node should be the JSONNode itself (lens), NOT JSONLens
+      const newItem = new ModelItem(path, this.getBindingExpr(), jsonNode, this, instanceId, fore);
+
+      const alert = this.getAlert();
+      if (alert) newItem.addAlert(alert);
+
+      this.getModel().registerModelItem(newItem);
+    });
   }
 
   /**
@@ -346,8 +352,11 @@ export class FxBind extends ForeElementMixin {
       const inst = this.getModel().getInstance(this.instanceId);
       if (inst.type === 'xml') {
         this.nodeset = evaluateXPathToNodes(this.ref, inscopeContext, this);
+      } else if (inst.type === 'json') {
+        // ✅ JSON must also resolve the nodeset via XPath evaluation
+        this.nodeset = evaluateXPathToNodes(this.ref, inscopeContext, this);
       } else {
-        this.nodeset = this.ref;
+        this.nodeset = [];
       }
     }
   }
@@ -458,12 +467,60 @@ export class FxBind extends ForeElementMixin {
   }
 
   getReferences(propertyExpr) {
+    // For XML, DependencyNotifyingDomFacade reliably reports the nodes touched during evaluation.
+    // For JSON lens nodes, the domFacade hook does not fire (evaluation goes through our lens resolver),
+    // so we must extract lookup tokens and resolve them explicitly.
+
+    if (!propertyExpr) return [];
+
+    // JSON path: resolve dependencies by parsing lens lookups in the expression.
+    if (this.bindType === 'json') {
+      const touchedNodes = new Set();
+      const tokens = this._extractJsonLookupTokens(propertyExpr);
+
+      // Evaluate each token in the *current* context node (each item in nodeset)
+      this.nodeset.forEach(node => {
+        tokens.forEach(token => {
+          try {
+            const refs = evaluateXPathToNodes(token, node, this);
+            refs.forEach(r => touchedNodes.add(r));
+          } catch (_e) {
+            // ignore: dependency extraction must never break bind initialization
+          }
+        });
+      });
+
+      return Array.from(touchedNodes.values());
+    }
+
+    // XML path: use dom facade for accurate dependency tracking
     const touchedNodes = new Set();
     const domFacade = new DependencyNotifyingDomFacade(otherNode => touchedNodes.add(otherNode));
     this.nodeset.forEach(node => {
       evaluateXPathToString(propertyExpr, node, this, domFacade);
     });
     return Array.from(touchedNodes.values());
+  }
+  _extractJsonLookupTokens(expr) {
+    if (!expr) return [];
+
+    const src = String(expr);
+    const tokens = new Set();
+
+    // instance('id')?a?b?c  or instance('id')?*
+    const instRe = /instance\s*\([^)]*\)\s*(?:\?\s*\*|\?\s*[a-zA-Z_][\w-]*)+/g;
+    let m;
+    while ((m = instRe.exec(src)) !== null) {
+      if (m[0]) tokens.add(m[0].replace(/\s+/g, ''));
+    }
+
+    // relative lookups like ?title, ?year, ?ui, ?query (ignore ?*)
+    const relRe = /\?[a-zA-Z_][\w-]*/g;
+    while ((m = relRe.exec(src)) !== null) {
+      if (m[0] && m[0] !== '?*') tokens.add(m[0]);
+    }
+
+    return Array.from(tokens);
   }
 
   /*

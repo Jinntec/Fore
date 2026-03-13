@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fore Todo (JSON) – todo2.html</title>
+
+    <script type="module" src="../../index.js"></script>
+
+    <style>
+        /* prevent flicker before Fore is ready */
+        fx-fore {
+            visibility: hidden;
+        }
+        fx-fore.fx-ready {
+            visibility: visible;
+        }
+
+        :root {
+            --border: #ddd;
+            --muted: #666;
+            --bg: #fafafa;
+            --pill: #f3f3f3;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+            margin: 0;
+            background: #fff;
+        }
+
+        header {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .wrap {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 12px 16px 24px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        section {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px;
+        }
+
+        h2 {
+            margin: 0 0 10px;
+            font-size: 16px;
+        }
+
+        .row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .muted {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        fx-control label {
+            display: block;
+            font-size: 12px;
+            color: #555;
+            margin-bottom: 4px;
+        }
+
+        fx-control .widget {
+            width: 100%;
+            padding: 8px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+        }
+
+        .btnbar {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        fx-trigger button {
+            padding: 7px 10px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            background: var(--bg);
+            cursor: pointer;
+        }
+        fx-trigger button:hover {
+            background: #f0f0f0;
+        }
+
+        #todos {
+            display: block;
+            max-height: 60vh;
+            overflow-y: auto;
+            padding: 0.25rem;
+        }
+
+        fx-repeatitem {
+            display: block;
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px solid transparent;
+            margin-bottom: 8px;
+            background: #fff;
+        }
+        fx-repeatitem[repeat-index] {
+            border-color: #444;
+        }
+
+        .pill {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 999px;
+            border: 1px solid #ccc;
+            font-size: 12px;
+            background: var(--pill);
+        }
+
+        /* FILTERING: hide items marked nonrelevant by binds */
+        fx-repeatitem[nonrelevant] {
+            display: none;
+        }
+
+        .todo-title {
+            flex: 1;
+            min-width: 0;
+        }
+        .todo-title .done {
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+
+        .tiny {
+            font-size: 12px;
+            padding: 5px 8px;
+            border-radius: 9px;
+        }
+    </style>
+</head>
+
+<body>
+<header>
+    <strong>Fore JSON Demo:</strong> Todo (todo2.html rewritten for JSON)
+    <div class="muted">JSON lens paths (?foo), fx-bind relevant filtering, insert/delete/setvalue.</div>
+</header>
+
+<div class="wrap">
+    <fx-fore id="todo-demo">
+        <fx-model>
+            <fx-instance id="data" type="json">
+                {
+                "ui": { "newTitle": "", "query": "", "filter": "all" },
+                "todos": [
+                    { "title": "Buy oat milk", "done": false },
+                    { "title": "Finish Fore JSON demo", "done": false },
+                    { "title": "Watch Blade Runner again", "done": true }
+                ]
+                }
+            </fx-instance>
+
+            <!-- Filter: mark each todo relevant based on query + filter selection -->
+<!--
+            <fx-bind
+                    ref="?todos?*"
+                    relevant="
+              (
+                instance('data')?ui?filter = 'all'
+                or (instance('data')?ui?filter = 'active' and not(?done))
+                or (instance('data')?ui?filter = 'done' and ?done)
+              )
+              and
+              (
+                instance('data')?ui?query = ''
+                or contains(lower-case(?title), lower-case(instance('data')?ui?query))
+              )
+            "
+            ></fx-bind>
+-->
+        </fx-model>
+
+        <div class="grid">
+            <!-- LEFT: list -->
+            <section>
+                <h2>Todos</h2>
+
+                <div class="row" style="gap: 10px">
+                    <fx-control ref="instance('data')?ui?query" update-event="input" style="flex: 1">
+                        <label>Search</label>
+                        <input class="widget" placeholder="Type to filter..." type="search" />
+                    </fx-control>
+
+                    <fx-control ref="instance('data')?ui?filter" update-event="change" style="width: 170px">
+                        <label>Filter</label>
+                        <select class="widget">
+                            <option value="all">All</option>
+                            <option value="active">Active</option>
+                            <option value="done">Done</option>
+                        </select>
+                    </fx-control>
+                </div>
+
+                <div class="muted" style="margin: 10px 0">
+                    Selected index: <fx-output ref="index('todos')"></fx-output>
+                    <span class="pill" style="margin-left: 6px">
+                Count:
+                <fx-output ref="count(instance('data')?todos?*)"></fx-output>
+              </span>
+                </div>
+
+                <fx-repeat id="todos" ref="instance('data')?todos?*">
+                    <template>
+                        <div class="row">
+                            <div class="pill">
+                                {if(?done) then 'done' else 'active'}
+                            </div>
+
+                            <div class="todo-title">
+                                <strong>
+                                    <fx-output
+                                            ref="if(?done) then concat(?title,'') else concat(?title,'')"
+                                    ></fx-output>
+                                </strong>
+                                <span class="muted" style="margin-left: 8px">
+                      <fx-output ref="if(?done) then '✓' else ''"></fx-output>
+                    </span>
+                            </div>
+
+                            <fx-trigger class="tiny">
+                                <button class="tiny" title="Toggle done">Toggle</button>
+                                <fx-setvalue ref="?done">not(?done)</fx-setvalue>
+                            </fx-trigger>
+
+                            <fx-trigger class="tiny">
+                                <button class="tiny" title="Delete">Delete</button>
+                                <fx-delete ref="instance('data')?todos[index('todos')]"></fx-delete>
+                            </fx-trigger>
+                        </div>
+                    </template>
+                </fx-repeat>
+
+                <hr style="border: none; border-top: 1px solid var(--border); margin: 12px 0" />
+
+                <h2>Add</h2>
+
+                <fx-control ref="instance('data')?ui?newTitle" update-event="input">
+                    <label>New todo title</label>
+                    <input class="widget" placeholder="What needs doing?" />
+                </fx-control>
+
+                <div class="btnbar">
+                    <fx-trigger id="add-todo">
+                        <button>Add todo</button>
+
+                        <!-- Append a blank todo object (inline JSON template) -->
+                        <fx-insert ref="instance('data')?todos" position="after" at="count(instance('data')?todos?*)">
+                            <template>
+                                {
+                                "title": "",
+                                "done": false
+                                }
+                            </template>
+                        </fx-insert>
+
+                        <!-- Set title on last item (works in JSON lens world) -->
+                        <fx-setvalue ref="instance('data')?todos[last()]?title">
+                            {instance('data')?ui?newTitle}
+                        </fx-setvalue>
+
+                        <!-- Clear the input -->
+                        <fx-setvalue ref="instance('data')?ui?newTitle"></fx-setvalue>
+                    </fx-trigger>
+
+                    <fx-trigger id="mark-all-done">
+                        <button>Mark all done</button>
+                        <!-- Simple approach: set done=true on all via for-each style map
+                             If your Fore doesn't support '!' operator in your build, remove this trigger. -->
+                        <fx-setvalue ref="instance('data')?todos?*?done">true()</fx-setvalue>
+                    </fx-trigger>
+                </div>
+
+                <div class="muted" style="margin-top: 8px">
+                    Tip: filtering is via <code>fx-bind relevant</code>. Nonrelevant items are hidden by CSS.
+                </div>
+            </section>
+
+            <!-- RIGHT: detail -->
+            <section>
+                <h2>Detail</h2>
+
+                <fx-group ref="instance('data')?todos[index('todos')]">
+                    <div class="row" style="margin-bottom: 10px">
+                        <span class="pill">Selected</span>
+                        <span class="muted">Edit the current todo via index()</span>
+                    </div>
+
+                    <fx-control ref="?title" update-event="input">
+                        <label>Title</label>
+                        <input class="widget" />
+                    </fx-control>
+
+                    <div class="btnbar">
+                        <fx-trigger id="toggle-detail">
+                            <button>Toggle done</button>
+                            <fx-setvalue ref="?done">not(?done)</fx-setvalue>
+                        </fx-trigger>
+
+                        <fx-trigger id="set-sample-title">
+                            <button>Set sample title</button>
+                            <fx-setvalue ref="?title">Edited in detail</fx-setvalue>
+                        </fx-trigger>
+                    </div>
+
+                    <div class="muted" style="margin-top: 12px">
+                        Bound path:
+                        <code>
+                            <fx-output ref="instance('data')?todos[index('todos')]?title"></fx-output>
+                        </code>
+                    </div>
+                </fx-group>
+            </section>
+        </div>
+    </fx-fore>
+</div>
+</body>
+</html>

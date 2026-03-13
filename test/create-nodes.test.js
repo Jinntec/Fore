@@ -239,7 +239,9 @@ describe('create-nodes', () => {
         </fx-model>
 
         <fx-repeat ref="('a', 'b', 'c')">
-          <fx-output ref="."></fx-output>
+          <template>
+            <fx-output ref="."></fx-output>
+          </template>
         </fx-repeat>
 
         <fx-group ref=".">

@@ -184,9 +184,10 @@ describe('functions', () => {
             </data>
           </fx-instance>
         </fx-model>
-        <fx-repeat id="repeat">
+
+      <fx-repeat id="repeat" ref="theanswer">
           <template>
-            <fx-output ref="theanswer"></fx-output>
+          <fx-output ref="."></fx-output>
           </template>
         </fx-repeat>
         <span id="index">{index('repeat')}</span>
@@ -195,8 +196,7 @@ describe('functions', () => {
 
     await oneEvent(el, 'refresh-done');
 
-    const indexVal = document.getElementById('index').innerText;
-
+    const indexVal = el.querySelector('#index')?.innerText?.trim();
     expect(Number(indexVal)).to.equal(1);
   });
 
@@ -230,7 +230,7 @@ describe('functions', () => {
     trigger.performActions();
     await refreshed;
 
-    const indexVal = document.querySelector('#index').innerText;
+    const indexVal = el.querySelector('#index')?.innerText?.trim();
     expect(Number(indexVal)).to.equal(3);
   });
 

@@ -1,7 +1,6 @@
 import ForeElementMixin from '../ForeElementMixin.js';
 import { Fore } from '../fore.js';
-import { evaluateXPath, evaluateXPathToBoolean, resolveId } from '../xpath-evaluation';
-import { DependencyNotifyingDomFacade } from '../DependencyNotifyingDomFacade';
+import { resolveId } from '../xpath-evaluation.js';
 
 export class UIElement extends ForeElementMixin {
   constructor() {
@@ -120,6 +119,8 @@ export class UIElement extends ForeElementMixin {
    * Called by ModelItem when it changes
    * @param {import('../modelitem.js').ModelItem} modelItem - The ModelItem that changed
    */
+
+/*
   update(modelItem) {
     if (this.isBound()) {
       // console.log('[UIElement] update()', modelItem);
@@ -127,7 +128,20 @@ export class UIElement extends ForeElementMixin {
       this.refresh();
     }
   }
+*/
 
+  update(_modelItem) {
+    if (!this.isBound()) return;
+    const fore = this.getOwnerForm();
+    if (!fore) return;
+
+    // Preserve legacy eager updates unless we're already in a refresh phase.
+    if (fore.isRefreshPhase) {
+      fore.addToBatchedNotifications(this);
+    } else {
+      this.refresh();
+    }
+  }
   // init() {
   //   throw new Error('You have to implement the method init!');
   // }

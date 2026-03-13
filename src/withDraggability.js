@@ -217,7 +217,6 @@ export const withDraggability = (superclass, isAlsoDraggable) =>
       }
 
       // Note: full refresh needed since multiple model items may be affected.
-      // TODO: Leverage the changedPaths trick
       this.getOwnerForm().getModel().updateModel();
       this.getOwnerForm().refresh(true);
     }
