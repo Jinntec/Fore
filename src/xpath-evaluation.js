@@ -558,7 +558,6 @@ function getVariablesInScope(formElement) {
         : closestActualFormElement.parentNode;
   }
 
-  // Fall back to owning fore if we couldn't find an element carrying inScopeVariables
   const scopeNode = closestActualFormElement || formElement;
   const fore =
     (scopeNode && typeof scopeNode.getOwnerForm === 'function' && scopeNode.getOwnerForm()) ||
@@ -566,48 +565,79 @@ function getVariablesInScope(formElement) {
 
   const variables = {};
 
-  // 1) Implicit instance vars (Variant A): $default and $<instanceId>
-  // These are the lowest-precedence defaults and can be overridden by explicit fx-var.
-  // NOTE: Some evaluations can happen before FxModel has populated `_instanceVarBindings`.
-  // Build bindings on the fly (side-effect free) so `$default` is always available.
+  // Helper: get :scope > fx-instance list from a fore's model without triggering instance getters
+  const getLocalInstances = aFore => {
+    if (!aFore) return [];
+    const model =
+      (typeof aFore.getModel === 'function' && aFore.getModel()) ||
+      aFore.shadowRoot?.querySelector?.('fx-model') ||
+      aFore.querySelector?.('fx-model') ||
+      null;
+    if (!model) return [];
+    return Array.from(model.querySelectorAll(':scope > fx-instance'));
+  };
+
+  const buildBindingsFromInstances = instEls => {
+    if (!instEls || !instEls.length) return null;
+    const b = Object.create(null);
+
+    // default = first instance in doc order
+    const first = instEls[0];
+    const firstIsJson = _isJsonInstance(first);
+    b.default = firstIsJson
+      ? _getRawJsonRootValue(first)
+      : _getInstanceDefaultContextNoSideEffects(first);
+
+    // $<id> for explicitly id'ed instances
+    for (const inst of instEls) {
+      const id = (inst.getAttribute && inst.getAttribute('id')) || '';
+      if (!id) continue;
+      if (id === 'default') continue;
+
+      b[id] = _isJsonInstance(inst)
+        ? _getRawJsonRootValue(inst)
+        : _getInstanceDefaultContextNoSideEffects(inst);
+    }
+    return b;
+  };
+
+  // 1) Implicit instance vars: $default and $<id>
   let instanceBindings = fore && fore._instanceVarBindings;
 
-  // If bindings are missing OR don't even contain `default`, build them from this fore's model.
+  // Ensure we have at least a `default` binding; if not, build it.
   if (fore && (!instanceBindings || !('default' in instanceBindings))) {
     try {
-      const model =
-        (typeof fore.getModel === 'function' && fore.getModel()) ||
-        fore.shadowRoot?.querySelector?.('fx-model') ||
-        fore.querySelector?.('fx-model') ||
-        null;
+      const localInst = getLocalInstances(fore);
+      const built = buildBindingsFromInstances(localInst);
 
-      if (model) {
-        const instEls = Array.from(model.querySelectorAll(':scope > fx-instance'));
-        if (instEls.length) {
-          const b = Object.create(null);
+      if (built && built.default !== undefined && built.default !== null) {
+        fore._instanceVarBindings = built;
+        instanceBindings = built;
+      } else {
+        // NEW: fallback to nearest ancestor fore that has a SHARED instance as default
+        let p =
+          fore.parentNode?.nodeType === Node.DOCUMENT_FRAGMENT_NODE
+            ? fore.parentNode.host
+            : fore.parentNode;
+        while (p) {
+          const parentFore = p.closest ? p.closest('fx-fore') : null;
+          if (!parentFore) break;
 
-          // default = first instance in doc order
-          const first = instEls[0];
-          const firstIsJson = _isJsonInstance(first);
-          b.default = firstIsJson
-            ? _getRawJsonRootValue(first)
-            : _getInstanceDefaultContextNoSideEffects(first);
+          const parentInst = getLocalInstances(parentFore).filter(
+            i => i.hasAttribute && i.hasAttribute('shared'),
+          );
+          const parentBuilt = buildBindingsFromInstances(parentInst);
 
-          // $<id> for explicitly id'ed instances
-          for (const inst of instEls) {
-            const id = (inst.getAttribute && inst.getAttribute('id')) || '';
-            if (!id) continue;
-            if (id === 'default') continue;
-
-            b[id] = _isJsonInstance(inst)
-              ? _getRawJsonRootValue(inst)
-              : _getInstanceDefaultContextNoSideEffects(inst);
+          if (parentBuilt && parentBuilt.default !== undefined && parentBuilt.default !== null) {
+            // Do NOT cache this onto the child fore; it’s a fallback view, not ownership.
+            instanceBindings = parentBuilt;
+            break;
           }
 
-          // Prefer not to mutate global state during evaluation, but keeping a cache is useful.
-          // This is safe because it does not call any getters with side effects.
-          fore._instanceVarBindings = b;
-          instanceBindings = b;
+          p =
+            parentFore.parentNode?.nodeType === Node.DOCUMENT_FRAGMENT_NODE
+              ? parentFore.parentNode.host
+              : parentFore.parentNode;
         }
       }
     } catch (_e) {
@@ -617,13 +647,11 @@ function getVariablesInScope(formElement) {
 
   if (instanceBindings) {
     for (const [k, v] of Object.entries(instanceBindings)) {
-      // IMPORTANT: do not call instance getters here.
-      // Convert raw JSON objects to XQuery Map items so `?` lookup works.
       variables[k] = _toXQueryMapItem(v);
     }
   }
 
-  // 2) Explicit in-scope variables (fx-var or other injectors)
+  // 2) Explicit in-scope variables (fx-var or other injectors) override implicit ones
   if (closestActualFormElement && closestActualFormElement.inScopeVariables) {
     for (const key of closestActualFormElement.inScopeVariables.keys()) {
       const varElementOrValue = closestActualFormElement.inScopeVariables.get(key);
@@ -632,8 +660,7 @@ function getVariablesInScope(formElement) {
       if (varElementOrValue.nodeType) {
         const el = varElementOrValue;
 
-        // If this fx-var is effectively defining the default instance var, keep the implicit binding.
-        // This preserves `$default` as a JSONNode/Map item suitable for `?` lookups.
+        // Preserve implicit binding for $default when fx-var simply re-declares default instance
         if (
           el.nodeName === 'FX-VAR' &&
           fore &&
@@ -644,19 +671,11 @@ function getVariablesInScope(formElement) {
           const isDefaultInstanceExpr =
             /^instance\s*\(\s*\)\s*$/.test(vexpr) ||
             /^instance\s*\(\s*(['"])default\1\s*\)\s*$/.test(vexpr);
-          if (isDefaultInstanceExpr) {
-            // Keep existing implicit value (already assigned above) and do not overwrite.
-            continue;
-          }
+          if (isDefaultInstanceExpr) continue;
         }
 
-        // IMPORTANT: avoid triggering nested fx-var refresh/evaluation while collecting variables.
-        // This prevents recursion when a variable value evaluation itself needs variables.
         if (el.nodeName === 'FX-VAR') {
-          if (el._isRefreshing) {
-            // Skip variables currently being computed.
-            continue;
-          }
+          if (el._isRefreshing) continue;
           if ('_value' in el) {
             variables[key] = el._value;
             continue;
@@ -673,22 +692,15 @@ function getVariablesInScope(formElement) {
       }
     }
   }
-  // Prevent self-recursive fx-var evaluation:
-  // While computing <fx-var name="X">, do not expose X as an in-scope variable.
+
+  // Prevent self-recursive fx-var evaluation
   if (formElement && formElement.nodeName === 'FX-VAR') {
     const selfName = (formElement.getAttribute('name') || '').trim();
-    if (selfName) {
-      // Support both Map-like and plain-object storage
-      if (variables && typeof variables.delete === 'function') {
-        variables.delete(selfName);
-      } else if (variables && typeof variables === 'object') {
-        delete variables[selfName];
-      }
-    }
+    if (selfName) delete variables[selfName];
   }
+
   return variables;
 }
-
 // ------------------------------------------------------------
 // Namespace resolver infra (XML only)
 // ------------------------------------------------------------
@@ -920,11 +932,14 @@ function _jsonAtomicFromResolved(resolved) {
     return String(resolved);
   }
 }
+// Paste this over the existing function in src/xpath-evaluation.js
 function _materializeInstanceLookupsInPredicate(predicateExpr, currentJsonNode, formElement) {
   const src = String(predicateExpr ?? '');
   let out = '';
   const extraVars = {};
   let varCount = 0;
+
+  const inScope = getVariablesInScope(formElement);
 
   let inSingle = false;
   let inDouble = false;
@@ -946,11 +961,53 @@ function _materializeInstanceLookupsInPredicate(predicateExpr, currentJsonNode, 
     ch === '|' ||
     ch === '&';
 
+  function readLookupTail(start) {
+    let k = start;
+
+    if (src[k] === '.') {
+      if (src[k + 1] !== '?') return null;
+      k += 1;
+    }
+    if (src[k] !== '?') return null;
+
+    let bracketDepth = 0;
+    let inS = false;
+    let inD = false;
+
+    while (k < src.length) {
+      const ch = src[k];
+
+      if (ch === "'" && !inD) {
+        inS = !inS;
+        k += 1;
+        continue;
+      }
+      if (ch === '"' && !inS) {
+        inD = !inD;
+        k += 1;
+        continue;
+      }
+      if (inS || inD) {
+        k += 1;
+        continue;
+      }
+
+      if (ch === '[') bracketDepth += 1;
+      else if (ch === ']') {
+        if (bracketDepth > 0) bracketDepth -= 1;
+        else break;
+      }
+
+      if (bracketDepth === 0 && k !== start && isBoundary(ch)) break;
+      k += 1;
+    }
+
+    return { raw: src.slice(start, k), end: k };
+  }
+
   function readInstanceLensAt(start) {
-    // Reads `instance(...)` followed by one or more `?step` parts.
     if (!src.slice(start).match(/^instance\s*\(/)) return null;
 
-    // Find matching ')'
     let j = start;
     let inS = false;
     let inD = false;
@@ -984,46 +1041,62 @@ function _materializeInstanceLookupsInPredicate(predicateExpr, currentJsonNode, 
 
     if (j >= src.length) return null;
 
-    // Must be followed by '?' (after optional whitespace)
     let k = j + 1;
     while (k < src.length && /\s/.test(src[k])) k += 1;
-    if (src[k] !== '?') return null;
+    const tail = readLookupTail(k);
+    if (!tail) return null;
 
-    // Consume until boundary, respecting bracket depth and quotes
-    k += 1;
-    let bracketDepth = 0;
-    inS = false;
-    inD = false;
+    return { raw: src.slice(start, tail.end), end: tail.end };
+  }
 
-    while (k < src.length) {
-      const ch = src[k];
+  function readVariableLensAt(start) {
+    if (src[start] !== '$') return null;
 
-      if (ch === "'" && !inD) {
-        inS = !inS;
-        k += 1;
-        continue;
-      }
-      if (ch === '"' && !inS) {
-        inD = !inD;
-        k += 1;
-        continue;
-      }
-      if (inS || inD) {
-        k += 1;
-        continue;
-      }
+    let j = start + 1;
+    if (!/[A-Za-z_]/.test(src[j] || '')) return null;
+    j += 1;
+    while (j < src.length && /[\w.-]/.test(src[j])) j += 1;
 
-      if (ch === '[') bracketDepth += 1;
-      else if (ch === ']') {
-        if (bracketDepth > 0) bracketDepth -= 1;
-        else break;
-      }
+    let k = j;
+    while (k < src.length && /\s/.test(src[k])) k += 1;
 
-      if (bracketDepth === 0 && isBoundary(ch)) break;
-      k += 1;
+    const tail = readLookupTail(k);
+    if (!tail) {
+      return { raw: src.slice(start, j), end: j, name: src.slice(start + 1, j), tail: '' };
     }
 
-    return { raw: src.slice(start, k), end: k };
+    return {
+      raw: src.slice(start, tail.end),
+      end: tail.end,
+      name: src.slice(start + 1, j),
+      tail: src.slice(k, tail.end),
+    };
+  }
+
+  function resolveVariableLens(rawVarExpr) {
+    const m = String(rawVarExpr).match(/^\$([A-Za-z_][\w.-]*)([\s\S]*)$/);
+    if (!m) return null;
+
+    const varName = m[1];
+    const rest = (m[2] || '').trim();
+
+    const base = Object.prototype.hasOwnProperty.call(inScope, varName) ? inScope[varName] : null;
+
+    if (rest && (rest.startsWith('?') || rest.startsWith('.?'))) {
+      if (base && _isJsonNode(base)) {
+        const resolved = _resolveSimpleLookupToJsonNode(rest, base, formElement);
+        return _jsonAtomicFromResolved(resolved);
+      }
+      const resolved = _resolveLookupOnMapItem(base, rest);
+      return _jsonAtomicFromResolved(resolved);
+    }
+
+    return _jsonAtomicFromResolved(base);
+  }
+
+  function resolveRelativeLookup(rawLookupExpr) {
+    const resolved = _resolveSimpleLookupToJsonNode(rawLookupExpr, currentJsonNode, formElement);
+    return _jsonAtomicFromResolved(resolved);
   }
 
   for (let i = 0; i < src.length; i += 1) {
@@ -1041,16 +1114,34 @@ function _materializeInstanceLookupsInPredicate(predicateExpr, currentJsonNode, 
     }
 
     if (!inSingle && !inDouble) {
-      const lens = readInstanceLensAt(i);
-      if (lens && _looksLikeLookupExpr(lens.raw) && _isSimpleLookupExpr(lens.raw)) {
-        const varName = `__fxp${varCount++}`;
+      // 1) instance('x')?foo?bar
+      const instLens = readInstanceLensAt(i);
+      if (instLens && _looksLikeLookupExpr(instLens.raw) && _isSimpleLookupExpr(instLens.raw)) {
+        const vname = `__fxp${varCount++}`;
+        const resolved = _resolveSimpleLookupToJsonNode(instLens.raw, currentJsonNode, formElement);
+        extraVars[vname] = _jsonAtomicFromResolved(resolved);
+        out += `$${vname}`;
+        i = instLens.end - 1;
+        continue;
+      }
 
-        // Resolve the lookup using the existing JSON lens resolver.
-        const resolved = _resolveSimpleLookupToJsonNode(lens.raw, currentJsonNode, formElement);
-        extraVars[varName] = _jsonAtomicFromResolved(resolved);
+      // 2) $default?ui?query (or plain $var)
+      const varLens = readVariableLensAt(i);
+      if (varLens) {
+        const vname = `__fxp${varCount++}`;
+        extraVars[vname] = resolveVariableLens(varLens.raw);
+        out += `$${vname}`;
+        i = varLens.end - 1;
+        continue;
+      }
 
-        out += `$${varName}`;
-        i = lens.end - 1;
+      // 3) relative lookup like ?title / .?title
+      const relLens = readLookupTail(i);
+      if (relLens && _looksLikeLookupExpr(relLens.raw) && _isSimpleLookupExpr(relLens.raw)) {
+        const vname = `__fxp${varCount++}`;
+        extraVars[vname] = resolveRelativeLookup(relLens.raw);
+        out += `$${vname}`;
+        i = relLens.end - 1;
         continue;
       }
     }
@@ -1060,105 +1151,108 @@ function _materializeInstanceLookupsInPredicate(predicateExpr, currentJsonNode, 
 
   return { expr: out.trim(), extraVars };
 }
-
 function _filterJsonNodesByPredicate(nodes, predicateExpr, formElement, variables = {}) {
   const pred = String(predicateExpr ?? '').trim();
 
   if (pred === 'true()' || pred === 'true') return (nodes || []).filter(_isJsonNode);
   if (pred === 'false()' || pred === 'false') return [];
 
-  const toPlain = v => {
-    if (v == null) return v;
-    if (_isJsonNode(v)) return toPlain(v.value);
-    if (Array.isArray(v)) return v.map(toPlain);
-    if (v instanceof Map) {
-      const o = Object.create(null);
-      for (const [k, vv] of v.entries()) o[String(k)] = toPlain(vv);
-      return o;
-    }
-    if (typeof v === 'object' && !v.nodeType) {
-      const o = Object.create(null);
-      for (const [k, vv] of Object.entries(v)) o[k] = toPlain(vv);
-      return o;
-    }
-    return v;
-  };
+  // Keep the existing special fast-paths (they’re fine as an optimization)
+  const containsDot = pred.match(/^contains\s*\(\s*\.\s*,\s*([\s\S]+)\s*\)\s*$/);
+  if (containsDot) {
+    const rhs = containsDot[1].trim();
+    const inScope = getVariablesInScope(formElement);
 
-  const toStringSafe = v => {
-    const vv = toPlain(v);
-    if (vv === null || vv === undefined) return '';
-    if (typeof vv === 'string' || typeof vv === 'number' || typeof vv === 'boolean') return String(vv);
-    try {
-      return JSON.stringify(vv);
-    } catch (_e) {
-      return String(vv);
-    }
-  };
+    const toPlain = v => {
+      if (v == null) return v;
+      if (_isJsonNode(v)) return toPlain(v.value);
+      if (Array.isArray(v)) return v.map(toPlain);
+      if (v instanceof Map) {
+        const o = Object.create(null);
+        for (const [k, vv] of v.entries()) o[String(k)] = toPlain(vv);
+        return o;
+      }
+      if (typeof v === 'object' && !v.nodeType) {
+        const o = Object.create(null);
+        for (const [k, vv] of Object.entries(v)) o[k] = toPlain(vv);
+        return o;
+      }
+      return v;
+    };
 
-  const containsMatch = pred.match(/^contains\s*\(\s*\.\s*,\s*([\s\S]+)\s*\)\s*$/);
-  if (containsMatch) {
-    const rhs = containsMatch[1].trim();
+    const toStringSafe = v => {
+      const vv = toPlain(v);
+      if (vv === null || vv === undefined) return '';
+      if (typeof vv === 'string' || typeof vv === 'number' || typeof vv === 'boolean')
+        return String(vv);
+      try {
+        return JSON.stringify(vv);
+      } catch (_e) {
+        return String(vv);
+      }
+    };
+
+    const resolveExprToString = (rawExpr, itemNode) => {
+      const expr = String(rawExpr ?? '').trim();
+
+      const quoted = expr.match(/^(['"])([\s\S]*)\1$/);
+      if (quoted) return String(quoted[2] ?? '');
+
+      const varLens = expr.match(/^\$([A-Za-z_][\w.-]*)([\s\S]*)$/);
+      if (varLens) {
+        const varName = varLens[1];
+        const rest = (varLens[2] || '').trim();
+
+        const base =
+          (variables && varName in variables ? variables[varName] : null) ??
+          (inScope && varName in inScope ? inScope[varName] : null);
+
+        if (rest && (rest.startsWith('?') || rest.startsWith('.?'))) {
+          if (base && _isJsonNode(base)) {
+            const resolved = _resolveSimpleLookupToJsonNode(rest, base, formElement);
+            return toStringSafe(_jsonAtomicFromResolved(resolved));
+          }
+          const resolved = _resolveLookupOnMapItem(base, rest);
+          return toStringSafe(_jsonAtomicFromResolved(resolved));
+        }
+
+        return toStringSafe(_jsonAtomicFromResolved(base));
+      }
+
+      if (expr === '.') {
+        const v = typeof itemNode.getValue === 'function' ? itemNode.getValue() : itemNode.value;
+        return toStringSafe(v);
+      }
+
+      if (_looksLikeLookupExpr(expr)) {
+        const resolved = _resolveSimpleLookupToJsonNode(expr, itemNode, formElement);
+        return toStringSafe(_jsonAtomicFromResolved(resolved));
+      }
+
+      if (expr.startsWith('$')) {
+        const key = expr.slice(1);
+        const v =
+          (variables && key in variables ? variables[key] : null) ??
+          (inScope && key in inScope ? inScope[key] : null);
+        return toStringSafe(_jsonAtomicFromResolved(v));
+      }
+
+      return expr;
+    };
 
     return (nodes || []).filter(n => {
       if (!_isJsonNode(n)) return false;
-
-      let needle = '';
-      const quoted = rhs.match(/^(['"])([\s\S]*)\1$/);
-      if (quoted) {
-        needle = String(quoted[2] ?? '');
-      } else {
-        const inScope = getVariablesInScope(formElement);
-
-        const varLens = rhs.match(/^\$([A-Za-z_][\w.-]*)(\?[\s\S]+)?$/);
-        if (varLens) {
-          const varName = varLens[1];
-          const rest = varLens[2] || '';
-
-          const base =
-              (variables && varName in variables ? variables[varName] : null) ??
-              (varName in inScope ? inScope[varName] : null);
-
-          if (rest && (rest.startsWith('?') || rest.startsWith('.?'))) {
-            if (base && _isJsonNode(base)) {
-              const resolved = _resolveSimpleLookupToJsonNode(rest, base, formElement);
-              needle = toStringSafe(_jsonAtomicFromResolved(resolved));
-            } else {
-              const resolved = _resolveLookupOnMapItem(base, rest);
-              needle = toStringSafe(_jsonAtomicFromResolved(resolved));
-            }
-          } else {
-            needle = toStringSafe(_jsonAtomicFromResolved(base));
-          }
-        } else {
-          const resolved = _looksLikeLookupExpr(rhs)
-              ? _resolveSimpleLookupToJsonNode(rhs, n, formElement)
-              : null;
-
-          needle = toStringSafe(_jsonAtomicFromResolved(resolved));
-
-          if (!needle && rhs.startsWith('$')) {
-            const key = rhs.slice(1);
-            const v =
-                (variables && key in variables ? variables[key] : null) ??
-                (key in inScope ? inScope[key] : null);
-            needle = toStringSafe(_jsonAtomicFromResolved(v));
-          }
-        }
-      }
-
+      const needle = resolveExprToString(rhs, n);
       if (needle === '') return true;
 
-      // haystack: stringify the whole item (convert Map->object first)
       const raw = typeof n.getValue === 'function' ? n.getValue() : n.value;
       const haystack = toStringSafe(raw);
-
-      return haystack.includes(needle);
+      return String(haystack || '').includes(String(needle));
     });
   }
 
-  // General case: evaluate predicate using FontoXPath
+  // --- GENERAL CASE (the important fix) ---
   const inScope = getVariablesInScope(formElement);
-  const domFacade = __jsonDomFacade;
 
   const out = [];
   for (const n of nodes || []) {
@@ -1166,14 +1260,18 @@ function _filterJsonNodesByPredicate(nodes, predicateExpr, formElement, variable
 
     try {
       const { expr: predExpr, extraVars } = _materializeInstanceLookupsInPredicate(
-          pred,
-          n,
-          formElement,
+        pred,
+        n,
+        formElement,
       );
       const mergedVars = { ...inScope, ...variables, ...extraVars };
 
-      const ok = fxEvaluateXPathToBoolean(predExpr, n, domFacade, mergedVars, {
-        currentContext: { formElement },
+      // Evaluate predicate in RAW context (no JSONDomFacade).
+      // This avoids JSONDomFacade quirks and matches the behavior of the working instance() variant.
+      const rawContext = typeof n.getValue === 'function' ? n.getValue() : n.value;
+
+      const ok = fxEvaluateXPathToBoolean(predExpr, rawContext, null, mergedVars, {
+        currentContext: { formElement, jsonMode: 'raw' },
         moduleImports: { xf: XFORMS_NAMESPACE_URI },
         functionNameResolver,
         namespaceResolver: null,
@@ -1182,8 +1280,10 @@ function _filterJsonNodesByPredicate(nodes, predicateExpr, formElement, variable
       });
 
       if (ok) out.push(n);
-    } catch (_e) {
-      // treat as false
+    } catch (e) {
+      // IMPORTANT: don't swallow silently — but keep it non-fatal.
+      // This will immediately show you if variable resolution or predicate rewriting is still wrong.
+      console.warn('[Fore] JSON predicate failed:', pred, '=>', e);
     }
   }
 

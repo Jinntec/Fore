@@ -12,9 +12,7 @@ async function handleResponse(fxInstance, response) {
   let responseContentType = response.headers.get('content-type').split(';')[0].trim().toLowerCase();
 
   if (responseContentType.startsWith('text/html')) {
-    return response.text().then(
-        result => new DOMParser().parseFromString(result, 'text/html'),
-    );
+    return response.text().then(result => new DOMParser().parseFromString(result, 'text/html'));
   }
   if (responseContentType.endsWith('/json') || responseContentType.endsWith('+json')) {
     return response.json();
@@ -58,20 +56,47 @@ export class FxInstance extends HTMLElement {
       this.src = this.getAttribute('src');
     }
 
-    // IMPORTANT:
-    // Do NOT write to `this.id` for the implicit default instance.
-    // `this.id` is the global HTML id and reflects to an attribute, which would make
-    // every id-less instance appear as id="default" in the DOM.
-    // Keep a separate instance identifier for Fore semantics.
-    this.instanceId = this.hasAttribute('id') ? this.getAttribute('id') : 'default';
+    // Default instance selection is positional:
+    // The first <fx-instance> child (doc order) of the owning <fx-model> is the default instance.
+    // If the author did not provide an id on that first instance, we set id="default".
+    // If the author provided an id on that first instance, we use that id instead.
+    const parentModel =
+      this.parentNode && this.parentNode.nodeName && this.parentNode.nodeName.toUpperCase() === 'FX-MODEL'
+        ? this.parentNode
+        : null;
 
-    this.credentials = this.hasAttribute('credentials')
-        ? this.getAttribute('credentials')
-        : 'same-origin';
+    const explicitId = (this.getAttribute('id') || '').trim();
+
+    let isFirstInModel = false;
+    if (parentModel) {
+      const instances = Array.from(parentModel.children).filter(
+        el => el && el.nodeType === Node.ELEMENT_NODE && el.localName === 'fx-instance',
+      );
+      isFirstInModel = instances.length > 0 && instances[0] === this;
+    } else {
+      // Standalone <fx-instance> in tests/fixtures: treat as default.
+      isFirstInModel = true;
+    }
+
+    if (isFirstInModel) {
+      // First instance defines the default instance
+      const effectiveId = explicitId || 'default';
+      this.instanceId = effectiveId;
+      // For backwards compatibility/tests, reflect as DOM id.
+      this.id = effectiveId;
+    } else {
+      // Non-first instances are only addressable by id if explicitly provided.
+      this.instanceId = explicitId || '';
+      if (explicitId) {
+        this.id = explicitId;
+      }
+    }
+
+    this.credentials = this.hasAttribute('credentials') ? this.getAttribute('credentials') : 'same-origin';
     if (!['same-origin', 'include', 'omit'].includes(this.credentials)) {
       console.error(
-          `fx-submission: the value of credentials is not valid. Expected 'same-origin', 'include' or 'omit' but got '${this.credentials}'`,
-          this,
+        `fx-submission: the value of credentials is not valid. Expected 'same-origin', 'include' or 'omit' but got '${this.credentials}'`,
+        this,
       );
     }
 
@@ -127,11 +152,11 @@ export class FxInstance extends HTMLElement {
   async init() {
     await this._initInstance();
     this.dispatchEvent(
-        new CustomEvent('instance-loaded', {
-          composed: true,
-          bubbles: true,
-          detail: { instance: this },
-        }),
+      new CustomEvent('instance-loaded', {
+        composed: true,
+        bubbles: true,
+        detail: { instance: this },
+      }),
     );
     return this;
   }

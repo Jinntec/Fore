@@ -59,7 +59,6 @@
 </header>
 
 <fx-fore id="movies-demo">
-<!--    <fx-var name="def" value="instance('default')"></fx-var>-->
     <fx-model>
         <fx-instance type="json">
             {
@@ -88,14 +87,15 @@
             <fx-control ref="?ui?query" update-event="input">
                 <label>Search (client state)</label>
                 <input class="widget" placeholder="Type to filter..." type="search"	data-cy="query"/>
-                <fx-refresh control="movies" event="value-changed"></fx-refresh>
+<!--                <fx-refresh control="movies" event="value-changed"></fx-refresh>-->
             </fx-control>
 
             <div class="muted" style="margin:10px 0;">
                 Selected index: {index('movies')} <fx-output value="index('movies')"></fx-output>
             </div>
-{$default?ui?query}
-            <fx-repeat id="movies" ref="?movies?*[contains(.,$default?ui?query)]" data-cy="movies-repeat">
+            {$default?ui?query}
+
+            <fx-repeat id="movies" ref="?movies?*[contains(lower-case(?title), lower-case($default?ui?query))]">
                 <template>
                     <div class="row">
                         <strong>
