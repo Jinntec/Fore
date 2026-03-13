@@ -199,12 +199,15 @@ export class RepeatBase extends withDraggability(UIElement, false) {
 
     // Generate the parent `modelItem` for the new repeat item
     this.opNum++;
-    const parentModelItem = FxBind.createModelItem(this.ref, node, this, this.opNum);
+    let parentModelItem = FxBind.createModelItem(this.ref, node, this, this.opNum);
+    // IMPORTANT: registerModelItem may return an existing canonical ModelItem for the same path.
+    // Always keep using the returned instance to avoid "ghost" ModelItems that still notify.
+    parentModelItem = this.getModel().registerModelItem(parentModelItem);
     newRepeatItem.modelItem = parentModelItem;
 
     this.setIndex(insertionIndex);
 
-    this.getModel().registerModelItem(parentModelItem);
+    // parentModelItem already registered above
 
     // Step 5: Create modelItems recursively for child elements
     this._createModelItemsRecursively(newRepeatItem, parentModelItem);
@@ -214,7 +217,6 @@ export class RepeatBase extends withDraggability(UIElement, false) {
 
     this.getOwnerForm().addToBatchedNotifications(newRepeatItem);
   }
-
   /**
    * @abstract
    *
@@ -475,7 +477,9 @@ export class RepeatBase extends withDraggability(UIElement, false) {
               // Create a ModelItem only for the final node; children never get their own opNum
               modelItem = FxBind.createModelItem(ref, node, child, null);
               modelItem.parentModelItem = parentModelItem;
-              this.getModel().registerModelItem(modelItem);
+            // IMPORTANT: keep using the canonical instance returned by registerModelItem.
+            // Otherwise a throwaway ModelItem can leak into observer graphs and be notified.
+            modelItem = this.getModel().registerModelItem(modelItem);
             }
 
             // Always apply Dewey rewrite (handles both $inst and instance('inst') forms)

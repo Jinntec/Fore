@@ -291,8 +291,8 @@ describe('fx-items tests', () => {
           <fx-items ref="instance('list')?*" class="widget">
             <template>
               <span class="fx-checkbox">
-                <input id="check" name="option" type="checkbox" value="{value}" />
-                <label>{name}</label>
+                <input id="check" name="option" type="checkbox" value="{?value}" />
+                <label>{?name}</label>
               </span>
             </template>
           </fx-items>
@@ -336,8 +336,8 @@ describe('fx-items tests', () => {
           <fx-items ref="instance('list')?*" class="widget">
             <template>
               <span class="fx-checkbox">
-                <input id="check" name="option" type="checkbox" value="{value}" />
-                <label>{name}</label>
+                <input id="check" name="option" type="checkbox" value="{?value}" />
+                <label>{?name}</label>
               </span>
             </template>
           </fx-items>
@@ -378,8 +378,8 @@ describe('fx-items tests', () => {
           <fx-items ref="instance('list')?*" class="widget">
             <template>
               <span class="fx-checkbox">
-                <input id="check" name="option" type="checkbox" value="{value}" />
-                <label>{name}</label>
+                <input id="check" name="option" type="checkbox" value="{?value}" />
+                <label>{?name}</label>
               </span>
             </template>
           </fx-items>
@@ -438,8 +438,8 @@ describe('fx-items tests', () => {
             <fx-items ref="instance('default')?*" class="widget">
               <template>
                 <div class="fx-checkbox">
-                  <input type="radio" name="group" value="{value}" />
-                  <label>{name}</label>
+                  <input type="radio" name="group" value="{?value}" />
+                  <label>{?name}</label>
                 </div>
               </template>
             </fx-items>
@@ -459,14 +459,17 @@ describe('fx-items tests', () => {
     `);
 
     await oneEvent(el, 'ready');
+
     const button = el.querySelector('#en button');
+
+// attach listener first, then click
+    const p = oneEvent(document, 'refresh-done');
     button.click();
-    await oneEvent(el, 'refresh-done');
+    await p;
 
     const labels = el.querySelectorAll('.fx-checkbox label');
     expect(labels[0].textContent).to.equal('Letter');
     expect(labels[1].textContent).to.equal('Prayer');
     expect(labels[2].textContent).to.equal('Calendar');
-    expect(labels[3].textContent).to.equal('Directory');
-  });
+    expect(labels[3].textContent).to.equal('Directory');  });
 });

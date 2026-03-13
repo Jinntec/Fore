@@ -5,16 +5,20 @@
   <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
 
   <title>JSON Lazy Binding Test</title>
-  <link href="../resources/demo.css" rel="stylesheet">
+  <link href="../../resources/demo.css" rel="stylesheet">
+  <style>
+    [repeat-index]{
+        background: #eee;
+    }
+  </style>
 </head>
 <body>
 <div class="wrapper">
-  <h1>JSON Lazy Binding Test</h1>
-  <p>This test demonstrates binding to JSON values without explicit fx-bind elements.</p>
+  <h1>JSON Binding Test</h1>
 
   <fx-fore>
     <fx-model id="model1">
-      <fx-instance id="test-json" type="json">
+      <fx-instance type="json">
         {
           "person": {
             "name": "John Doe",
@@ -33,12 +37,13 @@
       </fx-instance>
     </fx-model>
 
-    <h2>Simple JSON Values</h2>
+    <h2>Simple JSON Values (does not update data !!!)</h2>
     
-    <fx-control ref="?person?name">
+    <fx-control ref="?person?name" update-event="input">
       <label>Name:</label>
     </fx-control>
-    
+<!--    {?person?name}-->
+
     <fx-control ref="?person?age">
       <label>Age:</label>
     </fx-control>
@@ -51,23 +56,10 @@
       <label>City:</label>
     </fx-control>
 
-    <h2>Array Items</h2>
-    
-    <fx-repeat ref="?items">
-      <template>
-        <div style="margin-bottom: 10px; padding: 10px; border: 1px solid #ccc;">
-          <fx-control ref="?id">
-            <label>ID:</label>
-          </fx-control>
-          <fx-control ref="?name">
-            <label>Item Name:</label>
-          </fx-control>
-        </div>
-      </template>
-    </fx-repeat>
   </fx-fore>
 </div>
 
-<script type="module" src="../demo/demo.js"></script>
+<script type="module" src="../demo.js"></script>
+<script type="module" src="../../tools/fx-lens.js"></script>
 </body>
 </html>

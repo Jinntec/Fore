@@ -2,9 +2,10 @@ import { DepGraph } from './dep_graph.js';
 import { Fore } from './fore.js';
 import './fx-instance.js';
 import { ModelItem } from './modelitem.js';
-import { getPath } from './xpath-path.js';
+import { parseJsonRef, getPath } from './xpath-path.js';
 import { evaluateXPath, evaluateXPathToBoolean, evaluateXPathToNodes } from './xpath-evaluation.js';
 import { XPathUtil } from './xpath-util.js';
+import { getLensForNode } from './json/JSONNode.js';
 
 /**
  * The model of this Fore scope. It holds all the intances, binding, submissions and custom
@@ -128,6 +129,7 @@ export class FxModel extends HTMLElement {
    */
   static lazyCreateModelItem(model, ref, node, formElement) {
     const instanceId = XPathUtil.resolveInstance(formElement, ref);
+    const instance = model.getInstance(instanceId);
     const fore = model.formElement;
 
     if (fore?.createNodes && (node === null || node === undefined)) {
@@ -136,43 +138,62 @@ export class FxModel extends HTMLElement {
       model.registerModelItem(mi);
       return mi;
     }
-
     if (node === null || node === undefined) return null;
 
-    let targetNode = node.nodeType === Node.TEXT_NODE ? node.parentNode : node;
+    let targetNode = Array.isArray(node) ? node[0] : node;
 
+    // Wrap JSON primitives / raw values into a lens node when needed
+    if (instance.type === 'json') {
+      const parentLens = instance.nodeset;
+      const parsedRef = parseJsonRef(ref);
+      if (parsedRef && parsedRef.steps && parsedRef.steps.length > 0) {
+        const key = parsedRef.steps[parsedRef.steps.length - 1];
+        targetNode = getLensForNode(targetNode, parentLens, key, instanceId);
+      }
+    }
+
+    // Compute canonical path
     let path = null;
-    if (targetNode?.nodeType) {
+    if (targetNode?.nodeType || targetNode?.__jsonlens__) {
       path = getPath(targetNode, instanceId);
     }
 
-    // Check if a ModelItem with the same path already exists
+    const isLensObject =
+        !!targetNode && typeof targetNode === 'object' &&
+        typeof targetNode.get === 'function' && typeof targetNode.set === 'function';
+
+    // If ModelItem for same path exists, RETARGET it (node OR lens)
     if (path) {
       const existingModelItem = model.modelItems.find(mi => mi.path === path);
       if (existingModelItem) {
-        // Update the node reference if needed
-        if (existingModelItem.node !== targetNode) {
-          existingModelItem.node = targetNode;
+        if (isLensObject) {
+          if (existingModelItem.lens !== targetNode) {
+            existingModelItem.lens = targetNode;
+            existingModelItem.node = null;
+          }
+        } else {
+          if (existingModelItem.node !== targetNode) {
+            existingModelItem.node = targetNode;
+            existingModelItem.lens = null;
+          }
         }
         return existingModelItem;
       }
     }
 
     const mi = new ModelItem(
-      path,
-      ref,
-      targetNode,
-      model.getBindForElement(targetNode),
-      instanceId,
-      fore,
+        path,
+        ref,
+        targetNode,
+        model.getBindForElement(targetNode),
+        instanceId,
+        fore,
     );
     mi.isSynthetic = true;
 
-    // console.log('new ModelItem is instanceof ModelItem ', mi instanceof ModelItem);
     model.registerModelItem(mi);
     return mi;
   }
-
   /**
    * modelConstruct starts actual processing of the model by
    *
@@ -199,11 +220,40 @@ export class FxModel extends HTMLElement {
       // Wait until all the instances are built
       await Promise.all(promises);
       this.instances = Array.from(instances);
+      // Build in-memory variable bindings for instances (Variant A: no <fx-var> DOM nodes).
+      // These bindings are merged into XPath variable resolution by xpath-evaluation.js.
+      if (this.formElement) {
+        const bindings = Object.create(null);
+
+        // $default always points to the model's default instance (first instance)
+        // IMPORTANT: For JSON instances, bind RAW JS root so `?` lookup works.
+        try {
+          const defInst = this.getDefaultInstance();
+          if (defInst) {
+            const t = (defInst.getAttribute && defInst.getAttribute('type')) || defInst.type;
+            bindings.default = t === 'json' ? defInst.getInstanceData() : defInst.getDefaultContext();
+          }
+        } catch (_e) {
+          // ignore
+        }
+        // Also expose $<id> for explicitly id'ed instances
+        this.instances.forEach(inst => {
+          const explicitId = inst.getAttribute('id');
+          if (!explicitId) return;
+          // Do not overwrite $default binding; $default remains the first instance
+          if (explicitId === 'default') return;
+
+          const t = (inst.getAttribute && inst.getAttribute('type')) || inst.type;
+          bindings[explicitId] = t === 'json' ? inst.getInstanceData() : inst.getDefaultContext();
+        });
+        this.formElement._instanceVarBindings = bindings;
+      }
       // console.log('_modelConstruct this.instances ', this.instances);
       // Await until the model-construct-done event is handled off
       this.modelConstructed = true;
       await Fore.dispatch(this, 'model-construct-done', { model: this });
       this.inited = true;
+
       this.updateModel();
     } else {
       // ### if there's no instance one will created
@@ -225,10 +275,87 @@ export class FxModel extends HTMLElement {
   }
 
   registerModelItem(modelItem) {
-    // console.log('ModelItem registered ', modelItem);
-    this.modelItems.push(modelItem);
-  }
+    if (!modelItem) return null;
 
+    const path = modelItem.path;
+
+    const resetComputedState = mi => {
+      // Tabula rasa for computed facets; keep identity (boundControls/observers)
+      mi.readonly = ModelItem.READONLY_DEFAULT;
+      mi.relevant = ModelItem.RELEVANT_DEFAULT;
+      mi.required = ModelItem.REQUIRED_DEFAULT;
+      mi.constraint = ModelItem.CONSTRAINT_DEFAULT;
+      mi.type = ModelItem.TYPE_DEFAULT;
+
+      // common extras in Fore's ModelItem
+      if ('valid' in mi) mi.valid = true;
+      if ('enabled' in mi) mi.enabled = true;
+      mi.changed = false;
+
+      // observer/dependency bookkeeping (safe to reset; will be rebuilt)
+      if (mi.dependencies && typeof mi.dependencies.clear === 'function') mi.dependencies.clear();
+      if (mi.stateExpressions) mi.stateExpressions = {};
+      if (mi.state) mi.state = {};
+    };
+
+    const retarget = (target, source) => {
+      // point to current backing node/lens
+      if (source.lens) {
+        target.lens = source.lens;
+        target.node = null;
+      } else if (source.node) {
+        target.node = source.node;
+        target.lens = null;
+      }
+
+      // keep metadata current
+      if (source.ref) target.ref = source.ref;
+      if (source.bind) target.bind = source.bind;
+      if (source.instanceId) target.instanceId = source.instanceId;
+      if (source.fore) target.fore = source.fore;
+
+      // ✅ IMPORTANT: do NOT copy value!
+      // For XML nodes, assigning `value` sets `node.textContent` and can delete child elements.
+
+      resetComputedState(target);
+
+      if (!target.boundControls) target.boundControls = [];
+    };
+
+    // ---- rebuild reuse-by-path (approach A) ----
+    if (path && this._prevModelItemsByPath) {
+      const prev = this._prevModelItemsByPath.get(path);
+      if (prev) {
+        retarget(prev, modelItem);
+
+        if (!this.modelItems.includes(prev)) {
+          this.modelItems.push(prev);
+        }
+
+        this._prevModelItemsByPath.delete(path);
+        return prev;
+      }
+    }
+
+    // ---- normal path ----
+    if (!path) {
+      // No path => can't reuse; keep as-is
+      this.modelItems.push(modelItem);
+      return modelItem;
+    }
+
+    const existing = this.modelItems.find(mi => mi.path === path);
+    if (!existing) {
+      // New canonical item
+      resetComputedState(modelItem);
+      this.modelItems.push(modelItem);
+      return modelItem;
+    }
+
+    // Re-target canonical item
+    retarget(existing, modelItem);
+    return existing;
+  }
   /**
    * update action triggering the update cycle
    */
@@ -253,50 +380,78 @@ export class FxModel extends HTMLElement {
    * @param {Node} node - The node for which to remove the model item
    */
   removeModelItem(node) {
-    const index = this.modelItems.findIndex(mi => mi.node === node);
-    // The model item is not always there. Might be the case if a node is 'skipped' during rendering. All paths jump over it.
-    // It may still have descendants that can have model items
+    if (!node) return;
+
+    // Support both XML nodes (mi.node) and JSON lens nodes (mi.lens)
+    const index = this.modelItems.findIndex(mi => mi.node === node || mi.lens === node);
+
+    // The model item is not always there. Might be the case if a node is 'skipped' during rendering.
+    // It may still have descendants that can have model items.
     if (index !== -1) {
+      const mi = this.modelItems[index];
+
+      // IMPORTANT:
+      // Before removing the ModelItem, enqueue all observers (bound UI controls) for refresh.
+      // Otherwise, deleting a bound node can orphan controls (eg. fx-group) because their ModelItem
+      // disappears before the refresh scheduler can reach them.
+      try {
+        const fore = this.formElement || this.parentNode || mi.fore;
+        if (fore && typeof fore.addToBatchedNotifications === 'function' && mi && mi.observers) {
+          mi.observers.forEach(observer => {
+            if (observer && typeof observer.refresh === 'function') {
+              fore.addToBatchedNotifications(observer);
+            }
+          });
+        }
+      } catch (_e) {
+        // ignore
+      }
+
       this.modelItems.splice(index, 1);
     }
 
-    for (const child of Array.from(node.childNodes)) {
-      this.removeModelItem(child);
+    // Recurse for XML descendants only
+    if (node.childNodes) {
+      for (const child of Array.from(node.childNodes)) {
+        this.removeModelItem(child);
+      }
     }
   }
 
   rebuild() {
     console.log(`🔷   rebuild() '${this.fore.id}'`);
 
-    this.mainGraph = new DepGraph(false); // do: should be moved down below binds.length check but causes errors in tests.
+    // Build a lookup for existing ModelItems so we can reuse them by path (approach A)
+    const prevItems = Array.isArray(this.modelItems) ? this.modelItems : [];
+    this._prevModelItemsByPath = new Map();
+    prevItems.forEach(mi => {
+      if (mi && mi.path) this._prevModelItemsByPath.set(mi.path, mi);
+    });
+
+    this.mainGraph = new DepGraph(false);
     this.modelItems = [];
 
-    // trigger recursive initialization of the fx-bind elements
     const binds = this.querySelectorAll('fx-model > fx-bind');
     if (binds.length === 0) {
-      // console.log('skipped model update');
       this.skipUpdate = true;
+      this._prevModelItemsByPath = null;
       return;
     }
 
-    binds.forEach(bind => {
-      bind.init(this);
-    });
+    binds.forEach(bind => bind.init(this));
 
     if (this.formElement.createNodes) {
-      // initData should be running here as well: we just got a whole new instance that may be
-      // incomplete
       this.formElement.initData();
     }
+
+    // Drop unused previous ModelItems (not re-registered this rebuild)
+    this._prevModelItemsByPath = null;
 
     console.log('mainGraph', this.mainGraph);
     console.log('rebuild mainGraph calc order', this.mainGraph.overallOrder());
 
-    // this.dispatchEvent(new CustomEvent('rebuild-done', {detail: {maingraph: this.mainGraph}}));
     Fore.dispatch(this, 'rebuild-done', { maingraph: this.mainGraph });
-    // console.log('mainGraph', this.mainGraph);
   }
-
   /**
    * recalculation of all modelItems. Uses dependency graph to determine order of computation.
    *
@@ -415,58 +570,64 @@ export class FxModel extends HTMLElement {
    * @param {string} path - the canonical XPath of the node
    */
   compute(node, path) {
-    const modelItem = this.getModelItem(node);
-    if (modelItem && path.includes(':')) {
-      const property = path.split(':')[1];
-      if (property) {
-        /*
-                        if (property === 'readonly') {
-                            // make sure that calculated items are always readonly
-                            if(modelItem.bind['calculate']){
-                                modelItem.readonly =  true;
-                            }else {
-                                const expr = modelItem.bind[property];
-                                const compute = evaluateXPathToBoolean(expr, modelItem.node, this);
-                                modelItem.readonly = compute;
-                            }
-                        }
-        */
-        const expr = modelItem.bind[property];
-        if (property === 'calculate') {
-          const compute = evaluateXPath(expr, modelItem.node, this);
-          modelItem.value = compute;
-          modelItem.readonly = true; // calculated nodes are always readonly
-          modelItem.notify(); // Notify observers directly
-        } else if (property !== 'constraint' && property !== 'type') {
-          /*
-          console.log(
-            'recalculating path ',
-            path,
-            ' Expr:',
-            expr,
-            'modelitem value',
-            modelItem.node.textContent,
-          );
-*/
-          // ### re-compute the Boolean value of all facets expect 'constraint' and 'type' which are handled in revalidate()
-          if (expr) {
-            const compute = evaluateXPathToBoolean(expr, modelItem.node, this);
-            modelItem[property] = compute;
-            // modelItem.notify(); // Notify observers directly
-            this.fore.addToBatchedNotifications(modelItem);
-            /*
-                                    console.log(
-                                      `recalculating path ${path} - Expr:'${expr}' computed`,
-                                      modelItem[property],
-                                    );
-                        */
-          }
+    // Nodes in dep graphs can be transient during JSON insert/rebuild windows.
+    // Preserve depGraph semantics, but avoid crashing when a ModelItem is momentarily missing.
+
+    // Resolve facet property (eg. "$data/movies[3]/title:relevant")
+    const isFacetPath = typeof path === 'string' && path.includes(':');
+    if (!isFacetPath) return;
+
+    const property = path.split(':')[1];
+    if (!property) return;
+
+    // Try to resolve the model item primarily by node, but fall back to canonical path.
+    // The depGraph stores node data that may not be the same object identity after lens rebuild.
+    let modelItem = this.getModelItem(node);
+
+    if (!modelItem && node && (node.__jsonlens__ === true || typeof node.getPath === 'function')) {
+      try {
+        const instanceId = node.instanceId || XPathUtil.resolveInstance(this, path);
+        const canonical = getPath(node, instanceId);
+        modelItem = this.getModelItem(canonical);
+      } catch (_e) {
+        // ignore
+      }
+    }
+
+    // If still missing, fall back to the prefix path of the facet node.
+    // eg. "$data/movies[3]/title:relevant" => "$data/movies[3]/title"
+    if (!modelItem) {
+      const basePath = path.substring(0, path.indexOf(':'));
+      modelItem = this.getModelItem(basePath);
+    }
+
+    // ✅ Minimal fix: don't crash the update cycle if the ModelItem doesn't exist.
+    // This can happen during insert/delete when rebuild retargeting is in progress.
+    if (!modelItem) {
+      return;
+    }
+
+    if (modelItem && typeof path === 'string') {
+      const expr = modelItem.bind ? modelItem.bind[property] : null;
+      const context = modelItem.node || modelItem.lens;
+
+      if (property === 'calculate') {
+        const compute = evaluateXPath(expr, context, this);
+        modelItem.value = compute;
+        modelItem.readonly = true; // calculated nodes are always readonly
+        modelItem.notify(); // Notify observers directly
+      } else if (property !== 'constraint' && property !== 'type') {
+        // ### re-compute the Boolean value of all facets expect 'constraint' and 'type' which are handled in revalidate()
+        if (expr) {
+          const compute = evaluateXPathToBoolean(expr, context, this);
+          modelItem[property] = compute;
+          // modelItem.notify(); // Notify observers directly
+          this.fore.addToBatchedNotifications(modelItem);
         }
       }
       this.computes += 1;
     }
   }
-
   /**
    * Iterates all modelItems to calculate the validation status.
    *
@@ -569,7 +730,18 @@ export class FxModel extends HTMLElement {
    * @returns {ModelItem|null}
    */
   getModelItem(nodeOrPath) {
-    return this.modelItems.find(mi => mi.node === nodeOrPath || mi.path === nodeOrPath) || null;
+    if (nodeOrPath == null) return null;
+
+    // Path lookup
+    if (typeof nodeOrPath === 'string') {
+      const key = nodeOrPath.includes(':') ? nodeOrPath.substring(0, nodeOrPath.indexOf(':')) : nodeOrPath;
+      return this.modelItems.find(mi => mi.path === key) || null;
+    }
+
+    // Node/lens lookup
+    return (
+        this.modelItems.find(mi => mi.node === nodeOrPath || mi.lens === nodeOrPath) || null
+    );
   }
 
   /**
@@ -603,45 +775,63 @@ export class FxModel extends HTMLElement {
    * @returns {import('./fx-instance.js').FxInstance}
    */
   getInstance(id) {
-    // console.log('getInstance ', id);
-    // console.log('instances ', this.instances);
-    // console.log('instances array ',Array.from(this.instances));
+    let found = null;
 
-    let found;
+    // default instance is first instance in this model
     if (id === 'default') {
       found = this.instances[0];
     }
+
     // ### lookup in local instances first
     if (!found) {
       const instArray = Array.from(this.instances);
       found = instArray.find(inst => inst.id === id);
     }
-    // ### lookup in parent Fore if present
+
+    // ### lookup in parent Fore if present (shared instances)
     if (!found) {
-      // const parentFore = this.fore.parentNode.closest('fx-fore');
       const parentFore =
-        this.fore.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE
-          ? this.fore.parentNode.host.closest('fx-fore')
-          : this.fore.parentNode.closest('fx-fore');
+          this.fore.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE
+              ? this.fore.parentNode.host.closest('fx-fore')
+              : this.fore.parentNode.closest('fx-fore');
+
       if (parentFore) {
-        // console.log('shared instances from parent', this.parentNode.id);
         const parentInstances = parentFore.getModel().instances;
-        const shared = parentInstances.filter(shared => shared.hasAttribute('shared'));
-        found = shared.find(found => found.id === id);
+        const shared = parentInstances.filter(inst => inst.hasAttribute('shared'));
+        found = shared.find(inst => inst.id === id);
       }
     }
-    // search for shared instances in the whole document
+
+    // ### search for shared instances in the light DOM (legacy)
     if (!found) {
       found = document.querySelector(`fx-instance[id="${id}"][shared]`);
     }
-    if (found) {
-      return found;
+
+    // ### NEW: search for shared instances inside other fx-fore shadowRoots
+    // This is required when a fore keeps its model/instances in its own shadow DOM
+    // and sibling fores want to consume that instance via instance('id').
+    if (!found) {
+      const allFores = Array.from(document.querySelectorAll('fx-fore'));
+      for (const fore of allFores) {
+        // light DOM inside fore (in case someone authoring without shadow)
+        const light = fore.querySelector?.(`fx-instance[id="${id}"][shared]`);
+        if (light) {
+          found = light;
+          break;
+        }
+
+        // shadow DOM inside fore (common in your demos)
+        const shadow = fore.shadowRoot?.querySelector?.(`fx-instance[id="${id}"][shared]`);
+        if (shadow) {
+          found = shadow;
+          break;
+        }
+      }
     }
-    if (id === 'default') {
-      return this.getDefaultInstance(); // if id is not found always defaults to first in doc order
-    }
+
+    if (found) return found;
+
     if (!found && this.fore.strict) {
-      // return this.getDefaultInstance(); // if id is not found always defaults to first in doc order
       Fore.dispatch(this, 'error', {
         origin: this,
         message: `Instance '${id}' does not exist`,

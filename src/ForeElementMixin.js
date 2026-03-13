@@ -184,7 +184,7 @@ export default class ForeElementMixin extends HTMLElement {
         // console.log('match ', match);
         const naked = match.substring(1, match.length - 1);
         const inscope = getInScopeContext(node, naked);
-        const result = evaluateXPathToString(naked, inscope, this);
+        const result = evaluateXPathToString(naked, inscope, this.getOwnerForm());
         const replaced = expr.replaceAll(match, result);
         // console.log('replacing ', expr, ' with ', replaced);
         expr = replaced;
@@ -242,60 +242,86 @@ export default class ForeElementMixin extends HTMLElement {
   /**
    * @returns {import('./modelitem.js').ModelItem}
    */
+  /**
+   * @returns {import('./modelitem.js').ModelItem}
+   */
   getModelItem() {
-    if (!this.getModel()) return;
+    if (!this.getModel()) return null;
 
-    // First try to find by node reference
-    const mi = this.getModel().getModelItem(this.nodeset);
-    if (mi) {
-      this.modelItem = mi;
-    }
+    const model = this.getModel();
 
+    // Resolve the effective bound node for repeated contexts
     const repeated = XPathUtil.getClosest('fx-repeatitem', this);
-    let existed;
+    let effectiveNode = this.nodeset;
+
     if (repeated) {
       const { index } = repeated;
-      if (Array.isArray(this.nodeset)) {
-        existed = this.getModel().getModelItem(this.nodeset[index - 1]);
-      } else {
-        existed = this.getModel().getModelItem(this.nodeset);
+      if (Array.isArray(effectiveNode)) {
+        effectiveNode = effectiveNode[index - 1];
       }
-    } else {
-      existed = this.nodeset ? this.getModel().getModelItem(this.nodeset) : null;
     }
 
-    // If we couldn't find by node reference, try to find by path
-    if (!existed && this.nodeset) {
-      // Get the path for the current nodeset
-      const instanceId = XPathUtil.resolveInstance(this, this.ref);
-      let targetNode =
-        this.nodeset.nodeType === Node.TEXT_NODE ? this.nodeset.parentNode : this.nodeset;
+    // 1) Try exact lookup by node OR lens object (model.getModelItem was updated earlier)
+    let existed = effectiveNode ? model.getModelItem(effectiveNode) : null;
+    if (existed) {
+      this.modelItem = existed;
+      return existed;
+    }
 
-      if (targetNode?.nodeType) {
-        const path = getPath(targetNode, instanceId);
+    // 2) Try lookup by canonical path (XML + JSON)
+    const instanceId = XPathUtil.resolveInstance(this, this.ref);
 
-        // Try to find a ModelItem with this path
-        existed = this.getModel().modelItems.find(item => item.path === path);
+    // Normalize XML text node -> parent
+    let targetNode = effectiveNode;
+    if (targetNode?.nodeType === Node.TEXT_NODE) targetNode = targetNode.parentNode;
 
-        if (existed) {
-          // Update the node reference in the existing ModelItem
+    let path = null;
+
+    // XML node path
+    if (targetNode?.nodeType) {
+      path = getPath(targetNode, instanceId);
+    }
+    // JSON lens node path (preferred)
+    else if (targetNode?.__jsonlens__ && typeof targetNode.getPath === 'function') {
+      // JSONNode.getPath() already returns the canonical path you want
+      path = targetNode.getPath();
+    }
+    // As a last resort: try getPath() util for JSON lens nodes if it supports them
+    else if (targetNode?.__jsonlens__) {
+      try {
+        path = getPath(targetNode, instanceId);
+      } catch (_e) {
+        // ignore
+      }
+    }
+
+    if (path) {
+      existed = model.modelItems.find(item => item.path === path) || null;
+      if (existed) {
+        // CRITICAL: retarget existing ModelItem to the current backing object
+        const isLensObject =
+            targetNode &&
+            typeof targetNode === 'object' &&
+            typeof targetNode.get === 'function' &&
+            typeof targetNode.set === 'function';
+
+        if (isLensObject) {
+          existed.lens = targetNode;
+          existed.node = null;
+        } else {
           existed.node = targetNode;
+          existed.lens = null;
         }
-      }
-      if (!existed) {
-        const lazyCreatedModelItem = FxModel.lazyCreateModelItem(
-          this.getModel(),
-          this.ref,
-          this.nodeset,
-          this,
-        );
-        this.modelItem = lazyCreatedModelItem;
-        return lazyCreatedModelItem;
+
+        this.modelItem = existed;
+        return existed;
       }
     }
-    this.modelItem = existed;
 
-    return existed;
+    // 3) Not found: lazily create (lazyCreateModelItem now dedupes/retargets by path)
+    const lazyCreatedModelItem = FxModel.lazyCreateModelItem(model, this.ref, effectiveNode, this);
+    this.modelItem = lazyCreatedModelItem;
+    return lazyCreatedModelItem;
   }
   /**
    * Returns the effective value for the element.

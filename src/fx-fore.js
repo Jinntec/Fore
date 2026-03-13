@@ -288,6 +288,7 @@ export class FxFore extends HTMLElement {
     this.createNodes = this.hasAttribute('create-nodes') ? true : false;
     this._localNamesWithChanges = new Set();
     this.setAttribute('role', 'form'); // set aria role
+    this._pendingRefresh = false;
   }
 
   /**
@@ -561,6 +562,7 @@ export class FxFore extends HTMLElement {
       await Promise.all(libs.map(l => l.readyPromise || Promise.resolve()));
 
       await modelElement.modelConstruct();
+      console.log("varbindings ",this._instanceVarBindings);
       this._handleModelConstructDone();
     }
 
@@ -674,6 +676,79 @@ export class FxFore extends HTMLElement {
     }
   }
 
+  /**
+   * Ensure there is an fx-var for each fx-instance in this fx-fore's fx-model scope.
+   *
+   * - For instances with an @id, create `$id` with value `instance('id')`.
+   * - For the first instance WITHOUT an @id, create `$default` with value `instance()`.
+   * - IMPORTANT: if an instance has id="default", we STILL bind `$default` to `instance()`
+   *   (avoids recursion / stack overflow during fx-var refresh in some cycles).
+   *
+   * Vars are inserted as direct children of `<fx-fore>` immediately before `<fx-model>`.
+   * The method is idempotent.
+   */
+  _ensureInstanceVars() {
+    if (this.__instanceVarsEnsured) return;
+    this.__instanceVarsEnsured = true;
+
+    // Resolve this fx-fore's own fx-model (not nested ones)
+    const model = this.querySelector(':scope > fx-model');
+    if (!model) return;
+
+    // Collect instances that are direct children of this model (doc order)
+    const instances = Array.from(model.querySelectorAll(':scope > fx-instance'));
+
+    // Collect existing fx-var names at fx-fore scope (author-defined and previously generated)
+    const existingVars = new Set(
+        Array.from(this.querySelectorAll(':scope > fx-var'))
+            .map(v => (v.getAttribute('name') || '').trim())
+            .filter(Boolean),
+    );
+
+    let defaultAssigned = false;
+
+    for (const inst of instances) {
+      const rawId = (inst.getAttribute('id') || '').trim();
+
+      // First id-less instance => $default = instance()
+      if (!rawId) {
+        if (defaultAssigned) continue;
+        defaultAssigned = true;
+
+        const name = 'default';
+        if (existingVars.has(name)) continue;
+
+        const fxVar = document.createElement('fx-var');
+        fxVar.setAttribute('name', name);
+        fxVar.setAttribute('value', 'instance()');
+        fxVar.setAttribute('data-generated', 'instance-var');
+
+        this.insertBefore(fxVar, model);
+        existingVars.add(name);
+        continue;
+      }
+
+      // Normal id-based instance var
+      const name = rawId;
+      if (existingVars.has(name)) continue;
+
+      const fxVar = document.createElement('fx-var');
+      fxVar.setAttribute('name', name);
+
+      // IMPORTANT: avoid `instance('default')` recursion in fx-var refresh
+      if (name === 'default') {
+        fxVar.setAttribute('value', 'instance()');
+      } else {
+        fxVar.setAttribute('value', `instance('${name}')`);
+      }
+
+      fxVar.setAttribute('data-generated', 'instance-var');
+
+      this.insertBefore(fxVar, model);
+      existingVars.add(name);
+    }
+  }
+
   _injectDevtools() {
     if (this.ownerDocument.querySelector('fx-devtools')) {
       // There's already a devtools, so we can ignore this one.
@@ -713,9 +788,11 @@ export class FxFore extends HTMLElement {
   }
 
   markAsClean() {
+    console.log('marking as clean', this);
     this.addEventListener(
         'value-changed',
         () => {
+          console.log('MARK as modified', this)
           this.dirtyState = dirtyStates.DIRTY;
           this.classList.toggle('fx-modified')
         },
@@ -723,6 +800,7 @@ export class FxFore extends HTMLElement {
     );
     this.dirtyState = dirtyStates.CLEAN;
     this.classList.remove('fx-modified');
+    this.querySelectorAll('.visited').forEach(el => el.classList.remove('visited'));
   }
 
   /**
@@ -793,89 +871,73 @@ export class FxFore extends HTMLElement {
   /**
    * @param {(boolean|{reason:'index-function'})} [force]fx-fore
    */
+  /**
+   * @param {(boolean|{reason:'index-function'})} [force]
+   */
+  /**
+   * @param {(boolean|{reason:'index-function'})} [force]
+   */
   async refresh(force) {
+    // If we're already refreshing, do NOT drop the request.
+    // Queue a hard refresh and return a promise that resolves when the next refresh finishes.
     if (this.isRefreshing) {
-      return;
-    }
+      // keep "strongest" request: any true means hard refresh
+      this._pendingRefresh = this._pendingRefresh || force === true;
 
-    /*
-    if (force !== true && this._localNamesWithChanges.size > 0) {
-      force = {
-        ...(force || { reason: undefined }),
-        elementLocalnamesWithChanges: Array.from(this._localNamesWithChanges),
-      };
-      this._localNamesWithChanges.clear();
+      return new Promise(resolve => {
+        this.addEventListener('refresh-done', () => resolve(), { once: true });
+      });
     }
-*/
 
     this.isRefreshing = true;
     this.isRefreshPhase = true;
 
-    // refresh () {
-    // ### refresh Fore UI elements
-    // if (!this.initialRun && this.toRefresh.length !== 0) {
-    // if (!this.initialRun && this.toRefresh.length !== 0) {
-    // if (!force && !this.initialRun && this.toRefresh.length !== 0) {
-    if (force === true || this.initialRun) {
-      console.log('🔄 🔴🔴🔴 ### full refresh() on ', this);
-      Fore.refreshChildren(this, force);
-    } else {
-      // Process all batched no tifications at the end of the refresh phase
-      console.log('🔄 🎯  ### processing batched notifications');
-      await this._processBatchedNotifications();
-    }
+    try {
+      if (force === true || this.initialRun) {
+        console.log('🔄 🔴🔴🔴 ### full refresh() on ', this);
+        await Fore.refreshChildren(this, force);
+      } else {
+        await this._processBatchedNotifications();
+      }
 
-    // ### refresh template expressions
-    if (force === true || this.initialRun || this._scanForNewTemplateExpressionsNextRefresh) {
-      this._updateTemplateExpressions();
-      this._scanForNewTemplateExpressionsNextRefresh = false; // reset
-    }
+      if (force === true || this.initialRun || this._scanForNewTemplateExpressionsNextRefresh) {
+        this._updateTemplateExpressions();
+        this._scanForNewTemplateExpressionsNextRefresh = false;
+      }
 
-    this._processTemplateExpressions();
+      this._processTemplateExpressions();
 
-    this.isRefreshPhase = false;
+      this.isRefreshPhase = false;
+      this.initialRun = false;
+      this.style.visibility = 'visible';
 
-    // console.log('### <<<<< dispatching refresh-done - end of UI update cycle >>>>>');
-    // this.dispatchEvent(new CustomEvent('refresh-done'));
-    this.initialRun = false;
-    this.style.visibility = 'visible';
-    console.info(
-        `%c ✅ refresh-done on #${this.id}`,
-        'background:darkorange; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
-        this.getModel().modelItems,
-    );
+      console.info(
+          `%c ✅ refresh-done on #${this.id}`,
+          'background:darkorange; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+          this.getModel().modelItems,
+      );
 
-    Fore.dispatch(this, 'refresh-done', {});
+      Fore.dispatch(this, 'refresh-done', {});
 
-    const subFores = Array.from(this.querySelectorAll('fx-fore'));
-    /*
-        calling the parent to refresh causes errors and inconsistent state. Also it is questionable
-        if a child should actually interact with its parent in this way.
-
-        This only affects the refreshing NOT the data mutation itself which is happening as expected.
-
-        Current solution is that a child that wants the parent to refresh must do so by adding an additional
-        event handler that dispatches an event upwards and having a handler in the parent to refresh itself.
-
-        So refreshed propagate downwards but not upwards which is at least an option to consider.
-
-        if(this.parentNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE){
-            // await this.parentNode.closest('fx-fore')?.refresh(false);
+      const subFores = Array.from(this.querySelectorAll('fx-fore'));
+      for (const subFore of subFores) {
+        if (subFore.ready) {
+          await subFore.refresh(true);
         }
-    */
-    for (const subFore of subFores) {
-      // subFore.refresh(false, changedPaths);
-      if (subFore.ready) {
-        // Do an unconditional hard refresh: there might be changes that are relevant
-        // todo: investigate impact of observer architecture - do we really want to refresh all subfore elements with a hard refresh?
-        await subFore.refresh(true);
+      }
+    } finally {
+      this.isRefreshing = false;
+
+      // If anything requested a refresh while we were refreshing, run exactly one more.
+      // This prevents "dropped" refresh requests (your timeout).
+      if (this._pendingRefresh) {
+        const pendingHard = this._pendingRefresh === true;
+        this._pendingRefresh = false;
+        // Important: do NOT await in finally without clearing flags first.
+        await this.refresh(pendingHard);
       }
     }
-    this.isRefreshing = false;
-    // Clear the batch
-    // this.batchedNotifications.clear();
   }
-
   /**
    * Add a ModelItem to the batch of notifications to be processed at the end of the refresh phase
    * @param {ModelItem | import('./ui/UIElement.js').UIElement} item - The ModelItem or UI Element to add to the batch
@@ -892,6 +954,9 @@ export class FxFore extends HTMLElement {
    */
   _processBatchedNotifications() {
     if (this.batchedNotifications.size > 0) {
+      console.log(`🔄 🎯  ### processing ${ this.batchedNotifications.size} batched notifications`);
+      console.log('🔄 🎯  ### processing ', Array.from(this.batchedNotifications));
+
       // console.log(`🔍 Processing ${this.batchedNotifications.size} batched notifications`);
 
       // Process all batched notifications
@@ -932,6 +997,10 @@ export class FxFore extends HTMLElement {
         }
       });
 
+      // Update template expressions after processing batched notifications
+      // This ensures template expressions are re-evaluated when data changes
+      this._processTemplateExpressions();
+
       // Clear the batch
       this.batchedNotifications.clear();
     }
@@ -958,6 +1027,7 @@ export class FxFore extends HTMLElement {
 
     // console.log('######### storedTemplateExpressions', this.storedTemplateExpressions.length);
 
+    if(!tmplExpressions) return;
     /*
     storing expressions and their nodes for re-evaluation
     */
@@ -1021,45 +1091,64 @@ export class FxFore extends HTMLElement {
    * @param {Node} node the node which will get updated with evaluation result
    */
   evaluateTemplateExpression(expr, node) {
-    // ### do not evaluate template expressions with nonrelevant sections
+    // ### do not evaluate template expressions within nonrelevant sections
     if (node.nodeType === Node.ATTRIBUTE_NODE && node.ownerElement.closest('[nonrelevant]')) return;
     if (node.nodeType === Node.TEXT_NODE && node.parentNode.closest('[nonrelevant]')) return;
     if (node.nodeType === Node.ELEMENT_NODE && node.closest('[nonrelevant]')) return;
 
-    // if(node.closest('[nonrelevant]')) return;
-    const replaced = expr.replace(/{[^}]*}/g, match => {
+    // ---- IMPORTANT GUARD ----
+    // Prevent JSON object/array literals in fx-insert@origin from being treated as
+    // template expressions (they contain {...} but are not XPath templates).
+    if (node.nodeType === Node.ATTRIBUTE_NODE) {
+      const el = node.ownerElement;
+      if (el && el.localName === 'fx-insert' && node.name === 'origin') {
+        const v = String(node.value ?? '').trim();
+        const isJsonLiteral =
+            (v.startsWith('{') && v.endsWith('}')) || (v.startsWith('[') && v.endsWith(']'));
+        if (isJsonLiteral) return;
+      }
+    }
+    // -------------------------
+
+    // The element that "defines" the template expression is the correct basis for:
+    // - namespace resolution (xmlns lookup)
+    // - fx-var scoping (in-scope variables)
+    // - context() in repeats (repeat item detection)
+    const definitionElement =
+        node.nodeType === Node.ATTRIBUTE_NODE
+            ? node.ownerElement
+            : node.nodeType === Node.TEXT_NODE
+                ? (node.parentElement || node.parentNode)
+                : node;
+
+    const formElement =
+        definitionElement && definitionElement.nodeType === Node.ELEMENT_NODE
+            ? definitionElement
+            : this;
+
+    const replaced = String(expr ?? '').replace(/{[^}]*}/g, match => {
       if (match === '{}') return match;
+
       const naked = match.substring(1, match.length - 1);
       const inscope = getInScopeContext(node, naked);
+
       if (!inscope) {
-        console.warn('no inscope context for expr', naked);
-        const errNode =
-            node.nodeType === Node.TEXT_NODE || node.nodeType === Node.ATTRIBUTE_NODE
-                ? node.parentNode
-                : node;
         return match;
       }
-      // Templates are special: they use the namespace configuration from the place where they are
-      // being defined
-      const instanceId = XPathUtil.getInstanceId(naked,node);
-
-      // If there is an instance referred
-      const inst = instanceId
-          ? this.getModel().getInstance(instanceId)
-          : this.getModel().getDefaultInstance();
 
       try {
-        const result = evaluateXPathToString(naked, inscope, node, null, inst);
-        // console.log(`template expression result for ${naked}=${result}`);
-        return result;
+        // IMPORTANT:
+        // Do NOT pass `null` as the 4th argument here.
+        // Passing `null` suppresses variable collection, which hides implicit vars
+        // like `$default`.
+        return evaluateXPathToString(naked, inscope, formElement);
       } catch (error) {
         console.warn('ignoring unparseable expr', error);
         return match;
       }
     });
 
-    // Update to the new value. Don't do it though if nothing changed to prevent iframes or
-    // images from reloading for example
+    // Update to the new value only if it changed (avoid iframe/image reload etc.)
     if (node.nodeType === Node.ATTRIBUTE_NODE) {
       const parent = node.ownerElement;
       if (parent.getAttribute(node.nodeName) !== replaced) {
@@ -1070,9 +1159,7 @@ export class FxFore extends HTMLElement {
         node.textContent = replaced;
       }
     }
-  }
-
-  // eslint-disable-next-line class-methods-use-this
+  }  // eslint-disable-next-line class-methods-use-this
   _getTemplateExpression(node) {
     if (this.ignoredNodes) {
       if (node.nodeType === Node.ATTRIBUTE_NODE) {
@@ -1351,7 +1438,7 @@ export class FxFore extends HTMLElement {
           const lastMatchingSibling = nodeset.reverse().find(node => parentElement.contains(node));
           if (lastMatchingSibling) {
             return lastMatchingSibling;
-          }
+            }
           // Otherwise, just default to appending... If this runs multiple times for multiple nodes
           // it's unexpected to always prepend and get the order of children reversed from the UI.
 
@@ -1376,7 +1463,6 @@ export class FxFore extends HTMLElement {
     // Insert after the previous control
     return referenceNode;
   }
-
   /**
    * @param  {HTMLElement}  root The root of the data initialization. fx-repeat overrides this when it makes new repeat items
    *
@@ -1649,16 +1735,23 @@ export class FxFore extends HTMLElement {
   }
 
   _logError(e) {
+    // Prevent the error event from bubbling up and potentially triggering
+    // parent error handlers that might call refresh() again
     e.stopPropagation();
+    e.stopImmediatePropagation(); // Added to stop other listeners on this element
     e.preventDefault();
 
     console.error('ERROR', e.detail.message);
-    console.error(e.detail.origin);
-    if (e.detail.expr) {
-      console.error('Failing expression', e.detail.expr);
-    }
-    if (this.strict) {
-      this._displayError(e);
+
+    // Guard the display logic: if showing the error causes another error,
+    // we must break the cycle.
+    if (this.strict && !this._isLogging) {
+      this._isLogging = true;
+      try {
+        this._displayError(e);
+      } finally {
+        this._isLogging = false;
+      }
     }
   }
 

@@ -21,7 +21,7 @@ export default class DependentXPathQueries {
       }
     }
 
-    // We can also depend on the index function if it was used in our ancestry
+    // We can also depend on the index functioxn if it was used in our ancestry
     return !!this._parentDependencies?.isInvalidatedByIndexFunction();
   }
 
@@ -62,8 +62,43 @@ export default class DependentXPathQueries {
    *
    * @param {string} xpath the XPath to add
    */
+  /**
+   * Add an XPath to the dependencies
+   *
+   * @param {string} xpath the XPath to add
+   */
   addXPath(xpath) {
-    this._xpaths.add(xpath);
+    const expr = String(xpath ?? '');
+    if (!expr) return;
+
+    // Always keep the original expression
+    this._xpaths.add(expr);
+
+    // --- NEW: extract implicit JSON lookup deps hidden behind variables ---
+    //
+    // Examples:
+    //   contains(., $default?ui?query)  -> adds ?ui?query
+    //   $foo.?ui?query                 -> adds ?ui?query
+    //
+    // We only add lookup tails that start with ? or .? and then a key.
+    // This is intentionally conservative and string-based.
+    const varLookupRe =
+      /\$[A-Za-z_][\w.-]*\s*(\.\?)?(\?[\w$.-]+(?:\[[^\]]+\])?)(\?[\w$.-]+(?:\[[^\]]+\])?)*(\?\*)?/g;
+
+    // We want the full tail beginning at the first '?' (ignore optional '.')
+    // so: ".?ui?query" => "?ui?query"
+    let m;
+    while ((m = varLookupRe.exec(expr)) !== null) {
+      const fullMatch = m[0] || '';
+      const qpos = fullMatch.indexOf('?');
+      if (qpos === -1) continue;
+
+      const tail = fullMatch.slice(qpos); // e.g. "?ui?query"
+      // Only record meaningful deps (ignore just "?*")
+      if (tail === '?*') continue;
+
+      this._xpaths.add(tail);
+    }
   }
 
   /**

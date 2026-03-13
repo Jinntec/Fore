@@ -1,8 +1,27 @@
 import { createTypedValueFactory, registerCustomXPathFunction } from 'fontoxpath';
 import { evaluateXPath, globallyDeclaredFunctionLocalNames } from '../xpath-evaluation.js';
 
+// FontoXPath custom functions are registered globally. If multiple <fx-functionlib> (or multiple
+// <fx-fore> instances) register the same function name+arity, later registrations would overwrite
+// earlier ones across the whole page. We enforce "first wins".
+const _registeredFunctionKeys = new Set();
+
+function _makeFunctionKey(functionIdentifier, arity) {
+  if (typeof functionIdentifier === 'string') {
+    return `str:${functionIdentifier}#${arity}`;
+  }
+  return `{${functionIdentifier.namespaceURI}}${functionIdentifier.localName}#${arity}`;
+}
+
+function _ensureGlobalUnprefixedName(localName) {
+  // Keep this list unique to avoid unbounded growth across tests
+  if (!globallyDeclaredFunctionLocalNames.includes(localName)) {
+    globallyDeclaredFunctionLocalNames.push(localName);
+  }
+}
+
 /**
- * @param functionObject {{signature: string, type: string|null, functionBody: string}}
+ * @param functionObject {{signature: string, type: string|null, functionBody: string, implementation?: Function}}
  * @param formElement {HTMLElement} The form element connected to this function. Used to determine inscope context
  * @returns {undefined}
  */
@@ -31,29 +50,51 @@ export default function registerFunction(functionObject, formElement) {
       ? { namespaceURI: 'http://www.w3.org/2005/xquery-local-functions', localName }
       : `${prefix}:${localName}`;
 
-  // Make the function available globally w/o a prefix. See the functionNameResolver for for how
-  // functionObject is picked up
-  if (!prefix) {
-    globallyDeclaredFunctionLocalNames.push(localName);
+  const paramParts = params
+    ? params
+        .split(',')
+        .map(param => param.trim())
+        .filter(Boolean)
+        .map(param => {
+          const match = param.match(/(?<variableName>\$[^\s]+)(?:\sas\s(?<varType>[^\s]+))/);
+          if (!match) {
+            throw new Error(`Param ${param} could not be parsed`);
+          }
+          const { variableName, varType } = match.groups;
+          return {
+            variableName,
+            variableType: varType || 'item()*',
+          };
+        })
+    : [];
+
+  const arity = paramParts.length;
+
+  // -------------------------------------------------
+  // FIRST-WINS GUARD (name + arity) WITH NAME EXPORT
+  // -------------------------------------------------
+  const key = _makeFunctionKey(functionIdentifier, arity);
+
+  if (_registeredFunctionKeys.has(key)) {
+    // If this registration is unprefixed, we must still make it callable without prefix.
+    // This fixes the unit test case where local:hello-world() was registered earlier and
+    // hello-world() should resolve to that implementation.
+    if (!prefix) {
+      _ensureGlobalUnprefixedName(localName);
+    }
+    return;
   }
 
-  const paramParts = params
-    ? params.split(',').map(param => {
-        const match = param.match(/(?<variableName>\$[^\s]+)(?:\sas\s(?<varType>[^\s]+))/);
-        if (!match) {
-          throw new Error(`Param ${param} could not be parsed`);
-        }
-        const { variableName, varType } = match.groups;
-        return {
-          variableName,
-          variableType: varType || 'item()*',
-        };
-      })
-    : [];
+  _registeredFunctionKeys.add(key);
+
+  // Make the function available globally w/o a prefix.
+  if (!prefix) {
+    _ensureGlobalUnprefixedName(localName);
+  }
 
   switch (type) {
     case 'text/javascript': {
-      // NEW: if a real JS function is provided (module libs), register it directly.
+      // If a real JS function is provided (module libs), register it directly.
       if (typeof functionObject.implementation === 'function') {
         const impl = functionObject.implementation;
         registerCustomXPathFunction(
@@ -74,6 +115,7 @@ export default function registerFunction(functionObject, formElement) {
         'form',
         functionObject.functionBody,
       );
+
       registerCustomXPathFunction(
         functionIdentifier,
         paramParts.map(paramPart => paramPart.variableType),
@@ -83,25 +125,27 @@ export default function registerFunction(functionObject, formElement) {
       );
       break;
     }
+
     case 'text/xquf':
     case 'text/xquery':
     case 'text/xpath': {
       const typedValueFactories = paramParts.map(param =>
         createTypedValueFactory(param.variableType),
       );
+
       const language =
         type === 'text/xpath'
           ? 'XPath3.1'
           : type === 'text/xquery'
             ? 'XQuery3.1'
             : 'XQueryUpdate3.1';
+
       const fun = (domFacade, ...args) =>
         evaluateXPath(
           functionObject.functionBody,
           formElement.getInScopeContext(),
           formElement.getOwnerForm(),
           paramParts.reduce((variablesByName, paramPart, i) => {
-            // Because we know the XPath type here (from the function declaration) we do not have to depend on the implicit typings
             variablesByName[paramPart.variableName.replace('$', '')] = typedValueFactories[i](
               args[i],
               domFacade,
@@ -110,6 +154,7 @@ export default function registerFunction(functionObject, formElement) {
           }, {}),
           { language },
         );
+
       registerCustomXPathFunction(
         functionIdentifier,
         paramParts.map(paramPart => paramPart.variableType),

@@ -23,9 +23,7 @@ export class XPathUtil {
           for (const item of astNode[key]) {
             if (XPathUtil.containsDynamicContent(item)) return true;
           }
-        } else {
-          if (XPathUtil.containsDynamicContent(astNode[key])) return true;
-        }
+        } else if (XPathUtil.containsDynamicContent(astNode[key])) return true;
       }
     }
 
@@ -247,22 +245,30 @@ export class XPathUtil {
    * @returns {*|null}
    */
   static getParentBindingElement(start) {
-    /*    if (start.parentNode.host) {
-          const { host } = start.parentNode;
-          if (host.hasAttribute('ref')) {
-            return host;
-          }
-        } else */
-    if (
-      start.parentNode &&
-      (start.parentNode.nodeType !== Node.DOCUMENT_NODE ||
-        start.parentNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE)
-    ) {
-      return this.getClosest(
-        'fx-control[ref],fx-upload[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref],fx-repeatitem',
-        start.parentNode,
-      );
+    // JSON lens case
+    if (start && start.__jsonlens__ === true) {
+      let current = start.parent;
+      while (current) {
+        if (current.bindingElement) return current.bindingElement;
+        current = current.parent;
+      }
+      return null;
     }
+
+    // DOM case
+    let node = start?.parentNode;
+
+    while (
+      node &&
+      node.nodeType !== Node.DOCUMENT_NODE &&
+      node.nodeType !== Node.DOCUMENT_FRAGMENT_NODE
+    ) {
+      if (node.matches?.('[ref],fx-repeatitem')) {
+        return node;
+      }
+      node = node.parentNode;
+    }
+
     return null;
   }
 
@@ -275,7 +281,7 @@ export class XPathUtil {
    */
   static isAbsolutePath(path) {
     return (
-      path != null && (path.startsWith('/') || path.startsWith('instance(') || path.startsWith('$'))
+      path != null && (path.startsWith('/') || path.startsWith('instance(') || path.startsWith('$') || path.startsWith('?'))
     );
   }
 
@@ -297,34 +303,86 @@ export class XPathUtil {
    * @returns {string}
    */
   static getInstanceId(ref, boundElement) {
-    if (!ref) {
+    const refStr = typeof ref === 'string' ? ref.trim() : '';
+
+    // Variant A: instance-vars ($default, $foo) must count as instance references
+    // for dependency tracking, otherwise repeats won't refresh when they change.
+    try {
+      const host =
+          boundElement?.nodeType === Node.ATTRIBUTE_NODE ? boundElement.ownerElement : boundElement;
+      const fore = host?.closest?.('fx-fore');
+      const bindings = fore?._instanceVarBindings;
+
+      if (bindings) {
+        // $default => default instance
+        if (/\$default(?![\w.-])/.test(refStr)) return 'default';
+
+        // $<id> => instance <id> (only if it's a known binding key)
+        for (const k of Object.keys(bindings)) {
+          if (k === 'default') continue;
+          const re = new RegExp(
+              `\\$${k.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&')}(?![\\w.-])`,
+          );
+          if (re.test(refStr)) return k;
+        }
+      }
+    } catch (_e) {
+      // ignore
+    }
+
+    // Explicit "default instance" selector
+    if (refStr.startsWith('instance()')) {
       return 'default';
     }
-    if (ref.startsWith('instance()')) {
-      return 'default';
+
+    // Explicit instance('id') selector at the START of the expression only
+    // (Do NOT use refStr.includes('instance(') because predicates may reference other instances.)
+    {
+      const m = refStr.match(/^instance\(\s*(['"])(?<id>.*?)\1\s*\)/);
+      if (m?.groups?.id != null) {
+        return m.groups.id;
+      }
     }
-    if (ref.startsWith('instance(')) {
-      const result = ref.substring(ref.indexOf('(') + 1);
-      return result.substring(1, result.indexOf(')') - 1);
-    }
-    if (ref.startsWith('$')) {
-      // this variable might actually point to an instance
-      const variableName = ref.match(/\$(?<variableName>[a-zA-Z0-9\-\_]+).*/)?.groups?.variableName;
+
+    // Variable indirection (may ultimately point to instance(...))
+    if (refStr.startsWith('$')) {
+      const variableName = refStr.match(/^\$(?<variableName>[a-zA-Z0-9\-_]+)/)?.groups
+          ?.variableName;
+
       let closestActualFormElement = boundElement;
       while (closestActualFormElement && !('inScopeVariables' in closestActualFormElement)) {
         closestActualFormElement =
-          closestActualFormElement.nodeType === Node.ATTRIBUTE_NODE
-            ? closestActualFormElement.ownerElement
-            : closestActualFormElement.parentNode;
+            closestActualFormElement.nodeType === Node.ATTRIBUTE_NODE
+                ? closestActualFormElement.ownerElement
+                : closestActualFormElement.parentNode;
       }
 
       const correspondingVariable = closestActualFormElement?.inScopeVariables?.get(variableName);
-      if (!correspondingVariable) {
-        return null;
-      }
+      if (!correspondingVariable) return null;
+
       return this.getInstanceId(correspondingVariable.valueQuery, correspondingVariable);
     }
-    return null;
+
+    // If we can't decide from the ref itself (relative paths, '/', '.', missing ref, fx-repeatitem),
+    // inherit from the nearest ancestor that *does* have a ref or explicit instance().
+    const parentBinding = XPathUtil.getParentBindingElement(boundElement);
+    if (parentBinding) {
+      // If this is a repeatitem boundary with no ref, keep climbing
+      if (parentBinding.matches?.('fx-repeatitem') && !parentBinding.getAttribute?.('ref')) {
+        return this.getInstanceId(null, parentBinding);
+      }
+
+      const parentRef = parentBinding.getAttribute?.('ref');
+      if (parentRef) {
+        return this.getInstanceId(parentRef, parentBinding);
+      }
+
+      // Parent binding exists but has no ref (rare, but safe): keep climbing
+      return this.getInstanceId(null, parentBinding);
+    }
+
+    // No parent binding => top of scope. If ref wasn't explicit, default.
+    return 'default';
   }
 
   /**
@@ -360,18 +418,6 @@ export class XPathUtil {
     return shortened.startsWith('/') ? `${shortened}` : `/${shortened}`;
   }
 */
-
-  /**
-   * @param {Node} node
-   * @param {string} instanceId
-   * @returns string
-   */
-  static getPath(node, instanceId) {
-    const path = fx.evaluateXPathToString('path()', node);
-    // Path is like `$default/x[1]/y[1]`
-    const shortened = XPathUtil.shortenPath(path);
-    return shortened.startsWith('/') ? `$${instanceId}${shortened}` : `$${instanceId}/${shortened}`;
-  }
 
   /**
    * @param {string} path
