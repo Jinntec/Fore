@@ -6,6 +6,7 @@
     <title>Fore JSON Movies Explorer</title>
     <script type="module" src="../../index.js"></script>
     <script type="module" src="../../tools/fx-lens.js"></script>
+    <link rel="stylesheet" href="../../resources/demo.css" />
     <style>
         fx-fore { visibility: hidden; }
         fx-fore.fx-ready { visibility: visible; }
@@ -92,7 +93,6 @@
             <div class="muted" style="margin:10px 0;">
                 Selected index: {index('movies')} <fx-output value="index('movies')"></fx-output>
             </div>
-            {$default?ui?query}
 
             <fx-repeat id="movies" ref="?movies?*[contains(lower-case(?title), lower-case($default?ui?query))]">
                 <template>
