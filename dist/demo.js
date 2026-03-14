@@ -1,4 +1,4 @@
-/* Version: 3.0.0 - March 13, 2026 16:23:01 */
+/* Version: 3.0.0 - March 14, 2026 12:39:00 */
 /**
 @license
 Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
@@ -545,8 +545,7 @@ const CSS_BUILD_ATTR = 'css-build';
  */
 function getCssBuild(element) {
   if (cssBuild !== undefined) {
-    return (/** @type {string} */cssBuild
-    );
+    return /** @type {string} */cssBuild;
   }
   if (element.__cssBuild === undefined) {
     // try attribute first, as it is the common case
@@ -1491,12 +1490,12 @@ class ApplyShimInterface {
       this.styleElement(element);
       let shadowChildren = /** @type {!ParentNode} */element.shadowRoot.children || element.shadowRoot.childNodes;
       for (let i = 0; i < shadowChildren.length; i++) {
-        this.styleSubtree( /** @type {HTMLElement} */shadowChildren[i]);
+        this.styleSubtree(/** @type {HTMLElement} */shadowChildren[i]);
       }
     } else {
       let children = element.children || element.childNodes;
       for (let i = 0; i < children.length; i++) {
-        this.styleSubtree( /** @type {HTMLElement} */children[i]);
+        this.styleSubtree(/** @type {HTMLElement} */children[i]);
       }
     }
   }
@@ -1925,7 +1924,7 @@ const dedupingMixin = function (mixin) {
       // copy inherited mixin set from the extended class, or the base class
       // NOTE: we avoid use of Set here because some browser (IE11)
       // cannot extend a base Set via the constructor.
-      let mixinSet = Object.create( /** @type {!MixinFunction} */extended.__mixinSet || baseSet || null);
+      let mixinSet = Object.create(/** @type {!MixinFunction} */extended.__mixinSet || baseSet || null);
       mixinSet[mixinDedupeId] = true;
       /** @type {!MixinFunction} */
       extended.__mixinSet = mixinSet;
@@ -2108,8 +2107,7 @@ const SHADY_UNSCOPED_ATTR = 'shady-unscoped';
  * @return {?DomModule} .
  */
 function importModule(moduleId) {
-  return (/** @type {?DomModule} */DomModule.import(moduleId)
-  );
+  return /** @type {?DomModule} */DomModule.import(moduleId);
 }
 function styleForImport(importDoc) {
   // NOTE: polyfill affordance.
@@ -2921,7 +2919,6 @@ superClass => {
         /* eslint-enable */
       });
     }
-
     constructor() {
       super();
       /** @type {boolean} */
@@ -3252,7 +3249,7 @@ superClass => {
     _propertyToAttribute(property, attribute, value) {
       this.__serializing = true;
       value = arguments.length < 3 ? this[property] : value;
-      this._valueToNodeAttribute( /** @type {!HTMLElement} */this, value, attribute || this.constructor.attributeNameForProperty(property));
+      this._valueToNodeAttribute(/** @type {!HTMLElement} */this, value, attribute || this.constructor.attributeNameForProperty(property));
       this.__serializing = false;
     }
 
@@ -3575,7 +3572,7 @@ const PropertyAccessors = dedupingMixin(superClass => {
       switch (type) {
         case Object:
           try {
-            outValue = JSON.parse( /** @type {string} */value);
+            outValue = JSON.parse(/** @type {string} */value);
           } catch (x) {
             // allow non-JSON literals like Strings and Numbers
             outValue = value;
@@ -3583,7 +3580,7 @@ const PropertyAccessors = dedupingMixin(superClass => {
           break;
         case Array:
           try {
-            outValue = JSON.parse( /** @type {string} */value);
+            outValue = JSON.parse(/** @type {string} */value);
           } catch (x) {
             outValue = null;
           }
@@ -4496,7 +4493,7 @@ function dispatchNotifyEvent(inst, eventName, value, path) {
   // small number of internal tests failed in obscure ways, which may indicate
   // user code relied on timing differences resulting from ShadyDOM flushing
   // as a result of the wrapped `dispatchEvent`.
-  wrap( /** @type {!HTMLElement} */inst).dispatchEvent(new CustomEvent(eventName, {
+  wrap(/** @type {!HTMLElement} */inst).dispatchEvent(new CustomEvent(eventName, {
     detail
   }));
 }
@@ -4523,7 +4520,6 @@ function runNotifyEffect(inst, property, props, oldProps, info, hasPaths) {
   if (path && value === undefined) {
     value = props[property]; // specifically for .splices
   }
-
   dispatchNotifyEvent(inst, info.eventName, value, path);
 }
 
@@ -4620,16 +4616,16 @@ function runComputedEffects(inst, changedProps, oldProps, hasPaths) {
           enqueueEffectsFor(info.methodInfo, computeEffects, queue, order, hasPaths);
         }
       }
-      Object.assign( /** @type {!Object} */oldProps, inst.__dataOld);
-      Object.assign( /** @type {!Object} */changedProps, inst.__dataPending);
+      Object.assign(/** @type {!Object} */oldProps, inst.__dataOld);
+      Object.assign(/** @type {!Object} */changedProps, inst.__dataPending);
       inst.__dataPending = null;
     } else {
       // Original Polymer 2.x computed effects order, which continues running
       // effects until no further computed properties have been invalidated
       let inputProps = changedProps;
       while (runEffects(inst, computeEffects, inputProps, oldProps, hasPaths)) {
-        Object.assign( /** @type {!Object} */oldProps, inst.__dataOld);
-        Object.assign( /** @type {!Object} */changedProps, inst.__dataPending);
+        Object.assign(/** @type {!Object} */oldProps, inst.__dataOld);
+        Object.assign(/** @type {!Object} */changedProps, inst.__dataPending);
         inputProps = inst.__dataPending;
         inst.__dataPending = null;
       }
@@ -4994,7 +4990,7 @@ function applyBindingValue(inst, node, binding, part, value) {
   }
   if (binding.kind == 'attribute') {
     // Attribute binding
-    inst._valueToNodeAttribute( /** @type {Element} */node, value, binding.target);
+    inst._valueToNodeAttribute(/** @type {Element} */node, value, binding.target);
   } else {
     // Property binding
     let prop = binding.target;
@@ -5778,13 +5774,13 @@ const PropertyEffects = dedupingMixin(superClass => {
           }
         }
         this.__dataHasPaths = true;
-        if (this._setPendingProperty( /**@type{string}*/path, value, shouldNotify)) {
+        if (this._setPendingProperty(/**@type{string}*/path, value, shouldNotify)) {
           computeLinkedPaths(this, /**@type{string}*/path, value);
           return true;
         }
       } else {
         if (this.__dataHasAccessor && this.__dataHasAccessor[path]) {
-          return this._setPendingProperty( /**@type{string}*/path, value, shouldNotify);
+          return this._setPendingProperty(/**@type{string}*/path, value, shouldNotify);
         } else {
           this[path] = value;
         }
@@ -6268,7 +6264,7 @@ const PropertyEffects = dedupingMixin(superClass => {
       if (root) {
         set(root, path, value);
       } else {
-        if (!this[TYPES.READ_ONLY] || !this[TYPES.READ_ONLY][/** @type {string} */path]) {
+        if (!this[TYPES.READ_ONLY] || !this[TYPES.READ_ONLY][(/** @type {string} */path)]) {
           if (this._setPendingPropertyOrPath(path, value, true)) {
             this._invalidateProperties();
           }
@@ -6528,7 +6524,7 @@ const PropertyEffects = dedupingMixin(superClass => {
         }
       });
       if (dynamicFn) {
-        this._addPropertyEffect( /** @type {string} */method, TYPES.OBSERVE, {
+        this._addPropertyEffect(/** @type {string} */method, TYPES.OBSERVE, {
           fn: runObserverEffect,
           info,
           trigger: {
@@ -6984,7 +6980,7 @@ const PropertyEffects = dedupingMixin(superClass => {
      * @protected
      */
     _stampTemplate(template, templateInfo) {
-      templateInfo = templateInfo || /** @type {!TemplateInfo} */this._bindTemplate(template, true);
+      templateInfo = templateInfo || (/** @type {!TemplateInfo} */this._bindTemplate(template, true));
       // Ensures that created dom is `_enqueueClient`'d to this element so
       // that it can be flushed on next call to `_flushProperties`
       hostStack.push(this);
@@ -7511,7 +7507,7 @@ const PropertiesMixin = dedupingMixin(superClass => {
     // generated by this call to the mixin; the instanceof test only works
     // because the mixin is deduped and guaranteed only to apply once, hence
     // all constructors in a proto chain will see the same `PropertiesMixin`
-    return superCtor.prototype instanceof PropertiesMixin ? /** @type {!PropertiesMixinConstructor} */superCtor : null;
+    return superCtor.prototype instanceof PropertiesMixin ? (/** @type {!PropertiesMixinConstructor} */superCtor) : null;
   }
 
   /**
@@ -7569,7 +7565,7 @@ const PropertiesMixin = dedupingMixin(superClass => {
      */
     static finalize() {
       if (!this.hasOwnProperty(JSCompiler_renameProperty('__finalized', this))) {
-        const superCtor = superPropertiesClass( /** @type {!PropertiesMixinConstructor} */this);
+        const superCtor = superPropertiesClass(/** @type {!PropertiesMixinConstructor} */this);
         if (superCtor) {
           superCtor.finalize();
         }
@@ -7587,7 +7583,7 @@ const PropertiesMixin = dedupingMixin(superClass => {
      * @nocollapse
      */
     static _finalizeClass() {
-      const props = ownProperties( /** @type {!PropertiesMixinConstructor} */this);
+      const props = ownProperties(/** @type {!PropertiesMixinConstructor} */this);
       if (props) {
         /** @type {?} */this.createProperties(props);
       }
@@ -7604,8 +7600,8 @@ const PropertiesMixin = dedupingMixin(superClass => {
      */
     static get _properties() {
       if (!this.hasOwnProperty(JSCompiler_renameProperty('__properties', this))) {
-        const superCtor = superPropertiesClass( /** @type {!PropertiesMixinConstructor} */this);
-        this.__properties = Object.assign({}, superCtor && superCtor._properties, ownProperties( /** @type {PropertiesMixinConstructor} */this));
+        const superCtor = superPropertiesClass(/** @type {!PropertiesMixinConstructor} */this);
+        this.__properties = Object.assign({}, superCtor && superCtor._properties, ownProperties(/** @type {PropertiesMixinConstructor} */this));
       }
       return this.__properties;
     }
@@ -8047,7 +8043,7 @@ const ElementMixin = dedupingMixin(base => {
      */
     static createProperties(props) {
       for (let p in props) {
-        createPropertyFromConfig( /** @type {?} */this.prototype, p, props[p], props);
+        createPropertyFromConfig(/** @type {?} */this.prototype, p, props[p], props);
       }
     }
 
@@ -8136,10 +8132,10 @@ const ElementMixin = dedupingMixin(base => {
         // dom-module and/or super.template.
         protoTemplate !== undefined ? protoTemplate :
         // Look in dom-module associated with this element's is
-        this.hasOwnProperty(JSCompiler_renameProperty('is', this)) && getTemplateFromDomModule( /** @type {PolymerElementConstructor}*/this.is) ||
+        this.hasOwnProperty(JSCompiler_renameProperty('is', this)) && getTemplateFromDomModule(/** @type {PolymerElementConstructor}*/this.is) ||
         // Next look for superclass template (call the super impl this
         // way so that `this` points to the superclass)
-        Object.getPrototypeOf( /** @type {PolymerElementConstructor}*/this.prototype).constructor.template;
+        Object.getPrototypeOf(/** @type {PolymerElementConstructor}*/this.prototype).constructor.template;
       }
       return this._template;
     }
@@ -8180,8 +8176,8 @@ const ElementMixin = dedupingMixin(base => {
         if (meta) {
           this._importPath = pathFromUrl(meta.url);
         } else {
-          const module = DomModule.import( /** @type {PolymerElementConstructor} */this.is);
-          this._importPath = module && module.assetpath || Object.getPrototypeOf( /** @type {PolymerElementConstructor}*/this.prototype).constructor.importPath;
+          const module = DomModule.import(/** @type {PolymerElementConstructor} */this.is);
+          this._importPath = module && module.assetpath || Object.getPrototypeOf(/** @type {PolymerElementConstructor}*/this.prototype).constructor.importPath;
         }
       }
       return this._importPath;
@@ -8218,7 +8214,7 @@ const ElementMixin = dedupingMixin(base => {
       this.constructor.finalize();
       // note: finalize template when we have access to `localName` to
       // avoid dependence on `is` for polyfilling styling.
-      this.constructor._finalizeTemplate( /** @type {!HTMLElement} */this.localName);
+      this.constructor._finalizeTemplate(/** @type {!HTMLElement} */this.localName);
       super._initializeProperties();
       // set path defaults
       this.rootPath = rootPath;
@@ -8306,7 +8302,7 @@ const ElementMixin = dedupingMixin(base => {
      */
     connectedCallback() {
       if (window.ShadyCSS && this._template) {
-        window.ShadyCSS.styleElement( /** @type {!HTMLElement} */this);
+        window.ShadyCSS.styleElement(/** @type {!HTMLElement} */this);
       }
       super.connectedCallback();
     }
@@ -8337,7 +8333,7 @@ const ElementMixin = dedupingMixin(base => {
      */
     _readyClients() {
       if (this._template) {
-        this.root = this._attachDom( /** @type {StampedTemplate} */this.root);
+        this.root = this._attachDom(/** @type {StampedTemplate} */this.root);
       }
       // The super._readyClients here sets the clients initialized flag.
       // We must wait to do this until after client dom is created/attached
@@ -8411,7 +8407,7 @@ const ElementMixin = dedupingMixin(base => {
      */
     updateStyles(properties) {
       if (window.ShadyCSS) {
-        window.ShadyCSS.styleSubtree( /** @type {!HTMLElement} */this, properties);
+        window.ShadyCSS.styleSubtree(/** @type {!HTMLElement} */this, properties);
       }
     }
 
@@ -8555,7 +8551,7 @@ class Debouncer {
    */
   _cancelAsync() {
     if (this.isActive()) {
-      this._asyncModule.cancel( /** @type {number} */this._timer);
+      this._asyncModule.cancel(/** @type {number} */this._timer);
       this._timer = null;
     }
   }
@@ -8783,7 +8779,7 @@ function canBeLabelled(el) {
  * @return {!Array<!HTMLLabelElement>} Relevant label for `el`
  */
 function matchingLabels(el) {
-  let labels = Array.prototype.slice.call( /** @type {HTMLInputElement} */el.labels || []);
+  let labels = Array.prototype.slice.call(/** @type {HTMLInputElement} */el.labels || []);
   // IE doesn't have `labels` and Safari doesn't populate `labels`
   // if element is in a shadowroot.
   // In this instance, finding the non-ancestor labels is enough,
@@ -8795,7 +8791,7 @@ function matchingLabels(el) {
     if (el.id) {
       let matching = root.querySelectorAll(`label[for = ${el.id}]`);
       for (let i = 0; i < matching.length; i++) {
-        labels.push( /** @type {!HTMLLabelElement} */matching[i]);
+        labels.push(/** @type {!HTMLLabelElement} */matching[i]);
       }
     }
   }
@@ -8827,9 +8823,9 @@ let mouseCanceller = function (mouseEvent) {
     for (let i = 0; i < path.length; i++) {
       if (path[i].nodeType === Node.ELEMENT_NODE) {
         if (path[i].localName === 'label') {
-          clickedLabels.push( /** @type {!HTMLLabelElement} */path[i]);
-        } else if (canBeLabelled( /** @type {!HTMLElement} */path[i])) {
-          let ownerLabels = matchingLabels( /** @type {!HTMLElement} */path[i]);
+          clickedLabels.push(/** @type {!HTMLLabelElement} */path[i]);
+        } else if (canBeLabelled(/** @type {!HTMLElement} */path[i])) {
+          let ownerLabels = matchingLabels(/** @type {!HTMLElement} */path[i]);
           // check if one of the clicked labels is labelling this element
           for (let j = 0; j < ownerLabels.length; j++) {
             clickFromLabel = clickFromLabel || clickedLabels.indexOf(ownerLabels[j]) > -1;
@@ -9028,7 +9024,7 @@ function deepTargetFind(x, y) {
  * @return {EventTarget} Returns the event target.
  */
 function _findOriginalTarget(ev) {
-  const path = getComposedPath( /** @type {?Event} */ev);
+  const path = getComposedPath(/** @type {?Event} */ev);
   // It shouldn't be, but sometimes path is empty (window on Safari).
   return path.length > 0 ? path[0] : ev.target;
 }
@@ -9306,7 +9302,7 @@ function _fire(target, type, detail) {
     composed: true
   });
   ev.detail = detail;
-  wrap( /** @type {!Node} */target).dispatchEvent(ev);
+  wrap(/** @type {!Node} */target).dispatchEvent(ev);
   // forward `preventDefault` in a clean way
   if (ev.defaultPrevented) {
     let preventer = detail.preventer || detail.sourceEvent;
@@ -10445,7 +10441,7 @@ let FlattenedNodesObserver = class {
     if (isSlot(this._target)) {
       this._listenSlots([this._target]);
     } else if (wrap(this._target).children) {
-      this._listenSlots( /** @type {!NodeList<!Node>} */wrap(this._target).children);
+      this._listenSlots(/** @type {!NodeList<!Node>} */wrap(this._target).children);
       if (window.ShadyDOM) {
         this._shadyChildrenObserver = window.ShadyDOM.observeChildren(this._target, mutations => {
           this._processMutations(mutations);
@@ -10475,7 +10471,7 @@ let FlattenedNodesObserver = class {
     if (isSlot(this._target)) {
       this._unlistenSlots([this._target]);
     } else if (wrap(this._target).children) {
-      this._unlistenSlots( /** @type {!NodeList<!Node>} */wrap(this._target).children);
+      this._unlistenSlots(/** @type {!NodeList<!Node>} */wrap(this._target).children);
       if (window.ShadyDOM && this._shadyChildrenObserver) {
         window.ShadyDOM.unobserveChildren(this._shadyChildrenObserver);
         this._shadyChildrenObserver = null;
@@ -10690,7 +10686,7 @@ class DomApiNative {
    * @override
    */
   observeNodes(callback) {
-    return new FlattenedNodesObserver( /** @type {!HTMLElement} */this.node, callback);
+    return new FlattenedNodesObserver(/** @type {!HTMLElement} */this.node, callback);
   }
 
   /**
@@ -10796,7 +10792,7 @@ class DomApiNative {
    * @override
    */
   getEffectiveChildNodes() {
-    return FlattenedNodesObserver.getFlattenedNodes( /** @type {!HTMLElement} */this.node);
+    return FlattenedNodesObserver.getFlattenedNodes(/** @type {!HTMLElement} */this.node);
   }
 
   /**
@@ -10840,7 +10836,6 @@ function forwardMethods(proto, methods) {
     /* eslint-enable */
   }
 }
-
 function forwardReadOnlyProperties(proto, properties) {
   for (let i = 0; i < properties.length; i++) {
     let name = properties[i];
@@ -11072,19 +11067,17 @@ if (window['ShadyDOM'] && window['ShadyDOM']['inUse'] && window['ShadyDOM']['noP
 const dom = function (obj) {
   obj = obj || document;
   if (obj instanceof DomApiImpl) {
-    return (/** @type {!DomApi} */obj
-    );
+    return /** @type {!DomApi} */obj;
   }
   if (obj instanceof EventApi) {
-    return (/** @type {!EventApi} */obj
-    );
+    return /** @type {!EventApi} */obj;
   }
   let helper = obj['__domApi'];
   if (!helper) {
     if (obj instanceof Event) {
       helper = new EventApi(obj);
     } else {
-      helper = new DomApiImpl( /** @type {Node} */obj);
+      helper = new DomApiImpl(/** @type {Node} */obj);
     }
     obj['__domApi'] = helper;
   }
@@ -11784,7 +11777,7 @@ const LegacyElementMixin = dedupingMixin(base => {
      * @override
      */
     serializeValueToAttribute(value, attribute, node) {
-      this._valueToNodeAttribute( /** @type {Element} */node || this, value, attribute);
+      this._valueToNodeAttribute(/** @type {Element} */node || this, value, attribute);
     }
 
     /**
@@ -11918,7 +11911,7 @@ const LegacyElementMixin = dedupingMixin(base => {
       }
       let key = eventName + methodName;
       if (!bl[key]) {
-        bl[key] = this._addMethodEventListenerToNode( /** @type {!Node} */node, eventName, methodName, this);
+        bl[key] = this._addMethodEventListenerToNode(/** @type {!Node} */node, eventName, methodName, this);
       }
     }
 
@@ -11935,11 +11928,11 @@ const LegacyElementMixin = dedupingMixin(base => {
      */
     unlisten(node, eventName, methodName) {
       node = /** @type {!EventTarget} */node || this;
-      let bl = this.__boundListeners && this.__boundListeners.get( /** @type {!Element} */node);
+      let bl = this.__boundListeners && this.__boundListeners.get(/** @type {!Element} */node);
       let key = eventName + methodName;
       let handler = bl && bl[key];
       if (handler) {
-        this._removeEventListenerFromNode( /** @type {!Node} */node, eventName, handler);
+        this._removeEventListenerFromNode(/** @type {!Node} */node, eventName, handler);
         bl[key] = /** @type {?} */null;
       }
     }
@@ -11961,7 +11954,7 @@ const LegacyElementMixin = dedupingMixin(base => {
      * @override
      */
     setScrollDirection(direction, node) {
-      setTouchAction( /** @type {!Element} */node || this, DIRECTION_MAP[direction] || 'auto');
+      setTouchAction(/** @type {!Element} */node || this, DIRECTION_MAP[direction] || 'auto');
     }
     /* **** End Events **** */
 
@@ -12051,7 +12044,7 @@ const LegacyElementMixin = dedupingMixin(base => {
      */
     getEffectiveChildren() {
       let list = this.getEffectiveChildNodes();
-      return list.filter(function ( /** @type {!Node} */n) {
+      return list.filter(function (/** @type {!Node} */n) {
         return n.nodeType === Node.ELEMENT_NODE;
       });
     }
@@ -12188,7 +12181,7 @@ const LegacyElementMixin = dedupingMixin(base => {
      * @override
      */
     getComputedStyleValue(property) {
-      return styleInterface.getComputedStyleValue( /** @type {!Element} */this, property);
+      return styleInterface.getComputedStyleValue(/** @type {!Element} */this, property);
     }
 
     // debounce
@@ -14060,7 +14053,7 @@ class DomBind extends domBindBase {
         });
         return;
       }
-      this.root = this._stampTemplate( /** @type {!HTMLTemplateElement} */template);
+      this.root = this._stampTemplate(/** @type {!HTMLTemplateElement} */template);
       this.$ = this.root.$;
       this.__children = [];
       for (let n = this.root.firstChild; n; n = n.nextSibling) {
@@ -14112,8 +14105,7 @@ class LiteralString {
  */
 function literalValue(value) {
   if (value instanceof LiteralString) {
-    return (/** @type {!LiteralString} */value.value
-    );
+    return /** @type {!LiteralString} */value.value;
   } else {
     throw new Error(`non-literal value passed to Polymer's htmlLiteral function: ${value}`);
   }
@@ -14125,8 +14117,7 @@ function literalValue(value) {
  */
 function htmlValue(value) {
   if (value instanceof HTMLTemplateElement) {
-    return (/** @type {!HTMLTemplateElement } */value.innerHTML
-    );
+    return /** @type {!HTMLTemplateElement } */value.innerHTML;
   } else if (value instanceof LiteralString) {
     return literalValue(value);
   } else {
@@ -14549,7 +14540,7 @@ class DomRepeat extends domRepeatBase {
       // itself, which has been given a `_templateInfo` property
       const thisAsTemplate = /** @type {!HTMLTemplateElement} */
       /** @type {!HTMLElement} */this;
-      let template = this.template = thisAsTemplate._templateInfo ? thisAsTemplate : /** @type {!HTMLTemplateElement} */this.querySelector('template');
+      let template = this.template = thisAsTemplate._templateInfo ? thisAsTemplate : (/** @type {!HTMLTemplateElement} */this.querySelector('template'));
       if (!template) {
         // Wait until childList changes and template should be there by then
         let observer = new MutationObserver(() => {
@@ -15083,8 +15074,8 @@ class DomIfBase extends PolymerElement {
       // itself, which has been given a `_templateInfo` property
       const thisAsTemplate = /** @type {!HTMLTemplateElement} */
       /** @type {!HTMLElement} */this;
-      let template = thisAsTemplate._templateInfo ? thisAsTemplate : /** @type {!HTMLTemplateElement} */
-      wrap(thisAsTemplate).querySelector('template');
+      let template = thisAsTemplate._templateInfo ? thisAsTemplate : (/** @type {!HTMLTemplateElement} */
+      wrap(thisAsTemplate).querySelector('template'));
       if (!template) {
         // Wait until childList changes and template should be there by then
         let observer = new MutationObserver(() => {
@@ -15307,7 +15298,7 @@ class DomIfFast extends DomIfBase {
       }
     }
     // Pre-bind and link the template into the effects system
-    const templateInfo = host._bindTemplate( /** @type {!HTMLTemplateElement} */this.__template, true);
+    const templateInfo = host._bindTemplate(/** @type {!HTMLTemplateElement} */this.__template, true);
     // Install runEffects hook that prevents running property effects
     // (and any nested template effects) when the `if` is false
     templateInfo.runEffects = (runEffects, changedProps, hasPaths) => {
@@ -15357,7 +15348,7 @@ class DomIfFast extends DomIfBase {
       }
     };
     // Stamp the template, and set its DocumentFragment to the "instance"
-    this.__instance = host._stampTemplate( /** @type {!HTMLTemplateElement} */this.__template, templateInfo);
+    this.__instance = host._stampTemplate(/** @type {!HTMLTemplateElement} */this.__template, templateInfo);
     wrap(parentNode).insertBefore(this.__instance, this);
   }
 
@@ -15465,7 +15456,7 @@ class DomIfLegacy extends DomIfBase {
   __createAndInsertInstance(parentNode) {
     // Ensure we have an instance constructor
     if (!this.__ctor) {
-      this.__ctor = templatize( /** @type {!HTMLTemplateElement} */this.__template, this, {
+      this.__ctor = templatize(/** @type {!HTMLTemplateElement} */this.__template, this, {
         // dom-if templatizer instances require `mutable: true`, as
         // `__syncHostProperties` relies on that behavior to sync objects
         mutableData: true,
@@ -17403,7 +17394,6 @@ Polymer({
       // lazily when a distributed child is attached, which may occur before
       // configuration for this element in polyfill.
     },
-
     _inputHasContent: {
       type: Boolean,
       value: false
@@ -19187,7 +19177,7 @@ const IronButtonStateImpl = {
 
     // Ignore the event if this is coming from a focused light child, since that
     // element will deal with it.
-    if (this.isLightDescendant( /** @type {Node} */target)) return;
+    if (this.isLightDescendant(/** @type {Node} */target)) return;
     keyboardEvent.preventDefault();
     keyboardEvent.stopImmediatePropagation();
     this._setPressed(true);
@@ -19201,7 +19191,7 @@ const IronButtonStateImpl = {
 
     // Ignore the event if this is coming from a focused light child, since that
     // element will deal with it.
-    if (this.isLightDescendant( /** @type {Node} */target)) return;
+    if (this.isLightDescendant(/** @type {Node} */target)) return;
     if (this.pressed) {
       this._asyncClick();
     }
@@ -19884,7 +19874,7 @@ const PaperRippleBehavior = {
         // nodes are not valid event targets
         var domContainer = dom(this._rippleContainer || this);
         var target = dom(optTriggeringEvent).rootTarget;
-        if (domContainer.deepContains( /** @type {Node} */target)) {
+        if (domContainer.deepContains(/** @type {Node} */target)) {
           this._ripple.uiDownAction(optTriggeringEvent);
         }
       }
@@ -37473,7 +37463,6 @@ class XPathUtil {
     if (!doc) {
       doc = document.implementation.createDocument(null, null, null); // Create a new XML document if not provided
     }
-
     const parts = [];
     let scratch = '';
     let isInPredicate = false;
@@ -37980,7 +37969,6 @@ function DepGraph(opts) {
   this.incomingEdges = {}; // Node -> [Dependant Node]
   this.circular = opts && !!opts.circular; // Allows circular deps
 }
-
 DepGraph.prototype = {
   /**
    * The number of nodes in the graph.
@@ -38185,7 +38173,6 @@ DepGraph.prototype = {
     if (keys.length === 0) {
       return result; // Empty graph
     }
-
     if (!this.circular) {
       // Look for cycles - we run the DFS starting at all the nodes in case there
       // are several disconnected subgraphs inside this dependency graph.
@@ -38233,7 +38220,7 @@ function prettifyXml(source) {
 class JSONDomFacade {
   // Treat JSONNodes as "element-like" nodes for XPath purposes.
   // FontoXPath uses DOM nodeType numbers internally; 1 corresponds to ELEMENT_NODE.
-  getNodeType( /* node */
+  getNodeType(/* node */
   ) {
     return 1;
   }
@@ -40480,7 +40467,6 @@ class Fore {
       // }
       // }
     });
-
     return attrPredicate;
   }
 
@@ -40801,7 +40787,6 @@ class Fore {
     }
     // console.log('!!! DISPATCH_DONE', eventName);
   }
-
   static formatXml(xml) {
     const reg = /(>)(<)(\/*)/g;
     const wsexp = / *(.*) +\n/g;
@@ -41151,7 +41136,6 @@ function getLensForNode(value, parent = null, key = null, instanceId, instanceRo
       return value; // Bail out, return raw value
     }
   }
-
   return new JSONNode(value, parent, key, instanceId);
 }
 
@@ -41511,7 +41495,6 @@ class ModelItem {
     this.stateExpressions = {}; // e.g. { required: { expr: '../x', type: 'boolean' } }
     this.state = {}; // evaluated expression results
   }
-
   get value() {
     if (this.lens) return this.lens.get();
     if (!this.node) return null;
@@ -42888,7 +42871,6 @@ class ForeElementMixin extends HTMLElement {
       // console.warn('using default context ', this);
       // return;
     }
-
     if (this.ref === '') {
       this.nodeset = inscopeContext;
     } else if (Array.isArray(inscopeContext)) {
@@ -42955,7 +42937,6 @@ class ForeElementMixin extends HTMLElement {
     if (!parent) {
       return 'instance()'; // the default instance
     }
-
     return parent.getAttribute('ref');
   }
 
@@ -43203,7 +43184,6 @@ class FxBind extends ForeElementMixin {
       }
       // boundElement.getModel().registerModelItem(modelItem);
     }
-
     return modelItem;
   }
 
@@ -44454,7 +44434,6 @@ class DraggableComponent extends superclass {
     this.classList.remove('drag-over');
     //		event.stopPropagation();
   }
-
   _getDataNode() {
     const dataNode = this.getOwnerForm().draggedItem?.getModelItem()?.node;
     if (!dataNode) {
@@ -44836,7 +44815,6 @@ class RepeatBase extends withDraggability(UIElement) {
         // Fore.fadeOutElement(itemToRemove)
       }
     }
-
     if (contextSize > repeatItemCount) {
       for (let position = repeatItemCount + 1; position <= contextSize; position += 1) {
         // add new repeatitem
@@ -44882,7 +44860,6 @@ class RepeatBase extends withDraggability(UIElement) {
     // this.repeatCount = contextSize;
     // console.log('repeatCount', this.repeatCount);
   }
-
   connectedCallback() {
     super.connectedCallback();
 
@@ -44915,7 +44892,6 @@ class RepeatBase extends withDraggability(UIElement) {
         this._deleteHandler(node);
         //        this.removeRepeatItemForNode(node);
       });
-
       this.getOwnerForm().addToBatchedNotifications(this);
     };
     this.getOwnerForm().addEventListener('deleted', this.handleDelete);
@@ -45045,7 +45021,6 @@ class RepeatBase extends withDraggability(UIElement) {
         this.createdNodeset = repeatItemClone;
         // console.log('createdNodeset', this.createdNodeset)
       }
-
       if (repeatItem.index === 1) {
         this.applyIndex(repeatItem);
       }
@@ -45366,7 +45341,6 @@ class FxRepeatAttributes extends withDraggability(RepeatBase) {
     } else {
       this._removeIndexMarker(); // nothing selected
     }
-
     this.setAttribute('index', String(this.index));
   }
 
@@ -45466,7 +45440,6 @@ class FxRepeatAttributes extends withDraggability(RepeatBase) {
 
     // this.init();
   }
-
   async init() {
     // ### there must be a single 'template' child
 
@@ -45615,7 +45588,6 @@ class FxRepeatAttributes extends withDraggability(RepeatBase) {
       // }, 40);
     })();
   }
-
   async _initTemplate() {
     // const defaultSlot = this.shadowRoot.querySelector('slot');
     // todo: this is still weak - should handle that better maybe by an explicit slot?
@@ -45728,9 +45700,6 @@ const dirtyStates = {
  * @ts-check
  */
 class FxFore extends HTMLElement {
-  // Records init gate events that have already happened for a given target (document/window/element).
-  // This prevents “missed gate” situations when an fx-fore is replaced (e.g. via src loading)
-  // after the init event already fired.
   static _hasSeenInitEvent(target, eventName) {
     const set = FxFore._initEventState.get(target);
     return !!(set && set.has(eventName));
@@ -45873,7 +45842,7 @@ class FxFore extends HTMLElement {
       this._createRepeatsFromAttributes();
       this.inited = true;
     };
-    this.version = 'Version: 3.0.0 - built on March 13, 2026 16:23:01';
+    this.version = 'Version: 3.0.0 - built on March 14, 2026 12:39:00';
 
     /**
      * @type {import('./fx-model.js').FxModel}
@@ -46451,7 +46420,6 @@ class FxFore extends HTMLElement {
 
     // console.timeEnd('refreshLazy');
   }
-
   evaluateToNodes(xpath, context) {
     return evaluateXPathToNodes(xpath, context, this);
   }
@@ -47154,7 +47122,6 @@ class FxFore extends HTMLElement {
     }
     // console.log('DATA', this.getModel().getDefaultContext());
   }
-
   _createNodes(ref, referenceNode) {
     // console.log('creating', ref)
     // console.log('ownerDoc', referenceNode.ownerDocument);
@@ -47343,6 +47310,9 @@ class FxFore extends HTMLElement {
 }
 FxFore.outermostHandler = null;
 FxFore.draggedItem = null;
+// Records init gate events that have already happened for a given target (document/window/element).
+// This prevents “missed gate” situations when an fx-fore is replaced (e.g. via src loading)
+// after the init event already fired.
 FxFore._initEventState = new WeakMap();
 if (!customElements.get('fx-fore')) {
   customElements.define('fx-fore', FxFore);
@@ -47421,7 +47391,6 @@ class Relevance {
             */
           });
         }
-
         return Relevance._filterRelevant(element, n, clone);
       }
       return null;
@@ -48021,7 +47990,6 @@ class FxSubmission extends ForeElementMixin {
     }
   */
 }
-
 if (!customElements.get('fx-submission')) {
   customElements.define('fx-submission', FxSubmission);
 }
@@ -48323,7 +48291,6 @@ class AbstractControl extends UIElement {
     // Relevance.handleRelevance(this);
     // todo: handleType()
   }
-
   _getForm() {
     return this.getModel().parentNode;
   }
@@ -48369,7 +48336,6 @@ class AbstractControl extends UIElement {
     }
     */
   }
-
   _updateRequired() {
     if (this.modelItem.required) {
       // if (this.getOwnerForm().ready){
@@ -48782,7 +48748,6 @@ class FxControl extends AbstractControl {
         e.preventDefault();
         // e.stopImmediatePropagation();
       }
-
       this.widget.focus();
     });
     const defaultValueProp = this.widget.hasAttribute('multiple') ? 'selectedOptions' : 'value';
@@ -48814,7 +48779,6 @@ class FxControl extends AbstractControl {
       });
       this.updateEvent = 'blur'; // needs to be registered too
     }
-
     if (this.debounceDelay) {
       listenOn.addEventListener(this.updateEvent, debounce(this, () => {
         // console.log('eventlistener ', this.updateEvent);
@@ -48897,7 +48861,6 @@ class FxControl extends AbstractControl {
     if (modelitem?.readonly) {
       return; // do nothing when modelItem is readonly
     }
-
     if (this.getAttribute('as') === 'node') {
       const replace = this.shadowRoot.getElementById('replace');
       replace.replace(this.nodeset, val);
@@ -48920,7 +48883,6 @@ class FxControl extends AbstractControl {
     setval.actionPerformed(false);
     // this.visited = true;
   }
-
   _replaceNode(node) {
     // Note: clone the node while replacing to prevent the instances to leak through
     if (node.nodeType === Node.ATTRIBUTE_NODE) {
@@ -49058,7 +49020,6 @@ class FxControl extends AbstractControl {
         // widget[this.valueProp] = this.nodeset.cloneNode(true);
         // console.log('passed value to widget', widget.value);
       }
-
       return;
     }
 
@@ -49379,7 +49340,6 @@ class FxContainer extends UIElement {
       */
     };
   }
-
   constructor() {
     super();
     this.attachShadow({
@@ -49649,7 +49609,6 @@ class FxHint extends AbstractControl {
   }
   */
 }
-
 if (!customElements.get('fx-hint')) {
   customElements.define('fx-hint', FxHint);
 }
@@ -49717,7 +49676,6 @@ class FxOutput extends AbstractControl {
     });
     */
   }
-
   async refresh() {
     // Resolve the ref first. The ref will set the `nodeset` which is important for the 'context'
     if (this.ref) {
@@ -51114,7 +51072,6 @@ class FxTrigger extends AbstractControl {
       }
     }
   }
-
   async refresh() {
     super.refresh();
   }
@@ -51529,7 +51486,6 @@ class FxItems extends FxControl {
     super.refresh(force);
     // console.log('fx-items.refresh() called');
   }
-
   async updateWidgetValue() {
     // console.log('setting items value');
 
@@ -51841,7 +51797,6 @@ class FxLogSettings extends HTMLElement {
           // e.preventDefault();
           // e.stopPropagation();
         }
-
         const t = this.listenTo.find(evt => evt.name === item.name);
         e.target.checked ? t.show = true : t.show = false;
         // console.log('filter', this.listenTo);
@@ -52145,7 +52100,6 @@ class FxLogSettings extends HTMLElement {
 
     // }
   }
-
   _renderAction(actionElement, xpath, short, e) {
     actionElement.nodeName.split('-')[1];
     switch (actionElement.nodeName) {
@@ -52247,7 +52201,6 @@ class FxLogSettings extends HTMLElement {
             }
         */
   }
-
   _highlight(element) {
     const defaultBG = element.style.backgroundColor;
     const defaultTransition = element.style.transition;
@@ -52868,7 +52821,6 @@ class FxActionLog extends HTMLElement {
 
     // }
   }
-
   _renderAction(actionElement, xpath, short, e) {
     actionElement.nodeName.split('-')[1];
     let eventName;
@@ -52979,7 +52931,6 @@ class FxActionLog extends HTMLElement {
             }
         */
   }
-
   _highlight(element) {
     const defaultBG = element.style.backgroundColor;
     const defaultTransition = element.style.transition;
@@ -53128,7 +53079,6 @@ function isAttributeShown(name, sourceNode) {
   return true;
   // return name === 'id' || name === 'ref' || name === 'event';
 }
-
 class ADI {
   constructor(rootElement, instance) {
     this.sourceNodeByInspectorNodeLookup = new Map();
@@ -54820,7 +54770,6 @@ class FxJsonInstance extends HTMLElement {
     // container.addEventListener('click', (event) => this._handleToggleEvent);
     // });
   }
-
   disconnectedCallback() {}
   _isHidden(elem) {
     const width = elem.offsetWidth;
@@ -55196,7 +55145,6 @@ class FxDevtools extends HTMLElement {
     this.render();
     // document.body.style.height = document.body.scrollHeight + 320 + 'px';
   }
-
   _startResize(event) {
     this.isResizing = true;
     this.lastY = event.clientY;
@@ -55453,7 +55401,6 @@ class FxDevtools extends HTMLElement {
         })
     */
   }
-
   _handleOpen(ev) {
     // console.log('that works')
 
@@ -55471,7 +55418,6 @@ class FxDevtools extends HTMLElement {
                             `<fx-dom-inspector instance="${instance.id}"> </fx-dom-inspector>`
             */
     }
-
     if (instance.type === 'json') {
       const jsonInspector = document.createElement('fx-json-instance');
       jsonInspector.setAttribute('instance', instance.id);
@@ -55489,7 +55435,6 @@ class FxDevtools extends HTMLElement {
     }
   }
 }
-
 if (!customElements.get('fx-devtools')) {
   customElements.define('fx-devtools', FxDevtools);
 }
@@ -55623,7 +55568,6 @@ class FxUpload extends AbstractControl {
         e.preventDefault();
         // e.stopImmediatePropagation();
       }
-
       this.widget.focus();
     });
 
@@ -55671,7 +55615,6 @@ class FxUpload extends AbstractControl {
     // // this.value=content;
     // return content;
   }
-
   async _readFile(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -55689,7 +55632,6 @@ class FxUpload extends AbstractControl {
           resolve(result); // Return plain text
         }
       };
-
       reader.onerror = () => reject(new Error('Error reading file'));
 
       // Start reading the file
@@ -55752,7 +55694,6 @@ class FxUpload extends AbstractControl {
 
     // console.log('data', this.getOwnerForm().getModel().getDefaultInstanceData());
   }
-
   renderHTML(ref) {
     return `
             ${this.label ? `${this.label}` : ''}
@@ -56004,7 +55945,6 @@ class AbstractAction extends ForeElementMixin {
       // console.log('adding listener for ', this.event , ` to `, this);
     }
   }
-
   async performSafe() {
     try {
       await this.perform();
@@ -56482,7 +56422,6 @@ class FxAppend extends AbstractAction {
     }
   */
 }
-
 if (!customElements.get('fx-append')) {
   window.customElements.define('fx-append', FxAppend);
 }
@@ -56973,7 +56912,6 @@ class JSONLens {
     this.root = root; // the raw JSON object
     this.path = path; // path to target node, e.g., ['invoice', 'items', 0]
   }
-
   _resolveParent() {
     const lastKey = this.path[this.path.length - 1];
     const parentPath = this.path.slice(0, -1);
@@ -57959,7 +57897,6 @@ class FxSend extends AbstractAction {
     }
     // if not of type fx-submission signal error
   }
-
   _emitToChannel() {
     const channel = this.getModel().querySelector(`#${this.connection}`);
     if (channel === null) {
@@ -58007,7 +57944,6 @@ class FxToggle extends AbstractAction {
     // this.needsUpdate = true;
   }
 }
-
 if (!customElements.get('fx-toggle')) {
   window.customElements.define('fx-toggle', FxToggle);
 }
@@ -58313,7 +58249,6 @@ class FxReturn extends AbstractAction {
     }
     // const nonrelevant = this.hasAttribute('nonrelevant') ? this.getAttribute('nonrelevant') : null;
   }
-
   async perform() {
     super.perform();
 
@@ -59467,7 +59402,7 @@ class FxFunctionlib extends ForeElementMixin {
     }, this);
   }
   async _loadModuleLibrary(resolvedUrl, src, prefix) {
-    const mod = await import( /* @vite-ignore */resolvedUrl);
+    const mod = await import(/* @vite-ignore */resolvedUrl);
     const items = normalizeModuleExportToList(mod);
     for (const item of items) {
       if (typeof item === 'function') {
