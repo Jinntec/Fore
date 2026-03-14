@@ -28,7 +28,7 @@
     <h2>Loading a libary of JavaScript module functions.</h2>
     <demo-snippet open="true">
         <template>
-<fx-fore>
+<fx-fore id="first" data-cy="first">
     <fx-model id="model1">
         <!-- Module function library; prefix is optional -->
         <fx-functionlib src="lib.js"></fx-functionlib>
@@ -50,7 +50,7 @@
     </p>
     <demo-snippet open="true">
         <template>
-<fx-fore>
+<fx-fore id="second" data-cy="second">
     <fx-model id="model1">
         <!-- Module function library; prefix is optional -->
         <fx-functionlib src="lib.js" prefix="lib1"></fx-functionlib>
@@ -80,7 +80,7 @@
 
     <demo-snippet>
         <template>
-            <fx-fore>
+            <fx-fore id="third" data-cy="third">
                 <fx-model id="model1">
                     <!-- Second import of lib.js (same as above) -->
                     <fx-functionlib src="lib.js"></fx-functionlib>
