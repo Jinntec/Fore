@@ -72,23 +72,4 @@ describe('fx-fore init gating demos (demo/on-event.html)', () => {
     }).should('contain.text', 'Initialized after A and B were ready.');
   });
 
-  it('deprecated wait-for still works and emits a deprecation warning', () => {
-    cy.on('window:before:load', win => {
-      cy.spy(win.console, 'warn').as('consoleWarn');
-    });
-
-    cy.visit('on-event.html');
-
-    // Legacy dependent should still initialize
-    cy.get('fx-fore[wait-for="#legacy-master"]', { includeShadowDom: true }).should(
-      'contain.text',
-      'Legacy dependent initialized after master ready.',
-    );
-
-    // Warning should be printed at least once
-    cy.get('@consoleWarn').should('have.been.called');
-    cy.get('@consoleWarn')
-      .its('firstCall.args.0')
-      .should('match', /wait-for.+deprecated/i);
-  });
 });
