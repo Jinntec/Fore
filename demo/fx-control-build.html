@@ -6,13 +6,13 @@
 
     <title>running a build version</title>
 
-    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
     <link rel="stylesheet" href="../resources/demo.css">
 
 
 
+    <script type="module" src="../dist/fore-dev.js"></script>
 
-
+<!--
     <script type="module">
         import './node_modules/@polymer/iron-demo-helpers/demo-snippet.js';
         import './node_modules/@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
@@ -20,6 +20,7 @@
         import './node_modules/@polymer/paper-checkbox/paper-checkbox.js';
         import './node_modules/@polymer/paper-button/paper-button.js';
     </script>
+-->
 
     <style>
         body {
@@ -75,9 +76,6 @@
                 </data>
             </fx-instance>
             <fx-bind ref="item"></fx-bind>
-            <fx-bind ref="checked" type="boolean"></fx-bind>
-            <fx-bind ref="listitem"></fx-bind>
-            <fx-bind ref="label"></fx-bind>
         </fx-model>
         <fx-group>
 
@@ -89,23 +87,17 @@
             <section>
                 <h3>Wrapped paper controls</h3>
 
-                <demo-snippet>
-                    <template>
 
                         <fx-control ref="item" update-event="input">
-                            <paper-input class="widget" label="the item in paper land"></paper-input>
                             <fx-message event="value-changed">Hi {.}</fx-message>
                         </fx-control>
 
-                    </template>
-                </demo-snippet>
             </section>
 
         </fx-group>
     </fx-fore>
 
 </div>
-<script type="module" src="../dist/fore.js"></script>
 
 </body>
 </html>
