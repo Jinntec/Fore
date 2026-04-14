@@ -1,0 +1,66 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>iCal</title>
+    <link href="../../resources/fore.css" rel="stylesheet"/>
+    <link href="../../resources/demo.css" rel="stylesheet"/>
+    <script src="../../index.js" type="module"/>
+    <script src="../../tools/fx-lens.js" type="module"/>
+</head>
+<body>
+<div class="wrapper">
+    <fx-fore id="MWE Switch" role="form" xmlns:fhir="http://hl7.org/fhir">
+        <fx-model>
+
+            <fx-instance id="i-pat-comp">
+                <data>
+                    <bundle>
+                        <encounter>
+                            <id value="123"></id>
+                        </encounter>
+                    </bundle>
+                </data>
+            </fx-instance>
+        </fx-model>
+        <ul>
+            <li>
+                <fx-trigger class="toggle" label="Synopsis">
+                    <a href="#synopsis">
+                        <pb-i18n key="form.synopsis">Synopsis</pb-i18n>
+                    </a>
+                    <fx-toggle case="s-synopsis"></fx-toggle>
+                </fx-trigger>
+            </li>
+            <li>
+                <fx-trigger class="toggle" label="Open Activities">
+                    <a href="#s-activities">
+                        <pb-i18n key="form.activities">Termine</pb-i18n>
+                    </a>
+                    <fx-toggle case="s-activities"></fx-toggle>
+                </fx-trigger>
+            </li>
+        </ul>
+        <fx-switch id="bigswitch">
+            <fx-case id="s-synopsis" src="synopsis.html"></fx-case>
+            <fx-case id="s-activities" src="activities.html">
+                <fx-action event="select">
+                    <fx-message>Activities loaded</fx-message>
+                </fx-action>
+            </fx-case>
+        </fx-switch>
+        <fieldset id="synopsis">
+            <legend>
+                <label>Parent</label>
+            </legend>
+            <fx-repeat class="" ref="instance('i-pat-comp')//encounter">
+                <template>
+                    <fx-output ref="./id/@value"></fx-output>
+                </template>
+            </fx-repeat>
+        </fieldset>
+    </fx-fore>
+    <fx-lens></fx-lens>
+</div>
+</body>
+</html>
