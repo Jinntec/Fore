@@ -32,12 +32,12 @@
         </fx-instance>
 
     </fx-model>
-    <fx-group ref="instance()/*:Practitioner">
+    <fx-group ref="instance()/fhir:Practitioner">
         <fieldset id="practitioner-edit">
             <legend>
                 <label>Practitioner</label>
             </legend>
-            <fx-control id="tce-gender" ref="./*:gender/@value">
+            <fx-control id="tce-gender" ref="fhir:gender/@value">
                 <label>Geschlecht</label>
                 <select class="widget" ref="instance('i-datatypes')/gender/code">
                     <template>
