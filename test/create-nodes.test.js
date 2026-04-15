@@ -248,7 +248,7 @@ describe('create-nodes', () => {
           <fx-control ref="baz"></fx-control>
           <fx-control ref="foo"></fx-control>
           <fx-control ref="bar"></fx-control>
-        </fx-group
+        </fx-group>
       </fx-fore>
     `);
 
