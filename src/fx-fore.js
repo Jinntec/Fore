@@ -1468,21 +1468,35 @@ export class FxFore extends HTMLElement {
    */
   initData(root = this) {
     /**
+     * @param {*} value
+     * @returns {boolean}
+     */
+    const isObjectLike = value =>
+        value !== null && (typeof value === 'object' || typeof value === 'function');
+
+    /**
      * @param {*} nodeset
      * @returns {boolean}
      */
     const hasResolvedNodeset = nodeset => {
       if (nodeset == null) return false;
+
+      // Atomic values like strings/numbers/booleans are valid resolved XPath results
+      if (!isObjectLike(nodeset)) return true;
+
       if (Array.isArray(nodeset)) return nodeset.length > 0;
+
       if (typeof nodeset.length === 'number' && !('nodeType' in nodeset)) {
         return nodeset.length > 0;
       }
-      if (typeof nodeset[Symbol.iterator] === 'function' && !nodeset.nodeType) {
+
+      if (typeof nodeset[Symbol.iterator] === 'function' && !('nodeType' in nodeset)) {
         for (const item of nodeset) {
           return item !== undefined;
         }
         return false;
       }
+
       return !!nodeset.nodeType;
     };
 
@@ -1519,14 +1533,20 @@ export class FxFore extends HTMLElement {
      */
     const firstNode = candidate => {
       if (!candidate) return null;
+      if (!isObjectLike(candidate)) return null;
       if (candidate.nodeType) return candidate;
-      if (Array.isArray(candidate)) return candidate.find(item => item && item.nodeType) || null;
+
+      if (Array.isArray(candidate)) {
+        return candidate.find(item => item && isObjectLike(item) && item.nodeType) || null;
+      }
+
       if (typeof candidate.length === 'number' && typeof candidate.item === 'function') {
         for (let i = 0; i < candidate.length; i += 1) {
           const item = candidate.item(i);
-          if (item && item.nodeType) return item;
+          if (item && isObjectLike(item) && item.nodeType) return item;
         }
       }
+
       return null;
     };
 
@@ -1538,18 +1558,26 @@ export class FxFore extends HTMLElement {
      */
     const isAtomicSequence = candidate => {
       if (!candidate) return false;
+
+      // A single primitive value is also atomic from our perspective
+      if (!isObjectLike(candidate)) return true;
+
       if (candidate.nodeType) return false;
+
       if (Array.isArray(candidate)) {
-        return candidate.length > 0 && !candidate.some(item => item && item.nodeType);
+        return candidate.length > 0 && !candidate.some(item => item && isObjectLike(item) && item.nodeType);
       }
+
       if (typeof candidate.length === 'number' && typeof candidate.item === 'function') {
         return false;
       }
+
       if (typeof candidate[Symbol.iterator] === 'function') {
         for (const item of candidate) {
-          return !(item && item.nodeType);
+          return !(item && isObjectLike(item) && item.nodeType);
         }
       }
+
       return false;
     };
 
@@ -1580,10 +1608,13 @@ export class FxFore extends HTMLElement {
       const direct =
           typeof bound.getInScopeContext === 'function' ? firstNode(bound.getInScopeContext()) : null;
       if (direct) return direct;
+
       const dotCtx = firstNode(getInScopeContext(bound, '.'));
       if (dotCtx) return dotCtx;
+
       const refCtx = firstNode(getInScopeContext(bound, bound.ref));
       if (refCtx) return refCtx;
+
       return firstNode(fallback);
     };
 
@@ -1594,10 +1625,22 @@ export class FxFore extends HTMLElement {
         root.querySelectorAll(
             'fx-control[ref],fx-upload[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref]',
         ),
-    );
-    if (root.matches && root.matches('fx-repeatitem')) {
+    ).filter(boundEl => {
+      if (boundEl.nodeName !== 'FX-REPEAT') return true;
+
+      const repeatRef = String(boundEl.getAttribute('ref') || '').trim();
+
+      // Any repeat whose ref is a pure parenthesized expression is not a create-nodes candidate.
+      // Example: ('a', 'b', 'c')
+      if (repeatRef.startsWith('(')) return false;
+
+      return isCreateNodesCandidate(repeatRef);
+    });
+
+    if (root.matches && root.matches('fx-repeatitem') && firstNode(root.nodeset)) {
       boundControls.unshift(root);
     }
+
     console.log('_initData', boundControls);
 
     for (let i = 0; i < boundControls.length; i++) {
