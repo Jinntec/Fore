@@ -111,8 +111,9 @@ export class FxInsert extends AbstractAction {
   _getJsonTemplateTextFromTemplateEl(tplEl) {
     if (!tplEl) return null;
 
-    // Keep it robust against whitespace/formatting
-    const raw = String(tplEl.textContent || '').trim();
+    // <template>.textContent is "" because content lives in template.content (DocumentFragment).
+    // innerHTML reads from the content fragment correctly.
+    const raw = String(tplEl.innerHTML || tplEl.textContent || '').trim();
     if (!raw) return null;
     return raw;
   }

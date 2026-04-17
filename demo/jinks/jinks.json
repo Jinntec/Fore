@@ -1,0 +1,1620 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "https://tei-publisher.org/jinks/config/schema",
+    "type": "object",
+    "description": "Schema for jinks configuration files",
+    "properties": {
+        "$schema": {
+            "type": "string"
+        },
+        "id": {
+            "type": "string",
+            "format": "url",
+            "description": "Unique URI used to identify the application or profile"
+        },
+        "type": {
+            "type": "string",
+            "enum": ["base", "feature", "theme", "blueprint", "disabled", "bootstrap"],
+            "completionDetail": "Type of the profile"
+        },
+        "category": {
+            "type": "string",
+            "description": "Category of the profile",
+            "enum": ["data", "input", "output", "workflow", "development", "components", "static"]
+        },
+        "label": {
+            "type": "string",
+            "description": "A short title describing the application or profile"
+        },
+        "description": {
+            "type": "string",
+            "description": "Longer description of the application or profile"
+        },
+        "shortname": {
+            "type": "string",
+            "description": "A short name used to identify the profile and specify its settings in the features object. If not specified, the default is the directory name of the profile."
+        },
+        "version": {
+            "type": "string",
+            "description": "Version of this profile. Use to keep track of different upstream profile versions.",
+            "default": "1.0.0"
+        },
+        "extends": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "Path to the profile this profile extends, relative to the root of the application."
+        },
+        "order": {
+            "type": "integer",
+            "description": "Defines the position of this profile in the list of extended profiles. To import a profile right on top of base, i.e. before any other profile, use 1.",
+            "default": 100
+        },
+        "depends": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "Lists other profiles this profile depends on to work properly."
+        },
+        "ignore": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "List of regular expressions matching relative paths to files, which should not be checked for conflicts. Those files are always overwritten, even if they have local changes."
+        },
+        "skip": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "List of regular expressions matching relative target paths to files, which should not be copied into the target application."
+        },
+        "skipSource": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "List of regular expressions matching the source path of files, which should not be copied into the target application."
+        },
+        "actions": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "description": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "description",
+                    "name"
+                ]
+            }
+        },
+        "profiles": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "odds": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "List of ODDs used by this profile"
+        },
+        "data": {
+            "type": "object",
+            "patternProperties": {
+                "^[^\\s]+$": {
+                    "type": "string"
+                }
+            },
+            "description": "Map of XML files to use for the application. The key is the name of the data file and the value is the relative path. Each XML file will be loaded and made available as a context variable with the name of the key."
+        },
+        "defaults": {
+            "type": "object",
+            "properties": {
+                "search": {
+                    "type": "string"
+                },
+                "landing": {
+                    "type": "string",
+                    "description": "The HTML page to use as landing page. Will be renamed to index.html. Path is relative to the `templates` subdirectory."
+                },
+                "browse": {
+                    "type": "string",
+                    "description": "The HTML page to use for browse available document collections. Path is relative to the `templates` subdirectory."
+                },
+                "site-root": {
+                    "type": "string",
+                    "description": "The root URL of the site. If not specified, the root URL is the same as the context path."
+                },
+                "context-path": {
+                    "type": "string",
+                    "description": "The context path of the site. If not specified, the context path is determined automatically from the app's location in the database."
+                },
+                "view": {
+                    "type": "string",
+                    "enum": ["div", "page", "single"]
+                },
+                "media": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of output media types supported for display",
+                    "examples": [
+                        "web",
+                        "print",
+                        "fo",
+                        "latex",
+                        "epub"
+                    ]
+                },
+                "template": {
+                    "type": "string",
+                    "description": "The HTML template to use for rendering content pages. Should reside in `templates/pages`"
+                },
+                "odd": {
+                    "type": "string",
+                    "description": "The ODD to use if no other is selected"
+                },
+                "language": {
+                    "type": "string",
+                    "description": "Default language pre-selected for the app"
+                },
+                "languages": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of languages supported by the app"
+                },
+                "data": {
+                    "type": "string",
+                    "description": "Absolute or relative path to the root collection containing all data used by the app."
+                },
+                "data-default": {
+                    "type": "string",
+                    "description": "Absolute or relative path to the collection used for locating XML documents which can be displayed to users. If not specified, defaults to the collection given in `defaults.data`. A relative path will be interpreted relative to `defaults.data`. Use this if documents exposed to users reside in a subcollection below `defaults.data`, but users should not the the subcollection path."
+                },
+                "data-exclude": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of XPath expressions to exclude from the data default collection"
+                },
+                "register-root": {
+                    "type": "string",
+                    "description": "Absolute or relative path to the collection used for register data. Default is `data/registers`."
+                },
+                "pagination": {
+                    "type": "object",
+                    "properties": {
+                        "fill": {
+                            "type": "integer"
+                        },
+                        "depth": {
+                            "type": "integer"
+                        }
+                    }
+                },
+                "address-by-id": {
+                    "type": "boolean"
+                },
+                "sort": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "field": {
+                                "type": "string"
+                            },
+                            "label": {
+                                "type": "string"
+                            },
+                            "default": {
+                                "type": "boolean"
+                            }
+                        }
+                    },
+                    "description": "The fields to sort by default when displaying list of documents"
+                }
+            }
+        },
+        "collection-config": {
+            "type": "object",
+            "patternProperties": {
+                "^[^\\s]+$": {
+                    "type": "object",
+                    "properties": {
+                        "odd": {
+                            "type": "string"
+                        },
+                        "template": {
+                            "type": "string"
+                        },
+                        "view": {
+                            "type": "string"
+                        }
+                    },
+                    "additionalProperties": true
+                }
+            }
+        },
+        "menu": {
+            "type": "object",
+            "properties": {
+                "language": {
+                    "type": "boolean"
+                },
+                "delete": {
+                    "type": "boolean"
+                },
+                "dark-mode": {
+                    "type": "boolean"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "url": {
+                                "type": ["string", "null"],
+                                "description": "URL to link to. Might be null to remove an item inherited from a parent profile."
+                            },
+                            "id": {
+                                "type": "string"
+                            },
+                            "subitems": {
+                                "type": "array",
+                                "description": "Secondary menu displayed as a dropdown list. The submenu gets created if the parent item does not have an 'url' property.",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string"
+                                            },
+                                        "url": {
+                                            "type": ["string", "null"],
+                                            "description": "URL to link to. Might be null to remove an item inherited from a parent profile."
+                                        }
+                                    },
+                                "required": [
+                                    "id",
+                                    "url"
+                                    ]
+                                }
+                            }
+                        },
+                        "required": [
+                            "id"
+                        ]
+                    }
+                },
+                "login": {
+                    "type": "boolean"
+                },
+                "download": {
+                    "type": "boolean"
+                },
+                "search": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "features": {
+            "type": "object",
+            "properties": {
+                "menubar": {
+                    "type": "boolean"
+                },
+                "toolbar": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "If true, the toolbar will be displayed"
+                        },
+                        "zoom": {
+                            "type": "boolean",
+                            "description": "If true, zoom buttons will be displayed"
+                        },
+                        "navigation": {
+                            "type": "boolean",
+                            "description": "If true, navigation buttons will be displayed"
+                        },
+                        "progress": {
+                            "type": "object",
+                            "description": "The channel on which the progress bar should listen for updates",
+                            "properties": {
+                                "subscribe": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                },
+                "toolbar-toggles": {
+                    "type": "object",
+                    "description": "Properties for the toolbar toggles",
+                    "properties": { 
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "If true, the toolbar toggles will be displayed"
+                        },
+                        "toggle-reading": {
+                            "type": "boolean",
+                            "description": "If true, the toggle to switch on the reading version will be enabled (very plain edited text)"
+                        }
+                    }
+                },
+                "hero": {
+                    "type": "boolean"
+                },
+                "toc": {
+                    "type": "object",
+                    "properties": {
+                        "collapse": {
+                            "type": "boolean",
+                            "description": "If true, table of contents items will be initially collapsed"
+                        },
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "If true, the table of contents will be displayed"
+                        }
+                    }
+                },
+                "browse": {
+                    "type": "object",
+                    "properties": {
+                        "sort": {
+                            "type": "object",
+                            "properties": {
+                                "options": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "value": {
+                                                "type": "string"
+                                            },
+                                            "key": {
+                                                "type": "string"
+                                            },
+                                            "label": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "value",
+                                            "key"
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "field": {
+                            "type": "object",
+                            "properties": {
+                                "options": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "value": {
+                                                "type": "string"
+                                            },
+                                            "key": {
+                                                "type": "string"
+                                            },
+                                            "label": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "value",
+                                            "key"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "metadata": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "If true, the metadata block will be displayed in a sidebar"
+                        }
+                    }
+                },
+                "timeline": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "If true, the timeline will be displayed"
+                        },
+                        "document-view": {
+                            "type": "boolean",
+                            "description": "If true, the timeline will also be displayed in document view. If false, it is only visible when browsing a collection."
+                        }
+                    }
+                },
+                "register": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "If true, the entity register sidebar will be displayed"
+                        },
+                        "description": {
+                            "type": ["string", "null"],
+                            "description": "Whether to show descriptions in register browse pages or not.",
+                            "enum": ["auto", "select", null]
+                        }
+                    }
+                },
+                "iiif": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "If true, a IIIF viewer will be displayed in the right sidebar."
+                        },
+                        "viewer": {
+                            "type": "string",
+                            "description": "The viewer to use",
+                            "enum": ["pb-tify", "pb-facsimile"]
+                        },
+                        "type": {
+                            "type": "string",
+                            "description": "Type of the source of the images: either 'iiif' or 'image' (for simple image links not served via IIIF).",
+                            "enum": ["iiif", "image"]
+                        },
+                        "base_uri": {
+                            "type": "string",
+                            "description": "Base URI of the IIIF image API service"
+                        },
+                        "milestone_xpath": {
+                            "type": "string",
+                            "description": "XPath expression to select the milestone elements pointing to images"
+                        },
+                        "replace_facs": {
+                            "type": "object",
+                            "description": "Regular expression applied to the facs attribute of the milestone elements to extract the image identifier",
+                            "properties": {
+                                "regex": {
+                                    "type": "string",
+                                    "description": "Regular expression to match the facs attribute"
+                                },
+                                "replace": {
+                                    "type": "string",
+                                    "description": "Replacement string for the facs attribute"
+                                }
+                            }
+                        }
+                    }
+                },
+                "edition-navigation": {
+                    "type": "object",
+                    "properties": {
+                        "navigation": {
+                            "type": "boolean"
+                        },
+                        "in-correspondence": {
+                            "type": "boolean",
+                            "description": "If true, shows additional navigation for letter exchange between two specific correspondents"
+                        }
+                    }
+                },
+                "upload": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "If true, the upload form will be displayed"
+                        },
+                        "target": {
+                            "type": "string",
+                            "description": "The target collection to upload documents to"
+                        },
+                        "accept": {
+                            "type": "string",
+                            "description": "The file extensions accepted for uploading"
+                        }
+                    }
+                },
+                "jinntap": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "version": {
+                            "type": "string",
+                            "description": "The version of Jinntap",
+                            "examples": [ "dev", "1.24.0" ]
+                        },
+                        "cdn": {
+                            "type": "string",
+                            "description": "The CDN URL for Jinntap",
+                            "examples": [ "http://localhost:5174/" ]
+                        },
+                        "schema": {
+                            "type": "string",
+                            "description": "The schema to use for the editor",
+                            "examples": [ "resources/schema/schema.json" ]
+                        }
+                    }
+                },
+                "collab": {
+                    "type": "object",
+                    "description": "Configures the collaboration server for JinnTap",
+                    "properties": {
+                        "enable": {
+                            "type": "boolean"
+                        },
+                        "server": {
+                            "type": "string",
+                            "description": "The server to use for collaboration",
+                            "examples": [ "ws://localhost:8082" ]
+                        }
+                    }
+                },
+                "docs": {
+                    "type": "object",
+                    "properties": {
+                        "read-only": {
+                            "type": "boolean"
+                        }
+                    },
+                    "description": "If true, upload and ODD management will be disabled"
+                },
+                "metadata-editor": {
+                    "type": "object",
+                    "description": "Configures the metadata editor integration",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        }
+                    }
+                },
+                "forms": {
+                    "type": "object",
+                    "description": "Configures the forms framework ('fore') integration",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "fore": {
+                            "type": "object",
+                            "properties": {
+                                "cdn": {
+                                    "type": "string",
+                                    "description": "The CDN URL for Fore",
+                                    "examples": [ "https://cdn.jsdelivr.net/npm/@jinntec/fore" ]
+                                },
+                                "version": {
+                                    "type": "string",
+                                    "description": "The version of Fore to use",
+                                    "examples": [ "1.9.0", "local" ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "theme": { 
+            "type": "object",
+            "properties": {
+                "components": {
+                    "type": "object",
+                    "description": "Configures theme settings for webcomponents",
+                    "properties": {
+                        "styles": {
+                            "type": "string",
+                            "description": "Location of the CSS file to import. Path should be relative to the application root."
+                        }
+                    }
+                },
+                "body": {
+                    "type": "object",
+                    "description": "Configures the look of the body element",
+                    "properties": {
+                        "background-color": {
+                            "type": "string",
+                            "description": "Background color for the body element"
+                        },
+                        "classes": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Classes to add to the body element. Helps to distinguish between page types in CSS, e.g. 'landing' or 'places'."
+                        }
+                    }
+                },
+                "logo": {
+                    "type": "object",
+                    "description": "Configures the logo for the application",
+                    "properties": {
+                        "width": {
+                            "type": "string",
+                            "description": "Width of the logo"
+                        },
+                        "height": {
+                            "type": "string",
+                            "description": "Height of the logo"
+                        },
+                        "image": {
+                            "type": "string",
+                            "description": "Image to use for the logo. Path should be relative to `resources/css`."
+                        }
+                    }
+                },
+                "splash": {
+                    "type": "object",
+                    "description": "Configures the splash image (for the application loading screen)",
+                    "properties": {
+                        "image": {
+                            "type": "string",
+                            "description": "Image to use for the splash screen. Path should be relative to `resources/css`."
+                        },
+                        "width": {
+                            "type": "string",
+                            "description": "Width of the splash image"
+                        },
+                        "height": {
+                            "type": "string",
+                            "description": "Height of the splash image"
+                        }
+                    }
+                },
+                "colors": {
+                    "type": "object",
+                    "description": "Central color scheme configuration",
+                    "properties": {
+                        "palette": {
+                            "description": "Predefined color palette to use for the application",
+                            "type": "string",
+                            "examples": ["neutral", "green", "beige"]
+                        },
+                        "palettes": {
+                            "type": "object",
+                            "description": "Registered color palettes to use for the application. Maps palette names to CSS file name.",
+                            "patternProperties": {
+                                "^[^\\s]+$": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "background-color": {
+                            "type": "string",
+                            "description": "Main background color of the page. Used for the body element."
+                        }
+                    }
+                },
+                "menubar": {
+                    "type": "object",
+                    "description": "Configures the look of the menubar for the application",
+                    "properties": {
+                        "background-image": {
+                            "type": "string",
+                            "description": "Background image for the menubar"
+                        },
+                        "background-color": {
+                            "type": "string",
+                            "description": "Background color for the menubar"
+                        },
+                        "color": {
+                            "type": "string",
+                            "description": "Color for the menubar text"
+                        }
+                    }
+                },
+                "toolbar": {
+                    "type": "object",
+                    "description": "Configures the look of the toolbar for the application",
+                    "properties": {
+                        "background-color": {
+                            "type": "string",
+                            "description": "Background color for the toolbar"
+                        },
+                        "color": {
+                            "type": "string",
+                            "description": "Color for the toolbar text"
+                        }
+                    }
+                },
+                "content": {
+                    "type": "object",
+                    "description": "Settings for the content area",
+                    "properties": {
+                        "max-width": {
+                            "description": "Maximum width of the content area for better readability",
+                            "type": "string",
+                            "examples": [
+                                "70ch"
+                            ]
+                        }
+                    }
+                },
+                "fonts": {
+                    "type": "object",
+                    "description": "Typography settings for the application",
+                    "properties": {
+                        "content": {
+                            "type": "object",
+                            "description": "Typography for the content area",
+                            "properties": {
+                                "family": {
+                                    "type": "string",
+                                    "description": "Font family for the content area"
+                                },
+                                "size": {
+                                    "type": "string",
+                                    "description": "Font size for the content area. Use `rem` for relative size.",
+                                    "examples": [
+                                        "1.25rem"
+                                    ]
+                                },
+                                "weight": {
+                                    "type": "string",
+                                    "description": "Font weight for the content area. Use `normal` for regular weight, `bold` for bold weight, etc.",
+                                    "examples": [
+                                        "normal",
+                                        "bold",
+                                        "400",
+                                        "600",
+                                        "700"
+                                    ]
+                                }
+                            }
+                        },
+                        "base": {
+                            "type": "object",
+                            "description": "Typography for the base font ",
+                            "properties": {
+                                "family": {
+                                    "type": "string",
+                                    "description": "Font family for the base font"
+                                },
+                                "size": {
+                                    "type": "string",
+                                    "description": "Font size for the base font. Use `rem` for relative size.",
+                                    "examples": [
+                                        "1rem"
+                                    ]
+                                },
+                                "line-height": {
+                                    "type": "string",
+                                    "description": "Line height for the base font.",
+                                    "examples": [
+                                        "140%"
+                                    ]
+                                },
+                                "weight": {
+                                    "type": "string",
+                                    "description": "Font weight for the base font. Use `normal` for regular weight, `bold` for bold weight, etc.",
+                                    "examples": [
+                                        "normal",
+                                        "bold",
+                                        "400",
+                                        "600",
+                                        "700"
+                                    ]
+                                }
+                            }
+                        },
+                        "heading": {
+                            "type": "object",
+                            "description": "Typography for headings",
+                            "properties": {
+                                "family": {
+                                    "type": "string",
+                                    "description": "Font family for headings"
+                                },
+                                "size": {
+                                    "type": "string",
+                                    "description": "Font size for headings. Use `rem` for relative size.",
+                                    "examples": [
+                                        "1.25rem"
+                                    ]
+                                },
+                                "weight": {
+                                    "type": "string",
+                                    "description": "Font weight for headings. Use `normal` for regular weight, `bold` for bold weight, etc.",
+                                    "examples": [
+                                        "normal",
+                                        "bold",
+                                        "400",
+                                        "600",
+                                        "700"
+                                    ]
+                                }
+                            }
+                        },
+                        "footnote": {
+                            "type": "object",
+                            "properties": {
+                                "size": {
+                                    "type": "string",
+                                    "description": "Font size for footnotes. Use `rem` for relative size.",
+                                    "examples": [
+                                        "0.9rem"
+                                    ]
+                                }
+                            }
+                        },
+                        "breadcrumbs": {
+                            "type": "object",
+                            "description": "Typography for breadcrumbs",
+                            "properties": {
+                                "size": {
+                                    "type": "string",
+                                    "description": "Font size for breadcrumbs. Use `rem` for relative size.",
+                                    "examples": [
+                                        "0.9rem"
+                                    ]
+                                }
+                            }
+                        },
+                        "toc": {
+                            "type": "object",
+                            "description": "Typography for table of contents",
+                            "properties": {
+                                "size": {
+                                    "type": "string",
+                                    "description": "Font size for table of contents. Use `rem` for relative size.",
+                                    "examples": [
+                                        "1.125rem"
+                                    ]
+                                }
+                            }
+                        },
+                        "menubar": {
+                            "type": "object",
+                            "description": "Typography for the menubar",
+                            "properties": {
+                                "size": {
+                                    "type": "string",
+                                    "description": "Font size for the menubar. Use `rem` for relative size.",
+                                    "examples": [
+                                        "14px"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "breadcrumbs": {
+                    "type": "object",
+                    "properties": {
+                        "max": {
+                            "type": "string",
+                            "description": "max length of the breadcrumbs in the toolbar. Longer breadcrumbs will be truncated with an ellipsis.",
+                            "examples": [ "40ch"]
+                        }
+                    }
+                },
+                "landing": {
+                    "type": "object",
+                    "description": "Configures the look of the landing page",
+                    "properties": {
+                        "hero": {
+                            "type": "object",
+                            "description": "Configures the look of the hero section for the landing page",
+                            "properties": {
+                                "background-image": {
+                                    "type": "string",
+                                    "description": "Background image for the hero section. Path should be relative to `resources/css`."
+                                },
+                                "background-size": {
+                                    "type": "string",
+                                    "description": "Background size for the hero section",
+                                    "examples": [
+                                        "cover", "contain"
+                                    ]
+                                },
+                                "background-position": {
+                                    "type": "string",
+                                    "description": "Background position for the hero section",
+                                    "examples": [
+                                        "center", "top", "bottom"
+                                    ]
+                                },
+                                "background-repeat": {
+                                    "type": "string",
+                                    "description": "Background repeat for the hero section",
+                                    "examples": [
+                                        "no-repeat", "repeat", "repeat-x", "repeat-y"
+                                    ]
+                                },
+                                "background-color": {
+                                    "type": "string",
+                                    "description": "Background color for the hero section",
+                                    "examples": [
+                                        "rgba(0, 0, 0, 0.6)"
+                                    ]
+                                }
+                            }
+                        },
+                        "bottom": {
+                            "type": "object",
+                            "description": "Configures the look of the bottom section for the landing page",
+                            "properties": {
+                                "background-image": {
+                                    "type": "string",
+                                    "description": "Background image for the bottom section. Path should be relative to `resources/css`."
+                                },
+                                "background-size": {
+                                    "type": "string",
+                                    "description": "Background size for the bottom section",
+                                    "examples": [
+                                        "cover", "contain"
+                                    ]
+                                },
+                                "background-position": {
+                                    "type": "string",
+                                    "description": "Background position for the bottom section",
+                                    "examples": [
+                                        "center", "top", "bottom"
+                                    ]
+                                },
+                                "background-repeat": {
+                                    "type": "string",
+                                    "description": "Background repeat for the bottom section",
+                                    "examples": [
+                                        "no-repeat", "repeat", "repeat-x", "repeat-y"
+                                    ]
+                                },
+                                "background-color": {
+                                    "type": "string",
+                                    "description": "Background color for the bottom section",
+                                    "examples": [
+                                        "rgba(0, 0, 0, 0.4)"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "layout": {
+                    "type": "object",
+                    "properties": {
+                        "class": {
+                            "type": "string",
+                            "description": "Class to add to the main container element of the page",
+                            "examples": [
+                                "fixed-layout"
+                            ]
+                        },
+                        "max-width": {
+                            "type": "string",
+                            "description": "Width of the landing page content column",
+                            "examples": [
+                                "1200px"
+                            ]
+                        },
+                        "search": {
+                            "type": "string",
+                            "description": "Position of the search input on the browse page",
+                            "enum": ["before-top", "before"],
+                            "default": "before-top"
+                        },
+                        "before": {
+                            "type": "object",
+                            "properties": {
+                                "toggle": {
+                                    "type": "boolean",
+                                    "description": "If true, add a toggle button to the before sidebar to collapse and expand"
+                                },
+                                "hidden": {
+                                    "type": "boolean",
+                                    "description": "If true, the before sidebar will be initially hidden"
+                                },
+                                "width": {
+                                    "type": "string",
+                                    "description": "Width of the before sidebar",
+                                    "examples": [
+                                        "min(30vw, 356px)"
+                                    ]
+                                }
+                            }
+                        },
+                        "after": {
+                            "type": "object",
+                            "properties": {
+                                "toggle": {
+                                    "type": "boolean",
+                                    "description": "If true, add a toggle button to the after sidebar to collapse and expand"
+                                },
+                                "hidden": {
+                                    "type": "boolean",
+                                    "description": "If true, the after sidebar will be initially hidden"
+                                },
+                                "width": {
+                                    "type": "string",
+                                    "description": "Width of the after sidebar",
+                                    "examples": [
+                                        "min(30vw, 356px)"
+                                    ]
+                                }
+                            }
+                        },
+                        "footer": {
+                            "mobile": {
+                                "enabled": {
+                                    "type": "boolean",
+                                    "description": "If true, a footer will be displayed on mobile devices, providing access to the before sidebar"
+                                }
+                            }
+                        }
+                    }
+                },
+                "registers": {
+                    "type": "object",
+                    "properties": {
+                        "columns": {
+                            "type": "integer",
+                            "description": "Number of columns to display in the registers browse pages",
+                            "default": 2
+                        }
+                    }
+                },
+                "icons": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of icon files to include in the theme. Path should be relative to resources/css."
+                }
+            }
+        },
+        "overwrite": {
+            "type": "string"
+        },
+        "pkg": {
+            "type": "object",
+            "description": "Defines the properties required by eXist's package manager to handle installation",
+            "properties": {
+                "website": {
+                    "type": "string",
+                    "description": "Website URL on which the application will be hosted or the address of the code repository."
+                },
+                "abbrev": {
+                    "type": "string",
+                    "description": "Abbreviation of the application. Used to identify the application in the package manager and in URLs."
+                },
+                "author": {
+                    "type": "string",
+                    "description": "Main author of the application. Repeatable."
+                },
+                "version": {
+                    "type": "string",
+                    "description": "Version of the application"
+                },
+                "user": {
+                    "type": "object",
+                    "description": "User credentials for the application. This eXist-db user will own the application code.",
+                    "properties": {
+                        "password": {
+                            "type": "string",
+                            "description": "Password for the user"
+                        },
+                        "name": {
+                            "type": "string",
+                            "description": "Name of the user"
+                        },
+                        "group": {
+                            "type": "string",
+                            "description": "Group of the user"
+                        }
+                    },
+                    "required": [
+                        "group",
+                        "name",
+                        "password"
+                    ]
+                }
+            }
+        },
+        "generator": {
+            "type": "object",
+            "description": "Expert: XQuery code snippets to use in templates",
+            "properties": {
+                "generate-profile": {
+                    "type": "boolean",
+                    "description": "If true, the application will be generated as a profile. Default is false.",
+                    "default": false
+                },
+                "templates": {
+                    "type": "object",
+                    "patternProperties": {
+                        "^[^\\s]+$": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "docker": {
+            "type": "object",
+            "description": "Docker build and deployment configuration",
+            "properties": {
+                "eXist": {
+                    "type": "string",
+                    "description": "Version of eXist-db to use in Docker image"
+                },
+                "tei-publisher-lib": {
+                    "type": "string",
+                    "description": "Version of tei-publisher-lib to use"
+                },
+                "jinks-templates": {
+                    "type": "string",
+                    "description": "Version of jinks-templates to use"
+                },
+                "roaster": {
+                    "type": "string",
+                    "description": "Version of roaster (router) library to use"
+                },
+                "jwt": {
+                    "type": "string",
+                    "description": "Version of JWT library to use"
+                },
+                "crypto": {
+                    "type": "string",
+                    "description": "Version of crypto library to use"
+                },
+                "ant": {
+                    "type": "string",
+                    "description": "Version of Apache Ant to use"
+                },
+                "ports": {
+                    "type": "object",
+                    "description": "Port configuration for Docker container",
+                    "properties": {
+                        "http": {
+                            "type": "integer",
+                            "description": "HTTP port number",
+                            "default": 8080
+                        },
+                        "https": {
+                            "type": "integer",
+                            "description": "HTTPS port number",
+                            "default": 8443
+                        }
+                    }
+                },
+                "features": {
+                    "type": "object",
+                    "description": "Docker build-time feature flags",
+                    "properties": {
+                        "nodejs": {
+                            "type": "boolean",
+                            "description": "Enable Node.js support in Docker container"
+                        },
+                        "xst": {
+                            "type": "boolean",
+                            "description": "Enable XST support"
+                        },
+                        "cli": {
+                            "type": "boolean",
+                            "description": "Enable Jinks CLI support"
+                        },
+                        "ner": {
+                            "type": "boolean",
+                            "description": "Enable NER (Named Entity Recognition) support"
+                        },
+                        "tex": {
+                            "type": "boolean",
+                            "description": "Enable TeX/LaTeX support"
+                        }
+                    }
+                },
+                "externalXar": {
+                    "type": "object",
+                    "description": "Additional external XAR packages to include in Docker image. Keys are file names (without .xar extension), values are URLs (strings) or objects with url and optional token for private repositories.",
+                    "patternProperties": {
+                        "^[a-zA-Z0-9_-]+$": {
+                            "oneOf": [
+                                {
+                                    "type": "string",
+                                    "format": "uri",
+                                    "description": "Public URL to a .xar file"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "url": {
+                                            "type": "string",
+                                            "format": "uri",
+                                            "description": "URL to the .xar file"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "description": "Name of the BuildKit secret to use for authentication (e.g., 'github_token', 'gitlab_token'). The secret must be provided during docker build with --secret id=<token>,env=<ENV_VAR>"
+                                        }
+                                    },
+                                    "required": ["url"]
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "required": [
+                "jwt",
+                "crypto",
+                "roaster"
+            ]
+        },
+        "ci": {
+            "type": "object",
+            "description": "CI/CD configuration for continuous integration and deployment",
+            "properties": {
+                "provider": {
+                    "type": "string",
+                    "enum": ["github", "gitlab"],
+                    "description": "CI/CD provider to use. 'github' for GitHub Actions, 'gitlab' for GitLab CI",
+                    "default": "github"
+                },
+                "enabled": {
+                    "type": "boolean",
+                    "description": "Whether to enable CI/CD configuration generation",
+                    "default": true
+                }
+            }
+        },
+        "templating": {
+            "type": "object",
+            "description": "General settings for the templating system. Most settings will only be used in HTML template frontmatter.",
+            "properties": {
+                "extends": {
+                    "type": "string",
+                    "description": "Path to a template to extend. Used in template frontmatter."
+                },
+                "use": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of additional template definitions to consult when expanding blocks"
+                },
+                "ignoreImports": {
+                    "type": "boolean"
+                },
+                "modules": {
+                    "type": "object",
+                    "description": "XQuery modules to make available to templates. The key is the namespace URI of the module.",
+                    "patternProperties": {
+                        "^https?://.*": {
+                            "type": "object",
+                            "properties": {
+                                "at": {
+                                    "description": "Path to the XQuery module to load",
+                                    "type": "string"
+                                },
+                                "prefix": {
+                                    "description": "Prefix to use for the module",
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "at",
+                                "prefix"
+                            ]
+                        }
+                    }
+                },
+                "namespaces": {
+                    "type": "object",
+                    "description": "Namespaces to make available to templates. The key is the namespace prefix, the value is the namespace URI.",
+                    "patternProperties": {
+                        "^[\\d._\\-]+$": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "script": {
+            "type": "object",
+            "properties": {
+                "custom": {
+                    "type": "array",
+                    "description": "Custom JavaScript files to load into the application"
+                },
+                "webcomponents": {
+                    "type": "string",
+                    "description": "Version of the tei-publisher-components package to use or 'dev' to connect to a development server"
+                },
+                "extra-components": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Names of additional components to load from tei-publisher-components",
+                    "examples": [
+                        "pb-tify",
+                        "pb-leaflet-map"
+                    ]
+                },
+                "cdn": {
+                    "type": "string",
+                    "description": "URL of the CDN to use for web components",
+                    "examples": [
+                        "https://cdn.jsdelivr.net/npm/@teipublisher/pb-components",
+                        "http://localhost:8000"
+                    ]
+                },
+                "fore": {
+                    "type": "string",
+                    "description": "Version of the fore library to use",
+                    "examples": [
+                        "2.4.1"
+                    ]
+                }
+            }
+        },
+        "styles": {
+            "type": "array",
+            "description": "CSS files to load into the application",
+            "items": {
+                "type": "string"
+            }
+        },
+        "i18n": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "api": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "description": "Open API specifications to load into the application",
+                "properties": {
+                    "spec": {
+                        "type": "string",
+                        "description": "Path to the OpenAPI specification file"
+                    },
+                    "prefix": {
+                        "type": "string",
+                        "description": "Prefix used for the API endpoints. Should correspond to the XQuery module prefix. If no XQuery module is connected, provide a unique string for the documentation."
+                    },
+                    "id": {
+                        "type": "string",
+                        "description": "Namespace URI of the XQuery module implementing the API (optional)"
+                    },
+                    "path": {
+                        "type": "string",
+                        "description": "Path to the XQuery module implementing the API (optional)"
+                    }
+                },
+                "anyOf": [
+                    {
+                        "required": ["prefix", "spec"]
+                    },
+                    {
+                        "required": ["prefix", "id", "path"]
+                    }
+                ]
+            }
+        },
+        "static": {
+            "type": "object",
+            "properties": {
+                "fields": {
+                    "type": "object",
+                    "properties": {
+                        "index": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "store": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "redirect": {
+                    "type": "object",
+                    "description": "Adds a redirect to a new page. The key is the source path, the value is the target path.",
+                    "properties": {
+                        "": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "styles": {
+                    "type": "array",
+                    "description": "List of styles to load into each static page",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "facets": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "collections": {
+                    "type": "object",
+                    "description": "One or more collections to generate static pages for. The key (might be '') is the collection path relative to the default data collection, the value is a configuration object.",
+                    "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                            "index": {
+                                "type": ["string", "boolean"]
+                            },
+                            "path-prefix": {
+                                "type": "string",
+                                "description": "Optional prefix to prepend to the output path before the relative collection path"
+                            },
+                            "include": {
+                                "type": "array",
+                                "description": "Optional list of documents to include in the static page. If not specified, all documents in the collection will be included.",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "paginate": {
+                                "type": "object",
+                                "description": "How to paginate a document: associates a template with a list of parts to render for each page.",
+                                "properties": {
+                                    "toc": {
+                                        "type": "boolean",
+                                        "description": "If true, a table of contents will be generated for the document."
+                                    },
+                                    "parts": {
+                                        "type": "array",
+                                        "description": "List of parts to render for each page.",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "xpath": {
+                                                    "type": "string"
+                                                },
+                                                "odd": {
+                                                    "type": "string"
+                                                },
+                                                "id": {
+                                                    "type": "string",
+                                                    "description": "A name for the part. If empty, 'default' is used. Parts will be available in the template in a map called $parts. You can access the part with `$parts?<id>`, e.g. for the default part: `$parts?default`."
+                                                },
+                                                "user.mode": {
+                                                    "type": "string"
+                                                },
+                                                "view": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "template": {
+                                        "type": "string",
+                                        "description": "The template to use for rendering the pages"
+                                    }
+                                },
+                                "required": [
+                                    "parts",
+                                    "template",
+                                    "toc"
+                                ]
+                            },
+                            "template": {
+                                "type": "string",
+                                "description": "The template to use for browsing the collection"
+                            },
+                            "fetch": {
+                                "type": "array",
+                                "description": "Fetch a resource from an URL and store it",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "url": {
+                                            "type": "string",
+                                            "description": "The URL to fetch. May contain template parameters like [[$context?base-uri]]."
+                                        },
+                                        "target": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "required": [
+                            "index",
+                            "paginate",
+                            "template"
+                        ]
+                    }
+                },
+                "copy": {
+                    "type": "array",
+                    "description": "Copy resources from a path relative to the source collection into a target path in the static collection",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "from": {
+                                "type": "string",
+                                "description": "The path to the source collection, relative to the application root"
+                            },
+                            "to": {
+                                "type": "string",
+                                "description": "The path to the target collection, relative to the static output collection"
+                            },
+                            "filter": {
+                                "type": "string",
+                                "description": "Optional filter to apply when copying files"
+                            }
+                        }
+                    }
+                },
+                "templating": {
+                    "type": "object",
+                    "properties": {
+                        "use": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "List of template definitions to consult when expanding blocks"
+                        }
+                    }
+                }
+            }
+        },
+        "urls": {
+            "type": "object",
+            "properties": {
+                "template": {
+                    "type": "string",
+                    "description": "Pattern to use for URLs as required by pb-page/@url-template"
+                },
+                "ignore": {
+                    "type": "string",
+                    "description": "Comma-separated list of parameters to ignore in URLs as required by pb-page/@url-ignore"
+                }
+            }
+        }
+    },
+    "additionalProperties": true,
+    "patternProperties": {
+        "^[^$].*": {
+            "type": "object",
+            "properties": {
+                "$replace": {
+                    "type": ["boolean", "array"],
+                    "description": "If true, the object will not be merged with inherited configurations, but simply replace all of them. If an array, only the specified keys will be replaced, the rest merged."
+                }
+            },
+            "additionalProperties": true
+        }
+    },
+    "required": [
+        "id",
+        "label"
+    ]
+}
