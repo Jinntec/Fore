@@ -10,8 +10,6 @@
 
 >'situated in front of something else' - Merriam Webster
 
-[![Twitter URL](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Ftwitter.com%2FJinnForeTec)](https://twitter.com/JinnForeTec) 
-
 [Homepage](https://jinntec.github.io/Fore/) | 
 [Documentation](https://jinntec.github.io/fore-docs/) |
 
