@@ -1757,7 +1757,8 @@ export class FxFore extends HTMLElement {
       bound.getModelItem().bind?.evalInContext();
 
       if (!isResolvedBound(bound)) {
-        throw new Error('Creating annode failed');
+        console.warn('create-nodes: could not resolve bound after node creation, skipping', bound);
+        continue;
       }
     }
   }

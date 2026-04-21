@@ -328,4 +328,34 @@ describe('create-nodes', () => {
         expect(modelItem.node.ownerElement.localName).to.equal('gender');
         expect(modelItem.node.ownerElement.namespaceURI).to.equal('http://hl7.org/fhir');
     });
+
+    it('skips controls with unresolvable refs instead of throwing', async () => {
+        const el = fixtureSync(html`
+            <fx-fore
+                create-nodes
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+            >
+                <fx-model>
+                    <fx-instance>
+                        <data></data>
+                    </fx-instance>
+                </fx-model>
+
+                <fx-group ref=".">
+                    <fx-control ref="cbc:ID"></fx-control>
+                    <fx-control ref="unknown-ns:SomeElement"></fx-control>
+                    <fx-control ref="cbc:Note"></fx-control>
+                </fx-group>
+            </fx-fore>
+        `);
+
+        await oneEvent(el, 'ready');
+
+        const inst = el.querySelector('fx-instance');
+        const root = inst.instanceData.documentElement;
+
+        const cbcNs = 'urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2';
+        expect(root.getElementsByTagNameNS(cbcNs, 'ID')).to.have.length(1);
+        expect(root.getElementsByTagNameNS(cbcNs, 'Note')).to.have.length(1);
+    });
 });
