@@ -6,6 +6,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Fore** (`@jinntec/fore`) is a declarative UI framework built on HTML5 Web Components, implementing XForms 2.0 concepts for model-driven form and app development. Behavior is defined entirely by Web Components — no JavaScript required for basic forms.
 
+## References
+    - [Fore documentation](https://jinntec.github.io/fore-docs/tags/version-1.0.0/) — official element/attribute reference
+
 ## Commands
 
 ```bash
