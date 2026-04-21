@@ -1,0 +1,1110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, minimum-scale=1, initial-scale=1" name="viewport"/>
+  <title>Fore Editor</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; font-family: system-ui, sans-serif; font-size: 13px; overflow: hidden; }
+
+    .editor {
+      display: grid;
+      grid-template-columns: 165px 1fr 290px;
+      grid-template-rows: 44px calc(100vh - 44px);
+      height: 100vh;
+    }
+
+    /* ── Toolbar ─────────────────────────────────────────── */
+    .toolbar {
+      grid-column: 1 / -1;
+      background: #1a237e;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0 1rem;
+    }
+    .toolbar h1 { margin: 0; font-size: 0.9rem; font-weight: 600; flex: 1; }
+    .toolbar button {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.4);
+      color: #fff;
+      padding: 0.2rem 0.65rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.75rem;
+    }
+    .toolbar button:hover { background: rgba(255,255,255,0.15); }
+
+    /* ── Palette ─────────────────────────────────────────── */
+    .palette {
+      border-right: 1px solid #ddd;
+      background: #f7f7f7;
+      overflow-y: auto;
+      padding: 0.5rem 0.4rem;
+    }
+    .pal-section {
+      font-size: 0.62rem; font-weight: 700; color: #999;
+      padding: 0.5rem 0.25rem 0.2rem;
+      text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .pal-sep { height: 1px; background: #e0e0e0; margin: 0.4rem 0; }
+    .pt {
+      background: #fff; border: 1px solid #ddd; border-radius: 4px;
+      padding: 0.28rem 0.45rem; margin-bottom: 3px;
+      cursor: grab; user-select: none;
+      display: flex; align-items: center; gap: 0.3rem;
+      font-size: 0.78rem; line-height: 1.3;
+    }
+    .pt:hover { background: #e3f2fd; border-color: #90caf9; }
+    .pt.model:hover { background: #fce4ec; border-color: #f48fb1; }
+    .pt .ico { font-size: 0.85rem; line-height: 1; flex-shrink: 0; }
+
+    /* ── Canvas ──────────────────────────────────────────── */
+    .canvas-wrap { overflow-y: auto; background: #e8e8e8; padding: 1rem; }
+
+    /* ── Props panel ─────────────────────────────────────── */
+    .props { border-left: 1px solid #ddd; background: #fff; display: flex; flex-direction: column; overflow: hidden; }
+    .tab-bar { display: flex; border-bottom: 1px solid #e0e0e0; flex-shrink: 0; }
+    .tab-bar button {
+      flex: 1; background: none; border: none;
+      border-bottom: 2px solid transparent;
+      padding: 0.4rem; cursor: pointer;
+      font-size: 0.75rem; color: #777;
+    }
+    .tab-bar button.on { border-bottom-color: #3949ab; color: #3949ab; font-weight: 600; }
+    .tab-content { display: none; flex: 1; overflow-y: auto; }
+    .tab-content.on { display: block; }
+
+    .ph {
+      margin: 0; font-size: 0.78rem; font-weight: 600;
+      padding: 0.55rem 0.7rem; background: #f5f5f5;
+      border-bottom: 1px solid #eee;
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .ph .etag {
+      font-family: monospace; font-size: 0.72rem;
+      background: #e8eaf6; padding: 0.1rem 0.35rem;
+      border-radius: 3px; color: #3949ab;
+    }
+    .ph .etag.model { background: #fce4ec; color: #880e4f; }
+    .prop-row { padding: 0.38rem 0.7rem; border-bottom: 1px solid #f5f5f5; }
+    .prop-row label { display: block; font-size: 0.68rem; font-weight: 600; color: #555; margin-bottom: 2px; }
+    .prop-row .req { color: #e53935; }
+    .prop-row input, .prop-row select {
+      width: 100%; padding: 0.2rem 0.4rem;
+      border: 1px solid #ddd; border-radius: 3px;
+      font-size: 0.78rem; background: #fafafa;
+    }
+    .prop-row input:focus, .prop-row select:focus { outline: none; border-color: #7986cb; background: #fff; }
+    .prop-row .desc { font-size: 0.66rem; color: #aaa; margin-top: 3px; line-height: 1.3; }
+    .no-sel { padding: 1rem 0.7rem; color: #ccc; font-style: italic; font-size: 0.78rem; text-align: center; }
+    .help-body { padding: 0.75rem; font-size: 0.78rem; line-height: 1.6; color: #444; }
+    .help-body a { color: #3949ab; font-size: 0.72rem; }
+
+    /* Actions sub-panel inside props */
+    .actions-section { padding: 0.5rem 0.7rem; border-top: 1px solid #e8eaf6; }
+    .actions-section .as-title { font-size: 0.68rem; font-weight: 700; color: #777; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; }
+    .action-item { display: flex; align-items: center; gap: 4px; padding: 0.25rem 0.4rem; border: 1px solid #e0e0e0; border-radius: 4px; margin-bottom: 3px; cursor: pointer; font-size: 0.75rem; }
+    .action-item:hover { background: #f5f5f5; }
+    .action-item.sel { background: #e8eaf6; border-color: #9fa8da; }
+    .action-item .at { font-family: monospace; color: #3949ab; flex: 1; }
+    .action-item .ax { color: #ccc; cursor: pointer; }
+    .action-item .ax:hover { color: #e53935; }
+    .add-action-btn { font-size: 0.72rem; background: #e8eaf6; border: 1px dashed #9fa8da; color: #3949ab; padding: 0.2rem 0.5rem; border-radius: 3px; cursor: pointer; width: 100%; margin-top: 4px; }
+    .add-action-btn:hover { background: #c5cae9; }
+    .action-select { width: 100%; margin-top: 4px; padding: 0.2rem 0.4rem; border: 1px solid #ddd; border-radius: 3px; font-size: 0.75rem; }
+
+    /* ── Code panel ──────────────────────────────────────── */
+    #code-panel {
+      display: none;
+      position: fixed; bottom: 0; left: 165px; right: 290px;
+      height: 40vh; background: #1e1e1e; color: #d4d4d4;
+      font-family: 'Cascadia Code','Fira Code',monospace; font-size: 11px;
+      border-top: 2px solid #555; z-index: 100; flex-direction: column;
+    }
+    #code-panel.vis { display: flex; }
+    .code-bar { background: #2d2d2d; padding: 0.2rem 0.75rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.7rem; color: #aaa; flex-shrink: 0; }
+    .code-bar button { background: #444; border: none; color: #ddd; padding: 0.15rem 0.5rem; border-radius: 3px; cursor: pointer; font-size: 0.7rem; margin-left: 4px; }
+    #code-output { margin: 0; padding: 0.75rem 1rem; overflow: auto; flex: 1; }
+  </style>
+</head>
+<body>
+
+<div class="editor">
+  <div class="toolbar">
+    <h1>Fore Editor</h1>
+    <button id="btn-code">Code View</button>
+    <button id="btn-export">Export</button>
+    <button id="btn-clear">Clear</button>
+  </div>
+  <div class="palette" id="palette"></div>
+  <div class="canvas-wrap"><fore-canvas id="canvas"></fore-canvas></div>
+  <div class="props">
+    <div class="tab-bar">
+      <button class="on" id="tb-attrs" onclick="propTab('attrs',this)">Attributes</button>
+      <button id="tb-help" onclick="propTab('help',this)">Help</button>
+    </div>
+    <div id="tab-attrs" class="tab-content on"><p class="no-sel">Select an element</p></div>
+    <div id="tab-help"  class="tab-content"><p class="no-sel">Select an element</p></div>
+  </div>
+</div>
+
+<div id="code-panel">
+  <div class="code-bar">
+    <span>Generated HTML</span>
+    <div>
+      <button id="btn-copy">Copy</button>
+      <button onclick="toggleCode()">✕</button>
+    </div>
+  </div>
+  <pre id="code-output"></pre>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     Element Schema — single source of truth
+     ══════════════════════════════════════════════════════ -->
+<script type="module">
+
+// Shared attr sets
+const ACTION_COMMON = [
+  {k:'event',     req:false, ph:'',        desc:'DOM event that triggers this action. Omit to run on parent activation.'},
+  {k:'if',        req:false, ph:'',        desc:'XPath boolean — action only runs when true.'},
+  {k:'while',     req:false, ph:'',        desc:'XPath boolean — action repeats while true.'},
+  {k:'delay',     req:false, ph:'',        desc:'Delay in milliseconds before execution.'},
+  {k:'target',    req:false, ph:'',        desc:'ID of the element to attach the listener to.'},
+  {k:'propagate', req:false, ph:'',        desc:'"stop" to prevent event bubbling.', opts:['','stop']},
+  {k:'phase',     req:false, ph:'',        desc:'Event phase.', opts:['','default','capture']},
+];
+
+const ELEMENT_SCHEMA = {
+
+  // ── MODEL ─────────────────────────────────────────────
+
+  'fx-instance': {
+    category:'model', icon:'💾', label:'Instance',
+    help:'Holds a data tree (XML, JSON, or HTML). Every Fore form needs at least one. The first instance is the default, accessible as <code>instance()</code>.',
+    attrs:[
+      {k:'id',          req:false, ph:'i1',          desc:'Unique identifier — used in XPath as instance("id"). First instance is "default".'},
+      {k:'type',        req:false, ph:'xml',          desc:'Data format: xml (default), json, or html.', opts:['xml','json','html']},
+      {k:'src',         req:false, ph:'',             desc:'URL to fetch initial instance data from (HTTP GET).'},
+      {k:'credentials', req:false, ph:'same-origin',  desc:'CORS credential policy.', opts:['same-origin','include','omit']},
+      {k:'shared',      req:false, ph:'',             desc:'Set to share this instance with nested fx-fore elements.'},
+    ],
+    serialize: (el,h) => `    <fx-instance${h(el.attrs)}><root/></fx-instance>`,
+  },
+
+  'fx-bind': {
+    category:'model', icon:'⛓', label:'Bind',
+    help:'Attaches declarative constraints and calculations to instance nodes. No child elements.',
+    attrs:[
+      {k:'ref',        req:true,  ph:'/data/field',  desc:'XPath selecting the node(s) this bind constrains.'},
+      {k:'calculate',  req:false, ph:'',             desc:'XPath expression — result is written into the node.'},
+      {k:'required',   req:false, ph:'',             desc:'XPath boolean — true() makes the field required.'},
+      {k:'constraint', req:false, ph:'',             desc:'XPath boolean — false() marks the value invalid.'},
+      {k:'readonly',   req:false, ph:'',             desc:'XPath boolean — true() prevents editing.'},
+      {k:'relevant',   req:false, ph:'',             desc:'XPath boolean — false() hides bound controls.'},
+      {k:'type',       req:false, ph:'xs:string',    desc:'Data type for coercion and validation (xs:string, xs:integer, xs:date, …)'},
+      {k:'alert',      req:false, ph:'',             desc:'Message shown when constraint fails.'},
+    ],
+    serialize: (el,h) => `    <fx-bind${h(el.attrs)}/>`,
+  },
+
+  'fx-submission': {
+    category:'model', icon:'✈', label:'Submission',
+    help:'Defines how form data is sent or received over HTTP. Triggered by <code>fx-send</code>. Add <code>fx-header</code> children for custom headers.',
+    attrs:[
+      {k:'id',          req:false, ph:'s1',          desc:'Identifier for targeting via fx-send submission="id".'},
+      {k:'method',      req:true,  ph:'get',          desc:'HTTP method.', opts:['get','post','put','delete']},
+      {k:'action',      req:true,  ph:'',             desc:'Target URL.'},
+      {k:'ref',         req:false, ph:'/',            desc:'XPath selecting the data to submit (default: default instance root).'},
+      {k:'mediatype',   req:false, ph:'application/xml', desc:'Content-Type for the request.'},
+      {k:'replace',     req:false, ph:'instance',     desc:'What to do with the response.', opts:['all','instance','target','none']},
+      {k:'validate',    req:false, ph:'',             desc:'Set to "false" to skip validation before submit.'},
+      {k:'credentials', req:false, ph:'same-origin',  desc:'CORS credential policy.', opts:['same-origin','include','omit']},
+    ],
+    serialize: (el,h) => `    <fx-submission${h(el.attrs)}/>`,
+  },
+
+  'fx-function': {
+    category:'model', icon:'ƒ', label:'Function',
+    help:'Defines a custom XPath function inline, in XPath/XQuery or JavaScript. The function name must use the <code>local:</code> prefix.',
+    attrs:[
+      {k:'signature', req:true,  ph:'local:my-func($a as xs:string) as xs:string', desc:'Function declaration with parameter types.'},
+      {k:'type',      req:true,  ph:'text/xquery', desc:'Implementation language.', opts:['text/xquery','text/xquf','text/xpath','text/javascript']},
+    ],
+    serialize: (el,h) => `    <fx-function${h(el.attrs)}><!-- function body --></fx-function>`,
+  },
+
+  'fx-functionlib': {
+    category:'model', icon:'📚', label:'FunctionLib',
+    help:'References an external XQuery module, making its functions available throughout the form.',
+    attrs:[
+      {k:'src', req:true, ph:'', desc:'URL of the XQuery function library module.'},
+    ],
+    serialize: (el,h) => `    <fx-functionlib${h(el.attrs)}/>`,
+  },
+
+  'fx-connection': {
+    category:'model', icon:'⚡', label:'Connection',
+    help:'Opens a WebSocket connection to synchronize data across windows. Messages can bind directly to instance data.',
+    attrs:[
+      {k:'url',            req:true,  ph:'ws://localhost:8088', desc:'WebSocket endpoint URL.'},
+      {k:'message-format', req:false, ph:'json',                desc:'Format of transmitted messages.', opts:['json','xml','text']},
+      {k:'heartbeat',      req:false, ph:'0',                   desc:'Heartbeat interval in milliseconds (0 = off).'},
+    ],
+    serialize: (el,h) => `    <fx-connection${h(el.attrs)}/>`,
+  },
+
+  // ── UI ────────────────────────────────────────────────
+
+  'fx-control': {
+    category:'ui', icon:'⌨', label:'Control',
+    help:'The main editing widget. Binds to an instance node via <em>ref</em>. Renders the appropriate HTML input. Add a child element with <code>class="widget"</code> for the actual input.',
+    attrs:[
+      {k:'ref',          req:true,  ph:'fieldname', desc:'XPath pointing to the instance node this control edits.'},
+      {k:'as',           req:false, ph:'',          desc:'"text" (default) or "node" to pass DOM trees.', opts:['','text','node']},
+      {k:'update-event', req:false, ph:'',          desc:'When to write back: "blur" (default) or "enter".', opts:['','blur','enter']},
+      {k:'debounce',     req:false, ph:'',          desc:'Delay in ms before writing value back.'},
+      {k:'on-demand',    req:false, ph:'',          desc:'Hide until the control has a value.'},
+    ],
+    serialize: (el,h) => {
+      const label = el.attrs['data-label'] || 'Label';
+      const a = h(el.attrs, ['data-label']);
+      return `  <fx-control${a}>\n    <label>${label}</label>\n    <input class="widget" type="text">\n  </fx-control>`;
+    },
+  },
+
+  'fx-output': {
+    category:'ui', icon:'○', label:'Output',
+    help:'Displays a read-only value from the model. Not editable by the user.',
+    attrs:[
+      {k:'ref',   req:false, ph:'fieldname', desc:'XPath selecting the value to display.'},
+      {k:'value', req:false, ph:'',          desc:'Inline XPath expression (alternative to ref).'},
+    ],
+    serialize: (el,h) => `  <fx-output${h(el.attrs)}></fx-output>`,
+  },
+
+  'fx-group': {
+    category:'ui', icon:'▦', label:'Group',
+    help:'Groups related controls. Sets an optional XPath context node for all children. Renders as a fieldset.',
+    attrs:[
+      {k:'ref',   req:false, ph:'',      desc:'XPath context node for all children.'},
+      {k:'label', req:false, ph:'Group', desc:'Group heading / fieldset legend.'},
+      {k:'id',    req:false, ph:'',      desc:'Identifier for CSS / scripting.'},
+    ],
+    serialize: (el,h) => `  <fx-group${h(el.attrs)}>\n    <!-- group content -->\n  </fx-group>`,
+  },
+
+  'fx-repeat': {
+    category:'ui', icon:'↻', label:'Repeat',
+    help:'Repeats its template for each node in a nodeset. One <code>fx-repeatitem</code> is created per data node. Use with <code>fx-insert</code> / <code>fx-delete</code> to manage the list.',
+    attrs:[
+      {k:'ref', req:true,  ph:'items',    desc:'XPath nodeset — one repeat-item is rendered per node.'},
+      {k:'id',  req:false, ph:'myRepeat', desc:'Required when you need the index() XPath function.'},
+    ],
+    serialize: (el,h) => `  <fx-repeat${h(el.attrs)}>\n    <template>\n      <div>{.}</div>\n    </template>\n  </fx-repeat>`,
+  },
+
+  'fx-trigger': {
+    category:'ui', icon:'▶', label:'Trigger',
+    help:'A button (or any interactive element) that fires action children when activated. Add action elements as children to define what happens.',
+    attrs:[
+      {k:'ref',   req:false, ph:'', desc:'Optional XPath context / binding for readonly/relevant.'},
+      {k:'data-label', req:false, ph:'Click me', desc:'Button label text (editor only — becomes <label> child).'},
+    ],
+    serialize: (el,h,actions=[]) => {
+      const label = el.attrs['data-label'] || 'Click me';
+      const actionLines = actions.map(a => `    <${a.tag}${h(a.attrs)}/>`).join('\n');
+      return `  <fx-trigger>\n    <label>${label}</label>\n${actionLines}${actionLines?'\n':''}  </fx-trigger>`;
+    },
+  },
+
+  'fx-switch': {
+    category:'ui', icon:'⇄', label:'Switch',
+    help:'Shows exactly one <code>fx-case</code> child at a time. Toggle cases with <code>fx-toggle</code>. Can bind to a data node to auto-select the case whose id matches the value.',
+    attrs:[
+      {k:'ref', req:false, ph:'', desc:'XPath binding — toggles to the case whose id matches the value.'},
+      {k:'id',  req:false, ph:'', desc:'Identifier used by fx-toggle.'},
+    ],
+    serialize: (el,h) => `  <fx-switch${h(el.attrs)}>\n    <fx-case id="c1"><div>Case 1</div></fx-case>\n    <fx-case id="c2" selected=""><div>Case 2</div></fx-case>\n  </fx-switch>`,
+  },
+
+  'fx-dialog': {
+    category:'ui', icon:'◱', label:'Dialog',
+    help:'A modal dialog panel. Show/hide with fx-show / fx-hide actions.',
+    attrs:[
+      {k:'id', req:false, ph:'myDialog', desc:'Identifier used to target this dialog with fx-show/fx-hide.'},
+    ],
+    serialize: (el,h) => `  <fx-dialog${h(el.attrs)}>\n    <!-- dialog content -->\n  </fx-dialog>`,
+  },
+
+  'fx-alert': {
+    category:'ui', icon:'⚠', label:'Alert',
+    help:'Displays a notification message. Can be triggered by model events.',
+    attrs:[
+      {k:'event', req:false, ph:'', desc:'The event that triggers this alert.'},
+      {k:'level', req:false, ph:'', desc:'Alert severity level.', opts:['','info','warning','error']},
+    ],
+    serialize: (el,h) => `  <fx-alert${h(el.attrs)}><!-- message text --></fx-alert>`,
+  },
+
+  'fx-upload': {
+    category:'ui', icon:'⬆', label:'Upload',
+    help:'A file-upload widget that puts file content into an instance node.',
+    attrs:[
+      {k:'ref',       req:true,  ph:'',               desc:'XPath pointing to the instance node to receive the file.'},
+      {k:'mediatype', req:false, ph:'application/octet-stream', desc:'Accepted media type.'},
+    ],
+    serialize: (el,h) => `  <fx-upload${h(el.attrs)}></fx-upload>`,
+  },
+
+  'fx-droptarget': {
+    category:'ui', icon:'⊡', label:'Drop Target',
+    help:'A drag-and-drop target zone. Accepts dragged elements and triggers actions on drop.',
+    attrs:[
+      {k:'accept', req:false, ph:'', desc:'CSS selector or tag name of accepted draggables.'},
+      {k:'effect',  req:false, ph:'', desc:'Drag effect: move or copy.', opts:['','move','copy']},
+      {k:'ref',    req:false, ph:'', desc:'XPath context for actions triggered on drop.'},
+    ],
+    serialize: (el,h) => `  <fx-droptarget${h(el.attrs)}>\n    <!-- drop zone content -->\n  </fx-droptarget>`,
+  },
+
+  'fx-items': {
+    category:'ui', icon:'≡', label:'Items',
+    help:'Provides a dynamic list of options for a select/datalist inside an fx-control.',
+    attrs:[
+      {k:'ref',         req:true,  ph:'items',        desc:'XPath nodeset providing the option values.'},
+      {k:'value-ref',   req:false, ph:'',             desc:'XPath (relative to each item) for the option value.'},
+      {k:'label-ref',   req:false, ph:'',             desc:'XPath (relative to each item) for the option label.'},
+    ],
+    serialize: (el,h) => `  <fx-items${h(el.attrs)}></fx-items>`,
+  },
+
+  // ── ACTIONS ───────────────────────────────────────────
+
+  'fx-setvalue': {
+    category:'action', icon:'✎', label:'Set Value',
+    help:'Writes a value to an instance node.',
+    attrs:[
+      {k:'ref',   req:true,  ph:'/data/field', desc:'XPath selecting the target node.'},
+      {k:'value', req:false, ph:'',            desc:'XPath expression yielding the new value.'},
+      ...ACTION_COMMON,
+    ],
+  },
+
+  'fx-insert': {
+    category:'action', icon:'⊕', label:'Insert',
+    help:'Inserts a new node into a nodeset.',
+    attrs:[
+      {k:'ref',      req:true,  ph:'items',  desc:'XPath nodeset to insert into.'},
+      {k:'origin',   req:false, ph:'',       desc:'XPath selecting the template node to clone.'},
+      {k:'position', req:false, ph:'after',  desc:'Insert before or after ref.', opts:['before','after']},
+      ...ACTION_COMMON,
+    ],
+  },
+
+  'fx-delete': {
+    category:'action', icon:'✕', label:'Delete',
+    help:'Deletes node(s) from a nodeset.',
+    attrs:[
+      {k:'ref', req:true, ph:'items[last()]', desc:'XPath selecting the node(s) to delete.'},
+      ...ACTION_COMMON,
+    ],
+  },
+
+  'fx-append': {
+    category:'action', icon:'⊕', label:'Append',
+    help:'Appends a new node to a nodeset.',
+    attrs:[
+      {k:'ref',    req:true,  ph:'items', desc:'XPath nodeset to append to.'},
+      {k:'origin', req:false, ph:'',      desc:'XPath selecting the template node to clone.'},
+      ...ACTION_COMMON,
+    ],
+  },
+
+  'fx-send': {
+    category:'action', icon:'✈', label:'Send',
+    help:'Triggers an fx-submission.',
+    attrs:[
+      {k:'submission', req:false, ph:'s1', desc:'ID of the fx-submission to trigger (default: default submission).'},
+      ...ACTION_COMMON,
+    ],
+  },
+
+  'fx-dispatch': {
+    category:'action', icon:'⇢', label:'Dispatch',
+    help:'Fires a custom DOM event.',
+    attrs:[
+      {k:'name',   req:true,  ph:'my-event', desc:'Event name to dispatch.'},
+      {k:'target', req:false, ph:'',         desc:'ID of the target element (default: current element).'},
+      {k:'detail', req:false, ph:'',         desc:'XPath expression providing the event detail object.'},
+      ...ACTION_COMMON,
+    ],
+  },
+
+  'fx-toggle': {
+    category:'action', icon:'⇄', label:'Toggle',
+    help:'Toggles an fx-case inside an fx-switch.',
+    attrs:[
+      {k:'case', req:true, ph:'c1', desc:'ID of the fx-case to show.'},
+      ...ACTION_COMMON,
+    ],
+  },
+
+  'fx-show': {
+    category:'action', icon:'👁', label:'Show',
+    help:'Makes an element visible.',
+    attrs:[
+      {k:'ref', req:true, ph:'', desc:'ID or XPath of the element to show.'},
+      ...ACTION_COMMON,
+    ],
+  },
+
+  'fx-hide': {
+    category:'action', icon:'🚫', label:'Hide',
+    help:'Hides an element.',
+    attrs:[
+      {k:'ref', req:true, ph:'', desc:'ID or XPath of the element to hide.'},
+      ...ACTION_COMMON,
+    ],
+  },
+
+  'fx-setfocus': {
+    category:'action', icon:'◎', label:'Set Focus',
+    help:'Moves keyboard focus to an element.',
+    attrs:[
+      {k:'ref', req:true, ph:'', desc:'ID or ref of the element to focus.'},
+      ...ACTION_COMMON,
+    ],
+  },
+
+  'fx-load': {
+    category:'action', icon:'⬇', label:'Load',
+    help:'Loads a URL into the page or into an instance.',
+    attrs:[
+      {k:'url',     req:true,  ph:'', desc:'URL to load.'},
+      {k:'ref',     req:false, ph:'', desc:'XPath of the instance node to load the response into.'},
+      {k:'replace', req:false, ph:'', desc:'What to replace.', opts:['','all','instance','none']},
+      ...ACTION_COMMON,
+    ],
+  },
+
+  'fx-message': {
+    category:'action', icon:'💬', label:'Message',
+    help:'Displays a message to the user.',
+    attrs:[
+      {k:'level', req:false, ph:'', desc:'Severity level.', opts:['','info','warning','error']},
+      ...ACTION_COMMON,
+    ],
+  },
+
+  'fx-reset': {
+    category:'action', icon:'↺', label:'Reset',
+    help:'Resets the model to its initial state.',
+    attrs:[
+      {k:'model', req:false, ph:'', desc:'ID of the fx-model to reset (default: default model).'},
+      ...ACTION_COMMON,
+    ],
+  },
+
+  'fx-setattribute': {
+    category:'action', icon:'⚙', label:'Set Attribute',
+    help:'Sets a DOM attribute on an element.',
+    attrs:[
+      {k:'ref',   req:true,  ph:'', desc:'XPath or ID of the target element.'},
+      {k:'name',  req:true,  ph:'', desc:'Attribute name to set.'},
+      {k:'value', req:false, ph:'', desc:'XPath expression for the attribute value.'},
+      ...ACTION_COMMON,
+    ],
+  },
+
+  'fx-refresh': {
+    category:'action', icon:'⟳', label:'Refresh',
+    help:'Forces a UI refresh cycle.',
+    attrs:[...ACTION_COMMON],
+  },
+
+  'fx-replace': {
+    category:'action', icon:'⇌', label:'Replace',
+    help:'Replaces a node with another.',
+    attrs:[
+      {k:'ref',    req:true,  ph:'', desc:'XPath of the node to replace.'},
+      {k:'origin', req:false, ph:'', desc:'XPath of the replacement node.'},
+      ...ACTION_COMMON,
+    ],
+  },
+
+  'fx-call': {
+    category:'action', icon:'⤴', label:'Call',
+    help:'Calls a custom function defined with fx-function.',
+    attrs:[
+      {k:'function', req:true,  ph:'local:my-func', desc:'Name of the custom function to call.'},
+      {k:'ref',      req:false, ph:'',              desc:'XPath context.'},
+      ...ACTION_COMMON,
+    ],
+  },
+
+  'fx-confirm': {
+    category:'action', icon:'?', label:'Confirm',
+    help:'Prompts the user for confirmation before proceeding with sibling actions.',
+    attrs:[...ACTION_COMMON],
+  },
+
+  'fx-copy': {
+    category:'action', icon:'⎘', label:'Copy',
+    help:'Copies a node in the instance.',
+    attrs:[
+      {k:'ref', req:true, ph:'', desc:'XPath of the node to copy.'},
+      {k:'at',  req:false, ph:'', desc:'Position to insert the copy.'},
+      ...ACTION_COMMON,
+    ],
+  },
+
+  'fx-update': {
+    category:'action', icon:'↑', label:'Update',
+    help:'Triggers a rebuild/recalculate/revalidate cycle.',
+    attrs:[...ACTION_COMMON],
+  },
+};
+
+// ── Derived sets from schema ──────────────────────────────
+const MODEL_TAGS  = new Set(Object.entries(ELEMENT_SCHEMA).filter(([,v]) => v.category==='model' ).map(([k]) => k));
+const UI_TAGS     = new Set(Object.entries(ELEMENT_SCHEMA).filter(([,v]) => v.category==='ui'    ).map(([k]) => k));
+const ACTION_TAGS = new Set(Object.entries(ELEMENT_SCHEMA).filter(([,v]) => v.category==='action').map(([k]) => k));
+
+// ── Attribute string helper ───────────────────────────────
+function atStr(attrs, skip=[]) {
+  return Object.entries(attrs)
+    .filter(([k,v]) => v && !skip.includes(k))
+    .map(([k,v]) => ` ${k}="${v}"`)
+    .join('');
+}
+
+// ─────────────────────────────────────────────────────────
+// fore-canvas Web Component
+// ─────────────────────────────────────────────────────────
+class ForeCanvas extends HTMLElement {
+  constructor() {
+    super();
+    this._model  = [];
+    this._ui     = [];
+    this._sel    = null;
+    this.attachShadow({mode:'open'});
+    this._build();
+  }
+
+  _build() {
+    this.shadowRoot.innerHTML = `
+      <style>
+        :host { display: block; }
+        .zone { background:#fff; border-radius:8px; margin-bottom:12px; box-shadow:0 1px 4px rgba(0,0,0,.1); overflow:hidden; }
+        .zh { display:flex; align-items:center; flex-wrap:wrap; gap:4px; padding:.35rem .65rem; border-bottom:1px solid #e0e0e0; background:#f0f0f0; }
+        .zh.mh { background:#fdf0f4; border-bottom-color:#f5c6d8; }
+        .zh-t { font-size:.65rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:#888; margin-right:.3rem; }
+        .za { font-size:.68rem; padding:.1rem .45rem; border-radius:3px; cursor:pointer; border:1px solid; }
+        .za.u { background:#e8eaf6; border-color:#c5cae9; color:#3949ab; }
+        .za.u:hover { background:#c5cae9; }
+        .za.m { background:#fce4ec; border-color:#f48fb1; color:#880e4f; }
+        .za.m:hover { background:#f48fb1; }
+        .drop { min-height:64px; padding:.65rem; position:relative; transition:background .15s; }
+        .drop.over { background:#e3f2fd; }
+        .drop.over.md { background:#fce4ec; }
+        .drop.empty::after { content:attr(data-hint); position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#ccc; font-size:.78rem; pointer-events:none; }
+        /* model rows */
+        .mel { display:flex; align-items:baseline; gap:.4rem; padding:.3rem .5rem; border:1px solid #f3d9e8; border-radius:4px; background:#fff9fb; margin-bottom:4px; cursor:pointer; font-size:.75rem; }
+        .mel:hover { border-color:#f48fb1; background:#fce4ec; }
+        .mel.sel { border-color:#880e4f; box-shadow:0 0 0 2px #880e4f28; }
+        .mel .mt { font-family:monospace; color:#880e4f; font-weight:600; flex-shrink:0; }
+        .mel .ma { font-family:monospace; font-size:.68rem; color:#aaa; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .mel .mx { color:#ccc; cursor:pointer; flex-shrink:0; font-size:.8rem; }
+        .mel .mx:hover { color:#e53935; }
+        /* ui rows */
+        .uel { border:1px solid #e0e0e0; border-radius:6px; margin-bottom:8px; background:#fff; cursor:pointer; position:relative; overflow:hidden; }
+        .uel:hover { border-color:#90caf9; }
+        .uel.sel { border-color:#3949ab; box-shadow:0 0 0 2px #3949ab28; }
+        .uel-chip { position:absolute; top:0; right:0; display:flex; align-items:center; gap:2px; padding:1px 5px; background:rgba(255,255,255,.92); border-bottom-left-radius:5px; opacity:0; transition:opacity .1s; pointer-events:none; }
+        .uel:hover .uel-chip, .uel.sel .uel-chip { opacity:1; pointer-events:auto; }
+        .uel-chip .ct { font-family:monospace; font-size:.62rem; color:#3949ab; }
+        .uel-chip .cx { color:#ccc; cursor:pointer; font-size:.75rem; padding:0 2px; }
+        .uel-chip .cx:hover { color:#e53935; }
+        .ubody { padding:.55rem .7rem; pointer-events:none; }
+        .c-label { display:block; font-size:.7rem; font-weight:600; color:#555; margin-bottom:3px; }
+        .c-input  { display:block; width:100%; padding:.28rem .5rem; border:1px solid #ccc; border-radius:3px; font-size:.78rem; background:#fafafa; color:#bbb; }
+        .c-output { display:block; width:100%; padding:.28rem .5rem; border:1px solid #e8e8e8; border-radius:3px; font-size:.78rem; background:#f9f9f9; color:#bbb; font-family:monospace; }
+        .g-head { font-size:.72rem; font-weight:700; color:#555; margin-bottom:4px; }
+        .g-body { padding:.4rem .5rem; border:1px dashed #ccc; border-radius:4px; color:#bbb; font-size:.72rem; text-align:center; }
+        .rep-body { padding:.35rem .55rem; background:#f0f4ff; border-radius:4px; font-size:.72rem; color:#5c6bc0; }
+        .trig-btn { display:block; width:100%; padding:.32rem .6rem; background:#e8eaf6; border:1px solid #9fa8da; border-radius:4px; color:#3949ab; font-size:.78rem; text-align:center; }
+        .trig-badge { font-size:.62rem; background:#c5cae9; color:#3949ab; padding:0 4px; border-radius:3px; margin-left:6px; }
+        .sw-body { padding:.35rem .55rem; background:#f3e5f5; border-radius:4px; font-size:.72rem; color:#7b1fa2; }
+        .generic-body { padding:.35rem .55rem; font-size:.72rem; font-family:monospace; color:#aaa; }
+      </style>
+      <div class="zone">
+        <div class="zh mh" id="mz-h">
+          <span class="zh-t">fx-model</span>
+        </div>
+        <div class="drop md" id="mz" data-hint="Drop model elements here or use the + buttons above"></div>
+      </div>
+      <div class="zone">
+        <div class="zh" id="uz-h">
+          <span class="zh-t">UI</span>
+        </div>
+        <div class="drop" id="uz" data-hint="Drop UI elements here or use the + buttons above"></div>
+      </div>`;
+
+    this._mz = this.shadowRoot.querySelector('#mz');
+    this._uz = this.shadowRoot.querySelector('#uz');
+    this._wire(this._mz, 'model');
+    this._wire(this._uz, 'ui');
+  }
+
+  // Called by controller after schema is available
+  buildHeaders(schema) {
+    const mh = this.shadowRoot.querySelector('#mz-h');
+    const uh = this.shadowRoot.querySelector('#uz-h');
+    for (const [tag, s] of Object.entries(schema)) {
+      if (s.category === 'model') {
+        const b = document.createElement('button');
+        b.className = 'za m'; b.textContent = `+ ${s.label}`;
+        b.addEventListener('click', () => this.addElement(tag));
+        mh.appendChild(b);
+      } else if (s.category === 'ui') {
+        const b = document.createElement('button');
+        b.className = 'za u'; b.textContent = `+ ${s.label}`;
+        b.addEventListener('click', () => this.addElement(tag));
+        uh.appendChild(b);
+      }
+    }
+  }
+
+  _wire(zone, category) {
+    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('over'); });
+    zone.addEventListener('dragleave', e => { if (!zone.contains(e.relatedTarget)) zone.classList.remove('over'); });
+    zone.addEventListener('drop', e => {
+      e.preventDefault(); zone.classList.remove('over');
+      const tag = e.dataTransfer.getData('fore-tag');
+      if (!tag) return;
+      const s = ELEMENT_SCHEMA[tag];
+      if (!s || s.category !== category) return;
+      this.addElement(tag);
+    });
+  }
+
+  _defaults(tag) {
+    const s = ELEMENT_SCHEMA[tag];
+    if (!s) return {};
+    const a = {};
+    for (const {k, ph} of s.attrs) a[k] = ph || '';
+    return a;
+  }
+
+  addElement(tag) {
+    const el = {tag, attrs: this._defaults(tag), actions: [], id: `el-${Date.now()}`};
+    if (MODEL_TAGS.has(tag)) this._model.push(el);
+    else                     this._ui.push(el);
+    this._renderAll();
+    this._doSel(el.id);
+    this._fire('canvas-changed');
+  }
+
+  _renderAll() { this._renderModel(); this._renderUI(); }
+
+  _renderModel() {
+    const z = this._mz;
+    z.classList.toggle('empty', this._model.length === 0);
+    z.innerHTML = '';
+    for (const el of this._model) {
+      const d = document.createElement('div');
+      d.className = `mel${el.id === this._sel ? ' sel' : ''}`;
+      d.dataset.id = el.id;
+      const as = Object.entries(el.attrs).filter(([,v]) => v).map(([k,v]) => `${k}="${v}"`).join(' ');
+      d.innerHTML = `<span class="mt">&lt;${el.tag}</span><span class="ma">${as}&gt;</span><span class="mx">✕</span>`;
+      d.addEventListener('click', ev => {
+        if (ev.target.classList.contains('mx')) { this._del(el.id); return; }
+        this._doSel(el.id);
+      });
+      z.appendChild(d);
+    }
+  }
+
+  _renderUI() {
+    const z = this._uz;
+    z.classList.toggle('empty', this._ui.length === 0);
+    z.innerHTML = '';
+    for (const el of this._ui) {
+      const d = document.createElement('div');
+      d.className = `uel${el.id === this._sel ? ' sel' : ''}`;
+      d.dataset.id = el.id;
+      d.innerHTML = `
+        <div class="uel-chip"><span class="ct">${el.tag}</span><span class="cx">✕</span></div>
+        <div class="ubody">${this._uibody(el)}</div>`;
+      d.addEventListener('click', ev => {
+        if (ev.target.classList.contains('cx')) { this._del(el.id); return; }
+        this._doSel(el.id);
+      });
+      z.appendChild(d);
+    }
+  }
+
+  _uibody(el) {
+    const {tag, attrs, actions=[]} = el;
+    const lbl = attrs['data-label'] || attrs.ref || tag;
+    switch (tag) {
+      case 'fx-control':
+        return `<span class="c-label">${lbl}</span><span class="c-input">${attrs.as || 'text'}…</span>`;
+      case 'fx-output':
+        return `<span class="c-label">${lbl}</span><span class="c-output">{${attrs.ref || attrs.value || '…'}}</span>`;
+      case 'fx-group':
+        return `<div class="g-head">▦ ${attrs.label || lbl}</div><div class="g-body">group contents</div>`;
+      case 'fx-repeat':
+        return `<div class="rep-body">↻ Repeat — ref="${attrs.ref || '…'}"${attrs.id ? '  id="'+attrs.id+'"' : ''}</div>`;
+      case 'fx-trigger':
+        return `<div class="trig-btn">${attrs['data-label'] || 'Button'}<span class="trig-badge">${actions.length} action${actions.length!==1?'s':''}</span></div>`;
+      case 'fx-switch':
+        return `<div class="sw-body">⇄ Switch${attrs.id?' id="'+attrs.id+'"':''}</div>`;
+      default: {
+        const s = ELEMENT_SCHEMA[tag];
+        return `<div class="generic-body">&lt;${tag}&gt; ${s ? '— '+s.label : ''}</div>`;
+      }
+    }
+  }
+
+  _del(id) {
+    const inModel = this._model.some(x => x.id === id);
+    if (inModel) this._model = this._model.filter(x => x.id !== id);
+    else         this._ui    = this._ui.filter(x => x.id !== id);
+    if (this._sel === id) { this._sel = null; this._fire('element-selected', null); }
+    this._renderAll();
+    this._fire('canvas-changed');
+  }
+
+  _doSel(id) {
+    this._sel = id;
+    this._renderAll();
+    const el = [...this._model, ...this._ui].find(x => x.id === id);
+    this._fire('element-selected', el || null);
+  }
+
+  _fire(name, detail=null) {
+    this.dispatchEvent(new CustomEvent(name, {bubbles:true, composed:true, detail}));
+  }
+
+  updateAttr(id, key, value) {
+    const el = [...this._model, ...this._ui].find(x => x.id === id);
+    if (!el) return;
+    el.attrs[key] = value;
+    if (MODEL_TAGS.has(el.tag)) this._renderModel(); else this._renderUI();
+    this._fire('canvas-changed');
+  }
+
+  addAction(triggerId, actionTag) {
+    const el = this._ui.find(x => x.id === triggerId);
+    if (!el) return;
+    const s = ELEMENT_SCHEMA[actionTag];
+    if (!s) return;
+    const a = {};
+    for (const {k, ph} of s.attrs) a[k] = ph || '';
+    el.actions = el.actions || [];
+    const act = {tag: actionTag, attrs: a, id: `act-${Date.now()}`};
+    el.actions.push(act);
+    this._renderUI();
+    this._fire('canvas-changed');
+    return act;
+  }
+
+  removeAction(triggerId, actionId) {
+    const el = this._ui.find(x => x.id === triggerId);
+    if (!el) return;
+    el.actions = (el.actions||[]).filter(a => a.id !== actionId);
+    this._renderUI();
+    this._fire('canvas-changed');
+  }
+
+  updateActionAttr(triggerId, actionId, key, value) {
+    const el = this._ui.find(x => x.id === triggerId);
+    if (!el) return;
+    const act = (el.actions||[]).find(a => a.id === actionId);
+    if (act) { act.attrs[key] = value; this._fire('canvas-changed'); }
+  }
+
+  clearCanvas() {
+    this._model = []; this._ui = []; this._sel = null;
+    this._renderAll();
+    this._fire('element-selected', null);
+    this._fire('canvas-changed');
+  }
+
+  serialize() {
+    const h = (attrs, skip=[]) => atStr(attrs, skip);
+
+    const mLines = this._model.map(el => {
+      const s = ELEMENT_SCHEMA[el.tag];
+      return s?.serialize ? s.serialize(el, h) : `    <${el.tag}${h(el.attrs)}/>`;
+    });
+
+    const uLines = this._ui.map(el => {
+      const s = ELEMENT_SCHEMA[el.tag];
+      if (!s) return `  <${el.tag}${h(el.attrs)}></${el.tag}>`;
+      return s.serialize ? s.serialize(el, h, el.actions||[]) : `  <${el.tag}${h(el.attrs)}></${el.tag}>`;
+    });
+
+    const modelBlock = mLines.length ? `  <fx-model>\n${mLines.join('\n')}\n  </fx-model>` : '';
+    const uiBlock    = uLines.join('\n');
+    const body       = [modelBlock, uiBlock].filter(Boolean).join('\n');
+
+    return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>My Fore Form</title>
+  <link href="../resources/fore.css" rel="stylesheet">
+</head>
+<body>
+<fx-fore>
+${body}
+</fx-fore>
+<script type="module" src="../index.js"><\/script>
+</body>
+</html>`;
+  }
+}
+
+customElements.define('fore-canvas', ForeCanvas);
+
+// Export to window for controller (plain script)
+window._SCHEMA     = ELEMENT_SCHEMA;
+window._MODEL_TAGS = MODEL_TAGS;
+window._UI_TAGS    = UI_TAGS;
+window._ACTION_TAGS= ACTION_TAGS;
+</script>
+
+<!-- ══════════════════════════════════════════════════════════
+     Editor controller
+     ══════════════════════════════════════════════════════ -->
+<script>
+customElements.whenDefined('fore-canvas').then(() => {
+  const canvas  = document.getElementById('canvas');
+  const palette = document.getElementById('palette');
+  let selEl     = null;
+  let selAction = null; // selected action inside a trigger
+
+  // ── Build palette from schema ────────────────────────────
+  const schema = window._SCHEMA;
+  let section = null;
+
+  const addSection = (title) => {
+    const div = document.createElement('div');
+    div.className = 'pal-section';
+    div.textContent = title;
+    palette.appendChild(div);
+  };
+  const addSep = () => {
+    const d = document.createElement('div'); d.className = 'pal-sep';
+    palette.appendChild(d);
+  };
+
+  addSection('UI Elements');
+  for (const [tag, s] of Object.entries(schema)) {
+    if (s.category !== 'ui') continue;
+    const t = document.createElement('div');
+    t.className = 'pt'; t.draggable = true;
+    t.dataset.tag = tag; t.dataset.zone = 'ui';
+    t.innerHTML = `<span class="ico">${s.icon}</span>${s.label}`;
+    palette.appendChild(t);
+  }
+  addSep();
+  addSection('Model Elements');
+  for (const [tag, s] of Object.entries(schema)) {
+    if (s.category !== 'model') continue;
+    const t = document.createElement('div');
+    t.className = 'pt model'; t.draggable = true;
+    t.dataset.tag = tag; t.dataset.zone = 'model';
+    t.innerHTML = `<span class="ico">${s.icon}</span>${s.label}`;
+    palette.appendChild(t);
+  }
+
+  // Build canvas zone headers
+  canvas.buildHeaders(schema);
+
+  // ── Palette drag ─────────────────────────────────────────
+  document.addEventListener('dragstart', e => {
+    const t = e.target.closest('.pt');
+    if (!t) return;
+    e.dataTransfer.setData('fore-tag',  t.dataset.tag);
+    e.dataTransfer.setData('fore-zone', t.dataset.zone);
+    e.dataTransfer.effectAllowed = 'copy';
+  });
+
+  // ── Canvas events ────────────────────────────────────────
+  canvas.addEventListener('element-selected', e => {
+    selEl = e.detail;
+    selAction = null;
+    renderProps(selEl);
+  });
+  canvas.addEventListener('canvas-changed', () => {
+    if (document.getElementById('code-panel').classList.contains('vis')) refreshCode();
+  });
+
+  // ── Properties ───────────────────────────────────────────
+  function renderProps(el) {
+    const aPane = document.getElementById('tab-attrs');
+    const hPane = document.getElementById('tab-help');
+    if (!el) {
+      aPane.innerHTML = '<p class="no-sel">Select an element to edit its attributes</p>';
+      hPane.innerHTML = '<p class="no-sel">Select an element to see documentation</p>';
+      return;
+    }
+    const s = schema[el.tag] || {attrs:[], help:'', category:'ui'};
+    const isModel = s.category === 'model';
+
+    // Attrs tab
+    let html = `<p class="ph"><span class="etag${isModel?' model':''}">&lt;${el.tag}&gt;</span></p>`;
+    for (const {k, req, ph, desc, opts} of s.attrs) {
+      const val = el.attrs[k] ?? '';
+      const reqMark = req ? '<span class="req"> *</span>' : '';
+      if (opts) {
+        const options = opts.map(o => `<option value="${o}"${o===val?' selected':''}>${o||'—'}</option>`).join('');
+        html += `<div class="prop-row"><label>${k}${reqMark}</label><select data-key="${k}">${options}</select><div class="desc">${desc}</div></div>`;
+      } else {
+        html += `<div class="prop-row"><label>${k}${reqMark}</label><input type="text" data-key="${k}" value="${esc(val)}" placeholder="${ph||''}"><div class="desc">${desc}</div></div>`;
+      }
+    }
+    if (!s.attrs.length) html += '<p class="no-sel">No configurable attributes</p>';
+
+    // Actions sub-panel for fx-trigger
+    if (el.tag === 'fx-trigger') {
+      html += renderActionsSection(el);
+    }
+
+    aPane.innerHTML = html;
+    wireAttrInputs(aPane, el);
+    if (el.tag === 'fx-trigger') wireActionsSection(aPane, el);
+
+    // Help tab
+    hPane.innerHTML = `<div class="help-body">${s.help || 'No documentation available.'}<br><br><a href="https://jinntec.github.io/fore-docs/" target="_blank">→ Fore Documentation</a></div>`;
+  }
+
+  function renderActionsSection(triggerEl) {
+    const actions = triggerEl.actions || [];
+    let html = `<div class="actions-section">
+      <div class="as-title">Actions (${actions.length})</div>`;
+    for (const act of actions) {
+      const as = schema[act.tag];
+      html += `<div class="action-item${selAction===act.id?' sel':''}" data-act-id="${act.id}">
+        <span class="at">${as?.icon||''}  &lt;${act.tag}&gt;</span>
+        <span class="ax" data-act-del="${act.id}">✕</span>
+      </div>`;
+      // Inline attrs for selected action
+      if (selAction === act.id && as) {
+        for (const {k, ph, desc, opts} of as.attrs.filter(a => !['event','if','while','delay','target','propagate','phase'].includes(a.k))) {
+          const val = act.attrs[k] ?? '';
+          if (opts) {
+            const options = opts.map(o => `<option value="${o}"${o===val?' selected':''}>${o||'—'}</option>`).join('');
+            html += `<div class="prop-row" style="padding-left:1.2rem"><label>${k}</label><select data-act-key="${k}" data-act-id="${act.id}">${options}</select><div class="desc">${desc}</div></div>`;
+          } else {
+            html += `<div class="prop-row" style="padding-left:1.2rem"><label>${k}</label><input type="text" data-act-key="${k}" data-act-id="${act.id}" value="${esc(val)}" placeholder="${ph||''}"><div class="desc">${desc}</div></div>`;
+          }
+        }
+      }
+    }
+    // Action selector
+    const actionOpts = Object.entries(schema)
+      .filter(([,v]) => v.category === 'action')
+      .map(([tag, v]) => `<option value="${tag}">${v.icon} ${v.label} (${tag})</option>`)
+      .join('');
+    html += `<select class="action-select" id="action-sel"><option value="">+ Add action…</option>${actionOpts}</select>`;
+    html += `</div>`;
+    return html;
+  }
+
+  function wireActionsSection(container, el) {
+    // Add action
+    const sel = container.querySelector('#action-sel');
+    if (sel) {
+      sel.addEventListener('change', () => {
+        if (!sel.value) return;
+        const act = canvas.addAction(el.id, sel.value);
+        sel.value = '';
+        selAction = act?.id || null;
+        renderProps(selEl);
+      });
+    }
+    // Delete action
+    container.querySelectorAll('[data-act-del]').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        canvas.removeAction(el.id, btn.dataset.actDel);
+        if (selAction === btn.dataset.actDel) selAction = null;
+        renderProps(selEl);
+      });
+    });
+    // Select action
+    container.querySelectorAll('.action-item').forEach(item => {
+      item.addEventListener('click', e => {
+        if (e.target.dataset.actDel) return;
+        selAction = selAction === item.dataset.actId ? null : item.dataset.actId;
+        renderProps(selEl);
+      });
+    });
+    // Action attr inputs
+    container.querySelectorAll('[data-act-key]').forEach(inp => {
+      inp.addEventListener('input', () => {
+        canvas.updateActionAttr(el.id, inp.dataset.actId, inp.dataset.actKey, inp.value);
+        // sync local
+        const act = (el.actions||[]).find(a => a.id === inp.dataset.actId);
+        if (act) act.attrs[inp.dataset.actKey] = inp.value;
+      });
+    });
+  }
+
+  function wireAttrInputs(container, el) {
+    container.querySelectorAll('input[data-key],select[data-key]').forEach(inp => {
+      inp.addEventListener('input', () => {
+        if (!selEl) return;
+        canvas.updateAttr(selEl.id, inp.dataset.key, inp.value);
+        selEl.attrs[inp.dataset.key] = inp.value;
+      });
+    });
+  }
+
+  // ── Tab switching ────────────────────────────────────────
+  window.propTab = (name, btn) => {
+    document.querySelectorAll('.props .tab-content').forEach(e => e.classList.remove('on'));
+    document.querySelectorAll('.tab-bar button').forEach(b => b.classList.remove('on'));
+    document.getElementById('tab-' + name).classList.add('on');
+    btn.classList.add('on');
+  };
+
+  // ── Code view ────────────────────────────────────────────
+  function refreshCode() {
+    document.getElementById('code-output').textContent = canvas.serialize();
+  }
+  window.toggleCode = () => {
+    const p = document.getElementById('code-panel');
+    const show = p.classList.toggle('vis');
+    document.getElementById('btn-code').textContent = show ? 'Hide Code' : 'Code View';
+    if (show) refreshCode();
+  };
+  document.getElementById('btn-code').addEventListener('click', toggleCode);
+  document.getElementById('btn-copy').addEventListener('click', () => {
+    const btn = document.getElementById('btn-copy');
+    navigator.clipboard.writeText(document.getElementById('code-output').textContent)
+      .then(() => { btn.textContent = 'Copied!'; setTimeout(()=>btn.textContent='Copy',1500); });
+  });
+  document.getElementById('btn-export').addEventListener('click', () => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([canvas.serialize()],{type:'text/html'}));
+    a.download = 'my-fore-form.html'; a.click(); URL.revokeObjectURL(a.href);
+  });
+  document.getElementById('btn-clear').addEventListener('click', () => canvas.clearCanvas());
+
+  function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+});
+</script>
+
+</body>
+</html>
