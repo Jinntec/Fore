@@ -22,6 +22,19 @@
         fx-output#validator[valid] {
             display: none;
         }
+
+		fx-control[required]::before {
+			content: '⯪';
+		}
+
+		fx-control[invalid]::after {
+			content: '⯫';
+			color: red;
+		}
+
+		fx-control {
+			min-height: 2rem
+		}
     </style>
 </head>
 
@@ -41,10 +54,16 @@
             <fx-instance id="default" src="person-tmpl.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
                 <data></data>
             </fx-instance>
-            <fx-bind ref="instance('default')/persName"
-                     constraint="if(
-                                    string-length(name[@type='god']) = 0
-                                ) then false() else true()"
+
+            <fx-bind
+			  ref="instance('default')/persName/name[@type = ('nomen', 'praenomen', 'god', 'cognomen', 'supernomen')]"
+              required="let $c := . return empty(../name[@type = ('nomen', 'praenomen', 'god', 'cognomen', 'supernomen')][$c/@type != @type][string-length(.) > 0])"
+            >
+            </fx-bind>
+
+			<fx-bind
+			  ref="instance('default')/persName"
+              constraint="exists(name[@type = ('nomen', 'praenomen', 'god', 'cognomen', 'supernomen')][string-length(.) > 0])"
             >
             </fx-bind>
 <!--
