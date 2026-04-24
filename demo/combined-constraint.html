@@ -1,0 +1,283 @@
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title data-template="config:app-title"></title>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <link href="resources/images/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+    <link href="resources/images/favicon-16.png" rel="shortcut icon" sizes="16x16" type="image/png"/>
+    <link href="resources/images/favicon-24.png" rel="shortcut icon" sizes="24x24" type="image/png"/>
+    <link href="resources/images/favicon-32.png" rel="shortcut icon" sizes="32x32" type="image/png"/>
+    <link href="resources/images/favicon-64.png" rel="shortcut icon" sizes="64x64" type="image/png"/>
+<!--    <link href="resources/css/theme.css" rel="stylesheet"/>-->
+    <link href="../fore.css" rel="stylesheet"/>
+    <script src="./demo.js" type="module"></script>
+    <script src="../tools/fx-lens.js" type="module"></script>
+
+    <!--        <script type="module" src="http://localhost:8090/index.js"/>-->
+    <style>
+        [invalid] fx-alert {
+            display: block;
+        }
+
+        fx-output#validator[valid] {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+<main>
+    <fx-fore id="person">
+        <fx-action event="ready" if="uri-param('id') != ''">
+            <fx-send submission="s-load"></fx-send>
+        </fx-action>
+
+        <fx-model>
+<!--            <fx-action event="model-construct-done">-->
+<!--                <fx-send submission="s-login"></fx-send>-->
+<!--                <fx-send submission="s-load-template"></fx-send>-->
+<!--            </fx-action>-->
+
+            <fx-instance id="default" src="person-tmpl.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+                <data></data>
+            </fx-instance>
+            <fx-bind ref="instance('default')/persName"
+                     constraint="if(
+                                    string-length(name[@type='god']) = 0
+                                ) then false() else true()"
+            >
+            </fx-bind>
+<!--
+            <fx-bind constraint="if(
+                                    string-length(instance('default')/persName/name[@type='god']) = 0 and
+                                    string-length(instance('default')/persName/name[@type='praenomen']) = 0
+                                ) then false() else true()"
+                     ref="instance('default')/persName">
+            </fx-bind>
+-->
+
+            <fx-instance id="tribus">
+                <data>
+                    <tribus>Aelia</tribus>
+                    <tribus>Aemilia</tribus>
+                    <tribus>Arnensis</tribus>
+                    <tribus>Camilia</tribus>
+                    <tribus>Claudia</tribus>
+                    <tribus>Clustumina</tribus>
+                    <tribus>Collina</tribus>
+                    <tribus>Cornelia</tribus>
+                    <tribus>Esquilina</tribus>
+                    <tribus>Fabia</tribus>
+                    <tribus>Falerna</tribus>
+                    <tribus>Galeria</tribus>
+                    <tribus>Horatia</tribus>
+                    <tribus>Lemonia</tribus>
+                    <tribus>Maecia</tribus>
+                    <tribus>Menenia</tribus>
+                    <tribus>Oufentina</tribus>
+                    <tribus>Palatina</tribus>
+                    <tribus>Papiria</tribus>
+                    <tribus>Pollia</tribus>
+                    <tribus>Pomptina</tribus>
+                    <tribus>Publilia</tribus>
+                    <tribus>Pupinia</tribus>
+                    <tribus>Quirina</tribus>
+                    <tribus>Romilia</tribus>
+                    <tribus>Sabatina</tribus>
+                    <tribus>Scaptia</tribus>
+                    <tribus>Sergia</tribus>
+                    <tribus>Stellatina</tribus>
+                    <tribus>Suburana</tribus>
+                    <tribus>Sulpicia</tribus>
+                    <tribus>Teretina</tribus>
+                    <tribus>Tromentina</tribus>
+                    <tribus>Ulpia</tribus>
+                    <tribus>Velina</tribus>
+                    <tribus>Voltinia</tribus>
+                    <tribus>Voturia</tribus>
+                </data>
+            </fx-instance>
+            <fx-instance id="status">
+                <data>
+                    <item key="Herrscher / Herrscherhaus"></item>
+                    <item key="Senatorenstand"></item>
+                    <item key="Ritterstand"></item>
+                    <item key="Dekurionenstand"></item>
+                    <item key="höhere Gemeindeverwaltung"></item>
+                    <item key="subalterne Beamte"></item>
+                    <item key="Domänen- / niedere Gemeindeverwaltung"></item>
+                    <item key="Augustalen"></item>
+                    <item key="Freigelassene"></item>
+                    <item key="Sklaven"></item>
+                    <item key="Sonstige"></item>
+                </data>
+            </fx-instance>
+            <fx-instance id="vars">
+                <data>
+                    <loggedin>hidden</loggedin>
+                    <idno type=""></idno>
+                </data>
+            </fx-instance>
+            <fx-instance id="templ" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+                <person>
+                    <idno type=""></idno>
+                </person>
+            </fx-instance>
+
+            <fx-submission
+                    id="s-save"
+                    method="post"
+                    replace="instance"
+                    url="#echo">
+                <fx-action event="submit-done">
+                    <fx-message>Person wurde gespeichert</fx-message>
+                    <fx-send submission="s-load"></fx-send>
+                </fx-action>
+                <fx-message event="submit-error">couldn't be saved</fx-message>
+            </fx-submission>
+            <fx-submission id="s-create" method="post" replace="instance" url="api/people">
+                <fx-action event="submit-done">
+                    <fx-message>Daten wurden gespeichert</fx-message>
+                </fx-action>
+
+                <fx-action event="submit-error">
+                    <fx-message>Daten konnten nicht gespeichert werden.</fx-message>
+                </fx-action>
+
+            </fx-submission>
+
+<!--
+            <fx-submission
+                    id="s-load"
+                    method="get"
+                    replace="instance"
+                    url="api/people/{uri-param('id')}"
+                    validate="false">
+            </fx-submission>
+
+            <fx-submission
+                    id="s-load-template"
+                    method="get"
+                    replace="instance"
+                    url="templates/fore/person-tmpl.xml"
+                    validate="false">
+            </fx-submission>
+-->
+
+            <fx-submission id="s-reset" replace="instance" url="templates/fore/person-tmpl.xml">
+            </fx-submission>
+
+        </fx-model>
+
+        <fx-output ref="instance('default')/@xml:id"></fx-output>
+        {string-length(instance('default')/persName/name[@type='god']) = 0}
+        <fieldset>
+            <legend>Person valid:{}</legend>
+            <fx-output id="validator" ref="persName">
+                <fx-alert slot="label">One of
+                    <pb-i18n key="person.deity"></pb-i18n>
+                    , praenomen, nomen gentile, Cognomen or Supernomen must be present.
+                </fx-alert>
+            </fx-output>
+            <fx-control ref="persName/name[@type='god']">
+                <label data-i18n="person.deity">Gott</label>
+                <fx-action event="value-changed">
+                    <fx-unmodified></fx-unmodified>
+                    <fx-update></fx-update>
+                </fx-action>
+            </fx-control>
+            <fx-control ref="persName/name[@type='praenomen']">
+                <label>Praenomen</label>
+                <input autofocus="autofocus" class="widget" tabindex="1" type="text"/>
+            </fx-control>
+            <fx-control ref="persName/name[@type='nomen']">
+                <label>Nomen Gentile</label>
+            </fx-control>
+            <fx-control ref="persName/name[@type='cognomen']">
+                <label>Cognomen</label>
+            </fx-control>
+            <fx-control ref="persName/name[@type='supernomen']">
+                <label>Supernomen</label>
+            </fx-control>
+            <fx-control ref="persName/name[@type='tribus']">
+                <label>Tribus</label>
+                <select class="widget" ref="instance('tribus')/tribus" selection="open">
+                    <template>
+                        <option value="{.}">{.}</option>
+                    </template>
+                </select>
+            </fx-control>
+            <fx-control ref="persName/name[@type='origo']">
+                <label>Origo</label>
+            </fx-control>
+            <fx-control ref="@sex">
+                <label data-i18n="person.sex"></label>
+                <select class="widget">
+                    <option></option>
+                    <option data-i18n="person.male" selected="selected" value="M">Männlich</option>
+                    <option data-i18n="person.female" value="F">Weiblich</option>
+                </select>
+            </fx-control>
+            <fx-control ref="state[@type='status']">
+                <label data-i18n="person.status">Sozialer Status</label>
+                <select class="widget" ref="instance('status')/item" selection="open">
+                    <template>
+                        <option value="{@key}">{@key}</option>
+                    </template>
+                </select>
+            </fx-control>
+            <fx-control ref="occupation">
+                <label data-i18n="person.occupation">Beruf</label>
+            </fx-control>
+
+            <fieldset>
+                <legend>
+                    <label data-i18n="form.references">Referenzen</label>
+                    <fx-trigger class="add" title="Referenz hinzufügen">
+                        <iron-icon
+                                icon="add-circle-outline"
+                                title="Referenz hinzufügen"></iron-icon>
+
+                        <fx-insert context="." ref="idno"></fx-insert>
+                        <fx-refresh control="r-idno"></fx-refresh>
+                    </fx-trigger>
+                </legend>
+                <fx-repeat id="r-idno" ref="./idno">
+                    <template>
+                        <div class="inline-form">
+                            <fx-control ref="@type">
+                                <label>
+                                    <pb-i18n key="person.work">Work</pb-i18n>
+                                </label>
+                                <select class="widget" selection="open">
+                                    <option value="pir">PIR</option>
+                                    <option value="plre">PLRE</option>
+                                    <option value="wikidata">Wikidata</option>
+                                </select>
+                            </fx-control>
+                            <fx-control ref=".">
+                                <input/>
+                            </fx-control>
+                        </div>
+                    </template>
+                </fx-repeat>
+            </fieldset>
+        </fieldset>
+        <pb-restricted group="tei" login="login">
+            <p class="loginMessage" slot="fallback">You need to be logged in to edit.</p>
+            <div class="actions">
+                <fx-trigger class="saveBtn" id="save">
+                    <button type="submit">
+                        <pb-i18n key="form.save">Save</pb-i18n>
+                    </button>
+                    <fx-send if="uri-param('id') = ''" submission="s-create"></fx-send>
+                    <fx-send if="uri-param('id') != ''" submission="s-save"></fx-send>
+                </fx-trigger>
+            </div>
+        </pb-restricted>
+        {log('default')}
+    </fx-fore>
+</main>
+
+</body>
+</html>
