@@ -12,16 +12,9 @@
 <body>
 
 <fx-fore xmlns:fhir="http://hl7.org/fhir" id="fx-practitioner-edit" role="form" create-nodes="true">
-    <fx-action event="ready">
-        <fx-message>fore: edit ready</fx-message>
-    </fx-action>
 
     <fx-model>
-        <fx-action event="model-construct-done">
-            <fx-message>model: edit ready</fx-message>
-        </fx-action>
         <fx-instance src="practitioner.xml"></fx-instance>
-
         <fx-instance id="i-datatypes">
             <data>
                 <gender value="">
@@ -30,12 +23,8 @@
                 </gender>
             </data>
         </fx-instance>
-
     </fx-model>
 
-<!--    <fx-group ref="/*:Practitioner">-->
-<!--    <fx-group ref=".">-->
-<!--    <fx-group ref="$default">-->
     <fx-group ref="instance()">
         <fieldset id="practitioner-edit">
             <legend>
