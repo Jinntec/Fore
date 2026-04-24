@@ -352,6 +352,8 @@ export default class AbstractControl extends UIElement {
         this.setAttribute('valid', '');
         this.removeAttribute('invalid');
         this.getWidget().setAttribute('aria-invalid', 'false');
+        // also reset other dependent CSS classes
+        this.classList.remove('isEmpty');
       } else {
         this.setAttribute('invalid', '');
         this.getWidget().setAttribute('aria-invalid', 'true');
