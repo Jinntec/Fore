@@ -248,6 +248,53 @@ export class FxFore extends HTMLElement {
             .warning{
                 background:orange;
             }
+            #authoringErrors {
+              z-index: 20;
+            }
+            #authoringErrors .popup {
+              width: 70%;
+              max-height: 80vh;
+              overflow-y: auto;
+            }
+            #authoringErrors h2 {
+              background: #c62828;
+              color: white;
+              padding-left: 12px;
+              line-height: 40px;
+              font-size: 1rem;
+            }
+            #authoringErrors table {
+              width: 100%;
+              border-collapse: collapse;
+              font-size: 0.85rem;
+            }
+            #authoringErrors th {
+              text-align: left;
+              border-bottom: 2px solid #c62828;
+              padding: 4px 8px;
+            }
+            #authoringErrors td {
+              padding: 4px 8px;
+              border-bottom: 1px solid #ddd;
+              vertical-align: top;
+            }
+            #authoringErrors td:first-child {
+              color: #555;
+              font-family: monospace;
+              white-space: nowrap;
+            }
+            #authoringErrors .ae-actions {
+              text-align: center;
+              margin-top: 12px;
+            }
+            #authoringErrors .ae-actions button {
+              padding: 6px 20px;
+              background: #c62828;
+              color: white;
+              border: none;
+              border-radius: 3px;
+              cursor: pointer;
+            }
         `;
 
     const html = `
@@ -263,6 +310,14 @@ export class FxFore extends HTMLElement {
                    <h2></h2>
                     <a class="close" href="#"  onclick="event.target.parentNode.parentNode.classList.remove('show')" autofocus>&times;</a>
                     <div id="messageContent"></div>
+                </div>
+           </div>
+           <div id="authoringErrors" class="overlay">
+                <div class="popup">
+                    <h2>Authoring Errors</h2>
+                    <a class="close" href="#" onclick="event.preventDefault();event.target.closest('.overlay').classList.remove('show')">&times;</a>
+                    <div id="authoringErrorsContent" style="margin-top:48px;"></div>
+                    <div class="ae-actions"><button onclick="this.closest('.overlay').classList.remove('show')">Dismiss</button></div>
                 </div>
            </div>
            <slot name="event"></slot>
@@ -1345,6 +1400,11 @@ export class FxFore extends HTMLElement {
     // console.log(`### <<<<< ${this.id} ready >>>>>`);
 
     // console.log('### modelItems: ', this.getModel().modelItems);
+    try {
+      await this._runAuthoringChecks();
+    } catch (e) {
+      console.warn('[fore] authoring check failed:', e.message);
+    }
     Fore.dispatch(this, 'ready', {});
     // console.log('dataChanged', FxModel.dataChanged);
     this.markAsClean();
@@ -1358,6 +1418,42 @@ export class FxFore extends HTMLElement {
       e.stopPropagation();
       e.dataTransfer.dropEffect = 'move';
     });
+  }
+
+  async _runAuthoringChecks() {
+    if (this.hasAttribute('no-check')) return;
+    if (new URLSearchParams(window.location.search).has('no-check')) return;
+
+    const { checkAuthoring } = await import('./authoring-check.js');
+    const errors = checkAuthoring(this);
+    if (errors.length) {
+      this._showAuthoringErrors(errors);
+    }
+  }
+
+  _showAuthoringErrors(errors) {
+    const overlay = this.shadowRoot.getElementById('authoringErrors');
+    const content = this.shadowRoot.getElementById('authoringErrorsContent');
+    if (!overlay || !content) return;
+
+    const rows = errors
+        .map(({ element, message }) => {
+          const path = element
+              ? element.tagName.toLowerCase() + (element.id ? `#${element.id}` : '')
+              : '?';
+          const safeMsg = message.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+          const safePath = path.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+          return `<tr><td>${safePath}</td><td>${safeMsg}</td></tr>`;
+        })
+        .join('');
+
+    content.innerHTML = `
+      <table>
+        <thead><tr><th>Element</th><th>Problem</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>`;
+
+    overlay.classList.add('show');
   }
 
   /**
