@@ -65,6 +65,7 @@ export class FxCase extends FxContainer {
 
     this.addEventListener('select', async () => {
       const ownerForm = this.getOwnerForm();
+      let target = this;
       if (this.src) {
         // We will replace the node. So this node will be detached after these async function
         // calls. Save all important state first.
@@ -79,9 +80,10 @@ export class FxCase extends FxContainer {
           return;
         }
         await parentNode.replaceCase(this, replacement);
+        target = replacement;
       }
       const model = ownerForm.getModel();
-      ownerForm.addToBatchedNotifications(this);
+      ownerForm.addToBatchedNotifications(target);
       ownerForm.refresh(false);
     });
     this.addEventListener('deselect', (event) => {

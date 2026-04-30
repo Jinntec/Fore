@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-expressions */
 import {
-  html, oneEvent, fixtureSync, expect,
+  html, oneEvent, fixtureSync, expect, waitUntil,
 } from '@open-wc/testing';
 
 import '../index.js';
@@ -341,6 +341,48 @@ describe('fx-switch Tests', () => {
 
     const control3 = el.querySelector('[ref="item3"]');
     expect(control3.value).to.equal(null);
+  });
+
+  it('refreshes children of case loaded from src', async () => {
+    const originalFetch = globalThis.fetch;
+    globalThis.fetch = async () => ({
+      headers: { get: () => 'text/html' },
+      text: async () => `
+        <fx-case>
+          <fx-output id="loaded-output" ref="item"></fx-output>
+        </fx-case>
+      `,
+    });
+
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data><item>hello</item></data>
+          </fx-instance>
+        </fx-model>
+        <fx-trigger id="t-load">
+          <fx-toggle case="c-loaded"></fx-toggle>
+        </fx-trigger>
+        <fx-switch>
+          <fx-case id="c-first">static</fx-case>
+          <fx-case id="c-loaded" src="mock://irrelevant.html"></fx-case>
+        </fx-switch>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const trigger = el.querySelector('#t-load');
+    trigger.performActions();
+
+    await waitUntil(
+      () => el.querySelector('#loaded-output')?.value === 'hello',
+      'loaded output should have value after src case is selected',
+      { timeout: 2000 },
+    );
+
+    globalThis.fetch = originalFetch;
   });
 
 /*
