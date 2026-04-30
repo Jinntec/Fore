@@ -1,0 +1,800 @@
+{
+  "fx-fore": {
+    "category": "root",
+    "icon": "⬡",
+    "label": "Fore",
+    "help": "Root container for a Fore application. Establishes the processing scope and manages session initialization, UI refresh, and messaging.",
+    "editorRole": "root",
+    "container": true,
+    "acceptsHtml": true,
+    "validParents": ["document-root"],
+    "validChildren": ["model", "ui"],
+    "attrs": [
+      { "k": "create-nodes",      "req": false, "ph": "",       "desc": "Automatically generates missing XML data nodes based on UI binding expressions." },
+      { "k": "ignore-expressions","req": false, "ph": "",       "desc": "CSS selector — excludes matching elements from template expression processing." },
+      { "k": "init-on",           "req": false, "ph": "",       "desc": "Event name that triggers Fore initialization instead of default DOMContentLoaded." },
+      { "k": "init-on-target",    "req": false, "ph": "self",   "desc": "CSS selectors of targets to monitor for the init-on event." },
+      { "k": "show-confirmation", "req": false, "ph": "",       "desc": "Prompts confirmation when unsaved data modifications are detected." },
+      { "k": "src",               "req": false, "ph": "",       "desc": "Loads external fx-fore content from another HTML file." },
+      { "k": "strict",            "req": false, "ph": "",       "desc": "Displays error messages as toast notifications when present." }
+    ]
+  },
+
+  "fx-model": {
+    "category": "model",
+    "icon": "🗄",
+    "label": "Model",
+    "help": "Core data management component. Responsible for creating and maintaining the Main Dependency Graph (MDG). Contains instances, binds, submissions and functions. Every Fore application has exactly one model.",
+    "editorRole": "implicit",
+    "container": false,
+    "validParents": ["fx-fore"],
+    "attrs": []
+  },
+
+  "fx-instance": {
+    "category": "model",
+    "icon": "💾",
+    "label": "Instance",
+    "help": "Holds a data tree (XML, JSON, or HTML). Every Fore form needs at least one. The first instance is the default, accessible as <code>instance()</code>.",
+    "container": false,
+    "validParents": ["model-root"],
+    "attrs": [
+      { "k": "id",                       "req": false, "ph": "i1",          "desc": "Unique identifier — used in XPath as instance(\"id\"). First instance is \"default\"." },
+      { "k": "type",                     "req": false, "ph": "xml",          "desc": "Data format: xml (default), json, or html.", "opts": ["xml", "json", "html"] },
+      { "k": "src",                      "req": false, "ph": "",             "desc": "URL to fetch initial instance data from (HTTP GET)." },
+      { "k": "credentials",              "req": false, "ph": "same-origin",  "desc": "CORS credential policy.", "opts": ["same-origin", "include", "omit"] },
+      { "k": "shared",                   "req": false, "ph": "",             "desc": "Set to share this instance with nested fx-fore elements." },
+      { "k": "xpath-default-namespace",  "req": false, "ph": "",             "desc": "Defines namespace for unprefixed XPath expressions within this instance." }
+    ]
+  },
+
+  "fx-bind": {
+    "category": "model",
+    "icon": "⛓",
+    "label": "Bind",
+    "help": "Attaches declarative constraints and calculations to instance nodes. No child elements.",
+    "container": false,
+    "validParents": ["model-root"],
+    "attrs": [
+      { "k": "ref",        "req": true,  "ph": "/data/field", "desc": "XPath selecting the node(s) this bind constrains." },
+      { "k": "calculate",  "req": false, "ph": "",            "desc": "XPath expression — result is written into the node." },
+      { "k": "required",   "req": false, "ph": "",            "desc": "XPath boolean — true() makes the field required." },
+      { "k": "constraint", "req": false, "ph": "",            "desc": "XPath boolean — false() marks the value invalid." },
+      { "k": "readonly",   "req": false, "ph": "",            "desc": "XPath boolean — true() prevents editing." },
+      { "k": "relevant",   "req": false, "ph": "",            "desc": "XPath boolean — false() hides bound controls." },
+      { "k": "type",       "req": false, "ph": "xs:string",   "desc": "Data type for coercion and validation (xs:string, xs:integer, xs:date, …)" },
+      { "k": "alert",      "req": false, "ph": "",            "desc": "Message shown when constraint fails." }
+    ]
+  },
+
+  "fx-submission": {
+    "category": "model",
+    "icon": "✈",
+    "label": "Submission",
+    "help": "Defines how form data is sent or received over HTTP. Triggered by <code>fx-send</code>. Add <code>fx-header</code> children for custom headers.",
+    "container": false,
+    "validParents": ["model-root"],
+    "attrs": [
+      { "k": "id",               "req": false, "ph": "s1",              "desc": "Identifier for targeting via fx-send submission=\"id\"." },
+      { "k": "method",           "req": false, "ph": "get",             "desc": "HTTP method.", "opts": ["get", "post", "put", "delete", "url-encoded-post"] },
+      { "k": "action",           "req": false, "ph": "",                "desc": "Target URL." },
+      { "k": "ref",              "req": false, "ph": "/",               "desc": "XPath selecting the data to submit (default: default instance root)." },
+      { "k": "instance",         "req": false, "ph": "",                "desc": "Instance ID to use when replace='instance'.", "idref": "fx-instance" },
+      { "k": "mediatype",        "req": false, "ph": "application/xml", "desc": "Content-Type for the request." },
+      { "k": "responsemediatype","req": false, "ph": "",                "desc": "Expected Content-Type of the response (defaults to mediatype)." },
+      { "k": "replace",          "req": false, "ph": "all",             "desc": "What to do with the response.", "opts": ["all", "instance", "target", "download", "redirect", "none"] },
+      { "k": "target",           "req": false, "ph": "",                "desc": "CSS selector for targeted response insertion (when replace='target')." },
+      { "k": "targetref",        "req": false, "ph": "",                "desc": "XPath to target node for instance replacement." },
+      { "k": "into",             "req": false, "ph": "",                "desc": "XPath expression for response node insertion." },
+      { "k": "serialization",    "req": false, "ph": "xml",             "desc": "Serialization type.", "opts": ["xml", "none"] },
+      { "k": "nonrelevant",      "req": false, "ph": "remove",          "desc": "How to handle non-relevant nodes.", "opts": ["keep", "empty", "remove"] },
+      { "k": "validate",         "req": false, "ph": "",                "desc": "Set to \"false\" to skip validation before submit." },
+      { "k": "credentials",      "req": false, "ph": "same-origin",     "desc": "CORS credential policy.", "opts": ["same-origin", "include", "omit"] }
+    ]
+  },
+
+  "fx-function": {
+    "category": "model",
+    "icon": "ƒ",
+    "label": "Function",
+    "help": "Defines a custom XPath function inline, in XPath/XQuery or JavaScript. The function name must use the <code>local:</code> prefix.",
+    "container": false,
+    "validParents": ["model-root"],
+    "attrs": [
+      { "k": "signature", "req": true, "ph": "local:my-func($a as xs:string) as xs:string", "desc": "Function declaration with parameter types." },
+      { "k": "type",      "req": true, "ph": "text/xquery", "desc": "Implementation language.", "opts": ["text/xquery", "text/xquf", "text/xpath", "text/javascript"] }
+    ]
+  },
+
+  "fx-functionlib": {
+    "category": "model",
+    "icon": "📚",
+    "label": "FunctionLib",
+    "help": "References an external XQuery module, making its functions available throughout the form.",
+    "container": false,
+    "validParents": ["model-root"],
+    "attrs": [
+      { "k": "src",    "req": true,  "ph": "", "desc": "URL of the XQuery function library module." },
+      { "k": "prefix", "req": false, "ph": "", "desc": "Optional namespace prefix to prevent naming conflicts." }
+    ]
+  },
+
+  "fx-connection": {
+    "category": "model",
+    "icon": "⚡",
+    "label": "Connection",
+    "help": "Opens a WebSocket connection to synchronize data across windows. Messages can bind directly to instance data.",
+    "container": false,
+    "validParents": ["model-root"],
+    "attrs": [
+      { "k": "url",            "req": true,  "ph": "ws://localhost:8088", "desc": "WebSocket endpoint URL." },
+      { "k": "message-format", "req": false, "ph": "json",               "desc": "Format of transmitted messages.", "opts": ["json", "xml", "text"] },
+      { "k": "heartbeat",      "req": false, "ph": "0",                  "desc": "Heartbeat interval in milliseconds (0 = off)." }
+    ]
+  },
+
+  "fx-control": {
+    "category": "ui",
+    "icon": "⌨",
+    "label": "Control",
+    "help": "The main editing widget. Binds to an instance node via <em>ref</em>. Renders the appropriate HTML input. Add a child element with <code>class=\"widget\"</code> for the actual input.",
+    "container": false,
+    "acceptsHtml": false,
+    "validParents": ["ui-root", "fx-group", "fx-repeat", "fx-dialog", "fx-droptarget"],
+    "validChildren": ["fx-items"],
+    "attrs": [
+      { "k": "ref",          "req": true,  "ph": "fieldname",  "desc": "XPath pointing to the instance node this control edits." },
+      { "k": "label",        "req": false, "ph": "",           "desc": "Optional display label (rendered as <label> child)." },
+      { "k": "as",           "req": false, "ph": "",           "desc": "\"text\" (default) or \"node\" to pass DOM trees.", "opts": ["", "text", "node"] },
+      { "k": "update-event", "req": false, "ph": "",           "desc": "When to write back: \"blur\" (default) or \"enter\".", "opts": ["", "blur", "enter"] },
+      { "k": "debounce",     "req": false, "ph": "",           "desc": "Delay in ms before writing value back." },
+      { "k": "on-demand",    "req": false, "ph": "",           "desc": "Hide until the control has a value." },
+      { "k": "url",          "req": false, "ph": "",           "desc": "Imports external ForeBody as widget." },
+      { "k": "context",      "req": false, "ph": "",           "desc": "XPath to override the inherited context node." },
+      { "k": "create",       "req": false, "ph": "",           "desc": "Creates non-existing attribute nodes automatically when present." },
+      { "k": "initial",      "req": false, "ph": "",           "desc": "Default instance data for imported widgets (XPath)." },
+      { "k": "shadow",       "req": false, "ph": "",           "desc": "Attaches control to shadowDOM when present." },
+      { "k": "value-prop",   "req": false, "ph": "value",      "desc": "Custom DOM property for setting widget value (default: value)." },
+      { "k": "credentials",  "req": false, "ph": "same-origin","desc": "CORS credential policy for url-loaded widgets.", "opts": ["same-origin", "include", "omit"] },
+      { "k": "listen-on",    "req": false, "ph": "",           "desc": "CSS selector for event listener attachment point (default: .widget element)." }
+    ]
+  },
+
+  "fx-output": {
+    "category": "ui",
+    "icon": "○",
+    "label": "Output",
+    "help": "Displays a read-only value from the model. Not editable by the user. Supports HTML and Markdown rendering via mediatype.",
+    "container": false,
+    "acceptsHtml": false,
+    "validParents": ["ui-root", "fx-group", "fx-repeat", "fx-dialog", "fx-droptarget"],
+    "attrs": [
+      { "k": "ref",       "req": false, "ph": "fieldname", "desc": "XPath selecting the value to display." },
+      { "k": "value",     "req": false, "ph": "",           "desc": "Inline XPath expression calculating a string value (alternative to ref)." },
+      { "k": "mediatype", "req": false, "ph": "",           "desc": "Content rendering type for the output.", "opts": ["", "html", "markdown"] }
+    ]
+  },
+
+  "fx-group": {
+    "category": "ui",
+    "icon": "▦",
+    "label": "Group",
+    "help": "Groups related controls. Sets an optional XPath context node for all children. Renders as a fieldset.",
+    "container": true,
+    "acceptsHtml": true,
+    "validParents": ["ui-root", "fx-group", "fx-repeat", "fx-dialog", "fx-droptarget"],
+    "validChildren": ["ui"],
+    "attrs": [
+      { "k": "ref",   "req": false, "ph": "",      "desc": "XPath context node for all children." },
+      { "k": "label", "req": false, "ph": "Group", "desc": "Group heading / fieldset legend." },
+      { "k": "id",    "req": false, "ph": "",      "desc": "Identifier for CSS / scripting." }
+    ]
+  },
+
+  "fx-repeat": {
+    "category": "ui",
+    "icon": "↻",
+    "label": "Repeat",
+    "help": "Repeats its template for each node in a nodeset. One <code>fx-repeatitem</code> is created per data node. Use with <code>fx-insert</code> / <code>fx-delete</code> to manage the list.",
+    "container": true,
+    "acceptsHtml": true,
+    "validParents": ["ui-root", "fx-group", "fx-dialog", "fx-droptarget"],
+    "validChildren": ["ui"],
+    "attrs": [
+      { "k": "ref", "req": true,  "ph": "items",    "desc": "XPath nodeset — one repeat-item is rendered per node." },
+      { "k": "id",  "req": false, "ph": "myRepeat", "desc": "Required when you need the index() XPath function." }
+    ]
+  },
+
+  "fx-trigger": {
+    "category": "ui",
+    "icon": "▶",
+    "label": "Trigger",
+    "help": "A button (or any interactive element) that fires action children when activated. Add action elements as children to define what happens.",
+    "container": true,
+    "acceptsHtml": false,
+    "validParents": ["ui-root", "fx-group", "fx-repeat", "fx-dialog", "fx-droptarget"],
+    "validChildren": ["action"],
+    "attrs": [
+      { "k": "ref", "req": false, "ph": "", "desc": "Optional XPath context / binding for readonly/relevant." }
+    ]
+  },
+
+  "fx-switch": {
+    "category": "ui",
+    "icon": "⇄",
+    "label": "Switch",
+    "help": "Shows exactly one <code>fx-case</code> child at a time. Toggle cases with <code>fx-toggle</code>. Can bind to a data node to auto-select the case whose id matches the value.",
+    "container": true,
+    "acceptsHtml": false,
+    "validParents": ["ui-root", "fx-group", "fx-repeat", "fx-dialog", "fx-droptarget"],
+    "validChildren": ["fx-case"],
+    "attrs": [
+      { "k": "ref", "req": false, "ph": "", "desc": "XPath binding — toggles to the case whose id matches the value." },
+      { "k": "id",  "req": false, "ph": "", "desc": "Identifier used by fx-toggle." }
+    ]
+  },
+
+  "fx-case": {
+    "category": "ui",
+    "icon": "▭",
+    "label": "Case",
+    "help": "Defines an individual panel within an <code>fx-switch</code>. Exactly one case is visible at a time.",
+    "container": true,
+    "acceptsHtml": true,
+    "validParents": ["fx-switch"],
+    "validChildren": ["ui"],
+    "attrs": [
+      { "k": "name",     "req": false, "ph": "c1",  "desc": "Unique identifier used with fx-toggle to show this case." },
+      { "k": "label",    "req": false, "ph": "",     "desc": "Optional descriptive text for this case." },
+      { "k": "src",      "req": false, "ph": "",     "desc": "URL for loading case content dynamically." },
+      { "k": "selector", "req": false, "ph": "",     "desc": "CSS selector to extract specific elements from an external src." }
+    ]
+  },
+
+  "fx-dialog": {
+    "category": "ui",
+    "icon": "◱",
+    "label": "Dialog",
+    "help": "A modal dialog panel. Show/hide with fx-show / fx-hide actions.",
+    "container": true,
+    "acceptsHtml": true,
+    "validParents": ["ui-root", "fx-group"],
+    "validChildren": ["ui"],
+    "attrs": [
+      { "k": "id", "req": true, "ph": "myDialog", "desc": "Required — used to target this dialog with fx-show/fx-hide." }
+    ]
+  },
+
+  "fx-alert": {
+    "category": "ui",
+    "icon": "⚠",
+    "label": "Alert",
+    "help": "Messaging component for displaying validation errors or event-triggered notifications.",
+    "container": false,
+    "acceptsHtml": false,
+    "validParents": ["ui-root", "fx-group", "fx-repeat", "fx-dialog"],
+    "attrs": []
+  },
+
+  "fx-upload": {
+    "category": "ui",
+    "icon": "⬆",
+    "label": "Upload",
+    "help": "A file-upload widget that puts file content, filename and MIME type into instance nodes.",
+    "container": false,
+    "acceptsHtml": false,
+    "validParents": ["ui-root", "fx-group", "fx-repeat", "fx-dialog", "fx-droptarget"],
+    "attrs": [
+      { "k": "ref",      "req": true,  "ph": "",  "desc": "XPath pointing to the instance node to receive the file content." },
+      { "k": "accept",   "req": false, "ph": "*", "desc": "Restricts uploads to specified media types (e.g. image/*, application/pdf)." },
+      { "k": "filename", "req": false, "ph": "",  "desc": "XPath expression indicating where to store the uploaded filename." },
+      { "k": "mimetype", "req": false, "ph": "",  "desc": "XPath expression indicating where to store the media type." }
+    ]
+  },
+
+  "fx-droptarget": {
+    "category": "ui",
+    "icon": "⊡",
+    "label": "Drop Target",
+    "help": "A drag-and-drop target zone. Accepts dragged elements and triggers actions on drop.",
+    "container": true,
+    "acceptsHtml": true,
+    "validParents": ["ui-root", "fx-group", "fx-repeat", "fx-dialog"],
+    "validChildren": ["ui"],
+    "attrs": [
+      { "k": "accept",      "req": false, "ph": "*",    "desc": "CSS selector matching draggable elements that are accepted." },
+      { "k": "drop-action", "req": false, "ph": "move", "desc": "Operation type on drop.", "opts": ["move", "copy"] }
+    ]
+  },
+
+  "fx-items": {
+    "category": "ui",
+    "icon": "≡",
+    "label": "Items",
+    "help": "Provides a dynamic list of options for a select/datalist inside an fx-control.",
+    "container": false,
+    "acceptsHtml": false,
+    "validParents": ["fx-control"],
+    "attrs": [
+      { "k": "ref",       "req": true,  "ph": "items", "desc": "XPath nodeset providing the option values." },
+      { "k": "value-ref", "req": false, "ph": "",      "desc": "XPath (relative to each item) for the option value." },
+      { "k": "label-ref", "req": false, "ph": "",      "desc": "XPath (relative to each item) for the option label." }
+    ]
+  },
+
+  "fx-setvalue": {
+    "category": "action",
+    "icon": "✎",
+    "label": "Set Value",
+    "help": "Writes a value to an instance node.",
+    "container": false,
+    "validParents": ["any"],
+    "attrs": [
+      { "k": "ref",       "req": true,  "ph": "/data/field", "desc": "XPath selecting the target node." },
+      { "k": "value",     "req": false, "ph": "",            "desc": "XPath expression yielding the new value." },
+      { "k": "event",     "req": false, "ph": "",            "desc": "DOM event that triggers this action. Omit to run on parent activation." },
+      { "k": "if",        "req": false, "ph": "",            "desc": "XPath boolean — action only runs when true." },
+      { "k": "while",     "req": false, "ph": "",            "desc": "XPath boolean — action repeats while true." },
+      { "k": "delay",     "req": false, "ph": "",            "desc": "Delay in milliseconds before execution." },
+      { "k": "target",    "req": false, "ph": "",            "desc": "ID of the element to attach the listener to." },
+      { "k": "propagate", "req": false, "ph": "",            "desc": "\"stop\" to prevent event bubbling.", "opts": ["", "stop"] },
+      { "k": "phase",     "req": false, "ph": "",            "desc": "Event phase.", "opts": ["", "default", "capture"] }
+    ]
+  },
+
+  "fx-insert": {
+    "category": "action",
+    "icon": "⊕",
+    "label": "Insert",
+    "help": "Inserts a new node into a nodeset.",
+    "container": false,
+    "validParents": ["any"],
+    "attrs": [
+      { "k": "ref",        "req": true,  "ph": "items", "desc": "XPath nodeset to insert into." },
+      { "k": "origin",     "req": false, "ph": "",       "desc": "XPath selecting the template node to clone." },
+      { "k": "at",         "req": false, "ph": "",       "desc": "Index position in the nodeset for insertion." },
+      { "k": "context",    "req": false, "ph": "",       "desc": "XPath pointing to the parent node context." },
+      { "k": "position",   "req": false, "ph": "after",  "desc": "Insert before or after ref.", "opts": ["before", "after"] },
+      { "k": "keepValues", "req": false, "ph": "",       "desc": "Preserves text values from origin nodes when present." },
+      { "k": "event",     "req": false, "ph": "",        "desc": "DOM event that triggers this action. Omit to run on parent activation." },
+      { "k": "if",        "req": false, "ph": "",        "desc": "XPath boolean — action only runs when true." },
+      { "k": "while",     "req": false, "ph": "",        "desc": "XPath boolean — action repeats while true." },
+      { "k": "delay",     "req": false, "ph": "",        "desc": "Delay in milliseconds before execution." },
+      { "k": "target",    "req": false, "ph": "",        "desc": "ID of the element to attach the listener to." },
+      { "k": "propagate", "req": false, "ph": "",        "desc": "\"stop\" to prevent event bubbling.", "opts": ["", "stop"] },
+      { "k": "phase",     "req": false, "ph": "",        "desc": "Event phase.", "opts": ["", "default", "capture"] }
+    ]
+  },
+
+  "fx-delete": {
+    "category": "action",
+    "icon": "✕",
+    "label": "Delete",
+    "help": "Deletes node(s) from a nodeset.",
+    "container": false,
+    "validParents": ["any"],
+    "attrs": [
+      { "k": "ref",       "req": true,  "ph": "items[last()]", "desc": "XPath selecting the node(s) to delete." },
+      { "k": "event",     "req": false, "ph": "",              "desc": "DOM event that triggers this action. Omit to run on parent activation." },
+      { "k": "if",        "req": false, "ph": "",              "desc": "XPath boolean — action only runs when true." },
+      { "k": "while",     "req": false, "ph": "",              "desc": "XPath boolean — action repeats while true." },
+      { "k": "delay",     "req": false, "ph": "",              "desc": "Delay in milliseconds before execution." },
+      { "k": "target",    "req": false, "ph": "",              "desc": "ID of the element to attach the listener to." },
+      { "k": "propagate", "req": false, "ph": "",              "desc": "\"stop\" to prevent event bubbling.", "opts": ["", "stop"] },
+      { "k": "phase",     "req": false, "ph": "",              "desc": "Event phase.", "opts": ["", "default", "capture"] }
+    ]
+  },
+
+  "fx-append": {
+    "category": "action",
+    "icon": "⊕",
+    "label": "Append",
+    "help": "Appends a new entry to an fx-repeat. Deprecated — prefer fx-insert.",
+    "container": false,
+    "validParents": ["any"],
+    "attrs": [
+      { "k": "ref",       "req": true,  "ph": "items", "desc": "XPath nodeset to append to." },
+      { "k": "repeat",    "req": true,  "ph": "",       "desc": "ID of the fx-repeat that receives the new entry." },
+      { "k": "event",     "req": false, "ph": "",       "desc": "DOM event that triggers this action. Omit to run on parent activation." },
+      { "k": "if",        "req": false, "ph": "",       "desc": "XPath boolean — action only runs when true." },
+      { "k": "while",     "req": false, "ph": "",       "desc": "XPath boolean — action repeats while true." },
+      { "k": "delay",     "req": false, "ph": "",       "desc": "Delay in milliseconds before execution." },
+      { "k": "target",    "req": false, "ph": "",       "desc": "ID of the element to attach the listener to." },
+      { "k": "propagate", "req": false, "ph": "",       "desc": "\"stop\" to prevent event bubbling.", "opts": ["", "stop"] },
+      { "k": "phase",     "req": false, "ph": "",       "desc": "Event phase.", "opts": ["", "default", "capture"] }
+    ]
+  },
+
+  "fx-send": {
+    "category": "action",
+    "icon": "✈",
+    "label": "Send",
+    "help": "Triggers an fx-submission. Use '#reload' as submission value to refresh the window.",
+    "container": false,
+    "validParents": ["any"],
+    "attrs": [
+      { "k": "submission", "req": true,  "ph": "s1", "desc": "ID of the fx-submission to trigger. Use '#reload' to reload the window.", "idref": "fx-submission" },
+      { "k": "target",     "req": false, "ph": "",   "desc": "Overrides the submission's target (supports template expressions)." },
+      { "k": "url",        "req": false, "ph": "",   "desc": "Overrides the submission's URL (supports template expressions)." },
+      { "k": "event",     "req": false, "ph": "",    "desc": "DOM event that triggers this action. Omit to run on parent activation." },
+      { "k": "if",        "req": false, "ph": "",    "desc": "XPath boolean — action only runs when true." },
+      { "k": "while",     "req": false, "ph": "",    "desc": "XPath boolean — action repeats while true." },
+      { "k": "delay",     "req": false, "ph": "",    "desc": "Delay in milliseconds before execution." },
+      { "k": "propagate", "req": false, "ph": "",    "desc": "\"stop\" to prevent event bubbling.", "opts": ["", "stop"] },
+      { "k": "phase",     "req": false, "ph": "",    "desc": "Event phase.", "opts": ["", "default", "capture"] }
+    ]
+  },
+
+  "fx-dispatch": {
+    "category": "action",
+    "icon": "⇢",
+    "label": "Dispatch",
+    "help": "Fires a custom DOM event. Add <code>fx-property</code> children to pass event detail parameters.",
+    "container": false,
+    "validParents": ["any"],
+    "attrs": [
+      { "k": "name",      "req": true,  "ph": "my-event", "desc": "Event name to dispatch." },
+      { "k": "targetid",  "req": false, "ph": "",          "desc": "ID of the element that should receive the event. Broadcasts to document if omitted.", "idref": "any" },
+      { "k": "event",     "req": false, "ph": "",          "desc": "DOM event that triggers this action. Omit to run on parent activation." },
+      { "k": "if",        "req": false, "ph": "",          "desc": "XPath boolean — action only runs when true." },
+      { "k": "while",     "req": false, "ph": "",          "desc": "XPath boolean — action repeats while true." },
+      { "k": "delay",     "req": false, "ph": "",          "desc": "Delay in milliseconds before execution." },
+      { "k": "target",    "req": false, "ph": "",          "desc": "ID of the element to attach the listener to." },
+      { "k": "propagate", "req": false, "ph": "",          "desc": "\"stop\" to prevent event bubbling.", "opts": ["", "stop"] },
+      { "k": "phase",     "req": false, "ph": "",          "desc": "Event phase.", "opts": ["", "default", "capture"] }
+    ]
+  },
+
+  "fx-toggle": {
+    "category": "action",
+    "icon": "⇄",
+    "label": "Toggle",
+    "help": "Toggles an fx-case inside an fx-switch.",
+    "container": false,
+    "validParents": ["any"],
+    "attrs": [
+      { "k": "case",      "req": true,  "ph": "c1", "desc": "ID of the fx-case to show.", "idref": "fx-case" },
+      { "k": "event",     "req": false, "ph": "",   "desc": "DOM event that triggers this action. Omit to run on parent activation." },
+      { "k": "if",        "req": false, "ph": "",   "desc": "XPath boolean — action only runs when true." },
+      { "k": "while",     "req": false, "ph": "",   "desc": "XPath boolean — action repeats while true." },
+      { "k": "delay",     "req": false, "ph": "",   "desc": "Delay in milliseconds before execution." },
+      { "k": "target",    "req": false, "ph": "",   "desc": "ID of the element to attach the listener to." },
+      { "k": "propagate", "req": false, "ph": "",   "desc": "\"stop\" to prevent event bubbling.", "opts": ["", "stop"] },
+      { "k": "phase",     "req": false, "ph": "",   "desc": "Event phase.", "opts": ["", "default", "capture"] }
+    ]
+  },
+
+  "fx-show": {
+    "category": "action",
+    "icon": "👁",
+    "label": "Show",
+    "help": "Makes an fx-dialog visible.",
+    "container": false,
+    "validParents": ["any"],
+    "attrs": [
+      { "k": "dialog",    "req": true,  "ph": "", "desc": "ID of the fx-dialog to show.", "idref": "fx-dialog" },
+      { "k": "event",     "req": false, "ph": "", "desc": "DOM event that triggers this action. Omit to run on parent activation." },
+      { "k": "if",        "req": false, "ph": "", "desc": "XPath boolean — action only runs when true." },
+      { "k": "while",     "req": false, "ph": "", "desc": "XPath boolean — action repeats while true." },
+      { "k": "delay",     "req": false, "ph": "", "desc": "Delay in milliseconds before execution." },
+      { "k": "target",    "req": false, "ph": "", "desc": "ID of the element to attach the listener to." },
+      { "k": "propagate", "req": false, "ph": "", "desc": "\"stop\" to prevent event bubbling.", "opts": ["", "stop"] },
+      { "k": "phase",     "req": false, "ph": "", "desc": "Event phase.", "opts": ["", "default", "capture"] }
+    ]
+  },
+
+  "fx-hide": {
+    "category": "action",
+    "icon": "🚫",
+    "label": "Hide",
+    "help": "Hides an fx-dialog.",
+    "container": false,
+    "validParents": ["any"],
+    "attrs": [
+      { "k": "dialog",    "req": true,  "ph": "", "desc": "ID of the fx-dialog to hide.", "idref": "fx-dialog" },
+      { "k": "event",     "req": false, "ph": "", "desc": "DOM event that triggers this action. Omit to run on parent activation." },
+      { "k": "if",        "req": false, "ph": "", "desc": "XPath boolean — action only runs when true." },
+      { "k": "while",     "req": false, "ph": "", "desc": "XPath boolean — action repeats while true." },
+      { "k": "delay",     "req": false, "ph": "", "desc": "Delay in milliseconds before execution." },
+      { "k": "target",    "req": false, "ph": "", "desc": "ID of the element to attach the listener to." },
+      { "k": "propagate", "req": false, "ph": "", "desc": "\"stop\" to prevent event bubbling.", "opts": ["", "stop"] },
+      { "k": "phase",     "req": false, "ph": "", "desc": "Event phase.", "opts": ["", "default", "capture"] }
+    ]
+  },
+
+  "fx-setfocus": {
+    "category": "action",
+    "icon": "◎",
+    "label": "Set Focus",
+    "help": "Moves keyboard focus to an fx-control element.",
+    "container": false,
+    "validParents": ["any"],
+    "attrs": [
+      { "k": "control",   "req": true,  "ph": "", "desc": "ID of the fx-control element to focus.", "idref": "fx-control" },
+      { "k": "select",    "req": false, "ph": "", "desc": "When present, also selects the value of the target control." },
+      { "k": "event",     "req": false, "ph": "", "desc": "DOM event that triggers this action. Omit to run on parent activation." },
+      { "k": "if",        "req": false, "ph": "", "desc": "XPath boolean — action only runs when true." },
+      { "k": "while",     "req": false, "ph": "", "desc": "XPath boolean — action repeats while true." },
+      { "k": "delay",     "req": false, "ph": "", "desc": "Delay in milliseconds before execution." },
+      { "k": "target",    "req": false, "ph": "", "desc": "ID of the element to attach the listener to." },
+      { "k": "propagate", "req": false, "ph": "", "desc": "\"stop\" to prevent event bubbling.", "opts": ["", "stop"] },
+      { "k": "phase",     "req": false, "ph": "", "desc": "Event phase.", "opts": ["", "default", "capture"] }
+    ]
+  },
+
+  "fx-load": {
+    "category": "action",
+    "icon": "⬇",
+    "label": "Load",
+    "help": "Loads content into a page, opens a new tab, or replaces the current browser window.",
+    "container": false,
+    "validParents": ["any"],
+    "attrs": [
+      { "k": "url",       "req": false, "ph": "",      "desc": "URL source for loading external content." },
+      { "k": "attach-to", "req": false, "ph": "_self", "desc": "Where content loads: '_self', '_blank', or '#element-id'.", "opts": ["_self", "_blank"] },
+      { "k": "await",     "req": false, "ph": "",      "desc": "Event name to wait for before the load completes." },
+      { "k": "event",     "req": false, "ph": "",      "desc": "DOM event that triggers this action. Omit to run on parent activation." },
+      { "k": "if",        "req": false, "ph": "",      "desc": "XPath boolean — action only runs when true." },
+      { "k": "while",     "req": false, "ph": "",      "desc": "XPath boolean — action repeats while true." },
+      { "k": "delay",     "req": false, "ph": "",      "desc": "Delay in milliseconds before execution." },
+      { "k": "target",    "req": false, "ph": "",      "desc": "ID of the element to attach the listener to." },
+      { "k": "propagate", "req": false, "ph": "",      "desc": "\"stop\" to prevent event bubbling.", "opts": ["", "stop"] },
+      { "k": "phase",     "req": false, "ph": "",      "desc": "Event phase.", "opts": ["", "default", "capture"] }
+    ]
+  },
+
+  "fx-message": {
+    "category": "action",
+    "icon": "💬",
+    "label": "Message",
+    "help": "Displays a message to the user.",
+    "container": false,
+    "validParents": ["any"],
+    "attrs": [
+      { "k": "value",     "req": true,  "ph": "",          "desc": "XPath expression resolving to the message content." },
+      { "k": "level",     "req": false, "ph": "ephemeral", "desc": "Message display mode.", "opts": ["ephemeral", "modal", "sticky"] },
+      { "k": "event",     "req": false, "ph": "",          "desc": "DOM event that triggers this action. Omit to run on parent activation." },
+      { "k": "if",        "req": false, "ph": "",          "desc": "XPath boolean — action only runs when true." },
+      { "k": "while",     "req": false, "ph": "",          "desc": "XPath boolean — action repeats while true." },
+      { "k": "delay",     "req": false, "ph": "",          "desc": "Delay in milliseconds before execution." },
+      { "k": "target",    "req": false, "ph": "",          "desc": "ID of the element to attach the listener to." },
+      { "k": "propagate", "req": false, "ph": "",          "desc": "\"stop\" to prevent event bubbling.", "opts": ["", "stop"] },
+      { "k": "phase",     "req": false, "ph": "",          "desc": "Event phase.", "opts": ["", "default", "capture"] }
+    ]
+  },
+
+  "fx-reset": {
+    "category": "action",
+    "icon": "↺",
+    "label": "Reset",
+    "help": "Resets an instance back to its initial state.",
+    "container": false,
+    "validParents": ["any"],
+    "attrs": [
+      { "k": "instance",  "req": true,  "ph": "", "desc": "ID of the fx-instance to reset.", "idref": "fx-instance" },
+      { "k": "event",     "req": false, "ph": "", "desc": "DOM event that triggers this action. Omit to run on parent activation." },
+      { "k": "if",        "req": false, "ph": "", "desc": "XPath boolean — action only runs when true." },
+      { "k": "while",     "req": false, "ph": "", "desc": "XPath boolean — action repeats while true." },
+      { "k": "delay",     "req": false, "ph": "", "desc": "Delay in milliseconds before execution." },
+      { "k": "target",    "req": false, "ph": "", "desc": "ID of the element to attach the listener to." },
+      { "k": "propagate", "req": false, "ph": "", "desc": "\"stop\" to prevent event bubbling.", "opts": ["", "stop"] },
+      { "k": "phase",     "req": false, "ph": "", "desc": "Event phase.", "opts": ["", "default", "capture"] }
+    ]
+  },
+
+  "fx-setattribute": {
+    "category": "action",
+    "icon": "⚙",
+    "label": "Set Attribute",
+    "help": "Creates and sets a DOM attribute on an element.",
+    "container": false,
+    "validParents": ["any"],
+    "attrs": [
+      { "k": "ref",       "req": true,  "ph": "", "desc": "XPath or ID of the target element." },
+      { "k": "name",      "req": true,  "ph": "", "desc": "Attribute name to set." },
+      { "k": "value",     "req": false, "ph": "", "desc": "XPath expression for the attribute value." },
+      { "k": "event",     "req": false, "ph": "", "desc": "DOM event that triggers this action. Omit to run on parent activation." },
+      { "k": "if",        "req": false, "ph": "", "desc": "XPath boolean — action only runs when true." },
+      { "k": "while",     "req": false, "ph": "", "desc": "XPath boolean — action repeats while true." },
+      { "k": "delay",     "req": false, "ph": "", "desc": "Delay in milliseconds before execution." },
+      { "k": "target",    "req": false, "ph": "", "desc": "ID of the element to attach the listener to." },
+      { "k": "propagate", "req": false, "ph": "", "desc": "\"stop\" to prevent event bubbling.", "opts": ["", "stop"] },
+      { "k": "phase",     "req": false, "ph": "", "desc": "Event phase.", "opts": ["", "default", "capture"] }
+    ]
+  },
+
+  "fx-refresh": {
+    "category": "action",
+    "icon": "⟳",
+    "label": "Refresh",
+    "help": "Triggers immediate refresh of controls or the entire model.",
+    "container": false,
+    "validParents": ["any"],
+    "attrs": [
+      { "k": "control",   "req": false, "ph": "", "desc": "ID of a specific fx-control to refresh (default: full refresh).", "idref": "fx-control" },
+      { "k": "force",     "req": false, "ph": "", "desc": "When present, enforces a complete refresh regardless of change tracking." },
+      { "k": "self",      "req": false, "ph": "", "desc": "When present, searches upward for the nearest fx-control to refresh." },
+      { "k": "event",     "req": false, "ph": "", "desc": "DOM event that triggers this action. Omit to run on parent activation." },
+      { "k": "if",        "req": false, "ph": "", "desc": "XPath boolean — action only runs when true." },
+      { "k": "while",     "req": false, "ph": "", "desc": "XPath boolean — action repeats while true." },
+      { "k": "delay",     "req": false, "ph": "", "desc": "Delay in milliseconds before execution." },
+      { "k": "target",    "req": false, "ph": "", "desc": "ID of the element to attach the listener to." },
+      { "k": "propagate", "req": false, "ph": "", "desc": "\"stop\" to prevent event bubbling.", "opts": ["", "stop"] },
+      { "k": "phase",     "req": false, "ph": "", "desc": "Event phase.", "opts": ["", "default", "capture"] }
+    ]
+  },
+
+  "fx-replace": {
+    "category": "action",
+    "icon": "⇌",
+    "label": "Replace",
+    "help": "Replaces a node with another.",
+    "container": false,
+    "validParents": ["any"],
+    "attrs": [
+      { "k": "ref",       "req": true,  "ph": "", "desc": "XPath of the node to replace." },
+      { "k": "with",      "req": true,  "ph": "", "desc": "XPath expression pointing to the replacement node." },
+      { "k": "event",     "req": false, "ph": "", "desc": "DOM event that triggers this action. Omit to run on parent activation." },
+      { "k": "if",        "req": false, "ph": "", "desc": "XPath boolean — action only runs when true." },
+      { "k": "while",     "req": false, "ph": "", "desc": "XPath boolean — action repeats while true." },
+      { "k": "delay",     "req": false, "ph": "", "desc": "Delay in milliseconds before execution." },
+      { "k": "target",    "req": false, "ph": "", "desc": "ID of the element to attach the listener to." },
+      { "k": "propagate", "req": false, "ph": "", "desc": "\"stop\" to prevent event bubbling.", "opts": ["", "stop"] },
+      { "k": "phase",     "req": false, "ph": "", "desc": "Event phase.", "opts": ["", "default", "capture"] }
+    ]
+  },
+
+  "fx-call": {
+    "category": "action",
+    "icon": "⤴",
+    "label": "Call",
+    "help": "Calls an action block or a custom function defined with fx-function.",
+    "container": false,
+    "validParents": ["any"],
+    "attrs": [
+      { "k": "action",    "req": false, "ph": "",              "desc": "Identifier of an action block to invoke.", "idref": "fx-action" },
+      { "k": "function",  "req": false, "ph": "local:my-func", "desc": "Custom function name with required arguments." },
+      { "k": "event",     "req": false, "ph": "",              "desc": "DOM event that triggers this action. Omit to run on parent activation." },
+      { "k": "if",        "req": false, "ph": "",              "desc": "XPath boolean — action only runs when true." },
+      { "k": "while",     "req": false, "ph": "",              "desc": "XPath boolean — action repeats while true." },
+      { "k": "delay",     "req": false, "ph": "",              "desc": "Delay in milliseconds before execution." },
+      { "k": "target",    "req": false, "ph": "",              "desc": "ID of the element to attach the listener to." },
+      { "k": "propagate", "req": false, "ph": "",              "desc": "\"stop\" to prevent event bubbling.", "opts": ["", "stop"] },
+      { "k": "phase",     "req": false, "ph": "",              "desc": "Event phase.", "opts": ["", "default", "capture"] }
+    ]
+  },
+
+  "fx-confirm": {
+    "category": "action",
+    "icon": "?",
+    "label": "Confirm",
+    "help": "Displays a confirmation dialog. Subsequent sibling actions only execute if the user confirms.",
+    "container": false,
+    "validParents": ["any"],
+    "attrs": [
+      { "k": "message",   "req": true,  "ph": "", "desc": "Text displayed in the confirmation dialog." },
+      { "k": "target",    "req": false, "ph": "", "desc": "ID of the element this action is attached to.", "idref": "any" },
+      { "k": "event",     "req": false, "ph": "", "desc": "DOM event that triggers this action. Omit to run on parent activation." },
+      { "k": "if",        "req": false, "ph": "", "desc": "XPath boolean — action only runs when true." },
+      { "k": "while",     "req": false, "ph": "", "desc": "XPath boolean — action repeats while true." },
+      { "k": "delay",     "req": false, "ph": "", "desc": "Delay in milliseconds before execution." },
+      { "k": "propagate", "req": false, "ph": "", "desc": "\"stop\" to prevent event bubbling.", "opts": ["", "stop"] },
+      { "k": "phase",     "req": false, "ph": "", "desc": "Event phase.", "opts": ["", "default", "capture"] }
+    ]
+  },
+
+  "fx-copy": {
+    "category": "action",
+    "icon": "⎘",
+    "label": "Copy",
+    "help": "Copies text value to the clipboard.",
+    "container": false,
+    "validParents": ["any"],
+    "attrs": [
+      { "k": "ref",       "req": true,  "ph": "", "desc": "XPath of the node whose value to copy to clipboard." },
+      { "k": "event",     "req": false, "ph": "", "desc": "DOM event that triggers this action. Omit to run on parent activation." },
+      { "k": "if",        "req": false, "ph": "", "desc": "XPath boolean — action only runs when true." },
+      { "k": "while",     "req": false, "ph": "", "desc": "XPath boolean — action repeats while true." },
+      { "k": "delay",     "req": false, "ph": "", "desc": "Delay in milliseconds before execution." },
+      { "k": "target",    "req": false, "ph": "", "desc": "ID of the element to attach the listener to." },
+      { "k": "propagate", "req": false, "ph": "", "desc": "\"stop\" to prevent event bubbling.", "opts": ["", "stop"] },
+      { "k": "phase",     "req": false, "ph": "", "desc": "Event phase.", "opts": ["", "default", "capture"] }
+    ]
+  },
+
+  "fx-update": {
+    "category": "action",
+    "icon": "↑",
+    "label": "Update",
+    "help": "Triggers a rebuild/recalculate/revalidate cycle.",
+    "container": false,
+    "validParents": ["any"],
+    "attrs": [
+      { "k": "event",     "req": false, "ph": "", "desc": "DOM event that triggers this action. Omit to run on parent activation." },
+      { "k": "if",        "req": false, "ph": "", "desc": "XPath boolean — action only runs when true." },
+      { "k": "while",     "req": false, "ph": "", "desc": "XPath boolean — action repeats while true." },
+      { "k": "delay",     "req": false, "ph": "", "desc": "Delay in milliseconds before execution." },
+      { "k": "target",    "req": false, "ph": "", "desc": "ID of the element to attach the listener to." },
+      { "k": "propagate", "req": false, "ph": "", "desc": "\"stop\" to prevent event bubbling.", "opts": ["", "stop"] },
+      { "k": "phase",     "req": false, "ph": "", "desc": "Event phase.", "opts": ["", "default", "capture"] }
+    ]
+  },
+
+  "fx-toggleboolean": {
+    "category": "action",
+    "icon": "⊙",
+    "label": "Toggle Boolean",
+    "help": "Toggles a boolean value (true/false) in the data structure.",
+    "container": false,
+    "validParents": ["any"],
+    "attrs": [
+      { "k": "ref",       "req": true,  "ph": "", "desc": "XPath reference pointing to the boolean value to toggle." },
+      { "k": "event",     "req": false, "ph": "", "desc": "DOM event that triggers this action. Omit to run on parent activation." },
+      { "k": "if",        "req": false, "ph": "", "desc": "XPath boolean — action only runs when true." },
+      { "k": "while",     "req": false, "ph": "", "desc": "XPath boolean — action repeats while true." },
+      { "k": "delay",     "req": false, "ph": "", "desc": "Delay in milliseconds before execution." },
+      { "k": "target",    "req": false, "ph": "", "desc": "ID of the element to attach the listener to." },
+      { "k": "propagate", "req": false, "ph": "", "desc": "\"stop\" to prevent event bubbling.", "opts": ["", "stop"] },
+      { "k": "phase",     "req": false, "ph": "", "desc": "Event phase.", "opts": ["", "default", "capture"] }
+    ]
+  },
+
+  "fx-return": {
+    "category": "action",
+    "icon": "↩",
+    "label": "Return",
+    "help": "Returns a value from within a bound Fore element (e.g. an imported widget).",
+    "container": false,
+    "validParents": ["any"],
+    "attrs": [
+      { "k": "ref",       "req": true,  "ph": "", "desc": "XPath reference pointing to the bound node to return." },
+      { "k": "with",      "req": false, "ph": "", "desc": "XPath expression identifying a replacement node." },
+      { "k": "event",     "req": false, "ph": "", "desc": "DOM event that triggers this action. Omit to run on parent activation." },
+      { "k": "if",        "req": false, "ph": "", "desc": "XPath boolean — action only runs when true." },
+      { "k": "while",     "req": false, "ph": "", "desc": "XPath boolean — action repeats while true." },
+      { "k": "delay",     "req": false, "ph": "", "desc": "Delay in milliseconds before execution." },
+      { "k": "target",    "req": false, "ph": "", "desc": "ID of the element to attach the listener to." },
+      { "k": "propagate", "req": false, "ph": "", "desc": "\"stop\" to prevent event bubbling.", "opts": ["", "stop"] },
+      { "k": "phase",     "req": false, "ph": "", "desc": "Event phase.", "opts": ["", "default", "capture"] }
+    ]
+  },
+
+  "fx-unmodified": {
+    "category": "action",
+    "icon": "✓",
+    "label": "Unmodified",
+    "help": "Resets the modified state of the fx-fore element. Typically triggered after a successful submission.",
+    "container": false,
+    "validParents": ["any"],
+    "attrs": [
+      { "k": "event",     "req": false, "ph": "", "desc": "DOM event that triggers this action. Omit to run on parent activation." },
+      { "k": "if",        "req": false, "ph": "", "desc": "XPath boolean — action only runs when true." },
+      { "k": "while",     "req": false, "ph": "", "desc": "XPath boolean — action repeats while true." },
+      { "k": "delay",     "req": false, "ph": "", "desc": "Delay in milliseconds before execution." },
+      { "k": "target",    "req": false, "ph": "", "desc": "ID of the element to attach the listener to." },
+      { "k": "propagate", "req": false, "ph": "", "desc": "\"stop\" to prevent event bubbling.", "opts": ["", "stop"] },
+      { "k": "phase",     "req": false, "ph": "", "desc": "Event phase.", "opts": ["", "default", "capture"] }
+    ]
+  },
+
+  "fx-action": {
+    "category": "action",
+    "icon": "⊞",
+    "label": "Action",
+    "help": "A named action block — a reusable group of actions that can be invoked by fx-call.",
+    "container": true,
+    "validParents": ["any"],
+    "validChildren": ["action"],
+    "attrs": [
+      { "k": "id",        "req": false, "ph": "", "desc": "Identifier so this block can be called via fx-call action=\"id\"." },
+      { "k": "event",     "req": false, "ph": "", "desc": "DOM event that triggers this action. Omit to run on parent activation." },
+      { "k": "if",        "req": false, "ph": "", "desc": "XPath boolean — action only runs when true." },
+      { "k": "while",     "req": false, "ph": "", "desc": "XPath boolean — action repeats while true." },
+      { "k": "delay",     "req": false, "ph": "", "desc": "Delay in milliseconds before execution." },
+      { "k": "target",    "req": false, "ph": "", "desc": "ID of the element to attach the listener to." },
+      { "k": "propagate", "req": false, "ph": "", "desc": "\"stop\" to prevent event bubbling.", "opts": ["", "stop"] },
+      { "k": "phase",     "req": false, "ph": "", "desc": "Event phase.", "opts": ["", "default", "capture"] }
+    ]
+  }
+}
