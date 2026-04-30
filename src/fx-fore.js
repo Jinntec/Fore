@@ -222,8 +222,6 @@ export class FxFore extends HTMLElement {
               right:0;
               left:0;
               height:40px;
-             border-radius: 5px;
-
             }
             .popup .close {
                 position: absolute;
@@ -254,7 +252,7 @@ export class FxFore extends HTMLElement {
             #authoringErrors .popup {
               width: 70%;
               max-height: 80vh;
-              overflow-y: auto;
+              overflow:hidden;
             }
             #authoringErrors h2 {
               background: #c62828;
@@ -1449,7 +1447,7 @@ export class FxFore extends HTMLElement {
 
     content.innerHTML = `
       <table>
-        <thead><tr><th>Element</th><th>Problem</th></tr></thead>
+        <thead><tr><th>Element</th><th>Problem</th></tr></thead>    
         <tbody>${rows}</tbody>
       </table>`;
 
