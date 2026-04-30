@@ -15,6 +15,7 @@ export default [
         file: 'dist/fore.js',
         format: 'es',
         sourcemap: false,
+        inlineDynamicImports: true,
       },
     ],
     treeshake: true,
@@ -41,6 +42,7 @@ export default [
         file: 'dist/fore-dev.js',
         format: 'es',
         sourcemap: false,
+        inlineDynamicImports: true,
       },
     ],
     plugins: [
