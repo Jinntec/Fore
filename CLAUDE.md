@@ -22,6 +22,11 @@ npm run lint:types           # TypeScript type checking via JSDoc
 npm run docs                 # Generate Web Component Analyzer docs
 ```
 
+## Testing
+
+* Unit tests are using karma and are under '/tests' directory.
+* e2e tests are using cypress and are under 'cypress/e2e' directory and usually load one of the demo files from 'demo' directory.
+
 **Running a single test file**: Karma doesn't support single-file targeting directly; edit `karma.conf.js` to narrow the `files` glob, or use Cypress for E2E: `npm run start-cypress` then open the Cypress UI.
 
 ## Architecture
