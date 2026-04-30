@@ -59,7 +59,9 @@ function _checkXPathInstanceRefs(fore, errors) {
       let m;
       while ((m = INSTANCE_RE.exec(val)) !== null) {
         const id = m[1];
-        if (!fore.querySelector(`fx-instance#${id}`)) {
+        const localInstance = fore.querySelector(`fx-instance#${id}`);
+        const sharedInstance = !localInstance && fore.ownerDocument.querySelector(`fx-instance[shared]#${id}`);
+        if (!localInstance && !sharedInstance) {
           errors.push({
             element: el,
             message: `[${attr}="${val}"]: instance('${id}') — no <fx-instance id="${id}"> found`,
@@ -129,7 +131,8 @@ function _checkResetInstance(fore, errors) {
     const id = el.getAttribute('instance');
     if (_isDynamic(id)) return;
     const target = model ? model.querySelector(`fx-instance#${id}`) : fore.querySelector(`fx-instance#${id}`);
-    if (!target) {
+    const sharedTarget = !target && fore.ownerDocument.querySelector(`fx-instance[shared]#${id}`);
+    if (!target && !sharedTarget) {
       errors.push({ element: el, message: `<fx-reset instance="${id}">: no <fx-instance id="${id}"> found` });
     }
   });

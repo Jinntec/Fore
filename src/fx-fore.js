@@ -1397,12 +1397,6 @@ export class FxFore extends HTMLElement {
 
     // console.log(`### <<<<< ${this.id} ready >>>>>`);
 
-    // console.log('### modelItems: ', this.getModel().modelItems);
-    try {
-      await this._runAuthoringChecks();
-    } catch (e) {
-      console.warn('[fore] authoring check failed:', e.message);
-    }
     Fore.dispatch(this, 'ready', {});
     // console.log('dataChanged', FxModel.dataChanged);
     this.markAsClean();
@@ -1416,6 +1410,14 @@ export class FxFore extends HTMLElement {
       e.stopPropagation();
       e.dataTransfer.dropEffect = 'move';
     });
+
+    // Run authoring checks after ready — they're diagnostic only and must not delay
+    // the ready event or drag-listener registration (both of which tests depend on).
+    try {
+      await this._runAuthoringChecks();
+    } catch (e) {
+      console.warn('[fore] authoring check failed:', e.message);
+    }
   }
 
   async _runAuthoringChecks() {
