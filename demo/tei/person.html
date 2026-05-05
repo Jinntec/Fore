@@ -1,0 +1,217 @@
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title data-template="config:app-title"></title>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <link href="../../favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+    <link href="../../resources/fore.css" rel="stylesheet"/>
+    <script src="../demo.js" type="module"></script>
+    <script src="../../tools/fx-lens.js" type="module"></script>
+
+    <style>
+        [invalid] fx-alert {
+            display: block;
+        }
+
+        fx-output#validator[valid] {
+            display: none;
+        }
+        label{
+            display: block;
+        }
+
+        fx-control {
+            min-height: 2rem;
+            margin:0.5rem 0;
+        }
+        input,select{
+            width: 15rem;
+        }
+        [repeat-index]{
+            background-color: lightblue;
+            padding:0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+<main>
+    <fx-fore id="person">
+
+        <fx-model>
+
+            <fx-instance id="default" src="person-tmpl.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+                <data></data>
+            </fx-instance>
+
+            <fx-bind
+                    ref="instance('default')/persName/name[@type = ('nomen', 'praenomen', 'god', 'cognomen', 'supernomen')]"
+                    required="let $c := . return empty(../name[@type = ('nomen', 'praenomen', 'god', 'cognomen', 'supernomen')][$c/@type != @type][string-length(.) > 0])"
+            >
+            </fx-bind>
+
+            <fx-instance id="tribus">
+                <data>
+                    <tribus>Aelia</tribus>
+                    <tribus>Aemilia</tribus>
+                    <tribus>Arnensis</tribus>
+                    <tribus>Camilia</tribus>
+                    <tribus>Claudia</tribus>
+                    <tribus>Clustumina</tribus>
+                    <tribus>Collina</tribus>
+                    <tribus>Cornelia</tribus>
+                    <tribus>Esquilina</tribus>
+                    <tribus>Fabia</tribus>
+                    <tribus>Falerna</tribus>
+                    <tribus>Galeria</tribus>
+                    <tribus>Horatia</tribus>
+                    <tribus>Lemonia</tribus>
+                    <tribus>Maecia</tribus>
+                    <tribus>Menenia</tribus>
+                    <tribus>Oufentina</tribus>
+                    <tribus>Palatina</tribus>
+                    <tribus>Papiria</tribus>
+                    <tribus>Pollia</tribus>
+                    <tribus>Pomptina</tribus>
+                    <tribus>Publilia</tribus>
+                    <tribus>Pupinia</tribus>
+                    <tribus>Quirina</tribus>
+                    <tribus>Romilia</tribus>
+                    <tribus>Sabatina</tribus>
+                    <tribus>Scaptia</tribus>
+                    <tribus>Sergia</tribus>
+                    <tribus>Stellatina</tribus>
+                    <tribus>Suburana</tribus>
+                    <tribus>Sulpicia</tribus>
+                    <tribus>Teretina</tribus>
+                    <tribus>Tromentina</tribus>
+                    <tribus>Ulpia</tribus>
+                    <tribus>Velina</tribus>
+                    <tribus>Voltinia</tribus>
+                    <tribus>Voturia</tribus>
+                </data>
+            </fx-instance>
+
+            <fx-instance id="status">
+                <data>
+                    <item key="Herrscher / Herrscherhaus"></item>
+                    <item key="Senatorenstand"></item>
+                    <item key="Ritterstand"></item>
+                    <item key="Dekurionenstand"></item>
+                    <item key="höhere Gemeindeverwaltung"></item>
+                    <item key="subalterne Beamte"></item>
+                    <item key="Domänen- / niedere Gemeindeverwaltung"></item>
+                    <item key="Augustalen"></item>
+                    <item key="Freigelassene"></item>
+                    <item key="Sklaven"></item>
+                    <item key="Sonstige"></item>
+                </data>
+            </fx-instance>
+
+            <fx-submission
+                    id="s-save"
+                    method="post"
+                    replace="instance"
+                    url="#echo">
+                <fx-action event="submit-done">
+                    <fx-message>Person was stored</fx-message>
+                </fx-action>
+                <fx-message event="submit-error">couldn't be saved</fx-message>
+            </fx-submission>
+
+        </fx-model>
+
+        <fx-output ref="instance('default')/@xml:id"></fx-output>
+        <fieldset>
+            <legend>Person:</legend>
+            <fx-control ref="persName/name[@type='god']">
+                <label>Deity</label>
+                <fx-action event="value-changed">
+                    <fx-unmodified></fx-unmodified>
+                    <fx-update></fx-update>
+                </fx-action>
+            </fx-control>
+            <fx-control ref="persName/name[@type='praenomen']">
+                <label>Praenomen</label>
+                <input autofocus="autofocus" class="widget" tabindex="1" type="text"/>
+            </fx-control>
+            <fx-control ref="persName/name[@type='nomen']">
+                <label>Nomen Gentile</label>
+            </fx-control>
+            <fx-control ref="persName/name[@type='cognomen']">
+                <label>Cognomen</label>
+            </fx-control>
+            <fx-control ref="persName/name[@type='supernomen']">
+                <label>Supernomen</label>
+            </fx-control>
+            <fx-control ref="persName/name[@type='tribus']">
+                <label>Tribus</label>
+                <select class="widget" ref="instance('tribus')/tribus" selection="open">
+                    <template>
+                        <option value="{.}">{.}</option>
+                    </template>
+                </select>
+            </fx-control>
+            <fx-control ref="persName/name[@type='origo']">
+                <label>Origo</label>
+            </fx-control>
+            <fx-control ref="@sex">
+                <label data-i18n="person.sex">Gender</label>
+                <select class="widget">
+                    <option></option>
+                    <option selected="selected" value="M">male</option>
+                    <option value="F">female</option>
+                </select>
+            </fx-control>
+            <fx-control ref="state[@type='status']">
+                <label>Social state</label>
+                <select class="widget" ref="instance('status')/item" selection="open">
+                    <template>
+                        <option value="{@key}">{@key}</option>
+                    </template>
+                </select>
+            </fx-control>
+            <fx-control ref="occupation">
+                <label>Occupation</label>
+            </fx-control>
+
+            <fieldset>
+                <legend>
+                    <label>Referenzen</label>
+                    <fx-trigger class="add" title="Referenz hinzufügen">
+                        <button>+</button>
+                        <fx-insert context="." ref="idno"></fx-insert>
+                    </fx-trigger>
+                </legend>
+                <fx-repeat id="r-idno" ref="./idno">
+                    <template>
+                        <fx-control ref="@type">
+                            <label>Work</label>
+                            <select class="widget" selection="open">
+                                <option value="pir">PIR</option>
+                                <option value="plre">PLRE</option>
+                                <option value="wikidata">Wikidata</option>
+                            </select>
+                        </fx-control>
+                        <fx-control ref=".">
+                            <label>IdNo</label>
+                        </fx-control>
+
+                        <!-- do not allow to remove first item -->
+                        <fx-trigger ref=".[count(preceding-sibling::idno) > 0]" class="delete" title="Referenz entfernen">
+                            <button>-</button>
+                            <fx-delete ref="."></fx-delete>
+                        </fx-trigger>
+                    </template>
+                </fx-repeat>
+            </fieldset>
+        </fieldset>
+        <fx-trigger>
+            <button>save</button>
+            <fx-send submission="s-save"></fx-send>
+        </fx-trigger>
+    </fx-fore>
+</main>
+
+</body>
+</html>
