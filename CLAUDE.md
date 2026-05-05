@@ -4,7 +4,25 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Fore** (`@jinntec/fore`) is a declarative UI framework built on HTML5 Web Components, implementing XForms 2.0 concepts for model-driven form and app development. Behavior is defined entirely by Web Components — no JavaScript required for basic forms.
+**Fore** (`@jinntec/fore`) is a declarative UI framework built on HTML5 Web Components, implementing XForms 2.0 concepts for model-driven form and app development. Behavior is defined entirely by Web Components — no JavaScript required. XPath 3.1 is used as binding language across data models. Extensible with custom functions and controls.
+
+Fore is optimized for:
+
+* complex forms
+* data-driven applications
+* editing of XML and JSON structures
+* long-term preservation
+* fast development cycle
+
+## Tech Stack
+
+* npm
+* ES6 JavaScript
+* fontoXPath as XPath 3.1 implementation 
+* Web Components
+* cypress for e2e tests
+* karma for unit tests
+* vite as test server
 
 ## References
     - [Fore documentation](https://jinntec.github.io/fore-docs/tags/version-1.0.0/) — official element/attribute reference
@@ -57,7 +75,7 @@ Every data change triggers: **Rebuild → Recalculate → Revalidate → Refresh
 
 ### Data Model
 - **Primary**: XML with XPath 3.1 / XQuery 3.1 (via `fontoxpath`)
-- **Alternative**: JSON with JSONPath-like access (`src/json/`)
+- **Alternative**: JSON with JSON Lenses (`src/json/`)
 - Both can coexist in one application
 
 ### Dependency Tracking
