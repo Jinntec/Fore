@@ -182,19 +182,23 @@ header, footer{
     padding:2rem 0;
 }
 
-header .hero{
+header .hero {
     display: flex;
-    flex-wrap:wrap;
+    /* flex-wrap: wrap; */
     justify-content: space-evenly;
     align-items: center;
-    height: 18rem;
+    /* height: 18rem; */
     background: white;
     border-radius: 0;
-    padding:1rem 0;
+    padding: 1rem 0;
     border-bottom: thin solid rgba(0,0,0,0.2);
     position: relative;
-    margin-top:4rem;
-
+    margin-top: 4rem;
+    flex-direction: column;
+}
+header p{
+    max-width: 60rem;
+    padding:0 1.5rem;
 }
 
 header{
@@ -363,7 +367,7 @@ section {
     font-size: 1.2rem;
 }
 .wrapper {
-    max-width: 78.75rem;
+    max-width: 64rem;
     min-height: auto;
     z-index: 5;
     /*background: rgba(100, 100, 100, 0.1);*/
