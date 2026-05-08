@@ -29,7 +29,7 @@
     }
 
     [relevant] {
-        display: block;
+        display: inline-block;
     }
 
     fx-control[required] label:after {
