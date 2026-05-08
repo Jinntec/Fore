@@ -222,8 +222,6 @@ export class FxFore extends HTMLElement {
               right:0;
               left:0;
               height:40px;
-             border-radius: 5px;
-
             }
             .popup .close {
                 position: absolute;
@@ -248,6 +246,53 @@ export class FxFore extends HTMLElement {
             .warning{
                 background:orange;
             }
+            #authoringErrors {
+              z-index: 20;
+            }
+            #authoringErrors .popup {
+              width: 70%;
+              max-height: 80vh;
+              overflow:hidden;
+            }
+            #authoringErrors h2 {
+              background: #c62828;
+              color: white;
+              padding-left: 12px;
+              line-height: 40px;
+              font-size: 1rem;
+            }
+            #authoringErrors table {
+              width: 100%;
+              border-collapse: collapse;
+              font-size: 0.85rem;
+            }
+            #authoringErrors th {
+              text-align: left;
+              border-bottom: 2px solid #c62828;
+              padding: 4px 8px;
+            }
+            #authoringErrors td {
+              padding: 4px 8px;
+              border-bottom: 1px solid #ddd;
+              vertical-align: top;
+            }
+            #authoringErrors td:first-child {
+              color: #555;
+              font-family: monospace;
+              white-space: nowrap;
+            }
+            #authoringErrors .ae-actions {
+              text-align: center;
+              margin-top: 12px;
+            }
+            #authoringErrors .ae-actions button {
+              padding: 6px 20px;
+              background: #c62828;
+              color: white;
+              border: none;
+              border-radius: 3px;
+              cursor: pointer;
+            }
         `;
 
     const html = `
@@ -263,6 +308,14 @@ export class FxFore extends HTMLElement {
                    <h2></h2>
                     <a class="close" href="#"  onclick="event.target.parentNode.parentNode.classList.remove('show')" autofocus>&times;</a>
                     <div id="messageContent"></div>
+                </div>
+           </div>
+           <div id="authoringErrors" class="overlay">
+                <div class="popup">
+                    <h2>Authoring Errors</h2>
+                    <a class="close" href="#" onclick="event.preventDefault();event.target.closest('.overlay').classList.remove('show')">&times;</a>
+                    <div id="authoringErrorsContent" style="margin-top:48px;"></div>
+                    <div class="ae-actions"><button onclick="this.closest('.overlay').classList.remove('show')">Dismiss</button></div>
                 </div>
            </div>
            <slot name="event"></slot>
@@ -1344,7 +1397,6 @@ export class FxFore extends HTMLElement {
 
     // console.log(`### <<<<< ${this.id} ready >>>>>`);
 
-    // console.log('### modelItems: ', this.getModel().modelItems);
     Fore.dispatch(this, 'ready', {});
     // console.log('dataChanged', FxModel.dataChanged);
     this.markAsClean();
@@ -1358,6 +1410,50 @@ export class FxFore extends HTMLElement {
       e.stopPropagation();
       e.dataTransfer.dropEffect = 'move';
     });
+
+    // Run authoring checks after ready — they're diagnostic only and must not delay
+    // the ready event or drag-listener registration (both of which tests depend on).
+    try {
+      await this._runAuthoringChecks();
+    } catch (e) {
+      console.warn('[fore] authoring check failed:', e.message);
+    }
+  }
+
+  async _runAuthoringChecks() {
+    if (this.hasAttribute('no-check')) return;
+    if (new URLSearchParams(window.location.search).has('no-check')) return;
+
+    const { checkAuthoring } = await import('./authoring-check.js');
+    const errors = checkAuthoring(this);
+    if (errors.length) {
+      this._showAuthoringErrors(errors);
+    }
+  }
+
+  _showAuthoringErrors(errors) {
+    const overlay = this.shadowRoot.getElementById('authoringErrors');
+    const content = this.shadowRoot.getElementById('authoringErrorsContent');
+    if (!overlay || !content) return;
+
+    const rows = errors
+        .map(({ element, message }) => {
+          const path = element
+              ? element.tagName.toLowerCase() + (element.id ? `#${element.id}` : '')
+              : '?';
+          const safeMsg = message.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+          const safePath = path.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+          return `<tr><td>${safePath}</td><td>${safeMsg}</td></tr>`;
+        })
+        .join('');
+
+    content.innerHTML = `
+      <table>
+        <thead><tr><th>Element</th><th>Problem</th></tr></thead>    
+        <tbody>${rows}</tbody>
+      </table>`;
+
+    overlay.classList.add('show');
   }
 
   /**
@@ -1465,12 +1561,158 @@ export class FxFore extends HTMLElement {
   }
   /**
    * @param  {HTMLElement}  root The root of the data initialization. fx-repeat overrides this when it makes new repeat items
-   *
    */
   initData(root = this) {
-    // const created = new Promise(resolve => {
-    // console.log('INIT');
-    // const boundControls = Array.from(root.querySelectorAll('[ref]:not(fx-model *),fx-repeatitem'));
+    /**
+     * @param {*} value
+     * @returns {boolean}
+     */
+    const isObjectLike = value =>
+        value !== null && (typeof value === 'object' || typeof value === 'function');
+
+    /**
+     * @param {*} nodeset
+     * @returns {boolean}
+     */
+    const hasResolvedNodeset = nodeset => {
+      if (nodeset == null) return false;
+
+      // Atomic values like strings/numbers/booleans are valid resolved XPath results
+      if (!isObjectLike(nodeset)) return true;
+
+      if (Array.isArray(nodeset)) return nodeset.length > 0;
+
+      if (typeof nodeset.length === 'number' && !('nodeType' in nodeset)) {
+        return nodeset.length > 0;
+      }
+
+      if (typeof nodeset[Symbol.iterator] === 'function' && !('nodeType' in nodeset)) {
+        for (const item of nodeset) {
+          return item !== undefined;
+        }
+        return false;
+      }
+
+      return !!nodeset.nodeType;
+    };
+
+    /**
+     * Only try create-nodes for path-like refs, not general expressions like sequences.
+     * @param {string} ref
+     * @returns {boolean}
+     */
+    const isCreateNodesCandidate = ref => {
+      const expr = String(ref || '').trim();
+      if (!expr || expr === '.') return false;
+      if (expr.startsWith('"') || expr.startsWith("'")) return false;
+
+      // Ignore only simple literal sequences like ('a', 'b', 'c') or (1, 2, 3).
+      // Keep fx-repeat refs that are real path expressions or more complex XPath.
+      const simpleSequencePattern =
+          /^\(\s*(?:(?:'[^']*'|"[^"]*"|\d+(?:\.\d+)?|\.)(?:\s*,\s*(?:'[^']*'|"[^"]*"|\d+(?:\.\d+)?|\.))*)?\s*\)$/;
+      if (simpleSequencePattern.test(expr)) return false;
+
+      return true;
+    };
+
+    /**
+     * Detect whether a ref ends in an attribute step.
+     * @param {string} ref
+     * @returns {boolean}
+     */
+    const isAttributeRef = ref => /(^|\/)\s*@/.test(String(ref || '').trim());
+
+    /**
+     * Normalize a possibly sequence-like nodeset/context to a single DOM node.
+     * @param {*} candidate
+     * @returns {*}
+     */
+    const firstNode = candidate => {
+      if (!candidate) return null;
+      if (!isObjectLike(candidate)) return null;
+      if (candidate.nodeType) return candidate;
+
+      if (Array.isArray(candidate)) {
+        return candidate.find(item => item && isObjectLike(item) && item.nodeType) || null;
+      }
+
+      if (typeof candidate.length === 'number' && typeof candidate.item === 'function') {
+        for (let i = 0; i < candidate.length; i += 1) {
+          const item = candidate.item(i);
+          if (item && isObjectLike(item) && item.nodeType) return item;
+        }
+      }
+
+      return null;
+    };
+
+    /**
+     * Detect XPath results that are sequences of atomic values rather than DOM nodes.
+     * These are valid resolved results for repeats, but they must never trigger create-nodes.
+     * @param {*} candidate
+     * @returns {boolean}
+     */
+    const isAtomicSequence = candidate => {
+      if (!candidate) return false;
+
+      // A single primitive value is also atomic from our perspective
+      if (!isObjectLike(candidate)) return true;
+
+      if (candidate.nodeType) return false;
+
+      if (Array.isArray(candidate)) {
+        return candidate.length > 0 && !candidate.some(item => item && isObjectLike(item) && item.nodeType);
+      }
+
+      if (typeof candidate.length === 'number' && typeof candidate.item === 'function') {
+        return false;
+      }
+
+      if (typeof candidate[Symbol.iterator] === 'function') {
+        for (const item of candidate) {
+          return !(item && isObjectLike(item) && item.nodeType);
+        }
+      }
+
+      return false;
+    };
+
+    /**
+     * Check whether a bound element is resolved after evalInContext.
+     * Attribute refs often expose an empty string as nodeset, so use the model item node in that case.
+     * @param {import('./ForeElementMixin.js').default} bound
+     * @returns {boolean}
+     */
+    const isResolvedBound = bound => {
+      if (hasResolvedNodeset(bound.nodeset)) return true;
+      if (bound.nodeName === 'FX-REPEAT' && isAtomicSequence(bound.nodeset)) return true;
+      if (isAttributeRef(bound.ref)) {
+        const modelItem = typeof bound.getModelItem === 'function' ? bound.getModelItem() : null;
+        return !!modelItem?.node;
+      }
+      return false;
+    };
+
+    /**
+     * Determine the best context node for lazy node creation.
+     * Prefer the bound element's in-scope context, but fall back to a structural parent.
+     * @param {import('./ForeElementMixin.js').default} bound
+     * @param {*} fallback
+     * @returns {*}
+     */
+    const getCreationContext = (bound, fallback) => {
+      const direct =
+          typeof bound.getInScopeContext === 'function' ? firstNode(bound.getInScopeContext()) : null;
+      if (direct) return direct;
+
+      const dotCtx = firstNode(getInScopeContext(bound, '.'));
+      if (dotCtx) return dotCtx;
+
+      const refCtx = firstNode(getInScopeContext(bound, bound.ref));
+      if (refCtx) return refCtx;
+
+      return firstNode(fallback);
+    };
 
     /**
      * @type {import('./ForeElementMixin.js').default[]}
@@ -1479,11 +1721,24 @@ export class FxFore extends HTMLElement {
         root.querySelectorAll(
             'fx-control[ref],fx-upload[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref]',
         ),
-    );
-    if (root.matches && root.matches('fx-repeatitem')) {
+    ).filter(boundEl => {
+      if (boundEl.nodeName !== 'FX-REPEAT') return true;
+
+      const repeatRef = String(boundEl.getAttribute('ref') || '').trim();
+
+      // Any repeat whose ref is a pure parenthesized expression is not a create-nodes candidate.
+      // Example: ('a', 'b', 'c')
+      if (repeatRef.startsWith('(')) return false;
+
+      return isCreateNodesCandidate(repeatRef);
+    });
+
+    if (root.matches && root.matches('fx-repeatitem') && firstNode(root.nodeset)) {
       boundControls.unshift(root);
     }
+
     console.log('_initData', boundControls);
+
     for (let i = 0; i < boundControls.length; i++) {
       const bound = boundControls[i];
 
@@ -1494,11 +1749,16 @@ export class FxFore extends HTMLElement {
         // Repeat items are dumb. They do not respond to evalInContext
         bound.evalInContext();
       }
-      if (bound.nodeset !== null && !(Array.isArray(bound.nodeset) && bound.nodeset.length === 0)) {
-        // console.log('Node exists', bound.nodeset);
+
+      if (bound.nodeName === 'FX-REPEAT' && isAtomicSequence(bound.nodeset)) {
         continue;
       }
-      // console.log('Node does not exists', bound.ref);
+      if (isResolvedBound(bound)) {
+        continue;
+      }
+      if (!isCreateNodesCandidate(bound.ref)) {
+        continue;
+      }
 
       // We need to create that node!
       const previousControl = boundControls[i - 1];
@@ -1506,26 +1766,16 @@ export class FxFore extends HTMLElement {
       // Previous control can either be an ancestor of us, or a previous node, which can be a sibling, or a child of a sibling.
       // First: parent
       if (previousControl && previousControl.contains(bound)) {
-        // Parent is here.
-        // console.log('insert into', bound, previousControl);
-        // console.log('insert into nodeset', bound.nodeset);
         /**
          * @type {ParentNode}
          */
-        const parentNodeset = previousControl.nodeset;
-        // console.log('parentNodeset', parentNodeset);
-
-        // const parentModelItemNode = parentModelItem.node;
+        const parentNodeset =
+            firstNode(previousControl.nodeset) || firstNode(root.getModel().getDefaultContext());
+        const creationContext = getCreationContext(bound, parentNodeset);
         const ref = bound.ref;
-        // const newElement = parentModelItemNode.ownerDocument.createElement(ref);
-        // if (parentNodeset.querySelector(`[ref="${ref}"]`)) {
-        //   console.log(`Node with ref "${ref}" already exists.`);
-        //   continue;
-        // }
 
-        const newNode = this._createNodes(ref, parentNodeset);
-        if (!newNode) {
-          // We could not make the node for some reason. Maybe it's something like `instance('XXX')`?
+        const newNode = this._createNodes(ref, creationContext || parentNodeset);
+        if (!newNode || !parentNodeset) {
           continue;
         }
         if (newNode.nodeType === Node.ATTRIBUTE_NODE) {
@@ -1543,17 +1793,11 @@ export class FxFore extends HTMLElement {
           // Do not try to get a bind for a nodeSET of a repeat. there are multiple.
           bound.getModelItem().bind?.evalInContext();
         }
-
-        // console.log('CREATED child', newElement);
-        // console.log('new control evaluated to ', control.nodeset);
-        // Done!
         continue;
       }
-      // console.log('previousControl', previousControl);
-      // console.log('control', control);
+
       // Is previousControl a sibling or a descendant of a logical sibling? Keep looking backwards until we share parents!
-      let ourParent = XPathUtil.getParentBindingElement(bound);
-      // console.log('ourParent', ourParent);
+      const ourParent = XPathUtil.getParentBindingElement(bound);
       let siblingControl = null;
 
       for (let j = i - 1; j > 0; --j) {
@@ -1566,11 +1810,7 @@ export class FxFore extends HTMLElement {
           break;
         }
       }
-      if (!siblingControl) {
-        // console.log('No sibling found for', bound);
-      }
-      // console.log('sibling', siblingControl);
-      // todo: review: should this not just be inscopeContext?
+
       let parentNodeset;
       if (!ourParent || !ourParent.nodeset) {
         /*
@@ -1579,13 +1819,13 @@ export class FxFore extends HTMLElement {
            */
         parentNodeset = root.getModel().getDefaultContext();
       } else {
-        parentNodeset = ourParent.nodeset;
+        parentNodeset = firstNode(ourParent.nodeset) || root.getModel().getDefaultContext();
       }
       const ref = bound.ref;
+      const creationContext = getCreationContext(bound, parentNodeset);
 
-      const newNode = this._createNodes(ref, parentNodeset);
+      const newNode = this._createNodes(ref, creationContext || parentNodeset);
       if (!newNode) {
-        // We could not make the node for some reason. Maybe it's something like `instance('XXX')`?
         continue;
       }
 
@@ -1599,7 +1839,6 @@ export class FxFore extends HTMLElement {
         );
 
         if (referenceNode) {
-          // console.log('insert after', referenceNode,newNode);
           if (referenceNode.nodeType === Node.DOCUMENT_NODE) {
             referenceNode.firstElementChild.append(newNode);
           } else {
@@ -1610,50 +1849,135 @@ export class FxFore extends HTMLElement {
         }
       }
 
-      /*
-            console.log('control inscope', control.getInScopeContext());
-            console.log('control ref', control.ref);
-            console.log('control new element parent', newElement.parentNode.nodeName);
-      */
-
       bound.evalInContext();
       bound.getModelItem().bind?.evalInContext();
 
-      if (!bound.nodeset) {
-        throw new Error('Creating annode failed');
+      if (!isResolvedBound(bound)) {
+        console.warn('create-nodes: could not resolve bound after node creation, skipping', bound);
+        continue;
       }
-      // console.log('new control evaluated to ', control.nodeset);
-      // console.log('CREATED sibling', newElement);
     }
-    // console.log('DATA', this.getModel().getDefaultContext());
   }
-
   _createNodes(ref, referenceNode) {
-    // console.log('creating', ref)
-    // console.log('ownerDoc', referenceNode.ownerDocument);
-    /*
-        const existingNode = evaluateXPathToFirstNode(ref, referenceNode, this);
-        if(existingNode){
-            console.log(`Node already exists for ref: ${ref}`);
-            return existingNode;
-        }
-    console.log(`creating new node for ref: ${ref}`);
-    */
-    if (/instance\([^\)]*\)/.test(ref)) {
-      // This is an absolute path for some instance. Not supporteed for now
+    if (!ref || !referenceNode) return null;
+
+    const xpath = String(ref).trim();
+    if (!xpath || xpath === '.') return null;
+
+    if (/^instance\([^\)]*\)/.test(xpath)) {
+      // This is an absolute path for some instance. Not supported for create-nodes here.
       return null;
     }
-    let newElement;
-    if (ref.includes('/')) {
-      // multi-step ref expressions
-      const namespaceResolver = createNamespaceResolver(ref, this);
-      newElement = XPathUtil.createNodesFromXPath(ref, referenceNode.ownerDocument, this, namespaceResolver);
-      // console.log('new subtree', newElement);
-      return newElement;
-    } else {
-      const namespaceResolver = createNamespaceResolver(ref, this);
-      return XPathUtil.createNodesFromXPath(ref, referenceNode.ownerDocument, this, namespaceResolver);
+
+    const ownerDoc =
+        referenceNode.nodeType === Node.DOCUMENT_NODE
+            ? referenceNode
+            : referenceNode.ownerDocument;
+
+    const baseElement =
+        referenceNode.nodeType === Node.DOCUMENT_NODE
+            ? referenceNode.documentElement
+            : referenceNode.nodeType === Node.ATTRIBUTE_NODE
+                ? referenceNode.ownerElement
+                : referenceNode;
+
+    if (!ownerDoc) return null;
+
+    const baseNamespace = baseElement?.namespaceURI || null;
+    const namespaceResolver = createNamespaceResolver(xpath, this);
+
+    const parseName = token => {
+      const raw = token.trim();
+
+      if (raw.startsWith('@')) {
+        const attrToken = raw.slice(1);
+        if (attrToken.startsWith('*:')) {
+          return { isAttribute: true, namespaceURI: null, localName: attrToken.substring(2) };
+        }
+        if (attrToken.includes(':')) {
+          const [prefix, localName] = attrToken.split(':');
+          return {
+            isAttribute: true,
+            namespaceURI: prefix === '*' ? null : (namespaceResolver(prefix) || null),
+            localName,
+          };
+        }
+        return { isAttribute: true, namespaceURI: null, localName: attrToken };
+      }
+
+      if (raw.startsWith('*:')) {
+        return { isAttribute: false, namespaceURI: baseNamespace, localName: raw.substring(2) };
+      }
+      if (raw.includes(':')) {
+        const [prefix, localName] = raw.split(':');
+        return {
+          isAttribute: false,
+          namespaceURI: prefix === '*' ? baseNamespace : (namespaceResolver(prefix) || baseNamespace),
+          localName,
+        };
+      }
+      return { isAttribute: false, namespaceURI: baseNamespace, localName: raw };
+    };
+
+    const parseStep = step => {
+      const trimmed = step.trim();
+      const nameMatch = trimmed.match(/^([^\[]+)/);
+      const token = nameMatch ? nameMatch[1].trim() : trimmed;
+      const predicates = [];
+
+      const predicateRegex = /\[\s*@([^\]\s=]+)\s*=\s*(['"])(.*?)\2\s*\]/g;
+      let match;
+      while ((match = predicateRegex.exec(trimmed)) !== null) {
+        predicates.push({ name: match[1], value: match[3] });
+      }
+      return { token, predicates };
+    };
+
+    const steps = xpath
+        .split('/')
+        .map(step => step.trim())
+        .filter(step => step && step !== '.');
+
+    if (!steps.length) return null;
+
+    let subtreeRoot = null;
+    let current = null;
+
+    for (const rawStep of steps) {
+      const { token, predicates } = parseStep(rawStep);
+      if (!token || token === '.') {
+        continue;
+      }
+
+      const parsed = parseName(token);
+
+      if (parsed.isAttribute) {
+        if (!current) {
+          const attr = ownerDoc.createAttribute(parsed.localName);
+          return attr;
+        }
+        current.setAttribute(parsed.localName, '');
+        continue;
+      }
+
+      const element = parsed.namespaceURI
+          ? ownerDoc.createElementNS(parsed.namespaceURI, parsed.localName)
+          : ownerDoc.createElement(parsed.localName);
+
+      for (const predicate of predicates) {
+        const attrName = predicate.name.includes(':') ? predicate.name.split(':')[1] : predicate.name;
+        element.setAttribute(attrName, predicate.value);
+      }
+
+      if (!subtreeRoot) {
+        subtreeRoot = element;
+      } else {
+        current.appendChild(element);
+      }
+      current = element;
     }
+
+    return subtreeRoot;
   }
 
   _handleDragStart(event) {

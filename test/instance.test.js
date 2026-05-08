@@ -441,6 +441,51 @@ describe('instance Tests', () => {
     expect(two.innerText).to.equal('bar bar bar');
   });
 
+  it('parses inline json with multi-line string values', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="model1">
+          <fx-instance type="json">
+            {
+              "q": "Never whine, never complain.",
+              "a": "Robert Greene",
+              "h": "
+                <blockquote>Never whine.</blockquote>
+              "
+            }
+          </fx-instance>
+        </fx-model>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const instance = el.querySelector('fx-instance');
+    expect(instance.instanceData).to.exist;
+    expect(instance.instanceData.q).to.equal('Never whine, never complain.');
+    expect(instance.instanceData.a).to.equal('Robert Greene');
+    expect(instance.instanceData.h).to.include('<blockquote>');
+  });
+
+  it('renders html-valued json string via fx-output mediatype="html"', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance type="json">
+            { "h": "<blockquote>Never whine.</blockquote>" }
+          </fx-instance>
+        </fx-model>
+        <fx-output id="out" ref="?h" mediatype="html"></fx-output>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const out = el.querySelector('#out');
+    expect(out.shadowRoot.querySelector('blockquote')).to.exist;
+    expect(out.shadowRoot.querySelector('blockquote').textContent).to.include('Never whine');
+  });
+
   /*
           it('does NOT copy a "body" element from inline data', async () => {
               const el =  (

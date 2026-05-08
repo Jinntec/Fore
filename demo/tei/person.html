@@ -1,0 +1,631 @@
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title data-template="config:app-title"></title>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <link href="../../favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+    <link href="../../resources/fore.css" rel="stylesheet"/>
+    <script src="../demo.js" type="module"></script>
+    <script src="../../tools/fx-lens.js" type="module"></script>
+
+    <style>
+        :root {
+            --page-bg: #f3f7fb;
+            --card-bg: #ffffff;
+            --card-border: rgba(35, 95, 140, 0.14);
+            --text: #173149;
+            --muted: #60768a;
+            --soft: #eef6fb;
+            --accent: #1f7acb;
+            --accent-dark: #155f9f;
+            --danger: #b42318;
+            --danger-bg: #fff0ee;
+            --focus: rgba(31, 122, 203, 0.22);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family:
+                    system-ui,
+                    -apple-system,
+                    BlinkMacSystemFont,
+                    "Segoe UI",
+                    sans-serif;
+            color: var(--text);
+            background:
+                    radial-gradient(circle at 12% 8%, rgba(72, 164, 255, 0.16), transparent 24rem),
+                    radial-gradient(circle at 90% 20%, rgba(117, 216, 181, 0.12), transparent 28rem),
+                    linear-gradient(135deg, #f7fbff 0%, var(--page-bg) 58%, #ffffff 100%);
+        }
+
+        main {
+            width: min(100% - 2rem, 72rem);
+            margin: 0 auto;
+            padding: clamp(2rem, 5vw, 4rem) 0;
+        }
+
+        fx-fore#person {
+            display: block;
+        }
+
+        .editor-shell {
+            overflow: hidden;
+            border: 1px solid var(--card-border);
+            border-radius: 1.5rem;
+            background: rgba(255, 255, 255, 0.86);
+            box-shadow:
+                    0 2rem 5rem rgba(30, 70, 110, 0.13),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(16px);
+        }
+
+        .editor-header {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 1rem;
+            align-items: start;
+            padding: clamp(1.25rem, 3vw, 2rem);
+            border-bottom: 1px solid var(--card-border);
+            background:
+                    radial-gradient(circle at 95% 0%, rgba(72, 164, 255, 0.18), transparent 20rem),
+                    linear-gradient(135deg, #ffffff 0%, #f7fbff 100%);
+        }
+
+        .editor-kicker {
+            display: inline-flex;
+            width: fit-content;
+            margin-bottom: 0.6rem;
+            padding: 0.32rem 0.72rem;
+            border-radius: 999px;
+            background: #e7f3fb;
+            color: #1f5f96;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .editor-header h1 {
+            margin: 0;
+            font-size: clamp(1.8rem, 3vw, 2.6rem);
+            line-height: 1.08;
+            letter-spacing: -0.035em;
+        }
+
+        .editor-header p {
+            max-width: 44rem;
+            margin: 0.75rem 0 0;
+            color: var(--muted);
+            font-size: 1rem;
+            line-height: 1.55;
+        }
+
+        .person-id {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.45rem 0.7rem;
+            border-radius: 999px;
+            background: var(--soft);
+            color: var(--muted);
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.82rem;
+            white-space: nowrap;
+        }
+
+        .editor-body {
+            padding: clamp(1.25rem, 3vw, 2rem);
+        }
+
+        fieldset {
+            min-width: 0;
+            margin: 0;
+            padding: 0;
+            border: 0;
+        }
+
+        .section-card {
+            margin: 0 0 1.25rem;
+            padding: clamp(1rem, 2vw, 1.35rem);
+            border: 1px solid rgba(35, 95, 140, 0.12);
+            border-radius: 1.1rem;
+            background: #ffffff;
+            box-shadow: 0 0.75rem 1.75rem rgba(30, 70, 110, 0.06);
+        }
+
+        .section-card > legend,
+        .section-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            width: 100%;
+            margin: 0 0 1rem;
+            padding: 0;
+            color: var(--text);
+            font-size: 1.05rem;
+            font-weight: 750;
+            letter-spacing: -0.01em;
+        }
+
+        .field-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(13rem, 1fr));
+            gap: 1rem 1.25rem;
+        }
+
+        fx-control {
+            display: block;
+            min-height: 0;
+            margin: 0;
+        }
+
+        fx-control label,
+        label {
+            display: block;
+            margin: 0 0 0.35rem;
+            color: #41596d;
+            font-size: 0.85rem;
+            font-weight: 650;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            min-height: 2.55rem;
+            margin: 0;
+            padding: 0.5rem 0.68rem;
+            border: 1px solid rgba(35, 95, 140, 0.22);
+            border-radius: 0.65rem;
+            background: #ffffff;
+            color: var(--text);
+            font: inherit;
+            outline: none;
+            transition:
+                    border-color 160ms ease,
+                    box-shadow 160ms ease,
+                    background-color 160ms ease;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 0.22rem var(--focus);
+        }
+
+        select {
+            appearance: auto;
+        }
+
+        [invalid] input,
+        [invalid] select,
+        [invalid] textarea {
+            border-color: var(--danger);
+            background: var(--danger-bg);
+        }
+
+        [invalid] fx-alert {
+            display: block;
+            margin-top: 0.35rem;
+            color: var(--danger);
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+
+        fx-output#validator[valid] {
+            display: none;
+        }
+
+        .references-section {
+            margin-top: 1.25rem;
+        }
+
+        .references-section legend {
+            margin-bottom: 1rem;
+        }
+
+        .references-title {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+        }
+
+        fx-repeat#r-idno {
+            display: grid;
+            gap: 0.85rem;
+        }
+
+        fx-repeatitem
+        {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 1rem;
+            align-items: end;
+            padding: 1rem;
+            border: 1px solid rgba(35, 95, 140, 0.12);
+            border-radius: 0.9rem;
+            background: #f7fbff;
+        }
+
+        [repeat-index] {
+            background-color: #eaf5ff;
+        }
+
+        fx-trigger {
+            display: inline-flex;
+        }
+
+        button {
+            min-height: 2.45rem;
+            padding: 0.45rem 0.9rem;
+            border: 1px solid rgba(31, 122, 203, 0.22);
+            border-radius: 999px;
+            background: #ffffff;
+            color: var(--accent-dark);
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+            transition:
+                    transform 120ms ease,
+                    background-color 160ms ease,
+                    border-color 160ms ease,
+                    box-shadow 160ms ease;
+        }
+
+        button:hover {
+            background: #f0f8ff;
+            border-color: rgba(31, 122, 203, 0.38);
+            box-shadow: 0 0.45rem 1rem rgba(30, 70, 110, 0.08);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        .add button {
+            min-width: 2.35rem;
+            padding: 0.35rem 0.75rem;
+            background: var(--accent);
+            color: #ffffff;
+            border-color: var(--accent);
+            box-shadow: 0 0.55rem 1.25rem rgba(31, 122, 203, 0.22);
+        }
+
+        .delete button {
+            min-width: 2.35rem;
+            padding: 0.35rem 0.75rem;
+            color: var(--danger);
+            border-color: rgba(180, 35, 24, 0.2);
+            background: #ffffff;
+        }
+
+        .delete button:hover {
+            background: var(--danger-bg);
+            border-color: rgba(180, 35, 24, 0.35);
+        }
+
+        .editor-actions {
+            display: flex;
+            justify-content: flex-end;
+            padding-top: 0.5rem;
+        }
+
+        .editor-actions button {
+            min-width: 7rem;
+            background: var(--accent);
+            color: #ffffff;
+            border-color: var(--accent);
+            box-shadow: 0 0.75rem 1.75rem rgba(31, 122, 203, 0.24);
+        }
+
+        .editor-actions button:hover {
+            background: var(--accent-dark);
+            border-color: var(--accent-dark);
+        }
+
+        @media (max-width: 760px) {
+            main {
+                width: min(100% - 1rem, 72rem);
+                padding: 1rem 0;
+            }
+
+            .editor-header {
+                grid-template-columns: 1fr;
+            }
+
+            .field-grid {
+                grid-template-columns: 1fr;
+            }
+
+            fx-repeatitem,
+            [repeat-index] {
+                grid-template-columns: 1fr;
+                align-items: stretch;
+            }
+
+            .editor-actions {
+                justify-content: stretch;
+            }
+
+            .editor-actions fx-trigger,
+            .editor-actions button {
+                width: 100%;
+            }
+        }
+        .rule-note {
+            display: grid;
+            gap: 0.25rem;
+            margin: 0 0 1rem;
+            padding: 0.85rem 1rem;
+            border: 1px solid rgba(31, 122, 203, 0.18);
+            border-left: 0.35rem solid var(--accent);
+            border-radius: 0.85rem;
+            background: #f0f8ff;
+            color: var(--text);
+        }
+
+        .rule-note strong {
+            font-size: 0.82rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--accent-dark);
+        }
+
+        .rule-note span {
+            color: #41596d;
+            font-size: 0.95rem;
+            line-height: 1.45;
+        }
+        .rule-note.compact {
+            margin-bottom: 1rem;
+            padding: 0.7rem 0.85rem;
+            border-left-width: 0.25rem;
+        }
+
+        .rule-note.compact strong {
+            font-size: 0.76rem;
+        }
+
+        .rule-note.compact span {
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body>
+<main>
+    <fx-fore id="person">
+
+        <fx-model>
+
+            <fx-instance id="default" src="person-tmpl.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+                <data></data>
+            </fx-instance>
+
+            <fx-bind
+                    ref="instance('default')/persName/name[@type = ('nomen', 'praenomen', 'god', 'cognomen', 'supernomen')]"
+                    required="let $c := . return empty(../name[@type = ('nomen', 'praenomen', 'god', 'cognomen', 'supernomen')][$c/@type != @type][string-length(.) > 0])"
+            >
+            </fx-bind>
+
+            <fx-instance id="tribus">
+                <data>
+                    <tribus>Aelia</tribus>
+                    <tribus>Aemilia</tribus>
+                    <tribus>Arnensis</tribus>
+                    <tribus>Camilia</tribus>
+                    <tribus>Claudia</tribus>
+                    <tribus>Clustumina</tribus>
+                    <tribus>Collina</tribus>
+                    <tribus>Cornelia</tribus>
+                    <tribus>Esquilina</tribus>
+                    <tribus>Fabia</tribus>
+                    <tribus>Falerna</tribus>
+                    <tribus>Galeria</tribus>
+                    <tribus>Horatia</tribus>
+                    <tribus>Lemonia</tribus>
+                    <tribus>Maecia</tribus>
+                    <tribus>Menenia</tribus>
+                    <tribus>Oufentina</tribus>
+                    <tribus>Palatina</tribus>
+                    <tribus>Papiria</tribus>
+                    <tribus>Pollia</tribus>
+                    <tribus>Pomptina</tribus>
+                    <tribus>Publilia</tribus>
+                    <tribus>Pupinia</tribus>
+                    <tribus>Quirina</tribus>
+                    <tribus>Romilia</tribus>
+                    <tribus>Sabatina</tribus>
+                    <tribus>Scaptia</tribus>
+                    <tribus>Sergia</tribus>
+                    <tribus>Stellatina</tribus>
+                    <tribus>Suburana</tribus>
+                    <tribus>Sulpicia</tribus>
+                    <tribus>Teretina</tribus>
+                    <tribus>Tromentina</tribus>
+                    <tribus>Ulpia</tribus>
+                    <tribus>Velina</tribus>
+                    <tribus>Voltinia</tribus>
+                    <tribus>Voturia</tribus>
+                </data>
+            </fx-instance>
+
+            <fx-instance id="status">
+                <data>
+                    <item key="Herrscher / Herrscherhaus"></item>
+                    <item key="Senatorenstand"></item>
+                    <item key="Ritterstand"></item>
+                    <item key="Dekurionenstand"></item>
+                    <item key="höhere Gemeindeverwaltung"></item>
+                    <item key="subalterne Beamte"></item>
+                    <item key="Domänen- / niedere Gemeindeverwaltung"></item>
+                    <item key="Augustalen"></item>
+                    <item key="Freigelassene"></item>
+                    <item key="Sklaven"></item>
+                    <item key="Sonstige"></item>
+                </data>
+            </fx-instance>
+
+            <fx-submission
+                    id="s-save"
+                    method="post"
+                    replace="instance"
+                    url="#echo">
+                <fx-action event="submit-done">
+                    <fx-message>Person was stored</fx-message>
+                </fx-action>
+                <fx-message event="submit-error">couldn't be saved</fx-message>
+            </fx-submission>
+
+        </fx-model>
+
+        <fx-output ref="instance('default')/@xml:id"></fx-output>
+        <div class="editor-shell">
+            <header class="editor-header">
+                <div>
+                    <div class="editor-kicker">TEI person editor</div>
+                    <h1>Person record</h1>
+                    <p>
+                        Edit person data encoded in TEI (Text Encoding Initiative)
+                        including custom domain rules for names, using controlled vocabularies and repeated data.
+                    </p>
+                </div>
+
+                <div class="person-id">
+                    <span>ID</span>
+                    <fx-output ref="instance('default')/@xml:id"></fx-output>
+                </div>
+            </header>
+
+            <div class="editor-body">
+                <fieldset class="section-card">
+                    <legend>Person</legend>
+                    <div class="rule-note">
+                        <strong>Domain rule</strong>
+                        <span>
+                            A person record is valid when at least one identifying name field is present:
+                            Deity, Praenomen, Nomen Gentile, Cognomen or Supernomen.
+                        </span>
+                    </div>
+                    <div class="field-grid">
+
+                        <fx-control ref="persName/name[@type='god']">
+                            <label>Deity</label>
+                            <fx-action event="value-changed">
+                                <fx-unmodified></fx-unmodified>
+                                <fx-update></fx-update>
+                            </fx-action>
+                        </fx-control>
+
+                        <fx-control ref="persName/name[@type='praenomen']">
+                            <label>Praenomen</label>
+                            <input autofocus="autofocus" class="widget" tabindex="1" type="text"/>
+                        </fx-control>
+
+                        <fx-control ref="persName/name[@type='nomen']">
+                            <label>Nomen Gentile</label>
+                        </fx-control>
+
+                        <fx-control ref="persName/name[@type='cognomen']">
+                            <label>Cognomen</label>
+                        </fx-control>
+
+                        <fx-control ref="persName/name[@type='supernomen']">
+                            <label>Supernomen</label>
+                        </fx-control>
+
+                        <fx-control ref="persName/name[@type='tribus']">
+                            <label>Tribus</label>
+                            <select class="widget" ref="instance('tribus')/tribus" selection="open">
+                                <template>
+                                    <option value="{.}">{.}</option>
+                                </template>
+                            </select>
+                        </fx-control>
+
+                        <fx-control ref="persName/name[@type='origo']">
+                            <label>Origo</label>
+                        </fx-control>
+
+                        <fx-control ref="@sex">
+                            <label data-i18n="person.sex">Gender</label>
+                            <select class="widget">
+                                <option></option>
+                                <option selected="selected" value="M">male</option>
+                                <option value="F">female</option>
+                            </select>
+                        </fx-control>
+
+                        <fx-control ref="state[@type='status']">
+                            <label>Social state</label>
+                            <select class="widget" ref="instance('status')/item" selection="open">
+                                <template>
+                                    <option value="{@key}">{@key}</option>
+                                </template>
+                            </select>
+                        </fx-control>
+
+                        <fx-control ref="occupation">
+                            <label>Occupation</label>
+                        </fx-control>
+                    </div>
+                </fieldset>
+
+                <fieldset class="section-card references-section">
+                    <legend>
+                        <span class="references-title">References</span>
+                        <fx-trigger class="add" title="Referenz hinzufügen">
+                            <button type="button">+</button>
+                            <fx-insert context="." ref="idno"></fx-insert>
+                        </fx-trigger>
+                    </legend>
+                    <div class="rule-note compact">
+                        <strong>Interaction rule</strong>
+                        <span>
+                            At least one reference row is kept. Delete is only available for additional
+                            references.
+                        </span>
+                    </div>
+                    <fx-repeat id="r-idno" ref="./idno">
+                        <template>
+                            <fx-control ref="@type">
+                                <label>Work</label>
+                                <select class="widget" selection="open">
+                                    <option value="pir">PIR</option>
+                                    <option value="plre">PLRE</option>
+                                    <option value="wikidata">Wikidata</option>
+                                </select>
+                            </fx-control>
+
+                            <fx-control ref=".">
+                                <label>IdNo</label>
+                            </fx-control>
+
+                            <fx-trigger ref=".[count(preceding-sibling::idno) > 0]" class="delete" title="Referenz entfernen">
+                                <button type="button">−</button>
+                                <fx-delete ref="."></fx-delete>
+                            </fx-trigger>
+                        </template>
+                    </fx-repeat>
+                </fieldset>
+
+                <div class="editor-actions">
+                    <fx-trigger>
+                        <button type="button">Save</button>
+                        <fx-send submission="s-save"></fx-send>
+                    </fx-trigger>
+                </div>
+            </div>
+        </div>
+    </fx-fore>
+</main>
+
+</body>
+</html>

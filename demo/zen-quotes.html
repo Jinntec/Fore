@@ -34,8 +34,8 @@
         <template>
 -->
             <fx-fore>
-                <fx-instance type="json">
-                    [
+                <fx-model>
+                    <fx-instance type="json">
                         {
                             "q": "Never whine, never complain, never try to justify yourself.",
                             "a": "Robert Greene",
@@ -45,13 +45,13 @@
                             </blockquote>
                             "
                         }
-                    ]
-                </fx-instance>
-                <main></main>
-                <p>Inspirational quotes provided by <a href="https://zenquotes.io/" target="_blank">ZenQuotes API</a>
+                    </fx-instance>
+                </fx-model>
 
-                    {instance()?*}
-                </p>
+                <main>
+                    <p>Inspirational quotes provided by <a href="https://zenquotes.io/" target="_blank">ZenQuotes API</a></p>
+                    <fx-output ref="?h" mediatype="html"></fx-output>
+                </main>
             </fx-fore>
 <!--
         </template>

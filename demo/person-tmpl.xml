@@ -1,0 +1,14 @@
+<person xmlns="http://www.tei-c.org/ns/1.0" sex="M">
+    <persName>
+        <name type="god"/>
+        <name type="praenomen"/>
+        <name type="nomen"/>
+        <name type="cognomen"/>
+        <name type="supernomen"/>
+        <name type="tribus"/>
+        <name type="origo"/>
+    </persName>
+    <state type="status"/>
+    <occupation/>
+    <idno type=""></idno>
+</person>

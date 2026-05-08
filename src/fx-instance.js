@@ -320,7 +320,13 @@ export class FxInstance extends HTMLElement {
       const instanceData = new DOMParser().parseFromString(this.innerHTML, 'application/xml');
       this._setInitialData(instanceData);
     } else if (this.type === 'json') {
-      this._setInitialData(JSON.parse(this.textContent));
+      // Use innerHTML (not textContent) so HTML tags the browser parser consumed as
+      // child elements (e.g. <blockquote> in a string value) are serialized back to text.
+      // Then escape literal control characters that JSON.parse rejects inside strings.
+      const sanitized = this.innerHTML.replace(/("(?:[^"\\]|\\.)*")/gs, match =>
+        match.replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t'),
+      );
+      this._setInitialData(JSON.parse(sanitized));
     } else if (this.type === 'html') {
       this._setInitialData(this.firstElementChild.children);
     } else if (this.type === 'text') {

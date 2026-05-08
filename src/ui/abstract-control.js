@@ -335,17 +335,25 @@ export default class AbstractControl extends UIElement {
   }
 
   // todo - review alert handling altogether. There could be potentially multiple ones in model
+  // TODO: both required and handleValid set valid attrs and aria attrs. Duplicate code
   handleValid() {
     // console.log('mip valid', this.modelItem.required);
 
     // console.log('late modelItem', mi);
-    if (this.isValid() !== this.modelItem.constraint) {
-      if (this.modelItem.constraint) {
+    const hasValue = this.modelItem.value !== '';
+    const isRequired = this.modelItem.required;
+    const isValidAccordingToRequired = isRequired ? hasValue : true;
+    const isValidNow = this.modelItem.constraint && isValidAccordingToRequired;
+
+    if (this.isValid() !== isValidNow) {
+      if (isValidNow) {
         // if (alert) alert.style.display = 'none';
         this._dispatchEvent('valid');
         this.setAttribute('valid', '');
         this.removeAttribute('invalid');
         this.getWidget().setAttribute('aria-invalid', 'false');
+        // also reset other dependent CSS classes
+        this.classList.remove('isEmpty');
       } else {
         this.setAttribute('invalid', '');
         this.getWidget().setAttribute('aria-invalid', 'true');
@@ -379,7 +387,6 @@ export default class AbstractControl extends UIElement {
     // Ensure aria-invalid matches the current control state even if
     // we didn't enter the state-change branch above.
     this._syncAriaInvalid();
-
   }
 
   handleRelevant() {
@@ -400,12 +407,12 @@ export default class AbstractControl extends UIElement {
 
     // Apply attributes
     if (newEnabled) {
-        this.setAttribute('relevant', '');
+      this.setAttribute('relevant', '');
       this.removeAttribute('nonrelevant');
-      } else {
-        this.setAttribute('nonrelevant', '');
+    } else {
+      this.setAttribute('nonrelevant', '');
       this.removeAttribute('relevant');
-      }
+    }
 
     // Dispatch only on actual change
     if (wasEnabled !== newEnabled) {

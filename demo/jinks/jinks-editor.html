@@ -1,0 +1,655 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jinks Profile Editor</title>
+    <script type="module" src="../../index.js"></script>
+    <script type="module" src="../../tools/fx-lens.js"></script>
+    <style>
+        fx-fore { visibility: hidden; }
+        fx-fore.fx-ready { visibility: visible; }
+
+        body {
+            font-family: system-ui, sans-serif;
+            margin: 0;
+            background: #f5f5f5;
+        }
+
+        header {
+            padding: 12px 20px;
+            border-bottom: 1px solid #ddd;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        header h1 { margin: 0; font-size: 18px; }
+        header .muted { color: #666; font-size: 13px; }
+
+        .editor-body {
+            max-width: 860px;
+            margin: 20px auto;
+            padding: 0 16px 60px;
+        }
+
+        details {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        summary {
+            padding: 14px 18px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            user-select: none;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        summary::-webkit-details-marker { display: none; }
+        summary::before { content: '▶'; font-size: 10px; color: #888; transition: transform 0.15s; }
+        details[open] summary::before { transform: rotate(90deg); }
+
+        .section-body {
+            padding: 16px 18px;
+            border-top: 1px solid #eee;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .section-body .full-width {
+            grid-column: 1 / -1;
+        }
+
+        fx-control { display: block; }
+        fx-control label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 4px;
+        }
+
+        fx-control .widget {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 7px 10px;
+            border-radius: 7px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            background: #fafafa;
+        }
+
+        fx-control .widget:focus {
+            outline: none;
+            border-color: #4a90d9;
+            background: #fff;
+        }
+
+        textarea.widget {
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 10px 20px;
+            background: #fff;
+            border-top: 1px solid #ddd;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        fx-trigger button {
+            padding: 8px 18px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            background: #fafafa;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        fx-trigger button:hover { background: #f0f0f0; }
+
+        fx-trigger button.primary {
+            background: #2563eb;
+            color: #fff;
+            border-color: #2563eb;
+        }
+
+        fx-trigger button.primary:hover { background: #1d4ed8; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div>
+        <h1>Jinks Profile Editor</h1>
+        <div class="muted">Edit and export a jinks.json profile</div>
+    </div>
+</header>
+
+<fx-fore id="jinks-editor">
+    <fx-model>
+        <fx-instance id="data" type="json">
+            {
+                "id": "",
+                "label": "",
+                "version": "1.0.0",
+                "shortname": "",
+                "type": "base",
+                "category": "output",
+                "description": "",
+                "defaults": { "sort": [] },
+                "menu": { "items": [] },
+                "features": {
+                    "toolbar": { "enabled": false },
+                    "toc": { "enabled": false },
+                    "iiif": { "enabled": false },
+                    "upload": { "enabled": false }
+                },
+                "theme": { "colors": {}, "fonts": {}, "layout": {} },
+                "pkg": { "abbrev": "", "author": "", "version": "1.0.0" },
+                "extends": [],
+                "depends": []
+            }
+        </fx-instance>
+    </fx-model>
+
+    <div class="editor-body">
+
+        <!-- Section 1: Basic Info -->
+        <details open>
+            <summary>Basic Info</summary>
+            <div class="section-body">
+                <fx-control ref="?label" update-event="input">
+                    <label>Label</label>
+                    <input class="widget" type="text" placeholder="Short title" />
+                </fx-control>
+
+                <fx-control ref="?shortname" update-event="input">
+                    <label>Shortname</label>
+                    <input class="widget" type="text" placeholder="e.g. my-profile" />
+                </fx-control>
+
+                <fx-control ref="?id" update-event="input" class="full-width">
+                    <label>ID (URI)</label>
+                    <input class="widget" type="url" placeholder="https://example.org/my-profile" />
+                </fx-control>
+
+                <fx-control ref="?version" update-event="input">
+                    <label>Version</label>
+                    <input class="widget" type="text" placeholder="1.0.0" />
+                </fx-control>
+
+                <fx-control ref="?type" update-event="change">
+                    <label>Type</label>
+                    <select class="widget">
+                        <option value="base">base</option>
+                        <option value="feature">feature</option>
+                        <option value="theme">theme</option>
+                        <option value="blueprint">blueprint</option>
+                        <option value="disabled">disabled</option>
+                        <option value="bootstrap">bootstrap</option>
+                    </select>
+                </fx-control>
+
+                <fx-control ref="?category" update-event="change">
+                    <label>Category</label>
+                    <select class="widget">
+                        <option value="data">data</option>
+                        <option value="input">input</option>
+                        <option value="output">output</option>
+                        <option value="workflow">workflow</option>
+                        <option value="development">development</option>
+                        <option value="components">components</option>
+                        <option value="static">static</option>
+                    </select>
+                </fx-control>
+
+                <fx-control ref="?description" update-event="input" class="full-width">
+                    <label>Description</label>
+                    <textarea class="widget" placeholder="Longer description of this profile"></textarea>
+                </fx-control>
+            </div>
+        </details>
+
+        <!-- Section 2: Defaults -->
+        <details>
+            <summary>Defaults</summary>
+            <fx-group ref="?defaults">
+                <div class="section-body">
+                    <fx-control ref="?landing" update-event="input">
+                        <label>Landing page</label>
+                        <input class="widget" type="text" placeholder="templates/pages/index.html" />
+                    </fx-control>
+
+                    <fx-control ref="?browse" update-event="input">
+                        <label>Browse page</label>
+                        <input class="widget" type="text" placeholder="templates/pages/browse.html" />
+                    </fx-control>
+
+                    <fx-control ref="?template" update-event="input">
+                        <label>Content template</label>
+                        <input class="widget" type="text" placeholder="templates/pages/view.html" />
+                    </fx-control>
+
+                    <fx-control ref="?odd" update-event="input">
+                        <label>Default ODD</label>
+                        <input class="widget" type="text" placeholder="teipublisher.odd" />
+                    </fx-control>
+
+                    <fx-control ref="?language" update-event="input">
+                        <label>Default language</label>
+                        <input class="widget" type="text" placeholder="en" />
+                    </fx-control>
+
+                    <fx-control ref="?view" update-event="change">
+                        <label>View mode</label>
+                        <select class="widget">
+                            <option value="">— none —</option>
+                            <option value="div">div</option>
+                            <option value="page">page</option>
+                            <option value="single">single</option>
+                        </select>
+                    </fx-control>
+
+                    <fx-control ref="?data" update-event="input">
+                        <label>Data root collection</label>
+                        <input class="widget" type="text" placeholder="/db/apps/my-app/data" />
+                    </fx-control>
+
+                    <fx-control ref="?data-default" update-event="input">
+                        <label>Data default collection</label>
+                        <input class="widget" type="text" />
+                    </fx-control>
+                </div>
+
+                <div class="array-section">
+                    <div class="array-header">
+                        <span class="array-label">Sort fields</span>
+                        <fx-trigger>
+                            <button class="btn-add">+ Add</button>
+                            <fx-insert ref="?defaults?sort" position="last">
+                                <template>{ "field": "", "label": "", "default": false }</template>
+                            </fx-insert>
+                        </fx-trigger>
+                    </div>
+                    <fx-repeat id="sort-repeat" ref="?sort?*">
+                        <template>
+                            <div class="array-row">
+                                <fx-control ref="?field" update-event="input">
+                                    <label>Field</label>
+                                    <input class="widget" type="text" />
+                                </fx-control>
+                                <fx-control ref="?label" update-event="input">
+                                    <label>Label</label>
+                                    <input class="widget" type="text" />
+                                </fx-control>
+                                <fx-control ref="?default" update-event="change">
+                                    <label>Default</label>
+                                    <input class="widget" type="checkbox" />
+                                </fx-control>
+                                <fx-trigger class="btn-delete-wrap">
+                                    <button class="btn-delete">✕</button>
+                                    <fx-delete ref="?defaults?sort[index('sort-repeat')]"></fx-delete>
+                                </fx-trigger>
+                            </div>
+                        </template>
+                    </fx-repeat>
+                </div>
+            </fx-group>
+        </details>
+
+        <!-- Section 3: Features -->
+        <details>
+            <summary>Features</summary>
+            <div class="section-body">
+                <fx-group ref="?features?toolbar" class="feature-group full-width">
+                    <div class="feature-title">Toolbar</div>
+                    <fx-control ref="?enabled" update-event="change">
+                        <label><input class="widget" type="checkbox" /> Enabled</label>
+                    </fx-control>
+                    <fx-control ref="?zoom" update-event="change">
+                        <label><input class="widget" type="checkbox" /> Zoom</label>
+                    </fx-control>
+                    <fx-control ref="?navigation" update-event="change">
+                        <label><input class="widget" type="checkbox" /> Navigation</label>
+                    </fx-control>
+                </fx-group>
+
+                <fx-group ref="?features?toc" class="feature-group">
+                    <div class="feature-title">Table of Contents</div>
+                    <fx-control ref="?enabled" update-event="change">
+                        <label><input class="widget" type="checkbox" /> Enabled</label>
+                    </fx-control>
+                    <fx-control ref="?collapse" update-event="change">
+                        <label><input class="widget" type="checkbox" /> Initially collapsed</label>
+                    </fx-control>
+                </fx-group>
+
+                <fx-group ref="?features?metadata" class="feature-group">
+                    <div class="feature-title">Metadata</div>
+                    <fx-control ref="?enabled" update-event="change">
+                        <label><input class="widget" type="checkbox" /> Enabled</label>
+                    </fx-control>
+                </fx-group>
+
+                <fx-group ref="?features?upload" class="feature-group full-width">
+                    <div class="feature-title">Upload</div>
+                    <fx-control ref="?enabled" update-event="change">
+                        <label><input class="widget" type="checkbox" /> Enabled</label>
+                    </fx-control>
+                    <fx-control ref="?target" update-event="input">
+                        <label>Target collection</label>
+                        <input class="widget" type="text" />
+                    </fx-control>
+                    <fx-control ref="?accept" update-event="input">
+                        <label>Accepted extensions</label>
+                        <input class="widget" type="text" placeholder=".xml,.tei" />
+                    </fx-control>
+                </fx-group>
+
+                <fx-group ref="?features?iiif" class="feature-group full-width">
+                    <div class="feature-title">IIIF</div>
+                    <fx-control ref="?enabled" update-event="change">
+                        <label><input class="widget" type="checkbox" /> Enabled</label>
+                    </fx-control>
+                    <fx-control ref="?viewer" update-event="change">
+                        <label>Viewer</label>
+                        <select class="widget">
+                            <option value="">— none —</option>
+                            <option value="pb-tify">pb-tify</option>
+                            <option value="pb-facsimile">pb-facsimile</option>
+                        </select>
+                    </fx-control>
+                    <fx-control ref="?type" update-event="change">
+                        <label>Type</label>
+                        <select class="widget">
+                            <option value="">— none —</option>
+                            <option value="iiif">iiif</option>
+                            <option value="image">image</option>
+                        </select>
+                    </fx-control>
+                    <fx-control ref="?base_uri" update-event="input">
+                        <label>Base URI</label>
+                        <input class="widget" type="text" />
+                    </fx-control>
+                </fx-group>
+
+                <fx-group ref="?features?jinntap" class="feature-group full-width">
+                    <div class="feature-title">JinnTap editor</div>
+                    <fx-control ref="?enabled" update-event="change">
+                        <label><input class="widget" type="checkbox" /> Enabled</label>
+                    </fx-control>
+                    <fx-control ref="?version" update-event="input">
+                        <label>Version</label>
+                        <input class="widget" type="text" placeholder="1.0.0 or dev" />
+                    </fx-control>
+                    <fx-control ref="?cdn" update-event="input">
+                        <label>CDN URL</label>
+                        <input class="widget" type="text" placeholder="http://localhost:5174/" />
+                    </fx-control>
+                    <fx-control ref="?schema" update-event="input">
+                        <label>Schema path</label>
+                        <input class="widget" type="text" placeholder="resources/schema/schema.json" />
+                    </fx-control>
+                </fx-group>
+            </div>
+        </details>
+
+        <!-- Section 4: Menu -->
+        <details>
+            <summary>Menu</summary>
+            <fx-group ref="?menu">
+                <div class="section-body">
+                    <fx-control ref="?language" update-event="change">
+                        <label><input class="widget" type="checkbox" /> Show language selector</label>
+                    </fx-control>
+                    <fx-control ref="?login" update-event="change">
+                        <label><input class="widget" type="checkbox" /> Show login link</label>
+                    </fx-control>
+                    <fx-control ref="?dark-mode" update-event="change">
+                        <label><input class="widget" type="checkbox" /> Show dark mode toggle</label>
+                    </fx-control>
+                    <fx-control ref="?search" update-event="change">
+                        <label><input class="widget" type="checkbox" /> Show search input</label>
+                    </fx-control>
+                    <fx-control ref="?download" update-event="change">
+                        <label><input class="widget" type="checkbox" /> Show download option</label>
+                    </fx-control>
+                    <fx-control ref="?delete" update-event="change">
+                        <label><input class="widget" type="checkbox" /> Show delete option</label>
+                    </fx-control>
+                </div>
+
+                <div class="array-section">
+                    <div class="array-header">
+                        <span class="array-label">Menu items</span>
+                        <fx-trigger>
+                            <button class="btn-add">+ Add</button>
+                            <fx-insert ref="?menu?items" position="last">
+                                <template>{ "id": "", "url": "" }</template>
+                            </fx-insert>
+                        </fx-trigger>
+                    </div>
+                    <fx-repeat id="menu-items" ref="?items?*">
+                        <template>
+                            <div class="array-row">
+                                <fx-control ref="?id" update-event="input">
+                                    <label>ID</label>
+                                    <input class="widget" type="text" />
+                                </fx-control>
+                                <fx-control ref="?url" update-event="input">
+                                    <label>URL</label>
+                                    <input class="widget" type="text" />
+                                </fx-control>
+                                <fx-trigger class="btn-delete-wrap">
+                                    <button class="btn-delete">✕</button>
+                                    <fx-delete ref="?menu?items[index('menu-items')]"></fx-delete>
+                                </fx-trigger>
+                            </div>
+                        </template>
+                    </fx-repeat>
+                </div>
+            </fx-group>
+        </details>
+
+        <!-- Section 5: Theme -->
+        <details>
+            <summary>Theme</summary>
+            <fx-group ref="?theme">
+                <div class="section-body">
+                    <fx-group ref="?colors" class="full-width subsection">
+                        <div class="subsection-title">Colors</div>
+                        <fx-control ref="?palette" update-event="input">
+                            <label>Palette</label>
+                            <input class="widget" type="text" placeholder="neutral, green, beige …" />
+                        </fx-control>
+                        <fx-control ref="?background-color" update-event="input">
+                            <label>Background color</label>
+                            <input class="widget" type="text" placeholder="#ffffff" />
+                        </fx-control>
+                    </fx-group>
+
+                    <fx-group ref="?menubar" class="subsection">
+                        <div class="subsection-title">Menubar</div>
+                        <fx-control ref="?background-color" update-event="input">
+                            <label>Background</label>
+                            <input class="widget" type="text" />
+                        </fx-control>
+                        <fx-control ref="?color" update-event="input">
+                            <label>Text color</label>
+                            <input class="widget" type="text" />
+                        </fx-control>
+                    </fx-group>
+
+                    <fx-group ref="?toolbar" class="subsection">
+                        <div class="subsection-title">Toolbar</div>
+                        <fx-control ref="?background-color" update-event="input">
+                            <label>Background</label>
+                            <input class="widget" type="text" />
+                        </fx-control>
+                        <fx-control ref="?color" update-event="input">
+                            <label>Text color</label>
+                            <input class="widget" type="text" />
+                        </fx-control>
+                    </fx-group>
+
+                    <fx-group ref="?layout" class="subsection">
+                        <div class="subsection-title">Layout</div>
+                        <fx-control ref="?max-width" update-event="input">
+                            <label>Max width</label>
+                            <input class="widget" type="text" placeholder="1200px" />
+                        </fx-control>
+                        <fx-control ref="?class" update-event="input">
+                            <label>Container class</label>
+                            <input class="widget" type="text" />
+                        </fx-control>
+                    </fx-group>
+
+                    <fx-group ref="?fonts?content" class="subsection">
+                        <div class="subsection-title">Content font</div>
+                        <fx-control ref="?family" update-event="input">
+                            <label>Font family</label>
+                            <input class="widget" type="text" />
+                        </fx-control>
+                        <fx-control ref="?size" update-event="input">
+                            <label>Size</label>
+                            <input class="widget" type="text" placeholder="1.25rem" />
+                        </fx-control>
+                        <fx-control ref="?weight" update-event="input">
+                            <label>Weight</label>
+                            <input class="widget" type="text" placeholder="normal" />
+                        </fx-control>
+                    </fx-group>
+
+                    <fx-group ref="?fonts?base" class="subsection">
+                        <div class="subsection-title">Base font</div>
+                        <fx-control ref="?family" update-event="input">
+                            <label>Font family</label>
+                            <input class="widget" type="text" />
+                        </fx-control>
+                        <fx-control ref="?size" update-event="input">
+                            <label>Size</label>
+                            <input class="widget" type="text" />
+                        </fx-control>
+                    </fx-group>
+                </div>
+            </fx-group>
+        </details>
+
+        <!-- Section 6: Package & Inheritance -->
+        <details>
+            <summary>Package &amp; Inheritance</summary>
+            <div class="section-body">
+                <fx-group ref="?pkg" class="full-width subsection">
+                    <div class="subsection-title">Package</div>
+                    <fx-control ref="?abbrev" update-event="input">
+                        <label>Abbreviation</label>
+                        <input class="widget" type="text" />
+                    </fx-control>
+                    <fx-control ref="?author" update-event="input">
+                        <label>Author</label>
+                        <input class="widget" type="text" />
+                    </fx-control>
+                    <fx-control ref="?version" update-event="input">
+                        <label>Version</label>
+                        <input class="widget" type="text" placeholder="1.0.0" />
+                    </fx-control>
+                </fx-group>
+            </div>
+
+            <div class="array-section">
+                <div class="array-header">
+                    <span class="array-label">Extends</span>
+                    <fx-trigger>
+                        <button class="btn-add">+ Add</button>
+                        <fx-insert ref="?extends" position="last">
+                            <template>""</template>
+                        </fx-insert>
+                    </fx-trigger>
+                </div>
+                <fx-repeat id="extends-repeat" ref="?extends?*">
+                    <template>
+                        <div class="array-row">
+                            <fx-control ref="." update-event="input" style="flex:1">
+                                <label>Profile path</label>
+                                <input class="widget" type="text" />
+                            </fx-control>
+                            <fx-trigger class="btn-delete-wrap">
+                                <button class="btn-delete">✕</button>
+                                <fx-delete ref="?extends[index('extends-repeat')]"></fx-delete>
+                            </fx-trigger>
+                        </div>
+                    </template>
+                </fx-repeat>
+            </div>
+
+            <div class="array-section">
+                <div class="array-header">
+                    <span class="array-label">Depends</span>
+                    <fx-trigger>
+                        <button class="btn-add">+ Add</button>
+                        <fx-insert ref="?depends" position="last">
+                            <template>""</template>
+                        </fx-insert>
+                    </fx-trigger>
+                </div>
+                <fx-repeat id="depends-repeat" ref="?depends?*">
+                    <template>
+                        <div class="array-row">
+                            <fx-control ref="." update-event="input" style="flex:1">
+                                <label>Profile path</label>
+                                <input class="widget" type="text" />
+                            </fx-control>
+                            <fx-trigger class="btn-delete-wrap">
+                                <button class="btn-delete">✕</button>
+                                <fx-delete ref="?depends[index('depends-repeat')]"></fx-delete>
+                            </fx-trigger>
+                        </div>
+                    </template>
+                </fx-repeat>
+            </div>
+        </details>
+
+    </div>
+
+    <div class="footer">
+        <fx-trigger>
+            <button class="primary" id="export-btn">Export JSON</button>
+            <fx-dispatch name="export-json" targetid="jinks-editor"></fx-dispatch>
+        </fx-trigger>
+    </div>
+</fx-fore>
+
+<script>
+    document.getElementById('jinks-editor').addEventListener('export-json', () => {
+        const instance = document.querySelector('fx-instance#data');
+        const json = JSON.stringify(instance.instanceData, null, 2);
+        const blob = new Blob([json], { type: 'application/json' });
+        const a = Object.assign(document.createElement('a'), {
+            href: URL.createObjectURL(blob),
+            download: 'jinks.json'
+        });
+        a.click();
+        URL.revokeObjectURL(a.href);
+    });
+</script>
+
+</body>
+</html>

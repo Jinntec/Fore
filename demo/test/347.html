@@ -1,0 +1,28 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>iCal</title>
+    <link rel="stylesheet" href="../resources/css/fore.css"/>
+    <script type="module" src="../resources/scripts/fore/fore-dev.js"/>
+    <script type="module" src="../resources/scripts/fore/fx-lens.js"/>
+</head>
+<body>
+<div class="wrapper">
+    <!-- for accessability adding a 'role' and 'title' to make it a landmark -->
+    <fx-fore xmlns:fhir="http://hl7.org/fhir" id="ical" title="ical app" role="form">
+        <fx-model>
+            <fx-instance src="nabuSE/templates/fore/data/practitioner.xml">
+                <data>
+                </data>
+            </fx-instance>
+        </fx-model>
+
+        <fx-control class="fore-control" ref="instance('default')" initial="." src="nabuSE/templates/fore/mwe-fore-p.html">
+        </fx-control>
+
+    </fx-fore>
+    <fx-lens/>
+</div>
+</body>
+</html>

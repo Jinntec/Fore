@@ -1,0 +1,64 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>iCal</title>
+    <link rel="stylesheet" href="../../resources/fore.css"/>
+    <script type="module" src="../demo.js"></script>
+    <script type="module" src="../../tools/fx-lens.js"></script>
+</head>
+<body>
+<div class="wrapper">
+    <fx-fore xmlns:fhir="http://hl7.org/fhir" id="MWE Switch" role="form">
+        <fx-model>
+
+            <fx-instance id="i-pat-comp">
+                <data>
+                    <bundle>
+                        <encounter>
+                            <id value="123"></id>
+                        </encounter>
+                    </bundle>
+                </data>
+            </fx-instance>
+        </fx-model>
+        <ul>
+            <li>
+                <fx-trigger class="toggle" label="Synopsis">
+                    <a href="#synopsis">Synopsis</a>
+                    <fx-toggle case="s-synopsis"/>
+                </fx-trigger>
+            </li>
+            <li>
+                <fx-trigger class="toggle" label="Open Activities">
+                    <a href="#s-activities">
+                        Termine
+                    </a>
+                    <fx-toggle case="s-activities"/>
+                </fx-trigger>
+            </li>
+        </ul>
+        <fx-switch id="bigswitch">
+            <fx-case id="s-synopsis" src="s.html">
+            </fx-case>
+            <fx-case id="s-activities" src="a.html">
+                <fx-action event="select">
+                    <fx-message>Activities loaded</fx-message>
+                </fx-action>
+            </fx-case>
+        </fx-switch>
+        <fieldset id="synopsis">
+            <legend>
+                <label>Parent</label>
+            </legend>
+            <fx-repeat ref="instance('i-pat-comp')//encounter" class="">
+                <template>
+                    <fx-output ref="./id/@value"></fx-output>
+                </template>
+            </fx-repeat>
+        </fieldset>
+    </fx-fore>
+    <fx-lens></fx-lens>
+</div>
+</body>
+</html>
