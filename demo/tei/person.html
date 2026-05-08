@@ -398,6 +398,20 @@
         .rule-note.compact span {
             font-size: 0.9rem;
         }
+        .isEmpty.visited .widget {
+            background: lightgreen;
+        }
+        fx-control.visited[valid] .widget {
+            background: white;
+        }
+        .submit-validation-failed .rule-note.validation-rule {
+            background: pink;
+            border-color: red;
+
+            strong{
+                color:black;
+            }
+        }
     </style>
 </head>
 
@@ -482,9 +496,13 @@
                     url="#echo">
                 <fx-action event="submit-done">
                     <fx-message>Person was stored</fx-message>
+                    <fx-unmodified delay="1000"></fx-unmodified>
                 </fx-action>
                 <fx-message event="submit-error">couldn't be saved</fx-message>
             </fx-submission>
+            <fx-function signature="resetErrors()" type="text/javascript">
+                document.querySelector('fx-fore').classList.remove('submit-validation-failed');
+            </fx-function>
 
         </fx-model>
 
@@ -509,7 +527,7 @@
             <div class="editor-body">
                 <fieldset class="section-card">
                     <legend>Person</legend>
-                    <div class="rule-note">
+                    <div class="rule-note validation-rule">
                         <strong>Domain rule</strong>
                         <span>
                             A person record is valid when at least one identifying name field is present:
@@ -622,6 +640,7 @@
                     <fx-trigger>
                         <button type="button">Save</button>
                         <fx-send submission="s-save"></fx-send>
+                        <fx-call function="resetErrors()" delay="1500"></fx-call>
                     </fx-trigger>
                 </div>
             </div>
