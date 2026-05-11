@@ -47,6 +47,7 @@
             width: min(100% - 2rem, 72rem);
             margin: 0 auto;
             padding: clamp(2rem, 5vw, 4rem) 0;
+            margin-top: -2rem;
         }
 
         fx-fore#person {
@@ -412,6 +413,18 @@
                 color:black;
             }
         }
+        code {
+            border: 1px solid rgba(31, 122, 203, 0.18);
+            padding: 1rem;
+            border-radius: 1rem;
+            background: white;
+        }
+        code::before{
+            content: "Data";
+            font-weight: bold;
+            min-width: 25.375rem;
+            min-height:13.125rem;
+        }
     </style>
 </head>
 
@@ -518,10 +531,10 @@
                     </p>
                 </div>
 
-                <div class="person-id">
-                    <span>ID</span>
-                    <fx-output ref="instance('default')/@xml:id"></fx-output>
-                </div>
+                <code>
+                    <pre>{log('default')}</pre>
+                </code>
+
             </header>
 
             <div class="editor-body">
@@ -536,7 +549,7 @@
                     </div>
                     <div class="field-grid">
 
-                        <fx-control ref="persName/name[@type='god']">
+                        <fx-control ref="persName/name[@type='god']" update-event="input">
                             <label>Deity</label>
                             <fx-action event="value-changed">
                                 <fx-unmodified></fx-unmodified>
@@ -544,24 +557,24 @@
                             </fx-action>
                         </fx-control>
 
-                        <fx-control ref="persName/name[@type='praenomen']">
+                        <fx-control ref="persName/name[@type='praenomen']" update-event="input">
                             <label>Praenomen</label>
                             <input autofocus="autofocus" class="widget" tabindex="1" type="text"/>
                         </fx-control>
 
-                        <fx-control ref="persName/name[@type='nomen']">
+                        <fx-control ref="persName/name[@type='nomen']" update-event="input">
                             <label>Nomen Gentile</label>
                         </fx-control>
 
-                        <fx-control ref="persName/name[@type='cognomen']">
+                        <fx-control ref="persName/name[@type='cognomen']" update-event="input">
                             <label>Cognomen</label>
                         </fx-control>
 
-                        <fx-control ref="persName/name[@type='supernomen']">
+                        <fx-control ref="persName/name[@type='supernomen']" update-event="input">
                             <label>Supernomen</label>
                         </fx-control>
 
-                        <fx-control ref="persName/name[@type='tribus']">
+                        <fx-control ref="persName/name[@type='tribus']" update-event="input">
                             <label>Tribus</label>
                             <select class="widget" ref="instance('tribus')/tribus" selection="open">
                                 <template>
@@ -570,11 +583,11 @@
                             </select>
                         </fx-control>
 
-                        <fx-control ref="persName/name[@type='origo']">
+                        <fx-control ref="persName/name[@type='origo']" update-event="input">
                             <label>Origo</label>
                         </fx-control>
 
-                        <fx-control ref="@sex">
+                        <fx-control ref="@sex" update-event="input">
                             <label data-i18n="person.sex">Gender</label>
                             <select class="widget">
                                 <option></option>
@@ -583,7 +596,7 @@
                             </select>
                         </fx-control>
 
-                        <fx-control ref="state[@type='status']">
+                        <fx-control ref="state[@type='status']" update-event="input">
                             <label>Social state</label>
                             <select class="widget" ref="instance('status')/item" selection="open">
                                 <template>
@@ -592,7 +605,7 @@
                             </select>
                         </fx-control>
 
-                        <fx-control ref="occupation">
+                        <fx-control ref="occupation" update-event="input">
                             <label>Occupation</label>
                         </fx-control>
                     </div>
@@ -645,6 +658,7 @@
                 </div>
             </div>
         </div>
+
     </fx-fore>
 </main>
 
