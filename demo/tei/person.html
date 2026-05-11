@@ -413,17 +413,34 @@
                 color:black;
             }
         }
-        code {
+        .data-code {
             border: 1px solid rgba(31, 122, 203, 0.18);
             padding: 1rem;
             border-radius: 1rem;
             background: white;
-        }
-        code::before{
-            content: "Data";
-            font-weight: bold;
             min-width: 25.375rem;
-            min-height:13.125rem;
+            min-height: 13.125rem;
+            overflow: auto;
+        }
+
+        .data-code-title {
+            margin-bottom: 0.75rem;
+            font-weight: bold;
+        }
+
+        .data-code pre {
+            margin: 0;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.85rem;
+            line-height: 1.45;
+        }
+
+        .data-code code {
+            display: block;
+            white-space: inherit;
+            font: inherit;
         }
     </style>
 </head>
@@ -516,7 +533,45 @@
             <fx-function signature="resetErrors()" type="text/javascript">
                 document.querySelector('fx-fore').classList.remove('submit-validation-failed');
             </fx-function>
+            <fx-function signature="pretty($xml as xs:string) as xs:string" type="text/javascript">
+                if (!$xml) return '';
 
+                const lt = String.fromCharCode(60);
+                const gt = String.fromCharCode(62);
+
+                return String($xml)
+                .replace(new RegExp(gt + '\\s*' + lt, 'g'), gt + '\n' + lt)
+                .split('\n')
+                .reduce((state, line) => {
+                line = line.trim();
+                if (!line) return state;
+
+                let indent = state.indent;
+
+                if (line.startsWith(lt + '/')) {
+                indent -= 1;
+                }
+
+                state.result.push(`${'  '.repeat(Math.max(indent, 0))}${line}`);
+
+                const isOpeningTag =
+                line.startsWith(lt) &&
+                !line.startsWith(lt + '/') &&
+                !line.startsWith(lt + '?') &&
+                !line.startsWith(lt + '!') &&
+                !line.endsWith('/' + gt) &&
+                !line.includes(lt + '/');
+
+                if (isOpeningTag) {
+                indent += 1;
+                }
+
+                state.indent = indent;
+                return state;
+                }, { result: [], indent: 0 })
+                .result
+                .join('\n');
+            </fx-function>
         </fx-model>
 
         <fx-output ref="instance('default')/@xml:id"></fx-output>
@@ -531,10 +586,10 @@
                     </p>
                 </div>
 
-                <code>
-                    <pre>{log('default')}</pre>
-                </code>
-
+                <div class="data-code">
+                    <div class="data-code-title">Data</div>
+                    <pre><code>{pretty(log('default'))}</code></pre>
+                </div>
             </header>
 
             <div class="editor-body">
