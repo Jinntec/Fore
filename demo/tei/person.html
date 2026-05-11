@@ -646,8 +646,9 @@
                             <label data-i18n="person.sex">Gender</label>
                             <select class="widget">
                                 <option></option>
-                                <option selected="selected" value="M">male</option>
                                 <option value="F">female</option>
+                                <option selected="selected" value="M">male</option>
+                                <option value="O">other</option>
                             </select>
                         </fx-control>
 
@@ -669,7 +670,7 @@
                 <fieldset class="section-card references-section">
                     <legend>
                         <span class="references-title">References</span>
-                        <fx-trigger class="add" title="Referenz hinzufügen">
+                        <fx-trigger class="add" title="add reference">
                             <button type="button">+</button>
                             <fx-insert context="." ref="idno"></fx-insert>
                         </fx-trigger>
@@ -696,7 +697,7 @@
                                 <label>IdNo</label>
                             </fx-control>
 
-                            <fx-trigger ref=".[count(preceding-sibling::idno) > 0]" class="delete" title="Referenz entfernen">
+                            <fx-trigger ref=".[count(preceding-sibling::idno) > 0]" class="delete" title="delete reference">
                                 <button type="button">−</button>
                                 <fx-delete ref="."></fx-delete>
                             </fx-trigger>

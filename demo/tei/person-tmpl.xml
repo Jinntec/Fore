@@ -1,4 +1,4 @@
-<person xmlns="http://www.tei-c.org/ns/1.0" sex="M">
+<person xmlns="http://www.tei-c.org/ns/1.0" sex="">
     <persName>
         <name type="god"/>
         <name type="praenomen"/>
