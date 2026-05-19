@@ -948,8 +948,11 @@ export class FxFore extends HTMLElement {
 
     try {
       if (force === true || this.initialRun) {
+        performance.mark('force-refresh-start');
         console.log('🔄 🔴🔴🔴 ### full refresh() on ', this);
         await Fore.refreshChildren(this, force);
+        performance.mark('force-refresh-end');
+        performance.measure('force-refresh', 'force-refresh-start', 'force-refresh-end');
       } else {
         await this._processBatchedNotifications();
       }
@@ -1374,7 +1377,12 @@ export class FxFore extends HTMLElement {
 
     // First refresh should be forced
     if (this.createNodes) {
+      performance.mark('initData-start');
       this.initData();
+      performance.mark('initData-end');
+
+      performance.measure('initData', 'initData-start', 'initData-end');
+
       const binds = this.getModel().querySelector('fx-bind');
       if (binds) {
         this.getModel().updateModel();
