@@ -441,7 +441,7 @@ export default class FxControl extends XfAbstractControl {
     }
 
     // ### when there's a src Fore is used as widget and will be loaded from external file
-    if (this.src && !this.loaded && this.modelItem.relevant) {
+    if (this.src && !this.loaded && !this.loading && this.modelItem.relevant) {
       // ### evaluate initial data if necessary
 
       if (this.initial) {
@@ -449,9 +449,11 @@ export default class FxControl extends XfAbstractControl {
         // console.log('initialNodes', this.initialNode);
       }
 
+      this.loading = true;
       // ### load the markup from src
       await this._loadForeFromSrc();
       this.loaded = true;
+      this.loading = false;
 
       // ### replace default instance of embedded Fore with initial nodes
       // const innerInstance = this.querySelector('fx-instance');
