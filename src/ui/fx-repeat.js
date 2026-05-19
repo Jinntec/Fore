@@ -1035,7 +1035,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
     const fore = this.getOwnerForm();
     if (!fore.lazyRefresh || force) {
-      Fore.refreshChildren(this, force);
+      await Fore.refreshChildren(this, force);
     }
 
     this.setIndex(this.index);

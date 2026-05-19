@@ -579,7 +579,7 @@ export default class FxControl extends XfAbstractControl {
     } finally {
       this._isRefreshing = false;
     }
-    Fore.refreshChildren(this, force);
+    await Fore.refreshChildren(this, force);
   }
 
   /**
