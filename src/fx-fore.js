@@ -2,7 +2,11 @@ import { Fore } from './fore.js';
 import './fx-instance.js';
 import { FxModel } from './fx-model.js';
 import '@jinntec/jinn-toast';
-import { evaluateXPathToNodes, evaluateXPathToString, createNamespaceResolver } from './xpath-evaluation.js';
+import {
+  evaluateXPathToNodes,
+  evaluateXPathToString,
+  createNamespaceResolver,
+} from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
 import { XPathUtil } from './xpath-util.js';
 import { FxRepeatAttributes } from './ui/fx-repeat-attributes.js';
@@ -22,9 +26,7 @@ const dirtyStates = {
 };
 async function waitForFunctionLibs(rootEl) {
   const libs = Array.from(rootEl.querySelectorAll('fx-functionlib'));
-  await Promise.all(
-      libs.map(l => (l.readyPromise ? l.readyPromise : Promise.resolve()))
-  );
+  await Promise.all(libs.map(l => (l.readyPromise ? l.readyPromise : Promise.resolve())));
 }
 
 /**
@@ -334,8 +336,8 @@ export class FxFore extends HTMLElement {
     this._scanForNewTemplateExpressionsNextRefresh = false;
     this.repeatsFromAttributesCreated = false;
     this.validateOn = this.hasAttribute('validate-on')
-        ? this.getAttribute('validate-on')
-        : 'update';
+      ? this.getAttribute('validate-on')
+      : 'update';
     // this.mergePartial = this.hasAttribute('merge-partial')? true:false;
     this.mergePartial = false;
     this.createNodes = this.hasAttribute('create-nodes') ? true : false;
@@ -358,9 +360,9 @@ export class FxFore extends HTMLElement {
   _parseTargetList(raw) {
     if (!raw) return [];
     return raw
-        .split(/[\s,]+/)
-        .map(s => s.trim())
-        .filter(Boolean);
+      .split(/[\s,]+/)
+      .map(s => s.trim())
+      .filter(Boolean);
   }
 
   _findBySelector(sel) {
@@ -376,10 +378,10 @@ export class FxFore extends HTMLElement {
 
   _isReadyTarget(el) {
     return !!(
-        el &&
-        (el.ready === true ||
-            (el.classList && el.classList.contains('fx-ready')) ||
-            (typeof el.hasAttribute === 'function' && el.hasAttribute('ready')))
+      el &&
+      (el.ready === true ||
+        (el.classList && el.classList.contains('fx-ready')) ||
+        (typeof el.hasAttribute === 'function' && el.hasAttribute('ready')))
     );
   }
 
@@ -396,7 +398,7 @@ export class FxFore extends HTMLElement {
     if (waitForRaw) {
       if (!this._warnedWaitForDeprecation) {
         console.warn(
-            '[fx-fore] The "wait-for" attribute is deprecated. Use init-on="ready" init-on-target="..." instead.',
+          '[fx-fore] The "wait-for" attribute is deprecated. Use init-on="ready" init-on-target="..." instead.',
         );
         this._warnedWaitForDeprecation = true;
       }
@@ -495,7 +497,7 @@ export class FxFore extends HTMLElement {
     // Special: closest fx-fore
     if (targetSpec === 'closest') {
       const recheckFn =
-          event === 'ready' ? () => this._isReadyTarget(this.closest('fx-fore')) : null;
+        event === 'ready' ? () => this._isReadyTarget(this.closest('fx-fore')) : null;
 
       const matchesFn = ev => {
         const t = ev.target;
@@ -509,7 +511,7 @@ export class FxFore extends HTMLElement {
     const selector = targetSpec;
 
     const recheckFn =
-        event === 'ready' ? () => this._isReadyTarget(this._findBySelector(selector)) : null;
+      event === 'ready' ? () => this._isReadyTarget(this._findBySelector(selector)) : null;
 
     if (typeof recheckFn === 'function' && recheckFn()) {
       return Promise.resolve();
@@ -542,7 +544,7 @@ export class FxFore extends HTMLElement {
     }
 
     this._initGatesPromise = Promise.all(gates.map(g => this._waitForInitGate(g))).then(
-        () => undefined,
+      () => undefined,
     );
     return this._initGatesPromise;
   }
@@ -577,7 +579,7 @@ export class FxFore extends HTMLElement {
       }
       // Fallback for odd engines/polyfills
       return (slotEl.assignedNodes({ flatten: true }) || []).filter(
-          n => n.nodeType === Node.ELEMENT_NODE,
+        n => n.nodeType === Node.ELEMENT_NODE,
       );
     };
 
@@ -595,8 +597,8 @@ export class FxFore extends HTMLElement {
     }
     if (!modelElement.inited) {
       console.info(
-          `%cFore running ... ${this.id ? '#' + this.id : ''}`,
-          'background:#64b5f6; color:white; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+        `%cFore running ... ${this.id ? '#' + this.id : ''}`,
+        'background:#64b5f6; color:white; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
       );
 
       const variables = new Map();
@@ -615,14 +617,13 @@ export class FxFore extends HTMLElement {
       await Promise.all(libs.map(l => l.readyPromise || Promise.resolve()));
 
       await modelElement.modelConstruct();
-      console.log("varbindings ",this._instanceVarBindings);
+      console.log('varbindings ', this._instanceVarBindings);
       this._handleModelConstructDone();
     }
 
     this._createRepeatsFromAttributes();
     this.inited = true;
   };
-
 
   attributeChangedCallback(name, oldValue, newValue) {
     if (oldValue === newValue) return;
@@ -664,7 +665,7 @@ export class FxFore extends HTMLElement {
 
   connectedCallback() {
     const modelElement = Array.from(this.children).find(
-        modelElem => modelElem.nodeName.toUpperCase() === 'FX-MODEL',
+      modelElem => modelElem.nodeName.toUpperCase() === 'FX-MODEL',
     );
 
     this.model = modelElement;
@@ -691,8 +692,8 @@ export class FxFore extends HTMLElement {
             },true);
         */
     this.ignoreExpressions = this.hasAttribute('ignore-expressions')
-        ? this.getAttribute('ignore-expressions')
-        : null;
+      ? this.getAttribute('ignore-expressions')
+      : null;
 
     this.lazyRefresh = this.hasAttribute('refresh-on-view');
     if (this.lazyRefresh) {
@@ -753,9 +754,9 @@ export class FxFore extends HTMLElement {
 
     // Collect existing fx-var names at fx-fore scope (author-defined and previously generated)
     const existingVars = new Set(
-        Array.from(this.querySelectorAll(':scope > fx-var'))
-            .map(v => (v.getAttribute('name') || '').trim())
-            .filter(Boolean),
+      Array.from(this.querySelectorAll(':scope > fx-var'))
+        .map(v => (v.getAttribute('name') || '').trim())
+        .filter(Boolean),
     );
 
     let defaultAssigned = false;
@@ -843,13 +844,13 @@ export class FxFore extends HTMLElement {
   markAsClean() {
     console.log('marking as clean', this);
     this.addEventListener(
-        'value-changed',
-        () => {
-          console.log('MARK as modified', this)
-          this.dirtyState = dirtyStates.DIRTY;
-          this.classList.toggle('fx-modified')
-        },
-        { once: true },
+      'value-changed',
+      () => {
+        console.log('MARK as modified', this);
+        this.dirtyState = dirtyStates.DIRTY;
+        this.classList.toggle('fx-modified');
+      },
+      { once: true },
     );
     this.dirtyState = dirtyStates.CLEAN;
     this.classList.remove('fx-modified');
@@ -965,9 +966,9 @@ export class FxFore extends HTMLElement {
       this.style.visibility = 'visible';
 
       console.info(
-          `%c ✅ refresh-done on #${this.id}`,
-          'background:darkorange; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
-          this.getModel().modelItems,
+        `%c ✅ refresh-done on #${this.id}`,
+        'background:darkorange; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+        this.getModel().modelItems,
       );
 
       Fore.dispatch(this, 'refresh-done', {});
@@ -1007,7 +1008,7 @@ export class FxFore extends HTMLElement {
    */
   _processBatchedNotifications() {
     if (this.batchedNotifications.size > 0) {
-      console.log(`🔄 🎯  ### processing ${ this.batchedNotifications.size} batched notifications`);
+      console.log(`🔄 🎯  ### processing ${this.batchedNotifications.size} batched notifications`);
       console.log('🔄 🎯  ### processing ', Array.from(this.batchedNotifications));
 
       // console.log(`🔍 Processing ${this.batchedNotifications.size} batched notifications`);
@@ -1069,7 +1070,7 @@ export class FxFore extends HTMLElement {
    */
   _updateTemplateExpressions() {
     const search =
-        "(descendant-or-self::*!(text(), @*))[contains(., '{')][substring-after(., '{') => contains('}')][not(ancestor-or-self::*[self::fx-model or self::fx-function])]";
+      "(descendant-or-self::*!(text(), @*))[contains(., '{')][substring-after(., '{') => contains('}')][not(ancestor-or-self::*[self::fx-model or self::fx-function])]";
 
     const tmplExpressions = evaluateXPathToNodes(search, this, this);
     // console.log('template expressions found ', tmplExpressions);
@@ -1080,7 +1081,7 @@ export class FxFore extends HTMLElement {
 
     // console.log('######### storedTemplateExpressions', this.storedTemplateExpressions.length);
 
-    if(!tmplExpressions) return;
+    if (!tmplExpressions) return;
     /*
     storing expressions and their nodes for re-evaluation
     */
@@ -1157,7 +1158,7 @@ export class FxFore extends HTMLElement {
       if (el && el.localName === 'fx-insert' && node.name === 'origin') {
         const v = String(node.value ?? '').trim();
         const isJsonLiteral =
-            (v.startsWith('{') && v.endsWith('}')) || (v.startsWith('[') && v.endsWith(']'));
+          (v.startsWith('{') && v.endsWith('}')) || (v.startsWith('[') && v.endsWith(']'));
         if (isJsonLiteral) return;
       }
     }
@@ -1168,16 +1169,16 @@ export class FxFore extends HTMLElement {
     // - fx-var scoping (in-scope variables)
     // - context() in repeats (repeat item detection)
     const definitionElement =
-        node.nodeType === Node.ATTRIBUTE_NODE
-            ? node.ownerElement
-            : node.nodeType === Node.TEXT_NODE
-                ? (node.parentElement || node.parentNode)
-                : node;
+      node.nodeType === Node.ATTRIBUTE_NODE
+        ? node.ownerElement
+        : node.nodeType === Node.TEXT_NODE
+          ? node.parentElement || node.parentNode
+          : node;
 
     const formElement =
-        definitionElement && definitionElement.nodeType === Node.ELEMENT_NODE
-            ? definitionElement
-            : this;
+      definitionElement && definitionElement.nodeType === Node.ELEMENT_NODE
+        ? definitionElement
+        : this;
 
     const replaced = String(expr ?? '').replace(/{[^}]*}/g, match => {
       if (match === '{}') return match;
@@ -1212,7 +1213,7 @@ export class FxFore extends HTMLElement {
         node.textContent = replaced;
       }
     }
-  }  // eslint-disable-next-line class-methods-use-this
+  } // eslint-disable-next-line class-methods-use-this
   _getTemplateExpression(node) {
     if (this.ignoredNodes) {
       if (node.nodeType === Node.ATTRIBUTE_NODE) {
@@ -1261,17 +1262,17 @@ export class FxFore extends HTMLElement {
 
     // ##### lazy creation should NOT take place if there's a parent Fore using shared instances
     const parentFore =
-        this.parentNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE
-            ? this.parentNode.closest('fx-fore')
-            : null;
+      this.parentNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE
+        ? this.parentNode.closest('fx-fore')
+        : null;
     if (this.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
       console.log('fragment', this.parentNode);
     }
 
     if (parentFore) {
       const shared = parentFore
-          .getModel()
-          .instances.filter(shared => shared.hasAttribute('shared'));
+        .getModel()
+        .instances.filter(shared => shared.hasAttribute('shared'));
       if (shared.length !== 0) return;
     }
 
@@ -1292,8 +1293,8 @@ export class FxFore extends HTMLElement {
       }
     } catch (e) {
       console.warn(
-          'lazyCreateInstance created an error attempting to create a document',
-          e.message,
+        'lazyCreateInstance created an error attempting to create a document',
+        e.message,
       );
     }
   }
@@ -1350,8 +1351,8 @@ export class FxFore extends HTMLElement {
    */
   async _initUI() {
     console.info(
-        `%cinitUI #${this.id}`,
-        'background:lightblue; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+      `%cinitUI #${this.id}`,
+      'background:lightblue; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
     );
 
     const parentFore = this.closest('fx-fore');
@@ -1391,8 +1392,8 @@ export class FxFore extends HTMLElement {
     this.initialRun = false;
     // console.log('### >>>>> dispatching ready >>>>>', this);
     console.info(
-        `%c ✅ ${this.id ? '#' + this.id : 'Fore'} is ready`,
-        'background:lightgreen; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+      `%c ✅ ${this.id ? '#' + this.id : 'Fore'} is ready`,
+      'background:lightgreen; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
     );
 
     // console.log(`### <<<<< ${this.id} ready >>>>>`);
@@ -1437,19 +1438,19 @@ export class FxFore extends HTMLElement {
     if (!overlay || !content) return;
 
     const rows = errors
-        .map(({ element, message }) => {
-          const path = element
-              ? element.tagName.toLowerCase() + (element.id ? `#${element.id}` : '')
-              : '?';
-          const safeMsg = message.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-          const safePath = path.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-          return `<tr><td>${safePath}</td><td>${safeMsg}</td></tr>`;
-        })
-        .join('');
+      .map(({ element, message }) => {
+        const path = element
+          ? element.tagName.toLowerCase() + (element.id ? `#${element.id}` : '')
+          : '?';
+        const safeMsg = message.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const safePath = path.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return `<tr><td>${safePath}</td><td>${safeMsg}</td></tr>`;
+      })
+      .join('');
 
     content.innerHTML = `
       <table>
-        <thead><tr><th>Element</th><th>Problem</th></tr></thead>    
+        <thead><tr><th>Element</th><th>Problem</th></tr></thead>
         <tbody>${rows}</tbody>
       </table>`;
 
@@ -1534,7 +1535,7 @@ export class FxFore extends HTMLElement {
           const lastMatchingSibling = nodeset.reverse().find(node => parentElement.contains(node));
           if (lastMatchingSibling) {
             return lastMatchingSibling;
-            }
+          }
           // Otherwise, just default to appending... If this runs multiple times for multiple nodes
           // it's unexpected to always prepend and get the order of children reversed from the UI.
 
@@ -1568,7 +1569,7 @@ export class FxFore extends HTMLElement {
      * @returns {boolean}
      */
     const isObjectLike = value =>
-        value !== null && (typeof value === 'object' || typeof value === 'function');
+      value !== null && (typeof value === 'object' || typeof value === 'function');
 
     /**
      * @param {*} nodeset
@@ -1609,7 +1610,7 @@ export class FxFore extends HTMLElement {
       // Ignore only simple literal sequences like ('a', 'b', 'c') or (1, 2, 3).
       // Keep fx-repeat refs that are real path expressions or more complex XPath.
       const simpleSequencePattern =
-          /^\(\s*(?:(?:'[^']*'|"[^"]*"|\d+(?:\.\d+)?|\.)(?:\s*,\s*(?:'[^']*'|"[^"]*"|\d+(?:\.\d+)?|\.))*)?\s*\)$/;
+        /^\(\s*(?:(?:'[^']*'|"[^"]*"|\d+(?:\.\d+)?|\.)(?:\s*,\s*(?:'[^']*'|"[^"]*"|\d+(?:\.\d+)?|\.))*)?\s*\)$/;
       if (simpleSequencePattern.test(expr)) return false;
 
       return true;
@@ -1661,7 +1662,10 @@ export class FxFore extends HTMLElement {
       if (candidate.nodeType) return false;
 
       if (Array.isArray(candidate)) {
-        return candidate.length > 0 && !candidate.some(item => item && isObjectLike(item) && item.nodeType);
+        return (
+          candidate.length > 0 &&
+          !candidate.some(item => item && isObjectLike(item) && item.nodeType)
+        );
       }
 
       if (typeof candidate.length === 'number' && typeof candidate.item === 'function') {
@@ -1702,7 +1706,7 @@ export class FxFore extends HTMLElement {
      */
     const getCreationContext = (bound, fallback) => {
       const direct =
-          typeof bound.getInScopeContext === 'function' ? firstNode(bound.getInScopeContext()) : null;
+        typeof bound.getInScopeContext === 'function' ? firstNode(bound.getInScopeContext()) : null;
       if (direct) return direct;
 
       const dotCtx = firstNode(getInScopeContext(bound, '.'));
@@ -1718,9 +1722,9 @@ export class FxFore extends HTMLElement {
      * @type {import('./ForeElementMixin.js').default[]}
      */
     const boundControls = Array.from(
-        root.querySelectorAll(
-            'fx-control[ref],fx-upload[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref]',
-        ),
+      root.querySelectorAll(
+        'fx-control[ref],fx-upload[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref]',
+      ),
     ).filter(boundEl => {
       if (boundEl.nodeName !== 'FX-REPEAT') return true;
 
@@ -1760,6 +1764,11 @@ export class FxFore extends HTMLElement {
         continue;
       }
 
+      // Ignore bound elements in a different form. They will be taken care of in the other form.
+      if (bound.closest('fx-fore') !== this) {
+        continue;
+      }
+
       // We need to create that node!
       const previousControl = boundControls[i - 1];
 
@@ -1770,7 +1779,7 @@ export class FxFore extends HTMLElement {
          * @type {ParentNode}
          */
         const parentNodeset =
-            firstNode(previousControl.nodeset) || firstNode(root.getModel().getDefaultContext());
+          firstNode(previousControl.nodeset) || firstNode(root.getModel().getDefaultContext());
         const creationContext = getCreationContext(bound, parentNodeset);
         const ref = bound.ref;
 
@@ -1833,9 +1842,9 @@ export class FxFore extends HTMLElement {
         parentNodeset.setAttributeNode(newNode);
       } else {
         let referenceNode = this._findReferenceNodeForNewElement(
-            newNode,
-            parentNodeset,
-            siblingControl,
+          newNode,
+          parentNodeset,
+          siblingControl,
         );
 
         if (referenceNode) {
@@ -1870,16 +1879,14 @@ export class FxFore extends HTMLElement {
     }
 
     const ownerDoc =
-        referenceNode.nodeType === Node.DOCUMENT_NODE
-            ? referenceNode
-            : referenceNode.ownerDocument;
+      referenceNode.nodeType === Node.DOCUMENT_NODE ? referenceNode : referenceNode.ownerDocument;
 
     const baseElement =
-        referenceNode.nodeType === Node.DOCUMENT_NODE
-            ? referenceNode.documentElement
-            : referenceNode.nodeType === Node.ATTRIBUTE_NODE
-                ? referenceNode.ownerElement
-                : referenceNode;
+      referenceNode.nodeType === Node.DOCUMENT_NODE
+        ? referenceNode.documentElement
+        : referenceNode.nodeType === Node.ATTRIBUTE_NODE
+          ? referenceNode.ownerElement
+          : referenceNode;
 
     if (!ownerDoc) return null;
 
@@ -1898,7 +1905,7 @@ export class FxFore extends HTMLElement {
           const [prefix, localName] = attrToken.split(':');
           return {
             isAttribute: true,
-            namespaceURI: prefix === '*' ? null : (namespaceResolver(prefix) || null),
+            namespaceURI: prefix === '*' ? null : namespaceResolver(prefix) || null,
             localName,
           };
         }
@@ -1912,7 +1919,7 @@ export class FxFore extends HTMLElement {
         const [prefix, localName] = raw.split(':');
         return {
           isAttribute: false,
-          namespaceURI: prefix === '*' ? baseNamespace : (namespaceResolver(prefix) || baseNamespace),
+          namespaceURI: prefix === '*' ? baseNamespace : namespaceResolver(prefix) || baseNamespace,
           localName,
         };
       }
@@ -1934,9 +1941,9 @@ export class FxFore extends HTMLElement {
     };
 
     const steps = xpath
-        .split('/')
-        .map(step => step.trim())
-        .filter(step => step && step !== '.');
+      .split('/')
+      .map(step => step.trim())
+      .filter(step => step && step !== '.');
 
     if (!steps.length) return null;
 
@@ -1961,11 +1968,13 @@ export class FxFore extends HTMLElement {
       }
 
       const element = parsed.namespaceURI
-          ? ownerDoc.createElementNS(parsed.namespaceURI, parsed.localName)
-          : ownerDoc.createElement(parsed.localName);
+        ? ownerDoc.createElementNS(parsed.namespaceURI, parsed.localName)
+        : ownerDoc.createElement(parsed.localName);
 
       for (const predicate of predicates) {
-        const attrName = predicate.name.includes(':') ? predicate.name.split(':')[1] : predicate.name;
+        const attrName = predicate.name.includes(':')
+          ? predicate.name.split(':')[1]
+          : predicate.name;
         element.setAttribute(attrName, predicate.value);
       }
 
