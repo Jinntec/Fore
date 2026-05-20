@@ -14,8 +14,20 @@ const INDEX_RE = /index\s*\(\s*['"]([^'"]+)['"]\s*\)/g;
 
 // Attributes that may carry XPath expressions
 const XPATH_ATTRS = [
-  'ref', 'value', 'calculate', 'constraint', 'required', 'readonly',
-  'relevant', 'bind', 'context', 'if', 'while', 'origin', 'iterate', 'at',
+  'ref',
+  'value',
+  'calculate',
+  'constraint',
+  'required',
+  'readonly',
+  'relevant',
+  'bind',
+  'context',
+  'if',
+  'while',
+  'origin',
+  'iterate',
+  'at',
 ];
 
 function _isDynamic(val) {
@@ -23,7 +35,11 @@ function _isDynamic(val) {
 }
 
 function _byId(fore, id) {
-  return fore.ownerDocument.getElementById(id) || fore.getRootNode().getElementById?.(id) || fore.querySelector(`#${id}`);
+  return (
+    fore.ownerDocument.getElementById(id) ||
+    fore.getRootNode().getElementById?.(id) ||
+    fore.querySelector(`#${id}`)
+  );
 }
 
 function _checkSendSubmissions(fore, errors) {
@@ -31,9 +47,14 @@ function _checkSendSubmissions(fore, errors) {
   fore.querySelectorAll('fx-send[submission]').forEach(el => {
     const id = el.getAttribute('submission');
     if (_isDynamic(id)) return;
-    const target = model ? model.querySelector(`fx-submission#${id}`) : fore.querySelector(`fx-submission#${id}`);
+    const target = model
+      ? model.querySelector(`fx-submission#${id}`)
+      : fore.querySelector(`fx-submission#${id}`);
     if (!target) {
-      errors.push({ element: el, message: `<fx-send submission="${id}">: no <fx-submission id="${id}"> found` });
+      errors.push({
+        element: el,
+        message: `<fx-send submission="${id}">: no <fx-submission id="${id}"> found`,
+      });
     }
   });
 }
@@ -43,7 +64,10 @@ function _checkDispatchTargets(fore, errors) {
     const id = el.getAttribute('targetid');
     if (_isDynamic(id)) return;
     if (!_byId(fore, id)) {
-      errors.push({ element: el, message: `<fx-dispatch targetid="${id}">: no element with id="${id}" found` });
+      errors.push({
+        element: el,
+        message: `<fx-dispatch targetid="${id}">: no element with id="${id}" found`,
+      });
     }
   });
 }
@@ -60,7 +84,8 @@ function _checkXPathInstanceRefs(fore, errors) {
       while ((m = INSTANCE_RE.exec(val)) !== null) {
         const id = m[1];
         const localInstance = fore.querySelector(`fx-instance#${id}`);
-        const sharedInstance = !localInstance && fore.ownerDocument.querySelector(`fx-instance[shared]#${id}`);
+        const sharedInstance =
+          !localInstance && fore.ownerDocument.querySelector(`fx-instance[shared]#${id}`);
         if (!localInstance && !sharedInstance) {
           errors.push({
             element: el,
@@ -88,7 +113,10 @@ function _checkCallActions(fore, errors) {
     const id = el.getAttribute('action');
     if (_isDynamic(id)) return;
     if (!_byId(fore, id)) {
-      errors.push({ element: el, message: `<fx-call action="${id}">: no element with id="${id}" found` });
+      errors.push({
+        element: el,
+        message: `<fx-call action="${id}">: no element with id="${id}" found`,
+      });
     }
   });
 }
@@ -98,7 +126,10 @@ function _checkShowHideDialogs(fore, errors) {
     const id = el.getAttribute('dialog');
     if (_isDynamic(id)) return;
     if (!_byId(fore, id)) {
-      errors.push({ element: el, message: `<${el.localName} dialog="${id}">: no element with id="${id}" found` });
+      errors.push({
+        element: el,
+        message: `<${el.localName} dialog="${id}">: no element with id="${id}" found`,
+      });
     }
   });
 }
@@ -110,7 +141,10 @@ function _checkLoadAttachTo(fore, errors) {
     if (!val.startsWith('#')) return; // _blank, _self etc. are valid non-id targets
     const id = val.substring(1);
     if (!_byId(fore, id)) {
-      errors.push({ element: el, message: `<fx-load attach-to="${val}">: no element with id="${id}" found` });
+      errors.push({
+        element: el,
+        message: `<fx-load attach-to="${val}">: no element with id="${id}" found`,
+      });
     }
   });
 }
@@ -120,7 +154,10 @@ function _checkRefreshControl(fore, errors) {
     const id = el.getAttribute('control');
     if (_isDynamic(id)) return;
     if (!_byId(fore, id)) {
-      errors.push({ element: el, message: `<fx-refresh control="${id}">: no element with id="${id}" found` });
+      errors.push({
+        element: el,
+        message: `<fx-refresh control="${id}">: no element with id="${id}" found`,
+      });
     }
   });
 }
@@ -130,10 +167,15 @@ function _checkResetInstance(fore, errors) {
   fore.querySelectorAll('fx-reset[instance]').forEach(el => {
     const id = el.getAttribute('instance');
     if (_isDynamic(id)) return;
-    const target = model ? model.querySelector(`fx-instance#${id}`) : fore.querySelector(`fx-instance#${id}`);
+    const target = model
+      ? model.querySelector(`fx-instance#${id}`)
+      : fore.querySelector(`fx-instance#${id}`);
     const sharedTarget = !target && fore.ownerDocument.querySelector(`fx-instance[shared]#${id}`);
     if (!target && !sharedTarget) {
-      errors.push({ element: el, message: `<fx-reset instance="${id}">: no <fx-instance id="${id}"> found` });
+      errors.push({
+        element: el,
+        message: `<fx-reset instance="${id}">: no <fx-instance id="${id}"> found`,
+      });
     }
   });
 }
@@ -143,7 +185,10 @@ function _checkSetfocusControl(fore, errors) {
     const id = el.getAttribute('control');
     if (_isDynamic(id)) return;
     if (!_byId(fore, id)) {
-      errors.push({ element: el, message: `<fx-setfocus control="${id}">: no element with id="${id}" found` });
+      errors.push({
+        element: el,
+        message: `<fx-setfocus control="${id}">: no element with id="${id}" found`,
+      });
     }
   });
 }
@@ -153,7 +198,10 @@ function _checkToggleCase(fore, errors) {
     const id = el.getAttribute('case');
     if (_isDynamic(id)) return;
     if (!fore.querySelector(`fx-case#${id}`)) {
-      errors.push({ element: el, message: `<fx-toggle case="${id}">: no <fx-case id="${id}"> found` });
+      errors.push({
+        element: el,
+        message: `<fx-toggle case="${id}">: no <fx-case id="${id}"> found`,
+      });
     }
   });
 }
