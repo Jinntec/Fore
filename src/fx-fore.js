@@ -29,6 +29,17 @@ async function waitForFunctionLibs(rootEl) {
   await Promise.all(libs.map(l => (l.readyPromise ? l.readyPromise : Promise.resolve())));
 }
 
+/*
+ * Determine whether a string is a valid Name
+ *
+ * @param {string} name
+ * @returns {boolean} whether the name is a valid one
+ */
+function isValidName(name) {
+  const result = new DOMParser().parseFromString(`<${name}/>`, 'application/xml');
+  return result.querySelector('parsererror') === null;
+}
+
 /**
  * Main class for Fore.Outermost container element for each Fore application.
  *
@@ -1948,8 +1959,47 @@ export class FxFore extends HTMLElement {
       return { token, predicates };
     };
 
-    const steps = xpath
-      .split('/')
+    const splitSteps = xpath => {
+      /**
+       * @type {string[]}
+       */
+      const steps = [];
+      let scratch = '';
+      let isInPredicate = false;
+      for (const char of xpath.split('')) {
+        if (char === '[') {
+          isInPredicate = true;
+          scratch += char;
+          continue;
+        }
+        if (char === ']') {
+          scratch += char;
+          isInPredicate = false;
+          continue;
+        }
+        if (!isInPredicate) {
+          // Just add to the scratch. Do not check for slashes within predicates
+          if (char === '/') {
+            // Consume this path step
+            if (scratch) {
+              steps.push(scratch);
+            }
+            scratch = '';
+            continue;
+          }
+        }
+        scratch += char;
+      }
+
+      if (scratch) {
+        // Flush it
+        steps.push(scratch);
+      }
+
+      return steps;
+    };
+
+    const steps = splitSteps(xpath)
       .map(step => step.trim())
       .filter(step => step && step !== '.');
 
@@ -1973,6 +2023,14 @@ export class FxFore extends HTMLElement {
         }
         current.setAttribute(parsed.localName, '');
         continue;
+      }
+
+      if (!isValidName(parsed.localName)) {
+        // This did not result in a valid name. Stop.
+        console.warn(
+          `Creating node for the XPath ${xpath} failed because the part ${parsed.localName} is not a valid Name.`,
+        );
+        return;
       }
 
       const element = parsed.namespaceURI

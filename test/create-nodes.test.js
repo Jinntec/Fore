@@ -358,4 +358,30 @@ describe('create-nodes', () => {
         expect(root.getElementsByTagNameNS(cbcNs, 'ID')).to.have.length(1);
         expect(root.getElementsByTagNameNS(cbcNs, 'Note')).to.have.length(1);
     });
+
+    it('works for a exotic case', async () => {
+        const el = await fixtureSync(html`
+            <fx-fore create-nodes>
+                <fx-model id="model1">
+                    <fx-instance>
+                        <data>
+                        </data>
+                    </fx-instance>
+                    <fx-group ref=".">
+                        <fx-control ref="a[@href='http://foobar.com/baz']"></fx-control>
+                    </fx-group>
+                </fx-model>
+            </fx-fore>
+        `);
+
+        //      await elementUpdated(el);
+        await oneEvent(el, 'ready');
+
+        const inst = document.querySelector('fx-instance');
+
+        const elem = inst.instanceData.documentElement.firstElementChild;
+        expect(elem.nodeName).to.equal('a');
+        expect(elem.hasAttribute('href')).to.be.true;
+    });
+
 });
