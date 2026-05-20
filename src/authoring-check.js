@@ -43,10 +43,11 @@ function _byId(fore, id) {
 }
 
 function _checkSendSubmissions(fore, errors) {
-  const model = fore.querySelector(':scope > fx-model');
   fore.querySelectorAll('fx-send[submission]').forEach(el => {
     const id = el.getAttribute('submission');
     if (_isDynamic(id)) return;
+    const localFore = el.closest('fx-fore');
+    const { model } = localFore;
     const target = model
       ? model.querySelector(`fx-submission#${id}`)
       : fore.querySelector(`fx-submission#${id}`);
@@ -75,6 +76,7 @@ function _checkDispatchTargets(fore, errors) {
 function _checkXPathInstanceRefs(fore, errors) {
   const allEls = Array.from(fore.querySelectorAll('*'));
   for (const el of allEls) {
+    const localFore = el.closest('fx-fore');
     for (const attr of XPATH_ATTRS) {
       const val = el.getAttribute(attr);
       if (!val) continue;
@@ -83,9 +85,9 @@ function _checkXPathInstanceRefs(fore, errors) {
       let m;
       while ((m = INSTANCE_RE.exec(val)) !== null) {
         const id = m[1];
-        const localInstance = fore.querySelector(`fx-instance#${id}`);
+        const localInstance = localFore.querySelector(`fx-instance#${id}`);
         const sharedInstance =
-          !localInstance && fore.ownerDocument.querySelector(`fx-instance[shared]#${id}`);
+          !localInstance && localFore.ownerDocument.querySelector(`fx-instance[shared]#${id}`);
         if (!localInstance && !sharedInstance) {
           errors.push({
             element: el,
@@ -97,7 +99,7 @@ function _checkXPathInstanceRefs(fore, errors) {
       INDEX_RE.lastIndex = 0;
       while ((m = INDEX_RE.exec(val)) !== null) {
         const id = m[1];
-        if (!fore.querySelector(`fx-repeat#${id}`)) {
+        if (!localFore.querySelector(`fx-repeat#${id}`)) {
           errors.push({
             element: el,
             message: `[${attr}="${val}"]: index('${id}') — no <fx-repeat id="${id}"> found`,
