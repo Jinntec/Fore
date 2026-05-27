@@ -2016,6 +2016,14 @@ export class FxFore extends HTMLElement {
 
       const parsed = parseName(token);
 
+      if (!isValidName(parsed.localName)) {
+        // This did not result in a valid name. Stop.
+        console.warn(
+          `Creating node for the XPath ${xpath} failed because the part ${parsed.localName} is not a valid Name.`,
+        );
+        return;
+      }
+
       if (parsed.isAttribute) {
         if (!current) {
           const attr = ownerDoc.createAttribute(parsed.localName);
@@ -2023,14 +2031,6 @@ export class FxFore extends HTMLElement {
         }
         current.setAttribute(parsed.localName, '');
         continue;
-      }
-
-      if (!isValidName(parsed.localName)) {
-        // This did not result in a valid name. Stop.
-        console.warn(
-          `Creating node for the XPath ${xpath} failed because the part ${parsed.localName} is not a valid Name.`,
-        );
-        return;
       }
 
       const element = parsed.namespaceURI
