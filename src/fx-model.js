@@ -133,10 +133,8 @@ export class FxModel extends HTMLElement {
     const fore = model.formElement;
 
     if (fore?.createNodes && (node === null || node === undefined)) {
-      const mi = new ModelItem(undefined, ref, null, null, instanceId, fore);
-      mi.isSynthetic = true;
-      model.registerModelItem(mi);
-      return mi;
+      // Do not create the model item. It may be exchanged later when create-nodes actually made the node
+      return null;
     }
     if (node === null || node === undefined) return null;
 
@@ -159,8 +157,10 @@ export class FxModel extends HTMLElement {
     }
 
     const isLensObject =
-        !!targetNode && typeof targetNode === 'object' &&
-        typeof targetNode.get === 'function' && typeof targetNode.set === 'function';
+      !!targetNode &&
+      typeof targetNode === 'object' &&
+      typeof targetNode.get === 'function' &&
+      typeof targetNode.set === 'function';
 
     // If ModelItem for same path exists, RETARGET it (node OR lens)
     if (path) {
@@ -182,12 +182,12 @@ export class FxModel extends HTMLElement {
     }
 
     const mi = new ModelItem(
-        path,
-        ref,
-        targetNode,
-        model.getBindForElement(targetNode),
-        instanceId,
-        fore,
+      path,
+      ref,
+      targetNode,
+      model.getBindForElement(targetNode),
+      instanceId,
+      fore,
     );
     mi.isSynthetic = true;
 
@@ -231,7 +231,8 @@ export class FxModel extends HTMLElement {
           const defInst = this.getDefaultInstance();
           if (defInst) {
             const t = (defInst.getAttribute && defInst.getAttribute('type')) || defInst.type;
-            bindings.default = t === 'json' ? defInst.getInstanceData() : defInst.getDefaultContext();
+            bindings.default =
+              t === 'json' ? defInst.getInstanceData() : defInst.getDefaultContext();
           }
         } catch (_e) {
           // ignore
@@ -734,14 +735,14 @@ export class FxModel extends HTMLElement {
 
     // Path lookup
     if (typeof nodeOrPath === 'string') {
-      const key = nodeOrPath.includes(':') ? nodeOrPath.substring(0, nodeOrPath.indexOf(':')) : nodeOrPath;
+      const key = nodeOrPath.includes(':')
+        ? nodeOrPath.substring(0, nodeOrPath.indexOf(':'))
+        : nodeOrPath;
       return this.modelItems.find(mi => mi.path === key) || null;
     }
 
     // Node/lens lookup
-    return (
-        this.modelItems.find(mi => mi.node === nodeOrPath || mi.lens === nodeOrPath) || null
-    );
+    return this.modelItems.find(mi => mi.node === nodeOrPath || mi.lens === nodeOrPath) || null;
   }
 
   /**
@@ -791,9 +792,9 @@ export class FxModel extends HTMLElement {
     // ### lookup in parent Fore if present (shared instances)
     if (!found) {
       const parentFore =
-          this.fore.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE
-              ? this.fore.parentNode.host.closest('fx-fore')
-              : this.fore.parentNode.closest('fx-fore');
+        this.fore.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE
+          ? this.fore.parentNode.host.closest('fx-fore')
+          : this.fore.parentNode.closest('fx-fore');
 
       if (parentFore) {
         const parentInstances = parentFore.getModel().instances;
