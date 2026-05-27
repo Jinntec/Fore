@@ -1,7 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import {
-  html, fixtureSync, expect, elementUpdated, oneEvent,
-} from '@open-wc/testing';
+import { html, fixtureSync, expect, elementUpdated, oneEvent } from '@open-wc/testing';
 
 import '../index.js';
 
@@ -80,12 +78,14 @@ describe('group tests', () => {
             </data>
           </fx-instance>
 
-          <fx-submission id="s-load"
-                         method="post"
-                         url="#echo"
-                         ref="instance('data')"
-                         replace="instance"
-                         instance="default"></fx-submission>
+          <fx-submission
+            id="s-load"
+            method="post"
+            url="#echo"
+            ref="instance('data')"
+            replace="instance"
+            instance="default"
+          ></fx-submission>
         </fx-model>
 
         <fx-trigger id="t1">
@@ -121,14 +121,71 @@ describe('group tests', () => {
     const t1 = el.querySelector('#t1');
     t1.performActions();
 
-        setTimeout(() => group.refresh());
-        await oneEvent(group, 'enabled');
+    setTimeout(() => group.refresh());
+    await oneEvent(group, 'enabled');
 
-        expect(group.hasAttribute('relevant')).to.be.true;
+    expect(group.hasAttribute('relevant')).to.be.true;
 
-        const t2 = el.querySelector('#t2');
-        t2.performActions();
-        await oneEvent(group, 'disabled');
-        expect(group.hasAttribute('nonrelevant')).to.be.true;
+    const t2 = el.querySelector('#t2');
+    t2.performActions();
+    await oneEvent(group, 'disabled');
+    expect(group.hasAttribute('nonrelevant')).to.be.true;
+  });
+
+  it('groups that bind to something nonexistant do not get relevant when create-nodes is enabled and the node could not be created', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore create-nodes>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <foo type="baz">bar</foo>
+            </data>
+          </fx-instance>
+        </fx-model>
+
+        <fx-group id="the-group" ref="foo/@type='not-baz'">
+          <h2>a section of content being non-relevant initiallly</h2>
+        </fx-group>
+      </fx-fore>
+    `);
+
+    await elementUpdated(el);
+    const group = el.querySelector('#the-group');
+    expect(group).to.exist;
+
+    expect(group.hasAttribute('relevant'), 'The group should not be relevant').to.be.false;
+    expect(group.hasAttribute('nonrelevant'), 'The group should be nonrelevant').to.be.true;
+
+    // Now make it relevant!
+  });
+
+  it('groups that bind to something nonexistant do not get relevant when create-nodes is enabled and the node can be created', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore create-nodes>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <foo></foo>
+            </data>
+          </fx-instance>
+        </fx-model>
+
+        <fx-group id="the-group" ref="foo/bar">
+          <h2>
+            a section of content being non-relevant initiallly. But create-nodes fills it in right
+            away!
+          </h2>
+        </fx-group>
+      </fx-fore>
+    `);
+
+    await elementUpdated(el);
+    const group = el.querySelector('#the-group');
+    expect(group).to.exist;
+
+    expect(group.hasAttribute('relevant')).to.be.true;
+    expect(group.hasAttribute('nonrelevant')).to.be.false;
+
+    // Now make it relevant!
   });
 });
