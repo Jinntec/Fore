@@ -133,13 +133,8 @@ export class FxModel extends HTMLElement {
     const fore = model.formElement;
 
     if (fore?.createNodes && (node === null || node === undefined)) {
-      const mi = new ModelItem(undefined, ref, null, null, instanceId, fore);
-      mi.isSynthetic = true;
-      // TODO: set the relevancy to false only if the node could not be created
-      mi.relevant = false;
-
-      // Do not register the model item. It may be exchanged later when create-nodes actually made the node
-      return mi;
+      // Do not create the model item. It may be exchanged later when create-nodes actually made the node
+      return null;
     }
     if (node === null || node === undefined) return null;
 
