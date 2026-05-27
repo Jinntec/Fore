@@ -12,6 +12,9 @@
         .dynamic {
             background: #76ff03;
         }
+        fx-output{
+            display:inline-block !important;
+        }
     </style>
 </head>
 <body unresolved="unresolved">
@@ -23,25 +26,25 @@
 
     <p>First of all - there can as many <code><a href="https://jinntec.github.io/fore-docs/elements/model/instance/" target="_blank">fx-instance</a></code> elements as you need.</p>
 
-    <demo-snippet>
+    <demo-snippet open="open">
         <template>
-            <fx-fore>
-                <fx-model>
-                    <fx-instance>
-                        <data>
-                            <foobar></foobar>
-                        </data>
-                    </fx-instance>
-                    <fx-instance id="second">
-                        <data>
-                            <item>second instance</item>
-                        </data>
-                    </fx-instance>
-                    .
-                    .
-                    .
-                </fx-model>
-            </fx-fore>
+<fx-fore>
+    <fx-model>
+        <fx-instance>
+            <data>
+                <foobar></foobar>
+            </data>
+        </fx-instance>
+        <fx-instance id="second">
+            <data>
+                <item>second instance</item>
+            </data>
+        </fx-instance>
+        .
+        .
+        .
+    </fx-model>
+</fx-fore>
         </template>
     </demo-snippet>
     <h3>Description</h3>
@@ -62,27 +65,25 @@
     next example.</p>
 
     <h2>Addressing instances</h2>
-    <demo-snippet>
+    <demo-snippet open="open">
         <template>
-            <fx-fore>
-                <fx-model>
-                    <fx-instance>
-                        <data>
-                            <foobar>hi</foobar>
-                        </data>
-                    </fx-instance>
-                    <fx-instance id="second">
-                        <data>
-                            <item>second</item>
-                        </data>
-                    </fx-instance>
-                </fx-model>
-                <fx-output ref="foobar"></fx-output>,
-                <fx-output ref="instance('second')//item"></fx-output>
+<fx-fore>
+    <fx-model>
+        <fx-instance>
+            <data>
+                <foobar>hi</foobar>
+            </data>
+        </fx-instance>
+        <fx-instance id="second">
+            <data>
+                <item>second</item>
+            </data>
+        </fx-instance>
+    </fx-model>
+    <fx-output ref="foobar"></fx-output>,
+    <fx-output ref="instance('second')//item"></fx-output>
 
-            </fx-fore>
-
-
+</fx-fore>
         </template>
     </demo-snippet>
 

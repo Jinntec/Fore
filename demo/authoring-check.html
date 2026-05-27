@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport">
+    <title>Authoring Check Demo</title>
+    <link href="../resources/fore.css" rel="stylesheet">
+    <link href="../resources/vars.css" rel="stylesheet">
+    <link href="../resources/toastify.css" rel="stylesheet">
+    <script type="module">
+        import './demo.js';
+    </script>
+    <style>
+        body {
+            font-family: sans-serif;
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 2rem;
+            color: #333;
+        }
+        h1 { margin-bottom: 0.25rem; }
+        .subtitle {
+            color: #666;
+            margin-top: 0;
+            margin-bottom: 2rem;
+        }
+        .scenario {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .scenario h2 {
+            margin-top: 0;
+            font-size: 1.1rem;
+        }
+        .scenario.errors { border-color: #c62828; }
+        .scenario.errors h2 { color: #c62828; }
+        .scenario.ok { border-color: #2e7d32; }
+        .scenario.ok h2 { color: #2e7d32; }
+        .note {
+            background: #f5f5f5;
+            border-left: 4px solid #888;
+            padding: 0.75rem 1rem;
+            margin: 1rem 0 0;
+            font-size: 0.9rem;
+        }
+        .note code {
+            background: #e8e8e8;
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-size: 0.85rem;
+        }
+        .error-list {
+            background: #fff3f3;
+            border: 1px solid #ffcdd2;
+            border-radius: 4px;
+            padding: 0.75rem 1rem;
+            margin: 1rem 0;
+            font-size: 0.875rem;
+        }
+        .error-list h3 {
+            margin: 0 0 0.5rem;
+            font-size: 0.9rem;
+            color: #c62828;
+        }
+        .error-list ul {
+            margin: 0;
+            padding-left: 1.25rem;
+            columns: 2;
+        }
+        .error-list li {
+            margin-bottom: 0.3rem;
+            font-family: monospace;
+            break-inside: avoid;
+        }
+        fx-control {
+            display: block;
+            padding: 0.5rem 0;
+        }
+        label { display: block; font-size: 0.9rem; margin-bottom: 2px; }
+        input { width: 16rem; }
+        fx-trigger button {
+            margin-top: 0.75rem;
+            padding: 0.4rem 1.2rem;
+            margin-right: 0.5rem;
+        }
+        .badge {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 3px;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+        }
+        .badge.auto { background: #e3f2fd; color: #1565c0; }
+        .badge.off  { background: #e8f5e9; color: #2e7d32; }
+    </style>
+</head>
+<body>
+
+<h1>Authoring Check</h1>
+<p class="subtitle">
+    Fore detects common authoring mistakes at startup and displays them in a modal.
+    Add <code>no-check</code> to <code>&lt;fx-fore&gt;</code> to suppress checks in production.
+</p>
+
+<!-- ═══════════════════════════════════════════════════════
+     SCENARIO 1: form with deliberate authoring errors
+     ═════════════════════════════════════════════════════ -->
+<div class="scenario errors">
+    <h2>Broken form — checks active <span class="badge auto">auto</span></h2>
+    <p>
+        This form has intentional authoring mistakes covering all supported checks.
+        The error modal appears automatically on load because <code>no-check</code> is <em>not</em> set.
+    </p>
+
+    <div class="error-list">
+        <h3>Errors introduced below</h3>
+        <ul>
+            <li>fx-send submission="save" — id is "submit"</li>
+            <li>fx-dispatch targetid="confirm-dlg" — no such element</li>
+            <li>instance('prefs') in fx-bind — no fx-instance#prefs</li>
+            <li>index('items') in fx-bind — repeat id is "my-list"</li>
+            <li>fx-call action="shared-action" — no such element</li>
+            <li>fx-show dialog="info-dialog" — no such element</li>
+            <li>fx-hide dialog="info-dialog" — no such element</li>
+            <li>fx-load attach-to="#content-slot" — no such element</li>
+            <li>fx-refresh control="name-field" — no such element</li>
+            <li>fx-reset instance="scratch" — no fx-instance#scratch</li>
+            <li>fx-setfocus control="email-field" — no such element</li>
+            <li>fx-toggle case="tab-b" — no fx-case#tab-b</li>
+        </ul>
+    </div>
+
+    <fx-fore id="broken-form">
+        <fx-model>
+            <fx-instance>
+                <data>
+                    <name>Alice</name>
+                    <item>first</item>
+                    <item>second</item>
+                    <position>0</position>
+                </data>
+            </fx-instance>
+
+            <!-- ✗ instance('prefs') does not exist -->
+            <fx-bind ref="name" relevant="instance('prefs')/debug = 'true'"></fx-bind>
+
+            <!-- ✗ index('items') — repeat id is 'my-list' -->
+            <fx-bind ref="position" calculate="index('items')"></fx-bind>
+
+            <!-- ✗ fx-submission id is "submit", not "save" -->
+            <fx-submission id="submit" method="post" url="#"></fx-submission>
+        </fx-model>
+
+        <fx-control ref="name">
+            <label slot="label">Name</label>
+            <input slot="widget">
+        </fx-control>
+
+        <fx-repeat id="my-list" ref="item">
+            <template>
+                <fx-control ref=".">
+                    <label slot="label">Item</label>
+                    <input slot="widget">
+                </fx-control>
+            </template>
+        </fx-repeat>
+
+        <fx-trigger>
+            <!-- ✗ targetid does not exist -->
+            <fx-dispatch name="show" targetid="confirm-dlg"></fx-dispatch>
+            <button>Dispatch</button>
+        </fx-trigger>
+
+        <fx-trigger>
+            <!-- ✗ submission="save" but fx-submission id is "submit" -->
+            <fx-send submission="save"></fx-send>
+            <button>Send</button>
+        </fx-trigger>
+
+        <fx-trigger>
+            <!-- ✗ action id does not exist -->
+            <fx-call action="shared-action"></fx-call>
+            <button>Call action</button>
+        </fx-trigger>
+
+        <fx-trigger>
+            <!-- ✗ dialog id does not exist -->
+            <fx-show dialog="info-dialog"></fx-show>
+            <button>Show dialog</button>
+        </fx-trigger>
+
+        <fx-trigger>
+            <!-- ✗ dialog id does not exist -->
+            <fx-hide dialog="info-dialog"></fx-hide>
+            <button>Hide dialog</button>
+        </fx-trigger>
+
+        <fx-trigger>
+            <!-- ✗ attach-to element does not exist -->
+            <fx-load attach-to="#content-slot" url="fragment.html"></fx-load>
+            <button>Load</button>
+        </fx-trigger>
+
+        <fx-trigger>
+            <!-- ✗ control id does not exist -->
+            <fx-refresh control="name-field"></fx-refresh>
+            <button>Refresh control</button>
+        </fx-trigger>
+
+        <fx-trigger>
+            <!-- ✗ instance id "scratch" does not exist -->
+            <fx-reset instance="scratch"></fx-reset>
+            <button>Reset</button>
+        </fx-trigger>
+
+        <fx-trigger>
+            <!-- ✗ control id does not exist -->
+            <fx-setfocus control="email-field"></fx-setfocus>
+            <button>Set focus</button>
+        </fx-trigger>
+
+        <fx-switch>
+            <fx-case id="tab-a" selected="true">Tab A content</fx-case>
+            <!-- ✗ fx-toggle below references tab-b which does not exist -->
+        </fx-switch>
+        <fx-trigger>
+            <fx-toggle case="tab-b"></fx-toggle>
+            <button>Toggle case</button>
+        </fx-trigger>
+
+    </fx-fore>
+
+    <div class="note">
+        Fix each mistake and reload — the modal disappears when no errors remain.
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SCENARIO 2: same form with no-check (production mode)
+     ═════════════════════════════════════════════════════ -->
+<div class="scenario ok">
+    <h2>Same form — checks disabled <span class="badge off">no-check</span></h2>
+    <p>
+        Adding <code>no-check</code> to <code>&lt;fx-fore&gt;</code> silences all checks.
+        The authoring-check module is not even loaded — zero overhead.
+    </p>
+
+    <fx-fore id="nocheck-form" no-check>
+        <fx-model>
+            <fx-instance>
+                <data>
+                    <name>Bob</name>
+                </data>
+            </fx-instance>
+            <fx-submission id="submit" method="post" url="#"></fx-submission>
+        </fx-model>
+
+        <fx-control ref="name">
+            <label slot="label">Name</label>
+            <input slot="widget">
+        </fx-control>
+
+        <fx-trigger>
+            <!-- broken ref, but silent -->
+            <fx-send submission="save"></fx-send>
+            <button>Save (silent)</button>
+        </fx-trigger>
+    </fx-fore>
+
+    <div class="note">
+        This form has a broken <code>fx-send</code> reference but no modal appears
+        because <code>no-check</code> is present.
+    </div>
+</div>
+
+</body>
+</html>

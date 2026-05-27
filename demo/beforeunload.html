@@ -30,30 +30,30 @@
 	<p>Call
 	the <code><a href="https://jinntec.github.io/fore-docs/elements/actions/unmodified/" target="_blank">fx-unmodified</a></code>
 	action to mark the page as clean again.</p>
-    <demo-snippet>
+    <demo-snippet open="open">
         <template>
-            <fx-fore id="todo" show-confirmation="true">
-                <fx-model>
-                    <fx-instance>
-                        <data>
-                            <changed>false</changed>
-                            <item>item</item>
-                        </data>
-                    </fx-instance>
-                </fx-model>
-                <fx-control ref="item">
-                    <label>Change this</label>
-                </fx-control>
+<fx-fore id="todo" show-confirmation="true">
+    <fx-model>
+        <fx-instance>
+            <data>
+                <changed>false</changed>
+                <item>item</item>
+            </data>
+        </fx-instance>
+    </fx-model>
+    <fx-control ref="item">
+        <label>Change this</label>
+    </fx-control>
 
-				<fx-trigger>
-				  <button>Save</button>
-				  <fx-action>
-					<fx-message>Saving… Done</fx-message>
-					<fx-unmodified></fx-unmodified>
-				  </fx-action>
-				</fx-trigger>
-            </fx-fore>
-            <a href="https://github.com/jinntec/fore">Fore on Github</a>
+    <fx-trigger>
+      <button>Save</button>
+      <fx-action>
+        <fx-message>Saving… Done</fx-message>
+        <fx-unmodified></fx-unmodified>
+      </fx-action>
+    </fx-trigger>
+</fx-fore>
+<a href="https://github.com/jinntec/fore">Fore on Github</a>
         </template>
     </demo-snippet>
 

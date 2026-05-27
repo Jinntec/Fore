@@ -1,0 +1,84 @@
+<!DOCTYPE HTML>
+<html xmlns:func="generator-functions">
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport">
+    <title></title>
+    <link href="../resources/fore.css" rel="stylesheet">
+    <link href="../resources/vars.css" rel="stylesheet">
+    <link href="../resources/toastify.css" rel="stylesheet">
+    <link href="../demo.css" rel="stylesheet">
+    <link href="default.css" rel="stylesheet">
+    <script type="module">
+        import './demo.js';
+        import '../tools/fx-lens.js';
+    </script>
+    <style>
+        body{
+            font-family: sans-serif;
+        }
+        fx-control{
+            padding: 0.5rem 1rem;
+        }
+        input, select{
+            width: 20rem;
+        }
+        [type=checkbox]{
+            width: unset;
+        }
+        label{
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Prescription Demo</h1>
+</header>
+<main>
+<fx-fore>
+    <fx-model>
+        <fx-instance>
+            <data>
+                <medicationcode></medicationcode>
+                <dosage></dosage>
+                <substitutionallowed>false</substitutionallowed>
+                <substitutionreason></substitutionreason>
+            </data>
+        </fx-instance>
+
+        <fx-bind ref="substitutionreason" relevant="boolean-from-string($default/substitutionallowed)"></fx-bind>
+
+        <fx-instance id="medication-codes">
+            <codes>
+                <code label="Amoxicillin 500 mg" value="12345"></code>
+                <code label="Ibuprofen 400 mg" value="67890"></code>
+            </codes>
+        </fx-instance>
+    </fx-model>
+
+    <fx-control ref="medicationcode">
+        <label>Medication</label>
+        <select class="widget" ref="$medication-codes/code" selection="open">
+            <template>
+                <option value="{./@value}">{./@label}</option>
+            </template>
+        </select>
+    </fx-control>
+
+    <fx-control ref="dosage">
+        <label>Dosage</label>
+    </fx-control>
+
+    <fx-control ref="substitutionallowed" value-prop="checked" update-event="input">
+        <label for="check">Substitution allowed</label>
+        <input id="check" type="checkbox" class="widget">
+    </fx-control>
+
+    <fx-control ref="substitutionreason">
+        <label>Reason</label>
+    </fx-control>
+</fx-fore>
+</main>
+</body>
+</html>

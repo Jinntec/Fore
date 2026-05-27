@@ -17,7 +17,7 @@ export class Fore {
 
   static REQUIRED_DEFAULT = false;
 
-  static RELEVANT_DEFAULT = true
+  static RELEVANT_DEFAULT = true;
 
   static CONSTRAINT_DEFAULT = true;
 
@@ -267,7 +267,6 @@ export class Fore {
     return ['FX-BIND', 'FX-FUNCTION', 'FX-MODEL', 'FX-INSTANCE', 'FX-SUBMISSION'];
   }
 
-
   static async initUI(startElement) {
     const inited = new Promise(resolve => {
       const { children } = startElement;
@@ -301,23 +300,25 @@ export class Fore {
       }
 
       if (Fore.isUiElement(element.nodeName) && typeof element.refresh === 'function') {
-        /** @type {import('./ForeElementMixin.js').default} */
+        /** @type {import('./ui/UIElement.js').UIElement} */
         const bound = element;
 
         // Keep old behavior: only refresh UI elements during full/forced refresh
-        if (!force) {
-          // still recurse below
-        } else if (force === true) {
+        // Any #refresh call does its own recursion.
+        if (force === true) {
           const maybePromise = bound.refresh(force);
           if (maybePromise && typeof maybePromise.then === 'function') {
             await maybePromise;
           }
-        } else if (typeof force === 'object') {
+          continue;
+        }
+        if (typeof force === 'object') {
           // future selective refresh logic can live here if you re-enable it
           const maybePromise = bound.refresh(force);
           if (maybePromise && typeof maybePromise.then === 'function') {
             await maybePromise;
           }
+          continue;
         }
       }
 
@@ -521,10 +522,7 @@ export class Fore {
     const reg = /(>)(<)(\/*)/g;
     const wsexp = / *(.*) +\n/g;
     const contexp = /(<.+>)(.+\n)/g;
-    xml = xml
-      .replace(reg, '$1\n$2$3')
-      .replace(wsexp, '$1\n')
-      .replace(contexp, '$1\n$2');
+    xml = xml.replace(reg, '$1\n$2$3').replace(wsexp, '$1\n').replace(contexp, '$1\n$2');
     let formatted = '';
     const lines = xml.split('\n');
     let indent = 0;

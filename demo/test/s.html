@@ -1,0 +1,12 @@
+<fx-case>
+    <fieldset id="synopsis">
+        <legend>
+            <label>Synopsis</label>
+        </legend>
+        <fx-repeat id="r-oapps" ref="instance('i-pat-comp')//encounter" class="">
+            <template>
+                <fx-output ref="./id/@value"></fx-output>
+            </template>
+        </fx-repeat>
+    </fieldset>
+</fx-case>

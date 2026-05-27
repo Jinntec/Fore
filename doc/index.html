@@ -9,6 +9,18 @@
     <link rel="stylesheet" href="./clock.css">
     <link rel="stylesheet" href="../resources/home.css">
     <meta name="keywords" content="Fore, HTML5, Web Components, Declarative framework">
+    <meta
+            name="description"
+            content="Fore is a declarative framework for forms and editors that work directly with structured XML and JSON data, validation rules and standards-based models." />
+    <meta
+            name="keywords"
+            content="Fore, structured data, XML editor, JSON editor, data binding, XPath, declarative forms, standards-based editing, schema-based forms, XML forms, JSON forms, TEI editor, FHIR editor, XBRL, xInvoice, controlled vocabularies, Web Components" />
+
+    <meta name="author" content="Jinntec"/>
+    <meta name="robots" content="index, follow"/>
+    <meta name="theme-color" content="#1f7acb"/>
+    <link rel="canonical" href="https://jinntec.github.io/Fore/"/>
+
     <!-- Matomo -->
     <script>
         var _paq = window._paq = window._paq || [];
@@ -24,11 +36,321 @@
         })();
     </script>
     <!-- End Matomo Code -->
+    <style>
+        .getstarted {
+            display: block;
+        }
+
+        .demo-placeholder {
+            display: flex;
+            align-items: stretch;
+        }
+
+        .placeholder-card {
+            border: 1px dashed #b7c7d9;
+            background: #f7fbff;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            width: 100%;
+        }
+
+        .placeholder-card h3 {
+            margin-top: 0;
+        }
+
+        .hero {
+            min-height: 64vh;
+            display: grid;
+            grid-template-columns: minmax(0, 1.05fr) minmax(300px, 0.95fr);
+            align-items: center;
+            gap: clamp(2rem, 5vw, 5rem);
+            padding: clamp(3.5rem, 6vw, 5.5rem) clamp(1.5rem, 6vw, 6rem);
+            position: relative;
+            overflow: hidden;
+            background:
+                    radial-gradient(circle at 85% 20%, rgba(72, 164, 255, 0.28), transparent 32rem),
+                    radial-gradient(circle at 15% 80%, rgba(117, 216, 181, 0.18), transparent 28rem),
+                    linear-gradient(135deg, #f7fbff 0%, #eef6fb 45%, #ffffff 100%);
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image:
+                    linear-gradient(rgba(39, 80, 120, 0.055) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(39, 80, 120, 0.055) 1px, transparent 1px);
+            background-size: 36px 36px;
+            mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), transparent 85%);
+            pointer-events: none;
+        }
+
+        .hero > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-copy {
+            max-width: 42rem;
+        }
+
+        .hero .logo.fore {
+            /*width: clamp(4rem, 6vw, 5.75rem);*/
+            margin-bottom: 0.75rem;
+        }
+
+        .hero #version {
+            display: block;
+            margin-bottom: 1.25rem;
+            font-size: 0.85rem;
+            color: #60768a;
+        }
+
+        .hero h1 {
+            max-width: 13ch;
+            margin: 0 auto;
+            font-size: clamp(2.6rem, 5.2vw, 4rem);
+            line-height: 1;
+            letter-spacing: -0.045em;
+        }
+
+        .hero .claim {
+            max-width: 32rem;
+            margin: 1rem auto;
+            font-size: clamp(1.12rem, 1.55vw, 1.35rem);
+            line-height: 1.42;
+            color: #183247;
+        }
+
+        .hero .subclaim {
+            max-width: 32rem;
+            margin: 0.25rem auto 1.5rem;
+            font-size: clamp(1rem, 1.15vw, 1.1rem);
+            line-height: 1.55;
+            color: #4a6073;
+        }
+
+        .hero-actions {
+            margin: 0;
+        }
+
+        .hero a[role="button"] {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 2.75rem;
+            padding: 0 1.15rem;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .hero .getstarted {
+            background: #1f7acb;
+            color: white;
+            box-shadow: 0 0.75rem 1.75rem rgba(31, 122, 203, 0.24);
+        }
+
+        .hero-visual {
+            display: flex;
+            justify-content: center;
+        }
+
+        .model-card {
+            width: min(100%, 20rem);
+            padding: 1.1rem;
+            border: 1px solid rgba(35, 95, 140, 0.16);
+            border-radius: 1.5rem;
+            background: rgba(255, 255, 255, 0.78);
+            box-shadow:
+                    0 2rem 5rem rgba(30, 70, 110, 0.18),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(16px);
+            transform: rotate(1.5deg);
+        }
+
+        .card-label {
+            display: inline-flex;
+            margin-bottom: 0.75rem;
+            padding: 0.3rem 0.7rem;
+            border-radius: 999px;
+            background: #e7f3fb;
+            color: #1f5f96;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .model-card,
+        .model-card pre,
+        .model-card code {
+            text-align: left;
+        }
+
+        .model-card pre {
+            margin: 0;
+            padding: 1rem;
+            overflow-x: auto;
+            border-radius: 1rem;
+            background: #102536;
+            color: #d6efff;
+            font-size: clamp(0.72rem, 1vw, 0.86rem);
+            line-height: 1.55;
+            white-space: pre;
+        }
+
+        .model-card code {
+            display: block;
+            white-space: pre;
+            text-align: left;
+        }
+
+        .binding-line {
+            width: 2px;
+            height: 2rem;
+            margin: 0 auto;
+            background: linear-gradient(to bottom, #1f7acb, transparent);
+        }
+
+        .field-card {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 1rem;
+            align-items: center;
+            margin-top: 0.75rem;
+            padding: 0.85rem 1rem;
+            border-radius: 1rem;
+            background: white;
+            border: 1px solid rgba(35, 95, 140, 0.12);
+            box-shadow: 0 0.75rem 1.5rem rgba(30, 70, 110, 0.08);
+        }
+
+        .field-card span {
+            color: #60768a;
+            font-size: 0.85rem;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        }
+
+        .field-card strong {
+            color: #173149;
+        }
+
+        @media (max-width: 820px) {
+            .hero {
+                min-height: auto;
+                grid-template-columns: 1fr;
+                padding-top: 4rem;
+            }
+
+            .hero h1 {
+                max-width: 13ch;
+                /*font-size: clamp(2.4rem, 11vw, 3.8rem);*/
+            }
+
+            .hero-visual {
+                margin-top: 1rem;
+            }
+
+            .model-card {
+                transform: none;
+            }
+        }
+
+        .tei-demo-card {
+            display: grid;
+            grid-template-columns: minmax(13rem, 0.85fr) minmax(16rem, 1.15fr);
+            gap: 1rem;
+            align-items: stretch;
+            padding: 1rem;
+            border: 1px solid rgba(35, 95, 140, 0.16);
+            border-radius: 1.25rem;
+            background: rgba(255, 255, 255, 0.78);
+            box-shadow: 0 1.25rem 3rem rgba(30, 70, 110, 0.12);
+        }
+
+        .tei-demo-preview {
+            display: grid;
+            gap: 0.8rem;
+            padding: 1rem;
+            border-radius: 1rem;
+            background: #f7fbff;
+            text-align: left;
+        }
+
+        .tei-demo-preview .demo-label {
+            display: inline-flex;
+            width: fit-content;
+            margin-bottom: 0.25rem;
+            padding: 0.3rem 0.7rem;
+            border-radius: 999px;
+            background: #e7f3fb;
+            color: #1f5f96;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            align-items: center;
+        }
+
+        .tei-demo-preview label {
+            display: grid;
+            gap: 0.25rem;
+            margin: 0;
+            color: #4a6073;
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-align: left;
+        }
+
+        .tei-demo-preview input,
+        .tei-demo-preview select {
+            box-sizing: border-box;
+            width: 100%;
+            min-height: 2.35rem;
+            margin: 0;
+            padding: 0.45rem 0.65rem;
+            border: 1px solid rgba(35, 95, 140, 0.2);
+            border-radius: 0.55rem;
+            background: white;
+            color: #173149;
+            font: inherit;
+            text-align: left;
+        }
+
+        .tei-demo-card pre,
+        .tei-demo-card code {
+            white-space: pre !important;
+            text-align: left !important;
+        }
+
+        .tei-demo-card pre {
+            margin: 0;
+            padding: 1rem;
+            overflow-x: auto;
+            border-radius: 1rem;
+            background: #102536;
+            color: #d6efff;
+            font-size: clamp(0.7rem, 0.95vw, 0.84rem);
+            line-height: 1.55;
+        }
+
+        .tei-demo-card code {
+            display: block;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        }
+
+        @media (max-width: 820px) {
+            .tei-demo-card {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body id="home">
 <noscript>Sorry - This page requires JavaScript to work.</noscript>
 <a href="https://github.com/jinntec/fore" class="github-corner" title="Visit Fore on GitHub"
-   aria-label="Visit Tuttle on GitHub" target="_blank">
+   aria-label="Visit Fore on GitHub" target="_blank">
     <svg width="64" height="64" viewBox="0 0 250 250"
          style="color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true">
         <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
@@ -47,96 +369,288 @@
         </ul>
     </nav>
     <section class="hero">
-        <img class="logo fore" src="../resources/images/light-blue1.png" alt="Fore Logo">
-        <h1>Declarative user interfaces in plain HTML</h1>
-        <fx-fore id="version" src="version.html"></fx-fore>
-        <a href="https://jinntec.github.io/fore-docs/getstarted/" role="button" class="getstarted">Get Started</a>
+        <div class="hero-copy">
+            <img class="logo fore" src="../resources/images/light-blue1.png" alt="Fore Logo">
+            <fx-fore src="version.html" id="version"></fx-fore>
 
+            <h1>Forms and editors for structured data</h1>
+
+            <p class="claim">
+                Fore is a framework for applications that are centered around structured
+                XML or JSON data.
+            </p>
+
+            <p class="subclaim">
+                It works directly with the data model, keeping editing, calculations,
+                validations and interactions consistent as the data changes.
+            </p>
+
+            <p class="hero-actions">
+                <a href="https://jinntec.github.io/fore-docs/getstarted/" role="button" class="getstarted">
+                    Get Started
+                </a>
+            </p>
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+            <div class="model-card">
+                <div class="card-label">structured model</div>
+
+                <pre><code>&lt;person xml:id="p001"&gt;
+  &lt;persName&gt;
+    &lt;forename&gt;Julia&lt;/forename&gt;
+    &lt;surname&gt;Severa&lt;/surname&gt;
+  &lt;/persName&gt;
+  &lt;birth when="0075"/&gt;
+&lt;/person&gt;</code></pre>
+
+                <div class="binding-line"></div>
+
+                <div class="field-card">
+                    <span>persName / forename</span>
+                    <strong>Julia</strong>
+                </div>
+
+                <div class="field-card">
+                    <span>birth / @when</span>
+                    <strong>0075</strong>
+                </div>
+            </div>
+        </div>
     </section>
 </header>
+
 <div class="wrapper topic">
     <main>
 
+        <section class="intro">
+            <h2>When the data model matters</h2>
+
+            <p>
+                In structured-data applications, the data model keeps records,
+                documents and metadata consistent with established standards and
+                interoperable across systems.
+            </p>
+
+            <p>
+                Fore is designed for those applications: data-entry tools,
+                editorial interfaces, metadata editors and standards-based forms
+                where the model remains visible, reliable and central.
+            </p>
+        </section>
+
+        <section class="features three-col">
+            <div>
+                <h3>Structured data first</h3>
+                <p>
+                    Work with XML and JSON as application data, not as an
+                    afterthought hidden behind component state.
+                </p>
+            </div>
+
+            <div>
+                <h3>Standards-based editing</h3>
+                <p>
+                    Build editors for schema-based XML and JSON standards where validation,
+                    controlled vocabularies and domain-specific structures are central
+                    to the application.
+                </p>
+            </div>
+
+            <div>
+                <h3>Declarative rules</h3>
+                <p>
+                    Express calculations, constraints, required fields and
+                    conditional relevance directly in the model.
+                </p>
+            </div>
+        </section>
+
         <section class="samples">
             <div class="col-left">
-                <h2>Just pure tags</h2>
+                <h2>Example: editing TEI person data</h2>
+
                 <p>
-                    Build fully interactive user interfaces with pure HTML.
+                    A Fore editor can expose the parts of a TEI model that matter for a
+                    specific domain — names, status, gender, references and controlled
+                    vocabularies — while editing the underlying XML directly.
                 </p>
-                <p>From simple to very complex.</p>
+
+                <p>
+                    The form is not a separate representation that later has to be
+                    transformed back into TEI. It works with the structured data model.
+                </p>
+
             </div>
-            <demo-snippet>
-                <template>
-<fx-fore>
-    <button>
-        Say Hello
-        <fx-message event="click">Hello &hearts;</fx-message>
-    </button>
-</fx-fore>
-                </template>
-            </demo-snippet>
+            <div class="col-right">
+                <figure>
+                    <a href="../demo/tei/person.html" target="_blank">
+                        <img src="../resources/images/person.png" alt="TEI person editor">
+                    </a>
+                </figure>
+                <figcaption>
+                    <a href="../demo/tei/person.html" target="_blank">Open the full TEI person editor</a>
+                </figcaption>
+            </div>
+<!--
+            <div class="tei-demo-card">
+                <div class="tei-demo-preview">
+                    <div class="demo-label">TEI person editor</div>
+
+                    <label>
+                        Praenomen
+                        <input value="Julia" readonly>
+                    </label>
+
+                    <label>
+                        Nomen Gentile
+                        <input value="Severa" readonly>
+                    </label>
+
+                    <label>
+                        Gender
+                        <select disabled>
+                            <option>male</option>
+                            <option selected>female</option>
+                        </select>
+                    </label>
+
+                    <label>
+                        Reference
+                        <input value="wikidata:Q..." readonly>
+                    </label>
+                </div>
+
+                <pre><code>&lt;person xmlns="http://www.tei-c.org/ns/1.0" xml:id="p001" sex="F"&gt;
+  &lt;persName&gt;
+    &lt;name type="praenomen"&gt;Julia&lt;/name&gt;
+    &lt;name type="nomen"&gt;Severa&lt;/name&gt;
+  &lt;/persName&gt;
+  &lt;idno type="wikidata"&gt;Q...&lt;/idno&gt;
+&lt;/person&gt;</code></pre>
+            </div>
+-->
         </section>
 
-        <section class="samples two">
-            <div class="col-left">
-                <h3>A clock</h3>
-                <p>The <strong>model</strong> holds structured data in one or more <em>instances</em>. </p>
-                <p><strong>Bindings</strong> apply calculations (or constraints) to the data.</p>
-                <p><strong>Actions</strong> mutate, load or send data, interact with the user or trigger events.</p>
-                <p>The <strong>state engine</strong> tracks dependencies and updates the user interface
-                    automatically.</p>
+        <section class="use-cases">
+            <h2>Where Fore fits</h2>
+
+            <p class="section-lead">
+                Fore is useful wherever applications need to edit, validate and exchange
+                structured data without losing the semantics of the underlying model.
+            </p>
+
+            <div class="three-col">
+                <div>
+                    <h3>Digital humanities &amp; Publishing</h3>
+                    <p>
+                        Editors for TEI, authority data, annotations and metadata,
+                        connected to structured publication and enrichment workflows.
+                    </p>
+                </div>
+
+                <div>
+                    <h3>Research &amp; Science</h3>
+                    <p>
+                        Interfaces for structured data capture, curation and exchange,
+                        especially where standards and controlled vocabularies matter.
+                    </p>
+                </div>
+
+                <div>
+                    <h3>Public sector &amp; Business</h3>
+                    <p>
+                        Forms and editors for eGovernment, health, finance, reporting
+                        and other processes built around regulated data.
+                    </p>
+                </div>
             </div>
-            <demo-snippet>
-                <template>
-<fx-fore>
-    <!-- ### start the loop with a second delay between executions ### -->
-    <fx-action event="ready" while="true()" delay="1000">
-        <!-- ### update the Time and trigger recalculation ### -->
-        <fx-setvalue ref="time" value="now()"></fx-setvalue>
-    </fx-action>
-
-    <fx-model>
-        <!-- ### data-container ### -->
-        <fx-instance>
-            <data>
-                <time>12:30:00</time>
-                <hour>0</hour>
-                <minute>0</minute>
-                <second>0</second>
-                <h-deg></h-deg>
-                <min-deg>0</min-deg>
-                <s-deg></s-deg>
-            </data>
-        </fx-instance>
-
-        <!-- ### bindings calculating the hours, minutes and seconds and rotation degrees ### -->
-        <fx-bind ref="hour" calculate="hours-from-time(xs:time(../time))"></fx-bind>
-        <fx-bind ref="minute" calculate="minutes-from-time(xs:time(../time))"></fx-bind>
-        <fx-bind ref="h-deg" calculate="(../hour + ../minute div 60) * 30"></fx-bind>
-        <fx-bind ref="min-deg" calculate="../minute * 6"></fx-bind>
-        <fx-bind ref="second" calculate="seconds-from-time(xs:time(../time))"></fx-bind>
-        <fx-bind ref="s-deg" calculate="../second * 6"></fx-bind>
-
-        <!-- ### a custom JavaScript utility function to return a formatted Date ### -->
-        <fx-function signature="now() as xs:string" type="text/javascript">
-            const now = new Date();
-            return `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
-        </fx-function>
-
-    </fx-model>
-    <!-- ### Template Expressions in {} to output the bound data ### -->
-    <div class="clock">
-        <div class="circle" style="transform:rotate({s-deg}deg);"></div>
-        <div class="brand">Fore</div>
-        <span class="three-nine"></span>
-        <div class="display-time">{time}</div>
-        <div style="transform:rotate({h-deg}deg);" class="hour"></div>
-        <div style="transform:rotate({min-deg}deg);" class="minute"></div>
-    </div>
-</fx-fore>
-                </template>
-            </demo-snippet>
         </section>
+        <section class="technical">
+            <div class="technical-copy">
+                <h2>How it works</h2>
+
+                <p>
+                    Fore applications are written declaratively in HTML: data instances,
+                    bindings, controls and actions describe how the application behaves.
+                    Predefined actions cover common data operations such as setting values,
+                    inserting, deleting, updating and submitting data.
+                </p>
+
+                <p>
+                    For project-specific logic, Fore can be extended with custom functions
+                    written in JavaScript, XPath or XQuery — without requiring a build process
+                    or bundling step.
+                </p>
+            </div>
+
+            <div class="technical-flow" aria-label="How Fore works">
+                <div class="flow-card">
+                    <span class="flow-number">01</span>
+                    <h3>Data instances</h3>
+                    <p>XML or JSON data remains the application model.</p>
+                </div>
+
+                <div class="flow-arrow">→</div>
+
+                <div class="flow-card">
+                    <span class="flow-number">02</span>
+                    <h3>Bindings</h3>
+                    <p>XPath expressions define values, rules and dependencies.</p>
+                </div>
+
+                <div class="flow-arrow">→</div>
+
+                <div class="flow-card">
+                    <span class="flow-number">03</span>
+                    <h3>Controls &amp; actions</h3>
+                    <p>HTML controls edit the model; actions update, insert, delete or submit data.</p>
+                </div>
+
+                <div class="flow-arrow">→</div>
+
+                <div class="flow-card">
+                    <span class="flow-number">04</span>
+                    <h3>Consistent UI</h3>
+                    <p>The interface reacts as calculations, validations and relevance change.</p>
+                </div>
+            </div>
+            <div class="technical-extension">
+                <h3>Declarative first, extensible when needed</h3>
+                <p>
+                    Many applications can be built mostly — sometimes entirely — with Fore
+                    markup. When a project needs special logic, custom functions can be
+                    written in JavaScript, XPath or XQuery and used directly in bindings,
+                    calculations and actions.
+                </p>
+            </div>
+<!--
+            <ul class="technical-tags">
+                <li>XML</li>
+                <li>JSON</li>
+                <li>XPath</li>
+                <li>Bindings</li>
+                <li>Validation</li>
+                <li>Repeats</li>
+                <li>Actions</li>
+                <li>Web Components</li>
+            </ul>
+-->
+        </section>
+        <section class="support">
+            <h2>Need a structured data editor?</h2>
+
+            <p>
+                Fore is developed by Jinntec. We provide consulting, prototypes,
+                custom editors and support for projects built around XML, JSON,
+                TEI, metadata and standards-based workflows.
+            </p>
+
+            <p>
+                  <a href="mailto:info@jinntec.de">Contact us</a>
+            </p>
+        </section>
+
     </main>
 </div>
 <footer>
@@ -145,7 +659,7 @@
             <h4>Fore is brought to you by</h4>
             <a href="https://jinntec.de" target="_blank"><img class="logo jinntec"
                                                               src="../resources/images/jinntec-bw.png"></a>
-            <div class="subline">For professional support contact us at<br/>info@jinntec.de</div>
+<!--            <div class="subline">For professional support contact us at<br/>info@jinntec.de</div>-->
         </div>
         <div>
             <h4>Links</h4>

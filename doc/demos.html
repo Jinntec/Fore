@@ -19,6 +19,16 @@
         #jinntap-logo{
             width: 128px;
         }
+        #demos .wrapper {
+            margin-top: 6rem;
+        }
+        nav{
+            border:none;
+        }
+        .local-nav{
+            border-bottom:thin solid rgba(0,0,0,0.2);
+            height: auto;
+        }
     </style>
     <!-- Matomo -->
     <script>
@@ -75,11 +85,13 @@
             <a href="#other">Other</a>
         </nav>
 
+<!--
         <section class="hero">
             <img class="logo fore" src="../resources/images/light-blue1.png">
             <div class="mission">Declarative user interfaces in plain HTML</div>
             <fx-fore id="version" src="version.html"></fx-fore>
         </section>
+-->
     </header>
     <main class="wrapper demos topic">
         <!--    <p class="style-hint">If you don't like the colors just <a href="demos.html">reload</a> the page.</p>-->
@@ -100,9 +112,9 @@
         <h2>Featured Demo</h2>
         <blockquote>This example shows a pure JSON-driven Movies Explorer that uses XPath Maps/Arrays syntax for binding. </blockquote>
         <figure>
-            <a href="#featured"><img src="../resources/images/movies.png" alt="a demo of JinnTap WYSIWYG TEI editor"></a>
+            <a href="#json"><img src="../resources/images/movies.png" alt="a demo of JinnTap WYSIWYG TEI editor"></a>
             <figcaption>
-                A moview explorer using JSON
+                A movie explorer using JSON
             </figcaption>
         </figure>
 
@@ -600,6 +612,7 @@
 
         <h2>Other examples</h2>
         <section id="other" class="three-col">
+
             <a href="reference.html"><div>
                 <h3>Fore Element Reference</h3>
                 <p>Dynamically loads and renders markdown files with document the Fore Element syntax</p>
@@ -669,6 +682,10 @@
             <a id="featured" href="../demo/jinntap.html"><div class="updated">
                 <h3>Using JinnTap as control</h3>
                 <p>Using JinnTap WYSIWYG TEI editor as a Fore control.</p>
+            </div></a>
+            <a id="featured" href="../demo/authoring-check.html"><div class="updated">
+                <h3>Authoring checks</h3>
+                <p>Fore checks for authoring problems by default.</p>
             </div></a>
         </section>
 

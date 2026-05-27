@@ -1,0 +1,48 @@
+<html lang="de">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>Practitioner pb</title>
+    <link rel="shortcut icon" type="image/png" href="./resources/images/icon.png" sizes="16x16"/>
+    <link rel="stylesheet" href="../../resources//theme.css" media="screen"/>
+    <link rel="stylesheet" href="../../resources//fore.css" media="screen"/>
+    <script type="module" src="../demo.js"></script>
+    <script type="module" src="../../tools/fx-lens.js"></script>
+</head>
+<body>
+
+<fx-fore xmlns:fhir="http://hl7.org/fhir" id="fx-practitioner-edit" role="form" create-nodes="true">
+
+    <fx-model>
+        <fx-instance src="practitioner.xml"></fx-instance>
+        <fx-instance id="i-datatypes">
+            <data>
+                <gender value="">
+                    <code value="male" label="male"></code>
+                    <code value="female" label="female"></code>
+                </gender>
+            </data>
+        </fx-instance>
+    </fx-model>
+
+    <fx-group ref="instance()">
+        <fieldset id="practitioner-edit">
+            <legend>
+                <label>Practitioner</label>
+            </legend>
+            <fx-control id="tce-gender" ref="*:gender/@value">
+                <label>Geschlecht</label>
+                <select class="widget" ref="instance('i-datatypes')/gender/code">
+                    <template>
+                        <option value="{@value}">{@label}</option>
+                    </template>
+                </select>
+            </fx-control>
+        </fieldset>
+    </fx-group>
+
+</fx-fore>
+<fx-lens/>
+
+</body>
+</html>

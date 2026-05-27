@@ -127,7 +127,7 @@ export class RepeatBase extends withDraggability(UIElement, false) {
     // if (!fore.lazyRefresh || force) {
     if (!fore.lazyRefresh || force) {
       // Turn the possibly conditional force refresh into a forced one: we changed our children
-      Fore.refreshChildren(this, force);
+      await Fore.refreshChildren(this, force);
     }
     // this.style.display = 'block';
     // this.style.display = this.display;
@@ -477,9 +477,9 @@ export class RepeatBase extends withDraggability(UIElement, false) {
               // Create a ModelItem only for the final node; children never get their own opNum
               modelItem = FxBind.createModelItem(ref, node, child, null);
               modelItem.parentModelItem = parentModelItem;
-            // IMPORTANT: keep using the canonical instance returned by registerModelItem.
-            // Otherwise a throwaway ModelItem can leak into observer graphs and be notified.
-            modelItem = this.getModel().registerModelItem(modelItem);
+              // IMPORTANT: keep using the canonical instance returned by registerModelItem.
+              // Otherwise a throwaway ModelItem can leak into observer graphs and be notified.
+              modelItem = this.getModel().registerModelItem(modelItem);
             }
 
             // Always apply Dewey rewrite (handles both $inst and instance('inst') forms)

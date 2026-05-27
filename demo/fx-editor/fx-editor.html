@@ -1,0 +1,1100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>fx-editor — Fore Visual Editor</title>
+
+  <!-- Define custom widget element synchronously so it's ready before Fore initialises -->
+  <script>
+  customElements.define('fx-attr-widget', class extends HTMLElement {
+    constructor() {
+      super();
+      this._value = '';
+      this._inner = null;
+      this._allOpts = [];
+      this._ph = '';
+    }
+    connectedCallback() { this._render(); }
+
+    // Called by JS after Fore renders the repeat, with resolved opts/idrefs
+    configure(opts, ph) {
+      this._allOpts = opts ?? [];
+      this._ph = ph ?? '';
+      this._render();
+      if (this._inner) this._inner.value = this._value;
+    }
+
+    _render() {
+      if (this._allOpts.length) {
+        if (this._inner?.tagName === 'SELECT') {
+          this._syncOpts(); this._inner.value = this._value; return;
+        }
+        const sel = document.createElement('select');
+        sel.className = 'attr-input';
+        this._allOpts.forEach(o => {
+          const op = document.createElement('option');
+          op.value = o; op.textContent = o || '—'; sel.appendChild(op);
+        });
+        sel.value = this._value;
+        sel.addEventListener('change', () => {
+          this._value = sel.value;
+          this.dispatchEvent(new Event('change', { bubbles: true }));
+        });
+        this.replaceChildren(sel);
+        this._inner = sel;
+      } else {
+        if (this._inner?.tagName === 'INPUT') { this._inner.placeholder = this._ph; return; }
+        const inp = document.createElement('input');
+        inp.type = 'text'; inp.className = 'attr-input'; inp.placeholder = this._ph;
+        inp.value = this._value;
+        inp.addEventListener('change', () => {
+          this._value = inp.value;
+          this.dispatchEvent(new Event('change', { bubbles: true }));
+        });
+        this.replaceChildren(inp);
+        this._inner = inp;
+      }
+    }
+    _syncOpts() {
+      this._inner.innerHTML = '';
+      this._allOpts.forEach(o => {
+        const op = document.createElement('option');
+        op.value = o; op.textContent = o || '—'; this._inner.appendChild(op);
+      });
+    }
+    get value() { return this._inner ? this._inner.value : this._value; }
+    set value(v) {
+      this._value = String(v ?? '');
+      if (this._inner) this._inner.value = this._value;
+    }
+  });
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, sans-serif; font-size: 13px; overflow: hidden; background: #f1f5f9; }
+
+    /* ── Fore element layout helpers ────────────────────────── */
+    fx-group   { display: contents; }
+    fx-group[hidden] { display: none !important; }
+    fx-output  { display: block; }
+    fx-control { display: block; }
+    fx-repeat  { display: contents; }
+
+    /* ── Layout grid ─────────────────────────────────────────── */
+    #editor {
+      display: grid;
+      grid-template-rows: 42px 1fr;
+      grid-template-columns: 1fr 290px;
+      height: 100vh;
+    }
+
+    /* ── Header toolbar ─────────────────────────────────────── */
+    header.toolbar {
+      grid-column: 1 / -1;
+      background: #1e293b; color: #fff;
+      display: flex; align-items: center; gap: 6px; padding: 0 12px;
+    }
+    .toolbar-brand { font-weight: 700; font-size: 0.82rem; letter-spacing: 0.04em; margin-right: 4px; }
+    .toolbar-sep   { width: 1px; height: 20px; background: rgba(255,255,255,.2); margin: 0 4px; }
+    .toolbar-spacer{ flex: 1; }
+    .toolbar button {
+      font-size: 0.72rem; padding: 4px 10px;
+      border: 1px solid rgba(255,255,255,.25); border-radius: 4px;
+      background: transparent; color: #fff; cursor: pointer;
+    }
+    .toolbar button:hover  { background: rgba(255,255,255,.12); }
+    .toolbar button.active { background: rgba(255,255,255,.22); border-color: rgba(255,255,255,.5); }
+    .kbd { display: inline-block; font-size: 0.58rem; padding: 1px 3px;
+           border: 1px solid rgba(255,255,255,.3); border-radius: 2px;
+           font-family: monospace; margin-left: 3px; }
+
+    /* ── Canvas ──────────────────────────────────────────────── */
+    main#canvas { overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+
+    /* ── Section (details) ───────────────────────────────────── */
+    details.section { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+    details.section > summary {
+      display: flex; align-items: center; gap: 6px;
+      padding: 6px 10px; cursor: pointer; user-select: none;
+      list-style: none; border-bottom: 1px solid #e2e8f0;
+    }
+    details.section > summary::-webkit-details-marker { display: none; }
+    .section-arrow { font-size: .6rem; transition: transform .15s; }
+    details.section[open] > summary .section-arrow { transform: rotate(90deg); }
+    .section-title {
+      font-size: .68rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .06em; color: #64748b; flex-shrink: 0; margin-right: 2px;
+    }
+    .section-ctx {
+      font-size: .65rem; color: #94a3b8; font-style: italic; flex-shrink: 0;
+    }
+    .model-section > summary { background: #fdf2f8; border-bottom-color: #fce7f3; }
+    .model-section > summary .section-title { color: #9d174d; }
+    .ui-section > summary { background: #eff6ff; border-bottom-color: #dbeafe; }
+    .ui-section > summary .section-title { color: #1d4ed8; }
+
+    /* ── Palette ─────────────────────────────────────────────── */
+    .palette { display: flex; flex-wrap: wrap; gap: 3px; flex: 1; overflow: hidden; }
+    .palette-btn {
+      font-size: .66rem; padding: 2px 7px; border-radius: 3px;
+      cursor: grab; border: 1px solid; white-space: nowrap; background: transparent;
+      transition: opacity .12s, box-shadow .12s;
+    }
+    .palette-btn:active { cursor: grabbing; opacity: .6; }
+    .palette-btn.model  { background: #fce7f3; border-color: #f9a8d4; color: #9d174d; }
+    .palette-btn.ui     { background: #dbeafe; border-color: #93c5fd; color: #1d4ed8; }
+    .palette-btn.action { background: #dcfce7; border-color: #86efac; color: #166534; }
+    .palette-btn.can-drop    { box-shadow: 0 0 0 2px #22c55e; }
+    .palette-btn.cannot-drop { opacity: .25; cursor: not-allowed; }
+
+    /* ── Drop zones ──────────────────────────────────────────── */
+    .drop-zone {
+      min-height: 56px; padding: 8px; position: relative; transition: background .12s;
+    }
+    .drop-zone.drag-over { background: #e0f2fe; outline: 2px dashed #38bdf8; outline-offset: -3px; border-radius: 4px; }
+    .model-section .drop-zone.drag-over { background: #fce7f3; outline-color: #f472b6; }
+    .drop-zone.drag-over.invalid { background: #fee2e2 !important; outline-color: #f87171 !important; }
+    .drop-zone.empty-hint::after {
+      content: attr(data-hint); position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: #cbd5e1; font-size: .72rem; pointer-events: none;
+    }
+
+    /* ── Cards ───────────────────────────────────────────────── */
+    .card {
+      display: flex; align-items: center; gap: 5px;
+      padding: 5px 7px; border-radius: 5px; border: 1px solid #e2e8f0;
+      background: #fff; margin-bottom: 4px; cursor: pointer;
+      font-size: .73rem; transition: border-color .1s;
+    }
+    .card:last-child { margin-bottom: 0; }
+    .card:hover { border-color: #94a3b8; }
+    .card.selected { outline: 2px solid #3b82f6; outline-offset: 1px; }
+    .card.model-card  { border-left: 3px solid #f9a8d4; }
+    .card.model-card.selected  { outline-color: #9d174d; }
+    .card.ui-card     { border-left: 3px solid #93c5fd; }
+    .card.ui-card.selected     { outline-color: #1d4ed8; }
+    .card.action-card { border-left: 3px solid #86efac; }
+    .card.action-card.selected { outline-color: #166534; }
+    .card-handle  { color: #d1d5db; cursor: grab; font-size: .8rem; flex-shrink: 0; }
+    .card-handle:active { cursor: grabbing; }
+    .card-icon    { font-size: .82rem; flex-shrink: 0; }
+    .card-tag     { font-family: monospace; font-weight: 600; flex-shrink: 0; }
+    .card-tag.model  { color: #9d174d; }
+    .card-tag.ui     { color: #1d4ed8; }
+    .card-tag.action { color: #166534; }
+    .card-attrs   { color: #94a3b8; font-size: .65rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; min-width: 0; }
+    .card-controls { display: flex; align-items: center; gap: 2px; margin-left: auto; flex-shrink: 0; }
+    .card-move-btn {
+      font-size: .55rem; padding: 1px 3px; border: 1px solid #e2e8f0;
+      border-radius: 2px; background: #f8fafc; color: #64748b; cursor: pointer; line-height: 1;
+    }
+    .card-move-btn:hover:not(:disabled) { background: #e2e8f0; }
+    .card-move-btn:disabled { opacity: .25; cursor: default; }
+    .card-children { width: 100%; margin-top: 6px; padding-top: 4px; border-top: 1px dashed #e2e8f0; }
+    .card-children-inner { margin-left: 12px; padding-left: 8px; border-left: 2px solid #e2e8f0; }
+    .child-drop-zone {
+      min-height: 24px; border-radius: 4px; padding: 4px 6px;
+      border: 1px dashed #e2e8f0; transition: background .12s, border-color .12s;
+    }
+    .child-drop-zone.drag-over { background: #e0f2fe; border-color: #38bdf8; }
+    .child-drop-zone.drag-over.invalid { background: #fee2e2; border-color: #f87171; }
+    .child-drop-zone-hint { font-size: .65rem; color: #cbd5e1; text-align: center; padding: 2px 0; pointer-events: none; }
+
+    /* ── Aside / Attr panel ──────────────────────────────────── */
+    aside#attr-panel {
+      overflow-y: auto; border-left: 1px solid #e2e8f0;
+      background: #fff; display: flex; flex-direction: column;
+    }
+    .aside-empty {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      color: #cbd5e1; font-size: .78rem; text-align: center; padding: 2rem; line-height: 1.8;
+    }
+    .aside-content { display: flex; flex-direction: column; flex: 1; min-height: 0; overflow-y: auto; }
+    .aside-header {
+      padding: 9px 12px 7px; border-bottom: 1px solid #e2e8f0;
+      display: flex; align-items: center; gap: 7px; background: #f8fafc;
+      position: sticky; top: 0; z-index: 1; flex-shrink: 0;
+    }
+    .aside-icon { font-size: .9rem; flex-shrink: 0; }
+    .aside-tag  { font-family: monospace; font-weight: 700; font-size: .82rem; flex: 1; }
+    .aside-del  {
+      font-size: .7rem; padding: 2px 7px; border: 1px solid #fca5a5;
+      border-radius: 3px; background: #fee2e2; color: #991b1b; cursor: pointer; flex-shrink: 0;
+    }
+    .aside-del:hover { background: #fca5a5; }
+    .aside-help {
+      padding: 7px 12px; font-size: .71rem; color: #64748b; line-height: 1.55;
+      border-bottom: 1px solid #f1f5f9; background: #fafafa; flex-shrink: 0;
+    }
+    .aside-help:empty { display: none; }
+    .aside-help code { background: #e2e8f0; padding: 0 3px; border-radius: 2px; font-size: .68rem; }
+    .attr-list { padding: 4px 0 12px; flex: 1; }
+    .attr-section-head {
+      padding: 8px 12px 3px; font-size: .6rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .06em; color: #94a3b8; display: block;
+    }
+    .attr-row { padding: 4px 12px; }
+    .attr-label { display: flex; align-items: baseline; gap: 3px; margin-bottom: 3px; }
+    .attr-key   { font-size: .7rem; font-weight: 600; color: #334155; font-family: monospace; }
+    .attr-req   { font-size: .62rem; color: #ef4444; visibility: hidden; }
+    /* Fore sets .required class on fx-control when bind says required=true */
+    fx-control.required .attr-req { visibility: visible; }
+    fx-control.invalid  .attr-input { border-color: #ef4444 !important; box-shadow: 0 0 0 2px #fee2e2; }
+    .attr-input {
+      width: 100%; font-size: .73rem; padding: 4px 7px;
+      border: 1px solid #e2e8f0; border-radius: 4px; background: #fff; font-family: monospace;
+    }
+    .attr-input:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 2px #bfdbfe; }
+    .attr-desc { font-size: .63rem; color: #94a3b8; margin-top: 2px; line-height: 1.4; }
+    .attr-sep  { height: 1px; background: #f1f5f9; margin: 4px 12px; }
+    .common-section { border-top: 1px solid #f1f5f9; margin-top: 6px; }
+    .common-section > summary {
+      cursor: pointer; list-style: none; user-select: none;
+    }
+    .common-section > summary::-webkit-details-marker { display: none; }
+    fx-attr-widget { display: block; }
+
+    /* ── Preview pane ────────────────────────────────────────── */
+    #preview-pane {
+      display: none; position: fixed; inset: 42px 0 0 0;
+      flex-direction: column; background: #fff; z-index: 20;
+    }
+    #preview-pane.visible { display: flex; }
+    .preview-bar {
+      padding: 7px 12px; background: #1e293b; color: #fff;
+      display: flex; align-items: center; gap: 8px; font-size: .78rem; flex-shrink: 0;
+    }
+    .preview-bar span { flex: 1; }
+    .preview-bar button {
+      font-size: .7rem; padding: 3px 9px;
+      border: 1px solid rgba(255,255,255,.3); border-radius: 3px;
+      background: transparent; color: #fff; cursor: pointer;
+    }
+    .preview-bar button:hover { background: rgba(255,255,255,.12); }
+    #preview-frame { flex: 1; border: none; background: #fff; }
+  </style>
+</head>
+<body>
+
+<fx-fore id="editor">
+  <fx-model>
+    <!--
+      sel-attrs: merged schema + current values for the selected element.
+      JS writes to this instance when selection changes; Fore renders the attr panel.
+    -->
+    <fx-instance id="sel-attrs">
+      <attrs>
+        <tag></tag>
+        <icon></icon>
+        <label></label>
+        <help></help>
+      </attrs>
+    </fx-instance>
+
+    <!--
+      doc-ctx: document context — element counts and ids for idref dropdowns
+      and conditional bind rules.
+    -->
+    <fx-instance id="doc-ctx">
+      <ctx>
+        <instance-count>0</instance-count>
+        <ids/>
+      </ctx>
+    </fx-instance>
+
+    <!-- Conditional required: fx-instance.id required when >1 instances exist -->
+    <fx-bind ref="instance('sel-attrs')/attr[@k='id']/@v"
+             required="instance('doc-ctx')/instance-count > 1 and instance('sel-attrs')/tag='fx-instance'"/>
+
+    <!-- Conditional required: fx-submission.id required when >1 submissions exist -->
+    <fx-bind ref="instance('sel-attrs')/attr[@k='id']/@v"
+             required="instance('doc-ctx')/submission-count > 1 and instance('sel-attrs')/tag='fx-submission'"/>
+  </fx-model>
+
+  <header class="toolbar">
+    <span class="toolbar-brand">fx-editor</span>
+    <div class="toolbar-sep"></div>
+    <button id="btn-new">New</button>
+    <button id="btn-save">Save<span class="kbd">⌘S</span></button>
+    <button id="btn-load">Load</button>
+    <button id="btn-download">Download HTML</button>
+    <div class="toolbar-spacer"></div>
+    <button id="btn-preview">Preview<span class="kbd">⌘P</span></button>
+  </header>
+
+  <main id="canvas">
+    <details class="section model-section" open>
+      <summary>
+        <span class="section-arrow">▶</span>
+        <span class="section-title">Model</span>
+        <span id="model-ctx" class="section-ctx"></span>
+        <div id="model-palette" class="palette"></div>
+      </summary>
+      <div id="model-zone" class="drop-zone empty-hint" data-section="model"
+           data-hint="Drag model elements here"></div>
+    </details>
+
+    <details class="section ui-section" open>
+      <summary>
+        <span class="section-arrow">▶</span>
+        <span class="section-title">UI</span>
+        <span id="ui-ctx" class="section-ctx"></span>
+        <div id="ui-palette" class="palette"></div>
+      </summary>
+      <div id="ui-zone" class="drop-zone empty-hint" data-section="ui"
+           data-hint="Drag UI or action elements here"></div>
+    </details>
+  </main>
+
+  <aside id="attr-panel">
+    <!-- Empty state: nothing selected -->
+    <fx-group relevant="instance('sel-attrs')/tag = ''">
+      <div class="aside-empty">Select an element<br>to edit its attributes</div>
+    </fx-group>
+
+    <!-- Content state: element selected — driven entirely by Fore instances -->
+    <fx-group relevant="instance('sel-attrs')/tag != ''" class="aside-content">
+      <div class="aside-header">
+        <fx-output ref="instance('sel-attrs')/icon" class="aside-icon"></fx-output>
+        <fx-output ref="instance('sel-attrs')/tag"  class="aside-tag"></fx-output>
+        <button class="aside-del" id="aside-delete">Delete</button>
+      </div>
+      <div class="aside-help">
+        <fx-output ref="instance('sel-attrs')/help" mediatype="html"></fx-output>
+      </div>
+      <div class="attr-list">
+        <!-- Own attributes (non-ACTION_COMMON) -->
+        <span class="attr-section-head">Attributes</span>
+        <fx-repeat ref="instance('sel-attrs')/attr[not(@common='true')]">
+          <template>
+            <div class="attr-row">
+              <fx-control ref="@v" update-event="change">
+                <div class="attr-label">
+                  <label class="attr-key">{@k}</label>
+                  <span class="attr-req" title="Required">*</span>
+                </div>
+                <fx-attr-widget class="widget" data-key="{@k}"></fx-attr-widget>
+                <div class="attr-desc">{@desc}</div>
+              </fx-control>
+            </div>
+          </template>
+        </fx-repeat>
+
+        <!-- Event / Condition attributes (ACTION_COMMON) — collapsed -->
+        <details class="common-section">
+          <summary class="attr-section-head">Event / Condition</summary>
+          <fx-repeat ref="instance('sel-attrs')/attr[@common='true']">
+            <template>
+              <div class="attr-row">
+                <fx-control ref="@v" update-event="change">
+                  <div class="attr-label">
+                    <label class="attr-key">{@k}</label>
+                    <span class="attr-req" title="Required">*</span>
+                  </div>
+                  <fx-attr-widget class="widget" data-key="{@k}"></fx-attr-widget>
+                  <div class="attr-desc">{@desc}</div>
+                </fx-control>
+              </div>
+            </template>
+          </fx-repeat>
+        </details>
+      </div>
+    </fx-group>
+  </aside>
+</fx-fore>
+
+<!-- Preview pane sits outside the Fore layout to cover full viewport -->
+<div id="preview-pane">
+  <div class="preview-bar">
+    <span>Preview</span>
+    <button id="btn-refresh-preview">Refresh</button>
+    <button id="btn-close-preview">Close</button>
+  </div>
+  <iframe id="preview-frame" title="Form Preview"></iframe>
+</div>
+
+<script type="module" src="../demo.js"></script>
+<script type="module">
+
+// ─────────────────────────────────────────────────────────────────────────────
+// State
+// ─────────────────────────────────────────────────────────────────────────────
+
+let schema = {};
+let doc = { model: [], ui: [] };
+let selectedId  = null;
+let previewOpen = false;
+let idCounter   = 0;
+let dragState   = null;
+let selAttrsData = [];   // JS-side mirror of sel-attrs for widget configuration
+
+const ACTION_COMMON_KEYS = new Set(['event','if','while','delay','target','propagate','phase']);
+const FORE = () => document.getElementById('editor');
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Utilities
+// ─────────────────────────────────────────────────────────────────────────────
+
+const uid = () => 'el-' + (++idCounter);
+
+function makeEl(tag) {
+  const attrs = {};
+  (schema[tag]?.attrs ?? []).forEach(a => { attrs[a.k] = ''; });
+  return { id: uid(), tag, attrs, children: [] };
+}
+
+function findEl(id, list) {
+  const pool = list ?? [...doc.model, ...doc.ui];
+  for (const el of pool) {
+    if (el.id === id) return el;
+    const found = el.children?.length ? findEl(id, el.children) : null;
+    if (found) return found;
+  }
+  return null;
+}
+
+function removeEl(id, list) {
+  const idx = list.findIndex(e => e.id === id);
+  if (idx !== -1) { list.splice(idx, 1); return true; }
+  for (const el of list) { if (el.children && removeEl(id, el.children)) return true; }
+  return false;
+}
+
+function getSiblings(id) {
+  const searchIn = (list) => {
+    if (list.some(e => e.id === id)) return list;
+    for (const el of list) {
+      const found = el.children ? searchIn(el.children) : null;
+      if (found) return found;
+    }
+    return null;
+  };
+  return searchIn(doc.model) ?? searchIn(doc.ui);
+}
+
+function esc(s)     { return String(s ?? '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escAttr(s) { return String(s ?? '').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Schema Loading
+// ─────────────────────────────────────────────────────────────────────────────
+
+async function loadSchema() {
+  schema = await fetch('./fore-schema.json').then(r => r.json());
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Palette
+// ─────────────────────────────────────────────────────────────────────────────
+
+function buildPalettes() {
+  const modelPalette = document.getElementById('model-palette');
+  const uiPalette    = document.getElementById('ui-palette');
+
+  for (const [tag, def] of Object.entries(schema)) {
+    if (def.editorRole) continue;
+    const btn = document.createElement('button');
+    btn.className   = `palette-btn ${def.category}`;
+    btn.dataset.tag = tag;
+    btn.draggable   = true;
+    btn.title       = def.label + (def.help ? ': ' + def.help.replace(/<[^>]+>/g,'').slice(0,90) : '');
+    btn.textContent = `${def.icon} ${tag}`;
+
+    btn.addEventListener('dragstart', e => {
+      dragState = { tag, fromPalette: true };
+      e.dataTransfer.effectAllowed = 'copy';
+      e.dataTransfer.setData('text/plain', tag);
+    });
+    btn.addEventListener('dragend', () => { dragState = null; });
+
+    if (def.category === 'model') modelPalette.appendChild(btn);
+    else uiPalette.appendChild(btn);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Context-aware palette state
+// ─────────────────────────────────────────────────────────────────────────────
+
+function refreshPaletteState() {
+  document.querySelectorAll('.palette-btn').forEach(btn => {
+    const tag = btn.dataset.tag;
+    const def = schema[tag];
+    if (!def) return;
+    btn.classList.remove('can-drop','cannot-drop');
+
+    if (!selectedId) return;   // neutral when nothing selected
+
+    if (def.category === 'model') {
+      // Model elements always go to model-root, not into a selected UI/action element
+      btn.classList.add('cannot-drop');
+      return;
+    }
+    const canDrop = isDropValid(tag, 'ui', selectedId);
+    btn.classList.add(canDrop ? 'can-drop' : 'cannot-drop');
+  });
+
+  // Update context labels in section summaries
+  const modelCtx = document.getElementById('model-ctx');
+  const uiCtx    = document.getElementById('ui-ctx');
+  if (selectedId) {
+    const sel = findEl(selectedId);
+    const selDef = schema[sel?.tag ?? ''];
+    if (sel && selDef?.container && selDef.category !== 'model') {
+      uiCtx.textContent = `→ drop into ${sel.tag}`;
+    } else {
+      uiCtx.textContent = '';
+    }
+    modelCtx.textContent = '';
+  } else {
+    modelCtx.textContent = '';
+    uiCtx.textContent = '';
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Drop Validation
+// ─────────────────────────────────────────────────────────────────────────────
+
+function isDropValid(tag, section, parentId) {
+  const def = schema[tag];
+  if (!def) return false;
+  const vp = def.validParents ?? [];
+  if (vp.includes('any')) return true;
+  if (parentId) {
+    const parentTag = findEl(parentId)?.tag;
+    const vc = schema[parentTag ?? '']?.validChildren ?? [];
+    return vc.some(v => v === tag || v === def.category);
+  }
+  return vp.includes(section + '-root');
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Canvas Rendering
+// ─────────────────────────────────────────────────────────────────────────────
+
+function renderCanvas() {
+  renderSection('model-zone', doc.model, 'model', null);
+  renderSection('ui-zone',    doc.ui,    'ui',    null);
+  refreshPaletteState();
+}
+
+function renderSection(zoneId, list, section, parentId) {
+  const zone = document.getElementById(zoneId);
+  if (!zone) return;
+  zone.innerHTML = '';
+  zone.classList.toggle('empty-hint', list.length === 0);
+  list.forEach((el, idx) => zone.appendChild(buildCard(el, section, idx, list.length)));
+  wireDropZone(zone, section, parentId);
+}
+
+function buildCard(el, section, idx, total) {
+  const def = schema[el.tag] ?? {};
+  const cat = def.category ?? section;
+
+  const card = document.createElement('div');
+  card.className = `card ${cat}-card${el.id === selectedId ? ' selected' : ''}`;
+  card.dataset.id  = el.id;
+  card.dataset.tag = el.tag;
+  card.tabIndex    = 0;
+  card.draggable   = true;
+
+  const handle   = mk('span', { className: 'card-handle', title: 'Drag to reorder' }, '⋮⋮');
+  const icon     = mk('span', { className: 'card-icon'  }, def.icon ?? '');
+  const tagSp    = mk('span', { className: `card-tag ${cat}` }, el.tag);
+  const preview  = Object.entries(el.attrs).filter(([,v]) => v).map(([k,v]) => `${k}="${v}"`).join(' ');
+  const attrSp   = mk('span', { className: 'card-attrs', title: preview }, preview);
+  const controls = mk('div',  { className: 'card-controls' });
+  const upBtn    = mk('button', { className: 'card-move-btn', title: 'Move up (Alt+↑)', disabled: idx === 0 }, '▲');
+  const dnBtn    = mk('button', { className: 'card-move-btn', title: 'Move down (Alt+↓)', disabled: idx === total - 1 }, '▼');
+  upBtn.addEventListener('click', e => { e.stopPropagation(); moveCard(el.id, -1); });
+  dnBtn.addEventListener('click', e => { e.stopPropagation(); moveCard(el.id,  1); });
+  controls.append(upBtn, dnBtn);
+  card.append(handle, icon, tagSp, attrSp, controls);
+
+  // Children zone for container elements (not model)
+  if ((def.container || def.validChildren?.length) && cat !== 'model') {
+    const childWrap = mk('div', { className: 'card-children' });
+    const inner     = mk('div', { className: 'card-children-inner' });
+    const childZone = mk('div', { className: 'child-drop-zone' });
+    childZone.dataset.parentId = el.id;
+    if (el.children?.length) {
+      el.children.forEach((child, ci) =>
+        childZone.appendChild(buildCard(child, section, ci, el.children.length)));
+    } else {
+      childZone.appendChild(mk('div', { className: 'child-drop-zone-hint' },
+        `Drop ${(def.validChildren ?? ['elements']).join(' / ')} here`));
+    }
+    wireDropZone(childZone, section, el.id);
+    inner.appendChild(childZone);
+    childWrap.appendChild(inner);
+    card.appendChild(childWrap);
+  }
+
+  card.addEventListener('click',   e => { e.stopPropagation(); selectEl(el.id); });
+  card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') selectEl(el.id); });
+  card.addEventListener('dragstart', e => {
+    dragState = { tag: el.tag, fromId: el.id, fromPalette: false };
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', el.id);
+    setTimeout(() => card.style.opacity = '0.4', 0);
+  });
+  card.addEventListener('dragend', () => { card.style.opacity = ''; dragState = null; });
+
+  return card;
+}
+
+function mk(tag, props = {}, text) {
+  const node = document.createElement(tag);
+  Object.assign(node, props);
+  if (text !== undefined) node.textContent = text;
+  return node;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Drop Zone Wiring
+// ─────────────────────────────────────────────────────────────────────────────
+
+function wireDropZone(zone, section, parentId) {
+  zone.addEventListener('dragover', e => {
+    if (!dragState) return;
+    const valid = isDropValid(dragState.tag, section, parentId);
+    e.preventDefault();
+    e.dataTransfer.dropEffect = valid ? 'move' : 'none';
+    zone.classList.add('drag-over');
+    zone.classList.toggle('invalid', !valid);
+  });
+  zone.addEventListener('dragleave', e => {
+    if (!zone.contains(e.relatedTarget)) zone.classList.remove('drag-over','invalid');
+  });
+  zone.addEventListener('drop', e => {
+    e.stopPropagation();
+    zone.classList.remove('drag-over','invalid');
+    if (!dragState || !isDropValid(dragState.tag, section, parentId)) return;
+    handleDrop(section, parentId, zone, e);
+  });
+}
+
+function handleDrop(section, parentId, zone, e) {
+  const { tag, fromId, fromPalette } = dragState;
+  dragState = null;
+
+  const targetList = parentId
+    ? findEl(parentId)?.children
+    : section === 'model' ? doc.model : doc.ui;
+  if (!targetList) return;
+
+  const insertIdx = dropIndexFromY(zone, e.clientY);
+  if (fromPalette) {
+    targetList.splice(insertIdx, 0, makeEl(tag));
+  } else {
+    const moved = findEl(fromId);
+    if (!moved) return;
+    removeEl(fromId, doc.model);
+    removeEl(fromId, doc.ui);
+    targetList.splice(insertIdx, 0, moved);
+  }
+
+  renderCanvas();
+  updateDocCtxInstance();
+  saveState();
+}
+
+function dropIndexFromY(zone, clientY) {
+  const cards = [...zone.children].filter(c => c.classList.contains('card'));
+  for (let i = 0; i < cards.length; i++) {
+    const rect = cards[i].getBoundingClientRect();
+    if (clientY < rect.top + rect.height / 2) return i;
+  }
+  return cards.length;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Selection
+// ─────────────────────────────────────────────────────────────────────────────
+
+function selectEl(id) {
+  selectedId = id;
+  renderCanvas();
+  updateSelInstances(id);
+  setTimeout(() => document.querySelector('.card.selected')?.scrollIntoView({ block: 'nearest' }), 0);
+}
+
+function clearSelection() {
+  selectedId = null;
+  renderCanvas();
+  clearSelAttrs();
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Fore Instance Bridge
+// ─────────────────────────────────────────────────────────────────────────────
+
+function setForeInstance(instanceId, xmlString) {
+  const instEl = FORE().querySelector(`fx-instance[id="${instanceId}"]`);
+  if (!instEl) return false;
+  const liveDoc = instEl.instanceDocument;
+  if (!liveDoc) return false;
+
+  const parser = new DOMParser();
+  const newDoc = parser.parseFromString(xmlString, 'text/xml');
+  if (newDoc.querySelector('parsererror')) {
+    console.error('XML parse error in setForeInstance', instanceId);
+    return false;
+  }
+
+  const liveRoot = liveDoc.documentElement;
+  const newRoot  = newDoc.documentElement;
+
+  // Sync attributes
+  [...liveRoot.attributes].forEach(a => {
+    if (!newRoot.hasAttribute(a.name)) liveRoot.removeAttribute(a.name);
+  });
+  [...newRoot.attributes].forEach(a => liveRoot.setAttribute(a.name, a.value));
+
+  // Sync children
+  while (liveRoot.firstChild) liveRoot.removeChild(liveRoot.firstChild);
+  [...newRoot.childNodes].forEach(n => liveRoot.appendChild(liveDoc.importNode(n, true)));
+  return true;
+}
+
+function triggerForeUpdate() {
+  const fore = FORE();
+  if (typeof fore.rebuild === 'function') fore.rebuild();
+}
+
+// Build sel-attrs XML from selected element + schema
+function buildSelAttrsXml(el) {
+  const def = schema[el.tag] ?? { attrs: [], icon: '', label: '', help: '' };
+
+  selAttrsData = def.attrs.map(a => ({
+    ...a,
+    v:      el.attrs[a.k] ?? '',
+    common: ACTION_COMMON_KEYS.has(a.k),
+    idrefs: a.idref ? collectRefs(a.idref) : [],
+  }));
+
+  const attrsXml = selAttrsData.map(a => {
+    const optsXml = [...(a.opts ?? []), ...a.idrefs]
+      .map(o => `<opt>${esc(o)}</opt>`).join('');
+    return `<attr k="${esc(a.k)}" v="${esc(a.v)}" req="${a.req}" ph="${esc(a.ph)}" ` +
+           `desc="${esc(a.desc)}" common="${a.common}">${optsXml}</attr>`;
+  }).join('');
+
+  // Use child elements (not attributes) so fx-output refs work correctly,
+  // especially mediatype="html" for the help field.
+  return `<attrs>` +
+         `<tag>${esc(el.tag)}</tag>` +
+         `<icon>${esc(def.icon ?? '')}</icon>` +
+         `<label>${esc(def.label ?? '')}</label>` +
+         `<help>${esc(def.help ?? '')}</help>` +
+         attrsXml +
+         `</attrs>`;
+}
+
+function buildDocCtxXml() {
+  const instanceCount   = doc.model.filter(e => e.tag === 'fx-instance').length;
+  const submissionCount = doc.model.filter(e => e.tag === 'fx-submission').length;
+  const ids = collectAllIds().map(({tag, id}) => `<id tag="${esc(tag)}">${esc(id)}</id>`).join('');
+  return `<ctx><instance-count>${instanceCount}</instance-count>` +
+         `<submission-count>${submissionCount}</submission-count><ids>${ids}</ids></ctx>`;
+}
+
+function updateSelInstances(elementId) {
+  const el = findEl(elementId);
+  if (!el) return;
+  setForeInstance('sel-attrs', buildSelAttrsXml(el));
+  setForeInstance('doc-ctx',   buildDocCtxXml());
+  triggerForeUpdate();
+}
+
+function clearSelAttrs() {
+  selAttrsData = [];
+  setForeInstance('sel-attrs', '<attrs><tag/><icon/><label/><help/></attrs>');
+  setForeInstance('doc-ctx',   buildDocCtxXml());
+  triggerForeUpdate();
+}
+
+function updateDocCtxInstance() {
+  setForeInstance('doc-ctx', buildDocCtxXml());
+  // If something is selected, also refresh its idrefs (e.g. id changed)
+  if (selectedId) {
+    const el = findEl(selectedId);
+    if (el) setForeInstance('sel-attrs', buildSelAttrsXml(el));
+  }
+  triggerForeUpdate();
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Idref helpers
+// ─────────────────────────────────────────────────────────────────────────────
+
+function collectRefs(idref) {
+  if (idref === 'any') return collectAllIds().map(({id}) => id);
+  const result = [];
+  const scan = (list) => {
+    list.forEach(el => {
+      if (el.tag === idref) {
+        if (el.attrs.id)   result.push(el.attrs.id);
+        if (el.attrs.name) result.push(el.attrs.name); // fx-case uses name
+      }
+      el.children?.length && scan(el.children);
+    });
+  };
+  scan(doc.model); scan(doc.ui);
+  return result;
+}
+
+function collectAllIds() {
+  const result = [];
+  const scan = (list) => {
+    list.forEach(el => {
+      if (el.attrs.id) result.push({ tag: el.tag, id: el.attrs.id });
+      el.children?.length && scan(el.children);
+    });
+  };
+  scan(doc.model); scan(doc.ui);
+  return result;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Post-render widget configuration (called after Fore's refresh-done)
+// ─────────────────────────────────────────────────────────────────────────────
+
+function configureWidgets() {
+  document.querySelectorAll('fx-attr-widget').forEach(w => {
+    const key = w.dataset.key;
+    const attrDef = selAttrsData.find(a => a.k === key);
+    if (!attrDef) return;
+    const opts = [...(attrDef.opts ?? []), ...attrDef.idrefs];
+    w.configure(opts, attrDef.ph);
+  });
+}
+
+FORE().addEventListener('refresh-done', configureWidgets);
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Fore → docState sync (attr value changes flow back to JS state)
+// ─────────────────────────────────────────────────────────────────────────────
+
+function updateCardAttrPreview(id) {
+  const card = document.querySelector(`.card[data-id="${id}"] .card-attrs`);
+  if (!card) return;
+  const el = findEl(id);
+  if (!el) return;
+  const preview = Object.entries(el.attrs).filter(([,v]) => v).map(([k,v]) => `${k}="${v}"`).join(' ');
+  card.textContent = preview; card.title = preview;
+}
+
+// Real-time card preview while typing
+document.getElementById('attr-panel').addEventListener('input', e => {
+  const widget = e.target.closest('fx-attr-widget');
+  if (!widget || !selectedId) return;
+  const key = widget.dataset.key;
+  const el  = findEl(selectedId);
+  if (!el || !key) return;
+  el.attrs[key] = widget.value;
+  updateCardAttrPreview(selectedId);
+}, true);
+
+// Sync to docState on change (Fore writes @v on change event too)
+document.getElementById('attr-panel').addEventListener('change', e => {
+  const widget = e.target.closest('fx-attr-widget');
+  if (!widget || !selectedId) return;
+  const key = widget.dataset.key;
+  const el  = findEl(selectedId);
+  if (!el || !key) return;
+  el.attrs[key] = widget.value;
+  updateCardAttrPreview(selectedId);
+  if (key === 'id' || key === 'name') updateDocCtxInstance();
+  saveState();
+}, true);
+
+// Delete button inside attr panel
+document.getElementById('attr-panel').addEventListener('click', e => {
+  if (e.target.id === 'aside-delete') deleteSelected();
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Move / Delete
+// ─────────────────────────────────────────────────────────────────────────────
+
+function moveCard(id, dir) {
+  const siblings = getSiblings(id);
+  if (!siblings) return;
+  const idx = siblings.findIndex(e => e.id === id);
+  const to  = idx + dir;
+  if (to < 0 || to >= siblings.length) return;
+  [siblings[idx], siblings[to]] = [siblings[to], siblings[idx]];
+  renderCanvas();
+  saveState();
+  setTimeout(() => document.querySelector(`.card[data-id="${id}"]`)?.focus(), 30);
+}
+
+function deleteSelected() {
+  if (!selectedId) return;
+  removeEl(selectedId, doc.model);
+  removeEl(selectedId, doc.ui);
+  selectedId = null;
+  renderCanvas();
+  clearSelAttrs();
+  updateDocCtxInstance();
+  saveState();
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Keyboard Shortcuts
+// ─────────────────────────────────────────────────────────────────────────────
+
+document.addEventListener('keydown', e => {
+  const inText = ['INPUT','SELECT','TEXTAREA'].includes(document.activeElement?.tagName);
+  if (e.altKey && e.key === 'ArrowUp')   { e.preventDefault(); if (selectedId) moveCard(selectedId, -1); return; }
+  if (e.altKey && e.key === 'ArrowDown') { e.preventDefault(); if (selectedId) moveCard(selectedId,  1); return; }
+  if (!inText) {
+    if ((e.key === 'Delete' || e.key === 'Backspace') && selectedId) { e.preventDefault(); deleteSelected(); }
+    if (e.key === 'Escape') clearSelection();
+  }
+  if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); saveToStorage(); }
+  if ((e.ctrlKey || e.metaKey) && e.key === 'p') { e.preventDefault(); togglePreview(); }
+});
+
+document.getElementById('canvas').addEventListener('click', e => {
+  if (e.target.id === 'canvas' || e.target.classList.contains('drop-zone')) clearSelection();
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Serializer → HTML output
+// ─────────────────────────────────────────────────────────────────────────────
+
+function serialize() {
+  const modelOut = doc.model.map(el => serEl(el, '    ')).join('\n');
+  const uiOut    = doc.ui.map(el => serEl(el, '  ')).join('\n');
+  return [
+    '<!doctype html>', '<html lang="en">', '<head>',
+    '  <meta charset="utf-8">',
+    '  <meta name="viewport" content="width=device-width, initial-scale=1">',
+    '  <title>My Fore Form</title>',
+    '  <script type="module" src="/node_modules/@jinntec/fore/dist/fore.js"><\\/script>',
+    '</head>', '<body>', '<fx-fore>',
+    '  <fx-model>',
+    modelOut || '    <!-- add model elements here -->',
+    '  </fx-model>',
+    uiOut    || '  <!-- add UI elements here -->',
+    '</fx-fore>', '</body>', '</html>',
+  ].join('\n');
+}
+
+function serEl(el, indent) {
+  const attrStr = Object.entries(el.attrs)
+    .filter(([,v]) => v !== '').map(([k,v]) => ` ${k}="${escAttr(v)}"`).join('');
+  const children = el.children ?? [];
+  if (!children.length && !needsBody(el.tag)) return `${indent}<${el.tag}${attrStr}/>`;
+  const body = children.map(c => serEl(c, indent + '  ')).join('\n') || defaultBody(el.tag, indent + '  ');
+  return `${indent}<${el.tag}${attrStr}>\n${body}\n${indent}</${el.tag}>`;
+}
+
+function needsBody(tag) {
+  return ['fx-instance','fx-function','fx-control','fx-group','fx-repeat',
+          'fx-switch','fx-case','fx-dialog','fx-trigger','fx-action'].includes(tag);
+}
+function defaultBody(tag, i) {
+  return ({
+    'fx-instance': `${i}<root/>`,
+    'fx-function': `${i}<!-- function body -->`,
+    'fx-control':  `${i}<label>Label</label>\n${i}<input class="widget" type="text">`,
+    'fx-group':    `${i}<!-- group content -->`,
+    'fx-repeat':   `${i}<template>\n${i}  <div>{.}</div>\n${i}</template>`,
+    'fx-switch':   `${i}<fx-case name="c1"><div>Case 1</div></fx-case>`,
+    'fx-case':     `${i}<!-- case content -->`,
+    'fx-dialog':   `${i}<!-- dialog content -->`,
+    'fx-trigger':  `${i}<label>Click me</label>`,
+    'fx-action':   `${i}<!-- actions -->`,
+  })[tag] ?? `${i}<!-- content -->`;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Preview
+// ─────────────────────────────────────────────────────────────────────────────
+
+function togglePreview() {
+  previewOpen = !previewOpen;
+  document.getElementById('preview-pane').classList.toggle('visible', previewOpen);
+  document.getElementById('btn-preview').classList.toggle('active', previewOpen);
+  if (previewOpen) refreshPreview();
+}
+function refreshPreview() {
+  document.getElementById('preview-frame').srcdoc = serialize();
+}
+
+document.getElementById('btn-preview').addEventListener('click', togglePreview);
+document.getElementById('btn-refresh-preview').addEventListener('click', refreshPreview);
+document.getElementById('btn-close-preview').addEventListener('click', () => { previewOpen = true; togglePreview(); });
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Persistence
+// ─────────────────────────────────────────────────────────────────────────────
+
+const STORAGE_KEY = 'fx-editor-doc-v1';
+
+function saveToStorage() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ doc, idCounter }));
+    const btn = document.getElementById('btn-save');
+    const orig = btn.textContent;
+    btn.textContent = 'Saved ✓';
+    setTimeout(() => { btn.textContent = orig; }, 1400);
+  } catch(e) { console.warn('Save failed:', e); }
+}
+
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ doc, idCounter })); } catch(_) {}
+}
+
+function loadFromStorage() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return;
+  try {
+    const saved = JSON.parse(raw);
+    doc = saved.doc ?? { model: [], ui: [] };
+    idCounter = saved.idCounter ?? 0;
+  } catch(e) { console.warn('Load failed:', e); }
+}
+
+function downloadHtml() {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([serialize()], { type: 'text/html' }));
+  a.download = 'my-fore-form.html'; a.click(); URL.revokeObjectURL(a.href);
+}
+
+function newDoc() {
+  if ((doc.model.length || doc.ui.length) &&
+      !confirm('Start a new document? Unsaved changes will be lost.')) return;
+  doc = { model: [], ui: [] }; selectedId = null; idCounter = 0;
+  renderCanvas(); clearSelAttrs(); updateDocCtxInstance();
+}
+
+document.getElementById('btn-new').addEventListener('click', newDoc);
+document.getElementById('btn-save').addEventListener('click', saveToStorage);
+document.getElementById('btn-load').addEventListener('click', () => { loadFromStorage(); renderCanvas(); updateDocCtxInstance(); });
+document.getElementById('btn-download').addEventListener('click', downloadHtml);
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Init — wait for Fore's 'ready' event before touching instances
+// ─────────────────────────────────────────────────────────────────────────────
+
+await loadSchema();
+buildPalettes();
+loadFromStorage();
+
+FORE().addEventListener('ready', () => {
+  renderCanvas();
+  updateDocCtxInstance();
+  clearSelAttrs();
+});
+
+</script>
+</body>
+</html>

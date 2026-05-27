@@ -119,49 +119,19 @@ export class FxOutput extends XfAbstractControl {
     // }
 
     if (this.mediatype === 'html') {
-      if (this.modelItem.node) {
-        const defaultSlot = this.shadowRoot.querySelector('#default');
-        const { node } = this.modelItem;
-        if (node.nodeType) {
-          valueWrapper.append(node);
-          // this.appendChild(node);
+      // JSON instances use a lens, so modelItem.node is null — fall back to this.value
+      const source = this.modelItem.node ?? this.value;
+      if (source) {
+        if (source.nodeType) {
+          valueWrapper.append(source);
           return;
         }
-
-        // ### try to parse as string
-        const tmpDoc = new DOMParser().parseFromString(node, 'text/html');
-        const theNode = tmpDoc.body.childNodes;
-        // console.log('actual node', theNode)
-        Array.from(theNode).forEach(n => {
+        // parse string as HTML
+        const tmpDoc = new DOMParser().parseFromString(source, 'text/html');
+        Array.from(tmpDoc.body.childNodes).forEach(n => {
           valueWrapper.append(n);
         });
-        // valueWrapper.append(theNode);
-
-        // valueWrapper.innerHTML=node;
-        /*
-        if (node.nodeType) {
-          this.appendChild(node);
-          return;
-        }
-        Object.entries(node).map(obj => {
-          // valueWrapper.appendChild(obj[1]);
-          this.appendChild(obj[1]);
-        });
-*/
-        /*
-        Object.entries(node).map(obj => {
-          // valueWrapper.appendChild(obj[1]);
-          this.appendChild(obj[1]);
-        });
-*/
-
-        return;
       }
-
-      // this.innerHTML = this.value.outerHTML;
-      // valueWrapper.innerHTML = this.value.outerHTML;
-
-      // this.shadowRoot.appendChild(this.value);
       return;
     }
 
