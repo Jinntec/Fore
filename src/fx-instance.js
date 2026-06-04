@@ -9,7 +9,11 @@ async function handleResponse(fxInstance, response) {
     alert(`response status:  ${status} - failed to load data for '${fxInstance.src}' - stopping.`);
     throw new Error(`failed to load data - status: ${status}`);
   }
-  let responseContentType = response.headers.get('content-type').split(';')[0].trim().toLowerCase();
+  const responseContentType = response.headers
+    .get('content-type')
+    .split(';')[0]
+    .trim()
+    .toLowerCase();
 
   if (responseContentType.startsWith('text/html')) {
     return response.text().then(result => new DOMParser().parseFromString(result, 'text/html'));
@@ -49,6 +53,36 @@ export class FxInstance extends HTMLElement {
 
     // JSON facade (only relevant for JSON instances)
     this.domFacade = null;
+
+    this.debugInfo = {
+      debugId: `instance-${Math.random().toString(36).slice(2, 9)}`,
+      createdAt: performance.now(),
+      initializedAt: null,
+      loadCount: 0,
+/*
+      mutationCount: 0,
+      lastMutationAt: null,
+*/
+    };
+  }
+
+  getDebugInfo() {
+    const defaultContext = this.getDefaultContext?.();
+
+    return {
+      ...this.debugInfo,
+      id: this.getAttribute('id') || null,
+      instanceId: this.instanceId,
+      type: this.type,
+      src: this.getAttribute('src') || null,
+      hasData: !!this.instanceData,
+      hasNodeset: !!this.nodeset,
+      defaultContextType: defaultContext?.nodeType
+        ? 'xml-node'
+        : defaultContext?.__jsonlens__
+          ? 'json-lens'
+          : typeof defaultContext,
+    };
   }
 
   connectedCallback() {
@@ -61,7 +95,9 @@ export class FxInstance extends HTMLElement {
     // If the author did not provide an id on that first instance, we set id="default".
     // If the author provided an id on that first instance, we use that id instead.
     const parentModel =
-      this.parentNode && this.parentNode.nodeName && this.parentNode.nodeName.toUpperCase() === 'FX-MODEL'
+      this.parentNode &&
+      this.parentNode.nodeName &&
+      this.parentNode.nodeName.toUpperCase() === 'FX-MODEL'
         ? this.parentNode
         : null;
 
@@ -92,7 +128,9 @@ export class FxInstance extends HTMLElement {
       }
     }
 
-    this.credentials = this.hasAttribute('credentials') ? this.getAttribute('credentials') : 'same-origin';
+    this.credentials = this.hasAttribute('credentials')
+      ? this.getAttribute('credentials')
+      : 'same-origin';
     if (!['same-origin', 'include', 'omit'].includes(this.credentials)) {
       console.error(
         `fx-submission: the value of credentials is not valid. Expected 'same-origin', 'include' or 'omit' but got '${this.credentials}'`,
@@ -144,6 +182,8 @@ export class FxInstance extends HTMLElement {
 
     // Signal structure mutation (used by fx-fore for refresh decisions)
     this.dispatchEvent(new CustomEvent('path-mutated', { bubbles: true, composed: true }));
+    // this.debugInfo.mutationCount += 1;
+    // this.debugInfo.lastMutationAt = performance.now();
   }
 
   /**
@@ -162,6 +202,8 @@ export class FxInstance extends HTMLElement {
   }
 
   reset() {
+    // this.debugInfo.mutationCount += 1;
+    // this.debugInfo.lastMutationAt = performance.now();
     // use the setter so nodeset is rebuilt for JSON too
     if (this.originalInstance && this.type === 'xml') {
       this.instanceData = this.originalInstance.cloneNode(true);
@@ -193,6 +235,8 @@ export class FxInstance extends HTMLElement {
    * legacy setter API: keep it, but forward to instanceData setter
    */
   setInstanceData(data) {
+    // this.debugInfo.mutationCount += 1;
+    // this.debugInfo.lastMutationAt = performance.now();
     this.instanceData = data;
   }
 
@@ -224,6 +268,8 @@ export class FxInstance extends HTMLElement {
     } else if (this.childNodes.length !== 0) {
       this._useInlineData();
     }
+    this.debugInfo.initializedAt = performance.now();
+    this.debugInfo.loadCount += 1;
   }
 
   createInstanceData() {

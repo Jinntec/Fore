@@ -45,8 +45,30 @@ export class FxModel extends HTMLElement {
      * @type {import('./fx-bind.js').FxBind[]}
      */
     this.binds = [];
+
+    this.debugInfo = {
+      debugId: `model-${Math.random().toString(36).slice(2, 9)}`,
+      createdAt: performance.now(),
+      modelConstructCount: 0,
+      updateModelCount: 0,
+      rebuildCount: 0,
+      recalculateCount: 0,
+      revalidateCount: 0,
+      lastUpdateAt: null,
+    };
   }
 
+  getDebugInfo() {
+    return {
+      ...this.debugInfo,
+      constructed: this.modelConstructed,
+      inited: this.inited,
+      instanceCount: this.instances.length,
+      modelItemCount: this.modelItems.length,
+      instances: this.instances.map(instance => instance.getDebugInfo?.()),
+      modelItems: this.modelItems.map(item => item.getDebugInfo?.()),
+    };
+  }
   /**
    * @returns {import('./fx-fore.js').FxFore}
    */
@@ -205,6 +227,7 @@ export class FxModel extends HTMLElement {
    */
   async modelConstruct() {
     console.info(`📌 model-construct for #${this.parentNode.id}`);
+    this.debugInfo.modelConstructCount += 1;
 
     // this.dispatchEvent(new CustomEvent('model-construct', { detail: this }));
     Fore.dispatch(this, 'model-construct', { model: this });
@@ -361,6 +384,8 @@ export class FxModel extends HTMLElement {
    * update action triggering the update cycle
    */
   updateModel() {
+    this.debugInfo.updateModelCount += 1;
+    this.debugInfo.lastUpdateAt = performance.now();
     // console.time('updateModel');
     this.rebuild();
     /*
@@ -421,6 +446,7 @@ export class FxModel extends HTMLElement {
 
   rebuild() {
     console.log(`🔷   rebuild() '${this.fore.id}'`);
+    this.debugInfo.rebuildCount += 1;
 
     // Build a lookup for existing ModelItems so we can reuse them by path (approach A)
     const prevItems = Array.isArray(this.modelItems) ? this.modelItems : [];
@@ -459,6 +485,7 @@ export class FxModel extends HTMLElement {
    * todo: use 'changed' flag on modelItems to determine subgraph for recalculation. Flag already exists but is not used.
    */
   async recalculate() {
+    this.debugInfo.recalculateCount += 1;
     if (!this.mainGraph) {
       return;
     }
@@ -646,6 +673,7 @@ export class FxModel extends HTMLElement {
    *
    */
   revalidate() {
+    this.debugInfo.revalidateCount += 1;
     if (this.modelItems.length === 0) return true;
 
     console.log(`🔷🔷🔷 revalidate() '${this.fore.id}'`);

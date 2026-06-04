@@ -372,12 +372,35 @@ export class FxFore extends HTMLElement {
   getDebugInfo() {
     return {
       ...this.debugInfo,
+      id: this.id || null,
       ready: this.ready,
       lazyRefresh: this.lazyRefresh,
       model: this.model?.getDebugInfo?.() || null,
     };
   }
 
+  getDebugSnapshot() {
+    const model = this.model;
+
+    return {
+      fore: {
+        id: this.id || null,
+        ready: this.ready,
+        lazyRefresh: this.lazyRefresh,
+        debugInfo: this.debugInfo,
+      },
+
+      model: model?.getDebugInfo?.() || null,
+
+      instances: model?.instances?.map(instance => instance.getDebugInfo?.()) || [],
+
+      modelItems: model?.modelItems?.map(item => item.getDebugInfo?.()) || [],
+
+      boundElements: Array.from(this.querySelectorAll('[ref]'))
+          .filter(el => typeof el.getDebugInfo === 'function')
+          .map(el => el.getDebugInfo()),
+    };
+  }
   /**
    * Parse a list of target specs.
    *
@@ -648,7 +671,9 @@ export class FxFore extends HTMLElement {
       const libs = Array.from(this.querySelectorAll('fx-functionlib'));
       await Promise.all(libs.map(l => l.readyPromise || Promise.resolve()));
 
+      this.debugInfo.modelConstructStartedAt = performance.now();
       await modelElement.modelConstruct();
+      this.debugInfo.modelConstructDoneAt = performance.now();
 
       console.log('varbindings ', this._instanceVarBindings);
       this._handleModelConstructDone();
