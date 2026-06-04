@@ -64,6 +64,39 @@ export class ModelItem {
     this.state = {}; // evaluated expression results
   }
 
+  getDebugInfo() {
+    return {
+      path: this.path,
+      ref: this.ref,
+      instanceId: this.instanceId,
+      type: this.type,
+
+      value: this.value,
+
+      facets: {
+        readonly: this.readonly,
+        relevant: this.relevant,
+        required: this.required,
+        constraint: this.constraint,
+        changed: this.changed,
+      },
+
+      backing: this.lens
+          ? 'json-lens'
+          : this.node
+              ? 'xml-node'
+              : 'unknown',
+
+      observerCount: this.observers?.size || 0,
+      boundControlCount: this.boundControls?.length || 0,
+      dependencyCount: this.dependencies?.size || 0,
+      alertCount: this.alerts?.length || 0,
+
+      stateExpressions: this.stateExpressions,
+      state: this.state,
+    };
+  }
+
   get value() {
     if (this.lens) return this.lens.get();
     if (!this.node) return null;
@@ -278,4 +311,5 @@ export class ModelItem {
 
     return [];
   }
+
 }
