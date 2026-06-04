@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fore fx-include Demo</title>
+
+    <script type="module" src="../index.js"></script>
+    <link rel="stylesheet" href="../resources/fore.css">
+
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 2rem;
+        }
+
+        .demo {
+            display: grid;
+            gap: 2rem;
+            max-width: 48rem;
+        }
+
+        fx-include {
+            display: block;
+            border: thin solid #ccc;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            min-height: 3rem;
+        }
+
+        fx-include::before {
+            content: "<fx-include>";
+            display: block;
+            font-size: 0.8rem;
+            opacity: 0.6;
+            margin-bottom: 0.5rem;
+        }
+
+        .included-panel {
+            padding: 1rem;
+            background: #f6f6f6;
+            border-radius: 0.5rem;
+        }
+
+        .reload-panel {
+            padding: 1rem;
+            background: #fff8e8;
+            border-radius: 0.5rem;
+        }
+
+        .external-panel {
+            padding: 1rem;
+            background: #eef5ff;
+            border-radius: 0.5rem;
+        }
+
+        .replace-panel {
+            padding: 1rem;
+            background: #f2fff2;
+            border: thin solid #9ccc9c;
+            border-radius: 0.5rem;
+        }
+
+        button {
+            width: max-content;
+            padding: 0.4rem 0.7rem;
+        }
+
+        fx-control {
+            display: block;
+            margin-block: 0.75rem;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-block-end: 0.25rem;
+        }
+
+        input.widget {
+            padding: 0.35rem;
+            min-width: 20rem;
+        }
+    </style>
+</head>
+
+<body>
+<h1>fx-include</h1>
+
+<fx-fore>
+    <fx-model>
+        <fx-instance>
+            <data>
+                <name>Fore include demo</name>
+                <description>This input was initialized after lazy inclusion.</description>
+            </data>
+        </fx-instance>
+    </fx-model>
+
+    <section class="demo">
+        <section>
+            <h2>Template include</h2>
+            <p>Default behavior: loads once and removes the event listener.</p>
+
+            <button id="load-template" type="button">Load template content</button>
+
+            <fx-include event="click" target="#load-template">
+                <template>
+                    <section class="included-panel">
+                        <h3>Included from local template</h3>
+
+                        <p>
+                            Bound output:
+                            <fx-output ref="name"></fx-output>
+                        </p>
+
+                        <fx-control ref="description">
+                            <label>Description</label>
+                            <input class="widget">
+                        </fx-control>
+                    </section>
+                </template>
+            </fx-include>
+        </section>
+
+        <section>
+            <h2>Reloadable template include</h2>
+            <p>With <code>reload</code>, every click clears and recreates the included content.</p>
+
+            <button id="reload-template" type="button">Reload template content</button>
+
+            <fx-include event="click" target="#reload-template" reload>
+                <template>
+                    <section class="reload-panel">
+                        <h3>Reloaded from local template</h3>
+
+                        <p>
+                            Timestamp:
+                            <span class="timestamp"></span>
+                        </p>
+
+                        <script>
+                            document.currentScript
+                                .closest('.reload-panel')
+                                .querySelector('.timestamp')
+                                .textContent = new Date().toLocaleTimeString();
+                        </script>
+                    </section>
+                </template>
+            </fx-include>
+        </section>
+
+        <section>
+            <h2>External include</h2>
+            <p>Loads an external HTML file once and selects one fragment from it.</p>
+
+            <button id="load-external" type="button">Load external fragment</button>
+
+            <fx-include
+                    event="click"
+                    target="#load-external"
+                    src="external-fragment.html"
+                    selector="#external-fragment">
+            </fx-include>
+        </section>
+
+        <section>
+            <h2>Replace mode</h2>
+            <p>The placeholder element is replaced by the included content.</p>
+
+            <button id="load-replace" type="button">Replace include element</button>
+
+            <fx-include event="click" target="#load-replace" replace>
+                <template>
+                    <section class="replace-panel">
+                        <h3>The original fx-include was replaced</h3>
+                        <p>This section now stands where the include placeholder used to be.</p>
+                    </section>
+                </template>
+            </fx-include>
+        </section>
+    </section>
+</fx-fore>
+</body>
+</html>
