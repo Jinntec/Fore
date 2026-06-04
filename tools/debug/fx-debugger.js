@@ -1,4 +1,3 @@
-
 /**
  * Fore DevTools - <fx-debugger>
  *
@@ -13,6 +12,7 @@
  *   - Instances
  *   - Model Items
  *   - Bound Elements
+ *   - Raw snapshot
  *
  * Non-goals for this phase:
  * - no mutation
@@ -79,7 +79,7 @@ export class FxDebugger extends HTMLElement {
           );
         border-bottom: 1px solid #e3e5ea;
       }
-      
+
       .fx-debugger__resize-hint:hover {
         background:
           linear-gradient(to bottom, #e8eaed, #fff),
@@ -91,12 +91,13 @@ export class FxDebugger extends HTMLElement {
             #9aa0a6 8px
           );
       }
-      
+
       .fx-debugger--resizing,
       .fx-debugger--resizing * {
         cursor: ns-resize !important;
         user-select: none !important;
       }
+
       .fx-debugger__header {
         flex: 0 0 auto;
         display: flex;
@@ -206,14 +207,25 @@ export class FxDebugger extends HTMLElement {
       .fx-debugger__panel {
         flex: 1 1 auto;
         min-height: 0;
-        overflow: auto;
+        overflow: hidden;
         padding: 1rem;
+        display: flex;
+        flex-direction: column;
       }
-
+      
       .fx-debugger__section + .fx-debugger__section {
         margin-top: 1.25rem;
       }
-
+      .fx-debugger__section {
+        min-height: 0;
+      }
+      
+      .fx-debugger__panel > .fx-debugger__section:only-child {
+        flex: 1 1 auto;
+        display: flex;
+        min-height: 0;
+        flex-direction: column;
+      }
       .fx-debugger__section h3 {
         margin: 0 0 0.75rem;
         font-size: 0.95rem;
@@ -235,25 +247,6 @@ export class FxDebugger extends HTMLElement {
       .fx-debugger__details dd {
         margin: 0;
         min-width: 0;
-      }
-
-      .fx-debugger__details-block {
-        border: 1px solid #e3e5ea;
-        border-radius: 0.35rem;
-        background: #fff;
-      }
-
-      .fx-debugger__details-block summary {
-        padding: 0.6rem 0.75rem;
-        cursor: pointer;
-        font-weight: 700;
-        background: #f8f9fb;
-      }
-
-      .fx-debugger__details-block .fx-debugger__json {
-        border: none;
-        border-top: 1px solid #e3e5ea;
-        border-radius: 0;
       }
 
       .fx-debugger__table-wrap {
@@ -298,7 +291,8 @@ export class FxDebugger extends HTMLElement {
       }
 
       .fx-debugger__json {
-        max-height: 24rem;
+        flex: 1 1 auto;
+        min-height: 0;
         overflow: auto;
         margin: 0;
         padding: 0.75rem;
@@ -307,7 +301,6 @@ export class FxDebugger extends HTMLElement {
         background: #f8f9fb;
         font-size: 0.85rem;
       }
-
       .fx-debugger__muted {
         color: #8a9099;
       }
@@ -369,9 +362,10 @@ export class FxDebugger extends HTMLElement {
   disconnectedCallback() {
     if (this.fore) {
       this.fore.removeEventListener('refresh-done', this._onForeRefreshDone);
-      window.removeEventListener('pointermove', this._onResizePointerMove);
-      window.removeEventListener('pointerup', this._onResizePointerUp);
     }
+
+    window.removeEventListener('pointermove', this._onResizePointerMove);
+    window.removeEventListener('pointerup', this._onResizePointerUp);
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -413,6 +407,7 @@ export class FxDebugger extends HTMLElement {
 
       <section class="fx-debugger__shell">
         <div class="fx-debugger__resize-hint" data-action="resize" title="Drag to resize debugger panel vertically"></div>
+
         <header class="fx-debugger__header">
           <div>
             <h2 class="fx-debugger__title">Fore Debugger</h2>
@@ -431,6 +426,7 @@ export class FxDebugger extends HTMLElement {
           ${this.renderTab('instances', `Instances ${this.countBadge(this.snapshot?.instances)}`)}
           ${this.renderTab('modelItems', `Model Items ${this.countBadge(this.snapshot?.modelItems)}`)}
           ${this.renderTab('boundElements', `Bound Elements ${this.countBadge(this.snapshot?.boundElements)}`)}
+          ${this.renderTab('raw', 'Raw snapshot')}
         </nav>
 
         <main class="fx-debugger__panel">
@@ -444,6 +440,7 @@ export class FxDebugger extends HTMLElement {
     this.querySelectorAll('[data-panel]').forEach(button => {
       button.addEventListener('click', this._onPanelClick);
     });
+
     this.querySelector('[data-action="resize"]')?.addEventListener('pointerdown', this._onResizePointerDown);
   }
 
@@ -509,6 +506,8 @@ export class FxDebugger extends HTMLElement {
         return this.renderModelItemsPanel();
       case 'boundElements':
         return this.renderBoundElementsPanel();
+      case 'raw':
+        return this.renderRawPanel();
       case 'fore':
       default:
         return this.renderForePanel();
@@ -532,12 +531,14 @@ export class FxDebugger extends HTMLElement {
           ${this.renderDetail('Bound elements', this.snapshot?.boundElements?.length)}
         </dl>
       </section>
+    `;
+  }
 
+  renderRawPanel() {
+    return `
       <section class="fx-debugger__section">
-        <details class="fx-debugger__details-block">
-          <summary>Raw snapshot</summary>
-          ${this.renderJsonBlock(this.snapshot)}
-        </details>
+        <h3>Raw snapshot</h3>
+        ${this.renderJsonBlock(this.snapshot)}
       </section>
     `;
   }
@@ -756,11 +757,11 @@ export class FxDebugger extends HTMLElement {
 
   escape(value) {
     return String(value)
-      .replaceAll('&', '&amp;')
-      .replaceAll('<', '&lt;')
-      .replaceAll('>', '&gt;')
-      .replaceAll('"', '&quot;')
-      .replaceAll("'", '&#039;');
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
   }
 
   _onRefreshClick() {
