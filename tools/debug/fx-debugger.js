@@ -1,3 +1,4 @@
+
 /**
  * Fore DevTools - <fx-debugger>
  *
@@ -26,6 +27,314 @@ export class FxDebugger extends HTMLElement {
     return ['for'];
   }
 
+  static get styles() {
+    return `
+      .fx-debugger {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 2147483647;
+        display: block;
+        height: 32vh;
+        min-height: 12rem;
+        max-height: 85vh;
+        overflow: hidden;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-size: 14px;
+        line-height: 1.4;
+        color: #202124;
+        background: #fff;
+        border-top: 1px solid #c4c7ce;
+        box-shadow: 0 -0.35rem 1rem rgba(0, 0, 0, 0.14);
+      }
+
+      .fx-debugger *,
+      .fx-debugger *::before,
+      .fx-debugger *::after {
+        box-sizing: border-box;
+      }
+
+      .fx-debugger__shell {
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
+        background: #fff;
+      }
+
+      .fx-debugger__resize-hint {
+        flex: 0 0 auto;
+        height: 0.45rem;
+        cursor: ns-resize;
+        touch-action: none;
+        user-select: none;
+        background:
+          linear-gradient(to bottom, #f1f3f4, #fff),
+          repeating-linear-gradient(
+            to right,
+            transparent 0,
+            transparent 6px,
+            #c4c7ce 6px,
+            #c4c7ce 8px
+          );
+        border-bottom: 1px solid #e3e5ea;
+      }
+      
+      .fx-debugger__resize-hint:hover {
+        background:
+          linear-gradient(to bottom, #e8eaed, #fff),
+          repeating-linear-gradient(
+            to right,
+            transparent 0,
+            transparent 6px,
+            #9aa0a6 6px,
+            #9aa0a6 8px
+          );
+      }
+      
+      .fx-debugger--resizing,
+      .fx-debugger--resizing * {
+        cursor: ns-resize !important;
+        user-select: none !important;
+      }
+      .fx-debugger__header {
+        flex: 0 0 auto;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid #e3e5ea;
+        background: #f8f9fb;
+      }
+
+      .fx-debugger__title {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 700;
+      }
+
+      .fx-debugger__target {
+        margin: 0.25rem 0 0;
+        color: #5f6368;
+      }
+
+      .fx-debugger__target--missing {
+        color: #9b1c1c;
+      }
+
+      .fx-debugger__refresh {
+        appearance: none;
+        border: 1px solid #c4c7ce;
+        border-radius: 0.35rem;
+        background: #fff;
+        color: #202124;
+        padding: 0.4rem 0.7rem;
+        font: inherit;
+        cursor: pointer;
+      }
+
+      .fx-debugger__refresh:hover {
+        background: #f1f3f4;
+      }
+
+      .fx-debugger__notice {
+        flex: 0 0 auto;
+        margin: 1rem;
+        padding: 0.75rem;
+        border-radius: 0.35rem;
+      }
+
+      .fx-debugger__notice--error {
+        border: 1px solid #f1b8b8;
+        background: #fff4f4;
+        color: #8a1111;
+      }
+
+      .fx-debugger__notice--warning {
+        border: 1px solid #efd38f;
+        background: #fff9e6;
+        color: #6f4e00;
+      }
+
+      .fx-debugger__tabs {
+        flex: 0 0 auto;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+        padding: 0.5rem 1rem 0;
+        border-bottom: 1px solid #e3e5ea;
+        background: #fff;
+      }
+
+      .fx-debugger__tab {
+        appearance: none;
+        border: 1px solid transparent;
+        border-bottom: none;
+        border-radius: 0.35rem 0.35rem 0 0;
+        background: transparent;
+        color: #444;
+        padding: 0.5rem 0.75rem;
+        font: inherit;
+        cursor: pointer;
+      }
+
+      .fx-debugger__tab:hover {
+        background: #f5f6f8;
+      }
+
+      .fx-debugger__tab[aria-selected="true"] {
+        border-color: #d6d9df;
+        background: #f8f9fb;
+        color: #111;
+        font-weight: 600;
+      }
+
+      .fx-debugger__badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 1.5em;
+        margin-left: 0.35rem;
+        padding: 0 0.35rem;
+        border-radius: 999px;
+        background: #e8eaed;
+        color: #3c4043;
+        font-size: 0.8em;
+      }
+
+      .fx-debugger__panel {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: auto;
+        padding: 1rem;
+      }
+
+      .fx-debugger__section + .fx-debugger__section {
+        margin-top: 1.25rem;
+      }
+
+      .fx-debugger__section h3 {
+        margin: 0 0 0.75rem;
+        font-size: 0.95rem;
+        font-weight: 700;
+      }
+
+      .fx-debugger__details {
+        display: grid;
+        grid-template-columns: max-content minmax(0, 1fr);
+        gap: 0.4rem 1rem;
+        margin: 0;
+      }
+
+      .fx-debugger__details dt {
+        color: #5f6368;
+        font-weight: 600;
+      }
+
+      .fx-debugger__details dd {
+        margin: 0;
+        min-width: 0;
+      }
+
+      .fx-debugger__details-block {
+        border: 1px solid #e3e5ea;
+        border-radius: 0.35rem;
+        background: #fff;
+      }
+
+      .fx-debugger__details-block summary {
+        padding: 0.6rem 0.75rem;
+        cursor: pointer;
+        font-weight: 700;
+        background: #f8f9fb;
+      }
+
+      .fx-debugger__details-block .fx-debugger__json {
+        border: none;
+        border-top: 1px solid #e3e5ea;
+        border-radius: 0;
+      }
+
+      .fx-debugger__table-wrap {
+        overflow: auto;
+        border: 1px solid #e3e5ea;
+        border-radius: 0.35rem;
+      }
+
+      .fx-debugger__table {
+        width: 100%;
+        min-width: 760px;
+        border-collapse: collapse;
+      }
+
+      .fx-debugger__table th,
+      .fx-debugger__table td {
+        padding: 0.45rem 0.55rem;
+        border-bottom: 1px solid #eceff3;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      .fx-debugger__table th {
+        position: sticky;
+        top: 0;
+        background: #f8f9fb;
+        color: #3c4043;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      .fx-debugger__table tr:last-child td {
+        border-bottom: none;
+      }
+
+      .fx-debugger__table code,
+      .fx-debugger__details code,
+      .fx-debugger__target code,
+      .fx-debugger__notice code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+        font-size: 0.92em;
+      }
+
+      .fx-debugger__json {
+        max-height: 24rem;
+        overflow: auto;
+        margin: 0;
+        padding: 0.75rem;
+        border: 1px solid #e3e5ea;
+        border-radius: 0.35rem;
+        background: #f8f9fb;
+        font-size: 0.85rem;
+      }
+
+      .fx-debugger__muted {
+        color: #8a9099;
+      }
+
+      .fx-debugger__bool {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+        font-size: 0.92em;
+      }
+
+      .fx-debugger__bool--true {
+        color: #137333;
+      }
+
+      .fx-debugger__bool--false {
+        color: #a50e0e;
+      }
+
+      .fx-debugger__empty {
+        padding: 1rem;
+        border: 1px dashed #cfd3da;
+        border-radius: 0.35rem;
+        color: #5f6368;
+        background: #fafafa;
+      }
+    `;
+  }
+
   constructor() {
     super();
 
@@ -36,6 +345,12 @@ export class FxDebugger extends HTMLElement {
     this._onRefreshClick = this._onRefreshClick.bind(this);
     this._onPanelClick = this._onPanelClick.bind(this);
     this._onForeRefreshDone = this._onForeRefreshDone.bind(this);
+    this._onResizePointerDown = this._onResizePointerDown.bind(this);
+    this._onResizePointerMove = this._onResizePointerMove.bind(this);
+    this._onResizePointerUp = this._onResizePointerUp.bind(this);
+
+    this._resizeStartY = 0;
+    this._resizeStartHeight = 0;
   }
 
   connectedCallback() {
@@ -54,24 +369,28 @@ export class FxDebugger extends HTMLElement {
   disconnectedCallback() {
     if (this.fore) {
       this.fore.removeEventListener('refresh-done', this._onForeRefreshDone);
+      window.removeEventListener('pointermove', this._onResizePointerMove);
+      window.removeEventListener('pointerup', this._onResizePointerUp);
     }
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if (name === 'for' && oldValue !== newValue && this.isConnected) {
-      if (this.fore) {
-        this.fore.removeEventListener('refresh-done', this._onForeRefreshDone);
-      }
-
-      this.fore = this.resolveFore();
-
-      if (this.fore) {
-        this.fore.addEventListener('refresh-done', this._onForeRefreshDone);
-      }
-
-      this.refresh();
-      this.render();
+    if (name !== 'for' || oldValue === newValue || !this.isConnected) {
+      return;
     }
+
+    if (this.fore) {
+      this.fore.removeEventListener('refresh-done', this._onForeRefreshDone);
+    }
+
+    this.fore = this.resolveFore();
+
+    if (this.fore) {
+      this.fore.addEventListener('refresh-done', this._onForeRefreshDone);
+    }
+
+    this.refresh();
+    this.render();
   }
 
   resolveFore() {
@@ -91,7 +410,9 @@ export class FxDebugger extends HTMLElement {
   render() {
     this.innerHTML = `
       <style>${FxDebugger.styles}</style>
+
       <section class="fx-debugger__shell">
+        <div class="fx-debugger__resize-hint" data-action="resize" title="Drag to resize debugger panel vertically"></div>
         <header class="fx-debugger__header">
           <div>
             <h2 class="fx-debugger__title">Fore Debugger</h2>
@@ -123,6 +444,7 @@ export class FxDebugger extends HTMLElement {
     this.querySelectorAll('[data-panel]').forEach(button => {
       button.addEventListener('click', this._onPanelClick);
     });
+    this.querySelector('[data-action="resize"]')?.addEventListener('pointerdown', this._onResizePointerDown);
   }
 
   renderTargetSummary() {
@@ -211,10 +533,12 @@ export class FxDebugger extends HTMLElement {
         </dl>
       </section>
 
-      <details  class="fx-debugger__section">
-        <summary>Raw snapshot</summary>
-        ${this.renderJsonBlock(this.snapshot)}
-      </details>  
+      <section class="fx-debugger__section">
+        <details class="fx-debugger__details-block">
+          <summary>Raw snapshot</summary>
+          ${this.renderJsonBlock(this.snapshot)}
+        </details>
+      </section>
     `;
   }
 
@@ -243,9 +567,7 @@ export class FxDebugger extends HTMLElement {
               </tr>
             </thead>
             <tbody>
-              ${instances
-                .map(
-                  instance => `
+              ${instances.map(instance => `
                 <tr>
                   <td><code>${this.escape(instance?.instanceId || instance?.id || '')}</code></td>
                   <td>${this.escape(instance?.type || '')}</td>
@@ -255,9 +577,7 @@ export class FxDebugger extends HTMLElement {
                   <td>${this.escape(instance?.defaultContextType || '')}</td>
                   <td>${this.escape(instance?.mutationCount ?? '')}</td>
                 </tr>
-              `,
-                )
-                .join('')}
+              `).join('')}
             </tbody>
           </table>
         </div>
@@ -293,9 +613,7 @@ export class FxDebugger extends HTMLElement {
               </tr>
             </thead>
             <tbody>
-              ${modelItems
-                .map(
-                  item => `
+              ${modelItems.map(item => `
                 <tr>
                   <td>${this.renderCodeOrDash(item?.path)}</td>
                   <td>${this.renderCodeOrDash(item?.ref)}</td>
@@ -308,9 +626,7 @@ export class FxDebugger extends HTMLElement {
                   <td>${this.escape(item?.backing || '')}</td>
                   <td>${this.escape(item?.observerCount ?? '')}</td>
                 </tr>
-              `,
-                )
-                .join('')}
+              `).join('')}
             </tbody>
           </table>
         </div>
@@ -345,9 +661,7 @@ export class FxDebugger extends HTMLElement {
               </tr>
             </thead>
             <tbody>
-              ${boundElements
-                .map(
-                  element => `
+              ${boundElements.map(element => `
                 <tr>
                   <td><code>${this.escape(element?.localName || '')}</code></td>
                   <td>${this.renderCodeOrDash(element?.id)}</td>
@@ -359,9 +673,7 @@ export class FxDebugger extends HTMLElement {
                   <td>${this.formatBoolean(element?.relevant)}</td>
                   <td>${this.formatBoolean(element?.readonly)}</td>
                 </tr>
-              `,
-                )
-                .join('')}
+              `).join('')}
             </tbody>
           </table>
         </div>
@@ -472,240 +784,37 @@ export class FxDebugger extends HTMLElement {
     this.render();
   }
 
-  static get styles() {
-    return `
-      .fx-debugger {
-        display: block;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        font-size: 14px;
-        line-height: 1.4;
-        color: #202124;
-      }
+  _onResizePointerDown(event) {
+    event.preventDefault();
 
-      .fx-debugger *,
-      .fx-debugger *::before,
-      .fx-debugger *::after {
-        box-sizing: border-box;
-      }
+    this._resizeStartY = event.clientY;
+    this._resizeStartHeight = this.getBoundingClientRect().height;
+    this.classList.add('fx-debugger--resizing');
 
-      .fx-debugger__shell {
-        border: 1px solid #d6d9df;
-        border-radius: 0.5rem;
-        background: #fff;
-        overflow: hidden;
-      }
+    window.addEventListener('pointermove', this._onResizePointerMove);
+    window.addEventListener('pointerup', this._onResizePointerUp);
+  }
 
-      .fx-debugger__header {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 1rem;
-        padding: 1rem;
-        border-bottom: 1px solid #e3e5ea;
-        background: #f8f9fb;
-      }
+  _onResizePointerMove(event) {
+    const delta = this._resizeStartY - event.clientY;
+    const nextHeight = this._resizeStartHeight + delta;
+    const minHeight = this._getCssPixelValue('min-height', 192);
+    const maxHeight = Math.min(window.innerHeight * 0.85, window.innerHeight - 40);
+    const clampedHeight = Math.max(minHeight, Math.min(maxHeight, nextHeight));
 
-      .fx-debugger__title {
-        margin: 0;
-        font-size: 1rem;
-        font-weight: 700;
-      }
+    this.style.height = `${clampedHeight}px`;
+  }
 
-      .fx-debugger__target {
-        margin: 0.25rem 0 0;
-        color: #5f6368;
-      }
+  _onResizePointerUp() {
+    this.classList.remove('fx-debugger--resizing');
 
-      .fx-debugger__target--missing {
-        color: #9b1c1c;
-      }
+    window.removeEventListener('pointermove', this._onResizePointerMove);
+    window.removeEventListener('pointerup', this._onResizePointerUp);
+  }
 
-      .fx-debugger__refresh {
-        appearance: none;
-        border: 1px solid #c4c7ce;
-        border-radius: 0.35rem;
-        background: #fff;
-        color: #202124;
-        padding: 0.4rem 0.7rem;
-        font: inherit;
-        cursor: pointer;
-      }
-
-      .fx-debugger__refresh:hover {
-        background: #f1f3f4;
-      }
-
-      .fx-debugger__notice {
-        margin: 1rem;
-        padding: 0.75rem;
-        border-radius: 0.35rem;
-      }
-
-      .fx-debugger__notice--error {
-        border: 1px solid #f1b8b8;
-        background: #fff4f4;
-        color: #8a1111;
-      }
-
-      .fx-debugger__notice--warning {
-        border: 1px solid #efd38f;
-        background: #fff9e6;
-        color: #6f4e00;
-      }
-
-      .fx-debugger__tabs {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.25rem;
-        padding: 0.5rem 1rem 0;
-        border-bottom: 1px solid #e3e5ea;
-        background: #fff;
-      }
-
-      .fx-debugger__tab {
-        appearance: none;
-        border: 1px solid transparent;
-        border-bottom: none;
-        border-radius: 0.35rem 0.35rem 0 0;
-        background: transparent;
-        color: #444;
-        padding: 0.5rem 0.75rem;
-        font: inherit;
-        cursor: pointer;
-      }
-
-      .fx-debugger__tab:hover {
-        background: #f5f6f8;
-      }
-
-      .fx-debugger__tab[aria-selected="true"] {
-        border-color: #d6d9df;
-        background: #f8f9fb;
-        color: #111;
-        font-weight: 600;
-      }
-
-      .fx-debugger__badge {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 1.5em;
-        margin-left: 0.35rem;
-        padding: 0 0.35rem;
-        border-radius: 999px;
-        background: #e8eaed;
-        color: #3c4043;
-        font-size: 0.8em;
-      }
-
-      .fx-debugger__panel {
-        padding: 1rem;
-      }
-
-      .fx-debugger__section + .fx-debugger__section {
-        margin-top: 1.25rem;
-      }
-
-      .fx-debugger__section h3 {
-        margin: 0 0 0.75rem;
-        font-size: 0.95rem;
-        font-weight: 700;
-      }
-
-      .fx-debugger__details {
-        display: grid;
-        grid-template-columns: max-content minmax(0, 1fr);
-        gap: 0.4rem 1rem;
-        margin: 0;
-      }
-
-      .fx-debugger__details dt {
-        color: #5f6368;
-        font-weight: 600;
-      }
-
-      .fx-debugger__details dd {
-        margin: 0;
-        min-width: 0;
-      }
-
-      .fx-debugger__table-wrap {
-        overflow: auto;
-        border: 1px solid #e3e5ea;
-        border-radius: 0.35rem;
-      }
-
-      .fx-debugger__table {
-        width: 100%;
-        min-width: 760px;
-        border-collapse: collapse;
-      }
-
-      .fx-debugger__table th,
-      .fx-debugger__table td {
-        padding: 0.45rem 0.55rem;
-        border-bottom: 1px solid #eceff3;
-        text-align: left;
-        vertical-align: top;
-      }
-
-      .fx-debugger__table th {
-        position: sticky;
-        top: 0;
-        background: #f8f9fb;
-        color: #3c4043;
-        font-weight: 700;
-        white-space: nowrap;
-      }
-
-      .fx-debugger__table tr:last-child td {
-        border-bottom: none;
-      }
-
-      .fx-debugger__table code,
-      .fx-debugger__details code,
-      .fx-debugger__target code,
-      .fx-debugger__notice code {
-        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-        font-size: 0.92em;
-      }
-
-      .fx-debugger__json {
-        max-height: 24rem;
-        overflow: auto;
-        margin: 0;
-        padding: 0.75rem;
-        border: 1px solid #e3e5ea;
-        border-radius: 0.35rem;
-        background: #f8f9fb;
-        font-size: 0.85rem;
-      }
-
-      .fx-debugger__muted {
-        color: #8a9099;
-      }
-
-      .fx-debugger__bool {
-        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-        font-size: 0.92em;
-      }
-
-      .fx-debugger__bool--true {
-        color: #137333;
-      }
-
-      .fx-debugger__bool--false {
-        color: #a50e0e;
-      }
-
-      .fx-debugger__empty {
-        padding: 1rem;
-        border: 1px dashed #cfd3da;
-        border-radius: 0.35rem;
-        color: #5f6368;
-        background: #fafafa;
-      }
-    `;
+  _getCssPixelValue(property, fallback) {
+    const value = Number.parseFloat(getComputedStyle(this).getPropertyValue(property));
+    return Number.isFinite(value) ? value : fallback;
   }
 }
 
