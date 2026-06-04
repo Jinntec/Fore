@@ -50,7 +50,7 @@ export class FxInclude extends HTMLElement {
     this.reload = this.hasAttribute('reload');
 
     if (this.immediate) {
-      this.include();
+      queueMicrotask(() => this.include());
       return;
     }
 
