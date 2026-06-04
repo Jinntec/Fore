@@ -29,303 +29,301 @@ export class FxDebugger extends HTMLElement {
 
   static get styles() {
     return `
-      .fx-debugger {
-        position: fixed;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 2147483647;
-        display: block;
-        height: 32vh;
-        min-height: 12rem;
-        max-height: 85vh;
-        overflow: hidden;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        font-size: 14px;
-        line-height: 1.4;
-        color: #202124;
-        background: #fff;
-        border-top: 1px solid #c4c7ce;
-        box-shadow: 0 -0.35rem 1rem rgba(0, 0, 0, 0.14);
-      }
+    .fx-debugger {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 2147483647;
+      display: block;
+      height: 32vh;
+      min-height: 12rem;
+      max-height: 85vh;
+      overflow: hidden;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 14px;
+      line-height: 1.4;
+      color: #202124;
+      background: #fff;
+      border-top: 1px solid #c4c7ce;
+      box-shadow: 0 -0.35rem 1rem rgba(0, 0, 0, 0.14);
+    }
 
-      .fx-debugger *,
-      .fx-debugger *::before,
-      .fx-debugger *::after {
-        box-sizing: border-box;
-      }
+    .fx-debugger *,
+    .fx-debugger *::before,
+    .fx-debugger *::after {
+      box-sizing: border-box;
+    }
 
-      .fx-debugger__shell {
-        min-height: 100%;
-        display: flex;
-        flex-direction: column;
-        background: #fff;
-      }
+    .fx-debugger__shell {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: #fff;
+    }
 
-      .fx-debugger__resize-hint {
-        flex: 0 0 auto;
-        height: 0.45rem;
-        cursor: ns-resize;
-        touch-action: none;
-        user-select: none;
-        background:
-          linear-gradient(to bottom, #f1f3f4, #fff),
-          repeating-linear-gradient(
-            to right,
-            transparent 0,
-            transparent 6px,
-            #c4c7ce 6px,
-            #c4c7ce 8px
-          );
-        border-bottom: 1px solid #e3e5ea;
-      }
+    .fx-debugger__resize-hint {
+      flex: 0 0 auto;
+      height: 0.45rem;
+      cursor: ns-resize;
+      touch-action: none;
+      user-select: none;
+      background:
+        linear-gradient(to bottom, #f1f3f4, #fff),
+        repeating-linear-gradient(
+          to right,
+          transparent 0,
+          transparent 6px,
+          #c4c7ce 6px,
+          #c4c7ce 8px
+        );
+      border-bottom: 1px solid #e3e5ea;
+    }
 
-      .fx-debugger__resize-hint:hover {
-        background:
-          linear-gradient(to bottom, #e8eaed, #fff),
-          repeating-linear-gradient(
-            to right,
-            transparent 0,
-            transparent 6px,
-            #9aa0a6 6px,
-            #9aa0a6 8px
-          );
-      }
+    .fx-debugger__resize-hint:hover {
+      background:
+        linear-gradient(to bottom, #e8eaed, #fff),
+        repeating-linear-gradient(
+          to right,
+          transparent 0,
+          transparent 6px,
+          #9aa0a6 6px,
+          #9aa0a6 8px
+        );
+    }
 
-      .fx-debugger--resizing,
-      .fx-debugger--resizing * {
-        cursor: ns-resize !important;
-        user-select: none !important;
-      }
+    .fx-debugger--resizing,
+    .fx-debugger--resizing * {
+      cursor: ns-resize !important;
+      user-select: none !important;
+    }
 
-      .fx-debugger__header {
-        flex: 0 0 auto;
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 1rem;
-        padding: 0.75rem 1rem;
-        border-bottom: 1px solid #e3e5ea;
-        background: #f8f9fb;
-      }
+    .fx-debugger__header {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #e3e5ea;
+      background: #f8f9fb;
+    }
 
-      .fx-debugger__title {
-        margin: 0;
-        font-size: 1rem;
-        font-weight: 700;
-      }
+    .fx-debugger__title {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 700;
+    }
 
-      .fx-debugger__target {
-        margin: 0.25rem 0 0;
-        color: #5f6368;
-      }
+    .fx-debugger__target {
+      margin: 0.25rem 0 0;
+      color: #5f6368;
+    }
 
-      .fx-debugger__target--missing {
-        color: #9b1c1c;
-      }
+    .fx-debugger__target--missing {
+      color: #9b1c1c;
+    }
 
-      .fx-debugger__refresh {
-        appearance: none;
-        border: 1px solid #c4c7ce;
-        border-radius: 0.35rem;
-        background: #fff;
-        color: #202124;
-        padding: 0.4rem 0.7rem;
-        font: inherit;
-        cursor: pointer;
-      }
+    .fx-debugger__refresh {
+      appearance: none;
+      border: 1px solid #c4c7ce;
+      border-radius: 0.35rem;
+      background: #fff;
+      color: #202124;
+      padding: 0.4rem 0.7rem;
+      font: inherit;
+      cursor: pointer;
+    }
 
-      .fx-debugger__refresh:hover {
-        background: #f1f3f4;
-      }
+    .fx-debugger__refresh:hover {
+      background: #f1f3f4;
+    }
 
-      .fx-debugger__notice {
-        flex: 0 0 auto;
-        margin: 1rem;
-        padding: 0.75rem;
-        border-radius: 0.35rem;
-      }
+    .fx-debugger__notice {
+      flex: 0 0 auto;
+      margin: 1rem;
+      padding: 0.75rem;
+      border-radius: 0.35rem;
+    }
 
-      .fx-debugger__notice--error {
-        border: 1px solid #f1b8b8;
-        background: #fff4f4;
-        color: #8a1111;
-      }
+    .fx-debugger__notice--error {
+      border: 1px solid #f1b8b8;
+      background: #fff4f4;
+      color: #8a1111;
+    }
 
-      .fx-debugger__notice--warning {
-        border: 1px solid #efd38f;
-        background: #fff9e6;
-        color: #6f4e00;
-      }
+    .fx-debugger__notice--warning {
+      border: 1px solid #efd38f;
+      background: #fff9e6;
+      color: #6f4e00;
+    }
 
-      .fx-debugger__tabs {
-        flex: 0 0 auto;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.25rem;
-        padding: 0.5rem 1rem 0;
-        border-bottom: 1px solid #e3e5ea;
-        background: #fff;
-      }
+    .fx-debugger__tabs {
+      flex: 0 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      padding: 0.5rem 1rem 0;
+      border-bottom: 1px solid #e3e5ea;
+      background: #fff;
+    }
 
-      .fx-debugger__tab {
-        appearance: none;
-        border: 1px solid transparent;
-        border-bottom: none;
-        border-radius: 0.35rem 0.35rem 0 0;
-        background: transparent;
-        color: #444;
-        padding: 0.5rem 0.75rem;
-        font: inherit;
-        cursor: pointer;
-      }
+    .fx-debugger__tab {
+      appearance: none;
+      border: 1px solid transparent;
+      border-bottom: none;
+      border-radius: 0.35rem 0.35rem 0 0;
+      background: transparent;
+      color: #444;
+      padding: 0.5rem 0.75rem;
+      font: inherit;
+      cursor: pointer;
+    }
 
-      .fx-debugger__tab:hover {
-        background: #f5f6f8;
-      }
+    .fx-debugger__tab:hover {
+      background: #f5f6f8;
+    }
 
-      .fx-debugger__tab[aria-selected="true"] {
-        border-color: #d6d9df;
-        background: #f8f9fb;
-        color: #111;
-        font-weight: 600;
-      }
+    .fx-debugger__tab[aria-selected="true"] {
+      border-color: #d6d9df;
+      background: #f8f9fb;
+      color: #111;
+      font-weight: 600;
+    }
 
-      .fx-debugger__badge {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 1.5em;
-        margin-left: 0.35rem;
-        padding: 0 0.35rem;
-        border-radius: 999px;
-        background: #e8eaed;
-        color: #3c4043;
-        font-size: 0.8em;
-      }
+    .fx-debugger__badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 1.5em;
+      margin-left: 0.35rem;
+      padding: 0 0.35rem;
+      border-radius: 999px;
+      background: #e8eaed;
+      color: #3c4043;
+      font-size: 0.8em;
+    }
 
-      .fx-debugger__panel {
-        flex: 1 1 auto;
-        min-height: 0;
-        overflow: hidden;
-        padding: 1rem;
-        display: flex;
-        flex-direction: column;
-      }
-      
-      .fx-debugger__section + .fx-debugger__section {
-        margin-top: 1.25rem;
-      }
-      .fx-debugger__section {
-        min-height: 0;
-      }
-      
-      .fx-debugger__panel > .fx-debugger__section:only-child {
-        flex: 1 1 auto;
-        display: flex;
-        min-height: 0;
-        flex-direction: column;
-      }
-      .fx-debugger__section h3 {
-        margin: 0 0 0.75rem;
-        font-size: 0.95rem;
-        font-weight: 700;
-      }
+    .fx-debugger__panel {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow: auto;
+      padding: 1rem;
+    }
 
-      .fx-debugger__details {
-        display: grid;
-        grid-template-columns: max-content minmax(0, 1fr);
-        gap: 0.4rem 1rem;
-        margin: 0;
-      }
+    .fx-debugger__section + .fx-debugger__section {
+      margin-top: 1.25rem;
+    }
 
-      .fx-debugger__details dt {
-        color: #5f6368;
-        font-weight: 600;
-      }
+    .fx-debugger__section h3 {
+      margin: 0 0 0.75rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
 
-      .fx-debugger__details dd {
-        margin: 0;
-        min-width: 0;
-      }
+    .fx-debugger__details {
+      display: grid;
+      grid-template-columns: max-content minmax(0, 1fr);
+      gap: 0.4rem 1rem;
+      margin: 0;
+    }
 
-      .fx-debugger__table-wrap {
-        overflow: auto;
-        border: 1px solid #e3e5ea;
-        border-radius: 0.35rem;
-      }
+    .fx-debugger__details dt {
+      color: #5f6368;
+      font-weight: 600;
+    }
 
-      .fx-debugger__table {
-        width: 100%;
-        min-width: 760px;
-        border-collapse: collapse;
-      }
+    .fx-debugger__details dd {
+      margin: 0;
+      min-width: 0;
+    }
 
-      .fx-debugger__table th,
-      .fx-debugger__table td {
-        padding: 0.45rem 0.55rem;
-        border-bottom: 1px solid #eceff3;
-        text-align: left;
-        vertical-align: top;
-      }
+    .fx-debugger__table-wrap {
+      max-height: 100%;
+      overflow: auto;
+      border: 1px solid #e3e5ea;
+      border-radius: 0.35rem;
+    }
 
-      .fx-debugger__table th {
-        position: sticky;
-        top: 0;
-        background: #f8f9fb;
-        color: #3c4043;
-        font-weight: 700;
-        white-space: nowrap;
-      }
+    .fx-debugger__table {
+      width: 100%;
+      min-width: 760px;
+      border-collapse: collapse;
+    }
 
-      .fx-debugger__table tr:last-child td {
-        border-bottom: none;
-      }
+    .fx-debugger__table th,
+    .fx-debugger__table td {
+      padding: 0.45rem 0.55rem;
+      border-bottom: 1px solid #eceff3;
+      text-align: left;
+      vertical-align: top;
+    }
 
-      .fx-debugger__table code,
-      .fx-debugger__details code,
-      .fx-debugger__target code,
-      .fx-debugger__notice code {
-        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-        font-size: 0.92em;
-      }
+    .fx-debugger__table th {
+      position: sticky;
+      top: 0;
+      background: #f8f9fb;
+      color: #3c4043;
+      font-weight: 700;
+      white-space: nowrap;
+    }
 
-      .fx-debugger__json {
-        flex: 1 1 auto;
-        min-height: 0;
-        overflow: auto;
-        margin: 0;
-        padding: 0.75rem;
-        border: 1px solid #e3e5ea;
-        border-radius: 0.35rem;
-        background: #f8f9fb;
-        font-size: 0.85rem;
-      }
-      .fx-debugger__muted {
-        color: #8a9099;
-      }
+    .fx-debugger__table tr:last-child td {
+      border-bottom: none;
+    }
 
-      .fx-debugger__bool {
-        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-        font-size: 0.92em;
-      }
+    .fx-debugger__table code,
+    .fx-debugger__details code,
+    .fx-debugger__target code,
+    .fx-debugger__notice code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 0.92em;
+    }
 
-      .fx-debugger__bool--true {
-        color: #137333;
-      }
+    .fx-debugger__json {
+      display: block;
+      max-height: calc(32vh - 10rem);
+      min-height: 6rem;
+      overflow: auto;
+      margin: 0;
+      padding: 0.75rem;
+      border: 1px solid #e3e5ea;
+      border-radius: 0.35rem;
+      background: #f8f9fb;
+      font-size: 0.85rem;
+      white-space: pre;
+    }
 
-      .fx-debugger__bool--false {
-        color: #a50e0e;
-      }
+    .fx-debugger[style*="height"] .fx-debugger__json {
+      max-height: calc(100vh - 14rem);
+    }
 
-      .fx-debugger__empty {
-        padding: 1rem;
-        border: 1px dashed #cfd3da;
-        border-radius: 0.35rem;
-        color: #5f6368;
-        background: #fafafa;
-      }
-    `;
+    .fx-debugger__muted {
+      color: #8a9099;
+    }
+
+    .fx-debugger__bool {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 0.92em;
+    }
+
+    .fx-debugger__bool--true {
+      color: #137333;
+    }
+
+    .fx-debugger__bool--false {
+      color: #a50e0e;
+    }
+
+    .fx-debugger__empty {
+      padding: 1rem;
+      border: 1px dashed #cfd3da;
+      border-radius: 0.35rem;
+      color: #5f6368;
+      background: #fafafa;
+    }
+  `;
   }
 
   constructor() {
