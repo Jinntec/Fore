@@ -355,6 +355,27 @@ export class FxFore extends HTMLElement {
     this._localNamesWithChanges = new Set();
     this.setAttribute('role', 'form'); // set aria role
     this._pendingRefresh = false;
+
+    this.debugInfo = {
+      id: this.id || null,
+      debugId: crypto.randomUUID ? crypto.randomUUID() : `fore-${Date.now()}`,
+      createdAt: performance.now(),
+      readyAt: null,
+      modelConstructStartedAt: null,
+      modelConstructDoneAt: null,
+      refreshCount: 0,
+      lastRefreshAt: null,
+      lastRefreshForce: null,
+    };
+  }
+
+  getDebugInfo() {
+    return {
+      ...this.debugInfo,
+      ready: this.ready,
+      lazyRefresh: this.lazyRefresh,
+      model: this.model?.getDebugInfo?.() || null,
+    };
   }
 
   /**
@@ -628,6 +649,7 @@ export class FxFore extends HTMLElement {
       await Promise.all(libs.map(l => l.readyPromise || Promise.resolve()));
 
       await modelElement.modelConstruct();
+
       console.log('varbindings ', this._instanceVarBindings);
       this._handleModelConstructDone();
     }
@@ -945,6 +967,10 @@ export class FxFore extends HTMLElement {
   async refresh(force) {
     // If we're already refreshing, do NOT drop the request.
     // Queue a hard refresh and return a promise that resolves when the next refresh finishes.
+    this.debugInfo.refreshCount += 1;
+    this.debugInfo.lastRefreshAt = performance.now();
+    this.debugInfo.lastRefreshForce = !!force;
+
     if (this.isRefreshing) {
       // keep "strongest" request: any true means hard refresh
       this._pendingRefresh = this._pendingRefresh || force === true;
@@ -1252,6 +1278,7 @@ export class FxFore extends HTMLElement {
    * @private
    */
   _handleModelConstructDone() {
+    this.debugInfo.modelConstructDoneAt = performance.now();
     if (this.showConfirmation) {
       window.addEventListener('beforeunload', event => {
         if (this.dirtyState === dirtyStates.DIRTY) {
@@ -1418,6 +1445,7 @@ export class FxFore extends HTMLElement {
     // console.log(`### <<<<< ${this.id} ready >>>>>`);
 
     Fore.dispatch(this, 'ready', {});
+    this.debugInfo.readyAt = performance.now();
     // console.log('dataChanged', FxModel.dataChanged);
     this.markAsClean();
 
