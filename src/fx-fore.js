@@ -375,6 +375,7 @@ export class FxFore extends HTMLElement {
       id: this.id || null,
       ready: this.ready,
       lazyRefresh: this.lazyRefresh,
+      createNodes: this.createNodes,
       model: this.model?.getDebugInfo?.() || null,
     };
   }
@@ -383,12 +384,7 @@ export class FxFore extends HTMLElement {
     const model = this.model;
 
     return {
-      fore: {
-        id: this.id || null,
-        ready: this.ready,
-        lazyRefresh: this.lazyRefresh,
-        debugInfo: this.debugInfo,
-      },
+      fore: this.getDebugInfo(),
 
       model: model?.getDebugInfo?.() || null,
 

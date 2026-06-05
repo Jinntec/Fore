@@ -523,6 +523,7 @@ export class FxDebugger extends HTMLElement {
         <dl class="fx-debugger__details">
           ${this.renderDetail('ID', fore.id)}
           ${this.renderDetail('Ready', fore.ready)}
+          ${this.renderDetail('createNodes', fore.createNodes)}
           ${this.renderDetail('Lazy refresh', fore.lazyRefresh)}
           ${this.renderDetail('Instances', this.snapshot?.instances?.length ?? model.instanceCount)}
           ${this.renderDetail('Model items', this.snapshot?.modelItems?.length ?? model.modelItemCount)}
