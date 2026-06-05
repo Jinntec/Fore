@@ -380,13 +380,15 @@ export class FxFore extends HTMLElement {
     };
   }
 
-  getDebugSnapshot() {
+  getDebugSnapshot(options = {}) {
     const model = this.model;
 
     return {
-      fore: this.getDebugInfo(),
+      fore: this.getDebugInfo?.() || null,
 
-      model: model?.getDebugInfo?.() || null,
+      model: model?.getDebugInfo?.({
+        includeGraphs: options.includeGraphs === true,
+      }) || null,
 
       instances: model?.instances?.map(instance => instance.getDebugInfo?.()) || [],
 
@@ -397,6 +399,7 @@ export class FxFore extends HTMLElement {
           .map(el => el.getDebugInfo()),
     };
   }
+
   /**
    * Parse a list of target specs.
    *
@@ -988,6 +991,9 @@ export class FxFore extends HTMLElement {
   async refresh(force) {
     // If we're already refreshing, do NOT drop the request.
     // Queue a hard refresh and return a promise that resolves when the next refresh finishes.
+    this.snapshot = this.fore?.getDebugSnapshot?.({
+      includeGraphs: this.activePanel === 'graphs',
+    }) || null;
     this.debugInfo.refreshCount += 1;
     this.debugInfo.lastRefreshAt = performance.now();
     this.debugInfo.lastRefreshForce = !!force;

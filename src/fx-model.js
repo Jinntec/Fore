@@ -58,9 +58,8 @@ export class FxModel extends HTMLElement {
     };
   }
 
-
-  getDebugInfo() {
-    return {
+  getDebugInfo(options = {}) {
+    const info = {
       ...this.debugInfo,
       constructed: this.modelConstructed,
       inited: this.inited,
@@ -68,9 +67,106 @@ export class FxModel extends HTMLElement {
       modelItemCount: this.modelItems.length,
       instances: this.instances.map(instance => instance.getDebugInfo?.()),
       modelItems: this.modelItems.map(item => item.getDebugInfo?.()),
-      graphs: this.getDebugGraphInfo(),
+    };
+
+    if (options.includeGraphs === true) {
+      info.graphs = this.getDebugGraphInfo();
+    }
+
+    return info;
+  }
+
+  getDebugGraphInfo() {
+    return {
+      computes: this.computes,
+      mainGraph: this.getDebugGraphSummary(this.mainGraph),
+      subGraph: this.getDebugGraphSummary(this.subgraph),
     };
   }
+
+  getDebugGraphSummary(graph) {
+    if (!graph) {
+      return null;
+    }
+
+    const nodes = Object.keys(graph.nodes || {});
+    const outgoingEdges = graph.outgoingEdges || {};
+    const incomingEdges = graph.incomingEdges || {};
+    const calculationOrder = this.getDebugGraphOrder(graph);
+
+    return {
+      nodeCount: typeof graph.size === 'function' ? graph.size() : nodes.length,
+      edgeCount: this.getDebugEdgeCount(outgoingEdges),
+      outgoingEdgeCount: this.getDebugEdgeCount(outgoingEdges),
+      incomingEdgeCount: this.getDebugEdgeCount(incomingEdges),
+      computeNodeCount: nodes.filter(node => typeof node === 'string' && node.includes(':')).length,
+      calculationOrderCount: calculationOrder.length,
+      calculationOrder: calculationOrder.map((path, index) =>
+          this.getDebugGraphNodeInfo(graph, path, index),
+      ),
+    };
+  }
+
+  getDebugGraphOrder(graph) {
+    if (!graph || typeof graph.overallOrder !== 'function') {
+      return [];
+    }
+
+    try {
+      return graph.overallOrder(false);
+    } catch (error) {
+      return [];
+    }
+  }
+
+  getDebugEdgeCount(edgeMap = {}) {
+    return Object.values(edgeMap).reduce((count, edges) => {
+      return count + (Array.isArray(edges) ? edges.length : 0);
+    }, 0);
+  }
+
+  getDebugGraphNodeInfo(graph, path, index = 0) {
+    let data = null;
+
+    try {
+      data = graph.getNodeData(path);
+    } catch (error) {
+      data = null;
+    }
+
+    const basePath =
+        typeof path === 'string' && path.includes(':')
+            ? path.substring(0, path.indexOf(':'))
+            : path;
+
+    const facet =
+        typeof path === 'string' && path.includes(':')
+            ? path.substring(path.indexOf(':') + 1)
+            : null;
+
+    const modelItem = this.getModelItem(basePath);
+
+    return {
+      index: index + 1,
+      path,
+      basePath,
+      facet,
+      isCompute: !!facet,
+      ref: modelItem?.ref || null,
+      instanceId: modelItem?.instanceId || null,
+      value: modelItem?.value,
+      dataType: data?.__jsonlens__
+          ? 'json-lens'
+          : data?.nodeType
+              ? 'xml-node'
+              : data === null || data === undefined
+                  ? null
+                  : typeof data,
+      dependencies: graph.outgoingEdges?.[path] || [],
+      dependants: graph.incomingEdges?.[path] || [],
+    };
+  }
+
   /**
    * @returns {import('./fx-fore.js').FxFore}
    */
@@ -879,103 +975,6 @@ export class FxModel extends HTMLElement {
     return result;
   }
 
-  getDebugGraphInfo() {
-    return {
-      mainGraph: this.getDebugGraphSummary(this.mainGraph),
-      subGraph: this.getDebugGraphSummary(this.subgraph),
-      computes: this.computes,
-    };
-  }
-
-  getDebugGraphSummary(graph) {
-    if (!graph) {
-      return null;
-    }
-
-    const nodes = Object.keys(graph.nodes || {});
-    const outgoingEdges = graph.outgoingEdges || {};
-    const incomingEdges = graph.incomingEdges || {};
-    const calculationOrder = this.getDebugGraphOrder(graph);
-
-    return {
-      nodeCount: typeof graph.size === 'function' ? graph.size() : nodes.length,
-      edgeCount: this.getDebugEdgeCount(outgoingEdges),
-      computeNodeCount: nodes.filter(node => node.includes(':')).length,
-      calculationOrderCount: calculationOrder.length,
-
-      calculationOrder: calculationOrder.map((path, index) =>
-          this.getDebugGraphNodeInfo(graph, path, index),
-      ),
-
-      nodes: nodes.map((path, index) =>
-          this.getDebugGraphNodeInfo(graph, path, index),
-      ),
-
-      outgoingEdgeCount: this.getDebugEdgeCount(outgoingEdges),
-      incomingEdgeCount: this.getDebugEdgeCount(incomingEdges),
-    };
-  }
-
-  getDebugGraphOrder(graph) {
-    if (!graph || typeof graph.overallOrder !== 'function') {
-      return [];
-    }
-
-    try {
-      return graph.overallOrder(false);
-    } catch (error) {
-      return [];
-    }
-  }
-
-  getDebugEdgeCount(edgeMap = {}) {
-    return Object.values(edgeMap).reduce((count, edges) => {
-      return count + (Array.isArray(edges) ? edges.length : 0);
-    }, 0);
-  }
-
-  getDebugGraphNodeInfo(graph, path, index = 0) {
-    let data = null;
-
-    try {
-      data = graph.getNodeData(path);
-    } catch (error) {
-      data = null;
-    }
-
-    const basePath = typeof path === 'string' && path.includes(':')
-        ? path.substring(0, path.indexOf(':'))
-        : path;
-
-    const facet = typeof path === 'string' && path.includes(':')
-        ? path.substring(path.indexOf(':') + 1)
-        : null;
-
-    const modelItem = this.getModelItem(basePath);
-
-    return {
-      index: index + 1,
-      path,
-      basePath,
-      facet,
-      isCompute: !!facet,
-
-      ref: modelItem?.ref || null,
-      instanceId: modelItem?.instanceId || null,
-      value: modelItem?.value,
-
-      dataType: data?.__jsonlens__
-          ? 'json-lens'
-          : data?.nodeType
-              ? 'xml-node'
-              : data === null || data === undefined
-                  ? null
-                  : typeof data,
-
-      dependencies: graph.outgoingEdges?.[path] || [],
-      dependants: graph.incomingEdges?.[path] || [],
-    };
-  }
 }
 
 if (!customElements.get('fx-model')) {

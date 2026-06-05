@@ -467,7 +467,10 @@ export class FxDebugger extends HTMLElement {
   }
 
   refresh() {
-    this.snapshot = this.fore?.getDebugSnapshot?.() || null;
+    this.snapshot =
+      this.fore?.getDebugSnapshot?.({
+        includeGraphs: this.activePanel === 'graphs',
+      }) || null;
   }
 
   render() {
@@ -617,6 +620,7 @@ export class FxDebugger extends HTMLElement {
       </section>
     `;
   }
+
   renderGraphsPanel() {
     const graphs = this.snapshot?.model?.graphs;
 
@@ -692,7 +696,9 @@ export class FxDebugger extends HTMLElement {
           </tr>
         </thead>
         <tbody>
-          ${order.map((item, index) => `
+          ${order
+            .map(
+              (item, index) => `
             <tr>
               <td>${index + 1}</td>
               <td>${this.renderCodeOrDash(item?.label || item?.id)}</td>
@@ -702,7 +708,9 @@ export class FxDebugger extends HTMLElement {
               <td>${this.escape(item?.type || '')}</td>
               <td>${this.renderValue(item?.value)}</td>
             </tr>
-          `).join('')}
+          `,
+            )
+            .join('')}
         </tbody>
       </table>
     </div>
@@ -956,6 +964,7 @@ export class FxDebugger extends HTMLElement {
     }
 
     this.activePanel = panel;
+    this.refresh();
     this.render();
   }
 
