@@ -48,13 +48,42 @@ export class FxDebugger extends HTMLElement {
       border-top: 1px solid #c4c7ce;
       box-shadow: 0 -0.35rem 1rem rgba(0, 0, 0, 0.14);
     }
-
+    .fx-debugger.fx-debugger--collapsed {
+      min-height: 0;
+      overflow: hidden;
+    }
+    
+    .fx-debugger.fx-debugger--collapsed .fx-debugger__resize-hint,
+    .fx-debugger.fx-debugger--collapsed .fx-debugger__tabs,
+    .fx-debugger.fx-debugger--collapsed .fx-debugger__panel,
+    .fx-debugger.fx-debugger--collapsed .fx-debugger__notice {
+      display: none;
+    }
+    
+    .fx-debugger.fx-debugger--collapsed .fx-debugger__shell {
+      min-height: 0;
+    }
+    
+    .fx-debugger.fx-debugger--collapsed .fx-debugger__header {
+      border-bottom: none;
+    }
     .fx-debugger *,
     .fx-debugger *::before,
     .fx-debugger *::after {
       box-sizing: border-box;
     }
-
+    .fx-debugger__header {
+      cursor: default;
+    }
+    
+    .fx-debugger__header::after {
+      content: "Double-click header to collapse/open";
+      align-self: center;
+      margin-left: auto;
+      color: #8a9099;
+      font-size: 0.8rem;
+      font-weight: 400;
+    }
     .fx-debugger__shell {
       height: 100%;
       display: flex;
@@ -135,7 +164,26 @@ export class FxDebugger extends HTMLElement {
       font: inherit;
       cursor: pointer;
     }
-
+    .fx-debugger__actions {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    .fx-debugger__toggle {
+      appearance: none;
+      border: 1px solid #c4c7ce;
+      border-radius: 0.35rem;
+      background: #fff;
+      color: #202124;
+      padding: 0.4rem 0.7rem;
+      font: inherit;
+      cursor: pointer;
+    }
+    
+    .fx-debugger__toggle:hover {
+      background: #f1f3f4;
+    }
     .fx-debugger__refresh:hover {
       background: #f1f3f4;
     }
@@ -336,17 +384,22 @@ export class FxDebugger extends HTMLElement {
     this._onRefreshClick = this._onRefreshClick.bind(this);
     this._onPanelClick = this._onPanelClick.bind(this);
     this._onForeRefreshDone = this._onForeRefreshDone.bind(this);
+
     this._onResizePointerDown = this._onResizePointerDown.bind(this);
     this._onResizePointerMove = this._onResizePointerMove.bind(this);
     this._onResizePointerUp = this._onResizePointerUp.bind(this);
+    this._onToggleClick = this._onToggleClick.bind(this);
 
     this._resizeStartY = 0;
     this._resizeStartHeight = 0;
+    this._storageKey = 'fore-devtools.fx-debugger.height';
+    this._collapsedStorageKey = 'fore-devtools.fx-debugger.collapsed';
+    this._collapsed = false;
   }
 
   connectedCallback() {
     this.classList.add('fx-debugger');
-
+    this.restorePanelState();
     this.fore = this.resolveFore();
 
     if (this.fore) {
@@ -434,12 +487,16 @@ export class FxDebugger extends HTMLElement {
     `;
 
     this.querySelector('[data-action="refresh"]')?.addEventListener('click', this._onRefreshClick);
+    this.querySelector('.fx-debugger__header')?.addEventListener('dblclick', this._onToggleClick);
 
     this.querySelectorAll('[data-panel]').forEach(button => {
       button.addEventListener('click', this._onPanelClick);
     });
 
-    this.querySelector('[data-action="resize"]')?.addEventListener('pointerdown', this._onResizePointerDown);
+    this.querySelector('[data-action="resize"]')?.addEventListener(
+      'pointerdown',
+      this._onResizePointerDown,
+    );
   }
 
   renderTargetSummary() {
@@ -567,7 +624,9 @@ export class FxDebugger extends HTMLElement {
               </tr>
             </thead>
             <tbody>
-              ${instances.map(instance => `
+              ${instances
+                .map(
+                  instance => `
                 <tr>
                   <td><code>${this.escape(instance?.instanceId || instance?.id || '')}</code></td>
                   <td>${this.escape(instance?.type || '')}</td>
@@ -577,7 +636,9 @@ export class FxDebugger extends HTMLElement {
                   <td>${this.escape(instance?.defaultContextType || '')}</td>
                   <td>${this.escape(instance?.mutationCount ?? '')}</td>
                 </tr>
-              `).join('')}
+              `,
+                )
+                .join('')}
             </tbody>
           </table>
         </div>
@@ -613,7 +674,9 @@ export class FxDebugger extends HTMLElement {
               </tr>
             </thead>
             <tbody>
-              ${modelItems.map(item => `
+              ${modelItems
+                .map(
+                  item => `
                 <tr>
                   <td>${this.renderCodeOrDash(item?.path)}</td>
                   <td>${this.renderCodeOrDash(item?.ref)}</td>
@@ -626,7 +689,9 @@ export class FxDebugger extends HTMLElement {
                   <td>${this.escape(item?.backing || '')}</td>
                   <td>${this.escape(item?.observerCount ?? '')}</td>
                 </tr>
-              `).join('')}
+              `,
+                )
+                .join('')}
             </tbody>
           </table>
         </div>
@@ -661,7 +726,9 @@ export class FxDebugger extends HTMLElement {
               </tr>
             </thead>
             <tbody>
-              ${boundElements.map(element => `
+              ${boundElements
+                .map(
+                  element => `
                 <tr>
                   <td><code>${this.escape(element?.localName || '')}</code></td>
                   <td>${this.renderCodeOrDash(element?.id)}</td>
@@ -673,7 +740,9 @@ export class FxDebugger extends HTMLElement {
                   <td>${this.formatBoolean(element?.relevant)}</td>
                   <td>${this.formatBoolean(element?.readonly)}</td>
                 </tr>
-              `).join('')}
+              `,
+                )
+                .join('')}
             </tbody>
           </table>
         </div>
@@ -756,14 +825,15 @@ export class FxDebugger extends HTMLElement {
 
   escape(value) {
     return String(value)
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#039;');
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#039;');
   }
 
-  _onRefreshClick() {
+  _onRefreshClick(event) {
+    event.stopPropagation();
     this.refresh();
     this.render();
   }
@@ -785,6 +855,10 @@ export class FxDebugger extends HTMLElement {
   }
 
   _onResizePointerDown(event) {
+    if (this._collapsed) {
+      return;
+    }
+
     event.preventDefault();
 
     this._resizeStartY = event.clientY;
@@ -807,7 +881,7 @@ export class FxDebugger extends HTMLElement {
 
   _onResizePointerUp() {
     this.classList.remove('fx-debugger--resizing');
-
+    this.storeHeight();
     window.removeEventListener('pointermove', this._onResizePointerMove);
     window.removeEventListener('pointerup', this._onResizePointerUp);
   }
@@ -815,6 +889,97 @@ export class FxDebugger extends HTMLElement {
   _getCssPixelValue(property, fallback) {
     const value = Number.parseFloat(getComputedStyle(this).getPropertyValue(property));
     return Number.isFinite(value) ? value : fallback;
+  }
+
+  storeHeight() {
+    try {
+      const height = Math.round(this.getBoundingClientRect().height);
+      localStorage.setItem(this._storageKey, String(height));
+    } catch (error) {
+      // Ignore storage errors, e.g. private mode or disabled localStorage.
+    }
+  }
+
+  restoreHeight() {
+    try {
+      const storedHeight = Number.parseInt(localStorage.getItem(this._storageKey), 10);
+
+      if (!Number.isFinite(storedHeight)) {
+        return;
+      }
+
+      const minHeight = 192;
+      const maxHeight = Math.min(window.innerHeight * 0.85, window.innerHeight - 40);
+      const clampedHeight = Math.max(minHeight, Math.min(maxHeight, storedHeight));
+
+      this.style.height = `${clampedHeight}px`;
+    } catch (error) {
+      // Ignore storage errors, e.g. private mode or disabled localStorage.
+    }
+  }
+
+  _onToggleClick() {
+    if (this._collapsed) {
+      this.expandPanel();
+    } else {
+      this.collapsePanel();
+    }
+
+    this.render();
+  }
+
+  collapsePanel() {
+    this.storeHeight();
+
+    this._collapsed = true;
+    this.classList.add('fx-debugger--collapsed');
+
+    this.style.height = `${this.getCollapsedHeight()}px`;
+
+    this.storeCollapsedState();
+  }
+
+  expandPanel() {
+    this._collapsed = false;
+    this.classList.remove('fx-debugger--collapsed');
+
+    this.restoreHeight();
+
+    this.storeCollapsedState();
+  }
+
+  storeCollapsedState() {
+    try {
+      localStorage.setItem(this._collapsedStorageKey, this._collapsed ? 'true' : 'false');
+    } catch (error) {
+      // Ignore storage errors, e.g. private mode or disabled localStorage.
+    }
+  }
+
+  restorePanelState() {
+    try {
+      this._collapsed = localStorage.getItem(this._collapsedStorageKey) === 'true';
+    } catch (error) {
+      this._collapsed = false;
+    }
+
+    this.classList.toggle('fx-debugger--collapsed', this._collapsed);
+
+    if (this._collapsed) {
+      requestAnimationFrame(() => {
+        this.style.height = `${this.getCollapsedHeight()}px`;
+      });
+      return;
+    }
+
+    this.restoreHeight();
+  }
+
+  getCollapsedHeight() {
+    const header = this.querySelector('.fx-debugger__header');
+    const headerHeight = header?.getBoundingClientRect().height || 56;
+
+    return Math.ceil(headerHeight);
   }
 }
 
