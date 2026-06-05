@@ -371,6 +371,24 @@ export class FxDebugger extends HTMLElement {
       color: #5f6368;
       background: #fafafa;
     }
+    .fx-debugger__graph-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+      gap: 1rem;
+    }
+    
+    .fx-debugger__graph-card {
+      border: 1px solid #e3e5ea;
+      border-radius: 0.35rem;
+      padding: 0.75rem;
+      background: #fff;
+    }
+    
+    .fx-debugger__graph-card h4 {
+      margin: 0 0 0.75rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
   `;
   }
 
@@ -474,6 +492,7 @@ export class FxDebugger extends HTMLElement {
 
         <nav class="fx-debugger__tabs" aria-label="Debugger panels">
           ${this.renderTab('fore', 'Fore')}
+          ${this.renderTab('graphs', 'Graphs')}
           ${this.renderTab('instances', `Instances ${this.countBadge(this.snapshot?.instances)}`)}
           ${this.renderTab('modelItems', `Model Items ${this.countBadge(this.snapshot?.modelItems)}`)}
           ${this.renderTab('boundElements', `Bound Elements ${this.countBadge(this.snapshot?.boundElements)}`)}
@@ -555,14 +574,14 @@ export class FxDebugger extends HTMLElement {
     }
 
     switch (this.activePanel) {
+      case 'graphs':
+        return this.renderGraphsPanel();
       case 'instances':
         return this.renderInstancesPanel();
       case 'modelItems':
         return this.renderModelItemsPanel();
       case 'boundElements':
         return this.renderBoundElementsPanel();
-      case 'raw':
-        return this.renderRawPanel();
       case 'fore':
       default:
         return this.renderForePanel();
@@ -597,6 +616,97 @@ export class FxDebugger extends HTMLElement {
         ${this.renderJsonBlock(this.snapshot)}
       </section>
     `;
+  }
+  renderGraphsPanel() {
+    const graphs = this.snapshot?.model?.graphs;
+
+    if (!graphs) {
+      return this.renderEmptyPanel('No recalculation graph information available.');
+    }
+
+    return `
+    <section class="fx-debugger__section">
+      <h3>Recalculation graphs</h3>
+
+      <div class="fx-debugger__graph-grid">
+        ${this.renderGraphSummaryCard('Main graph', graphs.mainGraph)}
+        ${this.renderGraphSummaryCard('Sub graph', graphs.subGraph)}
+      </div>
+    </section>
+
+    <section class="fx-debugger__section">
+      <h3>Main graph calculation order</h3>
+      ${this.renderCalculationOrderTable(graphs.mainGraph)}
+    </section>
+
+    <section class="fx-debugger__section">
+      <h3>Sub graph calculation order</h3>
+      ${this.renderCalculationOrderTable(graphs.subGraph)}
+    </section>
+  `;
+  }
+
+  renderGraphSummaryCard(title, graph) {
+    if (!graph) {
+      return `
+      <article class="fx-debugger__graph-card">
+        <h4>${this.escape(title)}</h4>
+        <p class="fx-debugger__muted">No graph available.</p>
+      </article>
+    `;
+    }
+
+    return `
+    <article class="fx-debugger__graph-card">
+      <h4>${this.escape(title)}</h4>
+
+      <dl class="fx-debugger__details">
+        ${this.renderDetail('Nodes', graph.nodeCount)}
+        ${this.renderDetail('Edges', graph.edgeCount)}
+        ${this.renderDetail('Computes', graph.computeCount)}
+        ${this.renderDetail('Calculation order', graph.calculationOrderCount)}
+      </dl>
+    </article>
+  `;
+  }
+
+  renderCalculationOrderTable(graph) {
+    const order = graph?.calculationOrder || [];
+
+    if (!order.length) {
+      return this.renderEmptyPanel('No calculation order available.');
+    }
+
+    return `
+    <div class="fx-debugger__table-wrap">
+      <table class="fx-debugger__table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Label</th>
+            <th>Path</th>
+            <th>Ref</th>
+            <th>Instance</th>
+            <th>Type</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${order.map((item, index) => `
+            <tr>
+              <td>${index + 1}</td>
+              <td>${this.renderCodeOrDash(item?.label || item?.id)}</td>
+              <td>${this.renderCodeOrDash(item?.path)}</td>
+              <td>${this.renderCodeOrDash(item?.ref)}</td>
+              <td>${this.renderCodeOrDash(item?.instanceId)}</td>
+              <td>${this.escape(item?.type || '')}</td>
+              <td>${this.renderValue(item?.value)}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
   }
 
   renderInstancesPanel() {
