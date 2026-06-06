@@ -186,10 +186,41 @@ export class AbstractAction extends ForeElementMixin {
     }
   }
 
+  getActionDebugDetail(extra = {}) {
+    return {
+      action: this.localName,
+      actionClass: this.constructor.name,
+      id: this.id || null,
+      event: this.event || null,
+      ref: this.getAttribute('ref') || null,
+      target: this.getAttribute('target') || null,
+      origin: this.getAttribute('origin') || null,
+      submission: this.getAttribute('submission') || null,
+      control: this.getAttribute('control') || null,
+      if: this.getAttribute('if') || null,
+      while: this.getAttribute('while') || null,
+      iterate: this.getAttribute('iterate') || null,
+      delay: this.delay || 0,
+      needsUpdate: this.needsUpdate,
+      ownerFore: this.getOwnerForm?.()?.id || null,
+      ...extra,
+    };
+  }
+
   async performSafe() {
+    let success = false;
+
+    await Fore.dispatch(
+        this,
+        'action-start',
+        this.getActionDebugDetail({
+          phase: 'start',
+        }),
+    );
+
     try {
       await this.perform();
-      // Return true to indicate success
+      success = true;
       return true;
     } catch (error) {
       await Fore.dispatch(this, 'error', {
@@ -198,8 +229,17 @@ export class AbstractAction extends ForeElementMixin {
         expr: error,
         level: 'Error',
       });
-      // Return false to indicate failure. Any loops must be canceled
+
       return false;
+    } finally {
+      await Fore.dispatch(
+          this,
+          'action-end',
+          this.getActionDebugDetail({
+            phase: 'end',
+            success,
+          }),
+      );
     }
   }
 
@@ -430,24 +470,20 @@ export class AbstractAction extends ForeElementMixin {
    * Template method to be implemented by each action that is called by execute() as part of
    * the processing.
    *
-   * This function should not called on any action directly - call execute() instead to ensure proper execution of 'if' and 'while'
+   * This function should not called on any action directly - call execute() instead to ensure proper execution of 'if' and 'while'.
+   *
+   * TODO Fore DevTools:
+   * Concrete actions overriding perform() should call `await super.perform()` at the start.
+   * Otherwise the debugger will not see the `execute-action` event for that action.
    */
   async perform() {
-    // await Fore.dispatch(document, 'execute-action', {action:this, event:this.event});
-
-    // todo: review - this evaluation seems redundant as we already evaluated in execute
     if (this.isBound() || this.nodeName === 'FX-ACTION') {
       this.evalInContext();
     }
 
-    this.dispatchEvent(
-      new CustomEvent('execute-action', {
-        composed: true,
-        bubbles: true,
-        cancelable: true,
-        detail: { action: this, event: this.event },
-      }),
-    );
+    await Fore.dispatch(this, 'execute-action', this.getActionDebugDetail({
+      phase: 'before',
+    }));
   }
 
   /**
@@ -493,8 +529,9 @@ export class AbstractAction extends ForeElementMixin {
    * @event action-performed - whenever an action has been run
    */
   dispatchActionPerformed() {
-    // console.log('action-performed ', this);
-    Fore.dispatch(this, 'action-performed', {});
+    Fore.dispatch(this, 'action-performed', this.getActionDebugDetail({
+      phase: 'after',
+    }));
   }
 }
 
