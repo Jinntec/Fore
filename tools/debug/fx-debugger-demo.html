@@ -5,13 +5,16 @@
   <title>Fore Debugger Demo</title>
 
   <!-- Adjust these paths for your repository layout. -->
-  <script type="module" src="../../index.js"></script>
   <script type="module" src="./fx-debugger.js"></script>
+  <script type="module" src="../fx-lens.js"></script>
+  <script type="module" src="../../index.js"></script>
 
   <link rel="stylesheet" href="../../demo/todo.css">
 <!--  <link rel="stylesheet" href="./fx-debugger.css">-->
 </head>
 <body>
+<!--<fx-debugger for="todo"></fx-debugger>-->
+<fx-debugger for="todo" gate-init></fx-debugger>
 
 <fx-fore id="todo">
 
@@ -122,7 +125,6 @@
   -->
 </fx-fore>
 
-<fx-debugger for="todo"></fx-debugger>
 
 </body>
 </html>
