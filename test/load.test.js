@@ -47,6 +47,9 @@ describe('load Tests', () => {
     expect(targetDiv).to.exist;
     // console.log('target',targetDiv)
 
+    await elementUpdated(el);
+    await new Promise(resolve => requestAnimationFrame(resolve));
+
     const div = targetDiv.firstElementChild;
     expect(div).to.exist;
     expect(div.nodeName).to.equal('DIV');

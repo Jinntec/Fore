@@ -187,36 +187,63 @@ export class AbstractAction extends ForeElementMixin {
   }
 
   getActionDebugDetail(extra = {}) {
+    const getAttr = name => {
+      try {
+        return this.getAttribute(name) || null;
+      } catch (error) {
+        return null;
+      }
+    };
+
     return {
-      action: this.localName,
-      actionClass: this.constructor.name,
+      action: this.localName || null,
+      actionClass: this.constructor?.name || null,
       id: this.id || null,
       event: this.event || null,
-      ref: this.getAttribute('ref') || null,
-      target: this.getAttribute('target') || null,
-      origin: this.getAttribute('origin') || null,
-      submission: this.getAttribute('submission') || null,
-      control: this.getAttribute('control') || null,
-      if: this.getAttribute('if') || null,
-      while: this.getAttribute('while') || null,
-      iterate: this.getAttribute('iterate') || null,
+      ref: getAttr('ref'),
+      target: getAttr('target'),
+      origin: getAttr('origin'),
+      submission: getAttr('submission'),
+      control: getAttr('control'),
+      if: getAttr('if'),
+      while: getAttr('while'),
+      iterate: getAttr('iterate'),
       delay: this.delay || 0,
       needsUpdate: this.needsUpdate,
-      ownerFore: this.getOwnerForm?.()?.id || null,
+      ownerFore: this.getOwnerFormSafe()?.id || null,
       ...extra,
     };
+  }
+
+  dispatchActionDebugEvent(type, extra = {}) {
+    try {
+      this.dispatchEvent(
+          new CustomEvent(type, {
+            composed: true,
+            bubbles: true,
+            cancelable: false,
+            detail: this.getActionDebugDetail(extra),
+          }),
+      );
+    } catch (error) {
+      // Debug events must never affect action execution.
+    }
+  }
+
+  getOwnerFormSafe() {
+    try {
+      return this.getOwnerForm?.() || null;
+    } catch (error) {
+      return null;
+    }
   }
 
   async performSafe() {
     let success = false;
 
-    await Fore.dispatch(
-        this,
-        'action-start',
-        this.getActionDebugDetail({
-          phase: 'start',
-        }),
-    );
+    this.dispatchActionDebugEvent('action-start', {
+      phase: 'start',
+    });
 
     try {
       await this.perform();
@@ -232,17 +259,12 @@ export class AbstractAction extends ForeElementMixin {
 
       return false;
     } finally {
-      await Fore.dispatch(
-          this,
-          'action-end',
-          this.getActionDebugDetail({
-            phase: 'end',
-            success,
-          }),
-      );
+      this.dispatchActionDebugEvent('action-end', {
+        phase: 'end',
+        success,
+      });
     }
   }
-
   /**
    * executes the action.
    *
@@ -303,8 +325,10 @@ export class AbstractAction extends ForeElementMixin {
 
     // Outermost handling
     if (FxFore.outermostHandler === null) {
+      const ownerForm = this.getOwnerFormSafe();
+
       console.log(
-        `%coutermost Action on ${this.getOwnerForm().id}`,
+        `%coutermost Action on ${ownerForm?.id || ''}`,
         'background:darkblue; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
         this,
       );
@@ -359,7 +383,8 @@ export class AbstractAction extends ForeElementMixin {
     if (this.delay) {
       // Delay further execution until the delay is done
       await wait(this.delay);
-      if (!XPathUtil.contains(this.getOwnerForm(), this)) {
+      const ownerForm = this.getOwnerFormSafe();
+      if (!ownerForm || !XPathUtil.contains(ownerForm, this)) {
         // We are no longer in the document. Stop working
         this.actionPerformed();
         resolveThisEvent();
@@ -376,7 +401,8 @@ export class AbstractAction extends ForeElementMixin {
     // Start by waiting
     await wait(this.delay || 0);
 
-    if (!XPathUtil.contains(this.getOwnerForm(), this)) {
+    const ownerForm = this.getOwnerFormSafe();
+    if (!ownerForm || !XPathUtil.contains(ownerForm, this)) {
       // We are no longer in the document. Stop working
       return;
     }
@@ -387,7 +413,7 @@ export class AbstractAction extends ForeElementMixin {
     }
 
     // Perform the action once. But quit if it failed
-    if (!this.performSafe()) {
+    if (!(await this.performSafe())) {
       return;
     }
 
@@ -413,7 +439,8 @@ export class AbstractAction extends ForeElementMixin {
         return;
       }
 
-      if (!XPathUtil.contains(this.getOwnerForm(), this)) {
+      const ownerForm = this.getOwnerFormSafe();
+      if (!ownerForm || !XPathUtil.contains(ownerForm, this)) {
         // We are no longer in the document. Stop working
         return;
       }
@@ -440,8 +467,10 @@ export class AbstractAction extends ForeElementMixin {
     this.currentEvent = null;
     this.actionPerformed();
     if (FxFore.outermostHandler === this) {
+      const ownerForm = this.getOwnerFormSafe();
+
       console.log(
-        `%cfinalizing outermost Action on ${this.getOwnerForm()?.id}`,
+        `%cfinalizing outermost Action on ${ownerForm?.id || ''}`,
         'background:darkblue; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
         this,
       );
@@ -481,9 +510,11 @@ export class AbstractAction extends ForeElementMixin {
       this.evalInContext();
     }
 
+/*
     await Fore.dispatch(this, 'execute-action', this.getActionDebugDetail({
       phase: 'before',
     }));
+*/
   }
 
   /**
@@ -511,7 +542,8 @@ export class AbstractAction extends ForeElementMixin {
       // console.log('running update cycle for outermostHandler', this);
       model.recalculate();
       model.revalidate();
-      this.getOwnerForm().refresh(false);
+      const ownerForm = this.getOwnerFormSafe();
+      ownerForm?.refresh(false);
       this.dispatchActionPerformed();
     } else if (this.needsUpdate) {
       // console.log('Update delayed!');
