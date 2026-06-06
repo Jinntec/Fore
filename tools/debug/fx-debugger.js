@@ -457,6 +457,11 @@ export class FxDebugger extends HTMLElement {
         color: #137333;
         font-weight: 700;
       }
+     .fx-debugger__event-type--dom {
+        color: #8a4b00;
+        font-weight: 700;
+      }
+
 
       .fx-debugger__action-detail {
         display: flex;
@@ -503,6 +508,12 @@ export class FxDebugger extends HTMLElement {
     this._eventFlowId = 0;
 
     this.eventTypes = [
+      'click',
+      'input',
+      'change',
+      'blur',
+      'focusout',
+      'keydown',
       'model-construct',
       'model-construct-done',
       'ready',
@@ -683,9 +694,9 @@ export class FxDebugger extends HTMLElement {
 
   refresh() {
     this.snapshot =
-        this.fore?.getDebugSnapshot?.({
-          includeGraphs: this.activePanel === 'graphs',
-        }) || null;
+      this.fore?.getDebugSnapshot?.({
+        includeGraphs: this.activePanel === 'graphs',
+      }) || null;
   }
 
   render() {
@@ -741,8 +752,8 @@ export class FxDebugger extends HTMLElement {
     });
 
     this.querySelector('[data-action="resize"]')?.addEventListener(
-        'pointerdown',
-        this._onResizePointerDown,
+      'pointerdown',
+      this._onResizePointerDown,
     );
   }
 
@@ -931,8 +942,8 @@ export class FxDebugger extends HTMLElement {
           </thead>
           <tbody>
             ${order
-        .map(
-            item => `
+              .map(
+                item => `
                   <tr>
                     <td>${this.renderValue(item?.index)}</td>
                     <td>${this.renderCodeOrDash(item?.path)}</td>
@@ -945,8 +956,8 @@ export class FxDebugger extends HTMLElement {
                     <td>${this.renderValue(item?.dependants?.length || 0)}</td>
                   </tr>
                 `,
-        )
-        .join('')}
+              )
+              .join('')}
           </tbody>
         </table>
       </div>
@@ -955,7 +966,9 @@ export class FxDebugger extends HTMLElement {
 
   renderEventsPanel() {
     if (!this.eventLog.length) {
-      return this.renderEmptyPanel('No Fore events captured yet. Interact with the form or press Refresh.');
+      return this.renderEmptyPanel(
+        'No Fore events captured yet. Interact with the form or press Refresh.',
+      );
     }
 
     return `
@@ -982,8 +995,8 @@ export class FxDebugger extends HTMLElement {
             </thead>
             <tbody>
               ${this.eventLog
-        .map(
-            entry => `
+                .map(
+                  entry => `
                     <tr class="${this.getEventRowClass(entry)}">
                       <td>${this.renderValue(entry.index)}</td>
                       <td>${this.renderCodeOrDash(entry.timeLabel)}</td>
@@ -993,8 +1006,8 @@ export class FxDebugger extends HTMLElement {
                       <td>${this.renderEventDetail(entry)}</td>
                     </tr>
                   `,
-        )
-        .join('')}
+                )
+                .join('')}
             </tbody>
           </table>
         </div>
@@ -1016,7 +1029,11 @@ export class FxDebugger extends HTMLElement {
   }
 
   getEventNodeClass(entry) {
-    if (!entry.flowId && entry.type !== 'outermost-action-start' && entry.type !== 'outermost-action-end') {
+    if (
+      !entry.flowId &&
+      entry.type !== 'outermost-action-start' &&
+      entry.type !== 'outermost-action-end'
+    ) {
       return 'fx-debugger__event-node--outside';
     }
 
@@ -1044,6 +1061,10 @@ export class FxDebugger extends HTMLElement {
       return 'fx-debugger__event-type--update';
     }
 
+    if (this.isDomEvent(type)) {
+      return 'fx-debugger__event-type--dom';
+    }
+
     if (this.isLifecycleEvent(type)) {
       return 'fx-debugger__event-type--lifecycle';
     }
@@ -1058,6 +1079,7 @@ export class FxDebugger extends HTMLElement {
     if (entry.type === 'action-end') return '■';
     if (entry.type === 'action-performed') return '◆';
     if (this.isUpdateCycleEvent(entry.type)) return '✓';
+    if (this.isDomEvent(entry.type)) return '↳';
     if (!entry.flowId) return '·';
     return '•';
   }
@@ -1074,6 +1096,10 @@ export class FxDebugger extends HTMLElement {
     return '';
   }
 
+  isDomEvent(type) {
+    return ['click', 'input', 'change', 'blur', 'focusout', 'keydown'].includes(type);
+  }
+
   isActionEvent(type) {
     return [
       'outermost-action-start',
@@ -1085,12 +1111,7 @@ export class FxDebugger extends HTMLElement {
   }
 
   isUpdateCycleEvent(type) {
-    return [
-      'recalculate-done',
-      'revalidate-done',
-      'refresh',
-      'refresh-done',
-    ].includes(type);
+    return ['recalculate-done', 'revalidate-done', 'refresh', 'refresh-done'].includes(type);
   }
 
   isLifecycleEvent(type) {
@@ -1127,12 +1148,12 @@ export class FxDebugger extends HTMLElement {
 
     const action = detail.action || detail.actionClass || 'action';
     const phase =
-        detail.phase ||
-        (entry.type === 'action-start'
-            ? 'start'
-            : entry.type === 'action-end' || entry.type === 'action-performed'
-                ? 'end'
-                : '');
+      detail.phase ||
+      (entry.type === 'action-start'
+        ? 'start'
+        : entry.type === 'action-end' || entry.type === 'action-performed'
+          ? 'end'
+          : '');
 
     const event = detail.event ? `event=${detail.event}` : '';
     const ref = detail.ref ? `ref=${detail.ref}` : '';
@@ -1161,10 +1182,10 @@ export class FxDebugger extends HTMLElement {
         <span class="fx-debugger__action-pill">${this.escape(String(action))}</span>
         ${phase ? `<span class="fx-debugger__action-phase">${this.escape(String(phase))}</span>` : ''}
         ${
-        parts.length
+          parts.length
             ? `<code>${this.escape(parts.join(' · '))}</code>`
             : '<span class="fx-debugger__muted">—</span>'
-    }
+        }
       </div>
     `;
   }
@@ -1207,8 +1228,8 @@ export class FxDebugger extends HTMLElement {
             </thead>
             <tbody>
               ${instances
-        .map(
-            instance => `
+                .map(
+                  instance => `
                     <tr>
                       <td><code>${this.escape(instance?.instanceId || instance?.id || '')}</code></td>
                       <td>${this.escape(instance?.type || '')}</td>
@@ -1219,8 +1240,8 @@ export class FxDebugger extends HTMLElement {
                       <td>${this.escape(instance?.mutationCount ?? '')}</td>
                     </tr>
                   `,
-        )
-        .join('')}
+                )
+                .join('')}
             </tbody>
           </table>
         </div>
@@ -1257,8 +1278,8 @@ export class FxDebugger extends HTMLElement {
             </thead>
             <tbody>
               ${modelItems
-        .map(
-            item => `
+                .map(
+                  item => `
                     <tr>
                       <td>${this.renderCodeOrDash(item?.path)}</td>
                       <td>${this.renderCodeOrDash(item?.ref)}</td>
@@ -1272,8 +1293,8 @@ export class FxDebugger extends HTMLElement {
                       <td>${this.escape(item?.observerCount ?? '')}</td>
                     </tr>
                   `,
-        )
-        .join('')}
+                )
+                .join('')}
             </tbody>
           </table>
         </div>
@@ -1309,8 +1330,8 @@ export class FxDebugger extends HTMLElement {
             </thead>
             <tbody>
               ${boundElements
-        .map(
-            element => `
+                .map(
+                  element => `
                     <tr>
                       <td><code>${this.escape(element?.localName || '')}</code></td>
                       <td>${this.renderCodeOrDash(element?.id)}</td>
@@ -1323,8 +1344,8 @@ export class FxDebugger extends HTMLElement {
                       <td>${this.formatBoolean(element?.readonly)}</td>
                     </tr>
                   `,
-        )
-        .join('')}
+                )
+                .join('')}
             </tbody>
           </table>
         </div>
@@ -1407,11 +1428,11 @@ export class FxDebugger extends HTMLElement {
 
   escape(value) {
     return String(value)
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#039;');
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#039;');
   }
 
   _onRefreshClick(event) {
@@ -1487,7 +1508,7 @@ export class FxDebugger extends HTMLElement {
       type: event.type,
       target: this.describeEventTarget(event.target),
       origin: this.describeEventTarget(event.composedPath?.()[0] || event.target),
-      detailSummary: this.summarizeEventDetail(event.detail),
+      detailSummary: this.summarizeEvent(event),
     };
   }
 
@@ -1534,6 +1555,49 @@ export class FxDebugger extends HTMLElement {
     const id = target.id ? `#${target.id}` : '';
 
     return `${localName}${id}`;
+  }
+  summarizeEvent(event) {
+    if (this.isDomEvent(event.type)) {
+      return this.summarizeDomEvent(event);
+    }
+
+    return this.summarizeEventDetail(event.detail);
+  }
+
+  summarizeDomEvent(event) {
+    const target = event.target;
+
+    const summary = {
+      type: event.type,
+      target: this.describeEventTarget(target),
+    };
+
+    if (target && 'value' in target) {
+      summary.value = target.value;
+    }
+
+    if (target && 'checked' in target) {
+      summary.checked = target.checked;
+    }
+
+    if (target?.name) {
+      summary.name = target.name;
+    }
+
+    if (target?.type) {
+      summary.inputType = target.type;
+    }
+
+    if (event.type === 'keydown') {
+      summary.key = event.key;
+      summary.code = event.code;
+    }
+
+    if (event.relatedTarget) {
+      summary.relatedTarget = this.describeEventTarget(event.relatedTarget);
+    }
+
+    return this.safeJson(summary);
   }
 
   summarizeEventDetail(detail) {
