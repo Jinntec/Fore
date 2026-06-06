@@ -65,10 +65,14 @@ export class FxBind extends ForeElementMixin {
 
   _debugModelItemCount() {
     const model = this.getModel?.();
-    if (!model) return 0;
 
-    return model.modelItems.filter(item => item.bind === this).length;
+    if (!model || !Array.isArray(model.modelItems)) {
+      return 0;
+    }
+
+    return model.modelItems.filter(item => item?.bind === this).length;
   }
+
   connectedCallback() {
     // console.log('connectedCallback ', this);
     // this.id = this.hasAttribute('id')?this.getAttribute('id'):;
