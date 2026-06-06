@@ -375,6 +375,41 @@ export class FxDebugger extends HTMLElement {
         margin-bottom: 0.75rem;
       }
 
+      .fx-debugger__event-filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.45rem 0.9rem;
+        align-items: center;
+        margin: 0 0 0.75rem;
+        padding: 0.55rem 0.65rem;
+        border: 1px solid #e3e5ea;
+        border-radius: 0.35rem;
+        background: #fafafa;
+      }
+
+      .fx-debugger__event-filters legend {
+        padding: 0 0.25rem;
+      }
+
+      .fx-debugger__event-filter {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        color: #3c4043;
+        font-size: 0.86rem;
+        white-space: nowrap;
+        cursor: pointer;
+      }
+
+      .fx-debugger__event-filter input {
+        margin: 0;
+      }
+
+      .fx-debugger__event-filter-count {
+        color: #8a9099;
+        font-size: 0.8rem;
+      }
+
       .fx-debugger__event-table td:last-child code {
         white-space: normal;
         overflow-wrap: anywhere;
@@ -457,11 +492,11 @@ export class FxDebugger extends HTMLElement {
         color: #137333;
         font-weight: 700;
       }
-     .fx-debugger__event-type--dom {
+
+      .fx-debugger__event-type--dom {
         color: #8a4b00;
         font-weight: 700;
       }
-
 
       .fx-debugger__action-detail {
         display: flex;
@@ -507,6 +542,17 @@ export class FxDebugger extends HTMLElement {
     this._eventFlowDepth = 0;
     this._eventFlowId = 0;
 
+    this.eventFilters = {
+      dom: true,
+      action: true,
+      update: true,
+      data: true,
+      submission: true,
+      lifecycle: true,
+      error: true,
+      other: true,
+    };
+
     this.eventTypes = [
       'click',
       'input',
@@ -547,6 +593,7 @@ export class FxDebugger extends HTMLElement {
     this._onResizePointerUp = this._onResizePointerUp.bind(this);
     this._onToggleClick = this._onToggleClick.bind(this);
     this._onDebugEvent = this._onDebugEvent.bind(this);
+    this._onEventFilterChange = this._onEventFilterChange.bind(this);
 
     this._resizeStartY = 0;
     this._resizeStartHeight = 0;
@@ -694,9 +741,9 @@ export class FxDebugger extends HTMLElement {
 
   refresh() {
     this.snapshot =
-      this.fore?.getDebugSnapshot?.({
-        includeGraphs: this.activePanel === 'graphs',
-      }) || null;
+        this.fore?.getDebugSnapshot?.({
+          includeGraphs: this.activePanel === 'graphs',
+        }) || null;
   }
 
   render() {
@@ -745,6 +792,10 @@ export class FxDebugger extends HTMLElement {
       this.render();
     });
 
+    this.querySelectorAll('[data-event-filter]').forEach(input => {
+      input.addEventListener('change', this._onEventFilterChange);
+    });
+
     this.querySelector('.fx-debugger__header')?.addEventListener('dblclick', this._onToggleClick);
 
     this.querySelectorAll('[data-panel]').forEach(button => {
@@ -752,8 +803,8 @@ export class FxDebugger extends HTMLElement {
     });
 
     this.querySelector('[data-action="resize"]')?.addEventListener(
-      'pointerdown',
-      this._onResizePointerDown,
+        'pointerdown',
+        this._onResizePointerDown,
     );
   }
 
@@ -942,8 +993,8 @@ export class FxDebugger extends HTMLElement {
           </thead>
           <tbody>
             ${order
-              .map(
-                item => `
+        .map(
+            item => `
                   <tr>
                     <td>${this.renderValue(item?.index)}</td>
                     <td>${this.renderCodeOrDash(item?.path)}</td>
@@ -956,8 +1007,8 @@ export class FxDebugger extends HTMLElement {
                     <td>${this.renderValue(item?.dependants?.length || 0)}</td>
                   </tr>
                 `,
-              )
-              .join('')}
+        )
+        .join('')}
           </tbody>
         </table>
       </div>
@@ -965,9 +1016,11 @@ export class FxDebugger extends HTMLElement {
   }
 
   renderEventsPanel() {
+    const visibleEvents = this.getVisibleEventLog();
+
     if (!this.eventLog.length) {
       return this.renderEmptyPanel(
-        'No Fore events captured yet. Interact with the form or press Refresh.',
+          'No Fore events captured yet. Interact with the form or press Refresh.',
       );
     }
 
@@ -981,38 +1034,131 @@ export class FxDebugger extends HTMLElement {
           </button>
         </div>
 
-        <div class="fx-debugger__table-wrap">
-          <table class="fx-debugger__table fx-debugger__event-table">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Time</th>
-                <th>Flow</th>
-                <th>Target</th>
-                <th>Origin</th>
-                <th>Action / detail</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${this.eventLog
-                .map(
-                  entry => `
-                    <tr class="${this.getEventRowClass(entry)}">
-                      <td>${this.renderValue(entry.index)}</td>
-                      <td>${this.renderCodeOrDash(entry.timeLabel)}</td>
-                      <td>${this.renderEventFlowCell(entry)}</td>
-                      <td>${this.renderCodeOrDash(entry.target)}</td>
-                      <td>${this.renderCodeOrDash(entry.origin)}</td>
-                      <td>${this.renderEventDetail(entry)}</td>
-                    </tr>
-                  `,
-                )
-                .join('')}
-            </tbody>
-          </table>
-        </div>
+        ${this.renderEventFilters()}
+
+        ${
+        visibleEvents.length
+            ? this.renderEventTable(visibleEvents)
+            : this.renderEmptyPanel('No events match the current filters.')
+    }
       </section>
     `;
+  }
+
+  renderEventFilters() {
+    const counts = this.getEventCategoryCounts();
+    const filters = [
+      ['dom', 'DOM'],
+      ['action', 'Actions'],
+      ['update', 'Update cycle'],
+      ['data', 'Data'],
+      ['submission', 'Submissions'],
+      ['lifecycle', 'Lifecycle'],
+      ['error', 'Errors'],
+      ['other', 'Other'],
+    ];
+
+    return `
+      <fieldset class="fx-debugger__event-filters">
+        <legend class="fx-debugger__muted">Show events</legend>
+        ${filters
+        .map(
+            ([key, label]) => `
+              <label class="fx-debugger__event-filter">
+                <input
+                  type="checkbox"
+                  data-event-filter="${this.escape(key)}"
+                  ${this.eventFilters[key] ? 'checked' : ''}>
+                <span>${this.escape(label)}</span>
+                <span class="fx-debugger__event-filter-count">${counts[key] || 0}</span>
+              </label>
+            `,
+        )
+        .join('')}
+      </fieldset>
+    `;
+  }
+
+  renderEventTable(events) {
+    return `
+      <div class="fx-debugger__table-wrap">
+        <table class="fx-debugger__table fx-debugger__event-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Time</th>
+              <th>Flow</th>
+              <th>Target</th>
+              <th>Origin</th>
+              <th>Action / detail</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${events
+        .map(
+            entry => `
+                  <tr class="${this.getEventRowClass(entry)}">
+                    <td>${this.renderValue(entry.index)}</td>
+                    <td>${this.renderCodeOrDash(entry.timeLabel)}</td>
+                    <td>${this.renderEventFlowCell(entry)}</td>
+                    <td>${this.renderCodeOrDash(entry.target)}</td>
+                    <td>${this.renderCodeOrDash(entry.origin)}</td>
+                    <td>${this.renderEventDetail(entry)}</td>
+                  </tr>
+                `,
+        )
+        .join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  getVisibleEventLog() {
+    return this.eventLog.filter(entry => {
+      const category = this.getEventCategory(entry.type);
+      return this.eventFilters[category] !== false;
+    });
+  }
+
+  getEventCategoryCounts() {
+    return this.eventLog.reduce((counts, entry) => {
+      const category = this.getEventCategory(entry.type);
+      counts[category] = (counts[category] || 0) + 1;
+      return counts;
+    }, {});
+  }
+
+  getEventCategory(type) {
+    if (this.isDomEvent(type)) {
+      return 'dom';
+    }
+
+    if (this.isActionEvent(type)) {
+      return 'action';
+    }
+
+    if (this.isUpdateCycleEvent(type)) {
+      return 'update';
+    }
+
+    if (['value-changed', 'path-mutated', 'insert', 'delete', 'deleted'].includes(type)) {
+      return 'data';
+    }
+
+    if (['submit', 'submit-done', 'submit-error'].includes(type)) {
+      return 'submission';
+    }
+
+    if (this.isLifecycleEvent(type)) {
+      return 'lifecycle';
+    }
+
+    if (type === 'error') {
+      return 'error';
+    }
+
+    return 'other';
   }
 
   renderEventFlowCell(entry) {
@@ -1030,9 +1176,9 @@ export class FxDebugger extends HTMLElement {
 
   getEventNodeClass(entry) {
     if (
-      !entry.flowId &&
-      entry.type !== 'outermost-action-start' &&
-      entry.type !== 'outermost-action-end'
+        !entry.flowId &&
+        entry.type !== 'outermost-action-start' &&
+        entry.type !== 'outermost-action-end'
     ) {
       return 'fx-debugger__event-node--outside';
     }
@@ -1148,12 +1294,12 @@ export class FxDebugger extends HTMLElement {
 
     const action = detail.action || detail.actionClass || 'action';
     const phase =
-      detail.phase ||
-      (entry.type === 'action-start'
-        ? 'start'
-        : entry.type === 'action-end' || entry.type === 'action-performed'
-          ? 'end'
-          : '');
+        detail.phase ||
+        (entry.type === 'action-start'
+            ? 'start'
+            : entry.type === 'action-end' || entry.type === 'action-performed'
+                ? 'end'
+                : '');
 
     const event = detail.event ? `event=${detail.event}` : '';
     const ref = detail.ref ? `ref=${detail.ref}` : '';
@@ -1182,10 +1328,10 @@ export class FxDebugger extends HTMLElement {
         <span class="fx-debugger__action-pill">${this.escape(String(action))}</span>
         ${phase ? `<span class="fx-debugger__action-phase">${this.escape(String(phase))}</span>` : ''}
         ${
-          parts.length
+        parts.length
             ? `<code>${this.escape(parts.join(' · '))}</code>`
             : '<span class="fx-debugger__muted">—</span>'
-        }
+    }
       </div>
     `;
   }
@@ -1228,8 +1374,8 @@ export class FxDebugger extends HTMLElement {
             </thead>
             <tbody>
               ${instances
-                .map(
-                  instance => `
+        .map(
+            instance => `
                     <tr>
                       <td><code>${this.escape(instance?.instanceId || instance?.id || '')}</code></td>
                       <td>${this.escape(instance?.type || '')}</td>
@@ -1240,8 +1386,8 @@ export class FxDebugger extends HTMLElement {
                       <td>${this.escape(instance?.mutationCount ?? '')}</td>
                     </tr>
                   `,
-                )
-                .join('')}
+        )
+        .join('')}
             </tbody>
           </table>
         </div>
@@ -1278,8 +1424,8 @@ export class FxDebugger extends HTMLElement {
             </thead>
             <tbody>
               ${modelItems
-                .map(
-                  item => `
+        .map(
+            item => `
                     <tr>
                       <td>${this.renderCodeOrDash(item?.path)}</td>
                       <td>${this.renderCodeOrDash(item?.ref)}</td>
@@ -1293,8 +1439,8 @@ export class FxDebugger extends HTMLElement {
                       <td>${this.escape(item?.observerCount ?? '')}</td>
                     </tr>
                   `,
-                )
-                .join('')}
+        )
+        .join('')}
             </tbody>
           </table>
         </div>
@@ -1330,8 +1476,8 @@ export class FxDebugger extends HTMLElement {
             </thead>
             <tbody>
               ${boundElements
-                .map(
-                  element => `
+        .map(
+            element => `
                     <tr>
                       <td><code>${this.escape(element?.localName || '')}</code></td>
                       <td>${this.renderCodeOrDash(element?.id)}</td>
@@ -1344,8 +1490,8 @@ export class FxDebugger extends HTMLElement {
                       <td>${this.formatBoolean(element?.readonly)}</td>
                     </tr>
                   `,
-                )
-                .join('')}
+        )
+        .join('')}
             </tbody>
           </table>
         </div>
@@ -1428,11 +1574,22 @@ export class FxDebugger extends HTMLElement {
 
   escape(value) {
     return String(value)
-      .replaceAll('&', '&amp;')
-      .replaceAll('<', '&lt;')
-      .replaceAll('>', '&gt;')
-      .replaceAll('"', '&quot;')
-      .replaceAll("'", '&#039;');
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+  }
+
+  _onEventFilterChange(event) {
+    const key = event.currentTarget?.dataset?.eventFilter;
+
+    if (!key || !(key in this.eventFilters)) {
+      return;
+    }
+
+    this.eventFilters[key] = event.currentTarget.checked;
+    this.render();
   }
 
   _onRefreshClick(event) {
@@ -1556,6 +1713,7 @@ export class FxDebugger extends HTMLElement {
 
     return `${localName}${id}`;
   }
+
   summarizeEvent(event) {
     if (this.isDomEvent(event.type)) {
       return this.summarizeDomEvent(event);
