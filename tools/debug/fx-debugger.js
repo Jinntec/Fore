@@ -833,6 +833,9 @@ export class FxDebugger extends HTMLElement {
           ${this.renderDetail('Ready', fore.ready)}
           ${this.renderDetail('createNodes', fore.createNodes)}
           ${this.renderDetail('Lazy refresh', fore.lazyRefresh)}
+          ${this.renderDetail('init-on', fore.initOn)}
+          ${this.renderDetail('init-on-target', fore.initOnTarget)}
+          ${this.renderDetail('ignore-expressions', fore.ignoreExpressions)}
           ${this.renderDetail('Instances', this.snapshot?.instances?.length ?? model.instanceCount)}
           ${this.renderDetail('Model items', this.snapshot?.modelItems?.length ?? model.modelItemCount)}
           ${this.renderDetail('Bound elements', this.snapshot?.boundElements?.length)}

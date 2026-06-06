@@ -102,6 +102,7 @@ export class FxFore extends HTMLElement {
       },
       /**
        * merge-partial
+       * @deprecated
        */
       mergePartial: {
         type: Boolean,
@@ -346,9 +347,11 @@ export class FxFore extends HTMLElement {
     this.initialRun = true;
     this._scanForNewTemplateExpressionsNextRefresh = false;
     this.repeatsFromAttributesCreated = false;
+/*
     this.validateOn = this.hasAttribute('validate-on')
       ? this.getAttribute('validate-on')
       : 'update';
+*/
     // this.mergePartial = this.hasAttribute('merge-partial')? true:false;
     this.mergePartial = false;
     this.createNodes = this.hasAttribute('create-nodes') ? true : false;
@@ -376,6 +379,11 @@ export class FxFore extends HTMLElement {
       ready: this.ready,
       lazyRefresh: this.lazyRefresh,
       createNodes: this.createNodes,
+
+      initOn: this.getAttribute('init-on') || null,
+      initOnTarget: this.getAttribute('init-on-target') || null,
+      ignoreExpressions: this.getAttribute('ignore-expressions') || null,
+
       model: this.model?.getDebugInfo?.() || null,
     };
   }
