@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Fore fx-switch wizard demo</title>
+
+    <script type="module" src="./demo.js"></script>
+    <link rel="stylesheet" href="../resources/fore.css"/>
+
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            margin: 0;
+            background: #f4f4f4;
+            color: #222;
+        }
+
+        fx-fore {
+            display: block;
+            max-width: 52rem;
+            margin: 4rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.12);
+        }
+
+        .wizard-header {
+            margin-bottom: 2rem;
+        }
+
+        .wizard-header h1 {
+            margin: 0 0 0.5rem;
+            font-size: 2rem;
+        }
+
+        .wizard-progress {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+            margin: 2rem 0;
+        }
+
+        .wizard-step {
+            position: relative;
+            padding-top: 1.75rem;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #777;
+        }
+
+        .wizard-step::before {
+            content: attr(data-step);
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 1.5rem;
+            height: 1.5rem;
+            transform: translateX(-50%);
+            border-radius: 999px;
+            display: grid;
+            place-items: center;
+            background: #ddd;
+            color: #555;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .wizard-step.active,
+        .wizard-step.done {
+            color: #111;
+            font-weight: 600;
+        }
+
+        .wizard-step.active::before,
+        .wizard-step.done::before {
+            background: #111;
+            color: white;
+        }
+
+        .wizard-bar {
+            height: 0.4rem;
+            background: #ddd;
+            border-radius: 999px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .wizard-bar-fill {
+            height: 100%;
+            width: 25%;
+            background: #111;
+            border-radius: inherit;
+            transition: width 280ms ease;
+        }
+
+        fx-switch {
+            display: block;
+            position: relative;
+            overflow: hidden;
+            min-height: 18rem;
+        }
+        fx-case{
+            display: none;
+        }
+        fx-case.selected-case {
+            display: block;
+            animation: page-in 280ms ease both;
+        }
+
+        fx-case.deselected-case {
+            display: none;
+            /*animation: page-in 280ms ease both;*/
+        }
+
+        @keyframes page-in {
+            from {
+                opacity: 0;
+                transform: translateX(1.5rem);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .page {
+            padding: 1.5rem;
+            border: thin solid #ddd;
+            border-radius: 0.75rem;
+            background: #fafafa;
+        }
+
+        .page h2 {
+            margin-top: 0;
+        }
+
+        .wizard-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        fx-trigger button {
+            border: none;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            background: #111;
+            color: white;
+            font: inherit;
+            cursor: pointer;
+        }
+
+        fx-trigger.secondary button {
+            background: #ddd;
+            color: #222;
+        }
+
+        fx-trigger[disabled] button {
+            opacity: 0.35;
+            cursor: default;
+        }
+    </style>
+</head>
+
+<body>
+
+<fx-fore id="wizard-demo">
+    <fx-model>
+        <fx-instance id="wizard">
+            <data>
+                <step>1</step>
+            </data>
+        </fx-instance>
+    </fx-model>
+
+    <div class="wizard-header">
+        <h1>fx-switch Wizard</h1>
+    </div>
+    <div class="wizard-progress" data-progress>
+        <div class="wizard-step {if (number($default/step) = 1) then 'active' else if (number($default/step) gt 1) then 'done' else ''}" data-step="1">Start</div>
+
+        <div class="wizard-step {if (number($default/step) = 2) then 'active' else if (number($default/step) gt 2) then 'done' else ''}" data-step="2">Details</div>
+
+        <div class="wizard-step {if (number($default/step) = 3) then 'active' else if (number($default/step) gt 3) then 'done' else ''}" data-step="3">Options</div>
+
+        <div class="wizard-step {if (number($default/step) = 4) then 'active' else if (number($default/step) gt 4) then 'done' else ''}" data-step="4">Finish</div>
+    </div>
+    <div class="wizard-bar">
+        <div class="wizard-bar-fill" style="width: {number($default/step) * 25}%"></div>
+    </div>
+
+    <fx-switch id="pages" ref="instance('wizard')/step">
+        <fx-case id="step-1" name="1">
+            <section class="page">
+                <h2>Welcome</h2>
+                <p>
+                    This is the first page of the wizard. It could contain an introduction,
+                    a short explanation, or a choice that decides how the following pages behave.
+                </p>
+                <p>
+                    The transition is handled in CSS. The active page is selected by
+                    <code>fx-switch</code>.
+                </p>
+            </section>
+        </fx-case>
+
+        <fx-case id="step-2" name="2">
+            <section class="page">
+                <h2>Some details</h2>
+                <p>
+                    This page could contain a form. For the demo it only contains arbitrary text.
+                </p>
+
+                <fx-control ref="instance('wizard')/name">
+                    <label>Name</label>
+                    <input placeholder="Optional demo input"/>
+                </fx-control>
+            </section>
+        </fx-case>
+
+        <fx-case id="step-3" name="3">
+            <section class="page">
+                <h2>Options</h2>
+                <p>
+                    A wizard step can also contain groups, controls, repeats, or any other Fore UI.
+                </p>
+
+                <ul>
+                    <li>Declarative state in the model</li>
+                    <li>Page switching with a bound <code>fx-switch</code></li>
+                    <li>Progress display from the same step value</li>
+                </ul>
+            </section>
+        </fx-case>
+
+        <fx-case id="step-4" name="4">
+            <section class="page">
+                <h2>Done</h2>
+                <p>
+                    This is the final page. In a real wizard this could show a summary or trigger
+                    a submission.
+                </p>
+
+                <p>
+                    Current step:
+                    <strong><fx-output ref="instance('wizard')/step"></fx-output></strong>
+                </p>
+            </section>
+        </fx-case>
+    </fx-switch>
+    <div class="wizard-actions">
+        <div class="wizard-actions">
+            <fx-trigger class="secondary">
+                <button>Previous</button>
+                <fx-action>
+                    <fx-setvalue
+                            ref="instance('wizard')/step"
+                            value="max((1, number(instance('wizard')/step) - 1))">
+                    </fx-setvalue>
+                    <fx-recalculate></fx-recalculate>
+                    <fx-refresh></fx-refresh>
+                </fx-action>
+            </fx-trigger>
+
+            <fx-trigger>
+                <button>Next</button>
+                <fx-action>
+                    <fx-setvalue
+                            ref="instance('wizard')/step"
+                            value="min((4, number(instance('wizard')/step) + 1))">
+                    </fx-setvalue>
+                </fx-action>
+            </fx-trigger>
+        </div>
+    </div>
+</fx-fore>
+
+
+</body>
+</html>
