@@ -21,33 +21,6 @@ const DEBUG_PARAM = 'debug';
 
 autoInjectDebugger();
 
-async function autoInjectDebugger() {
-  const params = new URLSearchParams(window.location.search);
-
-  if (!params.has(DEBUG_PARAM)) {
-    return;
-  }
-
-  const debugValue = params.get(DEBUG_PARAM);
-  const target = resolveInitialDebugTarget(debugValue);
-
-  if (!target) {
-    console.warn('[Fore DevTools] No <fx-fore> found for ?debug.');
-    return;
-  }
-
-  ensureTargetId(target);
-  preGateFore(target);
-
-  await import('./fx-debugger.js');
-
-  if (isTemplateContained(target)) {
-    observeForStampedTarget(target.id);
-    return;
-  }
-
-  injectDebugger(target.id);
-}
 
 function resolveInitialDebugTarget(debugValue) {
   const liveTargets = getLiveForeElements();
@@ -143,6 +116,37 @@ function injectDebugger(targetId) {
 
   document.body.insertBefore(debuggerElement, document.body.firstChild);
 }
+
+async function autoInjectDebugger() {
+  const params = new URLSearchParams(window.location.search);
+
+  if (!params.has(DEBUG_PARAM)) {
+    return;
+  }
+
+  window.__FORE_DEBUG__ = true;
+
+  const debugValue = params.get(DEBUG_PARAM);
+  const target = resolveInitialDebugTarget(debugValue);
+
+  if (!target) {
+    console.warn('[Fore DevTools] No <fx-fore> found for ?debug.');
+    return;
+  }
+
+  ensureTargetId(target);
+  preGateFore(target);
+
+  await import('./fx-debugger.js');
+
+  if (isTemplateContained(target)) {
+    observeForStampedTarget(target.id);
+    return;
+  }
+
+  injectDebugger(target.id);
+}
+
 
 function getDebugInitEvent(target) {
   return `fx-debugger-ready-${target.id}`;

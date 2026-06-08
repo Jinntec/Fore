@@ -247,13 +247,14 @@ export class FxDebugger extends HTMLElement {
       }
 
       .fx-debugger__panel {
+        display: flex;
         flex: 1 1 auto;
         min-height: 0;
         overflow: auto;
         padding: 1rem;
       }
 
-      .fx-debugger__section + .fx-debugger__section {
+      .fx-debugger__section {
         margin-top: 1.25rem;
       }
 
