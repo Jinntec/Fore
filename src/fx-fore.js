@@ -391,16 +391,27 @@ export class FxFore extends HTMLElement {
   getDebugSnapshot(options = {}) {
     const model = this.model;
 
-    const debugElements = Array.from(this.querySelectorAll('[ref]'))
+    const debugRefElements = Array.from(this.querySelectorAll('[ref]'))
         .filter(element => typeof element.getDebugInfo === 'function');
 
-    const bindings = debugElements
-        .filter(element => element.localName === 'fx-bind')
-        .map(element => element.getDebugInfo());
+    const bindingElements = debugRefElements
+        .filter(element => element.localName === 'fx-bind');
 
-    const boundElements = debugElements
-        .filter(element => element.localName !== 'fx-bind')
-        .map(element => element.getDebugInfo());
+    const boundElementNames = new Set([
+      'fx-control',
+      'fx-output',
+      'fx-upload',
+      'fx-group',
+      'fx-repeat',
+      'fx-switch',
+    ]);
+
+    const boundUiElements = debugRefElements
+        .filter(element => boundElementNames.has(element.localName));
+
+    const bindings = bindingElements.map(element => element.getDebugInfo());
+
+    const boundElements = boundUiElements.map(element => element.getDebugInfo());
 
     return {
       fore: this.getDebugInfo?.() || null,
@@ -417,6 +428,7 @@ export class FxFore extends HTMLElement {
       boundElements,
     };
   }
+
   /**
    * Parse a list of target specs.
    *

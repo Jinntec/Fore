@@ -280,6 +280,55 @@ export class FxDebugger extends HTMLElement {
         min-width: 0;
       }
 
+      .fx-debugger__fore-targets {
+        margin: 0 0 1rem;
+        padding: 0.65rem;
+        border: 1px solid #e3e5ea;
+        border-radius: 0.35rem;
+        background: #fafafa;
+      }
+
+      .fx-debugger__fore-targets-label {
+        margin-bottom: 0.45rem;
+        color: #5f6368;
+        font-size: 0.85rem;
+        font-weight: 700;
+      }
+
+      .fx-debugger__fore-target-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.45rem;
+      }
+
+      .fx-debugger__fore-target {
+        appearance: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        border: 1px solid #c4c7ce;
+        border-radius: 999px;
+        background: #fff;
+        color: #202124;
+        padding: 0.35rem 0.55rem;
+        font: inherit;
+        cursor: pointer;
+      }
+
+      .fx-debugger__fore-target:hover {
+        background: #f1f3f4;
+      }
+
+      .fx-debugger__fore-target--current {
+        border-color: #174ea6;
+        background: #e8f0fe;
+      }
+
+      .fx-debugger__fore-target-state {
+        color: #5f6368;
+        font-size: 0.78rem;
+      }
+
       .fx-debugger__table-wrap {
         max-height: 100%;
         overflow: auto;
@@ -332,8 +381,11 @@ export class FxDebugger extends HTMLElement {
         border: 1px solid #e3e5ea;
         border-radius: 0.35rem;
         background: #f8f9fb;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
         font-size: 0.85rem;
+        line-height: 1.45;
         white-space: pre;
+        tab-size: 2;
       }
 
       .fx-debugger[style*="height"] .fx-debugger__json {
@@ -600,6 +652,14 @@ export class FxDebugger extends HTMLElement {
         font-size: 0.82rem;
         font-weight: 600;
       }
+      .fx-debugger-highlight-target {
+        outline: 3px solid #174ea6 !important;
+        outline-offset: 4px !important;
+        box-shadow: 0 0 0 6px rgba(23, 78, 166, 0.18) !important;
+        transition:
+          outline-color 0.2s ease,
+          box-shadow 0.2s ease !important;
+      }
     `;
   }
 
@@ -667,9 +727,9 @@ export class FxDebugger extends HTMLElement {
       'action-performed',
       'error',
     ];
-
     this._onRefreshClick = this._onRefreshClick.bind(this);
     this._onPanelClick = this._onPanelClick.bind(this);
+    this._onForeTargetClick = this._onForeTargetClick.bind(this);
     this._onForeRefreshDone = this._onForeRefreshDone.bind(this);
 
     this._onResizePointerDown = this._onResizePointerDown.bind(this);
@@ -681,6 +741,7 @@ export class FxDebugger extends HTMLElement {
     this._onDomEventFilterChange = this._onDomEventFilterChange.bind(this);
     this._onCustomEventsApply = this._onCustomEventsApply.bind(this);
     this._onKeyDown = this._onKeyDown.bind(this);
+    this._onForeTargetsChanged = this._onForeTargetsChanged.bind(this);
 
     this._resizeStartY = 0;
     this._resizeStartHeight = 0;
@@ -688,11 +749,18 @@ export class FxDebugger extends HTMLElement {
     this._collapsedStorageKey = 'fore-devtools.fx-debugger.collapsed';
     this._eventSettingsStorageKey = 'fore-devtools.fx-debugger.eventSettings';
     this._activePanelStorageKey = 'fore-devtools.fx-debugger.activePanel';
+    this._foreTargetObserver = null;
+    this._foreTargetRenderQueued = false;
+
+    this._highlightedForeTarget = null;
+    this._highlightedForeTargetTimer = null;
     this._collapsed = false;
+    this._originalBodyPaddingBottom = undefined;
   }
 
   connectedCallback() {
     this.classList.add('fx-debugger');
+    this.ensureGlobalHighlightStyle();
 
     if (!this.hasAttribute('tabindex')) {
       this.setAttribute('tabindex', '0');
@@ -715,9 +783,11 @@ export class FxDebugger extends HTMLElement {
     }
 
     this.attachEventListeners();
+    this.observeForeTargets();
 
     this.refresh();
     this.render();
+    this.applyPageOffset();
     this.waitForForeUpgrade();
   }
 
@@ -728,7 +798,10 @@ export class FxDebugger extends HTMLElement {
       this.fore.removeEventListener('refresh-done', this._onForeRefreshDone);
     }
 
+    this.clearHighlightedForeTarget();
     this.detachEventListeners();
+    this.disconnectForeTargetObserver();
+    this.clearPageOffset();
 
     window.removeEventListener('pointermove', this._onResizePointerMove);
     window.removeEventListener('pointerup', this._onResizePointerUp);
@@ -739,21 +812,10 @@ export class FxDebugger extends HTMLElement {
       return;
     }
 
-    this.detachEventListeners();
-
-    if (this.fore) {
-      this.fore.removeEventListener('refresh-done', this._onForeRefreshDone);
-    }
-
-    this.fore = this.resolveFore();
-
-    if (this.fore) {
-      this.fore.addEventListener('refresh-done', this._onForeRefreshDone);
-    }
-
-    this.attachEventListeners();
-    this.refresh();
-    this.render();
+    this.switchForeTarget(newValue, {
+      updateAttribute: false,
+      resetEvents: false,
+    });
   }
 
   gateForeInitialization() {
@@ -769,12 +831,14 @@ export class FxDebugger extends HTMLElement {
       return;
     }
 
-    this._debugInitEvent = `fx-debugger-ready-${targetId}`;
+    this._debugInitEvent =
+        fore.__debuggerManagedInitEvent || `fx-debugger-ready-${targetId}`;
 
     if (!fore.hasAttribute('init-on')) {
       fore.setAttribute('init-on', this._debugInitEvent);
       fore.setAttribute('init-on-target', 'document');
       fore.__debuggerManagedInitGate = true;
+      fore.__debuggerManagedInitEvent = this._debugInitEvent;
     }
   }
 
@@ -787,6 +851,16 @@ export class FxDebugger extends HTMLElement {
 
     queueMicrotask(() => {
       document.dispatchEvent(new CustomEvent(this._debugInitEvent));
+
+      requestAnimationFrame(() => {
+        if (!this.isConnected) {
+          return;
+        }
+
+        this.refresh();
+        this.render();
+        this.applyPageOffset();
+      });
     });
   }
 
@@ -795,6 +869,17 @@ export class FxDebugger extends HTMLElement {
       if (this.hasAttribute('gate-init')) {
         this.releaseForeInitialization();
       }
+
+      requestAnimationFrame(() => {
+        if (!this.isConnected) {
+          return;
+        }
+
+        this.refresh();
+        this.render();
+        this.applyPageOffset();
+      });
+
       return;
     }
 
@@ -821,12 +906,20 @@ export class FxDebugger extends HTMLElement {
     }
 
     this.attachEventListeners();
-    this.refresh();
-    this.render();
 
     if (this.hasAttribute('gate-init')) {
       this.releaseForeInitialization();
     }
+
+    requestAnimationFrame(() => {
+      if (!this.isConnected) {
+        return;
+      }
+
+      this.refresh();
+      this.render();
+      this.applyPageOffset();
+    });
   }
 
   resolveFore() {
@@ -871,6 +964,7 @@ export class FxDebugger extends HTMLElement {
           ${this.renderTab('graphs', 'Graphs')}
           ${this.renderTab('events', `Events ${this.countBadge(this.eventLog)}`)}
           ${this.renderTab('instances', `Instances ${this.countBadge(this.snapshot?.instances)}`)}
+          ${this.renderTab('bindings', `Bindings ${this.countBadge(this.snapshot?.bindings)}`)}
           ${this.renderTab('modelItems', `Model Items ${this.countBadge(this.snapshot?.modelItems)}`)}
           ${this.renderTab('boundElements', `Bound Elements ${this.countBadge(this.snapshot?.boundElements)}`)}
           ${this.renderTab('raw', 'Raw snapshot')}
@@ -884,9 +978,11 @@ export class FxDebugger extends HTMLElement {
 
     this.querySelector('[data-action="refresh"]')?.addEventListener('click', this._onRefreshClick);
 
-    this.querySelector('[data-action="clear-events"]')?.addEventListener('click', event => {
-      event.stopPropagation();
-      this.clearEvents();
+    this.querySelectorAll('[data-action="clear-events"]').forEach(button => {
+      button.addEventListener('click', event => {
+        event.stopPropagation();
+        this.clearEvents();
+      });
     });
 
     this.querySelectorAll('[data-event-filter]').forEach(input => {
@@ -920,6 +1016,10 @@ export class FxDebugger extends HTMLElement {
 
     this.querySelectorAll('[data-panel]').forEach(button => {
       button.addEventListener('click', this._onPanelClick);
+    });
+
+    this.querySelectorAll('[data-fore-target]').forEach(button => {
+      button.addEventListener('click', this._onForeTargetClick);
     });
 
     this.querySelector('[data-action="resize"]')?.addEventListener(
@@ -984,6 +1084,8 @@ export class FxDebugger extends HTMLElement {
     }
 
     switch (this.activePanel) {
+      case 'bindings':
+        return this.renderBindingsPanel();
       case 'graphs':
         return this.renderGraphsPanel();
       case 'events':
@@ -1010,6 +1112,8 @@ export class FxDebugger extends HTMLElement {
       <section class="fx-debugger__section">
         <h3>Fore</h3>
 
+        ${this.renderForeTargetList()}
+
         <dl class="fx-debugger__details">
           ${this.renderDetail('ID', fore.id)}
           ${this.renderDetail('Ready', fore.ready)}
@@ -1019,11 +1123,130 @@ export class FxDebugger extends HTMLElement {
           ${this.renderDetail('init-on-target', fore.initOnTarget)}
           ${this.renderDetail('ignore-expressions', fore.ignoreExpressions)}
           ${this.renderDetail('Instances', this.snapshot?.instances?.length ?? model.instanceCount)}
+          ${this.renderDetail('Bindings', this.snapshot?.bindings?.length)}
           ${this.renderDetail('Model items', this.snapshot?.modelItems?.length ?? model.modelItemCount)}
           ${this.renderDetail('Bound elements', this.snapshot?.boundElements?.length)}
         </dl>
       </section>
     `;
+  }
+
+  renderForeTargetList() {
+    const fores = this.getAvailableFores();
+
+    if (!fores.length) {
+      return this.renderEmptyPanel('No live fx-fore elements found.');
+    }
+
+    return `
+      <div class="fx-debugger__fore-targets">
+        <div class="fx-debugger__fore-targets-label">Available Fore elements</div>
+
+        <div class="fx-debugger__fore-target-list">
+          ${fores
+        .map(
+            fore => `
+                <button
+                  class="fx-debugger__fore-target ${fore.current ? 'fx-debugger__fore-target--current' : ''}"
+                  type="button"
+                  data-fore-target="${this.escape(fore.id)}"
+                  ${fore.current ? 'aria-current="true"' : ''}>
+                  <code>${this.escape(fore.label)}</code>
+                  <span class="fx-debugger__fore-target-state">
+                    ${fore.ready ? 'ready' : 'not ready'}
+                  </span>
+                </button>
+              `,
+        )
+        .join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  observeForeTargets() {
+    if (this._foreTargetObserver || !document.documentElement) {
+      return;
+    }
+
+    this._foreTargetObserver = new MutationObserver(records => {
+      const hasForeChange = records.some(record =>
+          Array.from(record.addedNodes).some(node => this.nodeContainsFore(node)) ||
+          Array.from(record.removedNodes).some(node => this.nodeContainsFore(node)),
+      );
+
+      if (!hasForeChange) {
+        return;
+      }
+
+      this._onForeTargetsChanged();
+    });
+
+    this._foreTargetObserver.observe(document.documentElement, {
+      childList: true,
+      subtree: true,
+    });
+  }
+
+  disconnectForeTargetObserver() {
+    if (!this._foreTargetObserver) {
+      return;
+    }
+
+    this._foreTargetObserver.disconnect();
+    this._foreTargetObserver = null;
+    this._foreTargetRenderQueued = false;
+  }
+
+  nodeContainsFore(node) {
+    if (!(node instanceof Element)) {
+      return false;
+    }
+
+    if (node.localName === 'fx-fore') {
+      return true;
+    }
+
+    return Boolean(node.querySelector?.('fx-fore'));
+  }
+
+  _onForeTargetsChanged() {
+    if (this._foreTargetRenderQueued) {
+      return;
+    }
+
+    this._foreTargetRenderQueued = true;
+
+    requestAnimationFrame(() => {
+      this._foreTargetRenderQueued = false;
+
+      if (!this.isConnected) {
+        return;
+      }
+
+      /*
+       * Only a re-render is needed to update the available Fore target list.
+       * The current snapshot still belongs to the currently selected target.
+       */
+      this.render();
+      this.applyPageOffset();
+    });
+  }
+
+  getAvailableFores() {
+    return Array.from(document.querySelectorAll('fx-fore')).map((fore, index) => {
+      if (!fore.id) {
+        fore.id = `fx-fore-debug-live-${index + 1}`;
+      }
+
+      return {
+        id: fore.id,
+        label: `#${fore.id}`,
+        localName: fore.localName,
+        ready: fore.ready === true,
+        current: fore === this.fore,
+      };
+    });
   }
 
   renderRawPanel() {
@@ -1549,6 +1772,61 @@ export class FxDebugger extends HTMLElement {
     }
   }
 
+  renderBindingsPanel() {
+    const bindings = this.snapshot?.bindings || [];
+
+    if (!bindings.length) {
+      return this.renderEmptyPanel('No bindings found.');
+    }
+
+    return `
+      <section class="fx-debugger__section">
+        <h3>Bindings</h3>
+
+        <div class="fx-debugger__table-wrap">
+          <table class="fx-debugger__table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Ref</th>
+                <th>Instance</th>
+                <th>Type</th>
+                <th>Calculate</th>
+                <th>Readonly</th>
+                <th>Required</th>
+                <th>Relevant</th>
+                <th>Constraint</th>
+                <th>Datatype</th>
+                <th>Model items</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${bindings
+        .map(
+            bind => `
+                    <tr>
+                      <td>${this.renderCodeOrDash(bind?.id)}</td>
+                      <td>${this.renderCodeOrDash(bind?.ref)}</td>
+                      <td>${this.renderCodeOrDash(bind?.instanceId)}</td>
+                      <td>${this.renderCodeOrDash(bind?.bindType)}</td>
+                      <td>${this.renderCodeOrDash(bind?.calculate)}</td>
+                      <td>${this.renderCodeOrDash(bind?.readonly)}</td>
+                      <td>${this.renderCodeOrDash(bind?.required)}</td>
+                      <td>${this.renderCodeOrDash(bind?.relevant)}</td>
+                      <td>${this.renderCodeOrDash(bind?.constraint)}</td>
+                      <td>${this.renderCodeOrDash(bind?.type)}</td>
+                      <td>${this.renderValue(bind?.modelItemCount)}</td>
+                    </tr>
+                  `,
+        )
+        .join('')}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    `;
+  }
+
   renderInstancesPanel() {
     const instances = this.snapshot?.instances || [];
 
@@ -1717,7 +1995,7 @@ export class FxDebugger extends HTMLElement {
 
   renderJsonBlock(value) {
     return `
-      <pre class="fx-debugger__json"><code>${this.escape(JSON.stringify(value, null, 2))}</code></pre>
+      <pre class="fx-debugger__json">${this.escape(JSON.stringify(value, null, 2))}</pre>
     `;
   }
 
@@ -1787,6 +2065,7 @@ export class FxDebugger extends HTMLElement {
     this._eventFlowDepth = 0;
     this._eventFlowId = 0;
     this.render();
+    this.applyPageOffset();
   }
 
   _onKeyDown(event) {
@@ -1813,7 +2092,7 @@ export class FxDebugger extends HTMLElement {
       return false;
     }
 
-    const localName = target.localName;
+    const { localName } = target;
 
     return (
         localName === 'input' ||
@@ -1833,6 +2112,7 @@ export class FxDebugger extends HTMLElement {
     this.eventFilters[key] = event.currentTarget.checked;
     this.storeEventSettings();
     this.render();
+    this.applyPageOffset();
   }
 
   _onDomEventFilterChange(event) {
@@ -1845,6 +2125,7 @@ export class FxDebugger extends HTMLElement {
     this.domEventFilters[key] = event.currentTarget.checked;
     this.storeEventSettings();
     this.render();
+    this.applyPageOffset();
   }
 
   _onCustomEventsApply() {
@@ -1857,12 +2138,14 @@ export class FxDebugger extends HTMLElement {
 
     this.storeEventSettings();
     this.render();
+    this.applyPageOffset();
   }
 
   _onRefreshClick(event) {
     event.stopPropagation();
     this.refresh();
     this.render();
+    this.applyPageOffset();
   }
 
   _onPanelClick(event) {
@@ -1876,11 +2159,66 @@ export class FxDebugger extends HTMLElement {
     this.storeActivePanel();
     this.refresh();
     this.render();
+    this.applyPageOffset();
+  }
+
+  _onForeTargetClick(event) {
+    const targetId = event.currentTarget?.dataset?.foreTarget;
+
+    if (!targetId) {
+      return;
+    }
+
+    if (this.fore?.id === targetId) {
+      this.highlightForeTarget(this.fore);
+      return;
+    }
+
+    this.switchForeTarget(targetId);
   }
 
   _onForeRefreshDone() {
     this.refresh();
     this.render();
+    this.applyPageOffset();
+  }
+
+  switchForeTarget(targetId, options = {}) {
+    const { updateAttribute = true, resetEvents = true, highlight = true } = options;
+    const nextFore = document.getElementById(targetId);
+
+    if (!nextFore || nextFore.localName !== 'fx-fore') {
+      return;
+    }
+
+    this.detachEventListeners();
+
+    if (this.fore) {
+      this.fore.removeEventListener('refresh-done', this._onForeRefreshDone);
+    }
+
+    this.fore = nextFore;
+
+    if (updateAttribute && this.getAttribute('for') !== targetId) {
+      this.setAttribute('for', targetId);
+    }
+
+    this.fore.addEventListener('refresh-done', this._onForeRefreshDone);
+    this.attachEventListeners();
+
+    if (resetEvents) {
+      this.eventLog = [];
+      this._eventFlowDepth = 0;
+      this._eventFlowId = 0;
+    }
+
+    this.refresh();
+    this.render();
+    this.applyPageOffset();
+
+    if (highlight) {
+      this.highlightForeTarget(this.fore);
+    }
   }
 
   getObservedEventTypes() {
@@ -1924,6 +2262,7 @@ export class FxDebugger extends HTMLElement {
 
     if (this.activePanel === 'events') {
       this.render();
+      this.applyPageOffset();
     }
   }
 
@@ -1995,7 +2334,7 @@ export class FxDebugger extends HTMLElement {
   }
 
   summarizeDomEvent(event) {
-    const target = event.target;
+    const { target } = event;
 
     const summary = {
       type: event.type,
@@ -2135,9 +2474,16 @@ export class FxDebugger extends HTMLElement {
 
       if (
           activePanel &&
-          ['fore', 'graphs', 'events', 'instances', 'modelItems', 'boundElements', 'raw'].includes(
-              activePanel,
-          )
+          [
+            'fore',
+            'graphs',
+            'events',
+            'instances',
+            'bindings',
+            'modelItems',
+            'boundElements',
+            'raw',
+          ].includes(activePanel)
       ) {
         this.activePanel = activePanel;
       }
@@ -2169,11 +2515,13 @@ export class FxDebugger extends HTMLElement {
     const clampedHeight = Math.max(minHeight, Math.min(maxHeight, nextHeight));
 
     this.style.height = `${clampedHeight}px`;
+    this.applyPageOffset();
   }
 
   _onResizePointerUp() {
     this.classList.remove('fx-debugger--resizing');
     this.storeHeight();
+    this.applyPageOffset();
 
     window.removeEventListener('pointermove', this._onResizePointerMove);
     window.removeEventListener('pointerup', this._onResizePointerUp);
@@ -2219,6 +2567,7 @@ export class FxDebugger extends HTMLElement {
     }
 
     this.render();
+    this.applyPageOffset();
   }
 
   collapsePanel() {
@@ -2229,6 +2578,7 @@ export class FxDebugger extends HTMLElement {
     this.style.height = `${this.getCollapsedHeight()}px`;
 
     this.storeCollapsedState();
+    this.applyPageOffset();
   }
 
   expandPanel() {
@@ -2237,6 +2587,7 @@ export class FxDebugger extends HTMLElement {
 
     this.restoreHeight();
     this.storeCollapsedState();
+    this.applyPageOffset();
   }
 
   storeCollapsedState() {
@@ -2259,11 +2610,16 @@ export class FxDebugger extends HTMLElement {
     if (this._collapsed) {
       requestAnimationFrame(() => {
         this.style.height = `${this.getCollapsedHeight()}px`;
+        this.applyPageOffset();
       });
       return;
     }
 
     this.restoreHeight();
+
+    requestAnimationFrame(() => {
+      this.applyPageOffset();
+    });
   }
 
   getCollapsedHeight() {
@@ -2271,6 +2627,88 @@ export class FxDebugger extends HTMLElement {
     const headerHeight = header?.getBoundingClientRect().height || 56;
 
     return Math.ceil(headerHeight);
+  }
+
+  applyPageOffset() {
+    if (!document.body) {
+      return;
+    }
+
+    if (this._originalBodyPaddingBottom === undefined) {
+      this._originalBodyPaddingBottom = document.body.style.paddingBottom || '';
+    }
+
+    const height = Math.ceil(this.getBoundingClientRect().height || this.getCollapsedHeight());
+    document.body.style.paddingBottom = `${height}px`;
+  }
+
+  clearPageOffset() {
+    if (!document.body) {
+      return;
+    }
+
+    if (this._originalBodyPaddingBottom !== undefined) {
+      document.body.style.paddingBottom = this._originalBodyPaddingBottom;
+      this._originalBodyPaddingBottom = undefined;
+      return;
+    }
+
+    document.body.style.paddingBottom = '';
+  }
+
+  ensureGlobalHighlightStyle() {
+    const styleId = 'fx-debugger-global-highlight-style';
+
+    if (document.getElementById(styleId)) {
+      return;
+    }
+
+    const style = document.createElement('style');
+    style.id = styleId;
+    style.textContent = `
+    .fx-debugger-highlight-target {
+      outline: 3px solid #174ea6 !important;
+      outline-offset: 4px !important;
+      box-shadow: 0 0 0 6px rgba(23, 78, 166, 0.18) !important;
+      transition:
+        outline-color 0.2s ease,
+        box-shadow 0.2s ease !important;
+    }
+  `;
+
+    document.head.appendChild(style);
+  }
+
+  highlightForeTarget(target) {
+    if (!target) {
+      return;
+    }
+
+    this.clearHighlightedForeTarget();
+
+    this._highlightedForeTarget = target;
+    target.classList.add('fx-debugger-highlight-target');
+
+    target.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+      inline: 'nearest',
+    });
+
+    window.clearTimeout(this._highlightedForeTargetTimer);
+    this._highlightedForeTargetTimer = window.setTimeout(() => {
+      this.clearHighlightedForeTarget();
+    }, 1600);
+  }
+
+  clearHighlightedForeTarget() {
+    window.clearTimeout(this._highlightedForeTargetTimer);
+    this._highlightedForeTargetTimer = null;
+
+    if (this._highlightedForeTarget) {
+      this._highlightedForeTarget.classList.remove('fx-debugger-highlight-target');
+      this._highlightedForeTarget = null;
+    }
   }
 }
 
