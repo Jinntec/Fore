@@ -660,6 +660,21 @@ export class FxDebugger extends HTMLElement {
           outline-color 0.2s ease,
           box-shadow 0.2s ease !important;
       }
+      .fx-debugger__element-link {
+        appearance: none;
+        border: none;
+        background: transparent;
+        color: #174ea6;
+        padding: 0;
+        font: inherit;
+        cursor: pointer;
+        text-decoration: underline;
+        text-underline-offset: 0.15em;
+      }
+      
+      .fx-debugger__element-link:hover {
+        color: #0b57d0;
+      }
     `;
   }
 
@@ -730,6 +745,7 @@ export class FxDebugger extends HTMLElement {
     this._onRefreshClick = this._onRefreshClick.bind(this);
     this._onPanelClick = this._onPanelClick.bind(this);
     this._onForeTargetClick = this._onForeTargetClick.bind(this);
+    this._onBoundElementClick = this._onBoundElementClick.bind(this);
     this._onForeRefreshDone = this._onForeRefreshDone.bind(this);
 
     this._onResizePointerDown = this._onResizePointerDown.bind(this);
@@ -752,6 +768,8 @@ export class FxDebugger extends HTMLElement {
     this._foreTargetObserver = null;
     this._foreTargetRenderQueued = false;
 
+    this._highlightedElement = null;
+    this._highlightedElementTimer = null;
     this._highlightedForeTarget = null;
     this._highlightedForeTargetTimer = null;
     this._collapsed = false;
@@ -798,7 +816,7 @@ export class FxDebugger extends HTMLElement {
       this.fore.removeEventListener('refresh-done', this._onForeRefreshDone);
     }
 
-    this.clearHighlightedForeTarget();
+    this.clearHighlightedPageElement();
     this.detachEventListeners();
     this.disconnectForeTargetObserver();
     this.clearPageOffset();
@@ -831,8 +849,7 @@ export class FxDebugger extends HTMLElement {
       return;
     }
 
-    this._debugInitEvent =
-        fore.__debuggerManagedInitEvent || `fx-debugger-ready-${targetId}`;
+    this._debugInitEvent = fore.__debuggerManagedInitEvent || `fx-debugger-ready-${targetId}`;
 
     if (!fore.hasAttribute('init-on')) {
       fore.setAttribute('init-on', this._debugInitEvent);
@@ -934,9 +951,9 @@ export class FxDebugger extends HTMLElement {
 
   refresh() {
     this.snapshot =
-        this.fore?.getDebugSnapshot?.({
-          includeGraphs: this.activePanel === 'graphs',
-        }) || null;
+      this.fore?.getDebugSnapshot?.({
+        includeGraphs: this.activePanel === 'graphs',
+      }) || null;
   }
 
   render() {
@@ -994,8 +1011,8 @@ export class FxDebugger extends HTMLElement {
     });
 
     this.querySelector('[data-action="apply-custom-events"]')?.addEventListener(
-        'click',
-        this._onCustomEventsApply,
+      'click',
+      this._onCustomEventsApply,
     );
 
     const customEventsInput = this.querySelector('[data-custom-events-input]');
@@ -1022,9 +1039,13 @@ export class FxDebugger extends HTMLElement {
       button.addEventListener('click', this._onForeTargetClick);
     });
 
+    this.querySelectorAll('[data-bound-element-index]').forEach(button => {
+      button.addEventListener('click', this._onBoundElementClick);
+    });
+
     this.querySelector('[data-action="resize"]')?.addEventListener(
-        'pointerdown',
-        this._onResizePointerDown,
+      'pointerdown',
+      this._onResizePointerDown,
     );
   }
 
@@ -1144,8 +1165,8 @@ export class FxDebugger extends HTMLElement {
 
         <div class="fx-debugger__fore-target-list">
           ${fores
-        .map(
-            fore => `
+            .map(
+              fore => `
                 <button
                   class="fx-debugger__fore-target ${fore.current ? 'fx-debugger__fore-target--current' : ''}"
                   type="button"
@@ -1157,8 +1178,8 @@ export class FxDebugger extends HTMLElement {
                   </span>
                 </button>
               `,
-        )
-        .join('')}
+            )
+            .join('')}
         </div>
       </div>
     `;
@@ -1170,7 +1191,8 @@ export class FxDebugger extends HTMLElement {
     }
 
     this._foreTargetObserver = new MutationObserver(records => {
-      const hasForeChange = records.some(record =>
+      const hasForeChange = records.some(
+        record =>
           Array.from(record.addedNodes).some(node => this.nodeContainsFore(node)) ||
           Array.from(record.removedNodes).some(node => this.nodeContainsFore(node)),
       );
@@ -1247,6 +1269,25 @@ export class FxDebugger extends HTMLElement {
         current: fore === this.fore,
       };
     });
+  }
+
+  getCurrentBoundDomElements() {
+    if (!this.fore) {
+      return [];
+    }
+
+    const boundElementNames = new Set([
+      'fx-control',
+      'fx-output',
+      'fx-upload',
+      'fx-group',
+      'fx-repeat',
+      'fx-switch',
+    ]);
+
+    return Array.from(this.fore.querySelectorAll('[ref]')).filter(element =>
+        boundElementNames.has(element.localName),
+    );
   }
 
   renderRawPanel() {
@@ -1336,8 +1377,8 @@ export class FxDebugger extends HTMLElement {
           </thead>
           <tbody>
             ${order
-        .map(
-            item => `
+              .map(
+                item => `
                   <tr>
                     <td>${this.renderValue(item?.index)}</td>
                     <td>${this.renderCodeOrDash(item?.path)}</td>
@@ -1350,8 +1391,8 @@ export class FxDebugger extends HTMLElement {
                     <td>${this.renderValue(item?.dependants?.length || 0)}</td>
                   </tr>
                 `,
-        )
-        .join('')}
+              )
+              .join('')}
           </tbody>
         </table>
       </div>
@@ -1363,7 +1404,7 @@ export class FxDebugger extends HTMLElement {
 
     if (!this.eventLog.length) {
       return this.renderEmptyPanel(
-          'No Fore events captured yet. Interact with the form or press Refresh.',
+        'No Fore events captured yet. Interact with the form or press Refresh.',
       );
     }
 
@@ -1384,10 +1425,10 @@ export class FxDebugger extends HTMLElement {
         ${this.renderEventFilters()}
 
         ${
-        visibleEvents.length
+          visibleEvents.length
             ? this.renderEventTable(visibleEvents)
             : this.renderEmptyPanel('No events match the current filters.')
-    }
+        }
       </section>
     `;
   }
@@ -1409,7 +1450,7 @@ export class FxDebugger extends HTMLElement {
       <fieldset class="fx-debugger__event-filters">
         <legend class="fx-debugger__muted">Show events</legend>
         ${filters
-        .map(
+          .map(
             ([key, label]) => `
               <label class="fx-debugger__event-filter">
                 <input
@@ -1420,8 +1461,8 @@ export class FxDebugger extends HTMLElement {
                 <span class="fx-debugger__event-filter-count">${counts[key] || 0}</span>
               </label>
             `,
-        )
-        .join('')}
+          )
+          .join('')}
         ${this.renderDomEventFilters()}
         ${this.renderCustomEventInput()}
       </fieldset>
@@ -1443,7 +1484,7 @@ export class FxDebugger extends HTMLElement {
       <div class="fx-debugger__dom-event-filters">
         <span class="fx-debugger__dom-event-filter-label">DOM types</span>
         ${filters
-        .map(
+          .map(
             ([key, label]) => `
               <label class="fx-debugger__event-filter">
                 <input
@@ -1455,8 +1496,8 @@ export class FxDebugger extends HTMLElement {
                 <span class="fx-debugger__event-filter-count">${counts[key] || 0}</span>
               </label>
             `,
-        )
-        .join('')}
+          )
+          .join('')}
       </div>
     `;
   }
@@ -1492,8 +1533,8 @@ export class FxDebugger extends HTMLElement {
           </thead>
           <tbody>
             ${events
-        .map(
-            entry => `
+              .map(
+                entry => `
                   <tr class="${this.getEventRowClass(entry)}">
                     <td>${this.renderValue(entry.index)}</td>
                     <td>${this.renderCodeOrDash(entry.timeLabel)}</td>
@@ -1503,8 +1544,8 @@ export class FxDebugger extends HTMLElement {
                     <td>${this.renderEventDetail(entry)}</td>
                   </tr>
                 `,
-        )
-        .join('')}
+              )
+              .join('')}
           </tbody>
         </table>
       </div>
@@ -1596,9 +1637,9 @@ export class FxDebugger extends HTMLElement {
 
   getEventNodeClass(entry) {
     if (
-        !entry.flowId &&
-        entry.type !== 'outermost-action-start' &&
-        entry.type !== 'outermost-action-end'
+      !entry.flowId &&
+      entry.type !== 'outermost-action-start' &&
+      entry.type !== 'outermost-action-end'
     ) {
       return 'fx-debugger__event-node--outside';
     }
@@ -1718,12 +1759,12 @@ export class FxDebugger extends HTMLElement {
 
     const action = detail.action || detail.actionClass || 'action';
     const phase =
-        detail.phase ||
-        (entry.type === 'action-start'
-            ? 'start'
-            : entry.type === 'action-end' || entry.type === 'action-performed'
-                ? 'end'
-                : '');
+      detail.phase ||
+      (entry.type === 'action-start'
+        ? 'start'
+        : entry.type === 'action-end' || entry.type === 'action-performed'
+          ? 'end'
+          : '');
 
     const event = detail.event ? `event=${detail.event}` : '';
     const ref = detail.ref ? `ref=${detail.ref}` : '';
@@ -1752,10 +1793,10 @@ export class FxDebugger extends HTMLElement {
         <span class="fx-debugger__action-pill">${this.escape(String(action))}</span>
         ${phase ? `<span class="fx-debugger__action-phase">${this.escape(String(phase))}</span>` : ''}
         ${
-        parts.length
+          parts.length
             ? `<code>${this.escape(parts.join(' · '))}</code>`
             : '<span class="fx-debugger__muted">—</span>'
-    }
+        }
       </div>
     `;
   }
@@ -1802,8 +1843,8 @@ export class FxDebugger extends HTMLElement {
             </thead>
             <tbody>
               ${bindings
-        .map(
-            bind => `
+                .map(
+                  bind => `
                     <tr>
                       <td>${this.renderCodeOrDash(bind?.id)}</td>
                       <td>${this.renderCodeOrDash(bind?.ref)}</td>
@@ -1818,8 +1859,8 @@ export class FxDebugger extends HTMLElement {
                       <td>${this.renderValue(bind?.modelItemCount)}</td>
                     </tr>
                   `,
-        )
-        .join('')}
+                )
+                .join('')}
             </tbody>
           </table>
         </div>
@@ -1853,8 +1894,8 @@ export class FxDebugger extends HTMLElement {
             </thead>
             <tbody>
               ${instances
-        .map(
-            instance => `
+                .map(
+                  instance => `
                     <tr>
                       <td><code>${this.escape(instance?.instanceId || instance?.id || '')}</code></td>
                       <td>${this.escape(instance?.type || '')}</td>
@@ -1865,8 +1906,8 @@ export class FxDebugger extends HTMLElement {
                       <td>${this.escape(instance?.mutationCount ?? '')}</td>
                     </tr>
                   `,
-        )
-        .join('')}
+                )
+                .join('')}
             </tbody>
           </table>
         </div>
@@ -1903,8 +1944,8 @@ export class FxDebugger extends HTMLElement {
             </thead>
             <tbody>
               ${modelItems
-        .map(
-            item => `
+                .map(
+                  item => `
                     <tr>
                       <td>${this.renderCodeOrDash(item?.path)}</td>
                       <td>${this.renderCodeOrDash(item?.ref)}</td>
@@ -1918,8 +1959,8 @@ export class FxDebugger extends HTMLElement {
                       <td>${this.escape(item?.observerCount ?? '')}</td>
                     </tr>
                   `,
-        )
-        .join('')}
+                )
+                .join('')}
             </tbody>
           </table>
         </div>
@@ -1935,49 +1976,56 @@ export class FxDebugger extends HTMLElement {
     }
 
     return `
-      <section class="fx-debugger__section">
-        <h3>Bound Elements</h3>
+    <section class="fx-debugger__section">
+      <h3>Bound Elements</h3>
 
-        <div class="fx-debugger__table-wrap">
-          <table class="fx-debugger__table">
-            <thead>
-              <tr>
-                <th>Element</th>
-                <th>ID</th>
-                <th>Ref</th>
-                <th>Model item path</th>
-                <th>Instance</th>
-                <th>Value</th>
-                <th>Required</th>
-                <th>Relevant</th>
-                <th>Readonly</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${boundElements
+      <div class="fx-debugger__table-wrap">
+        <table class="fx-debugger__table">
+          <thead>
+            <tr>
+              <th>Element</th>
+              <th>ID</th>
+              <th>Ref</th>
+              <th>Model item path</th>
+              <th>Instance</th>
+              <th>Value</th>
+              <th>Required</th>
+              <th>Relevant</th>
+              <th>Readonly</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${boundElements
         .map(
-            element => `
-                    <tr>
-                      <td><code>${this.escape(element?.localName || '')}</code></td>
-                      <td>${this.renderCodeOrDash(element?.id)}</td>
-                      <td>${this.renderCodeOrDash(element?.ref)}</td>
-                      <td>${this.renderCodeOrDash(element?.modelItemPath)}</td>
-                      <td>${this.renderCodeOrDash(element?.instanceId)}</td>
-                      <td>${this.renderValue(element?.value)}</td>
-                      <td>${this.formatBoolean(element?.required)}</td>
-                      <td>${this.formatBoolean(element?.relevant)}</td>
-                      <td>${this.formatBoolean(element?.readonly)}</td>
-                    </tr>
-                  `,
+            (element, index) => `
+                  <tr>
+                    <td>
+                      <button
+                        class="fx-debugger__element-link"
+                        type="button"
+                        data-bound-element-index="${index}"
+                        title="Highlight this bound element in the page">
+                        <code>${this.escape(element?.localName || '')}</code>
+                      </button>
+                    </td>
+                    <td>${this.renderCodeOrDash(element?.id)}</td>
+                    <td>${this.renderCodeOrDash(element?.ref)}</td>
+                    <td>${this.renderCodeOrDash(element?.modelItemPath)}</td>
+                    <td>${this.renderCodeOrDash(element?.instanceId)}</td>
+                    <td>${this.renderValue(element?.value)}</td>
+                    <td>${this.formatBoolean(element?.required)}</td>
+                    <td>${this.formatBoolean(element?.relevant)}</td>
+                    <td>${this.formatBoolean(element?.readonly)}</td>
+                  </tr>
+                `,
         )
         .join('')}
-            </tbody>
-          </table>
-        </div>
-      </section>
-    `;
+          </tbody>
+        </table>
+      </div>
+    </section>
+  `;
   }
-
   renderEmptyPanel(message) {
     return `
       <div class="fx-debugger__empty">
@@ -2053,11 +2101,11 @@ export class FxDebugger extends HTMLElement {
 
   escape(value) {
     return String(value)
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#039;');
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#039;');
   }
 
   clearEvents() {
@@ -2095,10 +2143,10 @@ export class FxDebugger extends HTMLElement {
     const { localName } = target;
 
     return (
-        localName === 'input' ||
-        localName === 'textarea' ||
-        localName === 'select' ||
-        target.isContentEditable === true
+      localName === 'input' ||
+      localName === 'textarea' ||
+      localName === 'select' ||
+      target.isContentEditable === true
     );
   }
 
@@ -2175,6 +2223,54 @@ export class FxDebugger extends HTMLElement {
     }
 
     this.switchForeTarget(targetId);
+  }
+
+  _onBoundElementClick(event) {
+    const index = Number.parseInt(event.currentTarget?.dataset?.boundElementIndex, 10);
+
+    if (!Number.isFinite(index)) {
+      return;
+    }
+
+    const element = this.getCurrentBoundDomElements()[index];
+
+    if (!element) {
+      return;
+    }
+
+    this.highlightPageElement(element);
+  }
+
+  highlightPageElement(element) {
+    if (!element) {
+      return;
+    }
+
+    this.clearHighlightedPageElement();
+
+    this._highlightedElement = element;
+    element.classList.add('fx-debugger-highlight-target');
+
+    element.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+      inline: 'nearest',
+    });
+
+    window.clearTimeout(this._highlightedElementTimer);
+    this._highlightedElementTimer = window.setTimeout(() => {
+      this.clearHighlightedPageElement();
+    }, 1600);
+  }
+
+  clearHighlightedPageElement() {
+    window.clearTimeout(this._highlightedElementTimer);
+    this._highlightedElementTimer = null;
+
+    if (this._highlightedElement) {
+      this._highlightedElement.classList.remove('fx-debugger-highlight-target');
+      this._highlightedElement = null;
+    }
   }
 
   _onForeRefreshDone() {
@@ -2404,24 +2500,24 @@ export class FxDebugger extends HTMLElement {
 
   parseCustomEventTypes(value) {
     return Array.from(
-        new Set(
-            String(value || '')
-                .split(/[\s,]+/)
-                .map(type => type.trim())
-                .filter(Boolean),
-        ),
+      new Set(
+        String(value || '')
+          .split(/[\s,]+/)
+          .map(type => type.trim())
+          .filter(Boolean),
+      ),
     );
   }
 
   storeEventSettings() {
     try {
       localStorage.setItem(
-          this._eventSettingsStorageKey,
-          JSON.stringify({
-            eventFilters: this.eventFilters,
-            domEventFilters: this.domEventFilters,
-            customEventTypes: this.customEventTypes,
-          }),
+        this._eventSettingsStorageKey,
+        JSON.stringify({
+          eventFilters: this.eventFilters,
+          domEventFilters: this.domEventFilters,
+          customEventTypes: this.customEventTypes,
+        }),
       );
     } catch (error) {
       // Ignore storage errors, e.g. private mode or disabled localStorage.
@@ -2473,17 +2569,17 @@ export class FxDebugger extends HTMLElement {
       const activePanel = localStorage.getItem(this._activePanelStorageKey);
 
       if (
-          activePanel &&
-          [
-            'fore',
-            'graphs',
-            'events',
-            'instances',
-            'bindings',
-            'modelItems',
-            'boundElements',
-            'raw',
-          ].includes(activePanel)
+        activePanel &&
+        [
+          'fore',
+          'graphs',
+          'events',
+          'instances',
+          'bindings',
+          'modelItems',
+          'boundElements',
+          'raw',
+        ].includes(activePanel)
       ) {
         this.activePanel = activePanel;
       }
@@ -2666,13 +2762,26 @@ export class FxDebugger extends HTMLElement {
     const style = document.createElement('style');
     style.id = styleId;
     style.textContent = `
-    .fx-debugger-highlight-target {
-      outline: 3px solid #174ea6 !important;
-      outline-offset: 4px !important;
-      box-shadow: 0 0 0 6px rgba(23, 78, 166, 0.18) !important;
+    .fx-debugger-highlight-overlay {
+      position: fixed;
+      z-index: 2147483646;
+      pointer-events: none;
+      border: 3px solid #174ea6;
+      border-radius: 0.35rem;
+      box-shadow:
+        0 0 0 6px rgba(23, 78, 166, 0.18),
+        0 0 1.25rem rgba(23, 78, 166, 0.35);
+      background: rgba(23, 78, 166, 0.04);
       transition:
-        outline-color 0.2s ease,
-        box-shadow 0.2s ease !important;
+        left 0.12s ease,
+        top 0.12s ease,
+        width 0.12s ease,
+        height 0.12s ease,
+        opacity 0.2s ease;
+    }
+
+    .fx-debugger-highlight-overlay.fx-debugger-highlight-overlay--fade {
+      opacity: 0;
     }
   `;
 
@@ -2680,25 +2789,7 @@ export class FxDebugger extends HTMLElement {
   }
 
   highlightForeTarget(target) {
-    if (!target) {
-      return;
-    }
-
-    this.clearHighlightedForeTarget();
-
-    this._highlightedForeTarget = target;
-    target.classList.add('fx-debugger-highlight-target');
-
-    target.scrollIntoView({
-      behavior: 'smooth',
-      block: 'center',
-      inline: 'nearest',
-    });
-
-    window.clearTimeout(this._highlightedForeTargetTimer);
-    this._highlightedForeTargetTimer = window.setTimeout(() => {
-      this.clearHighlightedForeTarget();
-    }, 1600);
+    this.highlightPageElement(target);
   }
 
   clearHighlightedForeTarget() {
