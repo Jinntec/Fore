@@ -115,7 +115,7 @@
         <section class="demo">
             <h2>Immediate inclusion</h2>
             <p>The included content is loaded immediately into the page. Usually used for
-            modularizing pages for easier editing.</p>
+                <b>modularizing</b> pages for easier editing.</p>
             <demo-snippet>
                 <template>
 <fx-include src="external-fragment.html" immediate></fx-include>
@@ -125,7 +125,7 @@
 
         <section class="demo">
             <h2>Inclusion on event</h2>
-            <p>Inclusion when receiving configured event</p>
+            <p>Inclusion when receiving configured event. Used for <b>lazy-loading</b> sections.</p>
             <section>
                 <p>Default behavior: loads once and removes the event listener.</p>
                 <demo-snippet>
@@ -185,7 +185,7 @@
 
             <section>
                 <h2>External include</h2>
-                <p>Loads an external HTML file once and selects one fragment from it.</p>
+                <p>Loads an external HTML file once and selects one fragment from it using a CSS selector.</p>
 
                 <button id="load-external" type="button">Load external fragment</button>
                 <demo-snippet>
