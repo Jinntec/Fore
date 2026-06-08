@@ -391,23 +391,32 @@ export class FxFore extends HTMLElement {
   getDebugSnapshot(options = {}) {
     const model = this.model;
 
+    const debugElements = Array.from(this.querySelectorAll('[ref]'))
+        .filter(element => typeof element.getDebugInfo === 'function');
+
+    const bindings = debugElements
+        .filter(element => element.localName === 'fx-bind')
+        .map(element => element.getDebugInfo());
+
+    const boundElements = debugElements
+        .filter(element => element.localName !== 'fx-bind')
+        .map(element => element.getDebugInfo());
+
     return {
       fore: this.getDebugInfo?.() || null,
 
-      model: model?.getDebugInfo?.({
-        includeGraphs: options.includeGraphs === true,
-      }) || null,
+      model:
+          model?.getDebugInfo?.({
+            includeGraphs: options.includeGraphs === true,
+          }) || null,
 
       instances: model?.instances?.map(instance => instance.getDebugInfo?.()) || [],
-
       modelItems: model?.modelItems?.map(item => item.getDebugInfo?.()) || [],
 
-      boundElements: Array.from(this.querySelectorAll('[ref]'))
-          .filter(el => typeof el.getDebugInfo === 'function')
-          .map(el => el.getDebugInfo()),
+      bindings,
+      boundElements,
     };
   }
-
   /**
    * Parse a list of target specs.
    *

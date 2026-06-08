@@ -19,6 +19,7 @@
 <fx-fore id="todo">
 
   <fx-model id="record">
+    <fx-send event="model-construct-done" submission="load"></fx-send>
     <fx-instance>
       <data>
         <task complete="false" due="">a</task>
@@ -88,6 +89,7 @@
     <fx-send submission="save" event="value-changed"></fx-send>
   </fx-control>
 
+  <fx-send submission="save" event="value-changed"></fx-send>
   <fx-repeat id="r-task" ref="task">
     <template>
       <div data-cy="task-{count(preceding-sibling::task)}">

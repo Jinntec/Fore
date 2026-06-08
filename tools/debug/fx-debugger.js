@@ -847,11 +847,11 @@ export class FxDebugger extends HTMLElement {
         ${this.renderTab('graphs', 'Graphs')}
         ${this.renderTab('events', `Events ${this.countBadge(this.eventLog)}`)}
         ${this.renderTab('instances', `Instances ${this.countBadge(this.snapshot?.instances)}`)}
+        ${this.renderTab('bindings', `Bindings ${this.countBadge(this.snapshot?.bindings)}`)}
         ${this.renderTab('modelItems', `Model Items ${this.countBadge(this.snapshot?.modelItems)}`)}
         ${this.renderTab('boundElements', `Bound Elements ${this.countBadge(this.snapshot?.boundElements)}`)}
         ${this.renderTab('raw', 'Raw snapshot')}
       </nav>
-
       <main class="fx-debugger__panel">
         ${this.renderActivePanel()}
       </main>
@@ -957,12 +957,69 @@ export class FxDebugger extends HTMLElement {
     `;
   }
 
+  renderBindingsPanel() {
+    const bindings = this.snapshot?.bindings || [];
+
+    if (!bindings.length) {
+      return this.renderEmptyPanel('No bindings found.');
+    }
+
+    return `
+    <section class="fx-debugger__section">
+      <h3>Bindings</h3>
+
+      <div class="fx-debugger__table-wrap">
+        <table class="fx-debugger__table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Ref</th>
+              <th>Instance</th>
+              <th>Type</th>
+              <th>Calculate</th>
+              <th>Readonly</th>
+              <th>Required</th>
+              <th>Relevant</th>
+              <th>Constraint</th>
+              <th>Datatype</th>
+              <th>Model items</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${bindings
+              .map(
+                bind => `
+                  <tr>
+                    <td>${this.renderCodeOrDash(bind?.id)}</td>
+                    <td>${this.renderCodeOrDash(bind?.ref)}</td>
+                    <td>${this.renderCodeOrDash(bind?.instanceId)}</td>
+                    <td>${this.renderCodeOrDash(bind?.bindType)}</td>
+                    <td>${this.renderCodeOrDash(bind?.calculate)}</td>
+                    <td>${this.renderCodeOrDash(bind?.readonly)}</td>
+                    <td>${this.renderCodeOrDash(bind?.required)}</td>
+                    <td>${this.renderCodeOrDash(bind?.relevant)}</td>
+                    <td>${this.renderCodeOrDash(bind?.constraint)}</td>
+                    <td>${this.renderCodeOrDash(bind?.type)}</td>
+                    <td>${this.renderValue(bind?.modelItemCount)}</td>
+                  </tr>
+                `,
+              )
+              .join('')}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  `;
+  }
+
   renderActivePanel() {
     if (!this.snapshot) {
       return this.renderEmptyPanel('No debug snapshot available.');
     }
 
     switch (this.activePanel) {
+      case 'bindings':
+        return this.renderBindingsPanel();
       case 'graphs':
         return this.renderGraphsPanel();
       case 'events':
@@ -2107,9 +2164,16 @@ export class FxDebugger extends HTMLElement {
 
       if (
         activePanel &&
-        ['fore', 'graphs', 'events', 'instances', 'modelItems', 'boundElements', 'raw'].includes(
-          activePanel,
-        )
+        [
+          'fore',
+          'graphs',
+          'events',
+          'instances',
+          'bindings',
+          'modelItems',
+          'boundElements',
+          'raw',
+        ].includes(activePanel)
       ) {
         this.activePanel = activePanel;
       }
