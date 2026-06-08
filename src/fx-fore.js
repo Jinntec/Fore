@@ -413,6 +413,10 @@ export class FxFore extends HTMLElement {
 
     const boundElements = boundUiElements.map(element => element.getDebugInfo());
 
+    const submissions = Array.from(this.querySelectorAll('fx-submission'))
+        .filter(element => typeof element.getDebugInfo === 'function')
+        .map(element => element.getDebugInfo());
+
     return {
       fore: this.getDebugInfo?.() || null,
 
@@ -426,6 +430,7 @@ export class FxFore extends HTMLElement {
 
       bindings,
       boundElements,
+      submissions
     };
   }
 

@@ -982,11 +982,11 @@ export class FxDebugger extends HTMLElement {
           ${this.renderTab('events', `Events ${this.countBadge(this.eventLog)}`)}
           ${this.renderTab('instances', `Instances ${this.countBadge(this.snapshot?.instances)}`)}
           ${this.renderTab('bindings', `Bindings ${this.countBadge(this.snapshot?.bindings)}`)}
+          ${this.renderTab('submissions', `Submissions ${this.countBadge(this.snapshot?.submissions)}`)}
           ${this.renderTab('modelItems', `Model Items ${this.countBadge(this.snapshot?.modelItems)}`)}
           ${this.renderTab('boundElements', `Bound Elements ${this.countBadge(this.snapshot?.boundElements)}`)}
           ${this.renderTab('raw', 'Raw snapshot')}
         </nav>
-
         <main class="fx-debugger__panel">
           ${this.renderActivePanel()}
         </main>
@@ -1107,6 +1107,8 @@ export class FxDebugger extends HTMLElement {
     switch (this.activePanel) {
       case 'bindings':
         return this.renderBindingsPanel();
+      case 'submissions':
+        return this.renderSubmissionsPanel();
       case 'graphs':
         return this.renderGraphsPanel();
       case 'events':
@@ -1130,26 +1132,27 @@ export class FxDebugger extends HTMLElement {
     const model = this.snapshot?.model || fore.model || {};
 
     return `
-      <section class="fx-debugger__section">
-        <h3>Fore</h3>
+    <section class="fx-debugger__section">
+      <h3>Fore</h3>
 
-        ${this.renderForeTargetList()}
+      ${this.renderForeTargetList()}
 
-        <dl class="fx-debugger__details">
-          ${this.renderDetail('ID', fore.id)}
-          ${this.renderDetail('Ready', fore.ready)}
-          ${this.renderDetail('createNodes', fore.createNodes)}
-          ${this.renderDetail('Lazy refresh', fore.lazyRefresh)}
-          ${this.renderDetail('init-on', fore.initOn)}
-          ${this.renderDetail('init-on-target', fore.initOnTarget)}
-          ${this.renderDetail('ignore-expressions', fore.ignoreExpressions)}
-          ${this.renderDetail('Instances', this.snapshot?.instances?.length ?? model.instanceCount)}
-          ${this.renderDetail('Bindings', this.snapshot?.bindings?.length)}
-          ${this.renderDetail('Model items', this.snapshot?.modelItems?.length ?? model.modelItemCount)}
-          ${this.renderDetail('Bound elements', this.snapshot?.boundElements?.length)}
-        </dl>
-      </section>
-    `;
+      <dl class="fx-debugger__details">
+        ${this.renderDetail('ID', fore.id)}
+        ${this.renderDetail('Ready', fore.ready)}
+        ${this.renderDetail('createNodes', fore.createNodes)}
+        ${this.renderDetail('Lazy refresh', fore.lazyRefresh)}
+        ${this.renderDetail('init-on', fore.initOn)}
+        ${this.renderDetail('init-on-target', fore.initOnTarget)}
+        ${this.renderDetail('ignore-expressions', fore.ignoreExpressions)}
+        ${this.renderDetail('Instances', this.snapshot?.instances?.length ?? model.instanceCount)}
+        ${this.renderDetail('Bindings', this.snapshot?.bindings?.length)}
+        ${this.renderDetail('Submissions', this.snapshot?.submissions?.length)}
+        ${this.renderDetail('Model items', this.snapshot?.modelItems?.length ?? model.modelItemCount)}
+        ${this.renderDetail('Bound elements', this.snapshot?.boundElements?.length)}
+      </dl>
+    </section>
+  `;
   }
 
   renderForeTargetList() {
@@ -1286,7 +1289,7 @@ export class FxDebugger extends HTMLElement {
     ]);
 
     return Array.from(this.fore.querySelectorAll('[ref]')).filter(element =>
-        boundElementNames.has(element.localName),
+      boundElementNames.has(element.localName),
     );
   }
 
@@ -1868,6 +1871,78 @@ export class FxDebugger extends HTMLElement {
     `;
   }
 
+  renderSubmissionsPanel() {
+    const submissions = this.snapshot?.submissions || [];
+
+    if (!submissions.length) {
+      return this.renderEmptyPanel('No submissions found.');
+    }
+
+    return `
+    <section class="fx-debugger__section">
+      <h3>Submissions</h3>
+
+      <div class="fx-debugger__table-wrap">
+        <table class="fx-debugger__table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Method</th>
+              <th>URL</th>
+              <th>Resource</th>
+              <th>Ref</th>
+              <th>Instance</th>
+              <th>Replace</th>
+              <th>Target</th>
+              <th>Target ref</th>
+              <th>Mediatype</th>
+              <th>Serialization</th>
+              <th>Validate</th>
+              <th>Relevant</th>
+              <th>Response</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${submissions
+              .map(
+                submission => `
+                  <tr>
+                    <td>${this.renderCodeOrDash(submission?.id)}</td>
+                    <td>${this.renderCodeOrDash(submission?.method)}</td>
+                    <td>${this.renderCodeOrDash(submission?.url || submission?.action)}</td>
+                    <td>${this.renderCodeOrDash(submission?.resource)}</td>
+                    <td>${this.renderCodeOrDash(submission?.ref)}</td>
+                    <td>${this.renderCodeOrDash(submission?.instance)}</td>
+                    <td>${this.renderCodeOrDash(submission?.replace)}</td>
+                    <td>${this.renderCodeOrDash(submission?.target)}</td>
+                    <td>${this.renderCodeOrDash(submission?.targetref)}</td>
+                    <td>${this.renderCodeOrDash(submission?.mediatype)}</td>
+                    <td>${this.renderCodeOrDash(submission?.serialization)}</td>
+                    <td>${this.renderCodeOrDash(submission?.validate)}</td>
+                    <td>${this.renderCodeOrDash(submission?.relevant)}</td>
+                    <td>${this.renderSubmissionResponse(submission)}</td>
+                  </tr>
+                `,
+              )
+              .join('')}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  `;
+  }
+
+  renderSubmissionResponse(submission) {
+    if (!submission?.hasResponse) {
+      return '<span class="fx-debugger__muted">—</span>';
+    }
+
+    const status = submission.responseStatus || '';
+    const text = submission.responseStatusText || '';
+
+    return `<code>${this.escape(`${status} ${text}`.trim())}</code>`;
+  }
+
   renderInstancesPanel() {
     const instances = this.snapshot?.instances || [];
 
@@ -1996,8 +2071,8 @@ export class FxDebugger extends HTMLElement {
           </thead>
           <tbody>
             ${boundElements
-        .map(
-            (element, index) => `
+              .map(
+                (element, index) => `
                   <tr>
                     <td>
                       <button
@@ -2018,14 +2093,15 @@ export class FxDebugger extends HTMLElement {
                     <td>${this.formatBoolean(element?.readonly)}</td>
                   </tr>
                 `,
-        )
-        .join('')}
+              )
+              .join('')}
           </tbody>
         </table>
       </div>
     </section>
   `;
   }
+
   renderEmptyPanel(message) {
     return `
       <div class="fx-debugger__empty">
@@ -2576,6 +2652,7 @@ export class FxDebugger extends HTMLElement {
           'events',
           'instances',
           'bindings',
+          'submissions',
           'modelItems',
           'boundElements',
           'raw',
