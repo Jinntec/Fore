@@ -81,6 +81,13 @@ export class FxCase extends FxContainer {
         }
         await parentNode.replaceCase(this, replacement);
         target = replacement;
+        // Re-dispatch 'select' on the loaded replacement so its fx-action handlers fire.
+        // The replacement's handlers are registered after async loading; they miss the
+        // initial 'select' that triggered the load.
+        if (parentNode.selectedCase === replacement) {
+          await Fore.dispatch(replacement, 'select', {});
+          return;
+        }
       }
       const model = ownerForm.getModel();
       ownerForm.addToBatchedNotifications(target);
