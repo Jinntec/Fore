@@ -239,6 +239,7 @@ export class Fore {
       'FX-GROUP',
       'FX-HINT',
       'FX-ITEMS',
+      'FX-INCLUDE',
       'FX-OUTPUT',
       'FX-RANGE',
       'FX-REPEAT',

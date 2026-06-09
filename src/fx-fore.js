@@ -1908,7 +1908,7 @@ export class FxFore extends HTMLElement {
         bound.evalInContext();
         if (bound.nodeName !== 'FX-REPEAT') {
           // Do not try to get a bind for a nodeSET of a repeat. there are multiple.
-          bound.getModelItem().bind?.evalInContext();
+          bound.getModelItem()?.bind?.evalInContext();
         }
         continue;
       }
@@ -1967,7 +1967,7 @@ export class FxFore extends HTMLElement {
       }
 
       bound.evalInContext();
-      bound.getModelItem().bind?.evalInContext();
+      bound.getModelItem()?.bind?.evalInContext();
 
       if (!isResolvedBound(bound)) {
         console.warn('create-nodes: could not resolve bound after node creation, skipping', bound);

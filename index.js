@@ -15,6 +15,7 @@ import './src/ui/fx-control.js';
 import './src/ui/fx-container.js';
 import './src/ui/fx-group.js';
 import './src/ui/fx-hint.js';
+import './src/ui/fx-include.js';
 import './src/ui/fx-output.js';
 import './src/ui/fx-repeat.js';
 import './src/ui/fx-repeat-attributes.js';
