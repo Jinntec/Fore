@@ -114,30 +114,43 @@ export class FxDebugger extends HTMLElement {
       }
 
       .fx-debugger__header {
+        position: relative;
         flex: 0 0 auto;
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto minmax(7rem, auto);
+        align-items: start;
         gap: 1rem;
         padding: 0.75rem 1rem;
         border-bottom: 1px solid #e3e5ea;
         background: #f8f9fb;
         cursor: default;
       }
-
+      
       .fx-debugger__header::after {
         content: "Double-click header to collapse/open";
+        grid-column: 2;
+        grid-row: 1;
         align-self: center;
-        margin-left: auto;
         color: #8a9099;
         font-size: 0.8rem;
         font-weight: 400;
+        line-height: 1;
+        text-align: center;
+        white-space: nowrap;
+        pointer-events: none;
       }
-
+      
+      .fx-debugger__refresh {
+        grid-column: 3;
+        grid-row: 1;
+        justify-self: end;
+        align-self: start;
+      }
       .fx-debugger__title {
         margin: 0;
         font-size: 1rem;
         font-weight: 700;
+        padding:0.5rem 0;
       }
 
       .fx-debugger__target {
@@ -159,6 +172,13 @@ export class FxDebugger extends HTMLElement {
         padding: 0.4rem 0.7rem;
         font: inherit;
         cursor: pointer;
+      }
+
+      .fx-debugger__refresh {
+        position: relative;
+        z-index: 1;
+        flex: 0 0 auto;
+        margin-left: auto;
       }
 
       .fx-debugger__refresh:hover,
@@ -252,10 +272,6 @@ export class FxDebugger extends HTMLElement {
         min-height: 0;
         overflow: auto;
         padding: 1rem;
-      }
-
-      .fx-debugger__section {
-        margin-top: 1.25rem;
       }
 
       .fx-debugger__section h3 {
@@ -535,7 +551,14 @@ export class FxDebugger extends HTMLElement {
       .fx-debugger__custom-events button:hover {
         background: #f1f3f4;
       }
-
+      .fx-debugger__event-flow-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin: 0 0 0.75rem;
+      }
+      
       .fx-debugger__event-table td:last-child code {
         white-space: normal;
         overflow-wrap: anywhere;
@@ -1414,9 +1437,10 @@ export class FxDebugger extends HTMLElement {
 
     return `
       <section class="fx-debugger__section">
-        <h3>Event flow</h3>
 
-        <div class="fx-debugger__event-toolbar">
+        <div class="fx-debugger__event-flow-header">
+          <h3>Event flow</h3>
+        
           <button
             class="fx-debugger__clear-events"
             type="button"
