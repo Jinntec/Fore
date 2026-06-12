@@ -252,6 +252,12 @@ export class FxInclude extends HTMLElement {
 
   async _initializeInsertedContent(startElement) {
     this._initForeUiDescendants(startElement);
+
+    const fore = startElement.closest('fx-fore');
+    if (fore?.createNodes && typeof fore.initData === 'function') {
+      fore.initData(startElement);
+    }
+
     await Fore.refreshChildren(startElement, true);
   }
 

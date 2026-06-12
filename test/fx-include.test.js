@@ -1,7 +1,8 @@
-import { expect, fixture, html, oneEvent } from '@open-wc/testing';
+import { expect, fixture, fixtureSync, html, oneEvent } from '@open-wc/testing';
 
 import { Fore } from '../src/fore.js';
 import '../src/ui/fx-include.js';
+import '../index.js';
 
 function oneForeError(target) {
     return new Promise(resolve => {
@@ -160,6 +161,55 @@ describe('fx-include', () => {
 
         expect(el.querySelector('.included')).to.exist;
         expect(el.querySelector('.included').textContent).to.contain('Immediate content');
+    });
+
+    it('immediate inclusion inside fx-fore waits for "ready" and runs initData so create-nodes works for included content', async () => {
+        const el = fixtureSync(html`
+            <fx-fore create-nodes>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <provenance type="found" notAfter="1885"></provenance>
+                        </data>
+                    </fx-instance>
+                </fx-model>
+
+                <fx-group ref=".">
+                    <fx-include immediate>
+                        <template>
+                            <fx-group ref="provenance[@type='found']">
+                                <fx-control create="create" ref="@when"></fx-control>
+                                <fx-control ref="note[@type='found-date']"></fx-control>
+                            </fx-group>
+                        </template>
+                    </fx-include>
+                </fx-group>
+            </fx-fore>
+        `);
+
+        const include = el.querySelector('fx-include');
+        const includeDone = oneEvent(include, 'include-done');
+
+        await oneEvent(el, 'ready');
+        await includeDone;
+
+        const inst = el.querySelector('fx-instance');
+        const provenance = inst.instanceData.documentElement.querySelector("provenance[type='found']");
+
+        // (a) ready gating: the [create] control could only resolve its in-scope
+        // context - the ancestor group inserted by fx-include, whose own context
+        // is the outer group's nodeset - because the include waited for fx-fore's
+        // "ready" event before inserting and refreshing its content.
+        expect(provenance.hasAttribute('when')).to.be.true;
+
+        // (b) create-nodes: initData ran on the included content and created the
+        // missing <note type="found-date"/> element.
+        expect(provenance.querySelector("note[type='found-date']")).to.exist;
+
+        // the control bound to that node resolved its nodeset and rendered
+        // normally instead of being marked nonrelevant.
+        const noteControl = include.querySelector(`fx-control[ref="note[@type='found-date']"]`);
+        expect(noteControl.hasAttribute('nonrelevant')).to.be.false;
     });
 
     it('loads external content from src and applies selector', async () => {
