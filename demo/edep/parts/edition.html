@@ -1,0 +1,292 @@
+<details class="group-6" id="edition">
+    <summary>
+        <h2>Edition of text
+        </h2>
+    </summary>
+    <div class="block" id="transcript">
+        <h4>
+            Transcription
+        </h4>
+        <fx-control
+          class="transcription editor"
+          ref="div[@type='edition']"
+          as="node"
+          update-event="leave">
+            <jinn-epidoc-editor
+              id="transcriptionEditor"
+              unwrap="unwrap"
+              class="widget"
+              show-leiden=""
+              schema="resources/scripts/tei.json"
+              schema-root="div"
+              mode="leiden_plus">
+                <h5 slot="leiden-header">Leiden+ Editor</h5>
+                <div slot="leiden-toolbar">
+                    <button
+                      data-command="snippet"
+                      data-mode="leiden_plus"
+                      data-params="($|_|)"
+                      title="Abbreviation parenthesis">
+                        (abc)
+                    </button>
+                    <button
+                      data-command="expan"
+                      data-mode="leiden_plus"
+                      title="Expanded abbreviation">
+                        (a(bcd))
+                    </button>
+                    <button
+                      data-command="erasure"
+                      data-mode="leiden_plus"
+                      title="Erasure">
+                        〚abc〛
+                    </button>
+                    <button
+                      data-command="unclear"
+                      data-mode="leiden_plus"
+                      title="Unclear">
+                        ạ
+                    </button>
+                    <button
+                      data-command="snippet"
+                      data-mode="leiden_plus"
+                      data-params="~|$|_||~$|2:gr|"
+                      title="Language switch">
+                        ~|...|~
+                    </button>
+                    <button data-command="div" data-mode="leiden_plus" title="Division">
+                        &lt;=...
+                    </button>
+                    <button
+                      data-command="snippet"
+                      data-mode="leiden_plus"
+                      title="Part"
+                      data-params="&lt;D=.$|A|.part&lt;=$|_|=&gt;=D&gt;">
+                        &lt;D=.A.part...
+                    </button>
+                    <button
+                      data-command="snippet"
+                      data-mode="leiden_plus"
+                      title="Column"
+                      data-params="&lt;D=.$|i|.column&lt;=$|_|=&gt;=D&gt;">
+                        &lt;D=.i.column...
+                    </button>
+                    <button
+                      data-command="snippet"
+                      data-mode="leiden_plus"
+                      title="Recto/Verso"
+                      data-params="&lt;D=.$|r|&lt;=$|_|=&gt;=D&gt;">
+                        &lt;D=.r...
+                    </button>
+                    <button
+                      data-command="fixNewlines"
+                      data-mode="leiden_plus"
+                      title="Add missing line numbers">
+                        ↩
+                    </button>
+                    <button data-command="erasure" data-mode="edcs">〚abc〛</button>
+                    <button data-command="gap" data-mode="edcs">[...]</button>
+                    <button data-command="convert" data-mode="edcs">
+                        Convert to Leiden+
+                    </button>
+                </div>
+                <h5 slot="xml-header">EpiDoc XML Editor
+                </h5>
+                <div slot="xml-toolbar">
+                    <button
+                      data-command="selectElement"
+                      title="Select element around current cursor position">
+                        &lt;|&gt;
+                    </button>
+                    <button
+                      data-command="encloseWith"
+                      title="Enclose selection in new element">
+                        &lt;...&gt;
+                    </button>
+                    <button
+                      data-command="removeEnclosing"
+                      title="Remove enclosing tags"
+                      class="sep">
+                        &lt;X&gt;
+                    </button>
+                    <button
+                      data-command="snippet"
+                      data-params="&lt;ab&gt;$|_|&lt;/ab&gt;"
+                      title="Insert ab">
+                        &lt;ab&gt;
+                    </button>
+                    <button
+                      data-command="snippet"
+                      data-params="&lt;supplied reason=&#34;lost&#34;&gt;$|_|&lt;/supplied&gt;"
+                      title="Insert supplied">
+                        &lt;supplied&gt;
+                    </button>
+                    <button
+                      data-command="snippet"
+                      data-params="&lt;expan&gt;&lt;abbr&gt;$|1|&lt;/abbr&gt;&lt;ex&gt;$|_|&lt;/ex&gt;&lt;/expan&gt;$|3|"
+                      title="Insert expan/abbr">
+                        &lt;expan&gt;
+                    </button>
+                    <button
+                      data-command="snippet"
+                      data-params="&lt;gap reason=&#34;lost&#34; extent=&#34;unknown&#34; unit=&#34;character&#34;/&gt;$|1|"
+                      title="Gap, extent unknown">
+                        <iron-icon icon="editor:space-bar"></iron-icon>
+                        ?
+                    </button>
+                    <button
+                      data-command="snippet"
+                      data-params="&lt;gap reason=&#34;lost&#34; quantity=&#34;$|1|&#34; unit=&#34;$|2:line|&#34;/&gt;$|3|"
+                      title="Gap, extent known">
+                        <iron-icon icon="editor:space-bar"></iron-icon>
+                    </button>
+                    <button
+                      data-command="snippet"
+                      data-params='&lt;hi rend="ligature">$|_|&lt;/hi>'
+                      title="Ligature">
+                        Lig
+                    </button>
+                    <button
+                      data-command="snippet"
+                      data-params='&lt;hi rend="apex">$|_|&lt;/hi>'
+                      title="Apex">
+                        Apex
+                    </button>
+                </div>
+            </jinn-epidoc-editor>
+        </fx-control>
+        <h4>
+            Display
+        </h4>
+        <div id="transcription-display"></div>
+    </div>
+    <div class="block">
+        <h4>
+            Apparatus
+        </h4>
+        <fx-control
+          class="apparatus editor"
+          ref="div[@type='apparatus']"
+          as="node"
+          update-event="leave">
+            <jinn-xml-editor
+              id="apparatus"
+              class="widget"
+              unwrap="unwrap"
+              schema="resources/scripts/tei.json"
+              schema-root="div"
+              namespace="http://www.tei-c.org/ns/1.0"
+              placeholder="[Should contain a &lt;listApp&gt; with nested &lt;app&gt;]"
+              base-url="${app}"
+              providers="zotero"
+              data-template="lib:parse-params">
+                <div slot="toolbar">
+                    <button
+                      data-command="selectElement"
+                      title="Select element around current cursor position">
+                        &lt;|&gt;
+                    </button>
+                    <button
+                      data-command="encloseWith"
+                      title="Enclose selection in new element">
+                        &lt;...&gt;
+                    </button>
+                    <button
+                      data-command="removeEnclosing"
+                      title="Remove enclosing tags"
+                      class="sep">
+                        &lt;X&gt;
+                    </button>
+                    <button
+                      data-command="snippet"
+                      data-params="&lt;listApp&gt;$|_|&lt;/listApp&gt;"
+                      title="Insert apparatus list">
+                        &lt;listApp&gt;
+                    </button>
+                    <button
+                      data-command="snippet"
+                      data-params="&lt;app loc=&#34;$|1|&#34;&gt;&lt;note&gt;$|_|&lt;/note&gt;&lt;/app&gt;"
+                      title="Insert apparatus entry">
+                        &lt;app&gt;
+                    </button>
+
+                    <button
+                      data-command="snippet"
+                      data-params="&lt;persName key=&#34;$|1|&#34;&gt;$|_|&lt;/persName&gt;"
+                      title="persName">
+                        <iron-icon icon="social:person-add"></iron-icon>
+                    </button>
+                    <button
+                      data-command="snippet"
+                      data-params="&lt;seg type=&#34;citedRange&#34;&gt;$|_|&lt;/seg&gt;"
+                      title="seg">
+                        &lt;seg&gt;
+                    </button>
+                </div>
+            </jinn-xml-editor>
+        </fx-control>
+    </div>
+
+    <!-- TRANSLATION -->
+
+    <div class="block">
+      <h4>
+          Translation
+      </h4>
+      <fx-group ref="div[@type='translation']">
+        <fx-control
+          class="translation editor"
+          ref="."
+          as="node"
+          update-event="leave">
+            <jinn-xml-editor
+              id="translation"
+              unwrap="unwrap"
+              class="widget"
+              placeholder="[Inline text/markup or sequence of paragraphs]"
+              schema="resources/scripts/tei.json"
+              schema-root="div"
+              namespace="http://www.tei-c.org/ns/1.0"
+              base-url="${app}"
+              providers="zotero"
+              data-template="lib:parse-params">
+                <div slot="toolbar">
+                    <button
+                      data-command="selectElement"
+                      title="Select element around current cursor position">
+                        &lt;|&gt;
+                    </button>
+                    <button
+                      data-command="encloseWith"
+                      title="Enclose selection in new element">
+                        &lt;...&gt;
+                    </button>
+                    <button
+                      data-command="removeEnclosing"
+                      title="Remove enclosing tags"
+                      class="sep">
+                        &lt;X&gt;
+                    </button>
+                    <button
+                      data-command="snippet"
+                      data-params="&lt;p&gt;$|_|&lt;/p&gt;"
+                      title="Insert paragraph">
+                        &lt;p&gt;
+                    </button>
+                    <button
+                      data-command="snippet"
+                      data-params="&lt;persName key=&#34;$|1|&#34;&gt;$|_|&lt;/persName&gt;"
+                      title="persName">
+                        <iron-icon icon="social:person-add"></iron-icon>
+                    </button>
+                </div>
+            </jinn-xml-editor>
+        </fx-control>
+        <fx-control class="translator" ref="@resp" create="create">
+            <label>
+                Translated by:
+            </label>
+        </fx-control>
+      </fx-group>
+    </div>
+</details>

@@ -1,0 +1,89 @@
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title data-template="config:app-title"></title>
+        <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" />
+        <link rel="shortcut icon" type="image/x-icon" href="resources/images/favicon.ico" />
+        <link rel="shortcut icon" type="image/png" href="resources/images/favicon-16.png" sizes="16x16" />
+        <link rel="shortcut icon" type="image/png" href="resources/images/favicon-24.png" sizes="24x24" />
+        <link rel="shortcut icon" type="image/png" href="resources/images/favicon-32.png" sizes="32x32" />
+        <link rel="shortcut icon" type="image/png" href="resources/images/favicon-64.png" sizes="64x64" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald" />
+        <link rel="stylesheet" href="resources/css/theme.css" />
+        <link rel="stylesheet" href="resources/css/fore.css" />
+        <link rel="stylesheet" href="resources/css/edep-theme.css" />
+        <link rel="stylesheet" href="resources/css/edep-theme2.css" />
+        <script type="module" src="pb-components-bundle.js" data-template="pages:load-components"></script>
+        <script type="module" src="resources/scripts/fore.js"></script>
+
+        <!--        <script type="module" src="http://localhost:8090/index.js"/>-->
+    </head>
+
+    <body>
+        <pb-page data-template="pages:pb-page" unresolved="unresolved" locales="resources/i18n/{{ns}}/{{lng}}.json">
+            <app-drawer-layout force-narrow="force-narrow">
+                <app-drawer slot="drawer" align="right">
+                    <div class="drawer-content">
+                        <pb-media-query query="(max-width: 1023px)">
+                            <!-- language selector -->
+                            <pb-lang name="lang" data-template="pages:languages"></pb-lang>
+                        </pb-media-query>
+                    </div>
+                </app-drawer>
+                <app-header-layout>
+                    <app-header slot="header" reveals="reveals" fixed="fixed" effects="waterfall">
+                        <app-toolbar data-template="lib:include" data-template-path="templates/menu.html"></app-toolbar>
+                        <pb-media-query query="(max-width: 1023px)">
+                            <app-toolbar class="toolbar" sticky="sticky">
+                                <!-- Search input -->
+                                <pb-search
+                                    action="${app}/search.html"
+                                    data-template="lib:parse-params"
+                                    value="${query}"
+                                    redirect="redirect"></pb-search>
+                                <paper-icon-button icon="icons:menu" drawer-toggle="drawer-toggle"></paper-icon-button>
+                            </app-toolbar>
+                        </pb-media-query>
+                    </app-header>
+
+                    <main>
+                        <pb-restricted login="login" group="tei">
+                            <p class="loginMessage" slot="fallback">You need to be logged in to edit.</p>
+                        </pb-restricted>
+                        <fx-fore src="templates/fore/places.html"></fx-fore>
+                    </main>
+
+                    <footer class="version">
+                        App: v<span data-template="pages:version"></span> / web components: v
+                        <pb-version></pb-version>
+                    </footer>
+                </app-header-layout>
+            </app-drawer-layout>
+            <paper-dialog id="downloadDialog">
+                <h2>
+                    <pb-i18n key="dialogs.generatingFile">Generating File...</pb-i18n>
+                </h2>
+                <paper-dialog-scrollable>
+                    <pb-i18n key="dialogs.downloadMessage"></pb-i18n>
+                </paper-dialog-scrollable>
+                <div class="buttons">
+                    <paper-button dialog-confirm="dialog-confirm" autofocus="autofocus">
+                        <pb-i18n key="dialogs.close">Close</pb-i18n>
+                    </paper-button>
+                </div>
+            </paper-dialog>
+            <paper-dialog id="errorDialog">
+                <h2>
+                    <pb-i18n key="dialogs.error">Error</pb-i18n>
+                </h2>
+                <paper-dialog-scrollable></paper-dialog-scrollable>
+                <div class="buttons">
+                    <paper-button dialog-confirm="dialog-confirm" autofocus="autofocus">
+                        <pb-i18n key="dialogs.close">Close</pb-i18n>
+                    </paper-button>
+                </div>
+            </paper-dialog>
+        </pb-page>
+        <div class="splash"></div>
+    </body>
+</html>

@@ -1,0 +1,297 @@
+@import 'vars.css';
+@import 'toastify.css';
+
+    /*@import url('dev.css');*/
+
+    html {
+        --inspector-bg: var(--paper-grey-300);
+        --inspector-pre-bg: var(--paper-grey-100);
+        --inspector-color: var(--paper-grey-800);
+        --inspector-instance-height: 200px;
+        --inspector-handle-bg: var(--paper-blue-700);
+        --inspector-handle-width: 30px;
+    }
+
+    [disabled] {
+        pointer-events: none;
+        cursor: default;
+    }
+
+    [refresh-on-view] {
+        /*opacity: 0;*/
+    }
+
+    /*
+        nonrelevant must always be hidden
+    */
+    [nonrelevant] {
+        display: none;
+    }
+
+    [relevant] {
+        display: block;
+    }
+
+    fx-control[required] label:after {
+        content: "*";
+        display: inline;
+        color: red;
+    }
+
+    .fore-error {
+        height: 2rem;
+        background: darkred;
+        width: 100%;
+        display: block !important;
+        color: white;
+    }
+
+    .fore-error::before {
+        content: 'right-click to inspect';
+        display: flex;
+        flex-align: center;
+    }
+
+    fx-alert {
+        color: darkred;
+        font-size: 0.9rem;
+        display: none;
+    }
+
+    [valid] fx-alert{
+        display: none;
+    }
+
+    .visited[invalid] fx-alert {
+        display: block;
+    }
+
+    /* case not displayed by default - if you want e.g. apply transitions you have to overwrite this rule with display='inline' or similar */
+    fx-case {
+        display: none;
+    }
+    fx-case.selected-case{
+        display:block;
+    }
+
+    fx-output[readonly] img {
+        background: inherit;
+    }
+
+    .error {
+        background: var(--paper-red-500);
+        display: flex;
+    }
+
+    fx-control, fx-trigger, .fx-checkbox {
+        white-space: nowrap;
+        /* position: relative; */
+    }
+
+    /* ### FX-DIALOG STYLES ### */
+    /* ### FX-DIALOG STYLES ### */
+    /* ### FX-DIALOG STYLES ### */
+    fx-dialog {
+        display: none;
+        opacity: 0;
+        width: 100vw;
+        height: 100vh;
+        transition: opacity 1s linear;
+        z-index: -1;
+        transition: none;
+    }
+
+    fx-dialog.show {
+        display: block;
+        min-height: 200px;
+        border-radius: 0.5rem;
+        opacity: 1;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 10;
+        transition: opacity 0.4s linear;
+        position: fixed;
+        top: 0;
+        left: 0;
+    }
+
+    fx-dialog.show .dialog-content {
+        padding: 1rem;
+        width: fit-content;
+        height: fit-content;
+        border: thin solid;
+        border-radius: 0.3rem;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        background: white;
+
+    }
+
+    fx-dialog a.close-dialog {
+        position: absolute;
+        right: 0.4rem;
+        top: 0.2rem;
+        color: var(--paper-grey-900);
+        text-decoration: none;
+        font-size: 1.2rem;
+    }
+
+    fx-dialog .action {
+        width: 100%;
+        text-align: center;
+        display: block;
+    }
+
+    fx-group, fx-switch, fx-repeat, fx-dialog {
+        /*display: block;*/
+        position: relative;
+    }
+
+    fx-hint {
+        display: none;
+    }
+
+    fx-model,
+    fx-instance,
+    fx-action,
+    fx-setvalue {
+        display: none;
+    }
+
+    fx-trigger a[disabled] {
+        color: lightgrey;
+    }
+
+    fx-trigger img[disabled] {
+        filter: blur(2px);
+    }
+
+    fx-repeatitem {
+        position: relative;
+        opacity: 1;
+    }
+
+    .hidden {
+        visibility: hidden;
+        opacity: 0;
+        transition: visibility 0s 2s, opacity 2s linear;
+    }
+
+    .isEmpty.visited .widget {
+        background: lightpink;
+    }
+
+    .loaded {
+        animation: fadein 0.3s forwards;
+    }
+
+    /* avoid flicker from nested lazily loaded elements */
+    .loaded .loaded {
+        animation: none;
+        opacity: 1;
+    }
+
+    .logtree details {
+        padding: 0.1rem 1rem;
+        margin: 0;
+    }
+    noscript{
+        display: block;
+        width: 100%;
+        padding: 1rem;
+        background: darkorange;
+        color:white;
+        position: absolute;
+        top:0;
+        left:0;
+    }
+
+    .submit-validation-failed .isEmpty .widget {
+        background: lightpink;
+    }
+
+    .vertical label {
+        display: block;
+    }
+
+    /* for on-demand elements */
+    [role=group][on-demand=true] {
+            display: none;
+    }
+    .trash {
+        display: inline-block;
+        position: absolute;
+        right:0;
+        top:0;
+        z-index: 10;
+        font-size: 0.8rem;
+    }
+    .trash svg{
+        width: 1rem;
+        height: 1rem;
+        color:#666666;
+    }
+    .trash svg:hover{
+        color:black;
+
+    }
+
+    /* fx-action-log styles */
+
+    fx-fore.action-log{
+        /*background: var(--paper-orange-500);*/
+    }
+    .action-log .action-log-debug {
+        display: block !important;
+        min-height: 3rem;
+        background: var(--paper-orange-500);
+    }
+    .action-log fx-model{
+        display: block;
+        min-height: 1rem;
+    }
+    .action-log fx-model::before{
+        content:'model';
+    }
+
+    .action-log fx-instance,
+    .action-log fx-bind,
+    .action-log fx-submission,
+    .action-log fx-function
+    {
+        display: block;
+        min-height: 2rem;
+        background: var(--paper-orange-500);
+    }
+
+    .action-log fx-bind::before{
+        content:'bind :: ' attr(ref);
+    }
+    .action-log fx-instance::before{
+        content:'instance :: ' attr(id);
+    }
+    .action-log fx-submission::before{
+        content:'submission ::' attr(id);
+    }
+
+    .action-log .action-log-debug::before{
+        content: attr(data-name);
+    }
+    .action-log .action-log-debug .targetd{
+        cursor: pointer;
+    }
+
+
+    /* ### toastify customizations #### */
+
+    .toastify.on.warning{
+        background: var(--paper-orange-500);
+    }
+
+	/*
+	 * For on-demand stuff, if it has no value initially,hide it
+	 */
+	[on-demand] {
+		display: none !important;
+	}

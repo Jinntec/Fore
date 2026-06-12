@@ -1,0 +1,52 @@
+<details id="verification">
+    <summary>
+        <h2>Verification</h2>
+    </summary>
+    <fx-group ref="fileDesc/titleStmt">
+        <fx-trigger class="add">
+            <button>+</button>
+            <fx-insert
+                    context="."
+                    origin="instance('templates')/respStmt"
+                    ref="respStmt"></fx-insert>
+        </fx-trigger>
+        <fx-repeat
+                class="nested-repeat"
+                id="r-verification"
+                ref="respStmt">
+            <template>
+                <fx-group ref="resp">
+                    <fx-control ref=".">
+                        <label>
+                            Basis of verification
+                        </label>
+                        <select
+                                class="widget"
+                                ref="instance('verification-options')//category">
+                            <template>
+                                <option value="{@xml:id}">{catDesc[@xml:lang = 'en']}</option>
+                            </template>
+                        </select>
+                    </fx-control>
+                    <fx-control create="create" ref="@when">
+                        <label>
+                            Date of verification
+                        </label>
+                    </fx-control>
+
+                    <fx-trigger>
+                        <button>X</button>
+                        <fx-delete ref="."></fx-delete>
+                    </fx-trigger>
+                </fx-group>
+            </template>
+        </fx-repeat>
+        <fx-trigger class="add">
+            <button>+</button>
+            <fx-insert
+                    context="fileDesc/titleStmt"
+                    origin="instance('templates')//respStmt"
+                    ref="respStmt"></fx-insert>
+        </fx-trigger>
+    </fx-group>
+</details>

@@ -1,0 +1,40 @@
+<details id="languages">
+    <!-- OBSOLETE, NOW PART OF TEXT DESCRIPTION AGAIN -->
+    <summary id="profile-lbl">
+        Language
+    </summary>
+    <fx-trigger class="add">
+        
+        <fx-insert
+          context="langUsage"
+          ref="language"
+          origin="instance('templates')/language"></fx-insert>
+    </fx-trigger>
+
+    <fx-repeat
+      class="nested-repeat"
+      ref="langUsage/language[not(note)][@ident!='']"
+      id="r-language">
+        <template>
+            <fx-group>
+                <fx-control ref="@ident">
+                    <label>
+                        Language
+                    </label>
+                    <select
+                  ref="instance('language-options')//category"
+                  class="widget">
+                    <template>
+                        <!-- prettier-ignore -->
+                        <option value="{@xml:id}">{catDesc[@xml:lang = $lang]}</option>
+                    </template>
+                </select>         
+                </fx-control>
+            <!-- TODO change into radio/checkbox -->
+
+               <fx-control ref="@ana" value-prop="checked" update-event="input">
+                    <label>
+                        Language scope</label
+        >
+    </fx-control>
+</details>

@@ -1,0 +1,32 @@
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title>Taxonomy of ligature options for EpiDoc profile</title>
+            </titleStmt>
+            <publicationStmt>
+                <p>Established in the scope of the EDEp project</p>
+            </publicationStmt>
+            <sourceDesc>
+                <p/>
+            </sourceDesc>
+        </fileDesc>
+        <encodingDesc>
+            <classDecl>
+                <taxonomy xml:id="ligature">
+                    <category xml:id="yes">
+                        <catDesc xml:lang="de">Ja</catDesc>
+                        <catDesc xml:lang="en">yes</catDesc>
+                    </category>
+                    <category xml:id="no">
+                        <catDesc xml:lang="de">Nein</catDesc>
+                        <catDesc xml:lang="en">no</catDesc>
+                    </category>
+                </taxonomy>
+            </classDecl>
+        </encodingDesc>
+    </teiHeader>
+    <standOff>
+        <note/>
+    </standOff>
+</TEI>

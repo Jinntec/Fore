@@ -1,0 +1,69 @@
+<details id="editor">
+    <summary>
+        <h2>Editing</h2>
+    </summary>
+
+    <fieldset>
+        <fx-group ref="revisionDesc">
+            <fx-control ref="@status" update-event="input" create="create">
+                <label>
+                    Status of Editing
+                </label>
+                <select
+                    ref="instance('publication-status')//category"
+                    class="widget">
+                        <template>
+                            <!-- prettier-ignore -->
+                            <option value="{@xml:id}">{catDesc[@xml:lang = $lang]}</option>
+                        </template>
+                </select>         
+            </fx-control>
+        </fx-group>
+    </fieldset>
+
+    <fieldset>
+        <legend>
+            <label>
+                Author(s) of the epigraphic edition
+            </label>
+            <fx-trigger class="add">
+                <fx-insert
+                context="fileDesc/titleStmt"
+                ref="editor"
+                origin="instance('templates')/editor"></fx-insert>
+            </fx-trigger>
+        </legend>
+
+        <fx-repeat
+        class="nested-repeat"
+        ref="fileDesc/titleStmt/editor"
+        id="r-editor">
+            <template>
+                <fx-group class="form-row">
+                    <fx-control ref="@role" create="create">
+                        <label>
+                            Role
+                        </label>
+                        <select
+                        class="widget"
+                        ref="instance('editor-roles')//category">
+                            <template>
+                                <option value="{@xml:id}">{catDesc[@xml:lang = $lang]}</option>
+                            </template>
+                        </select>
+                    </fx-control>
+
+                    <fx-control ref=".">
+                        <label>
+                            Author
+                        </label>
+                    </fx-control>
+                
+                </fx-group>
+                <fx-trigger>
+                    <fx-delete ref="."></fx-delete>
+                </fx-trigger>
+            </template>
+        </fx-repeat>
+    </fieldset>  
+</details>

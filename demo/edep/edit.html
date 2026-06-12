@@ -1,0 +1,721 @@
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title data-template="config:app-title"></title>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <link href="resources/images/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+    <link href="resources/images/favicon-16.png" rel="shortcut icon" sizes="16x16" type="image/png"/>
+    <link href="resources/images/favicon-24.png" rel="shortcut icon" sizes="24x24" type="image/png"/>
+    <link href="resources/images/favicon-32.png" rel="shortcut icon" sizes="32x32" type="image/png"/>
+    <link href="resources/images/favicon-64.png" rel="shortcut icon" sizes="64x64" type="image/png"/>
+    <link href="css/theme.css" media="screen" rel="stylesheet"/>
+    <link href="css/fore.css" media="screen" rel="stylesheet"/>
+    <link href="css/edep-theme.css" media="screen" rel="stylesheet"/>
+    <link href="css/edep-theme2.css" media="screen" rel="stylesheet"/>
+    <link href="css/geo-picker.css" media="screen" rel="stylesheet"/>
+    <link href="css/zotero-autocomplete.css" media="screen" rel="stylesheet"/>
+    <!-- Uncomment if jinn-codemirror is running on 8000 -->
+    <!--script type="module" src="http://localhost:8000/src/jinn-codemirror-bundle.ts"></script-->
+    <script src="scripts/jinn-codemirror-bundle.js" type="module"></script>
+
+    <script type="module" src="../../tools/fx-lens.js"></script>
+    <script type="module" src="../demo.js"></script>
+    <script src="scripts/zotero-autocomplete.js" type="module"></script>
+    <script src="scripts/edep-xml-editor.js" type="module"></script>
+    <!--    <script data-template="pages:load-components" src="pb-components-bundle.js" type="module"></script>-->
+    <style>
+        fx-lens {
+            top: 4rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+        }
+
+        nav fx-output label {
+            display: block;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+<main class="editor" id="main">
+    <fx-fore create-nodes="create-nodes" id="epidoc-editor" show-confirmation="show-confirmation">
+        <fx-model data-template="pages:parse-params">
+            <fx-action event="model-construct-done">
+                <fx-send
+                        if="string-length(instance('params')/id) != 0"
+                        submission="s-load-inscription"></fx-send>
+                <fx-setvalue ref="instance('vars')/inited">true</fx-setvalue>
+            </fx-action>
+
+            <fx-instance
+                    id="default"
+                    src="data/epidoc-template.xml"
+                    xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+                <data></data>
+            </fx-instance>
+            <fx-bind ref="instance('default')">
+                <!-- Fragments are relevant if they are actually there and if this TEI is of type partial -->
+                <fx-bind ref="@fragments" relevant="string() and not(../@type='partial')"></fx-bind>
+                <fx-bind ref="@type" relevant=". = 'partial'"></fx-bind>
+                <fx-bind ref="teiHeader">
+                    <fx-bind
+                            constraint="string-length(.) &gt; 0"
+                            ref="fileDesc/titleStmt/title"
+                            required="true()">
+                    </fx-bind>
+                    <fx-bind ref="fileDesc/sourceDesc/msDesc/history">
+                        <fx-bind ref="provenance">
+                            <fx-bind constraint="checkDate(.)" ref="./@when"></fx-bind>
+                            <fx-bind constraint="checkDate(.)" ref="./@notBefore"></fx-bind>
+                            <fx-bind constraint="checkDate(.)" ref="./@notAfter"></fx-bind>
+                        </fx-bind>
+                        <fx-bind ref="origin/origDate">
+                            <fx-bind constraint="checkDate(.)" ref="./@when-custom"></fx-bind>
+                            <fx-bind constraint="checkDate(.)" ref="./@notBefore-custom"></fx-bind>
+                            <fx-bind constraint="checkDate(.)" ref="./@notAfter-custom"></fx-bind>
+                        </fx-bind>
+                    </fx-bind>
+                </fx-bind>
+            </fx-bind>
+
+
+            <fx-instance id="i-fragment" xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
+            <!--
+                                            <fx-submission id="s-load-template"
+                                                           method="get"
+                                                           url="templates/fore/epidoc-template.xml"
+                                                           replace="instance"
+                                                           instance="i-fragment"
+                                                           validate="false">
+                                                <fx-action event="submit-done">
+                                                    <fx-setvalue ref="instance('i-fragment')/@corresp" value="instance('default')/@xml:id"></fx-setvalue>
+                                                    <fx-setvalue ref="instance('i-fragment')/@type" value="'partial'">partial</fx-setvalue>
+                                                    <fx-setvalue ref="instance('i-fragment')/@xml:id" value="concat(instance('default')/@xml:id,'-')"></fx-setvalue>
+                                                </fx-action>
+                                            </fx-submission>
+            -->
+            <!--                                <fx-instance id="i-fragments" type="json"></fx-instance>-->
+            <fx-submission
+                    id="s-create-fragment"
+                    instance="i-fragment"
+                    method="post"
+                    ref="instance('default')"
+                    replace="instance"
+                    url="api/fragment?collection={instance('params')/collection}">
+                <fx-action event="submit-done">
+                    <fx-message>
+                        Data has been saved
+                    </fx-message>
+                    <fx-setvalue ref="instance('default')/@fragments"
+                                 value="concat(instance('default')/@fragments, ' ', instance('i-fragment')/@xml:id)"></fx-setvalue>
+                </fx-action>
+                <fx-action event="submit-error">
+                    <fx-message>
+                        Saving data failed
+                    </fx-message>
+                    <fx-action src="resources/scripts/showErrors.js"></fx-action>
+                </fx-action>
+            </fx-submission>
+
+            <fx-instance id="typeins" src="data/typeins.xml"
+                         xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+                <data></data>
+            </fx-instance>
+
+            <fx-instance id="objtyp" src="data/objtyp.xml"
+                         xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+                <data></data>
+            </fx-instance>
+
+            <fx-instance id="material" src="data/material.xml"
+                         xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+                <data></data>
+            </fx-instance>
+
+            <fx-instance id="paleography" src="data/paleography.xml"
+                         xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+                <data></data>
+            </fx-instance>
+
+            <fx-instance id="editor-roles" src="data/editor-roles.xml"
+                         xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+                <data></data>
+            </fx-instance>
+
+            <fx-instance id="language-options" src="data/languages.xml"
+                         xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+                <data></data>
+            </fx-instance>
+
+            <fx-instance id="language-scope" src="data/language-scope.xml"
+                         xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+                <data></data>
+            </fx-instance>
+
+            <fx-instance id="decoration" src="data/decor.xml"
+                         xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+                <data></data>
+            </fx-instance>
+
+            <fx-instance id="metre" src="data/metre.xml"
+                         xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+                <data></data>
+            </fx-instance>
+
+            <fx-instance id="ligature" src="data/ligature.xml"
+                         xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+                <data></data>
+            </fx-instance>
+
+            <fx-instance id="verification-options" src="data/verification.xml"
+                         xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+                <data></data>
+            </fx-instance>
+
+            <fx-instance id="publication-status" src="data/publication-status.xml"
+                         xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+                <data></data>
+            </fx-instance>
+
+            <fx-instance id="preservation" src="data/preservation.xml"
+                         xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+                <data></data>
+            </fx-instance>
+
+            <fx-instance id="religion" src="data/religion.xml"
+                         xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+                <data></data>
+            </fx-instance>
+
+            <fx-instance id="document-type" src="data/document-type.xml"
+                         xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+                <data></data>
+            </fx-instance>
+
+            <fx-instance
+                    id="templates"
+                    src="data/templates.xml"
+                    xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+                <data></data>
+            </fx-instance>
+
+            <fx-instance id="vars" shared="true">
+                <data>
+                    <appdir>${app}</appdir>
+                    <display-leiden>hidden</display-leiden>
+                    <can-delete>false</can-delete>
+                    <parent></parent>
+                    <uuid></uuid>
+                    <geoid></geoid>
+                    <loggedin>hidden</loggedin>
+                    <xml-valid>true</xml-valid>
+                    <history-term></history-term>
+                    <geography-term></geography-term>
+                    <military-term></military-term>
+                    <language>en</language>
+                    <inited>false</inited>
+                    <is-fragment>false</is-fragment>
+                </data>
+            </fx-instance>
+            <!-- todo: remove static readonly once new fragment functionality is completely done -->
+            <fx-bind readonly="true()"
+                     ref="instance('vars')/is-fragment"
+                     relevant="not(exists(instance('default')/@type))"></fx-bind>
+            <fx-bind ref="instance('vars')/can-delete" relevant="index('r-fragments') gt 1"></fx-bind>
+            <fx-bind ref="instance('vars')/loggedin" relevant=".='true'"></fx-bind>
+            <fx-bind
+                    calculate="editorsValid()"
+                    constraint=".='true'"
+                    ref="instance('vars')/xml-valid"></fx-bind>
+
+            <fx-instance id="tmp">
+                <data>
+                    <dummy>xpath?</dummy>
+                </data>
+            </fx-instance>
+
+            <fx-instance id="params">
+                <data>
+                    <id>${id}</id>
+                    <collection>${collection}</collection>
+                    <app>${app}</app>
+                </data>
+            </fx-instance>
+
+            <fx-submission
+                    id="s-load-inscription"
+                    method="get"
+                    replace="instance"
+                    url="data/E0000030.xml"
+                    validate="false">
+                <fx-message event="submit-error">
+                    Failed to load inscription
+                </fx-message>
+
+                <fx-action event="submit-done">
+                    <!--
+                        ### initializing state for 30) 31) 32) dummy switches
+                    -->
+                    <fx-setvalue
+                            ref="instance('vars')/history-term"
+                            value="if(exists(instance('default')//term[@ref='#social-economic-legal-history'])) then 'true' else 'false'"></fx-setvalue>
+
+                    <fx-setvalue
+                            ref="instance('vars')/geography-term"
+                            value="if(exists(instance('default')//term[@ref='#geography'])) then 'true' else 'false'"></fx-setvalue>
+
+                    <fx-setvalue
+                            ref="instance('vars')/military-term"
+                            value="if(exists(instance('default')//term[@ref='#military'])) then 'true' else 'false'"></fx-setvalue>
+                </fx-action>
+            </fx-submission>
+
+            <fx-submission
+                    id="s-create"
+                    method="post"
+                    replace="instance"
+                    url="api/inscription?collection={instance('params')/collection}">
+                <fx-message event="submit-done">
+                    Data has been saved
+                </fx-message>
+                <fx-action event="submit-error">
+                    <fx-message>
+                        Please correct form before saving
+                    </fx-message>
+                    <fx-action src="resources/scripts/showErrors.js"></fx-action>
+                </fx-action>
+            </fx-submission>
+
+            <fx-submission
+                    id="s-save"
+                    method="post"
+                    replace="instance"
+                    url="api/inscription?id={instance('params')/id}&amp;collection={instance('params')/collection}">
+                <fx-action event="submit-done">
+                    <fx-message>
+                        Data has been saved
+                    </fx-message>
+                    <fx-unmodified></fx-unmodified>
+                    <fx-call function="updateUrl(instance('default')/@xml:id)"
+                             if="not(ends-with(uri-path(),'.xml'))"></fx-call>
+                </fx-action>
+                <fx-action event="submit-error">
+                    <fx-message>
+                        Please correct form before saving
+                    </fx-message>
+                    <fx-action src="resources/scripts/showErrors.js"></fx-action>
+                </fx-action>
+            </fx-submission>
+
+            <fx-function signature="gen-id() as xs:string" type="text/javascript">
+                return createUUID();
+            </fx-function>
+
+            <fx-instance id="login" type="json">{}</fx-instance>
+            <fx-submission
+                    id="s-login"
+                    instance="login"
+                    method="post"
+                    ref="instance('login')?*"
+                    replace="instance"
+                    serialization="none"
+                    url="api/login"
+                    validate="false">
+                <fx-setvalue event="submit-error" ref="instance('vars')/loggedin"
+                >false
+                </fx-setvalue
+                >
+                <fx-setvalue event="submit-done" ref="instance('vars')/loggedin">true</fx-setvalue>
+            </fx-submission>
+            <fx-function signature="updateUrl($id as xs:string)" type="text/javascript">
+                const url = new URL(window.location.href);
+                url.pathname += $id + '.xml';
+                history.pushState(null, '', url.toString());
+            </fx-function>
+
+            <fx-function signature="editorsValid() as xs:boolean" type="text/javascript">
+                const editors =
+                form.querySelectorAll('jinn-xml-editor[valid="false"],jinn-epidoc-editor[valid="false"]');
+                if(editors.length !== 0){ return false; }else{ return true; }
+            </fx-function>
+
+            <fx-function
+                    signature="shortlang($input as xs:string,$default as xs:string) as xs:string"
+                    type="text/javascript">
+                if($input) { return $input.substring(0, 2); } return $default;
+            </fx-function>
+
+            <fx-function
+                    signature="checkDate($value as xs:string) as xs:boolean"
+                    type="text/javascript">
+                return checkDate($value);
+            </fx-function>
+            <fx-function
+                    signature="sortNames($terms as element()*) as element()*"
+                    type="text/xquery">
+                let $lang := instance('vars')/language for $term in $terms order by
+                $term/catDesc[@xml:lang = $lang] return $term
+            </fx-function>
+            <fx-function
+                    signature="sortLang($langs as element()*) as element()*"
+                    type="text/xquery">
+                for $term in $langs order by $term return $term
+            </fx-function>
+            <fx-function
+                    signature="computeBiblId($bibls as element()*) as xs:string"
+                    type="text/xquery">
+                max(( 0, for $bibl in $bibls/@xml:id where starts-with($bibl, 'bibl-') return
+                xs:int(substring-after($bibl, 'bibl-')) )) + 1
+            </fx-function>
+            <fx-function
+                    signature="clipboard($value as xs:string) as xs:string"
+                    type="text/javascript">
+                console.log($value); navigator.clipboard.writeText($value); return $value;
+            </fx-function>
+            <fx-function
+                    signature="scrollto($selector as xs:string) as xs:string"
+                    type="text/javascript">
+                const found = document.querySelector($selector); if(found){
+                found.scrollIntoView({block: "start", inline: "nearest", behavior:"smooth"}); }
+            </fx-function>
+            <!--
+                <fx-function signature="expander() as xs:boolean" type="text/javascript">
+                const expander = document.querySelector('#expander');
+                const details = document.querySelectorAll('details');
+
+                if(expander.classList.contains('expanded')){
+                Array.from(details).foreach(d => {
+                details.removeAttribute('open');
+                });
+                }else{
+                Array.from(details).foreach(d => {
+                details.setAttribute('open','open');
+                expander.classList.addClass('expanded');
+                });
+                }
+                return true;
+                </fx-function>
+            -->
+        </fx-model>
+
+
+        <nav aria-labelledby="navigation">
+            <div class="toolbar">
+                <button class="expander" onclick="expandAll()" title="expand all">
+                    <svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                        <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                           stroke-width="1.5">
+                            <!-- up chevron -->
+                            <path d="M8 9 L12 5 L16 9"/>
+                            <!-- down chevron -->
+                            <path d="M8 15 L12 19 L16 15"/>
+                        </g>
+                    </svg>
+                </button>
+                <button class="expander" onclick="closeAll()" title="collapse all">
+                    <svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                        <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                           stroke-width="1.5">
+                            <!-- top chevron (now pointing down) -->
+                            <path d="M8 5 L12 9 L16 5"/>
+                            <!-- bottom chevron (now pointing up) -->
+                            <path d="M8 19 L12 15 L16 19"/>
+                        </g>
+                    </svg>
+                </button>
+            </div>
+            <ul>
+                <li>
+                    <a
+                            href="{uri-path()}#object">
+                        Identifier
+                    </a>
+                </li>
+                <li>
+                    <a
+                            href="{uri-path()}#findspot">
+                        Finding
+                    </a>
+                </li>
+                <li>
+                    <a
+                            href="{uri-path()}#location">
+                        Present location
+                    </a>
+                </li>
+                <li>
+                    <a
+                            href="{uri-path()}#verification">
+                        Verification
+                    </a>
+                </li>
+                <li>
+                    <a
+                            href="{uri-path()}#objectdesc">
+                        Description of object
+                    </a>
+                </li>
+                <li>
+                    <a
+                            href="{uri-path()}#inscription-field">
+                        Inscription field
+                    </a>
+                </li>
+                <li>
+                    <a
+                            href="{uri-path()}#text-description">
+                        Description of text
+                    </a>
+                </li>
+                <li>
+                    <a
+                            href="{uri-path()}#references">
+                        References
+                    </a>
+                </li>
+                <li>
+                    <a
+                            href="{uri-path()}#edition">
+                        Edition of text
+                    </a>
+                </li>
+                <li>
+                    <a
+                            href="{uri-path()}#commentary">
+                        Commentary
+                    </a>
+                </li>
+                <li>
+                    <a
+                            href="{uri-path()}#dating">
+                        Chronological data
+                    </a>
+                </li>
+                <li>
+                    <a
+                            href="{uri-path()}#historic-relevance">
+                        Historical relevance
+                    </a>
+                </li>
+                <li>
+                    <a
+                            href="{uri-path()}#editor">
+                        Editing
+                    </a>
+                </li>
+                <li class="nav-divider"></li>
+                <li class="noflex">
+                    <!-- these controls just create the attributes they are pointing to in case they are not present in the data -->
+                    <fx-control create="create" ref="instance('default')/@fragments" style="display:none;"></fx-control>
+                    <fx-control create="create" ref="instance('default')/@type" style="display:none;"></fx-control>
+                    <fx-group class="neutral" ref="instance('default')/@fragments[string() and ../@type!='partial']">
+                        <fieldset id="fragment-fields">
+                            <legend>
+                                Fragments
+                            </legend>
+                            <fx-repeat aria-labelled-by="r-fragments-label" id="r-fragments"
+                                       ref="tokenize(instance('default')/@fragments)">
+                                <template>
+                                    <fx-var name="curr" value="."></fx-var>
+                                    <a href="{uri-relpath()}{.}.xml" target="_blank">{.}</a>
+                                </template>
+                            </fx-repeat>
+                        </fieldset>
+                    </fx-group>
+
+<!--
+                    <fx-group
+                            ref="instance('default')/@xml:id[string-length(.) > 0][not(instance('default')/@type='partial')]">
+                        <fx-trigger id="addFragment">
+                            <button>
+                                Add fragment
+                            </button>
+                            <fx-send submission="s-create-fragment"></fx-send>
+                        </fx-trigger>
+                    </fx-group>
+
+                    <fx-group id="backlink" ref="instance('default')/@type[.='partial']">
+                        <a href="{concat(uri-relpath(),instance('default')/@corresp)}.xml" target="_blank">{instance('default')/@corresp}</a>
+                    </fx-group>
+-->
+                </li>
+            </ul>
+        </nav>
+        <fx-group aria-labelledby="title-lbl" class="outer-group" ref="teiHeader">
+            <h1 id="title-lbl">
+                <fx-control class="title" id="edeptitle" ref="fileDesc/titleStmt/title" update-event="input">
+                    <label>
+                        Title
+                    </label>
+                </fx-control>
+            </h1>
+
+            <!-- IDENTIFIERs -->
+            <fx-include src="parts/object.html" selector="#object" immediate></fx-include>
+
+            <fx-group
+                    class="neutral"
+                    id="inscription"
+                    ref="fileDesc/sourceDesc/msDesc">
+
+                <fx-include src="parts/findspot.html" selector="#findspot" immediate></fx-include>
+<!--                <fx-include src="parts/location.html" selector="#location"></fx-include>-->
+            </fx-group>
+<!--            <fx-include src="parts/verification.html" selector="#verification" replace></fx-include>-->
+
+
+<!--
+            <fx-group
+                    class="neutral"
+                    id="objdesc"
+                    ref="fileDesc/sourceDesc/msDesc">
+
+                <fx-include src="parts/objectdesc.html" selector="#objectdesc" immediate></fx-include>
+                <fx-include src="parts/inscription-field.html" selector="#inscription-field" immediate></fx-include>
+                <fx-include src="parts/text-description.html" selector="#text-description" immediate></fx-include>
+
+            </fx-group>
+-->
+
+<!--
+            <fx-group class="references-background" id="references">
+                <fx-group class="outer-group" ref="fileDesc/sourceDesc/listBibl">
+                    <h2>
+                        References
+                        <pb-popover>
+                            <iron-icon icon="info-outline"></iron-icon>
+                            <template slot="alternate">
+                                All the bibliographic titles have to be entered by referring to a Zotero-Library.
+                            </template>
+                        </pb-popover>
+                    </h2>
+
+                    <div
+                            data-template="lib:include"
+                            data-template-path="templates/parts/transmission.html"
+                            data-template-replace="true"
+                            id="transmission"></div>
+
+                    <div
+                            data-template="lib:include"
+                            data-template-path="templates/parts/prev-editions.html"
+                            data-template-replace="true"
+                            id="prev-editions"></div>
+                    <div
+                            data-template="lib:include"
+                            data-template-path="templates/parts/bibliography.html"
+                            data-template-replace="true"
+                            id="bibliography"></div>
+                    <div
+                            data-template="lib:include"
+                            data-template-path="templates/parts/images.html"
+                            data-template-replace="true"
+                            id="images"></div>
+                </fx-group>
+
+                <fx-group class="neutral" id="dig-images">
+                    <div
+                            data-template="lib:include"
+                            data-template-path="templates/parts/pictures.html"
+                            data-template-replace="true"
+                            id="pictures"></div>
+                </fx-group>
+            </fx-group>
+-->
+        </fx-group>
+
+<!--
+        <fx-group class="outer-group" ref="text/body">
+            <div
+                    data-template="lib:include"
+                    data-template-path="templates/parts/edition.html"
+                    data-template-replace="true"
+                    id="edition"></div>
+            <div
+                    data-template="lib:include"
+                    data-template-path="templates/parts/commentary.html"
+                    data-template-replace="true"
+                    id="commentary"></div>
+        </fx-group>
+-->
+
+<!--
+        <fx-group aria-labelledby="title-lbl" class="outer-group" ref="teiHeader">
+            &lt;!&ndash; DATING &ndash;&gt;
+            <div
+                    data-template="lib:include"
+                    data-template-path="templates/parts/dating.html"
+                    data-template-replace="true"
+                    id="dating"></div>
+
+            <div
+                    data-template="lib:include"
+                    data-template-path="templates/parts/historic-relevance.html"
+                    data-template-replace="true"
+                    id="historic-relevance"></div>
+
+            <div
+                    data-template="lib:include"
+                    data-template-path="templates/parts/editor.html"
+                    data-template-replace="true"
+                    id="editor"></div>
+        </fx-group>
+-->
+
+        <section class="buttonBar">
+                <p class="loginMessage" slot="fallback">You need to be logged in to save.</p>
+
+                <fx-trigger class="saveBtn" debounce="1000">
+                    <button>
+                        Save
+                    </button>
+                    <fx-action if="not(exists(instance('params')/id))">
+                        <fx-send submission="s-login"></fx-send>
+                        <fx-send submission="s-create"></fx-send>
+                    </fx-action>
+                    <fx-action if="exists(instance('params')/id)">
+                        <fx-send submission="s-login"></fx-send>
+                        <fx-send submission="s-save"></fx-send>
+                    </fx-action>
+                </fx-trigger>
+                <fx-trigger>
+                    <a href="edit/workspace/">
+                        New entry
+                    </a>
+                </fx-trigger>
+            <fx-trigger>
+                <a href="index.html">
+                    To the list
+                </a>
+            </fx-trigger>
+        </section>
+
+        <fx-control class="valid-warning" ref="instance('vars')/xml-valid">
+            <fx-alert>
+                Please correct form before saving
+            </fx-alert>
+            <input style="display: none"/>
+        </fx-control>
+
+        <pre>
+            <code>{log('default')}</code>
+        </pre>
+    </fx-fore>
+<!--    <fx-lens></fx-lens>-->
+</main>
+
+<footer class="version">
+    App: v<span data-template="pages:version"></span>
+</footer>
+
+<script src="scripts/util.js" type="text/javascript"></script>
+<!--fx-devtools></fx-devtools-->
+</body>
+</html>

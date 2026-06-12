@@ -1,0 +1,41 @@
+<body xmlns="http://www.tei-c.org/ns/1.0">
+    <keywords>
+        <term ref=""/>
+    </keywords>
+    <term ref="#social-economic-legal-history"/>
+    <term ref="#geography"/>
+    <term ref="#military"/>
+
+    <bibl type="public" corresp="">
+        <note></note>
+        <citedRange></citedRange>
+    </bibl>
+
+    <listBibl type="images">    
+        <bibl corresp="">
+            <note></note>
+            <citedRange></citedRange>
+        </bibl>
+    </listBibl>
+
+    <handNote scope="letterHeight">
+        <locus></locus>
+        <dimensions>
+            <height min="" max=""/>
+        </dimensions>
+    </handNote>
+
+    <graphic/>
+
+    <language ident="lat" ana=""/>
+    
+    <respStmt>
+        <resp when=""/>
+        <persName/>
+    </respStmt>
+
+    <editor role="digital"/>
+    <objectType ref=""/>
+    <material ref=""/>
+    <idno type=""></idno>
+</body>

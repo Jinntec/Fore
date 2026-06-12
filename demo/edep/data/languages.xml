@@ -1,0 +1,60 @@
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title>Taxonomy of languages for EpiDoc profile</title>
+            </titleStmt>
+            <publicationStmt>
+                <p>Established in the scope of the EDEp project</p>
+            </publicationStmt>
+            <sourceDesc>
+                <p/>
+            </sourceDesc>
+        </fileDesc>
+        <encodingDesc>
+            <classDecl>
+                <taxonomy xml:id="languages">
+                    <category xml:id="cel">
+                        <catDesc xml:lang="de">Keltisch</catDesc>
+                        <catDesc xml:lang="en">Celtic</catDesc>
+                    </category>
+                    <category xml:id="grc">
+                        <catDesc xml:lang="en">Greek</catDesc>
+                        <catDesc xml:lang="de">Griechisch</catDesc>
+                    </category>
+                    <category xml:id="heb">
+                        <catDesc xml:lang="en">Hebrew</catDesc>
+                        <catDesc xml:lang="de">Hebräisch</catDesc>
+                    </category>
+                    <category xml:id="xib">
+                        <catDesc xml:lang="en">Iberian</catDesc>
+                        <catDesc xml:lang="de">Iberisch</catDesc>
+                    </category>
+                    <category xml:id="ita">
+                        <catDesc xml:lang="en">Italic</catDesc>
+                        <catDesc xml:lang="de">Italisch</catDesc>
+                    </category>
+                    <category xml:id="lat">
+                        <catDesc xml:lang="en">Latin</catDesc>
+                        <catDesc xml:lang="de">Latein</catDesc>
+                    </category>
+                    <category xml:id="nxm">
+                        <catDesc xml:lang="en">Numidian</catDesc>
+                        <catDesc xml:lang="de">Numidisch</catDesc>
+                    </category>
+                    <category xml:id="xxx">
+                        <catDesc xml:lang="en">Palmyrenic</catDesc>
+                        <catDesc xml:lang="de">Palmyrisch</catDesc>
+                    </category>
+                    <category xml:id="xpu">
+                        <catDesc xml:lang="en">Phoenician-Punic</catDesc>
+                        <catDesc xml:lang="de">Phönizisch-Punisch</catDesc>
+                    </category>
+                </taxonomy>
+            </classDecl>
+        </encodingDesc>
+    </teiHeader>
+    <standOff>
+        <note/>
+    </standOff>
+</TEI>

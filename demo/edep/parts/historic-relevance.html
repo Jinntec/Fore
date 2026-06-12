@@ -1,0 +1,93 @@
+<fx-group ref="profileDesc" class="neutral">
+    <details id="historic-relevance">
+        <summary>
+            <h2>Historical relevance</h2>
+        </summary>
+        <!-- 28)  -->
+        <fx-group ref="textClass">  
+            <fx-group ref="keywords[@scheme='https://edh.ub.uni-heidelberg.de/edep/religion']"> 
+                <fx-group ref="term">      
+                    <fx-control
+                        ref="@ref"
+                        update-event="input"
+                        create="create">
+                        <label>
+                            Religion
+                        </label>
+                        <fx-items class="widget" ref="sortNames(instance('religion')//category)">
+                            <template>
+                        <span class="fx-checkbox">
+                            <input id="{@xml:id}" type="checkbox" value="{@xml:id}" />
+                            <label for="{@xml:id}">{catDesc[@xml:lang = $lang]}</label>
+                        </span>
+                            </template>
+                        </fx-items>
+                    </fx-control>
+                </fx-group>
+            </fx-group>
+        </fx-group>
+        
+        <!-- dummy switch to insert or delete 'term' elements in main instance -->
+        <fx-control
+            ref="instance('vars')/history-term"
+            update-event="input"
+            value-prop="checked">
+            <label for="historyTerm">
+                Social / Economic / Legal History
+            </label>
+            <input class="widget" id="historyTerm" type="checkbox" />
+            <fx-insert
+                event="value-changed"
+                if="context()/text()='true'"
+                origin="instance('templates')/term[@ref='#social-economic-legal-history']"
+                ref="instance('default')//textClass/keywords[@scheme='https://edh.ub.uni-heidelberg.de/edep/terms']/term"></fx-insert>
+
+            <fx-delete
+                event="value-changed"
+                if="context()/text()='false'"
+                ref="instance('default')//term[@ref='#social-economic-legal-history']"></fx-delete>
+        </fx-control>
+
+        <!-- dummy switch to insert or delete 'term' elements in main instance -->
+        <fx-control
+            ref="instance('vars')/geography-term"
+            update-event="input"
+            value-prop="checked">
+            <label for="geographyTerm">
+                Geography / Topography
+            </label>
+            <input class="widget" id="geographyTerm" type="checkbox" />
+            <fx-insert
+                event="value-changed"
+                if="context()/text()='true'"
+                origin="instance('templates')/term[@ref='#geography']"
+                ref="instance('default')//textClass/keywords[@scheme='https://edh.ub.uni-heidelberg.de/edep/terms']/term"></fx-insert>
+
+            <fx-delete
+                event="value-changed"
+                if="context()/text()='false'"
+                ref="instance('default')//term[@ref='#geography']"></fx-delete>
+        </fx-control>
+
+        <!-- dummy switch to insert or delete 'term' elements in main instance -->
+        <fx-control
+            ref="instance('vars')/military-term"
+            update-event="input"
+            value-prop="checked">
+            <label for="militaryTerm">
+                Military
+            </label>
+            <input class="widget" id="militaryTerm" type="checkbox" />
+            <fx-insert
+                event="value-changed"
+                if="context()/text()='true'"
+                origin="instance('templates')/term[@ref='#military']"
+                ref="instance('default')//textClass/keywords[@scheme='https://edh.ub.uni-heidelberg.de/edep/terms']/term"></fx-insert>
+
+            <fx-delete
+                event="value-changed"
+                if="context()/text()='false'"
+                ref="instance('default')//term[@ref='#military']"></fx-delete>
+        </fx-control>
+    </details>
+</fx-group>

@@ -1,0 +1,106 @@
+<details id="bibliography" class="group-6">
+    <summary>
+        <h3>Bibliography</h3>
+    </summary>
+    <!-- 35b) -->
+<!--
+    <fieldset>
+        <legend>
+            <label>
+                Bibliography
+            </label>
+            <fx-trigger class="add" title="Bibliographie hinzufügen">
+                <iron-icon icon="add-circle-outline"></iron-icon>
+
+                <fx-insert
+                  context="listBibl[@type='bibliography']"
+                  ref="bibl"
+                  origin="instance('templates')//bibl"></fx-insert>
+                <fx-refresh control="r-biblio"></fx-refresh>
+            </fx-trigger>
+        </legend>
+-->
+        <fx-repeat
+          class="nested-repeat"
+          id="r-biblio"
+          ref="listBibl[@type='bibliography']/bibl">
+            <template>
+                <div>
+                    <div class="output">
+                        <label>
+                            Sigle</label
+                        >
+                        <div>
+                            <fx-trigger>
+                                <iron-icon
+                                  class="widget"
+                                  icon="icons:content-copy"></iron-icon>
+                                <fx-call function="clipboard(@corresp)"></fx-call>
+                            </fx-trigger>
+                        </div>
+                    </div>
+                    <fx-control ref="@corresp" update-event="value-changed" create="create">
+                        <label>
+                            Reference
+                        </label>
+                        <zotero-autocomplete
+                            class="widget"
+                            endpoint="{instance('vars')/appdir}/api/zotero/items/suggest"
+                            limit="8"
+                            minlength="2"
+                            debounce="250"
+                            wait-ready="true">
+                        </zotero-autocomplete>
+                    </fx-control>
+                    <fx-control ref="citedRange">
+                        <label>
+                            Cited range
+                        </label>
+                    </fx-control>
+                    <fx-control ref="note" as="node" update-event="leave">
+                        <label>
+                            Notes
+                        </label>
+                        <edep-xml-editor
+                          class="widget"
+                          schema-root="note"
+                          placeholder="[Inline text/markup or sequence of paragraphs]"
+                          base-url="${app}"
+                          data-template="lib:parse-params">
+                        </edep-xml-editor>
+                    </fx-control>
+                    <fx-control ref="@type" update-event="input" create="create">
+                        <label>
+                            Display
+                        </label>
+                        <select
+                        ref="instance('publication-status')//category"
+                        class="widget">
+                            <template>
+                                <!-- prettier-ignore -->
+                                <option value="{@xml:id}">{catDesc[@xml:lang = $lang]}</option>
+                            </template>
+                        </select>         
+                    </fx-control>
+                </div>
+                <fx-trigger>
+                    <iron-icon
+                      icon="remove-circle-outline"
+                      title="Bibliographie löschen"></iron-icon>
+                    <fx-delete ref="."></fx-delete>
+                    <fx-refresh control="r-biblio"></fx-refresh>
+                </fx-trigger>
+            </template>
+        </fx-repeat>
+        <fx-trigger class="add" title="Bibliographie hinzufügen">
+            <iron-icon icon="add-circle-outline"></iron-icon>
+
+            <fx-insert
+                context="listBibl[@type='bibliography']"
+                ref="bibl"
+                origin="instance('templates')//bibl"></fx-insert>
+            <fx-refresh control="r-biblio"></fx-refresh>
+        </fx-trigger>
+
+<!--    </fieldset>-->
+</details>

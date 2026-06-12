@@ -1,0 +1,294 @@
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title>Taxonomy of writing options for EpiDoc profile</title>
+            </titleStmt>
+            <publicationStmt>
+                <p>Established in the scope of the EDEp project</p>
+            </publicationStmt>
+            <sourceDesc>
+                <p/>
+            </sourceDesc>
+        </fileDesc>
+        <encodingDesc>
+            <classDecl>
+                <taxonomy xml:id="writing">
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/2">
+                        <catDesc>Atramento</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/3">
+                        <catDesc>Caelo</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/18">
+                        <catDesc>Carbone</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/168">
+                        <catDesc>carved</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/20">
+                        <catDesc>Cetera</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/4">
+                        <catDesc>Crustis</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/12">
+                        <catDesc>Eingemeißelt mit Farbresten</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/44">
+                        <catDesc>Embossed</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/167">
+                        <catDesc>etched (with a sharp point)</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/21">
+                        <catDesc>Ignoratur</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/166">
+                        <catDesc>impressed</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/170">
+                        <catDesc>in points (chasing)</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/174">
+                        <catDesc>in points (repouss)</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/173">
+                        <catDesc>in relief (cut)</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/169">
+                        <catDesc>in troughs</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/5">
+                        <catDesc>Litteris Ageminatis</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/36">
+                        <catDesc>Litteris Alveolatis</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/6">
+                        <catDesc>Litteris Applicitis</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/7">
+                        <catDesc>Litteris Eminentibus</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/8">
+                        <catDesc>Litteris ex Forma</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/9">
+                        <catDesc>Litteris Scariphatis</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/172">
+                        <catDesc>molded</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/10">
+                        <catDesc>Pictura</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/171">
+                        <catDesc>protruding</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/11">
+                        <catDesc>Punctim</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/1">
+                        <catDesc>Scalpro</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/13">
+                        <catDesc>Signaculo</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/165">
+                        <catDesc>Signaculo Candente</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/14">
+                        <catDesc>Stilo</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/15">
+                        <catDesc>Terebro</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/16">
+                        <catDesc>Tessellis</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/17">
+                        <catDesc>Typo</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/19">
+                        <catDesc>Undetermined</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/175">
+                        <catDesc>with brush</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/176">
+                        <catDesc>minio depictae</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/177">
+                        <catDesc>compresse scriptae</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/178">
+                        <catDesc>rusticae neglegentissime insculptae</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/179">
+                        <catDesc>accurate (minus accurate) / affabre insculptae / scalptae</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/180">
+                        <catDesc>tempore recentiore colore nigro tinctae</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/181">
+                        <catDesc>decrescentes / accrescentes</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/182">
+                        <catDesc>littera supra eminens reliquis maior</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/183">
+                        <catDesc>erasae, in litura repositae</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/184">
+                        <catDesc>valde detritae, partim umore deletae, musco circumlitae</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/185">
+                        <catDesc>plane evanuerunt</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/186">
+                        <catDesc>Titulus incisus est litteris velocibus.</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/187">
+                        <catDesc>Subula</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/188">
+                        <catDesc>Brattea</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/189">
+                        <catDesc>Calamo</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/190">
+                        <catDesc>Creta</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/191">
+                        <catDesc>Granulis</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/192">
+                        <catDesc>Penicillo</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/193">
+                        <catDesc>ad gemina metalla</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/194">
+                        <catDesc>alveolis repletis</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/195">
+                        <catDesc>Gypso</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/196">
+                        <catDesc>Lapide rubro</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/197">
+                        <catDesc>Lapide fulvo</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/198">
+                        <catDesc>Digito</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/200">
+                        <catDesc>Spathula</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/201">
+                        <catDesc>in alveolis insertis</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/202">
+                        <catDesc>ipsae lapidi</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/203">
+                        <catDesc>litt. sulcis angulatis</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/204">
+                        <catDesc>litt. sulcis incurvatis</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/205">
+                        <catDesc>litt. sulcis rectis</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/206">
+                        <catDesc>litt. sulcis rudibus</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/207">
+                        <catDesc>litt. rubricatis</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/208">
+                        <catDesc>rubro</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/209">
+                        <catDesc>nigro</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/210">
+                        <catDesc>albo</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/211">
+                        <catDesc>candente</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/212">
+                        <catDesc>plumbo</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/213">
+                        <catDesc>vitro</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/214">
+                        <catDesc>auro</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/233">
+                        <catDesc>argento</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/215">
+                        <catDesc>Bulino</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/216">
+                        <catDesc>Carbone</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/217">
+                        <catDesc>Inchiostro</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/218">
+                        <catDesc>Digitus</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/219">
+                        <catDesc>Forma</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/220">
+                        <catDesc>Spathula</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/221">
+                        <catDesc>Brattea</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/222">
+                        <catDesc>Calamus</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/224">
+                        <catDesc>Granulis</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/225">
+                        <catDesc>Penicillus</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/226">
+                        <catDesc>Typus</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/227">
+                        <catDesc>Brush</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/228">
+                        <catDesc>Tessellae</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/229">
+                        <catDesc>Terebrus</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/230">
+                        <catDesc>Stylus</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/231">
+                        <catDesc>Signaculus</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/writing/lod/232">
+                        <catDesc>Scalprum</catDesc>
+                    </category>
+                </taxonomy>
+            </classDecl>
+        </encodingDesc>
+    </teiHeader>
+    <standOff>
+        <note/>
+    </standOff>
+</TEI>

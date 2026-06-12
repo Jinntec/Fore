@@ -1,0 +1,109 @@
+<details id="text-description">
+    <!-- 
+    
+    METRE: select
+    ?LANGUAGES: select + checkbox (if main language)
+    ?LANGUAGE COMMENTS: free form
+    PALEOGRAPHY: multiple checkboxes
+    NOTE: text editor
+    LIGATURE: select
+    
+    -->
+    <summary>
+        <h2>Description of text</h2>
+    </summary>
+    <fx-group ref="ancestor::teiHeader/profileDesc" class="outer-group" aria-labelledby="profile-lbl">
+
+        <fieldset>
+            <legend>
+                Language
+            </legend>
+
+            <fx-group ref="langUsage">
+                <fx-trigger class="add">
+                    
+                    <fx-insert
+                    context="."
+                    ref="language"
+                    origin="instance('templates')/language"></fx-insert>
+                </fx-trigger>
+
+                <fx-repeat
+                class="nested-repeat repeat-flex"
+                ref="language[@ident!='edep']"
+                id="r-language">
+                    <template>
+                    <fx-group class="neutral">
+                            <fx-control ref="@ident" create="create">
+                                <label>
+                                    Language
+            </label>
+            <select class="widget"
+                ref="sortNames(instance('metre')//category)"
+                selection="open">
+                <template>
+                    <!-- prettier-ignore -->
+                    <option value="{@xml:id}">{catDesc[@xml:lang = $lang]}</option>
+                </template>
+            </select>
+        </fx-control>
+
+        <div class="alternatives">
+            <fx-group ref="note[@type='paleography']" class="neutral">
+                <fx-control
+                ref="@corresp"
+                create="create"
+                update-event="input">
+                    <label>
+                        Paleography
+                    </label>
+                    <fx-items ref="instance('paleography')//category" class="widget">
+                        <template>
+                            <span class="fx-checkbox">
+                                <input type="checkbox" value="{@corresp}"/>
+                                <label>{catDesc[@xml:lang = $lang]}</label>
+                            </span>
+                        </template>
+                    </fx-items>
+                </fx-control>
+                <fx-control
+                id="input34"
+                ref="."
+                class="{instance('vars')/hide}"
+                as="node"
+                update-event="leave">
+                    <label>
+                        Remarks on the palaeography
+                    </label>
+                    <edep-xml-editor
+                    class="widget"
+                    placeholder="[Inline text/markup or sequence of paragraphs]"
+                    schema-root="provenance"
+                    base-url="${app}"
+                    data-template="lib:parse-params">
+                    </edep-xml-editor>
+                </fx-control>
+            </fx-group>
+        </div>
+    </fx-group>
+
+    <!-- 39) -->
+
+    <fx-group ref="physDesc">
+        <fx-group ref="handDesc" class="neutral">
+            <fx-control ref="handNote[@scope='ligature']" update-event="input">
+                <label>
+                    Ligature(s)
+                </label>
+                <select
+                    ref="sortNames(instance('ligature')//category)"
+                    class="widget">
+                    <template>
+                        <!-- prettier-ignore -->
+                        <option value="{@corresp}">{catDesc[@xml:lang = $lang]}</option>
+                    </template>
+                </select>
+            </fx-control>
+        </fx-group>
+    </fx-group>
+</details>

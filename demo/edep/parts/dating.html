@@ -1,0 +1,62 @@
+<details id="dating" class="group-6">
+    <summary>
+        <h2>Chronological data</h2>
+    </summary>
+    <fx-group ref="fileDesc/sourceDesc/msDesc/history/origin/origDate" id="chronology">
+        <!-- 26), 27)-->
+        <section class="form-row">
+            <fx-control ref="@when-custom" create="create">
+                <label>
+                    Point in time
+                </label>
+                <input
+                  placeholder=""
+                  data-i18n="[placeholder]form.dating-placeholder"
+                  class="widget" />
+                <fx-alert>
+                    <iron-icon icon="warning"></iron-icon>
+                    Invalid date
+                </fx-alert>
+            </fx-control>
+            <fx-control ref="@notBefore-custom" create="create">
+                <label>
+                    after
+                </label>
+                <input
+                  placeholder=""
+                  data-i18n="[placeholder]form.dating-placeholder"
+                  class="widget" />
+                <fx-alert>
+                    <iron-icon icon="warning"></iron-icon>
+                    Invalid date
+                </fx-alert>
+            </fx-control>
+            <fx-control ref="@notAfter-custom" create="create">
+                <label>
+                    before
+                </label>
+                <input
+                  placeholder=""
+                  data-i18n="[placeholder]form.dating-placeholder"
+                  class="widget" />
+                <fx-alert>
+                    <iron-icon icon="warning"></iron-icon>
+                    Invalid date
+                </fx-alert>
+            </fx-control>
+        </section>
+        <fx-control ref="." as="node" update-event="leave">
+            <label>
+                Further remarks
+            </label>
+            <edep-xml-editor
+              class="widget"
+              placeholder="[Inline text/markup or sequence of paragraphs]"
+              schema-root="provenance"
+              base-url="${app}"
+              data-template="lib:parse-params">
+                \
+            </edep-xml-editor>
+        </fx-control>
+    </fx-group>
+</details>

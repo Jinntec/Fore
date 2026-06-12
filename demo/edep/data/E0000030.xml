@@ -1,0 +1,197 @@
+<?xml-model href="https://epidoc.stoa.org/schema/latest/tei-epidoc.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="https://epidoc.stoa.org/schema/latest/tei-epidoc.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0" type="complete" xml:id="E0000030">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title>Titulus sacer Fortunae (EEE 3)</title>
+                <editor>Kajava</editor>
+                <editor role="digital">Wolfgang Meier</editor>
+                <respStmt>
+                    <resp when="1885">autopsy</resp>
+                    <persName>Helbig</persName>
+                </respStmt>
+                <respStmt>
+                    <resp>photo</resp>
+                    <persName>Kajava</persName>
+                </respStmt>
+                <editor role="digital">David Eibeck</editor>
+                <editor role="digital">Magdalena Turska</editor>
+                <editor role="digital">Joern Turner</editor>
+                <editor>Helbig</editor>
+            </titleStmt>
+            <publicationStmt>
+                <authority>Epigraphische Datenbank Heidelberg</authority>
+                <availability>
+                    <p>Heidelberger Akademie der Wissenschaften</p>
+                    <licence target="http://creativecommons.org/licenses/by-sa/4.0/">This file is
+                        licensed under the Creative Commons Attribution-ShareAlike 4.0 license.
+                    </licence>
+                </availability>
+            </publicationStmt>
+            <sourceDesc>
+                <msDesc>
+                    <msIdentifier>
+                        <repository key="https://d-nb.info/gnd/1055016-1">München, Staatliche
+                            Antikensammlung</repository>
+                        <idno type="inventory">NI 6979</idno>
+                        <idno type="TM">522587</idno>
+                        <idno type="EDEp">E0000030</idno>
+                    </msIdentifier>
+                    <physDesc>
+                        <objectDesc>
+                            <supportDesc>
+                                <support>
+                                    <objectType ref="https://www.eagle-network.eu/voc/objtyp/lod/257"/>
+                                    <material ref="https://www.eagle-network.eu/voc/material/lod/131"/>
+                                    <note><ref type="biblio" target="#Helbig"
+                                        >HELBIG</ref>: “In argilla grezza rossastra [...] una pizza
+ellittica (diametri 0,075 e 0,028), sul cui piano superiore
+sorgono cinque oggetti piramidali; sull'inferiore poi si
+legge un'arcaica iscrizione latina, graffita nell'argilla
+già cotta.” <ref type="biblio" target="#Europe"
+>NONNIS</ref>: “Una placchetta ovale d'incerta definizione
+tipologica, in cui è forse possibile riconoscere un organo
+intero (utero appiattito fortemente stilizzato?).”</note>
+                                </support>
+                                <condition>complete</condition>
+                            </supportDesc>
+                            <layoutDesc>
+                                <layout>
+                                    <note type="paleography">De forma litterae A notandum est
+                                        hastam trasversam a sinistra solutam oblique collocatam
+                                        esse.</note>
+                                    <note type="metre">no</note></layout>
+                            </layoutDesc>
+                        </objectDesc>
+                        <handDesc>
+                            <handNote scope="ligature">no</handNote>
+                            <handNote scope="letterHeight">
+                                <locus></locus>
+                                <height></height>  
+                            </handNote>
+                        </handDesc>
+                        <decoDesc>
+                            <decoNote corresp="https://www.eagle-network.eu/voc/decor/lod/1000"/>
+                        </decoDesc>
+                    </physDesc>
+                    <msContents class="https://www.eagle-network.eu/voc/typeins/lod/80">
+                        <summary>Tituli sacri; Titulus Fortunae</summary>
+                    </msContents>
+                    <history>
+                        <origin>
+                            <origDate notBefore-custom="-300" notAfter-custom="-200"
+datingMethod="http://en.wikipedia.org/wiki/Julian_calendar">Saeculo
+III a. Chr. n., potissimum medio, attribuit <ref type="biblio"
+target="#Europe">NONNIS</ref>.</origDate>
+                            <origPlace corresp="G003598"/>
+                        </origin>
+                        <provenance type="found" notAfter="1885"><note type="context">Inter res
+votivas in via degli Asini (nunc via dell’Asilo) prope portam
+Maggiore depositas [in fundo fratrum Colabucci <ref
+type="biblio" target="#Helbig">HELBIG</ref>].</note>
+                        </provenance>
+                        <provenance type="history">Nuper cognitum est rem hanc votivam eandem
+                            esse ac eam, quae exstat Monachii in Staatliche Antikensammlung,
+                            inv. NI 6979.</provenance>
+                    </history>
+                </msDesc>
+                <listBibl>
+                    <listBibl type="bibliography">
+                        <bibl type="public" corresp="CifarelliRecinto">
+                            <citedRange>11-12 adn. 26</citedRange>
+                        </bibl>
+                        <bibl type="public" corresp="CifarelliAmbrosiniNonnisNuovidati"/>
+                        <bibl type="public" corresp="BoosHeiligtümer"/>
+                        <bibl type="public" corresp="BoosInexcelsissimoloco">
+                            <citedRange>27</citedRange>
+                        </bibl>
+                        <bibl type="public" corresp="Hamdorf">
+                            <note>cum im. phot.;</note>
+                            <citedRange>622-623 n. E941</citedRange>
+                        </bibl>
+                        <bibl type="public" corresp="Europe"/>
+                        <bibl type="public" corresp="CifarelliInstrumentum"/>
+                        <bibl type="internal" corresp="Champeaux"/>
+                    </listBibl>
+                    <listBibl type="previousEditions">
+                        <bibl type="public" corresp="Helbig">
+                            <note>ex quo</note>
+                            <citedRange>63</citedRange>
+                        </bibl>
+                        <bibl type="public" corresp="IhmEEVIII">
+                            <citedRange>625</citedRange>
+                        </bibl>
+                        <bibl type="public" corresp="CIL1(2).2.4.1">
+                            <citedRange>3101</citedRange>
+                        </bibl>
+                    </listBibl>
+                    <listBibl type="images">
+                        <bibl type="public" xml:id="Hamdorf">
+                            <citedRange>622-623 n. E941</citedRange>
+                        </bibl>
+                        <bibl type="public" xml:id="NonnisAppunti">
+                            <note>im. phot. in p. 353.</note>
+                            <citedRange>353</citedRange>
+                        </bibl>
+                    </listBibl>
+                </listBibl>
+            </sourceDesc>
+        </fileDesc>
+        <encodingDesc>
+            <p>Encoded following EpiDoc guidelines 9.2</p>
+        </encodingDesc>
+        <profileDesc>
+            <textClass>
+                <keywords scheme="https://edh.ub.uni-heidelberg.de/edep/religion">
+                    <term/>
+                </keywords>
+                <keywords scheme="https://edh.ub.uni-heidelberg.de/edep/terms">
+                    <term/>
+                </keywords>
+            </textClass>
+            <langUsage>
+                <language ident=""><note/></language>
+                <language ana="main" ident="lat"/>
+            </langUsage>
+        </profileDesc>
+        <revisionDesc status="draft">
+            <change type="created" when="2025-02-14T16:10:48.463+01:00" who="edep"/>
+            <change type="changed" when="2025-09-02T15:33:46.324+02:00" who="edep"/>
+        </revisionDesc>
+    </teiHeader>
+    <facsimile>
+        <graphic url="http://www.edr-edr.it/edr_programmi/view_img.php?id_nr=155367&amp;lang=it"/>
+    </facsimile>
+    <text>
+        <body>
+            <div type="apparatus"/>
+            <div type="translation" resp="Eibeck">
+<ab>Alla Dea Fortuna.</ab>
+            </div>
+            <div type="edition">
+                <ab>
+                    <lb n="1"/><persName key="P000016">Fortunai</persName>
+                </ab>
+            </div>
+            <div type="commentary">
+                <ab>Cf. <ref type="biblio" target="#CifarelliRecinto">CIFARELLI, Recinto 
+<seg type="citedRange">11-12 adn. 26</seg></ref>; 
+<ref type="biblio" target="#CifarelliAmbrosiniNonnisNuovidati">CIFARELLI - AMBROSINI - NONNIS, Nuovi dati <seg type="citedRange">249-250</seg></ref>; 
+<ref type="biblio" target="#BoosHeiligtümer">BOOS, Heiligtümer <seg type="citedRange">191</seg></ref>; 
+<ref type="biblio" target="#BoosInexcelsissimoloco">BOOS, In excelsissimo loco <seg type="citedRange">27</seg></ref>; 
+<ref type="biblio" target="#Hamdorf">HAMDORF <seg type="citedRange">622-623 n. E941</seg> cum im. phot.</ref>; 
+<ref type="biblio" target="#Europe">NONNIS, Appunti <seg type="citedRange">360 n. [6]</seg>(im. phot. in <seg type="citedRange">p. 353</seg>)</ref>; 
+<ref type="biblio" target="#CifarelliInstrumentum">CIFARELLI, Instrumentum <seg type="citedRange">713</seg></ref>. 
+Alii sulcum a dextra litteram I esse putaverunt, quod <ref type="biblio" target="#Europe">NONNIS</ref> negat. Utcumque se habet, in dedicatione sacra
+divinitatis nomen casu potissimum dativo vel genetivo apparere exspectes.
+Itaque, si re vera Fortuna legendum est, de dativo in -a desinente agitur. <ref type="biblio" target="#BoosHeiligtümer">BOOS, Heiligtümer</ref> perperam formam
+Fortunai casum nominativum pluralem esse interpretatus est. De hoc titulo
+cultuque <persName key="P000016">deae Fortunae</persName>, quam Signini in
+sacello probabiliter a meridie oppidi prope <placeName>portam
+Maggiore</placeName> sito iam aetate liberae rei publicae venerabantur (CIFARELLI, l. l.), cf. 
+<ref type="biblio" target="#Champeaux">CHAMPEAUX <seg type="citedRange">185</seg></ref>.</ab>
+            </div>
+        </body>
+    </text>
+</TEI>
