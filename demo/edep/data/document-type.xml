@@ -1,0 +1,36 @@
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title>Taxonomy of documents options for EpiDoc profile</title>
+            </titleStmt>
+            <publicationStmt>
+                <p>Established in the scope of the EDEp project</p>
+            </publicationStmt>
+            <sourceDesc>
+                <p/>
+            </sourceDesc>
+        </fileDesc>
+        <encodingDesc>
+            <classDecl>
+                <taxonomy xml:id="document-type">
+                    <category xml:id="partial">
+                        <catDesc xml:lang="de">teil</catDesc>
+                        <catDesc xml:lang="en">partial</catDesc>
+                    </category>
+                    <category xml:id="unitary">
+                        <catDesc xml:lang="de">unitarisch</catDesc>
+                        <catDesc xml:lang="en">unitary</catDesc>
+                    </category>
+                    <category xml:id="composite">
+                        <catDesc xml:lang="de">composite</catDesc>
+                        <catDesc xml:lang="en">composite</catDesc>
+                    </category>
+                </taxonomy>
+            </classDecl>
+        </encodingDesc>
+    </teiHeader>
+    <standOff>
+        <note/>
+    </standOff>
+</TEI>

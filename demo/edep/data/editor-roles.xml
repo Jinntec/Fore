@@ -1,0 +1,37 @@
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title>Taxonomy of editorial roles for EpiDoc profile</title>
+            </titleStmt>
+            <publicationStmt>
+                <p>Established in the scope of the EDEp project</p>
+            </publicationStmt>
+            <sourceDesc>
+                <p/>
+            </sourceDesc>
+        </fileDesc>
+        <encodingDesc>
+            <classDecl>
+                <taxonomy xml:id="editor-roles">
+                    <category xml:id="original">
+                        <catDesc xml:lang="de">original</catDesc>
+                        <catDesc xml:lang="en">original</catDesc>
+                    </category>
+                    <category xml:id="print">
+                        <catDesc xml:lang="de">print</catDesc>
+                        <catDesc xml:lang="en">print</catDesc>
+                    </category>
+                    <category xml:id="digital">
+                        <catDesc xml:lang="en">digital</catDesc>
+                        <catDesc xml:lang="de">digital</catDesc>
+                    </category>
+                </taxonomy>
+
+            </classDecl>
+        </encodingDesc>
+    </teiHeader>
+    <standOff>
+        <note/>
+    </standOff>
+</TEI>

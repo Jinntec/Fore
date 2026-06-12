@@ -1,0 +1,36 @@
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title>Taxonomy of inscription decorations for EpiDoc profile</title>
+            </titleStmt>
+            <publicationStmt>
+                <p>Established in the scope of the EDEp project</p>
+            </publicationStmt>
+            <sourceDesc>
+                <p/>
+            </sourceDesc>
+        </fileDesc>
+        <encodingDesc>
+            <classDecl>
+                <taxonomy xml:id="decoration">
+                    <category corresp="https://www.eagle-network.eu/voc/decor/lod/1000">
+                        <catDesc xml:lang="en">no</catDesc>
+                        <catDesc xml:lang="de">Nein</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/decor/lod/2000">
+                        <catDesc xml:lang="en">yes</catDesc>
+                        <catDesc xml:lang="de">Ja</catDesc>
+                    </category>
+                    <category corresp="https://edh.ub.uni-heidelberg.de/edep/voc/decor/lod/3000">
+                        <catDesc xml:lang="en">unknown</catDesc>
+                        <catDesc xml:lang="de">unbekannt</catDesc>
+                    </category>
+                </taxonomy>
+            </classDecl>
+        </encodingDesc>
+    </teiHeader>
+    <standOff>
+        <note/>
+    </standOff>
+</TEI>

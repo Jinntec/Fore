@@ -1,0 +1,222 @@
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title>Taxonomy of provinces (historic) for EpiDoc profile</title>
+            </titleStmt>
+            <publicationStmt>
+                <p>Established in the scope of the EDEp project</p>
+            </publicationStmt>
+            <sourceDesc>
+                <p/>
+            </sourceDesc>
+        </fileDesc>
+        <encodingDesc>
+            <classDecl>
+                <taxonomy xml:id="province">
+                    <category xml:id="Ach">
+                        <catDesc xml:lang="en">Achaia</catDesc>
+                    </category>
+                    <category xml:id="Aeg">
+                        <catDesc xml:lang="en">Aegyptus</catDesc>
+                    </category>
+                    <category xml:id="Aem">
+                        <catDesc xml:lang="en">Aemilia (Regio VIII)</catDesc>
+                    </category>
+                    <category xml:id="Afr">
+                        <catDesc xml:lang="en">Africa Proconsularis</catDesc>
+                    </category>
+                    <category xml:id="AlC">
+                        <catDesc xml:lang="en">Alpes Cottiae</catDesc>
+                    </category>
+                    <category xml:id="AlG">
+                        <catDesc xml:lang="en">Alpes Graiae</catDesc>
+                    </category>
+                    <category xml:id="AlM">
+                        <catDesc xml:lang="en">Alpes Maritimae</catDesc>
+                    </category>
+                    <category xml:id="AlP">
+                        <catDesc xml:lang="en">Alpes Poeninae</catDesc>
+                    </category>
+                    <category xml:id="ApC">
+                        <catDesc xml:lang="en">Apulia et Calabria (Regio II)</catDesc>
+                    </category>
+                    <category xml:id="Aqu">
+                        <catDesc xml:lang="en">Aquitania</catDesc>
+                    </category>
+                    <category xml:id="Ara">
+                        <catDesc xml:lang="en">Arabia</catDesc>
+                    </category>
+                    <category xml:id="Arm">
+                        <catDesc xml:lang="en">Armenia</catDesc>
+                    </category>
+                    <category xml:id="Asi">
+                        <catDesc xml:lang="en">Asia</catDesc>
+                    </category>
+                    <category xml:id="Ass">
+                        <catDesc xml:lang="en">Assyria</catDesc>
+                    </category>
+                    <category xml:id="Bae">
+                        <catDesc xml:lang="en">Baetica</catDesc>
+                    </category>
+                    <category xml:id="Bar">
+                        <catDesc xml:lang="en">Barbaricum</catDesc>
+                    </category>
+                    <category xml:id="Bel">
+                        <catDesc xml:lang="en">Belgica</catDesc>
+                    </category>
+                    <category xml:id="BiP">
+                        <catDesc xml:lang="en">Bithynia et Pontus</catDesc>
+                    </category>
+                    <category xml:id="BrL">
+                        <catDesc xml:lang="en">Bruttium et Lucania (Regio III)</catDesc>
+                    </category>
+                    <category xml:id="Bri">
+                        <catDesc xml:lang="en">Britannia</catDesc>
+                    </category>
+                    <category xml:id="Cap">
+                        <catDesc xml:lang="en">Cappadocia</catDesc>
+                    </category>
+                    <category xml:id="Cil">
+                        <catDesc xml:lang="en">Cilicia</catDesc>
+                    </category>
+                    <category xml:id="Cor">
+                        <catDesc xml:lang="en">Corsica</catDesc>
+                    </category>
+                    <category xml:id="Cre">
+                        <catDesc xml:lang="en">Creta</catDesc>
+                    </category>
+                    <category xml:id="Cyp">
+                        <catDesc xml:lang="en">Cyprus</catDesc>
+                    </category>
+                    <category xml:id="Cyr">
+                        <catDesc xml:lang="en">Cyrene</catDesc>
+                    </category>
+                    <category xml:id="Dac">
+                        <catDesc xml:lang="en">Dacia</catDesc>
+                    </category>
+                    <category xml:id="Dal">
+                        <catDesc xml:lang="en">Dalmatia</catDesc>
+                    </category>
+                    <category xml:id="Epi">
+                        <catDesc xml:lang="en">Epirus</catDesc>
+                    </category>
+                    <category xml:id="Etr">
+                        <catDesc xml:lang="en">Etruria (Regio VII)</catDesc>
+                    </category>
+                    <category xml:id="Gal">
+                        <catDesc xml:lang="en">Galatia</catDesc>
+                    </category>
+                    <category xml:id="GeI">
+                        <catDesc xml:lang="en">Germania inferior</catDesc>
+                    </category>
+                    <category xml:id="GeS">
+                        <catDesc xml:lang="en">Germania superior</catDesc>
+                    </category>
+                    <category xml:id="HiC">
+                        <catDesc xml:lang="en">Hispania citerior</catDesc>
+                    </category>
+                    <category xml:id="Inc">
+                        <catDesc xml:lang="en">Provincia incerta</catDesc>
+                    </category>
+                    <category xml:id="Iud">
+                        <catDesc xml:lang="en">Iudaea</catDesc>
+                    </category>
+                    <category xml:id="LaC">
+                        <catDesc xml:lang="en">Latium et Campania (Regio I)</catDesc>
+                    </category>
+                    <category xml:id="Lig">
+                        <catDesc xml:lang="en">Liguria (Regio IX)</catDesc>
+                    </category>
+                    <category xml:id="Lug">
+                        <catDesc xml:lang="en">Lugdunensis</catDesc>
+                    </category>
+                    <category xml:id="Lus">
+                        <catDesc xml:lang="en">Lusitania</catDesc>
+                    </category>
+                    <category xml:id="LyP">
+                        <catDesc xml:lang="en">Lycia et Pamphylia</catDesc>
+                    </category>
+                    <category xml:id="MaC">
+                        <catDesc xml:lang="en">Mauretania Caesariensis</catDesc>
+                    </category>
+                    <category xml:id="MaT">
+                        <catDesc xml:lang="en">Mauretania Tingitana</catDesc>
+                    </category>
+                    <category xml:id="Mak">
+                        <catDesc xml:lang="en">Macedonia</catDesc>
+                    </category>
+                    <category xml:id="Mes">
+                        <catDesc xml:lang="en">Mesopotamia</catDesc>
+                    </category>
+                    <category xml:id="MoI">
+                        <catDesc xml:lang="en">Moesia inferior</catDesc>
+                    </category>
+                    <category xml:id="MoS">
+                        <catDesc xml:lang="en">Moesia superior</catDesc>
+                    </category>
+                    <category xml:id="Nar">
+                        <catDesc xml:lang="en">Narbonensis</catDesc>
+                    </category>
+                    <category xml:id="Nor">
+                        <catDesc xml:lang="en">Noricum</catDesc>
+                    </category>
+                    <category xml:id="Num">
+                        <catDesc xml:lang="en">Numidia</catDesc>
+                    </category>
+                    <category xml:id="PaI">
+                        <catDesc xml:lang="en">Pannonia inferior</catDesc>
+                    </category>
+                    <category xml:id="PaS">
+                        <catDesc xml:lang="en">Pannonia superior</catDesc>
+                    </category>
+                    <category xml:id="Pic">
+                        <catDesc xml:lang="en">Picenum (Regio V)</catDesc>
+                    </category>
+                    <category xml:id="Rae">
+                        <catDesc xml:lang="en">Raetia</catDesc>
+                    </category>
+                    <category xml:id="ReB">
+                        <catDesc xml:lang="en">Regnum Bospori</catDesc>
+                    </category>
+                    <category xml:id="Rom">
+                        <catDesc xml:lang="en">Roma</catDesc>
+                    </category>
+                    <category xml:id="Sam">
+                        <catDesc xml:lang="en">Samnium (Regio IV)</catDesc>
+                    </category>
+                    <category xml:id="Sar">
+                        <catDesc xml:lang="en">Sardinia</catDesc>
+                    </category>
+                    <category xml:id="Sic">
+                        <catDesc xml:lang="en">Sicilia, Melita</catDesc>
+                    </category>
+                    <category xml:id="Syr">
+                        <catDesc xml:lang="en">Syria</catDesc>
+                    </category>
+                    <category xml:id="Thr">
+                        <catDesc xml:lang="en">Thracia</catDesc>
+                    </category>
+                    <category xml:id="Tra">
+                        <catDesc xml:lang="en">Transpadana (Regio XI)</catDesc>
+                    </category>
+                    <category xml:id="Tri">
+                        <catDesc xml:lang="en">Tripolitania</catDesc>
+                    </category>
+                    <category xml:id="Umb">
+                        <catDesc xml:lang="en">Umbria (Regio VI)</catDesc>
+                    </category>
+                    <category xml:id="Val">
+                        <catDesc xml:lang="en">Valeria</catDesc>
+                    </category>
+                    <category xml:id="VeH">
+                        <catDesc xml:lang="en">Venetia et Histria (Regio X)</catDesc>
+                    </category>
+                </taxonomy>
+            </classDecl>
+        </encodingDesc>
+    </teiHeader>
+    <standOff>
+        <note/>
+    </standOff>
+</TEI>

@@ -1,0 +1,63 @@
+<section>
+    <fx-control
+      class="commentary editor"
+      ref="div[@type='commentary']"
+      as="node"
+      update-event="leave">
+        <jinn-xml-editor
+          id="commentary-editor"
+          class="widget"
+          unwrap="unwrap"
+          placeholder="[Inline text/markup or sequence of paragraphs]"
+          schema="resources/scripts/tei.json"
+          schema-root="div"
+          namespace="http://www.tei-c.org/ns/1.0"
+          base-url="${app}"
+          providers="zotero"
+          data-template="lib:parse-params">
+            <div slot="toolbar">
+                <button
+                  data-command="selectElement"
+                  title="Select element around current cursor position">
+                    &lt;|&gt;
+                </button>
+                <button
+                  data-command="encloseWith"
+                  title="Enclose selection in new element">
+                    &lt;...&gt;
+                </button>
+                <button
+                  data-command="removeEnclosing"
+                  title="Remove enclosing tags"
+                  class="sep">
+                    &lt;X&gt;
+                </button>
+                <button
+                  data-command="snippet"
+                  data-params="&lt;p&gt;$|_|&lt;/p&gt;"
+                  title="Insert paragraph">
+                    &lt;p&gt;
+                </button>
+                <button
+                  data-command="snippet"
+                  data-params="&lt;ref type=&#34;biblio&#34; target=&#34;$|1|&#34;&gt;$|_|&lt;/ref&gt;"
+                  title="Insert reference">
+
+                </button>
+                <button
+                  data-command="snippet"
+                  data-params="&lt;persName key=&#34;$|1|&#34;&gt;$|_|&lt;/persName&gt;"
+                  title="persName">
+                    <iron-icon icon="social:person-add"></iron-icon>
+                </button>
+                <button
+                  data-command="snippet"
+                  data-params="&lt;seg type=&#34;citedRange&#34;&gt;$|_|&lt;/seg&gt;"
+                  title="Insert pages">
+                    &lt;seg&gt;
+                </button>
+                <!-- <button data-command="snippet" data-params="&lt;citedRange&gt;$|1|&lt;/citedRange&gt;" title="citedRange">&lt;citedRange&gt;</button> -->
+            </div>
+        </jinn-xml-editor>
+    </fx-control>
+</section>

@@ -1,0 +1,184 @@
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title>Taxonomy of object types for EpiDoc profile</title>
+            </titleStmt>
+            <publicationStmt>
+                <p>Established in the scope of the EDEp project</p>
+            </publicationStmt>
+            <sourceDesc>
+                <p/>
+            </sourceDesc>
+        </fileDesc>
+        <encodingDesc>
+            <classDecl>
+                <taxonomy xml:id="object-type">
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/1194">
+                        <catDesc xml:lang="de"> unbestimmt</catDesc>
+                        <catDesc xml:lang="en"> unassigned</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/29">
+                        <catDesc xml:lang="de">Altar</catDesc>
+                        <catDesc xml:lang="en">altar</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/35">
+                        <catDesc xml:lang="de">Architekturteil</catDesc>
+                        <catDesc xml:lang="en">architectural member</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/135">
+                        <catDesc xml:lang="de">Büste</catDesc>
+                        <catDesc xml:lang="en">bust</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/254">
+                        <catDesc xml:lang="de">Bank</catDesc>
+                        <catDesc xml:lang="en">bench</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/154">
+                        <catDesc xml:lang="de">Barren</catDesc>
+                        <catDesc xml:lang="en">bar</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/53">
+                        <catDesc xml:lang="de">Basis</catDesc>
+                        <catDesc xml:lang="en">base</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/189">
+                        <catDesc xml:lang="de">Block</catDesc>
+                        <catDesc xml:lang="en">block</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/40">
+                        <catDesc xml:lang="de">Brunnen</catDesc>
+                        <catDesc xml:lang="en">fountain</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/85">
+                        <catDesc xml:lang="de">Cippus</catDesc>
+                        <catDesc xml:lang="en">cippus</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/94">
+                        <catDesc xml:lang="de">Clipeus</catDesc>
+                        <catDesc xml:lang="en">clipeus</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/112">
+                        <catDesc xml:lang="de">Cupa</catDesc>
+                        <catDesc xml:lang="en">cupa</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/118">
+                        <catDesc xml:lang="de">Diptychon</catDesc>
+                        <catDesc xml:lang="en">diptych</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/20">
+                        <catDesc xml:lang="de">Ehren- / Grab- / Votivbogen</catDesc>
+                        <catDesc xml:lang="en">honorific/votive arch</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/102">
+                        <catDesc xml:lang="de">Ehren- / Votivsäule</catDesc>
+                        <catDesc xml:lang="en">honorific/grave/votive column</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/210">
+                        <catDesc xml:lang="de">Fels</catDesc>
+                        <catDesc xml:lang="en">rock</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/230">
+                        <catDesc xml:lang="de">Grabbau</catDesc>
+                        <catDesc xml:lang="en">grave monument</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/132">
+                        <catDesc xml:lang="de">Herme</catDesc>
+                        <catDesc xml:lang="en">herm</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/140">
+                        <catDesc xml:lang="de">Instrumentum domesticum</catDesc>
+                        <catDesc xml:lang="en">instrumentum domesticum</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/141">
+                        <catDesc xml:lang="de">Instrumentum militare</catDesc>
+                        <catDesc xml:lang="en">instrumentum militare</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/142">
+                        <catDesc xml:lang="de">Instrumentum sacrum</catDesc>
+                        <catDesc xml:lang="en">instrumentum sacrum</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/89">
+                        <catDesc xml:lang="de">Meilen- / Leugenstein</catDesc>
+                        <catDesc xml:lang="en">mile-/leaguestone</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/157">
+                        <catDesc xml:lang="de">Mensa</catDesc>
+                        <catDesc xml:lang="en">mensa</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/182">
+                        <catDesc xml:lang="de">Olla</catDesc>
+                        <catDesc xml:lang="en">olla</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/190">
+                        <catDesc xml:lang="de">Pflaster</catDesc>
+                        <catDesc xml:lang="en">pavement</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/260">
+                        <catDesc xml:lang="de">Platte</catDesc>
+                        <catDesc xml:lang="en">slab</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/24">
+                        <catDesc xml:lang="de">Relief</catDesc>
+                        <catDesc xml:lang="en">relief</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/214">
+                        <catDesc xml:lang="de">Sarkophag</catDesc>
+                        <catDesc xml:lang="en">sarcophagus</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/163">
+                        <catDesc xml:lang="de">Schmuck</catDesc>
+                        <catDesc xml:lang="en">jewellery</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/224">
+                        <catDesc xml:lang="de">Skulptur</catDesc>
+                        <catDesc xml:lang="en">sculpture</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/67">
+                        <catDesc xml:lang="de">Stadtbefestigung</catDesc>
+                        <catDesc xml:lang="en">fortification</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/241">
+                        <catDesc xml:lang="de">Statue</catDesc>
+                        <catDesc xml:lang="en">statue</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/57">
+                        <catDesc xml:lang="de">Statuenbasis</catDesc>
+                        <catDesc xml:lang="en">statue base</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/250">
+                        <catDesc xml:lang="de">Stele</catDesc>
+                        <catDesc xml:lang="en">stele</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/257">
+                        <catDesc xml:lang="de">Tafel</catDesc>
+                        <catDesc xml:lang="en">tabula</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/276">
+                        <catDesc xml:lang="de">Tessera</catDesc>
+                        <catDesc xml:lang="en">tessera</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/78">
+                        <catDesc xml:lang="de">Urne</catDesc>
+                        <catDesc xml:lang="en">urn</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/42">
+                        <catDesc xml:lang="de">Waffe</catDesc>
+                        <catDesc xml:lang="en">weapon</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/147">
+                        <catDesc xml:lang="de">Ziegel</catDesc>
+                        <catDesc xml:lang="en">tile</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/objtyp/lod/1778">
+                        <catDesc xml:lang="en">Other</catDesc>
+                        <catDesc xml:lang="de">Sonstige</catDesc>
+                    </category>
+                </taxonomy>
+            </classDecl>
+        </encodingDesc>
+    </teiHeader>
+    <standOff>
+        <note/>
+    </standOff>
+</TEI>
