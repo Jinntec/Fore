@@ -1,0 +1,36 @@
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title>Taxonomy of preservation options for EpiDoc profile</title>
+            </titleStmt>
+            <publicationStmt>
+                <p>Established in the scope of the EDEp project</p>
+            </publicationStmt>
+            <sourceDesc>
+                <p/>
+            </sourceDesc>
+        </fileDesc>
+        <encodingDesc>
+            <classDecl>
+                <taxonomy xml:id="preservation">
+                    <category xml:id="unknown">
+                        <catDesc xml:lang="de">unbekannt</catDesc>
+                        <catDesc xml:lang="en">unknown</catDesc>
+                    </category>
+                    <category xml:id="complete">
+                        <catDesc xml:lang="de">vollständig</catDesc>
+                        <catDesc xml:lang="en">complete</catDesc>
+                    </category>
+                    <category xml:id="fragmentary">
+                        <catDesc xml:lang="en">fragmentary</catDesc>
+                        <catDesc xml:lang="de">fragmentarisch</catDesc>
+                    </category>
+                </taxonomy>
+            </classDecl>
+        </encodingDesc>
+    </teiHeader>
+    <standOff>
+        <note/>
+    </standOff>
+</TEI>

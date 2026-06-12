@@ -1,0 +1,241 @@
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <base href="${app}" data-template="pages:parse-params" />
+        <title data-template="config:app-title"></title>
+        <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" />
+        <link rel="stylesheet" href="resources/css/edep-theme.css" />
+        <!--script type="module" src="http://localhost:8090/index.js"/-->
+        <script type="module" src="resources/scripts/fore-dev.js"></script>
+        <link rel="stylesheet" href="resources/css/theme.css" />
+        <link rel="stylesheet" href="resources/css/fore.css" />
+        <link rel="stylesheet" href="resources/css/edep-theme.css" />
+        <link rel="stylesheet" href="resources/css/edep-theme2.css" />
+    </head>
+
+    <body>
+        <fx-fore id="geopicker" wait-for="#epidoc-editor">
+            <fx-action event="visibilitychange" target="#document" if="event('target.visibilityState')='visible'">
+                <fx-send submission="s-load-places"></fx-send>
+                <fx-send submission="s-load-place"></fx-send>
+            </fx-action>
+            <!--
+                This page allows to pick a `place` record with geo-data information for linkage
+                into the using TEI.
+
+                This will load data as necessary and just expects an `<place>` element as initial instance.
+
+                On selection of a value from the datalist the respective full record is fetched and displayed.
+            -->
+            <fx-action event="model-construct-done">
+                <fx-send submission="s-load-places"></fx-send>
+                <fx-send submission="s-load-place"></fx-send>
+            </fx-action>
+            <fx-model>
+                <fx-instance
+                    id="i-geo"
+                    xpath-default-namespace="http://www.tei-c.org/ns/1.0"
+                    src="templates/fore/data/geoid.xml">
+                    <data></data>
+                </fx-instance>
+
+                <fx-instance
+                    id="i-geodata"
+                    src="api/geopicker/places"
+                    xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+                    <data></data>
+                </fx-instance>
+
+                <!-- full place record -->
+                <fx-instance
+                    id="i-place"
+                    xpath-default-namespace="http://www.tei-c.org/ns/1.0"
+                    src="templates/fore/data/geoid.xml">
+                    <data></data>
+                </fx-instance>
+
+                <fx-instance id="province" src="../edep-data/data/taxonomy/province.xml" type="xml">
+                    <vocabulary></vocabulary>
+                </fx-instance>
+
+                <fx-instance id="country" src="../edep-data/data/taxonomy/country.xml" type="xml">
+                    <vocabulary></vocabulary>
+                </fx-instance>
+
+                <fx-instance id="g-vars">
+                    <data>
+                        <open>true</open>
+                        <place></place>
+                    </data>
+                </fx-instance>
+
+                <!-- loads a single place - full record -->
+                <fx-submission
+                    id="s-load-place"
+                    ref="instance('i-geo')"
+                    url="api/places/{instance('i-geo')/origPlace/@corresp}"
+                    replace="instance"
+                    instance="i-place"
+                    method="get"
+                    validate="false">
+                    <fx-action event="submit-done">
+                        <!--fx-message>place loaded</fx-message-->
+                    </fx-action>
+                </fx-submission>
+
+                <!-- loading the shortlist of places to be used by the autocomplete list -->
+                <fx-submission
+                    id="s-load-places"
+                    url="api/geopicker/places"
+                    method="get"
+                    replace="instance"
+                    instance="i-geodata">
+<!--                    <fx-message event="submit-done">places have been reloaded</fx-message>-->
+                </fx-submission>
+            </fx-model>
+
+            <fx-var name="lang" value="instance('vars')/language"></fx-var>
+
+            <!--  <div class="geopicker-control">-->
+            <div>
+                <pb-popover id="findspot-popover">
+                    <iron-icon icon="info-outline"></iron-icon>
+                    <template slot="alternate">
+                        <pb-i18n key="form.hint-geo">Geo ID</pb-i18n>
+                    </template>
+                </pb-popover>
+
+                <fx-control ref="instance('i-geo')/origPlace/@corresp" id="findspot-ctrl" update-event="input">
+                    <label>
+                        <pb-i18n key="form.geoid">Geo ID</pb-i18n>
+<!--
+                        <pb-popover>
+                            <iron-icon icon="info-outline"></iron-icon>
+                            <template slot="alternate">
+                                <pb-i18n key="form.hint-geo">Geo ID</pb-i18n>
+                            </template>
+                        </pb-popover>
+-->
+
+                    </label>
+
+                    <input list="place-list" class="widget" />
+
+                    <datalist id="place-list" data-ref="instance('i-geodata')//place/placeName">
+                        <template>
+                            <option value="{../@xml:id}">{.}</option>
+                        </template>
+                    </datalist>
+                    <fx-action event="value-changed">
+                        <!-- if we have a @corresp load the place and display it -->
+                        <fx-action if="string-length(.) != 0">
+                            <fx-send submission="s-load-place"></fx-send>
+                            <fx-send submission="s-load-places"></fx-send>
+                            <fx-setvalue ref="instance('g-vars')/open">true</fx-setvalue>
+                        </fx-action>
+                        <!-- return the @corresp to the binding control -->
+                        <fx-return ref="."></fx-return>
+                    </fx-action>
+                    <iron-icon icon="close">
+                        <fx-action event="click">
+                            <!-- reset @corresp to empty -->
+                            <fx-setvalue ref="instance('i-geo')/origPlace/@corresp"></fx-setvalue>
+                            <!-- open group to display details -->
+                            <fx-setvalue ref="instance('g-vars')/open">false</fx-setvalue>
+                            <fx-refresh force="force"></fx-refresh>
+                        </fx-action>
+                    </iron-icon>
+                </fx-control>
+            </div>
+            <!--
+                <iron-icon icon="close">
+                <fx-action event="click">
+                &lt;!&ndash; reset @corresp to empty &ndash;&gt;
+                <fx-setvalue ref="instance('i-geo')/origPlace/@corresp"></fx-setvalue>
+                &lt;!&ndash; open group to display details &ndash;&gt;
+                <fx-setvalue ref="instance('g-vars')/open">false</fx-setvalue>
+                <fx-refresh force="force"></fx-refresh>
+                </fx-action>
+                </iron-icon>
+            -->
+            <!--  </div>-->
+
+            <!-- 5) -->
+            <fx-group
+                class="geo-place"
+                ref="instance('i-place')"
+                style="display:{if(instance('g-vars')/open = 'true') then 'block' else 'none'};">
+                <fx-output
+                    ref="instance('province')/term[@xml:id = instance('i-place')//*:region[@type='province']]/name[@xml:lang=$lang]">
+                    <label slot="label">
+                        <pb-i18n key="form.site-ancient-province"></pb-i18n>
+                    </label>
+                </fx-output>
+
+                <!-- 6) -->
+                <fx-output
+                    ref="instance('country')/term[@xml:id = string(instance('i-place')//*:country)]/name[@xml:lang=$lang]">
+                    <label slot="label">
+                        <pb-i18n key="form.site-modern-country"></pb-i18n>
+                    </label>
+                </fx-output>
+
+                <!-- 7) -->
+                <fx-output ref="region[@type='region']">
+                    <label slot="label">Region</label>
+                </fx-output>
+
+                <!-- 8) -->
+                <fx-output ref="placeName[@type='ancient']">
+                    <label slot="label">
+                        <pb-i18n key="form.site-ancient-name">Fundort (antik)</pb-i18n>
+                    </label>
+                </fx-output>
+
+                <!-- 9) -->
+                <fx-output ref="placeName[@type='modern']">
+                    <label slot="label">
+                        <pb-i18n key="form.site-modern-name">Fundort (modern)</pb-i18n>
+                    </label>
+                </fx-output>
+
+                <!-- 10a) -->
+                <fx-output ref="placeName[@type='findspot']">
+                    <label slot="label">
+                        <pb-i18n key="form.context-of-provenance">Fundkontext</pb-i18n>
+                    </label>
+                </fx-output>
+            </fx-group>
+            <!--
+                #######
+                If a full repeat is needed to output a formatted item for selection the following markup can be used. However
+                it's not yet complete.
+                #######
+                <fx-control ref="instance('g-vars')/search" update-event='input'>
+                <fx-action event='click'>
+                <fx-setvalue ref="instance('g-vars')/open" value="if(. = 'true') then 'false' else 'true'"></fx-setvalue>
+                <fx-refresh force="force"></fx-refresh>
+                </fx-action>
+                </fx-control>
+
+                <fx-repeat id="r-places" ref="instance('i-geodata')/place" style="display:{if(instance('g-vars')/open = 'true') then 'block' else 'none'};">
+                <template>
+                <div tabindex='0'>
+                <fx-action event="click">
+                <fx-message>clicked</fx-message>
+                <fx-setvalue ref="instance('i-geo')/origPlace/@corresp" value="context('r-places')/@xml:id"></fx-setvalue>
+                <fx-return ref="instance('i-geo')/origPlace/@corresp"></fx-return>
+                <fx-setvalue ref="instance('g-vars')/open">false</fx-setvalue>
+                <fx-send submission="s-load-place"></fx-send>
+                </fx-action>
+                <fx-output  tabindex='0' ref="placeName"></fx-output>
+                </div>
+                </template>
+                </fx-repeat>
+            -->
+
+            <!--    </fx-group>-->
+        </fx-fore>
+        <!--<fx-devtools></fx-devtools>-->
+    </body>
+</html>

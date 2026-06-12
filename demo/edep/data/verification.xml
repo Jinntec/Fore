@@ -1,0 +1,44 @@
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title>Taxonomy of verification options for EpiDoc profile</title>
+            </titleStmt>
+            <publicationStmt>
+                <p>Established in the scope of the EDEp project</p>
+            </publicationStmt>
+            <sourceDesc>
+                <p/>
+            </sourceDesc>
+        </fileDesc>
+        <encodingDesc>
+            <classDecl>
+                <taxonomy xml:id="verification">
+                    <category xml:id="autopsy">
+                        <catDesc xml:lang="de">Autopsie</catDesc>
+                        <catDesc xml:lang="en">Autopsy</catDesc>
+                    </category>
+                    <category xml:id="squeeze">
+                        <catDesc xml:lang="de">Abklatsch</catDesc>
+                        <catDesc xml:lang="en">Squeeze</catDesc>
+                    </category>
+                    <category xml:id="photo">
+                        <catDesc xml:lang="de">Foto</catDesc>
+                        <catDesc xml:lang="en">Photo</catDesc>
+                    </category>
+                    <category xml:id="drawing">
+                        <catDesc xml:lang="de">Zeichnung</catDesc>
+                        <catDesc xml:lang="en">Drawing</catDesc>
+                    </category>
+                    <category xml:id="not-seen">
+                        <catDesc xml:lang="de">nicht gesehen</catDesc>
+                        <catDesc xml:lang="en">not seen</catDesc>
+                    </category>
+                </taxonomy>
+            </classDecl>
+        </encodingDesc>
+    </teiHeader>
+    <standOff>
+        <note/>
+    </standOff>
+</TEI>

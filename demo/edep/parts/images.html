@@ -1,0 +1,76 @@
+<section>
+    <!-- 35c) Bilder: Verweis auf Literatur, in der Abbildung vorhanden -->
+    <fx-repeat
+      class="nested-repeat"
+      id="r-images"
+      ref="listBibl[@type='images']/bibl">
+        <template>
+            <div>
+                <div class="output">
+                    <label>
+                        Sigle</label
+                    >
+                    <div>
+                        <fx-trigger>
+                            <iron-icon
+                              class="widget"
+                              icon="icons:content-copy"></iron-icon>
+                            <fx-call function="clipboard(@corresp)"></fx-call>
+                        </fx-trigger>
+                    </div>
+                </div>
+                <fx-control ref="@corresp" update-event="change" create="create">
+                    <label>
+                        Reference
+                    </label>
+                    <zotero-autocomplete
+                        class="widget"
+                        endpoint="{instance('vars')/appdir}/api/zotero/items/suggest"
+                        limit="8"
+                        minlength="2"
+                        debounce="250"
+                        wait-ready="true">
+                    </zotero-autocomplete>
+                </fx-control>
+                <fx-control ref="citedRange">
+                    <label>
+                        Cited range
+                    </label>
+                </fx-control>
+                <div>
+                    <fx-control ref="note" as="node" update-event="leave">
+                        <label>
+                            Notes
+                        </label>
+                        <edep-xml-editor
+                          class="widget"
+                          schema-root="note"
+                          placeholder="[Inline text/markup or sequence of paragraphs]"
+                          base-url="${app}"
+                          data-template="lib:parse-params">
+                        </edep-xml-editor>
+                    </fx-control>
+                </div>
+            </div>
+            <fx-trigger>
+                <iron-icon
+                  icon="remove-circle-outline"
+                  title="delete image"></iron-icon>
+                <fx-delete ref="."></fx-delete>
+                <fx-refresh control="r-images"></fx-refresh>
+            </fx-trigger>
+        </template>
+    </fx-repeat>
+    <fx-trigger
+        class="add"
+        title="Bilder (Fotos, Zeichnungen, Abklatsche) hinzufügen">
+        <iron-icon icon="add-circle-outline"></iron-icon>
+        <fx-action>
+            <fx-insert
+                context="listBibl[@type='images']"
+                ref="bibl"
+                origin="instance('templates')//listBibl[@type='images']/bibl"></fx-insert>
+            <fx-refresh control="r-images"></fx-refresh>
+        </fx-action>
+    </fx-trigger>
+</section>

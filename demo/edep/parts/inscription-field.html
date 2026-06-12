@@ -1,0 +1,85 @@
+<fx-group>
+    <fx-group ref="physDesc/objectDesc/layoutDesc/layout" id="dimensions">
+        <section class="form-row">
+            <fx-control class="measurement" ref="dimensions/height">
+                <label>
+                    Height
+                </label>
+            </fx-control>
+
+            <fx-control class="measurement" ref="dimensions/width">
+                <label>
+                    Width
+                </label>
+            </fx-control>
+        </section>
+
+        <fx-control ref="ab" as="node" update-event="leave">
+            <label>
+                Description
+            </label>
+            <edep-xml-editor
+              class="widget"
+              placeholder="[Inline text/markup or sequence of paragraphs]"
+              schema-root="provenance"
+              base-url="${app}"
+              data-template="lib:parse-params">
+            </edep-xml-editor>
+        </fx-control>
+    </fx-group>
+
+    <fieldset>
+        <legend>
+            Letter size(s)
+        </legend>
+        <fx-group ref="physDesc">
+            <fx-group ref="handDesc">
+
+                <fx-trigger class="add">
+                    <fx-insert
+                    context="."
+                    ref="handNote"
+                    origin="instance('templates')/handNote[@scope='letterHeight']"></fx-insert>
+                </fx-trigger>
+
+                <fx-repeat
+                class="nested-repeat"
+                ref="handNote[@scope='letterHeight']"
+                id="r-letterHeight">
+                    <template>
+                        <fx-group>
+                            <fx-group class="form-row">                             
+                                <fx-control ref="locus">
+                                    <label>
+                                        Line(s)
+                                            </label>
+                                        </fx-control>
+
+                                        <fx-control ref="@max" create="create" class="measurement">
+                                            <label>
+                                                Letter size max
+                                            </label>
+                                        </fx-control>
+                                    </fx-group>
+                                </fx-group>
+                            </fx-group>
+                            <fx-group ref="dimensions">
+                                <fx-control ref="height">
+                                    <label>
+                                        Free form
+                                    </label>
+                                    <textarea class="widget"></textarea>
+                                </fx-control>
+                            </fx-group>
+
+                        </fx-group>
+
+                        <fx-trigger tabindex="">
+                            <fx-delete ref="."></fx-delete>
+                        </fx-trigger>
+                    </template>
+                </fx-repeat>
+            </fx-group>
+        </fx-group>
+    </fieldset>
+</fx-group>

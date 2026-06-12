@@ -1,0 +1,44 @@
+<fx-group id="location-group">
+    <fx-group ref="msIdentifier/repository" class="neutral">
+        <fx-control ref=".">
+            <label>
+                Present location
+                
+
+            </label>
+            <textarea class="widget"></textarea>
+        </fx-control>
+
+        <fx-control ref="@key" create="create">
+            <label>
+                Repository ID
+            </label>
+        </fx-control>
+    </fx-group>
+    <fx-control ref="msIdentifier/idno[@type='inventory']">
+        <label>
+            Inventory number
+        </label>
+    </fx-control>
+
+    <!-- 12b) -->
+    <div class="with-hint">
+        <fx-control
+          ref="history/provenance[@type='history']"
+          as="node"
+          update-event="leave">
+            <label>
+                Remarks on the history of the object e.g., secondary use, change of location, loss.
+                
+
+            </label>
+            <edep-xml-editor
+              class="widget"
+              placeholder="[Inline text/markup or sequence of paragraphs]"
+              schema-root="provenance"
+              base-url="${app}"
+              data-template="lib:parse-params">
+            </edep-xml-editor>
+        </fx-control>
+    </div>
+</fx-group>

@@ -1,0 +1,32 @@
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title>Taxonomy of publication status options for EpiDoc profile</title>
+            </titleStmt>
+            <publicationStmt>
+                <p>Established in the scope of the EDEp project</p>
+            </publicationStmt>
+            <sourceDesc>
+                <p/>
+            </sourceDesc>
+        </fileDesc>
+        <encodingDesc>
+            <classDecl>
+                <taxonomy xml:id="publication-status">
+                    <category xml:id="internal">
+                        <catDesc xml:lang="de">intern</catDesc>
+                        <catDesc xml:lang="en">internal</catDesc>
+                    </category>
+                    <category xml:id="public">
+                        <catDesc xml:lang="de">öffentlich</catDesc>
+                        <catDesc xml:lang="en">public</catDesc>
+                    </category>
+                </taxonomy>
+            </classDecl>
+        </encodingDesc>
+    </teiHeader>
+    <standOff>
+        <note/>
+    </standOff>
+</TEI>

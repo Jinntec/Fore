@@ -1,0 +1,117 @@
+fx-control.fore-control{
+    display:block;
+}
+
+fx-control > fx-fore{
+    z-index: 10;
+    width:100%;
+    min-height:1rem;
+}
+fx-control > fx-fore  fx-control {
+    /*display:block;*/
+    padding-top:0;
+    margin:0;
+}
+fx-inspector{
+    position:fixed;
+    right:0;
+    top:0;
+}
+fx-fore fx-fore fx-inspector{
+    width:25%;
+}
+
+fx-fore#geopicker{
+    padding:0;
+}
+#geopicker .geo-place {
+    margin-left: 0;
+    padding: 0;
+    margin:1rem 0;
+}
+[icon="add-circle-outline"]{
+    color:black;
+}
+
+#geopicker{
+    .with-hint{
+        grid-template-columns: initial;
+        /*margin-left:-1rem;*/
+        align-items: center;
+
+        fx-control{
+            align-items: center;
+        }
+    }
+}
+/*
+#geopicker .geopicker-control {
+    width: 100%;
+    display: grid;
+    grid-template-areas: "control clear";
+    grid-template-columns: 1fr 2rem;
+    align-items: center;
+    grid-gap: 1rem;
+}
+.geopicker-control fx-control{
+    grid-area: control;
+    display: flex;
+    flex-direction: row;
+    column-gap: 2rem;
+}
+.geopicker-control label{
+    width: 24rem;
+    text-align: right;
+}
+.geopicker-control iron-icon{
+    grid-area: clear;
+}
+.geopicker-control a{
+    grid-area: add;
+    margin-left:-1rem;
+}
+*/
+
+#geopicker fx-repeat-attributes{
+    display: none;
+}
+#geopicker iron-icon{
+    /*grid-area: clear;*/
+    align-self:center;
+    border-radius: 50%;
+    margin-left:-0.25rem;
+}
+#geopicker iron-icon:hover{
+    background: #ddd;
+}
+#geopicker fx-repeat{
+    margin-top:1.5rem;
+    height:40vh;
+    overflow: auto;
+    border:thin solid #999;
+}
+#geopicker fx-repeatitem{
+    cursor: pointer;
+    border-bottom: thin solid #ddd;
+}
+#geopicker fx-repeatitem:hover{
+    background: #efefef;
+}
+#geopicker fx-output{
+    padding:0.5rem 0;
+    margin: 0;
+}
+#geopicker input{
+    width: calc(100% - 2rem);
+    margin-left: 0rem;
+}
+#geopicker fx-group{
+    margin:0;
+    padding:0;
+    border:0;
+    margin-left:0.5rem;
+}
+.geo-place fx-output {
+    grid-template-columns: 10rem 1rem 1fr;
+    grid-column-gap: 2rem;
+}

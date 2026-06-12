@@ -1,0 +1,136 @@
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title>Taxonomy of paleography options for EpiDoc profile</title>
+            </titleStmt>
+            <publicationStmt>
+                <p>Established in the scope of the EDEp project</p>
+            </publicationStmt>
+            <sourceDesc>
+                <p/>
+            </sourceDesc>
+        </fileDesc>
+        <encodingDesc>
+            <classDecl>
+                <taxonomy xml:id="paleography">
+                    <category corresp="https://edep.adw.uni-heidelberg.de/paleography/actuaria">
+                        <catDesc xml:lang="de">Actuaria</catDesc>
+                        <catDesc xml:lang="en">actuaria</catDesc>
+                    </category>
+                    <category corresp="https://edep.adw.uni-heidelberg.de/paleography/quadrata">
+                        <catDesc xml:lang="de">Quadrata</catDesc>
+                        <catDesc xml:lang="en">quadrata </catDesc>
+                    </category>
+                    <category corresp="https://edep.adw.uni-heidelberg.de/paleography/italics">
+                        <catDesc xml:lang="de">Kursivschrift</catDesc>
+                        <catDesc xml:lang="en">cursive</catDesc>
+                    </category>
+                    <category
+                        corresp="https://edep.adw.uni-heidelberg.de/paleography/letters-prolonged">
+                        <catDesc xml:lang="de">längliche Buchstaben</catDesc>
+                        <catDesc xml:lang="en">elongated letters</catDesc>
+                    </category>
+                    <category corresp="https://edep.adw.uni-heidelberg.de/paleography/libraria">
+                        <catDesc xml:lang="de">Libraria</catDesc>
+                        <catDesc xml:lang="en">libraria</catDesc>
+                    </category>
+                    <category corresp="https://edep.adw.uni-heidelberg.de/paleography/uniziale">
+                        <catDesc xml:lang="de">Unziale</catDesc>
+                        <catDesc xml:lang="en">uncial</catDesc>
+                    </category>
+                    <category corresp="https://edep.adw.uni-heidelberg.de/paleography/deep-engraved">
+                        <catDesc xml:lang="de">tief eingemeißelt</catDesc>
+                        <catDesc xml:lang="en">deeply carved</catDesc>
+                    </category>
+                    <category corresp="https://edep.adw.uni-heidelberg.de/paleography/filled">
+                        <catDesc xml:lang="de">ausgemalt</catDesc>
+                        <catDesc xml:lang="en">coloured/painted</catDesc>
+                    </category>
+                    <category corresp="https://edep.adw.uni-heidelberg.de/paleography/narrow">
+                        <catDesc xml:lang="de">eng geschrieben</catDesc>
+                        <catDesc xml:lang="en">tightly written</catDesc>
+                    </category>
+                    <category
+                        corresp="https://edep.adw.uni-heidelberg.de/paleography/negligent-engraved">
+                        <catDesc xml:lang="de">nachlässig gemeißelt</catDesc>
+                        <catDesc xml:lang="en">carelessly carved</catDesc>
+                    </category>
+                    <category
+                        corresp="https://edep.adw.uni-heidelberg.de/paleography/carefully-engraved">
+                        <catDesc xml:lang="de">sorgfältig gemeißelt</catDesc>
+                        <catDesc xml:lang="en">carefully carved</catDesc>
+                    </category>
+                    <category
+                        corresp="https://edep.adw.uni-heidelberg.de/paleography/evenly-distributed">
+                        <catDesc xml:lang="de">gleichmäßig angeordnet</catDesc>
+                        <catDesc xml:lang="en">evenly arranged</catDesc>
+                    </category>
+                    <category corresp="https://edep.adw.uni-heidelberg.de/paleography/scratched">
+                        <catDesc xml:lang="de">geritzt</catDesc>
+                        <catDesc xml:lang="en">scratched (graffiti)</catDesc>
+                    </category>
+                    <category corresp="https://edep.adw.uni-heidelberg.de/paleography/painted">
+                        <catDesc xml:lang="de">aufgemalt</catDesc>
+                        <catDesc xml:lang="en">painted</catDesc>
+                    </category>
+                    <category corresp="https://edep.adw.uni-heidelberg.de/paleography/mosaic">
+                        <catDesc xml:lang="de">Mosaikinschrift</catDesc>
+                        <catDesc xml:lang="en">mosaic inscription</catDesc>
+                    </category>
+                    <category
+                        corresp="https://edep.adw.uni-heidelberg.de/paleography/litterae-aureae">
+                        <catDesc xml:lang="de">litterae aureae</catDesc>
+                        <catDesc xml:lang="en">litterae aureae</catDesc>
+                    </category>
+                    <category
+                        corresp="https://edep.adw.uni-heidelberg.de/paleography/letters-decreasing">
+                        <catDesc xml:lang="de">Buchstaben kleiner werdend</catDesc>
+                        <catDesc xml:lang="en">letters getting smaller</catDesc>
+                    </category>
+                    <category
+                        corresp="https://edep.adw.uni-heidelberg.de/paleography/letters-increasing">
+                        <catDesc xml:lang="de">Buchstaben größer werdend</catDesc>
+                        <catDesc xml:lang="en">letters getting bigger</catDesc>
+                    </category>
+                    <category
+                        corresp="https://edep.adw.uni-heidelberg.de/paleography/letters-potruding">
+                        <catDesc xml:lang="de">Longa Buchstaben</catDesc>
+                        <catDesc xml:lang="en">longa letters</catDesc>
+                    </category>
+                    <category
+                        corresp="https://edep.adw.uni-heidelberg.de/paleography/letters-erased">
+                        <catDesc xml:lang="de">Buchstaben eradiert</catDesc>
+                        <catDesc xml:lang="en">letters erased</catDesc>
+                    </category>
+                    <category
+                        corresp="https://edep.adw.uni-heidelberg.de/paleography/letters-rubbed">
+                        <catDesc xml:lang="de">Buchstaben abgerieben</catDesc>
+                        <catDesc xml:lang="en">letters rubbed off</catDesc>
+                    </category>
+                    <category
+                        corresp="https://edep.adw.uni-heidelberg.de/paleography/letters-erodet">
+                        <catDesc xml:lang="de">Buchstaben verwittert</catDesc>
+                        <catDesc xml:lang="en">letters weathered</catDesc>
+                    </category>
+                    <category
+                        corresp="https://edep.adw.uni-heidelberg.de/paleography/letters-missing">
+                        <catDesc xml:lang="de">Buchstaben verschwunden</catDesc>
+                        <catDesc xml:lang="en">letters disappeared</catDesc>
+                    </category>
+                    <category corresp="https://edep.adw.uni-heidelberg.de/paleography/dowel-hole">
+                        <catDesc xml:lang="de">Dübellöcher erhalten</catDesc>
+                        <catDesc xml:lang="en">dowel holes preserved</catDesc>
+                    </category>
+                    <category corresp="https://edep.adw.uni-heidelberg.de/paleography/overwritten">
+                        <catDesc xml:lang="de">Stein mehrfach beschrieben</catDesc>
+                        <catDesc xml:lang="en">inscribed several times</catDesc>
+                    </category>
+                </taxonomy>
+            </classDecl>
+        </encodingDesc>
+    </teiHeader>
+    <standOff>
+        <note/>
+    </standOff>
+</TEI>
