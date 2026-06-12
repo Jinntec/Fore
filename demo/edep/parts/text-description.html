@@ -1,49 +1,85 @@
-<details id="text-description">
-    <!-- 
-    
-    METRE: select
-    ?LANGUAGES: select + checkbox (if main language)
-    ?LANGUAGE COMMENTS: free form
-    PALEOGRAPHY: multiple checkboxes
-    NOTE: text editor
-    LIGATURE: select
-    
-    -->
-    <summary>
-        <h2>Description of text</h2>
-    </summary>
+ <fx-group>
     <fx-group ref="ancestor::teiHeader/profileDesc" class="outer-group" aria-labelledby="profile-lbl">
 
         <fieldset>
             <legend>
-                Language
+                Language(s)
             </legend>
 
             <fx-group ref="langUsage">
                 <fx-trigger class="add">
-                    
                     <fx-insert
-                    context="."
-                    ref="language"
-                    origin="instance('templates')/language"></fx-insert>
+                            context="."
+                            ref="language"
+                            origin="instance('templates')/language"></fx-insert>
                 </fx-trigger>
 
                 <fx-repeat
-                class="nested-repeat repeat-flex"
-                ref="language[@ident!='edep']"
-                id="r-language">
+                        class="nested-repeat repeat-flex"
+                        ref="language[@ident!='edep']"
+                        id="r-language">
                     <template>
-                    <fx-group class="neutral">
+                        <fx-group class="neutral">
                             <fx-control ref="@ident" create="create">
                                 <label>
-                                    Language
+                                    <pb-i18n key="form.language"/>
+                                </label>
+                                <select
+                                        ref="instance('language-options')//category"
+                                        class="widget">
+                                    <template>
+                                        <!-- prettier-ignore -->
+                                        <option value="{@xml:id}">{catDesc[@xml:lang = 'en']}</option>
+                                    </template>
+                                </select>
+                            </fx-control>
+                            <!-- TODO change into radio/checkbox -->
+
+                            <fx-control ref="@ana" update-event="input" create="create">
+                                <label>
+                                    lang scope
+                                </label>
+                                <select
+                                        ref="instance('language-scope')//category"
+                                        class="widget">
+                                    <template>
+                                        <!-- prettier-ignore -->
+                                        <option value="{@xml:id}">{catDesc[@xml:lang = 'en']}</option>
+                                    </template>
+                                </select>
+                            </fx-control>
+                        </fx-group>
+                        <fx-trigger>
+                            <fx-delete ref="."></fx-delete>
+                        </fx-trigger>
+                    </template>
+                </fx-repeat>
+
+                <fx-group ref="language[@ident='edep']">
+                    <fx-control ref=".">
+                        <label>
+                            free form
+                        </label>
+                        <textarea class="widget"></textarea>
+
+                    </fx-control>
+                </fx-group>
+            </fx-group>
+        </fieldset>
+    </fx-group>
+
+    <fx-group ref="physDesc/objectDesc/layoutDesc/layout" id="layout" class="neutral">
+        <!-- 24) -->
+        <fx-control ref="note[@type='metre']" update-event="input">
+            <label>
+                Metrik
             </label>
             <select class="widget"
-                ref="sortNames(instance('metre')//category)"
-                selection="open">
+                    ref="sortNames(instance('metre')//category)"
+                    selection="open">
                 <template>
                     <!-- prettier-ignore -->
-                    <option value="{@xml:id}">{catDesc[@xml:lang = $lang]}</option>
+                    <option value="{@xml:id}">{catDesc[@xml:lang = 'en']}</option>
                 </template>
             </select>
         </fx-control>
@@ -51,36 +87,36 @@
         <div class="alternatives">
             <fx-group ref="note[@type='paleography']" class="neutral">
                 <fx-control
-                ref="@corresp"
-                create="create"
-                update-event="input">
+                        ref="@corresp"
+                        create="create"
+                        update-event="input">
                     <label>
-                        Paleography
+                        Paläographie
                     </label>
                     <fx-items ref="instance('paleography')//category" class="widget">
                         <template>
                             <span class="fx-checkbox">
                                 <input type="checkbox" value="{@corresp}"/>
-                                <label>{catDesc[@xml:lang = $lang]}</label>
+                                <label>{catDesc[@xml:lang = 'en']}</label>
                             </span>
                         </template>
                     </fx-items>
                 </fx-control>
                 <fx-control
-                id="input34"
-                ref="."
-                class="{instance('vars')/hide}"
-                as="node"
-                update-event="leave">
+                        id="input34"
+                        ref="."
+                        class="{instance('vars')/hide}"
+                        as="node"
+                        update-event="leave">
                     <label>
-                        Remarks on the palaeography
+                        freie Angabe
                     </label>
                     <edep-xml-editor
-                    class="widget"
-                    placeholder="[Inline text/markup or sequence of paragraphs]"
-                    schema-root="provenance"
-                    base-url="${app}"
-                    data-template="lib:parse-params">
+                            class="widget"
+                            placeholder="[Inline text/markup or sequence of paragraphs]"
+                            schema-root="provenance"
+                            base-url="${app}"
+                            data-template="lib:parse-params">
                     </edep-xml-editor>
                 </fx-control>
             </fx-group>
@@ -93,17 +129,17 @@
         <fx-group ref="handDesc" class="neutral">
             <fx-control ref="handNote[@scope='ligature']" update-event="input">
                 <label>
-                    Ligature(s)
+                    Ligatur
                 </label>
                 <select
-                    ref="sortNames(instance('ligature')//category)"
-                    class="widget">
+                        ref="sortNames(instance('ligature')//category)"
+                        class="widget">
                     <template>
                         <!-- prettier-ignore -->
-                        <option value="{@corresp}">{catDesc[@xml:lang = $lang]}</option>
+                        <option value="{@corresp}">{catDesc[@xml:lang = 'en']}</option>
                     </template>
                 </select>
             </fx-control>
         </fx-group>
     </fx-group>
-</details>
+ </fx-group>

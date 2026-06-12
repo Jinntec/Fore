@@ -1,7 +1,3 @@
-<details id="verification">
-    <summary>
-        <h2>Verification</h2>
-    </summary>
     <fx-group ref="fileDesc/titleStmt">
         <fx-trigger class="add">
             <button>+</button>
@@ -33,12 +29,12 @@
                             Date of verification
                         </label>
                     </fx-control>
-
-                    <fx-trigger>
-                        <button>X</button>
-                        <fx-delete ref="."></fx-delete>
-                    </fx-trigger>
                 </fx-group>
+
+                <fx-trigger>
+                    <button>X</button>
+                    <fx-delete ref="."></fx-delete>
+                </fx-trigger>
             </template>
         </fx-repeat>
         <fx-trigger class="add">
@@ -49,4 +45,3 @@
                     ref="respStmt"></fx-insert>
         </fx-trigger>
     </fx-group>
-</details>

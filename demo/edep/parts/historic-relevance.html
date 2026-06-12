@@ -1,8 +1,4 @@
 <fx-group ref="profileDesc" class="neutral">
-    <details id="historic-relevance">
-        <summary>
-            <h2>Historical relevance</h2>
-        </summary>
         <!-- 28)  -->
         <fx-group ref="textClass">  
             <fx-group ref="keywords[@scheme='https://edh.ub.uni-heidelberg.de/edep/religion']"> 
@@ -18,7 +14,7 @@
                             <template>
                         <span class="fx-checkbox">
                             <input id="{@xml:id}" type="checkbox" value="{@xml:id}" />
-                            <label for="{@xml:id}">{catDesc[@xml:lang = $lang]}</label>
+                            <label for="{@xml:id}">{catDesc[@xml:lang = 'en']}</label>
                         </span>
                             </template>
                         </fx-items>
@@ -89,5 +85,4 @@
                 if="context()/text()='false'"
                 ref="instance('default')//term[@ref='#military']"></fx-delete>
         </fx-control>
-    </details>
 </fx-group>

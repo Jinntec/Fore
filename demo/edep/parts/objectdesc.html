@@ -1,8 +1,4 @@
-<details id="objectdesc">
-    <summary>
-        <h2>Description of object</h2>
-    </summary>
-
+<fx-group>
     <fx-group class="neutral" ref="physDesc">
         <fx-group class="neutral form-row" ref="decoDesc/decoNote">
             <fx-control ref="@corresp" update-event="input" create="create">
@@ -15,7 +11,7 @@
                 selection="open">
                     <template>
                         <!-- prettier-ignore -->
-                        <option value="{@corresp}">{head((catDesc[@xml:lang = $lang], catDesc))}</option>
+                        <option value="{@corresp}">{catDesc[@xml:lang = 'en']}</option>
                     </template>
                 </select>
             </fx-control>
@@ -37,7 +33,7 @@
                 class="widget">
                 <template>
                     <!-- prettier-ignore -->
-                    <option value="{@xml:id}">{catDesc[@xml:lang = $lang]}</option>
+                    <option value="{@xml:id}">{catDesc[@xml:lang = 'en']}</option>
                 </template>
             </select>     
         </fx-control>
@@ -60,7 +56,7 @@
                                 class="widget"
                                 ref="sortNames(instance('objtyp')//category)">
                                     <template>
-                                        <option value="{@corresp}">{catDesc[@xml:lang = $lang]}</option>
+                                        <option value="{@corresp}">{catDesc[@xml:lang = 'en']}</option>
                                     </template>
                                 </select>
                             </fx-control>
@@ -114,7 +110,7 @@
                                 class="widget"
                                 ref="sortNames(instance('material')//category)">
                                     <template>
-                                        <option value="{@corresp}">{catDesc[@xml:lang = $lang]}</option>
+                                        <option value="{@corresp}">{catDesc[@xml:lang = 'en']}</option>
                                     </template>
                                 </select>
                             </fx-control>
@@ -182,7 +178,7 @@
                                     class="widget"
                                     ref="sortNames(instance('typeins')//category)">
                                         <template>
-                                            <option value="{@corresp}">{catDesc[@xml:lang = $lang]}</option>
+                                            <option value="{@corresp}">{catDesc[@xml:lang = 'en']}</option>
                                         </template>
                                     </select>
                                 </fx-control>
@@ -203,5 +199,4 @@
             </fx-group>
         </fx-group>
     </div>
-
-</details>
+</fx-group>

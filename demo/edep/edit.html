@@ -18,8 +18,8 @@
     <!--script type="module" src="http://localhost:8000/src/jinn-codemirror-bundle.ts"></script-->
     <script src="scripts/jinn-codemirror-bundle.js" type="module"></script>
 
-    <script type="module" src="../../tools/fx-lens.js"></script>
-    <script type="module" src="../demo.js"></script>
+    <script src="../../tools/fx-lens.js" type="module"></script>
+    <script src="../demo.js" type="module"></script>
     <script src="scripts/zotero-autocomplete.js" type="module"></script>
     <script src="scripts/edep-xml-editor.js" type="module"></script>
     <!--    <script data-template="pages:load-components" src="pb-components-bundle.js" type="module"></script>-->
@@ -39,6 +39,20 @@
         nav fx-output label {
             display: block;
             width: 100%;
+        }
+
+        #r-letterHeight fx-repeatitem {
+            display: block;
+        }
+
+        .fx-checkbox {
+            display: flex;
+            justify-content: start;
+
+        }
+
+        .alternatives .fx-checkbox input {
+            width: 2rem;
         }
     </style>
 </head>
@@ -224,7 +238,6 @@
                     <is-fragment>false</is-fragment>
                 </data>
             </fx-instance>
-            <!-- todo: remove static readonly once new fragment functionality is completely done -->
             <fx-bind readonly="true()"
                      ref="instance('vars')/is-fragment"
                      relevant="not(exists(instance('default')/@type))"></fx-bind>
@@ -530,21 +543,21 @@
                         </fieldset>
                     </fx-group>
 
-<!--
-                    <fx-group
-                            ref="instance('default')/@xml:id[string-length(.) > 0][not(instance('default')/@type='partial')]">
-                        <fx-trigger id="addFragment">
-                            <button>
-                                Add fragment
-                            </button>
-                            <fx-send submission="s-create-fragment"></fx-send>
-                        </fx-trigger>
-                    </fx-group>
+                    <!--
+                                        <fx-group
+                                                ref="instance('default')/@xml:id[string-length(.) > 0][not(instance('default')/@type='partial')]">
+                                            <fx-trigger id="addFragment">
+                                                <button>
+                                                    Add fragment
+                                                </button>
+                                                <fx-send submission="s-create-fragment"></fx-send>
+                                            </fx-trigger>
+                                        </fx-group>
 
-                    <fx-group id="backlink" ref="instance('default')/@type[.='partial']">
-                        <a href="{concat(uri-relpath(),instance('default')/@corresp)}.xml" target="_blank">{instance('default')/@corresp}</a>
-                    </fx-group>
--->
+                                        <fx-group id="backlink" ref="instance('default')/@type[.='partial']">
+                                            <a href="{concat(uri-relpath(),instance('default')/@corresp)}.xml" target="_blank">{instance('default')/@corresp}</a>
+                                        </fx-group>
+                    -->
                 </li>
             </ul>
         </nav>
@@ -558,138 +571,174 @@
             </h1>
 
             <!-- IDENTIFIERs -->
-            <fx-include src="parts/object.html" selector="#object" immediate></fx-include>
+            <fx-include immediate selector="#object" src="parts/object.html"></fx-include>
 
             <fx-group
                     class="neutral"
                     id="inscription"
                     ref="fileDesc/sourceDesc/msDesc">
 
-                <fx-include src="parts/findspot.html" selector="#findspot" immediate></fx-include>
-<!--                <fx-include src="parts/location.html" selector="#location"></fx-include>-->
+                <details id="findspot">
+                    <summary>
+                        <h2>Finding</h2>
+                    </summary>
+                    <fx-include event="toggle" src="parts/findspot.html"
+                                target="#findspot"></fx-include>
+                </details>
+                <details id="location">
+                    <summary>
+                        <h2>Present location</h2>
+                    </summary>
+
+                    <fx-include event="toggle" selector="#location-group" src="parts/location.html"
+                                target="#location"></fx-include>
+                </details>
             </fx-group>
-<!--            <fx-include src="parts/verification.html" selector="#verification" replace></fx-include>-->
+            <details id="verification">
+                <summary>
+                    <h2>Verification</h2>
+                </summary>
+
+                <fx-include event="toggle" src="parts/verification.html" target="#verification"></fx-include>
+            </details>
 
 
-<!--
             <fx-group
                     class="neutral"
                     id="objdesc"
                     ref="fileDesc/sourceDesc/msDesc">
+                <details id="objectdesc">
+                    <summary>
+                        <h2>Description of object</h2>
+                    </summary>
+                    <fx-include src="parts/objectdesc.html" event="toggle" target="#objectdesc"></fx-include>
+                </details>
+                <details id="inscription-field">
+                    <summary>
+                        <h2>Inscription field</h2>
+                    </summary>
 
-                <fx-include src="parts/objectdesc.html" selector="#objectdesc" immediate></fx-include>
-                <fx-include src="parts/inscription-field.html" selector="#inscription-field" immediate></fx-include>
-                <fx-include src="parts/text-description.html" selector="#text-description" immediate></fx-include>
+                    <fx-include src="parts/inscription-field.html" event="toggle" target="#inscription-field"></fx-include>
+                </details>
+                <details id="text-description">
+                    <summary>
+                        <h2>text-description</h2>
+                    </summary>
+
+                    <fx-include src="parts/text-description.html" event="toggle" target="#text-description"></fx-include>
+                </details>
 
             </fx-group>
--->
 
-<!--
             <fx-group class="references-background" id="references">
                 <fx-group class="outer-group" ref="fileDesc/sourceDesc/listBibl">
                     <h2>
                         References
-                        <pb-popover>
-                            <iron-icon icon="info-outline"></iron-icon>
-                            <template slot="alternate">
-                                All the bibliographic titles have to be entered by referring to a Zotero-Library.
-                            </template>
-                        </pb-popover>
                     </h2>
+                    <details id="transmission" class="group-6">
+                        <summary>
+                            <h3>Transmission</h3>
 
-                    <div
-                            data-template="lib:include"
-                            data-template-path="templates/parts/transmission.html"
-                            data-template-replace="true"
-                            id="transmission"></div>
+                        </summary>
+                        <fx-include src="parts/transmission.html" event="toggle" target="#transmission"></fx-include>
+                    </details>
+                    <details id="prev-editions" class="group-6">
+                        <summary>
+                            <h3>Previous editions</h3>
 
-                    <div
-                            data-template="lib:include"
-                            data-template-path="templates/parts/prev-editions.html"
-                            data-template-replace="true"
-                            id="prev-editions"></div>
-                    <div
-                            data-template="lib:include"
-                            data-template-path="templates/parts/bibliography.html"
-                            data-template-replace="true"
-                            id="bibliography"></div>
-                    <div
-                            data-template="lib:include"
-                            data-template-path="templates/parts/images.html"
-                            data-template-replace="true"
-                            id="images"></div>
+                        </summary>
+                        <fx-include  src="parts/prev-editions.html" event="toggle" target="#prev-editions"></fx-include>
+                    </details>
+                    <details id="bibliography" class="group-6">
+                        <summary>
+                            <h3>Bibliography</h3>
+                        </summary>
+                        <fx-include event="toggle" target="#bibliography" src="parts/bibliography.html"></fx-include>
+                    </details>
+
+                    <details id="images" class="group-6">
+                        <summary>
+                            <h3>Images (drawings, photographs, squeezes)</h3>
+                        </summary>
+                        <fx-include event="toggle" target="#images" src="parts/images.html"></fx-include>
+                    </details>
                 </fx-group>
 
                 <fx-group class="neutral" id="dig-images">
-                    <div
-                            data-template="lib:include"
-                            data-template-path="templates/parts/pictures.html"
-                            data-template-replace="true"
-                            id="pictures"></div>
+                    <details id="pictures" class="group-6">
+                        <summary>
+                            <h3>Digital Images</h3>
+
+                        </summary>
+
+                        <fx-include  event="toggle" target="#pictures" src="parts/pictures.html"></fx-include>
+                    </details>
+
                 </fx-group>
             </fx-group>
--->
         </fx-group>
 
-<!--
         <fx-group class="outer-group" ref="text/body">
-            <div
-                    data-template="lib:include"
-                    data-template-path="templates/parts/edition.html"
-                    data-template-replace="true"
-                    id="edition"></div>
-            <div
-                    data-template="lib:include"
-                    data-template-path="templates/parts/commentary.html"
-                    data-template-replace="true"
-                    id="commentary"></div>
-        </fx-group>
--->
 
-<!--
+            <details class="group-6" id="edition">
+                <summary>
+                    <h2>Edition of text
+                    </h2>
+                </summary>
+                <fx-include event="toggle" target="#edition" src="parts/edition.html"></fx-include>
+            </details>
+            <details class="group-10" id="commentary">
+                <summary>
+                    <h2>Commentary</h2>
+                </summary>
+                <fx-include  event="toggle" target="#commentary" src="parts/commentary.html"></fx-include>
+            </details>
+        </fx-group>
+
         <fx-group aria-labelledby="title-lbl" class="outer-group" ref="teiHeader">
-            &lt;!&ndash; DATING &ndash;&gt;
-            <div
-                    data-template="lib:include"
-                    data-template-path="templates/parts/dating.html"
-                    data-template-replace="true"
-                    id="dating"></div>
+            <!-- DATING -->
+            <details id="dating" class="group-6">
+                <summary>
+                    <h2>Chronological data</h2>
+                </summary>
+                <fx-include  event="toggle" target="#dating" src="parts/dating.html"></fx-include>
+            </details>
+            <details id="historic-relevance">
+                <summary>
+                    <h2>Historical relevance</h2>
+                </summary>
+                <fx-include  event="toggle" target="#historic-relevance" src="parts/historic-relevance.html"></fx-include>
+            </details>
+            <details id="editor">
+                <summary>
+                    <h2>Editing</h2>
+                </summary>
+                <fx-include event="toggle" target="#editor" src="parts/editor.html"></fx-include>
+            </details>
 
-            <div
-                    data-template="lib:include"
-                    data-template-path="templates/parts/historic-relevance.html"
-                    data-template-replace="true"
-                    id="historic-relevance"></div>
-
-            <div
-                    data-template="lib:include"
-                    data-template-path="templates/parts/editor.html"
-                    data-template-replace="true"
-                    id="editor"></div>
         </fx-group>
--->
 
         <section class="buttonBar">
-                <p class="loginMessage" slot="fallback">You need to be logged in to save.</p>
+            <p class="loginMessage" slot="fallback">You need to be logged in to save.</p>
 
-                <fx-trigger class="saveBtn" debounce="1000">
-                    <button>
-                        Save
-                    </button>
-                    <fx-action if="not(exists(instance('params')/id))">
-                        <fx-send submission="s-login"></fx-send>
-                        <fx-send submission="s-create"></fx-send>
-                    </fx-action>
-                    <fx-action if="exists(instance('params')/id)">
-                        <fx-send submission="s-login"></fx-send>
-                        <fx-send submission="s-save"></fx-send>
-                    </fx-action>
-                </fx-trigger>
-                <fx-trigger>
-                    <a href="edit/workspace/">
-                        New entry
-                    </a>
-                </fx-trigger>
+            <fx-trigger class="saveBtn" debounce="1000">
+                <button>
+                    Save
+                </button>
+                <fx-action if="not(exists(instance('params')/id))">
+                    <fx-send submission="s-login"></fx-send>
+                    <fx-send submission="s-create"></fx-send>
+                </fx-action>
+                <fx-action if="exists(instance('params')/id)">
+                    <fx-send submission="s-login"></fx-send>
+                    <fx-send submission="s-save"></fx-send>
+                </fx-action>
+            </fx-trigger>
+            <fx-trigger>
+                <a href="edit/workspace/">
+                    New entry
+                </a>
+            </fx-trigger>
             <fx-trigger>
                 <a href="index.html">
                     To the list
@@ -704,11 +753,8 @@
             <input style="display: none"/>
         </fx-control>
 
-        <pre>
-            <code>{log('default')}</code>
-        </pre>
     </fx-fore>
-<!--    <fx-lens></fx-lens>-->
+    <!--    <fx-lens></fx-lens>-->
 </main>
 
 <footer class="version">

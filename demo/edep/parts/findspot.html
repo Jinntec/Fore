@@ -1,84 +1,79 @@
 <!-- context: fileDesc/sourceDesc/msDesc-->
-<details id="findspot" open>
-    <summary>
-        <h2>Finding</h2>
-    </summary>
 
-    <fx-group ref="history">
-<!--
-        <fx-control class="fore-control"
-                    id="findspot-ctrl"
-                    initial=".."
-                    ref="origin/origPlace/@corresp"
-                    src="geo-picker.html">
+<fx-group ref="history">
+    <!--
+            <fx-control class="fore-control"
+                        id="findspot-ctrl"
+                        initial=".."
+                        ref="origin/origPlace/@corresp"
+                        src="geo-picker.html">
+            </fx-control>
+    -->
+
+    <fx-group class="neutral" ref="provenance[@type='found']">
+        <fx-control
+                as="node"
+                ref="note[@type='context']"
+                update-event="leave">
+            <label>
+                Findspot
+            </label>
+            <edep-xml-editor
+                    base-url="."
+                    class="widget"
+                    placeholder="[Inline text/markup or sequence of paragraphs]"
+                    schema-root="provenance">
+            </edep-xml-editor>
         </fx-control>
--->
 
-        <fx-group class="neutral" ref="provenance[@type='found']">
-            <fx-control
-                    as="node"
-                    ref="note[@type='context']"
-                    update-event="leave">
+        <!-- YYYY ->  matches(//title,'^-?[1-9]\d*$')-->
+        <!-- YYYY-MM-DD -> matches(//title,'^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$')    -->
+        <section class="form-row">
+            <fx-control create="create" ref="@when">
                 <label>
-                    Findspot
+                    Date
                 </label>
-                <edep-xml-editor
-                        base-url="."
-                        class="widget"
-                        placeholder="[Inline text/markup or sequence of paragraphs]"
-                        schema-root="provenance">
-                </edep-xml-editor>
+                <input class="widget" placeholder="YYYY, YYYY-MM oder YYYY-MM-DD"/>
+                <fx-alert>
+                    <iron-icon icon="warning"></iron-icon>
+                    Ungültiges Datum
+                </fx-alert>
             </fx-control>
-
-            <!-- YYYY ->  matches(//title,'^-?[1-9]\d*$')-->
-            <!-- YYYY-MM-DD -> matches(//title,'^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$')    -->
-            <section class="form-row">
-                <fx-control create="create" ref="@when">
-                    <label>
-                        Date
-                    </label>
-                    <input class="widget" placeholder="YYYY, YYYY-MM oder YYYY-MM-DD" />
-                    <fx-alert>
-                        <iron-icon icon="warning"></iron-icon>
-                        Ungültiges Datum
-                    </fx-alert>
-                </fx-control>
-                <fx-control create="create" ref="@notBefore">
-                    <label>
-                        date after
-                    </label>
-                    <input class="widget" placeholder="YYYY, YYYY-MM oder YYYY-MM-DD" />
-                    <fx-alert>
-                        <iron-icon icon="warning"></iron-icon>
-                        Ungültiges Datum
-                    </fx-alert>
-                </fx-control>
-                <fx-control create="create" ref="@notAfter">
-                    <label>
-                        date before
-                    </label>
-                    <input class="widget" placeholder="YYYY, YYYY-MM oder YYYY-MM-DD" />
-                    <fx-alert>
-                        <iron-icon icon="warning"></iron-icon>
-                        Ungültiges Datum
-                    </fx-alert>
-                </fx-control>
-            </section>
-            <fx-control
-                    as="node"
-                    ref="note[@type='found-date']"
-                    update-event="leave">
+            <fx-control create="create" ref="@notBefore">
                 <label>
-                    Anmerkungen
+                    date after
                 </label>
-                <edep-xml-editor
-                        base-url="."
-                        class="widget"
-                        placeholder="[Inline text/markup or sequence of paragraphs]"
-                        schema-root="provenance">
-                </edep-xml-editor>
+                <input class="widget" placeholder="YYYY, YYYY-MM oder YYYY-MM-DD"/>
+                <fx-alert>
+                    <iron-icon icon="warning"></iron-icon>
+                    Ungültiges Datum
+                </fx-alert>
             </fx-control>
-        </fx-group>
-
+            <fx-control create="create" ref="@notAfter">
+                <label>
+                    date before
+                </label>
+                <input class="widget" placeholder="YYYY, YYYY-MM oder YYYY-MM-DD"/>
+                <fx-alert>
+                    <iron-icon icon="warning"></iron-icon>
+                    Ungültiges Datum
+                </fx-alert>
+            </fx-control>
+        </section>
+        <fx-control
+                as="node"
+                ref="note[@type='found-date']"
+                update-event="leave">
+            <label>
+                Anmerkungen
+            </label>
+            <edep-xml-editor
+                    base-url="."
+                    class="widget"
+                    placeholder="[Inline text/markup or sequence of paragraphs]"
+                    schema-root="provenance">
+            </edep-xml-editor>
+        </fx-control>
     </fx-group>
-</details>
+
+</fx-group>

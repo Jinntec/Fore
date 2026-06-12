@@ -1,7 +1,3 @@
-<details id="editor">
-    <summary>
-        <h2>Editing</h2>
-    </summary>
 
     <fieldset>
         <fx-group ref="revisionDesc">
@@ -14,7 +10,7 @@
                     class="widget">
                         <template>
                             <!-- prettier-ignore -->
-                            <option value="{@xml:id}">{catDesc[@xml:lang = $lang]}</option>
+                            <option value="{@xml:id}">{catDesc[@xml:lang = 'en']}</option>
                         </template>
                 </select>         
             </fx-control>
@@ -48,7 +44,7 @@
                         class="widget"
                         ref="instance('editor-roles')//category">
                             <template>
-                                <option value="{@xml:id}">{catDesc[@xml:lang = $lang]}</option>
+                                <option value="{@xml:id}">{catDesc[@xml:lang = 'en']}</option>
                             </template>
                         </select>
                     </fx-control>
