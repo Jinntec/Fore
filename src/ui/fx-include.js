@@ -1,4 +1,5 @@
 import { Fore } from '../fore.js';
+import { FxFore } from '../fx-fore.js';
 
 /**
  * <fx-include>
@@ -50,11 +51,28 @@ export class FxInclude extends HTMLElement {
     this.reload = this.hasAttribute('reload');
 
     if (this.immediate) {
-      queueMicrotask(() => this.include());
+      this._includeWhenReady();
       return;
     }
 
     this._bindListener();
+  }
+
+  /**
+   * Includes content immediately, but waits until the closest `fx-fore` has
+   * finished its initial Rebuild/Recalculate/Revalidate/Refresh cycle (i.e. is
+   * "ready"), so the included content can resolve binding context against an
+   * already-initialized ancestor chain.
+   */
+  _includeWhenReady() {
+    const fore = this.closest('fx-fore');
+
+    if (!fore) {
+      queueMicrotask(() => this.include());
+      return;
+    }
+
+    FxFore.waitUntilReady(fore).then(() => this.include());
   }
 
   disconnectedCallback() {

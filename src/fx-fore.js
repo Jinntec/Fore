@@ -387,13 +387,24 @@ export class FxFore extends HTMLElement {
     return null;
   }
 
-  _isReadyTarget(el) {
+  static _isReadyTarget(el) {
     return !!(
       el &&
       (el.ready === true ||
         (el.classList && el.classList.contains('fx-ready')) ||
         (typeof el.hasAttribute === 'function' && el.hasAttribute('ready')))
     );
+  }
+
+  /**
+   * Resolves once `fore` has dispatched its initial `ready` event (or
+   * immediately, if it's already ready).
+   */
+  static waitUntilReady(fore) {
+    if (FxFore._isReadyTarget(fore)) {
+      return Promise.resolve();
+    }
+    return FxFore._waitForEvent(fore, 'ready', FxFore._isReadyTarget);
   }
 
   /**
@@ -433,7 +444,7 @@ export class FxFore extends HTMLElement {
     return gates;
   }
 
-  _waitForEvent(target, eventName, isSatisfiedFn = null) {
+  static _waitForEvent(target, eventName, isSatisfiedFn = null) {
     // If a caller provides an explicit satisfaction check, honor it first.
     if (typeof isSatisfiedFn === 'function' && isSatisfiedFn(target)) {
       FxFore._markInitEventSeen(target, eventName);
@@ -495,20 +506,20 @@ export class FxFore extends HTMLElement {
   _waitForInitGate({ event, targetSpec }) {
     // Direct targets
     if (targetSpec === 'self') {
-      const satisfied = event === 'ready' ? t => this._isReadyTarget(t) : null;
-      return this._waitForEvent(this, event, satisfied);
+      const satisfied = event === 'ready' ? t => FxFore._isReadyTarget(t) : null;
+      return FxFore._waitForEvent(this, event, satisfied);
     }
     if (targetSpec === 'document') {
-      return this._waitForEvent(document, event);
+      return FxFore._waitForEvent(document, event);
     }
     if (targetSpec === 'window') {
-      return this._waitForEvent(window, event);
+      return FxFore._waitForEvent(window, event);
     }
 
     // Special: closest fx-fore
     if (targetSpec === 'closest') {
       const recheckFn =
-        event === 'ready' ? () => this._isReadyTarget(this.closest('fx-fore')) : null;
+        event === 'ready' ? () => FxFore._isReadyTarget(this.closest('fx-fore')) : null;
 
       const matchesFn = ev => {
         const t = ev.target;
@@ -522,7 +533,7 @@ export class FxFore extends HTMLElement {
     const selector = targetSpec;
 
     const recheckFn =
-      event === 'ready' ? () => this._isReadyTarget(this._findBySelector(selector)) : null;
+      event === 'ready' ? () => FxFore._isReadyTarget(this._findBySelector(selector)) : null;
 
     if (typeof recheckFn === 'function' && recheckFn()) {
       return Promise.resolve();
