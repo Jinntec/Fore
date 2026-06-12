@@ -200,10 +200,18 @@ export class FxInclude extends HTMLElement {
       return fragment;
     }
 
-    const template = parsed.querySelector('template');
+    const template = parsed.body.querySelector(':scope > template');
 
     if (template) {
       return document.importNode(template.content, true);
+    }
+
+    const rootElements = Array.from(parsed.body.children);
+
+    if (rootElements.length === 1) {
+      const fragment = document.createDocumentFragment();
+      fragment.appendChild(document.importNode(rootElements[0], true));
+      return fragment;
     }
 
     const fragment = document.createDocumentFragment();

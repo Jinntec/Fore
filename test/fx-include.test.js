@@ -343,6 +343,54 @@ describe('fx-include', () => {
         }
     });
 
+    it('includes the single root element from external src, ignoring nested templates, when no selector is present', async () => {
+        const originalLoadHtml = Fore.loadHtml;
+
+        try {
+            Fore.loadHtml = async () => `
+        <html>
+          <body>
+            <section class="external-root">
+              <select class="widget">
+                <template>
+                  <option value="ignored">Ignored option template</option>
+                </template>
+              </select>
+              <p class="marker">External root content</p>
+            </section>
+          </body>
+        </html>
+      `;
+
+            const el = await fixture(html`
+        <div>
+          <button id="load" type="button">Load</button>
+
+          <fx-include
+            event="click"
+            target="#load"
+            src="fragment.html">
+          </fx-include>
+        </div>
+      `);
+
+            const button = el.querySelector('#load');
+            const include = el.querySelector('fx-include');
+
+            const done = oneEvent(include, 'include-done');
+
+            button.click();
+            await done;
+
+            expect(include.querySelector('.external-root')).to.exist;
+            expect(include.querySelector('.marker')).to.exist;
+            expect(include.querySelector('option')).to.equal(null);
+            expect(include.textContent).to.contain('External root content');
+        } finally {
+            Fore.loadHtml = originalLoadHtml;
+        }
+    });
+
     it('dispatches an error when no template and no src are available', async () => {
         const el = await fixture(html`
             <fx-include event="click"></fx-include>
