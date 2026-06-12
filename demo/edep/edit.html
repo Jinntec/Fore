@@ -54,6 +54,9 @@
         .alternatives .fx-checkbox input {
             width: 2rem;
         }
+        h1{
+            margin:1rem 0;
+        }
     </style>
 </head>
 
@@ -561,14 +564,15 @@
                 </li>
             </ul>
         </nav>
+        <h1>Incription Editor</h1>
         <fx-group aria-labelledby="title-lbl" class="outer-group" ref="teiHeader">
-            <h1 id="title-lbl">
+            <h2 id="title-lbl">
                 <fx-control class="title" id="edeptitle" ref="fileDesc/titleStmt/title" update-event="input">
                     <label>
                         Title
                     </label>
                 </fx-control>
-            </h1>
+            </h2>
 
             <!-- IDENTIFIERs -->
             <fx-include immediate selector="#object" src="parts/object.html"></fx-include>
@@ -718,6 +722,7 @@
 
         </fx-group>
 
+<!--
         <section class="buttonBar">
             <p class="loginMessage" slot="fallback">You need to be logged in to save.</p>
 
@@ -745,6 +750,7 @@
                 </a>
             </fx-trigger>
         </section>
+-->
 
         <fx-control class="valid-warning" ref="instance('vars')/xml-valid">
             <fx-alert>
