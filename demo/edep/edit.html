@@ -54,13 +54,16 @@
         .alternatives .fx-checkbox input {
             width: 2rem;
         }
+        .delete button{
+            background-color: lightpink;
+        }
     </style>
 </head>
 
 <body>
 <main class="editor" id="main">
     <fx-fore create-nodes="create-nodes" id="epidoc-editor" show-confirmation="show-confirmation">
-        <fx-model data-template="pages:parse-params">
+        <fx-model>
             <fx-action event="model-construct-done">
                 <fx-send
                         if="string-length(instance('params')/id) != 0"
@@ -148,11 +151,6 @@
                 <data></data>
             </fx-instance>
 
-            <fx-instance id="material" src="data/material.xml"
-                         xpath-default-namespace="http://www.tei-c.org/ns/1.0">
-                <data></data>
-            </fx-instance>
-
             <fx-instance id="paleography" src="data/paleography.xml"
                          xpath-default-namespace="http://www.tei-c.org/ns/1.0">
                 <data></data>
@@ -169,11 +167,6 @@
             </fx-instance>
 
             <fx-instance id="language-scope" src="data/language-scope.xml"
-                         xpath-default-namespace="http://www.tei-c.org/ns/1.0">
-                <data></data>
-            </fx-instance>
-
-            <fx-instance id="decoration" src="data/decor.xml"
                          xpath-default-namespace="http://www.tei-c.org/ns/1.0">
                 <data></data>
             </fx-instance>
@@ -754,7 +747,7 @@
         </fx-control>
 
     </fx-fore>
-    <!--    <fx-lens></fx-lens>-->
+        <fx-lens></fx-lens>
 </main>
 
 <footer class="version">

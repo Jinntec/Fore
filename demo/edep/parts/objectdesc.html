@@ -6,7 +6,8 @@
                     Decoration
                 </label>
                 <select
-                ref="sortNames(instance('decoration')//category)"
+                ref="sortNames($src//category)"
+                data-src="data/decor.xml"
                 class="widget"
                 selection="open">
                     <template>
@@ -61,14 +62,14 @@
                                 </select>
                             </fx-control>
                         </fx-group>
-                        <fx-trigger>
-                            
+                        <fx-trigger class="delete">
+                            <button>X</button>
                             <fx-delete ref="."></fx-delete>
                         </fx-trigger>
                     </template>
                 </fx-repeat>
                 <fx-trigger class="add">
-                    
+                    <button>+</button>
                     <fx-insert
                         context="."
                         ref="objectType"
@@ -108,21 +109,24 @@
                                 </label>
                                 <select
                                 class="widget"
-                                ref="sortNames(instance('material')//category)">
+                                ref="sortNames($material//category)"
+                                data-src="data/material.xml"
+                                data-id="material"
+                                data-type="xml">
                                     <template>
                                         <option value="{@corresp}">{catDesc[@xml:lang = 'en']}</option>
                                     </template>
                                 </select>
                             </fx-control>
                         </fx-group>
-                        <fx-trigger>
-                            
+                        <fx-trigger class="delete">
+                            <button>X</button>
                             <fx-delete ref="."></fx-delete>
                         </fx-trigger>
                     </template>
                 </fx-repeat>
                 <fx-trigger class="add">
-                    
+                    <button>+</button>
                     <fx-insert
                         context="."
                         ref="material"
@@ -182,14 +186,14 @@
                                         </template>
                                     </select>
                                 </fx-control>
-                            <fx-trigger>
-                                
+                            <fx-trigger class="delete">
+                                <button>X</button>
                                 <fx-delete ref="."></fx-delete>
                             </fx-trigger>
                         </template>
                     </fx-repeat>
                     <fx-trigger class="add">
-                        
+                        <button>+</button>
                         <fx-insert
                             context="."
                             ref="term"
