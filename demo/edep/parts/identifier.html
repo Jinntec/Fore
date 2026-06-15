@@ -1,0 +1,22 @@
+<fx-group ref="fileDesc/sourceDesc/msDesc/msIdentifier" id="object" aria-labelledby="identifier-lbl">
+    <h2 id="identifier-lbl">
+        Identifier
+    </h2>
+    <!-- 3) -->
+
+    <fx-output ref="idno[@type='EDEp']" class="edepid">
+        <label slot="label">
+            EDEp-ID
+        </label>
+    </fx-output>
+
+    <!-- 16a) -->
+
+    <fx-control id="tm-number" class="tm-number" ref="idno[@type='TM']">
+        <label>
+            TM ID
+        </label>
+    </fx-control>
+
+    <!-- there's no 17) -->
+</fx-group>

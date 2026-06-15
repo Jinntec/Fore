@@ -1,0 +1,273 @@
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title>Taxonomy of support material for EpiDoc profile</title>
+            </titleStmt>
+            <publicationStmt>
+                <p>Established in the scope of the EDEp project</p>
+            </publicationStmt>
+            <sourceDesc>
+                <p/>
+            </sourceDesc>
+        </fileDesc>
+        <encodingDesc>
+            <classDecl>
+                <taxonomy xml:id="material">
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/137">
+                        <catDesc xml:lang="de"> unbestimmt</catDesc>
+                        <catDesc xml:lang="en"> indefinite</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/2">
+                        <catDesc xml:lang="de">Stein – unbestimmt</catDesc>
+                        <catDesc xml:lang="en">Stone, indefinite</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/88">
+                        <catDesc xml:lang="de">Achat</catDesc>
+                        <catDesc xml:lang="en">agate</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/77">
+                        <catDesc xml:lang="de">Alabaster</catDesc>
+                        <catDesc xml:lang="en">alabaster</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/15">
+                        <catDesc xml:lang="de">Andesit, Onyx, Porphyr</catDesc>
+                        <catDesc xml:lang="en">andesit, onyx, porphyr</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/7">
+                        <catDesc xml:lang="de">Aplit</catDesc>
+                        <catDesc xml:lang="en">aplit</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/16">
+                        <catDesc xml:lang="de">Basalt</catDesc>
+                        <catDesc xml:lang="en">basalt</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/73">
+                        <catDesc xml:lang="de">Brekzie</catDesc>
+                        <catDesc xml:lang="en">breccia</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/59">
+                        <catDesc xml:lang="de">Dolomit</catDesc>
+                        <catDesc xml:lang="en">dolomite</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/24">
+                        <catDesc xml:lang="de">Feldspat</catDesc>
+                        <catDesc xml:lang="en">feldspar</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/300">
+                        <catDesc xml:lang="de">Gagat</catDesc>
+                        <catDesc xml:lang="en">jet</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/37">
+                        <catDesc xml:lang="de">Gneis</catDesc>
+                        <catDesc xml:lang="en">gneiss</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/11">
+                        <catDesc xml:lang="de">Granit</catDesc>
+                        <catDesc xml:lang="en">granite</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/90">
+                        <catDesc xml:lang="de">Hämatit</catDesc>
+                        <catDesc xml:lang="en">haematite</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/91">
+                        <catDesc xml:lang="de">Heliotrop</catDesc>
+                        <catDesc xml:lang="en">heliotrope</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/89">
+                        <catDesc xml:lang="de">Jaspis</catDesc>
+                        <catDesc xml:lang="en">jasper</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/76">
+                        <catDesc xml:lang="de">Kalkmergel, Konglomerat</catDesc>
+                        <catDesc xml:lang="en">limestone marl, conglomerate</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/92">
+                        <catDesc xml:lang="de">Karneol</catDesc>
+                        <catDesc xml:lang="en">carnelian</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/67">
+                        <catDesc xml:lang="de">Kalkstein</catDesc>
+                        <catDesc xml:lang="en">limestone</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/93">
+                        <catDesc xml:lang="de">Lapislazuli</catDesc>
+                        <catDesc xml:lang="en">lapis lazuli</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/53">
+                        <catDesc xml:lang="de">Lava</catDesc>
+                        <catDesc xml:lang="en">lava</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/6">
+                        <catDesc xml:lang="de">magmatisches Gestein – unbestimmt</catDesc>
+                        <catDesc xml:lang="en">magmatic rock – indefinite</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/48">
+                        <catDesc xml:lang="de">Marmor (Farbe unbestimmt)</catDesc>
+                        <catDesc xml:lang="en">marble (colour indefinite)</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/49">
+                        <catDesc xml:lang="de">Marmor, weiß</catDesc>
+                        <catDesc xml:lang="en">marble, white</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/50">
+                        <catDesc xml:lang="de">Marmor, farbig</catDesc>
+                        <catDesc xml:lang="en">marble, coloured</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/87">
+                        <catDesc xml:lang="de">Mineral – unbestimmt</catDesc>
+                        <catDesc xml:lang="en">mineral – indefinite</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/79">
+                        <catDesc xml:lang="de">Molasse</catDesc>
+                        <catDesc xml:lang="en">molasse</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/63">
+                        <catDesc xml:lang="de">Muschelkalk</catDesc>
+                        <catDesc xml:lang="en">shell limestone</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/81">
+                        <catDesc xml:lang="de">Nenfro</catDesc>
+                        <catDesc xml:lang="en">nenfro</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/70">
+                        <catDesc xml:lang="de">Oolith</catDesc>
+                        <catDesc xml:lang="en">oolite</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/95">
+                        <catDesc xml:lang="de">Opal</catDesc>
+                        <catDesc xml:lang="en">Opal</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/82">
+                        <catDesc xml:lang="de">Peperin</catDesc>
+                        <catDesc xml:lang="en">peperino</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/51">
+                        <catDesc xml:lang="de">Quarzit</catDesc>
+                        <catDesc xml:lang="en">quartzite</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/75">
+                        <catDesc xml:lang="de">Sandstein</catDesc>
+                        <catDesc xml:lang="en">sandstone</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/97">
+                        <catDesc xml:lang="de">Sardonyx</catDesc>
+                        <catDesc xml:lang="en">sardonyx</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/52">
+                        <catDesc xml:lang="de">Schiefer</catDesc>
+                        <catDesc xml:lang="en">slate</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/41">
+                        <catDesc xml:lang="de">Speckstein</catDesc>
+                        <catDesc xml:lang="en">soapstone</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/13">
+                        <catDesc xml:lang="de">Syenit</catDesc>
+                        <catDesc xml:lang="en">syenite</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/83">
+                        <catDesc xml:lang="de">Trachyte</catDesc>
+                        <catDesc xml:lang="en">trachyte</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/71">
+                        <catDesc xml:lang="de">Travertin</catDesc>
+                        <catDesc xml:lang="en">travertine</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/30">
+                        <catDesc xml:lang="de">Tuff</catDesc>
+                        <catDesc xml:lang="en">tuff (calcareous)</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/98">
+                        <catDesc xml:lang="de">Vulkantuff</catDesc>
+                        <catDesc xml:lang="en">tuff (volcanic)</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/107">
+                        <catDesc xml:lang="de">Metall – unbestimmt</catDesc>
+                        <catDesc xml:lang="en">Metals – indefinite</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/108">
+                        <catDesc xml:lang="de">Blei</catDesc>
+                        <catDesc xml:lang="en">Metals - lead</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/109">
+                        <catDesc xml:lang="de">Bronze</catDesc>
+                        <catDesc xml:lang="en">Metals - bronze</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/111">
+                        <catDesc xml:lang="de">Eisen</catDesc>
+                        <catDesc xml:lang="en">Metals - iron</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/112">
+                        <catDesc xml:lang="de">Gold</catDesc>
+                        <catDesc xml:lang="en">Metals - gold</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/113">
+                        <catDesc xml:lang="de">Kupfer</catDesc>
+                        <catDesc xml:lang="en">Metals - copper</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/114">
+                        <catDesc xml:lang="de">Messing</catDesc>
+                        <catDesc xml:lang="en">Metals - brass</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/115">
+                        <catDesc xml:lang="de">Silber</catDesc>
+                        <catDesc xml:lang="en">Metals - silver</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/116">
+                        <catDesc xml:lang="de">Zinn</catDesc>
+                        <catDesc xml:lang="en">Metals - tin</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/118">
+                        <catDesc xml:lang="de">sonstige Materialien/Werkstoffe –
+                            unbestimmt</catDesc>
+                        <catDesc xml:lang="en">other materials – indefinite</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/119">
+                        <catDesc xml:lang="de">Bernstein</catDesc>
+                        <catDesc xml:lang="en">amber</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/120">
+                        <catDesc xml:lang="de">Elfenbein</catDesc>
+                        <catDesc xml:lang="en">ivory</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/121">
+                        <catDesc xml:lang="de">Emaille</catDesc>
+                        <catDesc xml:lang="en">enamel</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/122">
+                        <catDesc xml:lang="de">Glas</catDesc>
+                        <catDesc xml:lang="en">glass</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/123">
+                        <catDesc xml:lang="de">Holz</catDesc>
+                        <catDesc xml:lang="en">wood</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/124">
+                        <catDesc xml:lang="de">Knochen</catDesc>
+                        <catDesc xml:lang="en">bone</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/125">
+                        <catDesc xml:lang="de">Leder</catDesc>
+                        <catDesc xml:lang="en">leather</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/126">
+                        <catDesc xml:lang="de">Putz, Stuck</catDesc>
+                        <catDesc xml:lang="en">plaster / stucco</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/131">
+                        <catDesc xml:lang="de">Ton</catDesc>
+                        <catDesc xml:lang="en">clay</catDesc>
+                    </category>
+                    <category corresp="https://www.eagle-network.eu/voc/material/lod/133">
+                        <catDesc xml:lang="de">Wachs</catDesc>
+                        <catDesc xml:lang="en">wax</catDesc>
+                    </category>
+                </taxonomy>
+            </classDecl>
+        </encodingDesc>
+    </teiHeader>
+    <standOff>
+        <note/>
+    </standOff>
+</TEI>

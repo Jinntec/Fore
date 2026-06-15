@@ -1,10 +1,13 @@
 # how to release step-by-step
 
 ## Release
+1. `npm login`
+1. `npm whoami`
+1. `npm ping`
 1. `npm version patch | minor | major` depending on the nature of the changes in this release
 1. `git push` to push the generated commit
 1. `git push --tags` to push the generated tag
-1. `npm publish` this also does the build
+1. `npm publish --access public` this also does the build
 1. go to github and write release notes
 1. merge dev to master
 

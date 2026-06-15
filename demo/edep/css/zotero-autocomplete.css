@@ -1,0 +1,108 @@
+/* --- sizing tokens --- */
+zotero-autocomplete .za-field{
+    --za-clear-w: 2rem;
+    --za-pad-x: 1rem;
+    --za-right-pad: calc(var(--za-clear-w) + var(--za-pad-x));
+
+    /* Stack overlay + input */
+    display: grid;
+    grid-template-areas: "stack";
+    position: relative;
+
+    /* Move border/background to the wrapper so it can grow with overlay */
+    padding: .75rem var(--za-right-pad) .75rem var(--za-pad-x);
+    border: 1px solid #ccc;
+    border-radius: .75rem;
+    background: #fff;
+    transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+/* Focus ring now on the wrapper (covers the entire wrapped overlay) */
+zotero-autocomplete .za-field:focus-within{
+    border-color: #4c9ffe;
+    box-shadow: 0 0 0 3px rgba(76,159,254,.2);
+}
+
+/* Input: borderless, transparent, stretched to wrapper height */
+zotero-autocomplete .za-input{
+    grid-area: stack;
+    background: transparent;
+    border: 0;
+    padding: 0;                /* padding lives on the wrapper */
+    margin: 0;
+    width: 100%;
+    height: 100%;              /* << stretch with overlay height */
+    min-height: 1.35em;        /* a line at least */
+    outline: none;
+    font: 16px/1.35 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    color: inherit;
+}
+
+/* Overlay: multiline; sits above input; no inner padding now */
+zotero-autocomplete .za-overlay{
+    grid-area: stack;
+    white-space: normal;
+    word-break: break-word;
+    overflow: hidden;
+    display: none;
+    color: #111;
+    font: 14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    pointer-events: none;
+    z-index: 1;
+}
+zotero-autocomplete .za-field.has-overlay .za-overlay{ display:block; }
+
+/* Hide input text paint when overlay is shown; caret stays visible */
+zotero-autocomplete .za-field.has-overlay .za-input{
+    color: transparent; -webkit-text-fill-color: transparent;
+    caret-color: #111;
+}
+
+/* Clear button reserved space & always clickable */
+zotero-autocomplete .za-clear{
+    position: absolute; right: .5rem; top: 50%; transform: translateY(-50%);
+    border: 0; background: transparent; cursor: pointer;
+    font-size: 1.2rem; line-height: 1; color: #888; display: none;
+    z-index: 3;
+}
+zotero-autocomplete .za-clear.is-visible{ display:block; }
+
+/* Suggestions list above */
+zotero-autocomplete .za-list{
+    list-style:none; margin:.25rem 0 0; padding:.25rem;
+    border:1px solid #ddd; border-radius:.5rem; background:#fff;
+    box-shadow:0 4px 14px rgba(0,0,0,.08);
+    max-height:320px; overflow:auto; display:none; position:relative; z-index: 5;
+}
+zotero-autocomplete .za-list.is-open{ display:block; }
+
+zotero-autocomplete .za-item{
+    padding:.5rem .75rem; border-radius:.5rem; margin:.15rem 0; cursor:pointer; outline:none;
+}
+zotero-autocomplete .za-item[aria-selected="true"],
+zotero-autocomplete .za-item:hover{ background:rgba(0,0,0,.06); }
+
+zotero-autocomplete .za-bib{
+    white-space: normal; word-break: break-word;
+    font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+}
+/* when overlay is shown, prevent selection highlight on the input */
+zotero-autocomplete .za-field.has-overlay .za-input {
+    user-select: none;                 /* no text selection */
+    -webkit-user-select: none;
+}
+
+/* just in case something still gets selected, make the highlight transparent */
+zotero-autocomplete .za-field.has-overlay .za-input::selection {
+    background: transparent;
+}
+zotero-autocomplete .za-field.has-overlay .za-input::-moz-selection {
+    background: transparent;
+}
+
+/* also remove any tap/focus tint some browsers draw */
+zotero-autocomplete .za-input {
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+    box-shadow: none;
+}

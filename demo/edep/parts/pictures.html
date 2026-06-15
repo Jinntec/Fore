@@ -1,0 +1,23 @@
+<section>
+    <fx-group ref="instance('default')">
+        <fx-group ref="facsimile" class="neutral">
+            <fx-repeat class="nested-repeat" ref="graphic" id="r-pics">
+                <template>
+                    <fx-control ref="@url" create="create">
+                        <label>URL</label>
+                    </fx-control>
+
+                    <fx-trigger>
+                        <iron-icon icon="remove-circle-outline" title="delete image"></iron-icon>
+                        <fx-delete ref="."></fx-delete>
+                    </fx-trigger>
+                </template>
+            </fx-repeat>
+            <fx-trigger class="add" title="Abbildung hinzufügen">
+                <iron-icon icon="add-circle-outline"></iron-icon>
+
+                <fx-insert context="facsimile" ref="graphic" origin="instance('templates')/graphic"></fx-insert>
+            </fx-trigger>
+        </fx-group>
+    </fx-group>
+</section>

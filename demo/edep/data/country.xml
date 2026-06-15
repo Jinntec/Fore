@@ -1,0 +1,260 @@
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title>Taxonomy of countries (modern) for EpiDoc profile</title>
+            </titleStmt>
+            <publicationStmt>
+                <p>Established in the scope of the EDEp project</p>
+            </publicationStmt>
+            <sourceDesc>
+                <p/>
+            </sourceDesc>
+        </fileDesc>
+        <encodingDesc>
+            <classDecl>
+                <taxonomy xml:id="country-names">
+                    <category xml:id="ad">
+                        <catDesc xml:lang="en">Andorra</catDesc>
+                        <catDesc xml:lang="de">Andorra</catDesc>
+                    </category>
+                    <category xml:id="al">
+                        <catDesc xml:lang="en">Albania</catDesc>
+                        <catDesc xml:lang="de">Albanien</catDesc>
+                    </category>
+                    <category xml:id="am">
+                        <catDesc xml:lang="en">Armenia</catDesc>
+                        <catDesc xml:lang="de">Armenien</catDesc>
+                    </category>
+                    <category xml:id="at">
+                        <catDesc xml:lang="en">Austria</catDesc>
+                        <catDesc xml:lang="de">Österreich</catDesc>
+                    </category>
+                    <category xml:id="az">
+                        <catDesc xml:lang="en">Azerbaijan</catDesc>
+                        <catDesc xml:lang="de">Aserbaidschan</catDesc>
+                    </category>
+                    <category xml:id="ba">
+                        <catDesc xml:lang="en">Bosnia and Herzegovina</catDesc>
+                        <catDesc xml:lang="de">Bosnien und Herzegowina</catDesc>
+                    </category>
+                    <category xml:id="be">
+                        <catDesc xml:lang="en">Belgium</catDesc>
+                        <catDesc xml:lang="de">Belgien</catDesc>
+                    </category>
+                    <category xml:id="bg">
+                        <catDesc xml:lang="en">Bulgaria</catDesc>
+                        <catDesc xml:lang="de">Bulgarien</catDesc>
+                    </category>
+                    <category xml:id="ch">
+                        <catDesc xml:lang="en">Switzerland</catDesc>
+                        <catDesc xml:lang="de">Schweiz</catDesc>
+                    </category>
+                    <category xml:id="cy">
+                        <catDesc xml:lang="en">Cyprus</catDesc>
+                        <catDesc xml:lang="de">Zypern</catDesc>
+                    </category>
+                    <category xml:id="cz">
+                        <catDesc xml:lang="en">Czech Republic</catDesc>
+                        <catDesc xml:lang="de">Tschechische Republik</catDesc>
+                    </category>
+                    <category xml:id="de">
+                        <catDesc xml:lang="en">Germany</catDesc>
+                        <catDesc xml:lang="de">Deutschland</catDesc>
+                    </category>
+                    <category xml:id="dk">
+                        <catDesc xml:lang="en">Denmark</catDesc>
+                        <catDesc xml:lang="de">Dänemark</catDesc>
+                    </category>
+                    <category xml:id="dz">
+                        <catDesc xml:lang="en">Algeria</catDesc>
+                        <catDesc xml:lang="de">Algerien</catDesc>
+                    </category>
+                    <category xml:id="eg">
+                        <catDesc xml:lang="en">Egypt</catDesc>
+                        <catDesc xml:lang="de">Ägypten</catDesc>
+                    </category>
+                    <category xml:id="es">
+                        <catDesc xml:lang="en">Spain</catDesc>
+                        <catDesc xml:lang="de">Spanien</catDesc>
+                    </category>
+                    <category xml:id="fr">
+                        <catDesc xml:lang="en">France</catDesc>
+                        <catDesc xml:lang="de">Frankreich</catDesc>
+                    </category>
+                    <category xml:id="gb">
+                        <catDesc xml:lang="en">United Kingdom</catDesc>
+                        <catDesc xml:lang="de">Vereinigtes Königreich</catDesc>
+                    </category>
+                    <category xml:id="ge">
+                        <catDesc xml:lang="en">Georgia</catDesc>
+                        <catDesc xml:lang="de">Georgien</catDesc>
+                    </category>
+                    <category xml:id="gi">
+                        <catDesc xml:lang="en">Gibraltar</catDesc>
+                        <catDesc xml:lang="de">Gibraltar</catDesc>
+                    </category>
+                    <category xml:id="gr">
+                        <catDesc xml:lang="en">Greece</catDesc>
+                        <catDesc xml:lang="de">Griechenland</catDesc>
+                    </category>
+                    <category xml:id="hr">
+                        <catDesc xml:lang="en">Croatia</catDesc>
+                        <catDesc xml:lang="de">Kroatien</catDesc>
+                    </category>
+                    <category xml:id="hu">
+                        <catDesc xml:lang="en">Hungary</catDesc>
+                        <catDesc xml:lang="de">Ungarn</catDesc>
+                    </category>
+                    <category xml:id="il">
+                        <catDesc xml:lang="en">Israel</catDesc>
+                        <catDesc xml:lang="de">Israel</catDesc>
+                    </category>
+                    <category xml:id="iq">
+                        <catDesc xml:lang="en">Iraq</catDesc>
+                        <catDesc xml:lang="de">Irak</catDesc>
+                    </category>
+                    <category xml:id="it">
+                        <catDesc xml:lang="en">Italy</catDesc>
+                        <catDesc xml:lang="de">Italien</catDesc>
+                    </category>
+                    <category xml:id="jo">
+                        <catDesc xml:lang="en">Jordan</catDesc>
+                        <catDesc xml:lang="de">Jordanien</catDesc>
+                    </category>
+                    <category xml:id="kg">
+                        <catDesc xml:lang="en">Kyrgyzstan</catDesc>
+                        <catDesc xml:lang="de">Kirgisistan</catDesc>
+                    </category>
+                    <category xml:id="kz">
+                        <catDesc xml:lang="en">Kazakhstan</catDesc>
+                        <catDesc xml:lang="de">Kasachstan</catDesc>
+                    </category>
+                    <category xml:id="lb">
+                        <catDesc xml:lang="en">Lebanon</catDesc>
+                        <catDesc xml:lang="de">Libanon</catDesc>
+                    </category>
+                    <category xml:id="li">
+                        <catDesc xml:lang="en">Liechtenstein</catDesc>
+                        <catDesc xml:lang="de">Liechtenstein</catDesc>
+                    </category>
+                    <category xml:id="lu">
+                        <catDesc xml:lang="en">Luxembourg</catDesc>
+                        <catDesc xml:lang="de">Luxemburg</catDesc>
+                    </category>
+                    <category xml:id="ly">
+                        <catDesc xml:lang="en">Libyan Arab Jamahiriya</catDesc>
+                        <catDesc xml:lang="de">Libyen</catDesc>
+                    </category>
+                    <category xml:id="ma">
+                        <catDesc xml:lang="en">Morocco</catDesc>
+                        <catDesc xml:lang="de">Marokko</catDesc>
+                    </category>
+                    <category xml:id="md">
+                        <catDesc xml:lang="en">Moldova</catDesc>
+                        <catDesc xml:lang="de">Moldawien</catDesc>
+                    </category>
+                    <category xml:id="me">
+                        <catDesc xml:lang="en">Montenegro</catDesc>
+                        <catDesc xml:lang="de">Montenegro</catDesc>
+                    </category>
+                    <category xml:id="mk">
+                        <catDesc xml:lang="en">Macedonia</catDesc>
+                        <catDesc xml:lang="de">Nordmazedonien</catDesc>
+                    </category>
+                    <category xml:id="mt">
+                        <catDesc xml:lang="en">Malta</catDesc>
+                        <catDesc xml:lang="de">Malta</catDesc>
+                    </category>
+                    <category xml:id="nl">
+                        <catDesc xml:lang="en">Netherlands</catDesc>
+                        <catDesc xml:lang="de">Niederlande</catDesc>
+                    </category>
+                    <category xml:id="pl">
+                        <catDesc xml:lang="en">Poland</catDesc>
+                        <catDesc xml:lang="de">Polen</catDesc>
+                    </category>
+                    <category xml:id="pt">
+                        <catDesc xml:lang="en">Portugal</catDesc>
+                        <catDesc xml:lang="de">Portugal</catDesc>
+                    </category>
+                    <category xml:id="rks">
+                        <catDesc xml:lang="en">Kosovo</catDesc>
+                        <catDesc xml:lang="de">Kosovo</catDesc>
+                    </category>
+                    <category xml:id="ro">
+                        <catDesc xml:lang="en">Romania</catDesc>
+                        <catDesc xml:lang="de">Rumänien</catDesc>
+                    </category>
+                    <category xml:id="rs">
+                        <catDesc xml:lang="en">Serbia</catDesc>
+                        <catDesc xml:lang="de">Serbien</catDesc>
+                    </category>
+                    <category xml:id="ru">
+                        <catDesc xml:lang="en">Russia</catDesc>
+                        <catDesc xml:lang="de">Russland</catDesc>
+                    </category>
+                    <category xml:id="sa">
+                        <catDesc xml:lang="en">Saudi Arabia</catDesc>
+                        <catDesc xml:lang="de">Saudi Arabien</catDesc>
+                    </category>
+                    <category xml:id="sd">
+                        <catDesc xml:lang="en">Sudan</catDesc>
+                        <catDesc xml:lang="de">Sudan</catDesc>
+                    </category>
+                    <category xml:id="se">
+                        <catDesc xml:lang="en">Sweden</catDesc>
+                        <catDesc xml:lang="de">Schweden</catDesc>
+                    </category>
+                    <category xml:id="si">
+                        <catDesc xml:lang="en">Slovenia</catDesc>
+                        <catDesc xml:lang="de">Slowenien</catDesc>
+                    </category>
+                    <category xml:id="sk">
+                        <catDesc xml:lang="en">Slovakia</catDesc>
+                        <catDesc xml:lang="de">Slowakei</catDesc>
+                    </category>
+                    <category xml:id="sm">
+                        <catDesc xml:lang="en">San Marino</catDesc>
+                        <catDesc xml:lang="de">San Marino</catDesc>
+                    </category>
+                    <category xml:id="sy">
+                        <catDesc xml:lang="en">Syrian Arab Republic</catDesc>
+                        <catDesc xml:lang="de">Syrien</catDesc>
+                    </category>
+                    <category xml:id="tj">
+                        <catDesc xml:lang="en">Tajikistan</catDesc>
+                        <catDesc xml:lang="de">Tadschikistan</catDesc>
+                    </category>
+                    <category xml:id="tn">
+                        <catDesc xml:lang="en">Tunesia</catDesc>
+                        <catDesc xml:lang="de">Tunesien</catDesc>
+                    </category>
+                    <category xml:id="tr">
+                        <catDesc xml:lang="en">Turkey</catDesc>
+                        <catDesc xml:lang="de">Türkei</catDesc>
+                    </category>
+                    <category xml:id="ua">
+                        <catDesc xml:lang="en">Ukraine</catDesc>
+                        <catDesc xml:lang="de">Ukraine</catDesc>
+                    </category>
+                    <category xml:id="uz">
+                        <catDesc xml:lang="en">Uzbekistan</catDesc>
+                        <catDesc xml:lang="de">Usbekistan</catDesc>
+                    </category>
+                    <category xml:id="va">
+                        <catDesc xml:lang="en">Vatican City State</catDesc>
+                        <catDesc xml:lang="de">Vatikanstaat</catDesc>
+                    </category>
+                    <category xml:id="ye">
+                        <catDesc xml:lang="en">Yemen</catDesc>
+                        <catDesc xml:lang="de">Yemen</catDesc>
+                    </category>
+                </taxonomy>
+            </classDecl>
+        </encodingDesc>
+    </teiHeader>
+    <standOff>
+        <note/>
+    </standOff>
+</TEI>

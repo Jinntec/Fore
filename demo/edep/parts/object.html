@@ -1,0 +1,52 @@
+<fx-group aria-labelledby="identifier-lbl" class="outer-group" id="object"
+          ref="fileDesc/sourceDesc/msDesc/msIdentifier">
+    <h2 id="identifier-lbl">
+        Identifier
+    </h2>
+    <!-- 3) -->
+    <fx-output class="edepid" ref="idno[@type='EDEp']">
+        <label slot="label">
+            EDEp-ID
+        </label>
+    </fx-output>
+    <fieldset id="idnos">
+        <legend>Identifier
+            <fx-trigger class="add">
+                <button>+</button>
+                <fx-insert
+                        context="."
+                        origin="instance('templates')/idno"
+                        ref="idno"></fx-insert>
+            </fx-trigger>
+        </legend>
+        <fx-repeat class="idno-repeat" ref="idno[@type != 'EDEp']">
+            <template>
+                <fx-control ref="@type">
+                    <label>Type</label>
+                </fx-control>
+                <fx-control class="idno" ref=".">
+                    <label>
+                        Id number
+                    </label>
+                </fx-control>
+                <fx-trigger class="delete">
+                    <button>x</button>
+                    <fx-delete ref="."></fx-delete>
+                </fx-trigger>
+            </template>
+        </fx-repeat>
+    </fieldset>
+
+
+    <!-- 16a) -->
+
+    <!--
+        <fx-control id="tm-number" class="tm-number" ref="idno[@type='TM']">
+            <label>
+                TM ID
+
+            </label>
+        </fx-control>
+    -->
+    <!-- there's no 17) -->
+</fx-group>

@@ -1,0 +1,83 @@
+.zotero-picker{
+    position: relative;
+}
+.zotero-picker header{
+    display: flex;
+    flex-direction:row;
+    flex-wrap: wrap;
+    margin-left:12rem;
+    align-items: center;
+    gap:0.5rem;
+}
+.zotero-picker header .with-hint{
+    width: calc(100% - 2rem);
+}
+.zotero-picker fx-repeat{
+    display: none;
+    border:none;
+    padding: 0;
+}
+.zotero-picker.open fx-repeat{
+    display: block;
+    position: absolute;
+    max-height: 50vh;
+    overflow: auto;
+    max-width: 100%;
+    border: thin solid #ccc;
+    padding: 0.25rem;
+    z-index: 200;
+    background: white;
+}
+.zotero-picker fx-repeat fx-repeatitem{
+    border:none;
+    margin:0;
+}
+.zotero-picker .bib{
+    display: block;
+    width: 100%;
+    white-space: normal;
+}
+.zotero-picker .bib:hover{
+    background: #efefef;
+}
+#zotero-bib-output{
+    max-width: 100%;
+    white-space: normal;
+}
+.zotero-bib{
+    display: block;
+    white-space: normal;
+    padding:0.25rem;
+    background: whitesmoke;
+}
+.zotero-picker fx-control{
+    grid-area: control;
+    display: flex;
+    flex-direction: row;
+    column-gap: 2rem;
+
+}
+.zotero-picker .zotero-html{
+    white-space:normal;
+    margin-left:0.5rem;
+    padding:0.5rem 0;
+}
+
+.zotero-picker fx-control iron-icon{
+    grid-area: clear;
+}
+.zotero-picker progress{
+    display:none;
+    visibility: hidden;
+    margin-left:18rem;
+    width:inherit;
+    /*position:absolute;*/
+    /*top:0;*/
+    height: 6px;
+    /*min-height: 4px;*/
+    margin-bottom:0.25rem;
+}
+.zotero-picker progress.busy{
+    display: block;
+    visibility: visible;
+}

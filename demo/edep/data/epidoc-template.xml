@@ -1,0 +1,120 @@
+<?xml-model href="http://epidoc.stoa.org/schema/latest/tei-epidoc.rng" schematypens="http://relaxng.org/ns/structure/1.0"?><?xml-model href="http://epidoc.stoa.org/schema/latest/tei-epidoc.rng" schematypens="http://purl.oclc.org/dsdl/schematron"?><!-- Fehlende Felder da unklar: 34, 24 -->
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xml:id="" corresp="" fragments="" type="">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title/>
+                <editor/>
+                <author/>
+                <respStmt>
+                    <resp when=""></resp>
+                    <persName/>
+                </respStmt>
+            </titleStmt>
+            <publicationStmt>
+                <authority>Epigraphische Datenbank Heidelberg</authority>
+                <availability>
+                    <p>Heidelberger Akademie der Wissenschaften</p>
+                    <licence target="http://creativecommons.org/licenses/by-sa/4.0/">This file is licensed under the
+                        Creative Commons Attribution-ShareAlike 4.0 license. </licence>
+                </availability>
+            </publicationStmt>
+            <sourceDesc>
+                <msDesc>
+                    <msIdentifier>
+                        <repository/>                        
+                        <idno type="inventory"/>
+                        <idno type="EDEp"/>
+                        <idno type="TM"/>
+                    </msIdentifier>
+                    <msContents class="">
+                        <summary/>
+                    </msContents>
+                    <physDesc>
+                        <objectDesc>
+                            <supportDesc>
+                                <support>
+                                    <objectType ref=""/>
+                                    <material ref=""/>
+                                    <note/>
+                                    <dimensions>
+                                        <width/>
+                                        <height/>
+                                        <depth/>
+                                    </dimensions>
+                                </support>
+                                <condition/>
+                            </supportDesc>
+                            <layoutDesc>
+                                <layout>
+                                    <dimensions>
+                                        <height/>
+                                        <width/>
+                                    </dimensions>
+                                    <note type="paleography" corresp=""/>
+                                    <note type="metre"/>
+                                    <ab/>
+                                </layout>
+                            </layoutDesc>
+                        </objectDesc>
+                        <handDesc>
+                            <handNote scope="ligature">
+                            </handNote>
+                        </handDesc>
+                        <decoDesc>
+                            <decoNote corresp=""/>
+                        </decoDesc>
+                    </physDesc>
+                    <history>
+                        <origin>
+                            <origDate when-custom="" notBefore-custom="" notAfter-custom="" datingMethod="http://en.wikipedia.org/wiki/Julian_calendar"/>
+                            <origPlace corresp=""/>
+                        </origin>
+                        <provenance type="found" when="" notBefore="" notAfter="">
+                            <note type="context"/>
+                            <note type="found-date"/>
+                        </provenance>
+                        <provenance type="history"/>
+                    </history>
+                </msDesc>
+                <listBibl>
+                    <listBibl type="transmission">
+                    </listBibl>
+                    <listBibl type="previousEditions">
+                    </listBibl>
+                    <listBibl type="bibliography">
+                    </listBibl>
+                    <listBibl type="images">
+                    </listBibl>
+                </listBibl>
+            </sourceDesc>
+        </fileDesc>
+        <encodingDesc>
+            <p>Encoded following EpiDoc guidelines 9.2</p>
+        </encodingDesc>
+        <profileDesc>
+            <textClass>
+                <keywords scheme="https://edh.ub.uni-heidelberg.de/edep/religion">
+                    <term ref=""/>
+                </keywords>
+                <keywords scheme="https://edh.ub.uni-heidelberg.de/edep/terms">
+                    <term ref=""/>
+                </keywords>
+            </textClass>
+            <langUsage>
+                <language ident="edep"></language>
+                <language ident="lat" ana="main"></language>
+            </langUsage>
+        </profileDesc>
+        <revisionDesc status="draft"/>
+    </teiHeader>
+    <facsimile/>
+    <text>
+        <body>
+            <div type="edition"/>
+            <div type="apparatus"/>
+            <div type="translation" resp=""/>
+            <div type="commentary"/>
+        </body>
+    </text>
+</TEI>

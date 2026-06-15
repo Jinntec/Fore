@@ -1,0 +1,53 @@
+/*
+@import url('https://fonts.googleapis.com/css2?family=Cinzel&display=swap');
+
+.logo {
+    background-image: url("../images/logo-small.png");
+}
+
+.splash {
+    background-image: url("../images/logo.png");
+}
+*/
+
+body {
+    --pb-menubar-background-color: #ffffff;
+    --pb-menubar-color: var(--pb-color-primary);
+    --pb-lang-input-color: var(--pb-color-primary);
+    --pb-lang-label-color: var(--pb-color-primary);
+    --pb-heading-font-family: Cinzel, serif;
+    --pb-link-color: #e4040a;
+    --pb-color-green: #156064;
+    --pb-toolbar-background-color: #fbebda;
+}
+
+.logo {
+    background-size: contain;
+}
+
+main {
+    margin: 0 0.5rem 0 0.5rem;
+    height: auto;
+    margin-bottom: 3rem;
+}
+
+@media (min-width: 1200px) {
+    main {
+        max-width: 1400px;
+        padding-left: 18rem;
+    }
+}
+
+a:link, a:visited, a:hover {
+    color: var(--pb-link-color);
+    text-decoration: none;
+}
+
+.document-info pb-restricted {
+    display: inherit;
+}
+
+.document-info pb-restricted {
+    display: inherit;
+    --pb-link-color: var(--pb-color-primary);
+}

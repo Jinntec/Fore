@@ -1,0 +1,115 @@
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+      <teiHeader>
+            <fileDesc>
+                  <titleStmt>
+                        <title>Taxonomy of state of preservation for EpiDoc profile</title>
+                  </titleStmt>
+                  <publicationStmt>
+                        <p>Established in the scope of the EDEp project</p>
+                  </publicationStmt>
+                  <sourceDesc>
+                        <p/>
+                  </sourceDesc>
+            </fileDesc>
+            <encodingDesc>
+                  <classDecl>
+                        <taxonomy xml:id="preservation-state">
+                              <category
+                                    corresp="https://www.eagle-network.eu/voc/statepreserv/lod/4">
+                                    <catDesc>Broken</catDesc>
+                              </category>
+                              <category
+                                    corresp="https://www.eagle-network.eu/voc/statepreserv/lod/2">
+                                    <catDesc>Complete</catDesc>
+                              </category>
+                              <category
+                                    corresp="https://www.eagle-network.eu/voc/statepreserv/lod/24">
+                                    <catDesc>contigous</catDesc>
+                              </category>
+                              <category
+                                    corresp="https://www.eagle-network.eu/voc/statepreserv/lod/1">
+                                    <catDesc>Good</catDesc>
+                              </category>
+                              <category
+                                    corresp="https://www.eagle-network.eu/voc/statepreserv/lod/5">
+                                    <catDesc>Incomplete</catDesc>
+                              </category>
+                              <category
+                                    corresp="https://www.eagle-network.eu/voc/statepreserv/lod/23">
+                                    <catDesc>intact</catDesc>
+                              </category>
+                              <category
+                                    corresp="https://www.eagle-network.eu/voc/statepreserv/lod/9">
+                                    <catDesc>Lost</catDesc>
+                              </category>
+                              <category
+                                    corresp="https://www.eagle-network.eu/voc/statepreserv/lod/10">
+                                    <catDesc>lost but recorded</catDesc>
+                              </category>
+                              <category
+                                    corresp="https://www.eagle-network.eu/voc/statepreserv/lod/25">
+                                    <catDesc>non-contigous</catDesc>
+                              </category>
+                              <category
+                                    corresp="https://www.eagle-network.eu/voc/statepreserv/lod/3">
+                                    <catDesc>Probably complete</catDesc>
+                              </category>
+                              <category
+                                    corresp="https://www.eagle-network.eu/voc/statepreserv/lod/6">
+                                    <catDesc>tit. fragmenta inter se coniuncta</catDesc>
+                              </category>
+                              <category
+                                    corresp="https://www.eagle-network.eu/voc/statepreserv/lod/7">
+                                    <catDesc>tit. fragmenta inter se non coniuncta</catDesc>
+                              </category>
+                              <category
+                                    corresp="https://www.eagle-network.eu/voc/statepreserv/lod/8">
+                                    <catDesc>tit. fragmenta partim tantum inter se
+                                          coniuncta</catDesc>
+                              </category>
+                              <category
+                                    corresp="https://www.eagle-network.eu/voc/statepreserv/lod/26">
+                                    <catDesc>nulla vestigia tituli discerni possunt</catDesc>
+                              </category>
+                              <category
+                                    corresp="https://www.eagle-network.eu/voc/statepreserv/lod/27">
+                                    <catDesc>de titulo nec vola nec vestigium</catDesc>
+                              </category>
+                              <category
+                                    corresp="https://www.eagle-network.eu/voc/statepreserv/lod/28">
+                                    <catDesc>nihil legi potest nisi vestigia infirmissima</catDesc>
+                              </category>
+                              <category
+                                    corresp="https://www.eagle-network.eu/voc/statepreserv/lod/29">
+                                    <catDesc>titulus lapide scindendo periisse videtur</catDesc>
+                              </category>
+                              <category
+                                    corresp="https://www.eagle-network.eu/voc/statepreserv/lod/30">
+                                    <catDesc>quo labore pars tituli deleta esse videtur</catDesc>
+                              </category>
+                              <category
+                                    corresp="https://www.eagle-network.eu/voc/statepreserv/lod/31">
+                                    <catDesc>..., quorum inscriptiones prae vetustate legi
+                                          nequeunt</catDesc>
+                              </category>
+                              <category
+                                    corresp="https://www.eagle-network.eu/voc/statepreserv/lod/32">
+                                    <catDesc>undique aratri vomere laesus</catDesc>
+                              </category>
+                              <category
+                                    corresp="https://www.eagle-network.eu/voc/statepreserv/lod/33">
+                                    <catDesc>parte antica supra a dextra mutilus / mutilatus /
+                                          adesus</catDesc>
+                              </category>
+                              <category
+                                    corresp="https://www.eagle-network.eu/voc/statepreserv/lod/34">
+                                    <catDesc>in fronte fracturis rimisque laesus</catDesc>
+                              </category>
+                        </taxonomy>
+                  </classDecl>
+            </encodingDesc>
+      </teiHeader>
+      <standOff>
+            <note/>
+      </standOff>
+</TEI>

@@ -1,0 +1,36 @@
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title>Taxonomy of religion options for EpiDoc profile</title>
+            </titleStmt>
+            <publicationStmt>
+                <p>Established in the scope of the EDEp project</p>
+            </publicationStmt>
+            <sourceDesc>
+                <p/>
+            </sourceDesc>
+        </fileDesc>
+        <encodingDesc>
+            <classDecl>
+                <taxonomy xml:id="religion">
+                    <category xml:id="pagan">
+                        <catDesc xml:lang="de">pagan</catDesc>
+                        <catDesc xml:lang="en">pagan</catDesc>
+                    </category>
+                    <category xml:id="jewish">
+                        <catDesc xml:lang="de">jüdisch</catDesc>
+                        <catDesc xml:lang="en">jewish</catDesc>
+                    </category>
+                    <category xml:id="christian">
+                        <catDesc xml:lang="en">christian</catDesc>
+                        <catDesc xml:lang="de">christlich</catDesc>
+                    </category>
+                </taxonomy>
+            </classDecl>
+        </encodingDesc>
+    </teiHeader>
+    <standOff>
+        <note/>
+    </standOff>
+</TEI>

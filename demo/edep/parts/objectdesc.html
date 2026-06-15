@@ -1,0 +1,206 @@
+<fx-group>
+    <fx-group class="neutral" ref="physDesc">
+        <fx-group class="neutral form-row" ref="decoDesc/decoNote">
+            <fx-control ref="@corresp" update-event="input" create="create">
+                <label>
+                    Decoration
+                </label>
+                <select
+                ref="sortNames($src//category)"
+                data-src="data/decor.xml"
+                class="widget"
+                selection="open">
+                    <template>
+                        <!-- prettier-ignore -->
+                        <option value="{@corresp}">{catDesc[@xml:lang = 'en']}</option>
+                    </template>
+                </select>
+            </fx-control>
+
+            <fx-control class="description" ref=".">
+                <label>
+                    Description of decoration
+                </label>
+                <textarea class="widget"></textarea>
+            </fx-control>
+        </fx-group>
+
+        <fx-control ref="objectDesc/supportDesc/condition" update-event="input">
+            <label>
+                Preservation
+            </label>
+            <select
+                ref="instance('preservation')//category"
+                class="widget">
+                <template>
+                    <!-- prettier-ignore -->
+                    <option value="{@xml:id}">{catDesc[@xml:lang = 'en']}</option>
+                </template>
+            </select>     
+        </fx-control>
+        <fx-group ref="objectDesc/supportDesc/support" class="neutral">
+            <fieldset>
+                <legend>
+                    Type of monument
+                </legend>
+                <fx-repeat
+                  class="nested-repeat repeat-flex"
+                  ref="objectType"
+                  id="r-objtyp">
+                    <template>
+                        <fx-group class="neutral">
+                            <fx-control ref="@ref">
+                                <label>
+                                    Type of monument
+                                </label>
+                                <select
+                                class="widget"
+                                ref="sortNames(instance('objtyp')//category)">
+                                    <template>
+                                        <option value="{@corresp}">{catDesc[@xml:lang = 'en']}</option>
+                                    </template>
+                                </select>
+                            </fx-control>
+                        </fx-group>
+                        <fx-trigger class="delete">
+                            <button>X</button>
+                            <fx-delete ref="."></fx-delete>
+                        </fx-trigger>
+                    </template>
+                </fx-repeat>
+                <fx-trigger class="add">
+                    <button>+</button>
+                    <fx-insert
+                        context="."
+                        ref="objectType"
+                        origin="instance('templates')/objectType"></fx-insert>
+                </fx-trigger>
+            </fieldset>
+
+            <fx-control ref="note[not(@type)]" as="node" update-event="leave">
+                <label>
+                    Description of monument
+<!-- if it's not more we can give as hint we probably can leave away altogether (see other places also)
+                    
+-->
+                </label>
+                <edep-xml-editor
+                  class="widget"
+                  placeholder="[Inline text/markup or sequence of paragraphs]"
+                  schema-root="provenance"
+                  base-url="${app}"
+                  data-template="lib:parse-params">
+                </edep-xml-editor>
+            </fx-control>
+                
+            <fieldset>
+                <legend>
+                    Material
+                </legend>
+                <fx-repeat
+                    class="nested-repeat repeat-flex"
+                    ref="material"
+                    id="r-material">
+                    <template>
+                        <fx-group class="neutral">
+                            <fx-control ref="@ref">
+                                <label>
+                                    Material
+                                </label>
+                                <select
+                                class="widget"
+                                ref="sortNames($material//category)"
+                                data-src="data/material.xml"
+                                data-id="material"
+                                data-type="xml">
+                                    <template>
+                                        <option value="{@corresp}">{catDesc[@xml:lang = 'en']}</option>
+                                    </template>
+                                </select>
+                            </fx-control>
+                        </fx-group>
+                        <fx-trigger class="delete">
+                            <button>X</button>
+                            <fx-delete ref="."></fx-delete>
+                        </fx-trigger>
+                    </template>
+                </fx-repeat>
+                <fx-trigger class="add">
+                    <button>+</button>
+                    <fx-insert
+                        context="."
+                        ref="material"
+                        origin="instance('templates')/material"></fx-insert>
+                </fx-trigger>
+            </fieldset>
+            <section class="measurement-row form-row">
+            <fx-control class="measurement" ref="dimensions/height">
+                <label>
+                    Height
+                </label>
+            </fx-control>
+            <fx-control class="measurement" ref="dimensions/width">
+                <label>
+                    Width
+                </label>
+            </fx-control>
+            <fx-control class="measurement" ref="dimensions/depth">
+                <label>
+                    Depth
+                </label>
+            </fx-control>
+            </section>
+        </fx-group>
+    </fx-group>
+
+    <div class="alternatives">
+        <fx-group ref="msContents">
+            <fx-control ref="summary">
+                <label>
+                    Further remarks
+                </label>
+                <textarea class="widget"></textarea>
+            </fx-control>
+        </fx-group>
+
+        <fx-group class="neutral" ref="ancestor::teiHeader/profileDesc/textClass">
+            <fx-group ref="keywords[@scheme='https://edh.ub.uni-heidelberg.de/edep/inscription-type']">
+                <fieldset>
+                    <legend>
+                        Type of inscription
+                    </legend>
+                    <fx-repeat
+                        class="nested-repeat repeat-flex"
+                        ref="term"
+                        id="r-inscription-type">
+                        <template>
+                                <fx-control ref="@ref" create="create">
+                                    <label>
+                                        Type of inscription
+                                    </label>
+                                    <select
+                                    class="widget"
+                                    ref="sortNames(instance('typeins')//category)">
+                                        <template>
+                                            <option value="{@corresp}">{catDesc[@xml:lang = 'en']}</option>
+                                        </template>
+                                    </select>
+                                </fx-control>
+                            <fx-trigger class="delete">
+                                <button>X</button>
+                                <fx-delete ref="."></fx-delete>
+                            </fx-trigger>
+                        </template>
+                    </fx-repeat>
+                    <fx-trigger class="add">
+                        <button>+</button>
+                        <fx-insert
+                            context="."
+                            ref="term"
+                            origin="instance('templates')/keywords/term"></fx-insert>
+                    </fx-trigger>
+                </fieldset>
+            </fx-group>
+        </fx-group>
+    </div>
+</fx-group>

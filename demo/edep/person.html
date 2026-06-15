@@ -1,0 +1,380 @@
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title data-template="config:app-title"></title>
+        <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" />
+        <link rel="shortcut icon" type="image/x-icon" href="resources/images/favicon.ico" />
+        <link rel="shortcut icon" type="image/png" href="resources/images/favicon-16.png" sizes="16x16" />
+        <link rel="shortcut icon" type="image/png" href="resources/images/favicon-24.png" sizes="24x24" />
+        <link rel="shortcut icon" type="image/png" href="resources/images/favicon-32.png" sizes="32x32" />
+        <link rel="shortcut icon" type="image/png" href="resources/images/favicon-64.png" sizes="64x64" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald" />
+        <link rel="stylesheet" href="resources/css/theme.css" />
+        <link rel="stylesheet" href="resources/css/fore.css" />
+        <link rel="stylesheet" href="resources/css/edep-theme.css" />
+        <link rel="stylesheet" href="resources/css/edep-theme2.css" />
+        <script type="module" src="pb-components-bundle.js" data-template="pages:load-components" />
+        <script type="module" src="resources/scripts/fore-dev.js"></script>
+        <script type="module" src="resources/scripts/fx-lens.js"></script>
+
+        <!--        <script type="module" src="http://localhost:8090/index.js"/>-->
+        <style>
+            [invalid] fx-alert{
+                display: block;
+            }
+            fx-output#validator[valid]{
+                display: none;
+            }
+            input.widget, select.widget{
+                width:20rem;
+            }
+            fx-control[required]::after,
+            fx-control[required] > label::after{
+                display:none;
+            }
+            .actions{
+                display:flex;
+                align-items:center;
+                gap:1rem;
+            }
+            #new-entry a{
+                color:black;
+                cursor:pointer;
+                text-decoration:underline;
+            }
+            .reference-type{
+                width:10rem;
+            }
+            main{
+                padding: 0 2rem;
+            }
+            fieldset > fieldset {
+                margin: 2rem 1rem;
+                width: auto;
+            }
+            .hint{
+                margin-left: 1rem;
+            }
+        </style>
+    </head>
+
+    <body>
+        <pb-page data-template="pages:pb-page" unresolved="unresolved" locales="resources/i18n/{{ns}}/{{lng}}.json">
+            <app-drawer-layout force-narrow="force-narrow">
+                <app-drawer slot="drawer" align="right">
+                    <div class="drawer-content">
+                        <pb-media-query query="(max-width: 1023px)">
+                            <!-- language selector -->
+                            <pb-lang name="lang" data-template="pages:languages"></pb-lang>
+                        </pb-media-query>
+                    </div>
+                </app-drawer>
+                <app-header-layout>
+                    <app-header slot="header" reveals="reveals" fixed="fixed" effects="waterfall">
+                        <app-toolbar data-template="lib:include" data-template-path="templates/menu.html"></app-toolbar>
+                        <!--app-toolbar data-template="lib:include" data-template-path="templates/menu.html">
+                            <a data-target="custom" href="${app}/orte?category=${category}&amp;search=${search}" data-template="lib:parse-params">Geodaten</a>
+                            <a data-target="custom" href="${app}/personen?category=${category}&amp;search=${search}" data-template="lib:parse-params">Personen</a>
+                            </app-toolbar-->
+                        <pb-media-query query="(max-width: 1023px)">
+                            <app-toolbar class="toolbar" sticky="sticky">
+                                <!-- Search input -->
+                                <pb-search
+                                    action="${app}/search.html"
+                                    data-template="lib:parse-params"
+                                    value="${query}"
+                                    redirect="redirect"></pb-search>
+                                <paper-icon-button icon="icons:menu" drawer-toggle="drawer-toggle"></paper-icon-button>
+                            </app-toolbar>
+                        </pb-media-query>
+                    </app-header>
+
+                    <main>
+                        <fx-fore id="person">
+                            <fx-action event="ready" if="uri-param('id') != ''">
+                                <fx-send submission="s-load"></fx-send>
+                                <fx-setfocus control="first" delay="300"></fx-setfocus>
+                            </fx-action>
+
+                            <fx-model>
+                                <fx-action event="model-construct-done">
+                                    <fx-send submission="s-login"></fx-send>
+                                    <fx-send submission="s-load-template"></fx-send>
+                                </fx-action>
+
+                                <fx-instance id="default" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+                                    <data></data>
+                                </fx-instance>
+                                <fx-bind
+                    			  ref="instance('default')/persName/name[@type = ('nomen', 'praenomen', 'god', 'cognomen', 'supernomen')]"
+                                  required="let $c := . return empty(../name[@type = ('nomen', 'praenomen', 'god', 'cognomen', 'supernomen')][$c/@type != @type][string-length(.) > 0])">
+                                </fx-bind>
+
+                                <fx-instance id="tribus">
+                                    <data>
+                                        <tribus>Aelia</tribus>
+                                        <tribus>Aemilia</tribus>
+                                        <tribus>Arnensis</tribus>
+                                        <tribus>Camilia</tribus>
+                                        <tribus>Claudia</tribus>
+                                        <tribus>Clustumina</tribus>
+                                        <tribus>Collina</tribus>
+                                        <tribus>Cornelia</tribus>
+                                        <tribus>Esquilina</tribus>
+                                        <tribus>Fabia</tribus>
+                                        <tribus>Falerna</tribus>
+                                        <tribus>Galeria</tribus>
+                                        <tribus>Horatia</tribus>
+                                        <tribus>Lemonia</tribus>
+                                        <tribus>Maecia</tribus>
+                                        <tribus>Menenia</tribus>
+                                        <tribus>Oufentina</tribus>
+                                        <tribus>Palatina</tribus>
+                                        <tribus>Papiria</tribus>
+                                        <tribus>Pollia</tribus>
+                                        <tribus>Pomptina</tribus>
+                                        <tribus>Publilia</tribus>
+                                        <tribus>Pupinia</tribus>
+                                        <tribus>Quirina</tribus>
+                                        <tribus>Romilia</tribus>
+                                        <tribus>Sabatina</tribus>
+                                        <tribus>Scaptia</tribus>
+                                        <tribus>Sergia</tribus>
+                                        <tribus>Stellatina</tribus>
+                                        <tribus>Suburana</tribus>
+                                        <tribus>Sulpicia</tribus>
+                                        <tribus>Teretina</tribus>
+                                        <tribus>Tromentina</tribus>
+                                        <tribus>Ulpia</tribus>
+                                        <tribus>Velina</tribus>
+                                        <tribus>Voltinia</tribus>
+                                        <tribus>Voturia</tribus>
+                                    </data>
+                                </fx-instance>
+                                <fx-instance id="status">
+                                    <data>
+                                        <item key="Herrscher / Herrscherhaus"></item>
+                                        <item key="Senatorenstand"></item>
+                                        <item key="Ritterstand"></item>
+                                        <item key="Dekurionenstand"></item>
+                                        <item key="höhere Gemeindeverwaltung"></item>
+                                        <item key="subalterne Beamte"></item>
+                                        <item key="Domänen- / niedere Gemeindeverwaltung"></item>
+                                        <item key="Augustalen"></item>
+                                        <item key="Freigelassene"></item>
+                                        <item key="Sklaven"></item>
+                                        <item key="Sonstige"></item>
+                                    </data>
+                                </fx-instance>
+                                <fx-instance id="vars">
+                                    <data>
+                                        <loggedin>hidden</loggedin>
+                                        <idno type=""></idno>
+                                    </data>
+                                </fx-instance>
+                                <fx-instance id="templ" xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+                                    <person>
+                                        <idno type=""></idno>
+                                    </person>
+                                </fx-instance>
+                                <fx-bind ref="instance('vars')/loggedin" relevant=".='true'"></fx-bind>
+
+                                <fx-submission
+                                    id="s-save"
+                                    method="post"
+                                    url="api/people/{uri-param('id')}"
+                                    replace="instance">
+                                    <fx-action event="submit-done">
+                                        <fx-message>Person wurde gespeichert</fx-message>
+                                        <fx-send submission="s-load"></fx-send>
+                                    </fx-action>
+                                    <fx-message event="submit-error">couldn't be saved</fx-message>
+                                </fx-submission>
+                                <fx-submission id="s-create" url="api/people" method="post" replace="instance">
+                                    <fx-action event="submit-done">
+                                        <fx-message>Daten wurden gespeichert</fx-message>
+                                    </fx-action>
+
+                                    <fx-action event="submit-error">
+                                        <fx-message>Daten konnten nicht gespeichert werden.</fx-message>
+                                    </fx-action>
+
+                                </fx-submission>
+
+                                <fx-submission
+                                    id="s-load"
+                                    method="get"
+                                    url="api/people/{uri-param('id')}"
+                                    replace="instance"
+                                    validate="false">
+                                </fx-submission>
+
+                                <fx-submission
+                                    id="s-load-template"
+                                    method="get"
+                                    url="templates/fore/person-tmpl.xml"
+                                    replace="instance"
+                                    validate="false">
+                                </fx-submission>
+
+                                <fx-submission id="s-reset" url="templates/fore/person-tmpl.xml" replace="instance">
+                                </fx-submission>
+
+                                <fx-instance id="login" type="json">{}</fx-instance>
+                                <fx-submission
+                                    id="s-login"
+                                    ref="instance('login')?*"
+                                    url="api/login"
+                                    method="post"
+                                    replace="instance"
+                                    instance="login"
+                                    validate="false">
+                                    <fx-setvalue ref="instance('vars')/loggedin" event="submit-error"
+                                        >false</fx-setvalue
+                                    >
+                                    <fx-setvalue ref="instance('vars')/loggedin" event="submit-done">true</fx-setvalue>
+                                </fx-submission>
+                            </fx-model>
+
+                            <fx-output ref="instance('default')/@xml:id"></fx-output>
+                            <fieldset>
+                                <legend>Person</legend>
+                                <p class="hint"><pb-i18n key="form.hint-person-validation"></pb-i18n></p>
+                                <fx-control id="first" ref="persName/name[@type='god']">
+                                    <label data-i18n="person.deity">Gott</label>
+                                    <input type="text" autofocus="autofocus" class="widget" tabindex="1" />
+                                </fx-control>
+                                <fx-control ref="persName/name[@type='praenomen']">
+                                    <label>Praenomen</label>
+                                </fx-control>
+                                <fx-control ref="persName/name[@type='nomen']">
+                                    <label>Nomen Gentile</label>
+                                </fx-control>
+                                <fx-control ref="persName/name[@type='cognomen']">
+                                    <label>Cognomen</label>
+                                </fx-control>
+                                <fx-control ref="persName/name[@type='supernomen']">
+                                    <label>Supernomen</label>
+                                </fx-control>
+                                <fx-control ref="persName/name[@type='tribus']">
+                                    <label>Tribus</label>
+                                    <select ref="instance('tribus')/tribus" class="widget" selection="open">
+                                        <template>
+                                            <option value="{.}">{.}</option>
+                                        </template>
+                                    </select>
+                                </fx-control>
+                                <fx-control ref="persName/name[@type='origo']">
+                                    <label>Origo</label>
+                                </fx-control>
+                                <fx-control ref="@sex">
+                                    <label data-i18n="person.sex"></label>
+                                    <select class="widget">
+                                        <option></option>
+                                        <option value="M" selected="selected" data-i18n="person.male">Männlich</option>
+                                        <option value="F" data-i18n="person.female">Weiblich</option>
+                                    </select>
+                                </fx-control>
+                                <fx-control ref="state[@type='status']">
+                                    <label data-i18n="person.status">Sozialer Status</label>
+                                    <select class="widget" ref="instance('status')/item" selection="open">
+                                        <template>
+                                            <option value="{@key}">{@key}</option>
+                                        </template>
+                                    </select>
+                                </fx-control>
+                                <fx-control ref="occupation">
+                                    <label data-i18n="person.occupation">Beruf</label>
+                                </fx-control>
+
+                                <fieldset>
+                                    <legend>
+                                        <label data-i18n="form.references">Referenzen</label>
+                                        <fx-trigger class="add" title="Referenz hinzufügen">
+                                            <iron-icon
+                                                icon="add-circle-outline"
+                                                title="Referenz hinzufügen"></iron-icon>
+
+                                            <fx-insert context="." ref="idno"> </fx-insert>
+                                            <fx-refresh control="r-idno"></fx-refresh>
+                                        </fx-trigger>
+                                    </legend>
+                                    <fx-repeat ref="./idno" id="r-idno">
+                                        <template>
+                                            <div class="inline-form">
+                                                <fx-control class="reference-type" ref="@type">
+                                                    <label>
+                                                        <pb-i18n key="person.work">Work</pb-i18n>
+                                                    </label>
+                                                    <select class="widget" selection="open">
+                                                        <option value="pir">PIR</option>
+                                                        <option value="plre">PLRE</option>
+                                                        <option value="wikidata">Wikidata</option>
+                                                    </select>
+                                                </fx-control>
+                                                <fx-control ref=".">
+                                                    <label>
+                                                        <pb-i18n key="form.idno"></pb-i18n>
+                                                    </label>
+                                                    <input />
+                                                </fx-control>
+                                            </div>
+                                        </template>
+                                    </fx-repeat>
+                                </fieldset>
+                            </fieldset>
+                            <pb-restricted login="login" group="tei">
+                                <p class="loginMessage" slot="fallback">You need to be logged in to edit.</p>
+                                <div class="actions">
+                                    <fx-trigger id="save" class="saveBtn">
+                                        <button type="submit">
+                                            <pb-i18n key="form.save">Save</pb-i18n>
+                                        </button>
+                                        <fx-send submission="s-create" if="uri-param('id') = ''"></fx-send>
+                                        <fx-send submission="s-save" if="uri-param('id') != ''"></fx-send>
+                                    </fx-trigger>
+                                    <fx-trigger id="new-entry">
+                                        <a href="#">
+                                            <pb-i18n key="form.new">New</pb-i18n>
+                                        </a>
+                                        <fx-reload></fx-reload>
+                                    </fx-trigger>
+                                </div>
+                            </pb-restricted>
+                        </fx-fore>
+                    </main>
+
+                    <footer class="version">
+                        App: v<span data-template="pages:version"> </span> / web components: v
+                        <pb-version></pb-version>
+                    </footer>
+                </app-header-layout>
+            </app-drawer-layout>
+            <paper-dialog id="downloadDialog">
+                <h2>
+                    <pb-i18n key="dialogs.generatingFile">Generating File...</pb-i18n>
+                </h2>
+                <paper-dialog-scrollable>
+                    <pb-i18n key="dialogs.downloadMessage"></pb-i18n>
+                </paper-dialog-scrollable>
+                <div class="buttons">
+                    <paper-button dialog-confirm="dialog-confirm" autofocus="autofocus">
+                        <pb-i18n key="dialogs.close">Close</pb-i18n>
+                    </paper-button>
+                </div>
+            </paper-dialog>
+            <paper-dialog id="errorDialog">
+                <h2>
+                    <pb-i18n key="dialogs.error">Error</pb-i18n>
+                </h2>
+                <paper-dialog-scrollable></paper-dialog-scrollable>
+                <div class="buttons">
+                    <paper-button dialog-confirm="dialog-confirm" autofocus="autofocus">
+                        <pb-i18n key="dialogs.close">Close</pb-i18n>
+                    </paper-button>
+                </div>
+            </paper-dialog>
+        </pb-page>
+        <div class="splash"></div>
+    </body>
+</html>

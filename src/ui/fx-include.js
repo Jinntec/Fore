@@ -1,4 +1,5 @@
 import { Fore } from '../fore.js';
+import { FxFore } from '../fx-fore.js';
 
 /**
  * <fx-include>
@@ -50,11 +51,28 @@ export class FxInclude extends HTMLElement {
     this.reload = this.hasAttribute('reload');
 
     if (this.immediate) {
-      queueMicrotask(() => this.include());
+      this._includeWhenReady();
       return;
     }
 
     this._bindListener();
+  }
+
+  /**
+   * Includes content immediately, but waits until the closest `fx-fore` has
+   * finished its initial Rebuild/Recalculate/Revalidate/Refresh cycle (i.e. is
+   * "ready"), so the included content can resolve binding context against an
+   * already-initialized ancestor chain.
+   */
+  _includeWhenReady() {
+    const fore = this.closest('fx-fore');
+
+    if (!fore) {
+      queueMicrotask(() => this.include());
+      return;
+    }
+
+    FxFore.waitUntilReady(fore).then(() => this.include());
   }
 
   disconnectedCallback() {
@@ -182,10 +200,18 @@ export class FxInclude extends HTMLElement {
       return fragment;
     }
 
-    const template = parsed.querySelector('template');
+    const template = parsed.body.querySelector(':scope > template');
 
     if (template) {
       return document.importNode(template.content, true);
+    }
+
+    const rootElements = Array.from(parsed.body.children);
+
+    if (rootElements.length === 1) {
+      const fragment = document.createDocumentFragment();
+      fragment.appendChild(document.importNode(rootElements[0], true));
+      return fragment;
     }
 
     const fragment = document.createDocumentFragment();
@@ -234,6 +260,12 @@ export class FxInclude extends HTMLElement {
 
   async _initializeInsertedContent(startElement) {
     this._initForeUiDescendants(startElement);
+
+    const fore = startElement.closest('fx-fore');
+    if (fore?.createNodes && typeof fore.initData === 'function') {
+      fore.initData(startElement);
+    }
+
     await Fore.refreshChildren(startElement, true);
   }
 
