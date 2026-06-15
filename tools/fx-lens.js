@@ -88,6 +88,7 @@ export class FxLens extends HTMLElement {
       fore.addEventListener('nonrelevant', () => this.update(false));
       fore.addEventListener('valid', () => this.update(false));
       fore.addEventListener('invalid', () => this.update(false));
+      fore.addEventListener('refresh-done', () => this.update(false));
     });
 
     // If fores are added later, re-scan on capturing ready
@@ -391,19 +392,47 @@ export class FxLens extends HTMLElement {
     const fores = Array.from(document.querySelectorAll('fx-fore'));
     return instances
       .map((instance, index) => {
-        const fore = instance.closest('fx-fore');
-        const foreId = fore?.id || `fx-fore-${fores.indexOf(fore)}`;
-        const instId = instance.getAttribute('id') || 'default';
-        const key = `${foreId}#${instId}`;
+        const { key, label } = this._instanceMeta(instance, fores);
 
         return `
           <details id="d${index}" class="instance" data-key="${key}">
-            <summary>${key}</summary>
+            <summary>${label}</summary>
             <div class="instance-view tree" data-key="${key}"></div>
           </details>
         `;
       })
       .join('');
+  }
+
+  /**
+   * Derives a stable, unique key + display label for an `<fx-instance>`.
+   *
+   * Anonymous `data-src` lookup instances (created by fx-control for
+   * `data-src` lookup lists) have no `id`, so they would otherwise all
+   * collapse onto the same `${foreId}#default` key as the form's real
+   * default instance. Key those by their `data-src` URL instead.
+   *
+   * @param {Element} instance
+   * @param {Element[]} fores
+   * @returns {{key: string, label: string}}
+   */
+  _instanceMeta(instance, fores) {
+    const fore = instance.closest('fx-fore');
+    const foreId = fore?.id || `fx-fore-${fores.indexOf(fore)}`;
+    const id = instance.getAttribute('id');
+    const dataSrc = instance.getAttribute('data-src');
+
+    if (id) {
+      const key = `${foreId}#${id}`;
+      return { key, label: key };
+    }
+
+    if (dataSrc) {
+      return { key: `${foreId}#lookup:${dataSrc}`, label: `${foreId}#${dataSrc} (lookup)` };
+    }
+
+    const key = `${foreId}#default`;
+    return { key, label: key };
   }
 
   update(forceRebuild = false) {
@@ -461,10 +490,7 @@ export class FxLens extends HTMLElement {
       // Only render trees for OPEN instance panels
       const fores = Array.from(document.querySelectorAll('fx-fore'));
       for (const inst of instances) {
-        const fore = inst.closest('fx-fore');
-        const foreId = fore?.id || `fx-fore-${fores.indexOf(fore)}`;
-        const instId = inst.getAttribute('id') || 'default';
-        const key = `${foreId}#${instId}`;
+        const { key } = this._instanceMeta(inst, fores);
 
         const detailsEl = byKey.get(key);
         if (!detailsEl) continue;
@@ -525,8 +551,14 @@ export class FxLens extends HTMLElement {
   }
 
   _findInstanceByKey(key) {
-    // key = `${foreId}#${instanceId}`
-    const [foreId, instId] = String(key).split('#');
+    // key = `${foreId}#${instanceId}`, where instanceId is either a real
+    // `id`, `lookup:<data-src-url>` for an anonymous data-src instance, or
+    // `default`. Split on the first '#' only, since data-src URLs may
+    // themselves contain '#'.
+    const keyStr = String(key);
+    const sep = keyStr.indexOf('#');
+    const foreId = sep === -1 ? keyStr : keyStr.slice(0, sep);
+    const instId = sep === -1 ? '' : keyStr.slice(sep + 1);
     let fore = null;
 
     if (foreId) {
@@ -534,24 +566,34 @@ export class FxLens extends HTMLElement {
       if (!fore || fore.tagName !== 'FX-FORE') fore = null;
     }
 
-    if (fore) {
-      const inst = fore.querySelector(`fx-instance#${CSS.escape(instId || 'default')}`);
-      if (inst) return inst;
-      // fallback: default instance without id
-      if ((instId || 'default') === 'default')
-        return fore.querySelector('fx-instance:not([id])') || null;
-      return null;
+    const scope = fore || document;
+
+    if (instId.startsWith('lookup:')) {
+      const url = instId.slice('lookup:'.length);
+      return (
+        Array.from(scope.querySelectorAll('fx-instance[data-src]')).find(
+          el => el.getAttribute('data-src') === url,
+        ) || null
+      );
     }
 
-    // Fallback search (less ideal but robust)
-    if ((instId || 'default') === 'default') {
+    const id = instId || 'default';
+
+    // Try an instance with this exact `id` first (the form's default
+    // instance commonly declares `id="default"` explicitly).
+    const byId = scope.querySelector(`fx-instance#${CSS.escape(id)}`);
+    if (byId) return byId;
+
+    // Fallback: the anonymous default instance (no id, not a data-src lookup
+    // instance), since a form's default instance may also be id-less.
+    if (id === 'default') {
       return (
-        document.querySelector('fx-instance:not([id])') ||
-        document.querySelector('fx-instance') ||
+        scope.querySelector('fx-instance:not([id]):not([data-src])') ||
+        (fore ? null : document.querySelector('fx-instance')) ||
         null
       );
     }
-    return document.querySelector(`fx-instance#${CSS.escape(instId)}`) || null;
+    return null;
   }
 
   // ---------- TREE BUILDERS (same as before) ----------
