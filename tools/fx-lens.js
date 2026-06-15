@@ -102,141 +102,150 @@ export class FxLens extends HTMLElement {
 
   render() {
     const style = `
+      /* Host & layout */
       fx-lens{
-        position:fixed;
-        display:block;
-        top:0;
-        right:0;
-        bottom:0;
-        height:100vh;
-        width:var(--inspector-handle-width, 28px);
-        overflow:hidden;
-        z-index:900;
-        max-width:calc(100vw - var(--inspector-handle-width, 28px));
-        min-width:var(--inspector-handle-width, 28px);
-        box-shadow:-2px -2px 8px rgba(0,0,0,0.3);
-        font:12px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-        color:#111;
-        background:aliceblue;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 900;
+        display: block;
+        height: 100vh;
+        width: var(--inspector-handle-width, 28px);
+        min-width: var(--inspector-handle-width, 28px);
+        max-width: calc(100vw - var(--inspector-handle-width, 28px));
+        overflow: hidden;
+        background: aliceblue;
+        box-shadow: -2px -2px 8px rgba(0, 0, 0, 0.3);
+        color: #111;
+        font: 12px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
       }
-      fx-lens[open]{ width:40vw; }
+      fx-lens[open]{ width: 40vw; }
       fx-lens .main{
-        padding-left:var(--inspector-handle-width, 28px);
-        height:100vh;
-        overflow:hidden;
-        background:ghostwhite;
+        height: 100vh;
+        padding-left: var(--inspector-handle-width, 28px);
+        overflow: hidden;
+        background: ghostwhite;
       }
       fx-lens .main > div{
-        height:100vh;
-        overflow:auto;
+        height: 100vh;
+        overflow: auto;
       }
 
+      /* Handle */
       fx-lens .handle{
-        display:flex;
-        justify-content:center;
-        height:100%;
-        width:var(--inspector-handle-width, 28px);
-        background:var(--inspector-handle-bg, #3b3b3b);
-        position:absolute;
-        left:0;
-        color:white;
-        cursor:pointer;
-        z-index:800;
+        position: absolute;
+        left: 0;
+        z-index: 800;
+        display: flex;
+        justify-content: center;
+        height: 100%;
+        width: var(--inspector-handle-width, 28px);
+        background: var(--inspector-handle-bg, #3b3b3b);
+        color: white;
+        cursor: pointer;
       }
       fx-lens .handle::before{
-        content:'Data Lens';
-        white-space:nowrap;
-        transform:rotate(-90deg);
-        display:inline-block;
-        position:absolute;
-        left:-85px;
-        width:200px;
-        top:-1rem;
-        z-index:801;
+        position: absolute;
+        z-index: 801;
+        top: -1rem;
+        left: -85px;
+        display: inline-block;
+        width: 200px;
+        content: 'Data Lens';
+        white-space: nowrap;
+        transform: rotate(-90deg);
       }
       fx-lens .handle a,
       fx-lens .handle a:visited,
       fx-lens .handle a:link{
-        text-decoration:none;
-        color:white;
-        width:1.5rem;
-        height:1.5rem;
-        display:inline-flex;
-        align-items:center;
-        justify-content:center;
-        position:absolute;
-        z-index:850;
+        position: absolute;
+        z-index: 850;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.5rem;
+        height: 1.5rem;
+        color: white;
+        text-decoration: none;
       }
 
-      fx-lens details.instance summary{
-        font-size:1.05rem;
-        background:ghostwhite;
-        padding:0.5rem;
-        border-bottom:1px solid rgba(0,0,0,0.08);
-        user-select:none;
-          padding:0.25rem 0.5rem;
+      /* Reset host-page <details>/<summary> styles (margin/padding/border/font)
+         so they don't bleed into the lens panel */
+      fx-lens details,
+      fx-lens details[open]{
+        position: static;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        border-radius: 0;
       }
-      fx-lens details.instance > summary {
-          background: #2196f3;
-          color: white;
+      fx-lens summary,
+      fx-lens details[open] summary{
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font: inherit;
       }
-      fx-lens details summary::marker{
-        color:#2196f3;
+
+      /* Instance panels */
+      fx-lens details.instance > summary{
+        padding: 0.25rem 0.5rem;
+        background: #2196f3;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        color: white;
+        font-size: 1.05rem;
+        user-select: none;
       }
+      fx-lens details summary::marker{ color: #2196f3; }
       fx-lens .instance-view{
-        margin:0;
-        padding:0.5rem 0.5rem 1rem 1.5rem;
-        overflow:auto;
-        background:white;
-        border-bottom:1px solid rgba(0,0,0,0.06);
+        margin: 0;
+        padding: 0.5rem 0.5rem 1rem 1.5rem;
+        overflow: auto;
+        background: white;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
       }
 
       /* Tree */
       fx-lens .tree{
-        font:12px/1.4 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+        font: 12px/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
       }
       fx-lens .tree ul{
-        list-style:none;
-        margin:0;
-        padding-left:1rem;
-        border-left:1px solid rgba(0,0,0,0.10);
+        margin: 0;
+        padding-left: 1rem;
+        list-style: none;
+        border-left: 1px solid rgba(0, 0, 0, 0.1);
       }
-      fx-lens .tree li{
-        margin:0;
-      }
+      fx-lens .tree li{ margin: 0; }
       fx-lens .tree details > summary{
-        cursor:pointer;
-        user-select:none;
-        background:#e3f2fd;
+        padding: 0.1rem 0.25rem;
+        background: #e3f2fd;
+        cursor: pointer;
+        user-select: none;
       }
-      fx-lens details > summary::marker{
-        color:#1976d2;
-      }
-      fx-lens .tree .k{ color:#0b5394; }
-      fx-lens .tree .t{ color:#38761d; }
-      fx-lens .tree .v{ 
-        color:#444;
-        font-size:0.9rem; 
-      }
-      fx-lens .tree .muted{ color:#777; }
+      fx-lens details > summary::marker{ color: #1976d2; }
+      fx-lens .tree .k{ color: #0b5394; }
+      fx-lens .tree .t{ color: #38761d; }
+      fx-lens .tree .v{ color: #444; font-size: 0.9rem; }
+      fx-lens .tree .muted{ color: #777; }
 
       /* Placeholder for closed instance panels */
       fx-lens .placeholder{
-        color:#777;
-        font:12px/1.4 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
-        padding:0.5rem 0;
+        padding: 0.5rem 0;
+        color: #777;
+        font: 12px/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
       }
 
       /* Resizer */
       fx-lens .resizer{
-        width:0.25rem;
-        height:100vh;
-        background:rgba(215,220,235,0.3);
-        cursor:ew-resize;
-        position:absolute;
-        top:0;
-        left:0;
-        z-index:999;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 999;
+        width: 0.25rem;
+        height: 100vh;
+        background: rgba(215, 220, 235, 0.3);
+        cursor: ew-resize;
       }
     `;
 
