@@ -434,10 +434,42 @@ export class FxDebugger extends HTMLElement {
         background: #fafafa;
       }
 
-      .fx-debugger__graph-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+      .fx-debugger__graph-row {
+        display: flex;
+        flex-wrap: wrap;
         gap: 1rem;
+        align-items: flex-start;
+      }
+
+      .fx-debugger__graph-row + .fx-debugger__graph-row {
+        margin-top: 1rem;
+      }
+
+      .fx-debugger__graph-row .fx-debugger__graph-col {
+        flex: 0 0 16rem;
+      }
+
+      .fx-debugger__graph-row .fx-debugger__graph-table {
+        flex: 1 1 24rem;
+        min-width: 0;
+      }
+
+      .fx-debugger__graph-row--updated .fx-debugger__graph-card,
+      .fx-debugger__graph-row--updated .fx-debugger__table-wrap {
+        animation: fx-debugger-graph-flash 1.2s ease-out;
+      }
+
+      @keyframes fx-debugger-graph-flash {
+        0% {
+          background-color: #fef7e0;
+          border-color: #fbbc04;
+          box-shadow: 0 0 0 2px rgba(251, 188, 4, 0.45);
+        }
+        100% {
+          background-color: #fff;
+          border-color: #e3e5ea;
+          box-shadow: 0 0 0 0 rgba(251, 188, 4, 0);
+        }
       }
 
       .fx-debugger__graph-card {
@@ -445,12 +477,6 @@ export class FxDebugger extends HTMLElement {
         border-radius: 0.35rem;
         padding: 0.75rem;
         background: #fff;
-      }
-
-      .fx-debugger__graph-card h4 {
-        margin: 0 0 0.75rem;
-        font-size: 0.9rem;
-        font-weight: 700;
       }
 
       .fx-debugger__event-toolbar {
@@ -796,6 +822,10 @@ export class FxDebugger extends HTMLElement {
     this._highlightedElementTimer = null;
     this._highlightedForeTarget = null;
     this._highlightedForeTargetTimer = null;
+
+    this._previousGraphSnapshots = null;
+    this._graphHighlights = {};
+    this._graphHighlightTimer = null;
     this._collapsed = false;
     this._originalBodyPaddingBottom = undefined;
   }
@@ -844,6 +874,9 @@ export class FxDebugger extends HTMLElement {
     this.detachEventListeners();
     this.disconnectForeTargetObserver();
     this.clearPageOffset();
+
+    window.clearTimeout(this._graphHighlightTimer);
+    this._graphHighlightTimer = null;
 
     window.removeEventListener('pointermove', this._onResizePointerMove);
     window.removeEventListener('pointerup', this._onResizePointerUp);
@@ -978,6 +1011,36 @@ export class FxDebugger extends HTMLElement {
       this.fore?.getDebugSnapshot?.({
         includeGraphs: this.activePanel === 'graphs',
       }) || null;
+
+    if (this.activePanel === 'graphs') {
+      this.updateGraphHighlights(this.snapshot?.model?.graphs);
+    }
+  }
+
+  updateGraphHighlights(graphs) {
+    const previous = this._previousGraphSnapshots;
+
+    if (previous) {
+      ['mainGraph', 'subGraph'].forEach(key => {
+        if (JSON.stringify(graphs?.[key]) !== JSON.stringify(previous?.[key])) {
+          this._graphHighlights[key] = true;
+        }
+      });
+    }
+
+    this._previousGraphSnapshots = graphs ? JSON.parse(JSON.stringify(graphs)) : null;
+
+    if (this._graphHighlights.mainGraph || this._graphHighlights.subGraph) {
+      window.clearTimeout(this._graphHighlightTimer);
+      this._graphHighlightTimer = window.setTimeout(() => {
+        this._graphHighlights = {};
+        this._graphHighlightTimer = null;
+
+        if (this.activePanel === 'graphs') {
+          this.render();
+        }
+      }, 1200);
+    }
   }
 
   render() {
@@ -1335,31 +1398,35 @@ export class FxDebugger extends HTMLElement {
 
     return `
       <section class="fx-debugger__section">
-        <h3>Recalculation graphs</h3>
-
-        <div class="fx-debugger__graph-grid">
-          ${this.renderGraphSummaryCard('Main graph', graphs.mainGraph)}
-          ${this.renderGraphSummaryCard('Sub graph', graphs.subGraph)}
+        <div class="fx-debugger__graph-row${this._graphHighlights.mainGraph ? ' fx-debugger__graph-row--updated' : ''}">
+          <div class="fx-debugger__graph-col">
+            <h3>Main graph</h3>
+            ${this.renderGraphSummaryCard(graphs.mainGraph)}
+          </div>
+          <div class="fx-debugger__graph-table">
+            <h3>Calculation order</h3>
+            ${this.renderCalculationOrderTable(graphs.mainGraph)}
+          </div>
         </div>
-      </section>
 
-      <section class="fx-debugger__section">
-        <h3>Main graph calculation order</h3>
-        ${this.renderCalculationOrderTable(graphs.mainGraph)}
-      </section>
-
-      <section class="fx-debugger__section">
-        <h3>Sub graph calculation order</h3>
-        ${this.renderCalculationOrderTable(graphs.subGraph)}
+        <div class="fx-debugger__graph-row${this._graphHighlights.subGraph ? ' fx-debugger__graph-row--updated' : ''}">
+          <div class="fx-debugger__graph-col">
+            <h3>Sub graph</h3>
+            ${this.renderGraphSummaryCard(graphs.subGraph)}
+          </div>
+          <div class="fx-debugger__graph-table">
+            <h3>Calculation order</h3>
+            ${this.renderCalculationOrderTable(graphs.subGraph)}
+          </div>
+        </div>
       </section>
     `;
   }
 
-  renderGraphSummaryCard(title, graph) {
+  renderGraphSummaryCard(graph) {
     if (!graph) {
       return `
         <article class="fx-debugger__graph-card">
-          <h4>${this.escape(title)}</h4>
           <p class="fx-debugger__muted">No graph available.</p>
         </article>
       `;
@@ -1367,8 +1434,6 @@ export class FxDebugger extends HTMLElement {
 
     return `
       <article class="fx-debugger__graph-card">
-        <h4>${this.escape(title)}</h4>
-
         <dl class="fx-debugger__details">
           ${this.renderDetail('Nodes', graph.nodeCount)}
           ${this.renderDetail('Edges', graph.edgeCount)}
