@@ -55,6 +55,7 @@ export class FxModel extends HTMLElement {
       recalculateCount: 0,
       revalidateCount: 0,
       lastUpdateAt: null,
+      lastCycle: null,
     };
   }
 
@@ -484,7 +485,8 @@ export class FxModel extends HTMLElement {
   updateModel() {
     this.debugInfo.updateModelCount += 1;
     this.debugInfo.lastUpdateAt = performance.now();
-    // console.time('updateModel');
+
+    const rebuildStart = performance.now();
     this.rebuild();
     /*
         if (this.skipUpdate){
@@ -492,11 +494,21 @@ export class FxModel extends HTMLElement {
             return;
         }
 */
+    const recalculateStart = performance.now();
     this.recalculate();
+    const revalidateStart = performance.now();
     this.revalidate();
-    // console.log('updateModel finished with modelItems ', this.modelItems);
+    const revalidateEnd = performance.now();
 
-    // console.timeEnd('updateModel');
+    this.debugInfo.lastCycle = {
+      timestamp: revalidateEnd,
+      rebuildMs: recalculateStart - rebuildStart,
+      recalculateMs: revalidateStart - recalculateStart,
+      revalidateMs: revalidateEnd - revalidateStart,
+      totalMs: revalidateEnd - rebuildStart,
+      computes: this.computes || 0,
+      modelItemCount: this.modelItems.length,
+    };
   }
 
   /**

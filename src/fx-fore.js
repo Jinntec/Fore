@@ -369,6 +369,7 @@ export class FxFore extends HTMLElement {
       refreshCount: 0,
       lastRefreshAt: null,
       lastRefreshForce: null,
+      lastRefresh: null,
     };
   }
 
@@ -1025,9 +1026,7 @@ export class FxFore extends HTMLElement {
   async refresh(force) {
     // If we're already refreshing, do NOT drop the request.
     // Queue a hard refresh and return a promise that resolves when the next refresh finishes.
-    this.snapshot = this.fore?.getDebugSnapshot?.({
-      includeGraphs: this.activePanel === 'graphs',
-    }) || null;
+
     this.debugInfo.refreshCount += 1;
     this.debugInfo.lastRefreshAt = performance.now();
     this.debugInfo.lastRefreshForce = !!force;
@@ -1044,8 +1043,12 @@ export class FxFore extends HTMLElement {
     this.isRefreshing = true;
     this.isRefreshPhase = true;
 
+    const refreshStart = performance.now();
+    const isFullRefresh = force === true || this.initialRun;
+    const batchedCount = this.batchedNotifications.size;
+
     try {
-      if (force === true || this.initialRun) {
+      if (isFullRefresh) {
         performance.mark('force-refresh-start');
         console.log('🔄 🔴🔴🔴 ### full refresh() on ', this);
         await Fore.refreshChildren(this, force);
@@ -1071,6 +1074,15 @@ export class FxFore extends HTMLElement {
         'background:darkorange; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
         this.getModel().modelItems,
       );
+
+      // Record timing before dispatching 'refresh-done' since listeners (eg. fx-debugger)
+      // may synchronously read this.debugInfo.lastRefresh in response to the event.
+      this.debugInfo.lastRefresh = {
+        timestamp: performance.now(),
+        kind: isFullRefresh ? 'full' : 'partial',
+        durationMs: performance.now() - refreshStart,
+        batchedCount,
+      };
 
       Fore.dispatch(this, 'refresh-done', {});
 

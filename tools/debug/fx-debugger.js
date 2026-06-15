@@ -725,6 +725,18 @@ export class FxDebugger extends HTMLElement {
       .fx-debugger__element-link:hover {
         color: #0b57d0;
       }
+
+      .fx-debugger__perf-history-title {
+        margin: 1.25rem 0 0.75rem;
+        font-size: 0.95rem;
+        font-weight: 700;
+      }
+
+      .fx-debugger__perf-row--spike td {
+        background: #fce8e6;
+        color: #a50e0e;
+        font-weight: 700;
+      }
     `;
   }
 
@@ -739,6 +751,11 @@ export class FxDebugger extends HTMLElement {
     this.maxEventLogEntries = 200;
     this._eventFlowDepth = 0;
     this._eventFlowId = 0;
+
+    this._perfHistory = [];
+    this.maxPerfHistoryEntries = 50;
+    this._lastPerfCycleTimestamp = null;
+    this._lastPerfRefreshTimestamp = null;
 
     this.eventFilters = {
       dom: true,
@@ -1015,6 +1032,44 @@ export class FxDebugger extends HTMLElement {
     if (this.activePanel === 'graphs') {
       this.updateGraphHighlights(this.snapshot?.model?.graphs);
     }
+
+    this.recordPerfHistory();
+  }
+
+  /**
+   * Append a row to the performance history whenever the target's model/refresh
+   * debug info reports a newer update cycle, so the Performance panel can show
+   * a trend across refresh cycles (e.g. a sudden jump after adding a feature).
+   */
+  recordPerfHistory() {
+    const cycle = this.snapshot?.model?.lastCycle || null;
+    const refreshInfo = this.snapshot?.fore?.lastRefresh || null;
+
+    const cycleChanged = !!cycle && cycle.timestamp !== this._lastPerfCycleTimestamp;
+    const refreshChanged = !!refreshInfo && refreshInfo.timestamp !== this._lastPerfRefreshTimestamp;
+
+    if (!cycleChanged && !refreshChanged) {
+      return;
+    }
+
+    if (cycle) this._lastPerfCycleTimestamp = cycle.timestamp;
+    if (refreshInfo) this._lastPerfRefreshTimestamp = refreshInfo.timestamp;
+
+    this._perfHistory.push({
+      time: Math.max(cycle?.timestamp || 0, refreshInfo?.timestamp || 0),
+      rebuildMs: cycle?.rebuildMs ?? null,
+      recalculateMs: cycle?.recalculateMs ?? null,
+      revalidateMs: cycle?.revalidateMs ?? null,
+      refreshMs: refreshInfo?.durationMs ?? null,
+      refreshKind: refreshInfo?.kind ?? null,
+      totalMs: (cycle?.totalMs || 0) + (refreshInfo?.durationMs || 0),
+      computes: cycle?.computes ?? null,
+      modelItemCount: cycle?.modelItemCount ?? null,
+    });
+
+    if (this._perfHistory.length > this.maxPerfHistoryEntries) {
+      this._perfHistory.splice(0, this._perfHistory.length - this.maxPerfHistoryEntries);
+    }
   }
 
   updateGraphHighlights(graphs) {
@@ -1067,6 +1122,7 @@ export class FxDebugger extends HTMLElement {
           ${this.renderTab('fore', 'Fore')}
           ${this.renderTab('graphs', 'Graphs')}
           ${this.renderTab('events', `Events ${this.countBadge(this.eventLog)}`)}
+          ${this.renderTab('perf', `Performance ${this.countBadge(this._perfHistory)}`)}
           ${this.renderTab('instances', `Instances ${this.countBadge(this.snapshot?.instances)}`)}
           ${this.renderTab('bindings', `Bindings ${this.countBadge(this.snapshot?.bindings)}`)}
           ${this.renderTab('submissions', `Submissions ${this.countBadge(this.snapshot?.submissions)}`)}
@@ -1086,6 +1142,13 @@ export class FxDebugger extends HTMLElement {
       button.addEventListener('click', event => {
         event.stopPropagation();
         this.clearEvents();
+      });
+    });
+
+    this.querySelectorAll('[data-action="clear-perf"]').forEach(button => {
+      button.addEventListener('click', event => {
+        event.stopPropagation();
+        this.clearPerfHistory();
       });
     });
 
@@ -1200,6 +1263,8 @@ export class FxDebugger extends HTMLElement {
         return this.renderGraphsPanel();
       case 'events':
         return this.renderEventsPanel();
+      case 'perf':
+        return this.renderPerformancePanel();
       case 'instances':
         return this.renderInstancesPanel();
       case 'modelItems':
@@ -1524,6 +1589,126 @@ export class FxDebugger extends HTMLElement {
         }
       </section>
     `;
+  }
+
+  renderPerformancePanel() {
+    if (!this._perfHistory.length) {
+      return this.renderEmptyPanel(
+        'No update cycles recorded yet. Interact with the form to trigger a refresh.',
+      );
+    }
+
+    const latest = this._perfHistory[this._perfHistory.length - 1];
+
+    return `
+      <section class="fx-debugger__section">
+        <div class="fx-debugger__event-flow-header">
+          <h3>Latest update cycle</h3>
+
+          <button
+            class="fx-debugger__clear-events"
+            type="button"
+            data-action="clear-perf"
+            title="Clear performance history">
+            Clear history
+          </button>
+        </div>
+
+        <dl class="fx-debugger__details">
+          ${this.renderDetail('Rebuild', this.formatMs(latest.rebuildMs))}
+          ${this.renderDetail('Recalculate', this.formatMs(latest.recalculateMs))}
+          ${this.renderDetail('Revalidate', this.formatMs(latest.revalidateMs))}
+          ${this.renderDetail(
+            'UI refresh',
+            `${this.formatMs(latest.refreshMs)}${latest.refreshKind ? ` (${latest.refreshKind})` : ''}`,
+          )}
+          ${this.renderDetail('Total cycle', this.formatMs(latest.totalMs))}
+          ${this.renderDetail(
+            'Recalculated nodes',
+            `${latest.computes ?? '—'} (model has ${latest.modelItemCount ?? '—'} items)`,
+          )}
+        </dl>
+
+        <h3 class="fx-debugger__perf-history-title">History (last ${this._perfHistory.length} cycles)</h3>
+        ${this.renderPerfHistoryTable()}
+      </section>
+    `;
+  }
+
+  renderPerfHistoryTable() {
+    const rows = this._perfHistory;
+    const baseline = this.getPerfBaseline(rows);
+
+    return `
+      <div class="fx-debugger__table-wrap">
+        <table class="fx-debugger__table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Rebuild</th>
+              <th>Recalculate</th>
+              <th>Revalidate</th>
+              <th>UI refresh</th>
+              <th>Total</th>
+              <th>Recalculated nodes</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows
+              .map((row, index) => {
+                const spike = this.isPerfSpike(row, baseline);
+
+                return `
+                  <tr class="${spike ? 'fx-debugger__perf-row--spike' : ''}">
+                    <td>${index + 1}</td>
+                    <td>${this.formatMs(row.rebuildMs)}</td>
+                    <td>${this.formatMs(row.recalculateMs)}</td>
+                    <td>${this.formatMs(row.revalidateMs)}</td>
+                    <td>
+                      ${this.formatMs(row.refreshMs)}
+                      ${row.refreshKind ? `<span class="fx-debugger__action-phase">${this.escape(row.refreshKind)}</span>` : ''}
+                    </td>
+                    <td>${spike ? '⚠ ' : ''}${this.formatMs(row.totalMs)}</td>
+                    <td>${row.computes ?? '—'}</td>
+                  </tr>
+                `;
+              })
+              .join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  /**
+   * Median total cycle duration across the recorded history, used as a baseline
+   * to flag cycles that are significantly slower than usual.
+   */
+  getPerfBaseline(rows) {
+    const totals = rows.map(row => row.totalMs).filter(Number.isFinite);
+
+    if (!totals.length) {
+      return null;
+    }
+
+    const sorted = [...totals].sort((a, b) => a - b);
+    return sorted[Math.floor(sorted.length / 2)];
+  }
+
+  isPerfSpike(row, baseline) {
+    if (!baseline || !Number.isFinite(row.totalMs)) {
+      return false;
+    }
+
+    return row.totalMs > baseline * 2 && row.totalMs - baseline > 2;
+  }
+
+  formatMs(value) {
+    if (value === null || value === undefined || !Number.isFinite(value)) {
+      return '—';
+    }
+
+    return `${value.toFixed(2)} ms`;
   }
 
   renderEventFilters() {
@@ -2282,6 +2467,14 @@ export class FxDebugger extends HTMLElement {
     this.applyPageOffset();
   }
 
+  clearPerfHistory() {
+    this._perfHistory = [];
+    this._lastPerfCycleTimestamp = null;
+    this._lastPerfRefreshTimestamp = null;
+    this.render();
+    this.applyPageOffset();
+  }
+
   _onKeyDown(event) {
     if (this.activePanel !== 'events') {
       return;
@@ -2740,6 +2933,7 @@ export class FxDebugger extends HTMLElement {
           'fore',
           'graphs',
           'events',
+          'perf',
           'instances',
           'bindings',
           'submissions',
