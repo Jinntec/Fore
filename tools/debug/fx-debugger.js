@@ -2340,6 +2340,7 @@ export class FxDebugger extends HTMLElement {
                 <th>Instance ID</th>
                 <th>Type</th>
                 <th>Source</th>
+                <th>Shared</th>
                 <th>Has data</th>
                 <th>Has nodeset</th>
                 <th>Default context</th>
@@ -2354,6 +2355,7 @@ export class FxDebugger extends HTMLElement {
                       <td><code>${this.escape(instance?.instanceId || instance?.id || '')}</code></td>
                       <td>${this.escape(instance?.type || '')}</td>
                       <td>${this.renderCodeOrDash(instance?.src)}</td>
+                      <td>${this.formatBoolean(instance?.shared)}</td>
                       <td>${this.formatBoolean(instance?.hasData)}</td>
                       <td>${this.formatBoolean(instance?.hasNodeset)}</td>
                       <td>${this.escape(instance?.defaultContextType || '')}</td>

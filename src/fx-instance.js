@@ -75,6 +75,7 @@ export class FxInstance extends HTMLElement {
       instanceId: this.instanceId,
       type: this.type,
       src: this.getAttribute('src') || null,
+      shared: this.hasAttribute('shared'),
       hasData: !!this.instanceData,
       hasNodeset: !!this.nodeset,
       defaultContextType: defaultContext?.nodeType
