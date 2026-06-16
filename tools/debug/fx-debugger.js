@@ -16,6 +16,54 @@
  * - no breakpoints
  */
 
+/**
+ * Additional Fore events that fx-debugger does not observe by default.
+ * Each entry can be toggled on individually in the "Fore events" filter group.
+ */
+const FORE_EVENT_TYPES = [
+  { name: 'execute-action', description: 'fires when an action executes' },
+  { name: 'init', description: 'fires when a control initializes' },
+  { name: 'instance-loaded', description: 'fires after an fx-instance has been loaded' },
+  { name: 'loaded', description: 'fires after a fx-load has loaded' },
+  { name: 'reload', description: 'fires when a fx-reload action executes' },
+  { name: 'return', description: 'fires after a fx-return returned' },
+  { name: 'index-changed', description: 'fires when the repeat index changes' },
+  { name: 'item-created', description: 'fires when a repeat item was created' },
+  { name: 'item-changed', description: 'fires when a repeat item was changed' },
+  { name: 'select', description: 'fires when an fx-case has been selected' },
+  { name: 'deselect', description: 'fires when fx-case is deselected' },
+  { name: 'dialog-shown', description: 'fired when a dialog has been shown' },
+  { name: 'dialog-hidden', description: 'fires after fx-dialog has been hidden' },
+  { name: 'valid', description: 'fires after a fx-control has become valid' },
+  { name: 'invalid', description: 'fires after a control became invalid' },
+  { name: 'relevant', description: 'fires after a fx-control has become relevant' },
+  { name: 'nonrelevant', description: 'fires after an fx-control became nonrelevant' },
+  { name: 'optional', description: 'fires after an fx-control became optional' },
+  { name: 'required', description: 'fires after an fx-control has become required' },
+  { name: 'readonly', description: 'fires after an fx-control became readonly' },
+  { name: 'readwrite', description: 'fires after an fx-control became readwrite' },
+  { name: 'show-control', description: 'fires when a control becomes visible' },
+  { name: 'hide-control', description: 'fires when a control becomes hidden' },
+  { name: 'show-group', description: 'fires when a group becomes visible' },
+  { name: 'enabled', description: 'fires when a container becomes enabled' },
+  { name: 'disabled', description: 'fires when a container becomes disabled' },
+  { name: 'warn', description: 'fires when a control issues a warning' },
+  { name: 'message', description: 'fires when an fx-message action displays a message' },
+  {
+    name: 'xforms-binding-error',
+    description: 'fires when a variable name is declared more than once',
+  },
+  { name: 'no-template-error', description: 'fires when fx-repeat has no template to clone' },
+  { name: 'include-done', description: 'fires after an fx-include has finished loading content' },
+  { name: 'compute-exception', description: 'fires when a cyclic dependency is detected' },
+  { name: 'open', description: 'fires when an fx-connection (WebSocket) opens' },
+  { name: 'close', description: 'fires when an fx-connection (WebSocket) closes' },
+  { name: 'channel-message', description: 'fires when an fx-connection receives a message' },
+  { name: 'insert', description: 'fires when an fx-insert action inserts new nodes' },
+  { name: 'deleted', description: 'fires when an fx-delete action deletes nodes' },
+  { name: 'action-performed', description: 'fires after each action has been executed' },
+];
+
 export class FxDebugger extends HTMLElement {
   static get observedAttributes() {
     return ['for'];
@@ -278,6 +326,7 @@ export class FxDebugger extends HTMLElement {
         margin: 0 0 0.75rem;
         font-size: 0.95rem;
         font-weight: 700;
+        padding:1rem 0;
       }
 
       .fx-debugger__details {
@@ -520,7 +569,8 @@ export class FxDebugger extends HTMLElement {
         font-size: 0.8rem;
       }
 
-      .fx-debugger__dom-event-filters {
+      .fx-debugger__dom-event-filters,
+      .fx-debugger__fore-event-filters {
         display: flex;
         flex-wrap: wrap;
         gap: 0.35rem 0.75rem;
@@ -531,7 +581,8 @@ export class FxDebugger extends HTMLElement {
         border-top: 1px solid #e3e5ea;
       }
 
-      .fx-debugger__dom-event-filter-label {
+      .fx-debugger__dom-event-filter-label,
+      .fx-debugger__fore-event-filter-label {
         color: #8a9099;
         font-size: 0.8rem;
         font-weight: 600;
@@ -777,6 +828,11 @@ export class FxDebugger extends HTMLElement {
       keydown: false,
     };
 
+    this.foreEventFilters = FORE_EVENT_TYPES.reduce((filters, { name }) => {
+      filters[name] = false;
+      return filters;
+    }, {});
+
     this.customEventTypes = [];
 
     this.eventTypes = [
@@ -796,9 +852,9 @@ export class FxDebugger extends HTMLElement {
       'revalidate-done',
       'path-mutated',
       'value-changed',
-      'insert',
       'delete',
       'deleted',
+      'insert',
       'submit',
       'submit-done',
       'submit-error',
@@ -806,7 +862,6 @@ export class FxDebugger extends HTMLElement {
       'outermost-action-end',
       'action-start',
       'action-end',
-      'action-performed',
       'error',
     ];
     this._onRefreshClick = this._onRefreshClick.bind(this);
@@ -822,6 +877,7 @@ export class FxDebugger extends HTMLElement {
     this._onDebugEvent = this._onDebugEvent.bind(this);
     this._onEventFilterChange = this._onEventFilterChange.bind(this);
     this._onDomEventFilterChange = this._onDomEventFilterChange.bind(this);
+    this._onForeEventFilterChange = this._onForeEventFilterChange.bind(this);
     this._onCustomEventsApply = this._onCustomEventsApply.bind(this);
     this._onKeyDown = this._onKeyDown.bind(this);
     this._onForeTargetsChanged = this._onForeTargetsChanged.bind(this);
@@ -1158,6 +1214,10 @@ export class FxDebugger extends HTMLElement {
 
     this.querySelectorAll('[data-dom-event-filter]').forEach(input => {
       input.addEventListener('change', this._onDomEventFilterChange);
+    });
+
+    this.querySelectorAll('[data-fore-event-filter]').forEach(input => {
+      input.addEventListener('change', this._onForeEventFilterChange);
     });
 
     this.querySelector('[data-action="apply-custom-events"]')?.addEventListener(
@@ -1742,6 +1802,7 @@ export class FxDebugger extends HTMLElement {
           )
           .join('')}
         ${this.renderDomEventFilters()}
+        ${this.renderForeEventFilters()}
         ${this.renderCustomEventInput()}
       </fieldset>
     `;
@@ -1760,7 +1821,7 @@ export class FxDebugger extends HTMLElement {
 
     return `
       <div class="fx-debugger__dom-event-filters">
-        <span class="fx-debugger__dom-event-filter-label">DOM types</span>
+        <span class="fx-debugger__dom-event-filter-label">DOM events</span>
         ${filters
           .map(
             ([key, label]) => `
@@ -1776,6 +1837,28 @@ export class FxDebugger extends HTMLElement {
             `,
           )
           .join('')}
+      </div>
+    `;
+  }
+
+  renderForeEventFilters() {
+    const counts = this.getForeEventCounts();
+
+    return `
+      <div class="fx-debugger__fore-event-filters">
+        <span class="fx-debugger__fore-event-filter-label">Fore events</span>
+        ${FORE_EVENT_TYPES.map(
+          ({ name, description }) => `
+              <label class="fx-debugger__event-filter" title="${this.escape(description)}">
+                <input
+                  type="checkbox"
+                  data-fore-event-filter="${this.escape(name)}"
+                  ${this.foreEventFilters[name] ? 'checked' : ''}>
+                <span>${this.escape(name)}</span>
+                <span class="fx-debugger__event-filter-count">${counts[name] || 0}</span>
+              </label>
+            `,
+        ).join('')}
       </div>
     `;
   }
@@ -1864,6 +1947,16 @@ export class FxDebugger extends HTMLElement {
     }, {});
   }
 
+  getForeEventCounts() {
+    return this.eventLog.reduce((counts, entry) => {
+      if (this.isForeEvent(entry.type)) {
+        counts[entry.type] = (counts[entry.type] || 0) + 1;
+      }
+
+      return counts;
+    }, {});
+  }
+
   getEventCategory(type) {
     if (this.isDomEvent(type)) {
       return 'dom';
@@ -1895,6 +1988,10 @@ export class FxDebugger extends HTMLElement {
 
     if (type === 'error') {
       return 'error';
+    }
+
+    if (this.isForeEvent(type)) {
+      return 'fore';
     }
 
     return 'other';
@@ -1983,6 +2080,10 @@ export class FxDebugger extends HTMLElement {
 
   isDomEvent(type) {
     return ['click', 'input', 'change', 'blur', 'focusout', 'keydown'].includes(type);
+  }
+
+  isForeEvent(type) {
+    return type in this.foreEventFilters;
   }
 
   isCustomEvent(type) {
@@ -2535,6 +2636,21 @@ export class FxDebugger extends HTMLElement {
     this.applyPageOffset();
   }
 
+  _onForeEventFilterChange(event) {
+    const key = event.currentTarget?.dataset?.foreEventFilter;
+
+    if (!key || !(key in this.foreEventFilters)) {
+      return;
+    }
+
+    this.detachEventListeners();
+    this.foreEventFilters[key] = event.currentTarget.checked;
+    this.attachEventListeners();
+    this.storeEventSettings();
+    this.render();
+    this.applyPageOffset();
+  }
+
   _onCustomEventsApply() {
     const input = this.querySelector('[data-custom-events-input]');
     const nextTypes = this.parseCustomEventTypes(input?.value || '');
@@ -2677,7 +2793,13 @@ export class FxDebugger extends HTMLElement {
   }
 
   getObservedEventTypes() {
-    return Array.from(new Set([...this.eventTypes, ...this.customEventTypes]));
+    const enabledForeEvents = Object.keys(this.foreEventFilters).filter(
+      type => this.foreEventFilters[type],
+    );
+
+    return Array.from(
+      new Set([...this.eventTypes, ...enabledForeEvents, ...this.customEventTypes]),
+    );
   }
 
   attachEventListeners() {
@@ -2686,7 +2808,8 @@ export class FxDebugger extends HTMLElement {
     }
 
     this.getObservedEventTypes().forEach(type => {
-      this.fore.addEventListener(type, this._onDebugEvent, true);
+      const target = type === 'compute-exception' ? window : this.fore;
+      target.addEventListener(type, this._onDebugEvent, true);
     });
   }
 
@@ -2696,7 +2819,8 @@ export class FxDebugger extends HTMLElement {
     }
 
     this.getObservedEventTypes().forEach(type => {
-      this.fore.removeEventListener(type, this._onDebugEvent, true);
+      const target = type === 'compute-exception' ? window : this.fore;
+      target.removeEventListener(type, this._onDebugEvent, true);
     });
   }
 
@@ -2875,6 +2999,7 @@ export class FxDebugger extends HTMLElement {
         JSON.stringify({
           eventFilters: this.eventFilters,
           domEventFilters: this.domEventFilters,
+          foreEventFilters: this.foreEventFilters,
           customEventTypes: this.customEventTypes,
         }),
       );
@@ -2904,6 +3029,13 @@ export class FxDebugger extends HTMLElement {
         this.domEventFilters = {
           ...this.domEventFilters,
           ...settings.domEventFilters,
+        };
+      }
+
+      if (settings?.foreEventFilters && typeof settings.foreEventFilters === 'object') {
+        this.foreEventFilters = {
+          ...this.foreEventFilters,
+          ...settings.foreEventFilters,
         };
       }
 
