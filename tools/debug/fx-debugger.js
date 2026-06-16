@@ -423,6 +423,7 @@ export class FxDebugger extends HTMLElement {
       .fx-debugger__table th {
         position: sticky;
         top: 0;
+        z-index: 2;
         background: #f8f9fb;
         color: #3c4043;
         font-weight: 700;
