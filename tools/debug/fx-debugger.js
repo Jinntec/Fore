@@ -896,6 +896,7 @@ export class FxDebugger extends HTMLElement {
 
     this._resizeStartY = 0;
     this._resizeStartHeight = 0;
+    this._eventFiltersOpen = false;
     this._storageKey = 'fore-devtools.fx-debugger.height';
     this._collapsedStorageKey = 'fore-devtools.fx-debugger.collapsed';
     this._eventSettingsStorageKey = 'fore-devtools.fx-debugger.eventSettings';
@@ -1252,6 +1253,10 @@ export class FxDebugger extends HTMLElement {
     });
 
     this.querySelector('.fx-debugger__header')?.addEventListener('dblclick', this._onToggleClick);
+
+    this.querySelector('.fx-debugger__event-filters')?.addEventListener('toggle', event => {
+      this._eventFiltersOpen = event.target.open;
+    });
 
     this.querySelectorAll('[data-panel]').forEach(button => {
       button.addEventListener('click', this._onPanelClick);
@@ -1781,7 +1786,7 @@ export class FxDebugger extends HTMLElement {
     ];
 
     return `
-      <details class="fx-debugger__event-filters">
+      <details class="fx-debugger__event-filters"${this._eventFiltersOpen ? ' open' : ''}>
         <summary class="fx-debugger__muted">Show events</summary>
         <div class="fx-debugger__event-filters-body">
         ${filters
