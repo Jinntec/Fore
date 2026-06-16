@@ -217,7 +217,8 @@ export class AbstractAction extends ForeElementMixin {
 
   dispatchActionDebugEvent(type, extra = {}) {
     try {
-      this.dispatchEvent(
+      const target = this.isConnected ? this : (this.getOwnerFormSafe() ?? this);
+      target.dispatchEvent(
           new CustomEvent(type, {
             composed: true,
             bubbles: true,

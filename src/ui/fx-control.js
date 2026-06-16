@@ -571,7 +571,7 @@ export default class FxControl extends XfAbstractControl {
     try {
       this._isRefreshing = true;
       // console.log('🔄 fx-control refresh', this);
-      super.refresh(force);
+      await super.refresh(force);
       // console.log('refresh template', this.template);
       // const {widget} = this;
 
