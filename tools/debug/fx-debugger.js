@@ -173,7 +173,7 @@ export class FxDebugger extends HTMLElement {
         background: #f8f9fb;
         cursor: default;
       }
-      
+
       .fx-debugger__header::after {
         content: "Double-click header to collapse/open";
         grid-column: 2;
@@ -187,7 +187,15 @@ export class FxDebugger extends HTMLElement {
         white-space: nowrap;
         pointer-events: none;
       }
-      
+
+      .fx-debugger__header-left {
+        grid-column: 1;
+        grid-row: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+      }
+
       .fx-debugger__refresh {
         grid-column: 3;
         grid-row: 1;
@@ -201,14 +209,6 @@ export class FxDebugger extends HTMLElement {
         padding:0.5rem 0;
       }
 
-      .fx-debugger__target {
-        margin: 0.25rem 0 0;
-        color: #5f6368;
-      }
-
-      .fx-debugger__target--missing {
-        color: #9b1c1c;
-      }
 
       .fx-debugger__refresh,
       .fx-debugger__clear-events {
@@ -314,20 +314,24 @@ export class FxDebugger extends HTMLElement {
         font-size: 0.8em;
       }
 
-      .fx-debugger__panel {
+      main.fx-debugger__panel {
         display: flex;
         flex: 1 1 auto;
         min-height: 0;
         overflow: auto;
         padding: 1rem;
+        width:calc(100vw - 1rem);
       }
-
+      section.fx-debugger__section {
+          width: 100%;
+      }
       .fx-debugger__section h3 {
         margin: 0 0 0.75rem;
         font-size: 0.95rem;
         font-weight: 700;
         padding:1rem 0;
       }
+      
 
       .fx-debugger__details {
         display: grid;
@@ -347,18 +351,18 @@ export class FxDebugger extends HTMLElement {
       }
 
       .fx-debugger__fore-targets {
-        margin: 0 0 1rem;
-        padding: 0.65rem;
-        border: 1px solid #e3e5ea;
-        border-radius: 0.35rem;
-        background: #fafafa;
+        margin: 0;
+        padding: 0;
+        border: none;
+        border-radius: 0;
+        background: transparent;
       }
 
       .fx-debugger__fore-targets-label {
-        margin-bottom: 0.45rem;
+        margin-bottom: 0.3rem;
         color: #5f6368;
-        font-size: 0.85rem;
-        font-weight: 700;
+        font-size: 0.8rem;
+        font-weight: 600;
       }
 
       .fx-debugger__fore-target-list {
@@ -535,19 +539,26 @@ export class FxDebugger extends HTMLElement {
       }
 
       .fx-debugger__event-filters {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.45rem 0.9rem;
-        align-items: center;
         margin: 0 0 0.75rem;
-        padding: 0.55rem 0.65rem;
+        padding: 0.4rem 0.65rem;
         border: 1px solid #e3e5ea;
         border-radius: 0.35rem;
         background: #fafafa;
       }
 
-      .fx-debugger__event-filters legend {
-        padding: 0 0.25rem;
+      .fx-debugger__event-filters summary {
+        cursor: pointer;
+        user-select: none;
+        font-size: 0.86rem;
+        line-height: 1.6;
+      }
+
+      .fx-debugger__event-filters-body {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.45rem 0.9rem;
+        align-items: center;
+        padding-top: 0.45rem;
       }
 
       .fx-debugger__event-filter {
@@ -1162,9 +1173,9 @@ export class FxDebugger extends HTMLElement {
         <div class="fx-debugger__resize-hint" data-action="resize" title="Drag to resize debugger panel vertically"></div>
 
         <header class="fx-debugger__header">
-          <div>
+          <div class="fx-debugger__header-left">
             <h2 class="fx-debugger__title">Fore Debugger</h2>
-            ${this.renderTargetSummary()}
+            ${this.renderForeTargetList()}
           </div>
 
           <button class="fx-debugger__refresh" type="button" data-action="refresh">
@@ -1259,20 +1270,6 @@ export class FxDebugger extends HTMLElement {
     );
   }
 
-  renderTargetSummary() {
-    if (!this.fore) {
-      return `<p class="fx-debugger__target fx-debugger__target--missing">No fx-fore found</p>`;
-    }
-
-    const id = this.fore.id ? `#${this.escape(this.fore.id)}` : '(no id)';
-
-    return `
-      <p class="fx-debugger__target">
-        Target: <code>${id}</code>
-      </p>
-    `;
-  }
-
   renderStatus() {
     if (!this.fore) {
       return `
@@ -1346,8 +1343,6 @@ export class FxDebugger extends HTMLElement {
     return `
     <section class="fx-debugger__section">
       <h3>Fore</h3>
-
-      ${this.renderForeTargetList()}
 
       <dl class="fx-debugger__details">
         ${this.renderDetail('ID', fore.id)}
@@ -1785,8 +1780,9 @@ export class FxDebugger extends HTMLElement {
     ];
 
     return `
-      <fieldset class="fx-debugger__event-filters">
-        <legend class="fx-debugger__muted">Show events</legend>
+      <details class="fx-debugger__event-filters">
+        <summary class="fx-debugger__muted">Show events</summary>
+        <div class="fx-debugger__event-filters-body">
         ${filters
           .map(
             ([key, label]) => `
@@ -1804,7 +1800,8 @@ export class FxDebugger extends HTMLElement {
         ${this.renderDomEventFilters()}
         ${this.renderForeEventFilters()}
         ${this.renderCustomEventInput()}
-      </fieldset>
+        </div>
+      </details>
     `;
   }
 
