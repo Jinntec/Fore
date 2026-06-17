@@ -404,6 +404,22 @@ export class FxLens extends HTMLElement {
       .join('');
   }
 
+  _xmlName(node) {
+    if (!node) return '';
+
+    // For real XML documents, nodeName preserves the original lexical spelling,
+    // including prefixes, e.g. tei:surfaceGrp.
+    const doc = node.ownerDocument;
+    const isHtmlDoc = doc?.contentType === 'text/html';
+
+    if (!isHtmlDoc) {
+      return node.nodeName;
+    }
+
+    // For HTML documents, tagName/nodeName are usually uppercase.
+    return node.localName || node.nodeName.toLowerCase();
+  }
+
   /**
    * Derives a stable, unique key + display label for an `<fx-instance>`.
    *
@@ -730,13 +746,13 @@ export class FxLens extends HTMLElement {
     const attrs = [];
     if (el.attributes && el.attributes.length) {
       for (const a of Array.from(el.attributes)) {
-        attrs.push(` ${a.name}="${a.value}"`);
+        attrs.push(` ${this._xmlAttributeName(a)}="${a.value}"`);
       }
     }
 
     const summaryParts = [
       this._span('<', 'muted'),
-      this._span(el.tagName.toLowerCase(), 'k'),
+      this._span(this._xmlName(el), 'k'),
       this._span(attrs.join(''), 'v'),
       this._span('>', 'muted'),
     ];
@@ -769,6 +785,14 @@ export class FxLens extends HTMLElement {
     }
 
     return this._details(summaryParts, ul, true);
+  }
+
+  _xmlAttributeName(attr) {
+    if (!attr) return '';
+
+    // attr.name normally preserves prefixes and case for XML,
+    // e.g. xml:id, tei:rendition, sourceDesc-style camelCase attrs.
+    return attr.name;
   }
 }
 
