@@ -1128,59 +1128,63 @@ export class FxFore extends HTMLElement {
   }
 
   /**
-   * Process all batched notifications at the end of the refresh phase
+   * Process all batched notifications at the end of the refresh phase.
+   * Async so that all control refresh() calls (which are themselves async) are awaited
+   * before refresh-done fires — prevents _isRefreshing from being true when the
+   * next user input event arrives.
    */
-  _processBatchedNotifications() {
+  async _processBatchedNotifications() {
     if (this.batchedNotifications.size > 0) {
       console.log(`🔄 🎯  ### processing ${this.batchedNotifications.size} batched notifications`);
       console.log('🔄 🎯  ### processing ', Array.from(this.batchedNotifications));
 
-      // console.log(`🔍 Processing ${this.batchedNotifications.size} batched notifications`);
+      const refreshPromises = [];
 
-      // Process all batched notifications
+      // Process all batched notifications.
+      // Note: Set.forEach visits items added during iteration (they are appended to the end),
+      // so controls added via observer.update() (which calls addToBatchedNotifications) are
+      // also visited and their refresh() promises collected.
       this.batchedNotifications.forEach(entry => {
-        // console.log('batched update', entry);
-        // handle repeatitems created via data-ref
         if (entry.classList && entry.classList.contains('fx-repeatitem')) {
-          Fore.refreshChildren(entry, true);
+          refreshPromises.push(Fore.refreshChildren(entry, true));
         }
         if (entry && typeof entry.refresh === 'function') {
-          // Entry is a Ui Element
-          // Force refresh for this whole subtree
           const uiElement = /** @type {import('./ui/UIElement.js').UIElement} */ (entry);
           if (!uiElement.ownerDocument.contains(uiElement)) {
-            // Something already removed this ui element. Skip.
             return;
           }
-          uiElement.refresh(true);
+          refreshPromises.push(uiElement.refresh(true));
         }
         const nonrelevant = Array.from(this.querySelectorAll('[nonrelevant]'));
-        // loop nonrelevant elements
         if (nonrelevant) {
-          nonrelevant.forEach(entry => {
-            if (entry.refresh) {
-              entry.refresh();
+          nonrelevant.forEach(el => {
+            if (el.refresh) {
+              refreshPromises.push(el.refresh());
             }
           });
         }
         if (entry.observers) {
-          // Item is a model item
           entry.observers.forEach(observer => {
-            // console.log('🔍 processing observer', observer);
             if (typeof observer.update === 'function') {
-              // console.log('updating observer', observer);
               observer.update(entry);
             }
           });
         }
       });
 
-      // Update template expressions after processing batched notifications
-      // This ensures template expressions are re-evaluated when data changes
       this._processTemplateExpressions();
-
-      // Clear the batch
       this.batchedNotifications.clear();
+
+      if (refreshPromises.length > 0) {
+        await Promise.all(refreshPromises);
+      }
+
+      // Items added to batchedNotifications during the async Promise.all phase
+      // (e.g. by a second event listener that fired after the batch was cleared)
+      // are picked up here so they aren't lost.
+      if (this.batchedNotifications.size > 0) {
+        await this._processBatchedNotifications();
+      }
     }
   }
 

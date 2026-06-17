@@ -195,7 +195,7 @@ describe('multi-step refs', () => {
     const button = el.querySelector('button');
     button.click();
     await oneEvent(el, 'refresh-done');
-    expect(el.getModel().modelItems.length).to.equal(10);
+    expect(el.getModel().modelItems.length).to.equal(13);
   });
   it('created modelItems are observed by correct elements', async () => {
     const el = await fixtureSync(html`
