@@ -1,0 +1,53 @@
+<data xmlns="http://www.tei-c.org/ns/1.0">
+    <place xml:id="G003586">
+        <placeName type="findspot">Deutschhausplatz</placeName>
+    </place>
+    <place xml:id="G000003">
+        <placeName type="findspot">Fort Stahlberg</placeName>
+    </place>
+    <place xml:id="G003589">
+        <placeName type="findspot">Fragas de Panóias</placeName>
+    </place>
+    <place xml:id="G000010">
+        <placeName type="findspot">Galgenberg, Westhang</placeName>
+    </place>
+    <place xml:id="G000009">
+        <placeName type="findspot">Galgenberg, Westhang</placeName>
+    </place>
+    <place xml:id="G000002">
+        <placeName type="findspot">Kirchturm, sekundär verwendet</placeName>
+    </place>
+    <place xml:id="G000001">
+        <placeName type="findspot">Kirchturm, sekundär verwendet</placeName>
+    </place>
+    <place xml:id="G000007">
+        <placeName type="findspot">Lager Miltenberg-Ost, Porta decumana, bei, Lagergraben</placeName>
+    </place>
+    <place xml:id="G000005">
+        <placeName type="findspot">Lager, bei, Thermen, Eingang, bei</placeName>
+    </place>
+    <place xml:id="G000006">
+        <placeName type="findspot">S. Barbara, Kupferstollen</placeName>
+    </place>
+    <place xml:id="G003588">
+        <placeName type="findspot">Santuário de Panóias</placeName>
+    </place>
+    <place xml:id="G003587">
+        <placeName type="findspot">Signia</placeName>
+    </place>
+    <place xml:id="G000011">
+        <placeName type="findspot">Simmerner Str. 26</placeName>
+    </place>
+    <place xml:id="G003585">
+        <placeName type="findspot">Sömmeringstraße 6</placeName>
+    </place>
+    <place xml:id="G000004">
+        <placeName type="findspot">Wederath, bei, Archäologiepark Belginum, Heiliger Bezirk</placeName>
+    </place>
+    <place xml:id="G000008">
+        <placeName type="findspot">Zahlbach, Zahlbacher Steige, Nekropole</placeName>
+    </place>
+    <place xml:id="G003584">
+        <placeName type="findspot">Altbachtal</placeName>
+    </place>
+</data>
