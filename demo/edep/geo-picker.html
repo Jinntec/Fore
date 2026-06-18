@@ -16,24 +16,8 @@
     <body>
         <fx-fore id="geopicker">
 <!--
-            <fx-action event="visibilitychange" target="#document" if="event('target.visibilityState')='visible'">
-                <fx-send submission="s-load-places"></fx-send>
-                <fx-send submission="s-load-place"></fx-send>
-            </fx-action>
--->
-            <!--
-                This page allows to pick a `place` record with geo-data information for linkage
-                into the using TEI.
-
-                This will load data as necessary and just expects an `<place>` element as initial instance.
-
-                On selection of a value from the datalist the respective full record is fetched and displayed.
-            -->
-<!--
-            <fx-action event="model-construct-done">
-                <fx-send submission="s-load-places"></fx-send>
-                <fx-send submission="s-load-place"></fx-send>
-            </fx-action>
+    Simplified version of the geo-picker page. No lazy loading of data. Just mockup data - changing of
+    of place not supported in this mockup - there's just one template place.
 -->
             <fx-model>
                 <fx-instance
