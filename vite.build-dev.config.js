@@ -17,6 +17,21 @@ function versionInject() {
   };
 }
 
+function minifyBundle() {
+  return {
+    name: 'minify-bundle',
+    async renderChunk(code) {
+      const { transform } = await import('esbuild');
+      const result = await transform(code, {
+        loader: 'js',
+        minify: true,
+        target: 'es2020',
+      });
+      return { code: result.code, map: result.map || null };
+    },
+  };
+}
+
 export default defineConfig({
   plugins: [versionInject()],
   publicDir: false,
@@ -28,9 +43,10 @@ export default defineConfig({
     },
     outDir: 'dist',
     emptyOutDir: false,
-    minify: 'esbuild',
+    minify: false,
     target: 'es2020',
     rollupOptions: {
+      plugins: [minifyBundle()],
       output: {
         inlineDynamicImports: true,
         entryFileNames: 'fore-dev.js',
