@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fore Chat — Vehicle Entry</title>
+  <link rel="stylesheet" href="../../resources/fore.css">
+  <link rel="stylesheet" href="../../resources/vars.css">
+  <script type="module" src="../../index.js"></script>
+  <script type="module" src="../../tools/fx-lens.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 14px;
+      color: #1a1a1a;
+      background: #fff;
+    }
+
+    fx-fore {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ── Form panel (top) ───────────────────────────────── */
+    .form-panel {
+      background: #f8f9fa;
+      border-bottom: 2px solid #dee2e6;
+      padding: 1.25rem 1.5rem;
+    }
+
+    .form-panel h2 {
+      margin: 0 0 1rem;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #495057;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 0.75rem 1.25rem;
+    }
+
+    .form-grid fx-control {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .form-grid label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #6c757d;
+    }
+
+    .form-grid input {
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+      padding: 0.375rem 0.5rem;
+      font-size: 14px;
+      width: 100%;
+      background: #fff;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .form-grid input:focus {
+      outline: none;
+      border-color: #0d6efd;
+      box-shadow: 0 0 0 3px rgba(13,110,253,.15);
+    }
+
+    /* ── Chat panel (bottom) ────────────────────────────── */
+    .chat-panel {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    /* fx-switch and fx-case need flex column to fill space */
+    fx-switch {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+      width:calc(100vw - 3rem);
+    }
+
+    fx-case {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+    }
+
+    /* ── Transcript ──────────────────────────────────────── */
+    .transcript {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.625rem;
+    }
+
+    .message {
+      display: flex;
+    }
+
+    .message[data-role="user"] {
+      justify-content: flex-end;
+    }
+
+    .message[data-role="assistant"] {
+      justify-content: flex-start;
+    }
+
+    .bubble {
+      max-width: 72%;
+      padding: 0.5rem 0.875rem;
+      border-radius: 1.1rem;
+      line-height: 1.55;
+      word-break: break-word;
+    }
+
+    .message[data-role="user"] .bubble {
+      background: #0d6efd;
+      color: #fff;
+      border-bottom-right-radius: 0.2rem;
+    }
+
+    .message[data-role="assistant"] .bubble {
+      background: #e9ecef;
+      color: #212529;
+      border-bottom-left-radius: 0.2rem;
+    }
+
+    /* ── Status bar ─────────────────────────────────────── */
+    .status-bar {
+      padding: 0.25rem 1.5rem;
+      font-style: italic;
+      font-size: 12px;
+      color: #6c757d;
+      min-height: 1.5rem;
+    }
+
+    /* ── Input row ──────────────────────────────────────── */
+    .input-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem 1rem;
+      border-top: 1px solid #dee2e6;
+    }
+
+    .input-row fx-control {
+      flex: 1;
+    }
+
+    .input-row textarea {
+      width: 100%;
+      resize: none;
+      border: 1px solid #ced4da;
+      border-radius: 6px;
+      padding: 0.5rem 0.75rem;
+      font-size: 14px;
+      font-family: inherit;
+      line-height: 1.5;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .input-row textarea:focus {
+      outline: none;
+      border-color: #0d6efd;
+      box-shadow: 0 0 0 3px rgba(13,110,253,.15);
+    }
+
+    .btn-send {
+      background: #0d6efd;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 0.5rem 1.125rem;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s;
+    }
+
+    .btn-send:hover { background: #0b5ed7; }
+    .btn-send:active { background: #0a58ca; }
+
+    .btn-settings {
+      background: none;
+      border: 1px solid #dee2e6;
+      border-radius: 6px;
+      padding: 0.5rem 0.625rem;
+      font-size: 16px;
+      cursor: pointer;
+      color: #6c757d;
+      line-height: 1;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .btn-settings:hover {
+      background: #f8f9fa;
+      color: #1a1a1a;
+    }
+
+    /* ── Settings panel ─────────────────────────────────── */
+    .settings-panel {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 480px;
+    }
+
+    .settings-panel h3 {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .settings-panel fx-control {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .settings-panel label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #6c757d;
+    }
+
+    .settings-panel input {
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+      padding: 0.4rem 0.5rem;
+      font-size: 14px;
+      width: 100%;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .settings-panel input:focus {
+      outline: none;
+      border-color: #0d6efd;
+      box-shadow: 0 0 0 3px rgba(13,110,253,.15);
+    }
+
+    .settings-actions {
+      display: flex;
+      gap: 0.5rem;
+      padding-top: 0.5rem;
+    }
+
+    .btn-save {
+      background: #0d6efd;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 0.5rem 1.125rem;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-save:hover { background: #0b5ed7; }
+
+    .btn-cancel {
+      background: none;
+      border: 1px solid #dee2e6;
+      border-radius: 6px;
+      padding: 0.5rem 1rem;
+      font-size: 14px;
+      cursor: pointer;
+      color: #495057;
+      transition: background 0.15s;
+    }
+
+    .btn-cancel:hover { background: #f8f9fa; }
+  </style>
+</head>
+<body>
+
+<fx-fore>
+  <fx-model data-chat-schema>
+
+    <!--
+      formdata is the first (default) instance so fx-bind elements can use
+      short relative refs like ref="manufacturer" and the JS bridge can match
+      them with formdata.querySelector("manufacturer").
+    -->
+    <fx-instance id="formdata" shared>
+      <data>
+        <manufacturer></manufacturer>
+        <model></model>
+        <year></year>
+        <mileage></mileage>
+        <inspections></inspections>
+      </data>
+    </fx-instance>
+
+    <!-- template node cloned for each new transcript message -->
+    <fx-instance id="helper">
+      <data>
+        <message role=""></message>
+      </data>
+    </fx-instance>
+
+    <fx-instance id="transcript">
+      <data>
+        <messages></messages>
+      </data>
+    </fx-instance>
+
+    <fx-instance id="claude-request" type="json">
+      {"model":"claude-haiku-4-5",
+      "max_tokens":2048,
+      "system":"",
+      "tools":[],
+      "messages":[]}
+    </fx-instance>
+
+    <fx-instance id="claude-response" type="json">
+      {}
+    </fx-instance>
+
+    <fx-instance id="settings">
+      <data>
+        <apikey></apikey>
+        <endpoint>https://api.anthropic.com/v1/messages</endpoint>
+        <model>claude-haiku-4-5</model>
+      </data>
+    </fx-instance>
+
+    <fx-instance id="ui">
+      <data>
+        <inputmessage></inputmessage>
+        <status></status>
+        <activecase>chat</activecase>
+      </data>
+    </fx-instance>
+
+    <!--
+      Vehicle schema binds — read by fore-chat-build.js via
+        document.querySelector('[data-chat-schema]').querySelectorAll('fx-bind[ref]')
+      The label text becomes the field description in the Claude tool definition.
+      Adding a new field = adding one fx-bind here + one element to formdata instance.
+    -->
+    <fx-bind ref="manufacturer" type="string">
+      <label>Manufacturer</label>
+    </fx-bind>
+    <fx-bind ref="model" type="string">
+      <label>Car Model</label>
+    </fx-bind>
+    <fx-bind ref="year" type="integer">
+      <label>Year of Manufacture</label>
+    </fx-bind>
+    <fx-bind ref="mileage" type="integer">
+      <label>Mileage (km)</label>
+    </fx-bind>
+    <fx-bind ref="inspections" type="string">
+      <label>Inspection History (all | partial | none)</label>
+    </fx-bind>
+
+    <!-- Settings persistence via localStorage -->
+    <fx-submission id="load-settings"
+                   url="localStore:fore-chat-settings"
+                   method="get"
+                   replace="instance"
+                   ref="instance('settings')">
+      <!-- silently ignore if no saved settings yet -->
+      <fx-action event="submit-error"></fx-action>
+    </fx-submission>
+
+    <fx-submission id="save-settings"
+                   url="localStore:fore-chat-settings"
+                   method="post"
+                   ref="instance('settings')"
+                   replace="none">
+    </fx-submission>
+
+    <!-- Load saved settings on startup -->
+    <fx-action event="ready">
+      <fx-send submission="load-settings"></fx-send>
+    </fx-action>
+
+  </fx-model>
+
+  <!-- ─── Form Panel (top row) ─────────────────────────── -->
+  <div class="form-panel">
+    <h2>Sell my car</h2>
+    <fx-group ref="instance('formdata')">
+      <div class="form-grid">
+        <fx-control ref="manufacturer" update-event="input">
+          <label>Manufacturer</label>
+          <input type="text" placeholder="e.g. Audi">
+        </fx-control>
+        <fx-control ref="model" update-event="input">
+          <label>Car Model</label>
+          <input type="text" placeholder="e.g. A4">
+        </fx-control>
+        <fx-control ref="year" update-event="input">
+          <label>Year</label>
+          <input type="number" min="1900" max="2099" placeholder="e.g. 2014">
+        </fx-control>
+        <fx-control ref="mileage" update-event="input">
+          <label>Mileage (km)</label>
+          <input type="number" min="0" placeholder="e.g. 125000">
+        </fx-control>
+        <fx-control ref="inspections" update-event="input">
+          <label>Inspections</label>
+          <input type="text" placeholder="all | partial | none">
+        </fx-control>
+      </div>
+    </fx-group>
+  </div>
+
+  <!-- ─── Chat Panel (bottom row) ─────────────────────── -->
+  <div class="chat-panel">
+    <fx-switch ref="instance('ui')/activecase">
+
+      <!-- Chat case: transcript + input -->
+      <fx-case name="chat">
+
+        <div class="transcript" id="transcript-scroll">
+          <fx-repeat ref="instance('transcript')/messages/message">
+            <template>
+              <div class="message" data-role="{@role}">
+                <div class="bubble">{.}</div>
+              </div>
+            </template>
+          </fx-repeat>
+        </div>
+
+        <div class="status-bar">
+          <fx-output ref="instance('ui')/status"></fx-output>
+        </div>
+
+        <div class="input-row">
+          <fx-control ref="instance('ui')/inputmessage" update-event="input">
+            <textarea class="widget" placeholder="Describe the vehicle…" rows="2"></textarea>
+          </fx-control>
+
+          <fx-trigger>
+            <button class="btn-send">Send</button>
+            <fx-action>
+              <!-- 1. append a new message node to the transcript -->
+              <fx-insert context="instance('transcript')/messages"
+                         ref="message"
+                         origin="instance('helper')/message"></fx-insert>
+              <!-- 2. set text content from the input -->
+              <fx-setvalue ref="instance('transcript')/messages/message[last()]"
+                           value="instance('ui')/inputmessage/text()"></fx-setvalue>
+              <!-- 3. mark role as user -->
+              <fx-setvalue ref="instance('transcript')/messages/message[last()]/@role">user</fx-setvalue>
+              <!-- 4. show loading indicator -->
+              <fx-setvalue ref="instance('ui')/status" value="'Thinking…'"></fx-setvalue>
+              <!-- 5. clear the input -->
+              <fx-setvalue ref="instance('ui')/inputmessage"></fx-setvalue>
+              <!-- 6. build request, fetch Claude API, fill form -->
+              <fx-action src="fore-chat-build.js"></fx-action>
+            </fx-action>
+          </fx-trigger>
+
+          <fx-trigger>
+            <button class="btn-settings" title="Settings">⚙</button>
+            <fx-setvalue ref="instance('ui')/activecase" value="'settings'"></fx-setvalue>
+          </fx-trigger>
+        </div>
+
+      </fx-case>
+
+      <!-- Settings case: API key, endpoint, model -->
+      <fx-case name="settings">
+        <div class="settings-panel">
+          <h3>Settings</h3>
+          <fx-group ref="instance('settings')">
+            <fx-control ref="apikey" update-event="input">
+              <label>Claude API Key</label>
+              <input type="password" autocomplete="off" placeholder="sk-ant-…">
+            </fx-control>
+            <fx-control ref="endpoint" update-event="input">
+              <label>Endpoint URL</label>
+              <input type="url">
+            </fx-control>
+            <fx-control ref="model" update-event="input">
+              <label>Model</label>
+              <input type="text">
+            </fx-control>
+          </fx-group>
+          <div class="settings-actions">
+            <fx-trigger>
+              <button class="btn-save">Save</button>
+              <fx-action>
+                <fx-send submission="save-settings"></fx-send>
+                <fx-setvalue ref="instance('ui')/activecase" value="'chat'"></fx-setvalue>
+              </fx-action>
+            </fx-trigger>
+            <fx-trigger>
+              <button class="btn-cancel">Cancel</button>
+              <fx-setvalue ref="instance('ui')/activecase" value="'chat'"></fx-setvalue>
+            </fx-trigger>
+          </div>
+        </div>
+      </fx-case>
+
+    </fx-switch>
+  </div>
+
+</fx-fore>
+
+</body>
+</html>
