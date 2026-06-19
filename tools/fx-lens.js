@@ -1,3 +1,4 @@
+import { getPath } from '../src/xpath-path.js';
 /**
  * fx-lens — dependency-less instance viewer (light DOM, tree view)
  *
@@ -93,11 +94,11 @@ export class FxLens extends HTMLElement {
 
     // If fores are added later, re-scan on capturing ready
     document.addEventListener(
-      'ready',
-      ev => {
-        if (ev?.target?.tagName === 'FX-FORE') this._hookFores();
-      },
-      true,
+        'ready',
+        ev => {
+          if (ev?.target?.tagName === 'FX-FORE') this._hookFores();
+        },
+        true,
     );
   }
 
@@ -229,7 +230,35 @@ export class FxLens extends HTMLElement {
       fx-lens .tree .t{ color: #38761d; }
       fx-lens .tree .v{ color: #444; font-size: 0.9rem; }
       fx-lens .tree .muted{ color: #777; }
-
+      fx-lens .tree .path-copy{
+        cursor: pointer;
+        text-decoration: underline;
+        text-decoration-style: dotted;
+        text-underline-offset: 2px;
+      }
+      
+      fx-lens .tree .path-copy::after{
+        display: none;
+        content: '↗';
+        margin-left: 0.25rem;
+        color: #777;
+        font-weight: 400;
+      }
+      
+      fx-lens .tree .path-copy:hover::after,
+      fx-lens .tree .path-copy:focus::after{
+        display: inline;
+      }
+      
+      fx-lens .tree .path-copy:focus{
+        outline: 1px dotted currentColor;
+        outline-offset: 2px;
+      }
+      
+      fx-lens .tree .path-copy[data-copied='true']::after{
+        display: inline;
+        content: '✓';
+      }
       /* Placeholder for closed instance panels */
       fx-lens .placeholder{
         padding: 0.5rem 0;
@@ -391,17 +420,17 @@ export class FxLens extends HTMLElement {
   _renderInstances(instances) {
     const fores = Array.from(document.querySelectorAll('fx-fore'));
     return instances
-      .map((instance, index) => {
-        const { key, label } = this._instanceMeta(instance, fores);
+        .map((instance, index) => {
+          const { key, label } = this._instanceMeta(instance, fores);
 
-        return `
+          return `
           <details id="d${index}" class="instance" data-key="${key}">
             <summary>${label}</summary>
             <div class="instance-view tree" data-key="${key}"></div>
           </details>
         `;
-      })
-      .join('');
+        })
+        .join('');
   }
 
   _xmlName(node) {
@@ -418,6 +447,138 @@ export class FxLens extends HTMLElement {
 
     // For HTML documents, tagName/nodeName are usually uppercase.
     return node.localName || node.nodeName.toLowerCase();
+  }
+
+  _xmlNameSpan(el) {
+    const path = this._pathForXmlNode(el);
+    const span = this._span(this._xmlName(el), 'k path-copy');
+
+    if (path) {
+      span.setAttribute('title', `Click to copy path: ${path}`);
+      span.setAttribute('data-path', path);
+    } else {
+      span.setAttribute('title', 'Fore path unavailable');
+    }
+
+    span.setAttribute('role', 'button');
+    span.setAttribute('tabindex', '0');
+
+    span.addEventListener('click', event => {
+      event.preventDefault();
+      event.stopPropagation();
+      this._copyPathToClipboard(path, span);
+    });
+
+    span.addEventListener('keydown', event => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+
+      event.preventDefault();
+      event.stopPropagation();
+      this._copyPathToClipboard(path, span);
+    });
+
+    return span;
+  }
+
+  _pathForXmlNode(node) {
+    if (!node || node.nodeType !== 1) return '';
+
+    try {
+      const instance = this._instanceForXmlNode(node);
+      const instanceId = instance?.getAttribute('id') || 'default';
+      return getPath(node, instanceId);
+    } catch (err) {
+      console.warn('[fx-lens] could not compute Fore path for node:', err);
+      return '';
+    }
+  }
+
+  _instanceForXmlNode(node) {
+    if (!node) return null;
+
+    const instances = Array.from(document.querySelectorAll('fx-instance'));
+
+    return (
+        instances.find(instance => {
+          const raw = instance.instanceData;
+
+          if (!raw) return false;
+
+          // XML instance stored as Document
+          if (raw.nodeType === 9) {
+            return raw === node.ownerDocument;
+          }
+
+          // XML/HTML instance stored as Element or DocumentFragment
+          if (raw.nodeType === 1 || raw.nodeType === 11) {
+            return raw === node || (typeof raw.contains === 'function' && raw.contains(node));
+          }
+
+          // HTML instances may be stored as an HTMLCollection / array-like list
+          if (typeof raw.length === 'number') {
+            return Array.from(raw).some(
+                item =>
+                    item === node ||
+                    (item && typeof item.contains === 'function' && item.contains(node)),
+            );
+          }
+
+          return false;
+        }) || null
+    );
+  }
+
+  async _copyPathToClipboard(path, triggerEl = null) {
+    if (!path) return;
+
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(path);
+      } else {
+        this._fallbackCopyText(path);
+      }
+
+      this._showCopiedHint(triggerEl, path);
+    } catch (err) {
+      try {
+        this._fallbackCopyText(path);
+        this._showCopiedHint(triggerEl, path);
+      } catch (fallbackErr) {
+        console.warn('[fx-lens] could not copy Fore path:', err, fallbackErr);
+      }
+    }
+  }
+
+  _fallbackCopyText(text) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.setAttribute('readonly', 'readonly');
+    textarea.style.position = 'fixed';
+    textarea.style.left = '-9999px';
+    textarea.style.top = '0';
+
+    document.body.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
+
+    try {
+      document.execCommand('copy');
+    } finally {
+      textarea.remove();
+    }
+  }
+
+  _showCopiedHint(triggerEl, path) {
+    if (!triggerEl) return;
+
+    triggerEl.setAttribute('data-copied', 'true');
+    triggerEl.setAttribute('title', `Copied Fore path: ${path}`);
+
+    clearTimeout(triggerEl._fxLensCopiedTimer);
+    triggerEl._fxLensCopiedTimer = setTimeout(() => {
+      triggerEl.removeAttribute('data-copied');
+      triggerEl.setAttribute('title', `Click to copy Fore path: ${path}`);
+    }, 1200);
   }
 
   /**
@@ -497,10 +658,10 @@ export class FxLens extends HTMLElement {
       }
 
       const byKey = new Map(
-        Array.from(this.querySelectorAll('details.instance')).map(d => [
-          d.getAttribute('data-key') || '',
-          d,
-        ]),
+          Array.from(this.querySelectorAll('details.instance')).map(d => [
+            d.getAttribute('data-key') || '',
+            d,
+          ]),
       );
 
       // Only render trees for OPEN instance panels
@@ -587,9 +748,9 @@ export class FxLens extends HTMLElement {
     if (instId.startsWith('lookup:')) {
       const url = instId.slice('lookup:'.length);
       return (
-        Array.from(scope.querySelectorAll('fx-instance[data-src]')).find(
-          el => el.getAttribute('data-src') === url,
-        ) || null
+          Array.from(scope.querySelectorAll('fx-instance[data-src]')).find(
+              el => el.getAttribute('data-src') === url,
+          ) || null
       );
     }
 
@@ -604,9 +765,9 @@ export class FxLens extends HTMLElement {
     // instance), since a form's default instance may also be id-less.
     if (id === 'default') {
       return (
-        scope.querySelector('fx-instance:not([id]):not([data-src])') ||
-        (fore ? null : document.querySelector('fx-instance')) ||
-        null
+          scope.querySelector('fx-instance:not([id]):not([data-src])') ||
+          (fore ? null : document.querySelector('fx-instance')) ||
+          null
       );
     }
     return null;
@@ -666,9 +827,9 @@ export class FxLens extends HTMLElement {
 
     // XML nodes: Document/Element/Fragment
     const isNode =
-      raw &&
-      typeof raw === 'object' &&
-      (raw.nodeType === 1 || raw.nodeType === 9 || raw.nodeType === 11);
+        raw &&
+        typeof raw === 'object' &&
+        (raw.nodeType === 1 || raw.nodeType === 9 || raw.nodeType === 11);
 
     if (isNode) {
       const node = raw.nodeType === 9 ? raw.documentElement : raw;
@@ -725,9 +886,9 @@ export class FxLens extends HTMLElement {
         ul.appendChild(li);
       }
       return this._details(
-        [this._span(label, 'k'), this._span(' ', ''), this._span(`[array ${value.length}]`, 't')],
-        ul,
-        true,
+          [this._span(label, 'k'), this._span(' ', ''), this._span(`[array ${value.length}]`, 't')],
+          ul,
+          true,
       );
     }
 
@@ -752,7 +913,7 @@ export class FxLens extends HTMLElement {
 
     const summaryParts = [
       this._span('<', 'muted'),
-      this._span(this._xmlName(el), 'k'),
+      this._xmlNameSpan(el),
       this._span(attrs.join(''), 'v'),
       this._span('>', 'muted'),
     ];
