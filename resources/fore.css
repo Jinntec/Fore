@@ -73,6 +73,9 @@
     fx-case.selected-case{
         display:block;
     }
+    fx-case.deselected-case{
+        display:none;
+    }
 
     fx-output[readonly] img {
         background: inherit;
