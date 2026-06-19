@@ -38,7 +38,7 @@
                 <fx-instance
                     id="i-place"
                     xpath-default-namespace="http://www.tei-c.org/ns/1.0"
-                    src="data/geoid.xml">
+                    src="data/place.xml">
                     <data></data>
                 </fx-instance>
 
@@ -57,29 +57,6 @@
                     </data>
                 </fx-instance>
 
-                <!-- loads a single place - full record -->
-                <fx-submission
-                    id="s-load-place"
-                    ref="instance('i-geo')"
-                    url="data/place.xml"
-                    replace="instance"
-                    instance="i-place"
-                    method="get"
-                    validate="false">
-                    <fx-action event="submit-done">
-                        <!--fx-message>place loaded</fx-message-->
-                    </fx-action>
-                </fx-submission>
-
-                <!-- loading the shortlist of places to be used by the autocomplete list -->
-                <fx-submission
-                    id="s-load-places"
-                    url="#echo"
-                    method="get"
-                    replace="instance"
-                    instance="i-geodata">
-<!--                    <fx-message event="submit-done">places have been reloaded</fx-message>-->
-                </fx-submission>
             </fx-model>
 
             <fx-var name="lang" value="instance('vars')/language"></fx-var>
