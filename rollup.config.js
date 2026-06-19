@@ -18,7 +18,6 @@ export default [
         inlineDynamicImports: true,
       },
     ],
-    treeshake: true,
     plugins: [
       versionInjector(),
       resolve(),
@@ -31,8 +30,6 @@ export default [
           [require('@babel/plugin-proposal-class-properties'), { loose: true }],
         ],
       }),
-      strip(),
-      minifyHTML(),
     ],
   },
   {
