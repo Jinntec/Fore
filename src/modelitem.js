@@ -44,6 +44,7 @@ export class ModelItem {
     this.instanceId = instance;
     this.fore = fore;
     this.changed = false;
+    this.nativeValid = true;
 
     // console.log('[ModelItem] created:', this.path);
 

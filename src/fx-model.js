@@ -844,6 +844,22 @@ export class FxModel extends HTMLElement {
         }
       }
     });
+    // Native browser constraint validation — read ValidityState without side-effects.
+    // widget.validity.valid is a live property; no events are fired (unlike checkValidity()).
+    // Use querySelector instead of getWidget() to avoid DOM mutation (getWidget creates a
+    // fallback input if none exists).
+    this.fore.querySelectorAll('fx-control').forEach(control => {
+      if (!control.modelItem) return;
+      const widget = control.querySelector('.widget, input');
+      if (!widget?.validity) return;
+      const nativeValid = widget.validity.valid;
+      if (control.modelItem.nativeValid !== nativeValid) {
+        control.modelItem.nativeValid = nativeValid;
+        control.modelItem.notify();
+      }
+      if (!nativeValid) valid = false;
+    });
+
     console.log('modelItems after revalidate: ', this.modelItems);
     console.log('changed after revalidate: ', this.changed);
     console.log(

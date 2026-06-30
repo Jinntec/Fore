@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>Native Browser Validation</title>
+    <link href="../resources/demo.css" rel="stylesheet">
+    <style>
+        fx-control {
+            display: block;
+            padding: 10px 0;
+            position: relative;
+        }
+
+        fx-control label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        fx-control input.widget {
+            display: block;
+            width: 100%;
+            padding: 6px 8px;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        /*
+         * :user-valid / :user-invalid wait for the user to actually interact with the
+         * field before showing any feedback — unlike :valid / :invalid which fire immediately
+         * on page load (red border before the user types anything = bad UX).
+         */
+        fx-control input.widget:user-valid {
+            border-color: #43a047;
+            background-color: #f1f8f1;
+        }
+
+        fx-control input.widget:user-invalid {
+            border-color: #e53935;
+            background-color: #fff5f5;
+        }
+
+        /*
+         * Fallback for browsers without :user-valid/:user-invalid support.
+         * :placeholder-shown is true while the field is empty / untouched.
+         * Combining :valid/:invalid with :not(:placeholder-shown) produces
+         * the same "wait for interaction" behaviour.
+         * The @supports block keeps the fallback from fighting the modern rule
+         * in browsers that support both.
+         */
+        @supports not selector(input:user-invalid) {
+            fx-control input.widget:valid:not(:placeholder-shown) {
+                border-color: #43a047;
+                background-color: #f1f8f1;
+            }
+
+            fx-control input.widget:invalid:not(:placeholder-shown) {
+                border-color: #e53935;
+                background-color: #fff5f5;
+            }
+        }
+
+        fx-alert {
+            color: #e53935;
+            font-size: 0.85rem;
+            margin-top: 4px;
+        }
+
+        .pitfall {
+            background: #fff8e1;
+            border-left: 4px solid #ffa000;
+            padding: 8px 12px;
+            margin: 8px 0 16px;
+            font-size: 0.9rem;
+        }
+
+        .field-group {
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .field-group h3 {
+            margin: 0 0 4px;
+            font-size: 1rem;
+        }
+
+        .field-group p {
+            margin: 0 0 10px;
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        #validity-status {
+            margin-top: 16px;
+            padding: 10px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        #validity-status.valid { background: #e8f5e9; color: #2e7d32; }
+        #validity-status.invalid { background: #ffebee; color: #c62828; }
+    </style>
+</head>
+<body unresolved="unresolved">
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+
+<div class="wrapper">
+
+<h1>Native Browser Validation in Fore</h1>
+
+<p>
+    This demo wires native HTML5 constraint validation (<code>min</code>, <code>max</code>,
+    <code>pattern</code>, <code>type</code>, <code>required</code>) into Fore's update cycle.
+    The browser's <code>ValidityState</code> is read (side-effect-free) at the end of
+    <code>fx-model.revalidate()</code> and propagated via <code>ModelItem.nativeValid</code>
+    into <code>AbstractControl.handleValid()</code>.
+</p>
+<p>
+    <strong>No <code>&lt;form&gt;</code> wrapper is needed.</strong>
+    <code>widget.validity.valid</code> works on individual inputs independent of a form element.
+    Fore's <code>fx-submission</code> handles submission — a native form would only conflict.
+</p>
+
+<div class="pitfall">
+    <strong>Pitfall — <code>checkValidity()</code> fires events:</strong>
+    The integration reads <code>widget.validity.valid</code> (a live property) rather than calling
+    <code>widget.checkValidity()</code>. Calling <code>checkValidity()</code> dispatches an
+    <code>invalid</code> event on the input that would clash with Fore's own <code>invalid</code>
+    event on <code>fx-control</code>.
+</div>
+
+<div class="pitfall">
+    <strong>Pitfall — early <code>:invalid</code> flash on page load:</strong>
+    CSS <code>:valid</code> and <code>:invalid</code> apply the moment the page renders — before
+    the user touches anything. The solution is <code>:user-valid</code> / <code>:user-invalid</code>,
+    which wait for interaction. For browsers that don't support them yet, the
+    <code>:valid:not(:placeholder-shown)</code> / <code>:invalid:not(:placeholder-shown)</code>
+    fallback produces the same behaviour. Both patterns are used in this demo's stylesheet.
+</div>
+
+<demo-snippet>
+    <template>
+
+        <fx-fore id="native-form">
+            <fx-model>
+                <fx-instance>
+                    <data>
+                        <name></name>
+                        <age></age>
+                        <email></email>
+                        <zipcode></zipcode>
+                        <price></price>
+                    </data>
+                </fx-instance>
+
+                <!--
+                    XForms required works alongside native HTML required.
+                    Both are evaluated: Fore checks required emptiness in revalidate();
+                    the native input's validity.valueMissing feeds into nativeValid.
+                -->
+                <fx-bind ref="name" required="true()"></fx-bind>
+
+                <!--
+                    No fx-bind constraint needed for age — native min/max on the widget
+                    covers range validation via ValidityState (rangeUnderflow / rangeOverflow).
+                -->
+                <fx-bind ref="age"></fx-bind>
+
+                <!-- Native type=email validates format via validity.typeMismatch -->
+                <fx-bind ref="email" required="true()"></fx-bind>
+
+                <!-- Native pattern validates via validity.patternMismatch -->
+                <fx-bind ref="zipcode"></fx-bind>
+
+                <!-- Native min + step validate via rangeUnderflow + stepMismatch -->
+                <fx-bind ref="price"></fx-bind>
+            </fx-model>
+
+            <div class="field-group">
+                <h3>Name — <code>required</code></h3>
+                <p>
+                    Both <code>fx-bind required="true()"</code> (XForms) and native
+                    <code>required</code> on the input are set. Either alone would mark
+                    the field invalid.
+                </p>
+                <!--
+                    PITFALL: min/max/pattern/type from fx-bind are NOT propagated to the
+                    native input. They must be set manually on the widget element.
+                    There is a // todo: handleType() comment in abstract-control.js
+                    confirming this is a known gap.
+                -->
+                <fx-control id="ctrl-name" ref="name" update-event="input">
+                    <label>Full Name</label>
+                    <input class="widget" type="text" required placeholder="Enter your name">
+                    <fx-alert>Name is required</fx-alert>
+                </fx-control>
+            </div>
+
+            <div class="field-group">
+                <h3>Age — <code>type="number" min="0" max="120"</code></h3>
+                <p>
+                    Native range validation via <code>validity.rangeUnderflow</code> /
+                    <code>validity.rangeOverflow</code>. No XPath constraint needed.
+                </p>
+                <fx-control id="ctrl-age" ref="age" update-event="input">
+                    <label>Age (0–120)</label>
+                    <input class="widget" type="number" min="0" max="120" placeholder="e.g. 30">
+                    <fx-alert>Age must be a number between 0 and 120</fx-alert>
+                </fx-control>
+            </div>
+
+            <div class="field-group">
+                <h3>Email — <code>type="email"</code></h3>
+                <p>
+                    Native email format check via <code>validity.typeMismatch</code>.
+                    Combined with XForms <code>required</code>.
+                </p>
+                <fx-control id="ctrl-email" ref="email" update-event="input">
+                    <label>Email Address</label>
+                    <input class="widget" type="email" required placeholder="you@example.com">
+                    <fx-alert>Please enter a valid email address</fx-alert>
+                </fx-control>
+            </div>
+
+            <div class="field-group">
+                <h3>Zip Code — <code>pattern="[0-9][0-9][0-9][0-9][0-9]"</code> (5 digits)</h3>
+                <p>
+                    Native pattern check via <code>validity.patternMismatch</code>.
+                    Empty input is valid here (not required) — only non-empty invalid patterns fail.
+                </p>
+                <!--
+                    PITFALL: Empty inputs with pattern but without required are valid (native
+                    behavior). The pattern only applies when there IS a value. This can
+                    surprise users who expect pattern to imply required.
+
+                    NOTE: Do NOT use [0-9]{5} here. Fore's template-expression engine treats
+                    {...} in attributes as XPath expressions and rewrites them. Use the
+                    repetition-free form [0-9][0-9][0-9][0-9][0-9] instead.
+                -->
+                <fx-control id="ctrl-zipcode" ref="zipcode" update-event="input">
+                    <label>Zip Code (5 digits, optional)</label>
+                    <input class="widget" type="text" pattern="[0-9][0-9][0-9][0-9][0-9]" placeholder="e.g. 12345">
+                    <fx-alert>Zip code must be exactly 5 digits (0–9)</fx-alert>
+                </fx-control>
+            </div>
+
+            <div class="field-group">
+                <h3>Price — <code>type="number" min="0.01" step="0.01"</code></h3>
+                <p>
+                    Validates positive currency amounts. <code>validity.stepMismatch</code>
+                    catches values that don't align to the step (e.g. three decimal places).
+                </p>
+                <fx-control id="ctrl-price" ref="price" update-event="input">
+                    <label>Price (€, optional)</label>
+                    <input class="widget" type="number" min="0.01" step="0.01" placeholder="e.g. 9.99">
+                    <fx-alert>Price must be at least 0.01 and use at most 2 decimal places</fx-alert>
+                </fx-control>
+            </div>
+
+            <!--
+                CSS STRATEGY: :user-valid / :user-invalid (+ :placeholder-shown fallback)
+                handle the "early flash" problem — input borders only turn red/green after
+                the user interacts. fx-control[invalid] drives fx-alert visibility via Fore's
+                validation lifecycle, so alerts appear once Fore has processed the change.
+            -->
+
+            <div class="actions">
+                <fx-trigger>
+                    <button>Force Revalidate All</button>
+                    <!--
+                        fx-refresh force triggers a full model update + forced refresh of all
+                        controls, marking all as "visited" equivalent so alerts become visible.
+                    -->
+                    <fx-refresh force></fx-refresh>
+                </fx-trigger>
+            </div>
+
+        </fx-fore>
+
+    </template>
+</demo-snippet>
+
+<h2>Architecture Notes</h2>
+<ul>
+    <li>
+        <strong>Where the hook lives:</strong> <code>src/fx-model.js revalidate()</code> — after
+        the XPath constraint/required loop, before <code>return valid</code>.
+    </li>
+    <li>
+        <strong>How it propagates:</strong> <code>ModelItem.nativeValid</code> (new boolean MIP,
+        default <code>true</code>) is read by <code>AbstractControl.handleValid()</code> and
+        ANDed into the overall validity check.
+    </li>
+    <li>
+        <strong>Side-effect-free:</strong> Uses <code>widget.validity.valid</code> (live
+        <code>ValidityState</code> property) — no <code>checkValidity()</code> calls, no
+        <code>invalid</code> events fired by the validation pass.
+    </li>
+    <li>
+        <strong>Shadow DOM:</strong> Fore's native inputs live in <em>light DOM</em> as children
+        of <code>fx-control</code> (slotted into its shadow). <code>ValidityState</code> is
+        always accessible directly on the input element regardless of slot projection.
+    </li>
+    <li>
+        <strong>Attribute propagation gap:</strong> <code>fx-bind type="xs:integer"</code> does
+        <em>not</em> set <code>type="number"</code> on the widget. Native attributes must be
+        written directly on <code>&lt;input class="widget"&gt;</code>.
+        See <code>// todo: handleType()</code> in <code>abstract-control.js</code>.
+    </li>
+</ul>
+
+</div>
+<script type="module" src="./demo.js"></script>
+</body>
+</html>
