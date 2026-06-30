@@ -63,6 +63,20 @@
             }
         }
 
+        /*
+         * :in-range / :out-of-range apply to number/date inputs with min/max constraints.
+         * Unlike :user-valid/:user-invalid they have no :user- prefix, so they fire on
+         * page load for empty inputs (an empty optional number field is :in-range).
+         * Combining with :user-invalid/:user-valid guards against the early-flash problem.
+         * These rules are optional visual enhancements — the Fore [invalid] attribute and
+         * fx-alert visibility are already driven by the nativeValid integration.
+         */
+        @supports selector(input:user-invalid) {
+            fx-control input.widget:user-invalid:out-of-range {
+                border-style: dashed; /* distinguish range errors from other invalidity */
+            }
+        }
+
         fx-alert {
             color: #e53935;
             font-size: 0.85rem;
@@ -121,8 +135,8 @@
 <h1>Native Browser Validation in Fore</h1>
 
 <p>
-    This demo wires native HTML5 constraint validation (<code>min</code>, <code>max</code>,
-    <code>pattern</code>, <code>type</code>, <code>required</code>) into Fore's update cycle.
+    This demo shows how native HTML5 constraint validation (<code>min</code>, <code>max</code>,
+    <code>pattern</code>, <code>type</code>, <code>required</code>) works in sync with Fore's update cycle.
     The browser's <code>ValidityState</code> is read (side-effect-free) at the end of
     <code>fx-model.revalidate()</code> and propagated via <code>ModelItem.nativeValid</code>
     into <code>AbstractControl.handleValid()</code>.
@@ -134,7 +148,7 @@
 </p>
 
 <div class="pitfall">
-    <strong>Pitfall — <code>checkValidity()</code> fires events:</strong>
+    <strong>Implementation Note — <code>checkValidity()</code> fires events:</strong>
     The integration reads <code>widget.validity.valid</code> (a live property) rather than calling
     <code>widget.checkValidity()</code>. Calling <code>checkValidity()</code> dispatches an
     <code>invalid</code> event on the input that would clash with Fore's own <code>invalid</code>
@@ -142,12 +156,12 @@
 </div>
 
 <div class="pitfall">
-    <strong>Pitfall — early <code>:invalid</code> flash on page load:</strong>
+    <strong>Implementation Note — early <code>:invalid</code> flash on page load:</strong>
     CSS <code>:valid</code> and <code>:invalid</code> apply the moment the page renders — before
     the user touches anything. The solution is <code>:user-valid</code> / <code>:user-invalid</code>,
     which wait for interaction. For browsers that don't support them yet, the
     <code>:valid:not(:placeholder-shown)</code> / <code>:invalid:not(:placeholder-shown)</code>
-    fallback produces the same behaviour. Both patterns are used in this demo's stylesheet.
+    fallback produces the same behaviour. Both patterns are integrated in fore.css.
 </div>
 
 <demo-snippet>
@@ -162,6 +176,7 @@
                         <email></email>
                         <zipcode></zipcode>
                         <price></price>
+                        <username></username>
                     </data>
                 </fx-instance>
 
@@ -186,6 +201,9 @@
 
                 <!-- Native min + step validate via rangeUnderflow + stepMismatch -->
                 <fx-bind ref="price"></fx-bind>
+
+                <!-- minlength/maxlength validate via validity.tooShort / validity.tooLong -->
+                <fx-bind ref="username"></fx-bind>
             </fx-model>
 
             <div class="field-group">
@@ -229,7 +247,7 @@
                 </p>
                 <fx-control id="ctrl-email" ref="email" update-event="input">
                     <label>Email Address</label>
-                    <input class="widget" type="email" required placeholder="you@example.com">
+                    <input class="widget" type="email" placeholder="you@example.com">
                     <fx-alert>Please enter a valid email address</fx-alert>
                 </fx-control>
             </div>
@@ -253,6 +271,25 @@
                     <label>Zip Code (5 digits, optional)</label>
                     <input class="widget" type="text" pattern="[0-9][0-9][0-9][0-9][0-9]" placeholder="e.g. 12345">
                     <fx-alert>Zip code must be exactly 5 digits (0–9)</fx-alert>
+                </fx-control>
+            </div>
+
+            <div class="field-group">
+                <h3>Username — <code>minlength="3" maxlength="20"</code></h3>
+                <p>
+                    Length validation via <code>validity.tooShort</code> /
+                    <code>validity.tooLong</code>. Browsers block typing beyond
+                    <code>maxlength</code>, so <code>tooLong</code> is only reachable by
+                    programmatic value assignment. Empty input is valid (not required).
+                </p>
+                <!--
+                    minlength: validity.tooShort fires only when value is non-empty AND
+                    shorter than minlength. An empty field without required is always valid.
+                -->
+                <fx-control id="ctrl-username" ref="username" update-event="input">
+                    <label>Username (3–20 chars, optional)</label>
+                    <input class="widget" type="text" minlength="3" maxlength="20" placeholder="e.g. jsmith">
+                    <fx-alert>Username must be between 3 and 20 characters</fx-alert>
                 </fx-control>
             </div>
 
@@ -283,6 +320,7 @@
                         fx-refresh force triggers a full model update + forced refresh of all
                         controls, marking all as "visited" equivalent so alerts become visible.
                     -->
+                    <fx-update></fx-update>
                     <fx-refresh force></fx-refresh>
                 </fx-trigger>
             </div>
@@ -318,6 +356,22 @@
         <em>not</em> set <code>type="number"</code> on the widget. Native attributes must be
         written directly on <code>&lt;input class="widget"&gt;</code>.
         See <code>// todo: handleType()</code> in <code>abstract-control.js</code>.
+    </li>
+    <li>
+        <strong><code>minlength</code> / <code>maxlength</code>:</strong>
+        <code>validity.tooShort</code> fires only when the field is non-empty <em>and</em> shorter
+        than <code>minlength</code>. An empty non-required field is always valid.
+        <code>validity.tooLong</code> is rarely reached through typing (browsers block input at
+        <code>maxlength</code>) but is caught correctly if the value is set programmatically.
+    </li>
+    <li>
+        <strong><code>:in-range</code> / <code>:out-of-range</code>:</strong>
+        CSS pseudo-classes that apply to number/date inputs with <code>min</code>/<code>max</code>
+        constraints. Unlike <code>:user-invalid</code>, they have no <code>:user-</code> prefix —
+        an empty optional number field is considered <code>:in-range</code> on page load. Combine
+        with <code>:user-invalid</code> to avoid premature styling. These are purely visual
+        enhancements; Fore's <code>[invalid]</code> attribute and <code>fx-alert</code> visibility
+        are already handled by the <code>nativeValid</code> integration.
     </li>
 </ul>
 

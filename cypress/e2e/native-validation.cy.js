@@ -133,6 +133,29 @@ describe('native-validation demo', () => {
     });
   });
 
+  // ── Username — minlength/maxlength ───────────────────────────────────────
+  describe('username field (minlength=3 maxlength=20)', () => {
+    it('marks invalid and shows alert when value is too short', () => {
+      cy.get('#ctrl-username input.widget').type('ab').blur();
+      cy.get('#ctrl-username').should('have.attr', 'invalid');
+      cy.get('#ctrl-username fx-alert').should('be.visible');
+    });
+
+    it('marks valid when value meets minlength', () => {
+      cy.get('#ctrl-username input.widget').type('ab').blur();
+      cy.get('#ctrl-username').should('have.attr', 'invalid');
+
+      cy.get('#ctrl-username input.widget').clear().type('abc').blur();
+      cy.get('#ctrl-username').should('not.have.attr', 'invalid');
+      cy.get('#ctrl-username fx-alert').should('not.be.visible');
+    });
+
+    it('does not mark invalid when empty (minlength does not imply required)', () => {
+      cy.get('#ctrl-username input.widget').focus().blur();
+      cy.get('#ctrl-username').should('not.have.attr', 'invalid');
+    });
+  });
+
   // ── aria-invalid ──────────────────────────────────────────────────────────
   describe('aria-invalid on widget', () => {
     it('sets aria-invalid=true on the inner input when native validation fails', () => {

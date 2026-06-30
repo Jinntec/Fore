@@ -157,6 +157,75 @@ describe('native browser validation', () => {
       expect(model.modelItems[0].nativeValid).to.be.true;
     });
 
+    it('sets nativeValid=false when value is shorter than minlength', async () => {
+      // validity.tooShort fires only when value is non-empty AND shorter than minlength.
+      const el = fixtureSync(html`
+        <fx-fore>
+          <fx-model id="m">
+            <fx-instance><data><username></username></data></fx-instance>
+            <fx-bind ref="username"></fx-bind>
+          </fx-model>
+          <fx-control id="ctrl" ref="username">
+            <input class="widget" type="text" minlength="3" maxlength="20" placeholder="3-20 chars">
+          </fx-control>
+        </fx-fore>
+      `);
+      await oneEvent(el, 'ready');
+      const model = el.querySelector('#m');
+      const widget = el.querySelector('#ctrl').getWidget();
+
+      widget.value = 'ab'; // non-empty but below minlength=3 → tooShort
+      model.updateModel();
+      expect(model.modelItems[0].nativeValid).to.be.false;
+
+      widget.value = 'abc'; // exactly minlength → valid
+      model.updateModel();
+      expect(model.modelItems[0].nativeValid).to.be.true;
+    });
+
+    it('leaves nativeValid=true when value is empty (minlength does not imply required)', async () => {
+      // An empty non-required field with minlength is valid — tooShort only fires on
+      // non-empty values below the threshold.
+      const el = fixtureSync(html`
+        <fx-fore>
+          <fx-model id="m">
+            <fx-instance><data><username></username></data></fx-instance>
+            <fx-bind ref="username"></fx-bind>
+          </fx-model>
+          <fx-control id="ctrl" ref="username">
+            <input class="widget" type="text" minlength="3" maxlength="20" placeholder="3-20 chars">
+          </fx-control>
+        </fx-fore>
+      `);
+      await oneEvent(el, 'ready');
+      const model = el.querySelector('#m');
+      // widget.value stays '' (empty) — no interaction needed
+      expect(model.modelItems[0].nativeValid).to.be.true;
+    });
+
+    it('sets nativeValid=false when value exceeds maxlength (programmatic overflow)', async () => {
+      // Browsers block typing beyond maxlength, but programmatic value assignment can
+      // produce tooLong. Verifies the ValidityState pass catches it.
+      const el = fixtureSync(html`
+        <fx-fore>
+          <fx-model id="m">
+            <fx-instance><data><username></username></data></fx-instance>
+            <fx-bind ref="username"></fx-bind>
+          </fx-model>
+          <fx-control id="ctrl" ref="username">
+            <input class="widget" type="text" minlength="3" maxlength="20" placeholder="3-20 chars">
+          </fx-control>
+        </fx-fore>
+      `);
+      await oneEvent(el, 'ready');
+      const model = el.querySelector('#m');
+      const widget = el.querySelector('#ctrl').getWidget();
+
+      widget.value = 'a'.repeat(21); // exceeds maxlength=20 → tooLong
+      model.updateModel();
+      expect(model.modelItems[0].nativeValid).to.be.false;
+    });
+
     it('leaves nativeValid=true when no native constraints are set', async () => {
       const el = fixtureSync(html`
         <fx-fore>

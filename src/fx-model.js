@@ -766,6 +766,36 @@ export class FxModel extends HTMLElement {
       this.computes += 1;
     }
   }
+
+  _getNativeValidity(widget) {
+    if (!widget?.validity) return true;
+
+    let nativeValid = widget.validity.valid;
+
+    // Browsers do not consistently report minlength/maxlength violations
+    // for values assigned programmatically. Fore values are often updated
+    // programmatically, so enforce these two constraints explicitly.
+    const value = widget.value ?? '';
+
+    const minlength = widget.getAttribute('minlength');
+    if (minlength !== null && value !== '') {
+      const min = Number.parseInt(minlength, 10);
+      if (!Number.isNaN(min) && value.length < min) {
+        nativeValid = false;
+      }
+    }
+
+    const maxlength = widget.getAttribute('maxlength');
+    if (maxlength !== null) {
+      const max = Number.parseInt(maxlength, 10);
+      if (!Number.isNaN(max) && value.length > max) {
+        nativeValid = false;
+      }
+    }
+
+    return nativeValid;
+  }
+
   /**
    * Iterates all modelItems to calculate the validation status.
    *
@@ -852,7 +882,7 @@ export class FxModel extends HTMLElement {
       if (!control.modelItem) return;
       const widget = control.querySelector('.widget, input');
       if (!widget?.validity) return;
-      const nativeValid = widget.validity.valid;
+      const nativeValid = this._getNativeValidity(widget);
       if (control.modelItem.nativeValid !== nativeValid) {
         control.modelItem.nativeValid = nativeValid;
         control.modelItem.notify();
