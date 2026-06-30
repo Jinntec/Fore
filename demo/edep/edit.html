@@ -19,7 +19,7 @@
     <script src="scripts/jinn-codemirror-bundle.js" type="module"></script>
 
     <script src="../../tools/fx-lens.js" type="module"></script>
-    <script src="../demo.js" type="module"></script>
+    <script src="../../index.js" type="module"></script>
     <script src="scripts/zotero-autocomplete.js" type="module"></script>
     <script src="scripts/edep-xml-editor.js" type="module"></script>
     <!--    <script data-template="pages:load-components" src="pb-components-bundle.js" type="module"></script>-->
@@ -712,34 +712,6 @@
 
         </fx-group>
 
-        <section class="buttonBar">
-            <p class="loginMessage" slot="fallback">You need to be logged in to save.</p>
-
-            <fx-trigger class="saveBtn" debounce="1000">
-                <button>
-                    Save
-                </button>
-                <fx-action if="not(exists(instance('params')/id))">
-                    <fx-send submission="s-login"></fx-send>
-                    <fx-send submission="s-create"></fx-send>
-                </fx-action>
-                <fx-action if="exists(instance('params')/id)">
-                    <fx-send submission="s-login"></fx-send>
-                    <fx-send submission="s-save"></fx-send>
-                </fx-action>
-            </fx-trigger>
-            <fx-trigger>
-                <a href="edit/workspace/">
-                    New entry
-                </a>
-            </fx-trigger>
-            <fx-trigger>
-                <a href="index.html">
-                    To the list
-                </a>
-            </fx-trigger>
-        </section>
-
         <fx-control class="valid-warning" ref="instance('vars')/xml-valid">
             <fx-alert>
                 Please correct form before saving
@@ -748,7 +720,7 @@
         </fx-control>
 
     </fx-fore>
-        <fx-lens></fx-lens>
+<!--        <fx-lens></fx-lens>-->
 </main>
 
 <footer class="version">

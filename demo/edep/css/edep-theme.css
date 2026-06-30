@@ -31,11 +31,11 @@ main {
     margin-bottom: 3rem;
 }
 
-@media (min-width: 1200px) {
+/*@media (min-width: 1200px) {*/
     main {
-        padding-left: 18rem;
+        padding-left: 13rem;
     }
-}
+/*}*/
 
 a:link, a:visited, a:hover {
     color: var(--pb-link-color);
