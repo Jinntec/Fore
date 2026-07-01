@@ -262,14 +262,10 @@
                     PITFALL: Empty inputs with pattern but without required are valid (native
                     behavior). The pattern only applies when there IS a value. This can
                     surprise users who expect pattern to imply required.
-
-                    NOTE: Do NOT use [0-9]{5} here. Fore's template-expression engine treats
-                    {...} in attributes as XPath expressions and rewrites them. Use the
-                    repetition-free form [0-9][0-9][0-9][0-9][0-9] instead.
                 -->
                 <fx-control id="ctrl-zipcode" ref="zipcode" update-event="input">
                     <label>Zip Code (5 digits, optional)</label>
-                    <input class="widget" type="text" pattern="[0-9][0-9][0-9][0-9][0-9]" placeholder="e.g. 12345">
+                    <input class="widget" type="text" pattern="[0-9]{5}" placeholder="e.g. 12345">
                     <fx-alert>Zip code must be exactly 5 digits (0–9)</fx-alert>
                 </fx-control>
             </div>
