@@ -37,9 +37,9 @@ export default defineConfig({
   publicDir: false,
   build: {
     lib: {
-      entry: './index.js',
+      entry: './demo/demo-build.js',
       formats: ['es'],
-      fileName: 'fore-dev',
+      fileName: 'demo',
     },
     outDir: 'dist',
     emptyOutDir: false,
@@ -49,7 +49,7 @@ export default defineConfig({
       plugins: [minifyBundle()],
       output: {
         inlineDynamicImports: true,
-        entryFileNames: 'fore-dev.js',
+        entryFileNames: 'demo.js',
       },
     },
   },
