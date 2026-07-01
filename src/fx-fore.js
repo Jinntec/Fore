@@ -794,9 +794,8 @@ export class FxFore extends HTMLElement {
               // e.stopImmediatePropagation();
             },true);
         */
-    this.ignoreExpressions = this.hasAttribute('ignore-expressions')
-      ? this.getAttribute('ignore-expressions')
-      : null;
+    const userIgnore = this.getAttribute('ignore-expressions');
+    this.ignoreExpressions = userIgnore ? `[pattern], ${userIgnore}` : '[pattern]';
 
     this.lazyRefresh = this.hasAttribute('refresh-on-view');
     if (this.lazyRefresh) {
@@ -1344,10 +1343,8 @@ export class FxFore extends HTMLElement {
   } // eslint-disable-next-line class-methods-use-this
   _getTemplateExpression(node) {
     if (this.ignoredNodes) {
-      if (node.nodeType === Node.ATTRIBUTE_NODE) {
-        node = node.ownerElement;
-      }
-      const found = this.ignoredNodes.find(n => n.contains(node));
+      const checkNode = node.nodeType === Node.ATTRIBUTE_NODE ? node.ownerElement : node;
+      const found = this.ignoredNodes.find(n => n.contains(checkNode));
       if (found) return null;
     }
     if (node.nodeType === Node.ATTRIBUTE_NODE) {
