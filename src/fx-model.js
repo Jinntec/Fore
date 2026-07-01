@@ -45,6 +45,127 @@ export class FxModel extends HTMLElement {
      * @type {import('./fx-bind.js').FxBind[]}
      */
     this.binds = [];
+
+    this.debugInfo = {
+      debugId: `model-${Math.random().toString(36).slice(2, 9)}`,
+      createdAt: performance.now(),
+      modelConstructCount: 0,
+      updateModelCount: 0,
+      rebuildCount: 0,
+      recalculateCount: 0,
+      revalidateCount: 0,
+      lastUpdateAt: null,
+      lastCycle: null,
+    };
+  }
+
+  getDebugInfo(options = {}) {
+    const info = {
+      ...this.debugInfo,
+      constructed: this.modelConstructed,
+      inited: this.inited,
+      instanceCount: this.instances.length,
+      modelItemCount: this.modelItems.length,
+      instances: this.instances.map(instance => instance.getDebugInfo?.()),
+      modelItems: this.modelItems.map(item => item.getDebugInfo?.()),
+    };
+
+    if (options.includeGraphs === true) {
+      info.graphs = this.getDebugGraphInfo();
+    }
+
+    return info;
+  }
+
+  getDebugGraphInfo() {
+    return {
+      computes: this.computes,
+      mainGraph: this.getDebugGraphSummary(this.mainGraph),
+      subGraph: this.getDebugGraphSummary(this.subgraph),
+    };
+  }
+
+  getDebugGraphSummary(graph) {
+    if (!graph) {
+      return null;
+    }
+
+    const nodes = Object.keys(graph.nodes || {});
+    const outgoingEdges = graph.outgoingEdges || {};
+    const incomingEdges = graph.incomingEdges || {};
+    const calculationOrder = this.getDebugGraphOrder(graph);
+
+    return {
+      nodeCount: typeof graph.size === 'function' ? graph.size() : nodes.length,
+      edgeCount: this.getDebugEdgeCount(outgoingEdges),
+      outgoingEdgeCount: this.getDebugEdgeCount(outgoingEdges),
+      incomingEdgeCount: this.getDebugEdgeCount(incomingEdges),
+      computeNodeCount: nodes.filter(node => typeof node === 'string' && node.includes(':')).length,
+      calculationOrderCount: calculationOrder.length,
+      calculationOrder: calculationOrder.map((path, index) =>
+          this.getDebugGraphNodeInfo(graph, path, index),
+      ),
+    };
+  }
+
+  getDebugGraphOrder(graph) {
+    if (!graph || typeof graph.overallOrder !== 'function') {
+      return [];
+    }
+
+    try {
+      return graph.overallOrder(false);
+    } catch (error) {
+      return [];
+    }
+  }
+
+  getDebugEdgeCount(edgeMap = {}) {
+    return Object.values(edgeMap).reduce((count, edges) => {
+      return count + (Array.isArray(edges) ? edges.length : 0);
+    }, 0);
+  }
+
+  getDebugGraphNodeInfo(graph, path, index = 0) {
+    let data = null;
+
+    try {
+      data = graph.getNodeData(path);
+    } catch (error) {
+      data = null;
+    }
+
+    const basePath =
+        typeof path === 'string' && path.includes(':')
+            ? path.substring(0, path.indexOf(':'))
+            : path;
+
+    const facet =
+        typeof path === 'string' && path.includes(':')
+            ? path.substring(path.indexOf(':') + 1)
+            : null;
+
+    const modelItem = this.getModelItem(basePath);
+
+    return {
+      index: index + 1,
+      path,
+      basePath,
+      facet,
+      isCompute: !!facet,
+      ref: modelItem?.ref || null,
+      instanceId: modelItem?.instanceId || null,
+      value: modelItem?.value,
+      dataType: data?.__jsonlens__
+          ? 'json-lens'
+          : data?.nodeType
+              ? 'xml-node'
+              : data === null || data === undefined
+                  ? null
+                  : typeof data,
+      dependencies: graph.outgoingEdges?.[path] || [],
+      dependants: graph.incomingEdges?.[path] || [],
+    };
   }
 
   /**
@@ -205,6 +326,7 @@ export class FxModel extends HTMLElement {
    */
   async modelConstruct() {
     console.info(`📌 model-construct for #${this.parentNode.id}`);
+    this.debugInfo.modelConstructCount += 1;
 
     // this.dispatchEvent(new CustomEvent('model-construct', { detail: this }));
     Fore.dispatch(this, 'model-construct', { model: this });
@@ -361,7 +483,10 @@ export class FxModel extends HTMLElement {
    * update action triggering the update cycle
    */
   updateModel() {
-    // console.time('updateModel');
+    this.debugInfo.updateModelCount += 1;
+    this.debugInfo.lastUpdateAt = performance.now();
+
+    const rebuildStart = performance.now();
     this.rebuild();
     /*
         if (this.skipUpdate){
@@ -369,11 +494,21 @@ export class FxModel extends HTMLElement {
             return;
         }
 */
+    const recalculateStart = performance.now();
     this.recalculate();
+    const revalidateStart = performance.now();
     this.revalidate();
-    // console.log('updateModel finished with modelItems ', this.modelItems);
+    const revalidateEnd = performance.now();
 
-    // console.timeEnd('updateModel');
+    this.debugInfo.lastCycle = {
+      timestamp: revalidateEnd,
+      rebuildMs: recalculateStart - rebuildStart,
+      recalculateMs: revalidateStart - recalculateStart,
+      revalidateMs: revalidateEnd - revalidateStart,
+      totalMs: revalidateEnd - rebuildStart,
+      computes: this.computes || 0,
+      modelItemCount: this.modelItems.length,
+    };
   }
 
   /**
@@ -421,6 +556,7 @@ export class FxModel extends HTMLElement {
 
   rebuild() {
     console.log(`🔷   rebuild() '${this.fore.id}'`);
+    this.debugInfo.rebuildCount += 1;
 
     // Build a lookup for existing ModelItems so we can reuse them by path (approach A)
     const prevItems = Array.isArray(this.modelItems) ? this.modelItems : [];
@@ -459,6 +595,7 @@ export class FxModel extends HTMLElement {
    * todo: use 'changed' flag on modelItems to determine subgraph for recalculation. Flag already exists but is not used.
    */
   async recalculate() {
+    this.debugInfo.recalculateCount += 1;
     if (!this.mainGraph) {
       return;
     }
@@ -629,6 +766,36 @@ export class FxModel extends HTMLElement {
       this.computes += 1;
     }
   }
+
+  _getNativeValidity(widget) {
+    if (!widget?.validity) return true;
+
+    let nativeValid = widget.validity.valid;
+
+    // Browsers do not consistently report minlength/maxlength violations
+    // for values assigned programmatically. Fore values are often updated
+    // programmatically, so enforce these two constraints explicitly.
+    const value = widget.value ?? '';
+
+    const minlength = widget.getAttribute('minlength');
+    if (minlength !== null && value !== '') {
+      const min = Number.parseInt(minlength, 10);
+      if (!Number.isNaN(min) && value.length < min) {
+        nativeValid = false;
+      }
+    }
+
+    const maxlength = widget.getAttribute('maxlength');
+    if (maxlength !== null) {
+      const max = Number.parseInt(maxlength, 10);
+      if (!Number.isNaN(max) && value.length > max) {
+        nativeValid = false;
+      }
+    }
+
+    return nativeValid;
+  }
+
   /**
    * Iterates all modelItems to calculate the validation status.
    *
@@ -646,6 +813,7 @@ export class FxModel extends HTMLElement {
    *
    */
   revalidate() {
+    this.debugInfo.revalidateCount += 1;
     if (this.modelItems.length === 0) return true;
 
     console.log(`🔷🔷🔷 revalidate() '${this.fore.id}'`);
@@ -706,6 +874,22 @@ export class FxModel extends HTMLElement {
         }
       }
     });
+    // Native browser constraint validation — read ValidityState without side-effects.
+    // widget.validity.valid is a live property; no events are fired (unlike checkValidity()).
+    // Use querySelector instead of getWidget() to avoid DOM mutation (getWidget creates a
+    // fallback input if none exists).
+    this.fore.querySelectorAll('fx-control').forEach(control => {
+      if (!control.modelItem) return;
+      const widget = control.querySelector('.widget, input');
+      if (!widget?.validity) return;
+      const nativeValid = this._getNativeValidity(widget);
+      if (control.modelItem.nativeValid !== nativeValid) {
+        control.modelItem.nativeValid = nativeValid;
+        control.modelItem.notify();
+      }
+      if (!nativeValid) valid = false;
+    });
+
     console.log('modelItems after revalidate: ', this.modelItems);
     console.log('changed after revalidate: ', this.changed);
     console.log(
@@ -848,6 +1032,7 @@ export class FxModel extends HTMLElement {
     const result = this.instances[0].evalXPath(bindingExpr);
     return result;
   }
+
 }
 
 if (!customElements.get('fx-model')) {

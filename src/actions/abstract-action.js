@@ -186,10 +186,69 @@ export class AbstractAction extends ForeElementMixin {
     }
   }
 
+  getActionDebugDetail(extra = {}) {
+    const getAttr = name => {
+      try {
+        return this.getAttribute(name) || null;
+      } catch (error) {
+        return null;
+      }
+    };
+
+    return {
+      action: this.localName || null,
+      actionClass: this.constructor?.name || null,
+      id: this.id || null,
+      event: this.event || null,
+      ref: getAttr('ref'),
+      target: getAttr('target'),
+      origin: getAttr('origin'),
+      submission: getAttr('submission'),
+      control: getAttr('control'),
+      if: getAttr('if'),
+      while: getAttr('while'),
+      iterate: getAttr('iterate'),
+      delay: this.delay || 0,
+      needsUpdate: this.needsUpdate,
+      ownerFore: this.getOwnerFormSafe()?.id || null,
+      ...extra,
+    };
+  }
+
+  dispatchActionDebugEvent(type, extra = {}) {
+    try {
+      const target = this.isConnected ? this : (this.getOwnerFormSafe() ?? this);
+      target.dispatchEvent(
+          new CustomEvent(type, {
+            composed: true,
+            bubbles: true,
+            cancelable: false,
+            detail: this.getActionDebugDetail(extra),
+          }),
+      );
+    } catch (error) {
+      // Debug events must never affect action execution.
+    }
+  }
+
+  getOwnerFormSafe() {
+    try {
+      return this.getOwnerForm?.() || null;
+    } catch (error) {
+      return null;
+    }
+  }
+
   async performSafe() {
+    let success = false;
+
+    this.dispatchActionDebugEvent('action-start', {
+      phase: 'start',
+    });
+
     try {
       await this.perform();
-      // Return true to indicate success
+      success = true;
       return true;
     } catch (error) {
       await Fore.dispatch(this, 'error', {
@@ -198,11 +257,15 @@ export class AbstractAction extends ForeElementMixin {
         expr: error,
         level: 'Error',
       });
-      // Return false to indicate failure. Any loops must be canceled
+
       return false;
+    } finally {
+      this.dispatchActionDebugEvent('action-end', {
+        phase: 'end',
+        success,
+      });
     }
   }
-
   /**
    * executes the action.
    *
@@ -263,8 +326,10 @@ export class AbstractAction extends ForeElementMixin {
 
     // Outermost handling
     if (FxFore.outermostHandler === null) {
+      const ownerForm = this.getOwnerFormSafe();
+
       console.log(
-        `%coutermost Action on ${this.getOwnerForm().id}`,
+        `%coutermost Action on ${ownerForm?.id || ''}`,
         'background:darkblue; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
         this,
       );
@@ -319,7 +384,8 @@ export class AbstractAction extends ForeElementMixin {
     if (this.delay) {
       // Delay further execution until the delay is done
       await wait(this.delay);
-      if (!XPathUtil.contains(this.getOwnerForm(), this)) {
+      const ownerForm = this.getOwnerFormSafe();
+      if (!ownerForm || !XPathUtil.contains(ownerForm, this)) {
         // We are no longer in the document. Stop working
         this.actionPerformed();
         resolveThisEvent();
@@ -336,7 +402,8 @@ export class AbstractAction extends ForeElementMixin {
     // Start by waiting
     await wait(this.delay || 0);
 
-    if (!XPathUtil.contains(this.getOwnerForm(), this)) {
+    const ownerForm = this.getOwnerFormSafe();
+    if (!ownerForm || !XPathUtil.contains(ownerForm, this)) {
       // We are no longer in the document. Stop working
       return;
     }
@@ -347,7 +414,7 @@ export class AbstractAction extends ForeElementMixin {
     }
 
     // Perform the action once. But quit if it failed
-    if (!this.performSafe()) {
+    if (!(await this.performSafe())) {
       return;
     }
 
@@ -373,7 +440,8 @@ export class AbstractAction extends ForeElementMixin {
         return;
       }
 
-      if (!XPathUtil.contains(this.getOwnerForm(), this)) {
+      const ownerForm = this.getOwnerFormSafe();
+      if (!ownerForm || !XPathUtil.contains(ownerForm, this)) {
         // We are no longer in the document. Stop working
         return;
       }
@@ -400,8 +468,10 @@ export class AbstractAction extends ForeElementMixin {
     this.currentEvent = null;
     this.actionPerformed();
     if (FxFore.outermostHandler === this) {
+      const ownerForm = this.getOwnerFormSafe();
+
       console.log(
-        `%cfinalizing outermost Action on ${this.getOwnerForm()?.id}`,
+        `%cfinalizing outermost Action on ${ownerForm?.id || ''}`,
         'background:darkblue; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
         this,
       );
@@ -430,24 +500,22 @@ export class AbstractAction extends ForeElementMixin {
    * Template method to be implemented by each action that is called by execute() as part of
    * the processing.
    *
-   * This function should not called on any action directly - call execute() instead to ensure proper execution of 'if' and 'while'
+   * This function should not called on any action directly - call execute() instead to ensure proper execution of 'if' and 'while'.
+   *
+   * TODO Fore DevTools:
+   * Concrete actions overriding perform() should call `await super.perform()` at the start.
+   * Otherwise the debugger will not see the `execute-action` event for that action.
    */
   async perform() {
-    // await Fore.dispatch(document, 'execute-action', {action:this, event:this.event});
-
-    // todo: review - this evaluation seems redundant as we already evaluated in execute
     if (this.isBound() || this.nodeName === 'FX-ACTION') {
       this.evalInContext();
     }
 
-    this.dispatchEvent(
-      new CustomEvent('execute-action', {
-        composed: true,
-        bubbles: true,
-        cancelable: true,
-        detail: { action: this, event: this.event },
-      }),
-    );
+/*
+    await Fore.dispatch(this, 'execute-action', this.getActionDebugDetail({
+      phase: 'before',
+    }));
+*/
   }
 
   /**
@@ -475,7 +543,8 @@ export class AbstractAction extends ForeElementMixin {
       // console.log('running update cycle for outermostHandler', this);
       model.recalculate();
       model.revalidate();
-      this.getOwnerForm().refresh(false);
+      const ownerForm = this.getOwnerFormSafe();
+      ownerForm?.refresh(false);
       this.dispatchActionPerformed();
     } else if (this.needsUpdate) {
       // console.log('Update delayed!');
@@ -493,8 +562,9 @@ export class AbstractAction extends ForeElementMixin {
    * @event action-performed - whenever an action has been run
    */
   dispatchActionPerformed() {
-    // console.log('action-performed ', this);
-    Fore.dispatch(this, 'action-performed', {});
+    Fore.dispatch(this, 'action-performed', this.getActionDebugDetail({
+      phase: 'after',
+    }));
   }
 }
 

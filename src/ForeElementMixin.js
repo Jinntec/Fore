@@ -68,6 +68,24 @@ export default class ForeElementMixin extends HTMLElement {
     this.ownerForm = null;
   }
 
+  getDebugInfo() {
+    return {
+      localName: this.localName,
+      id: this.id || null,
+      ref: this.getAttribute?.('ref') || null,
+
+      modelItemPath: this.modelItem?.path || null,
+      instanceId: this.modelItem?.instanceId || null,
+
+      value: this.modelItem?.value,
+
+      relevant: this.modelItem?.relevant,
+      readonly: this.modelItem?.readonly,
+      required: this.modelItem?.required,
+      constraint: this.modelItem?.constraint,
+    };
+  }
+
   connectedCallback() {
     if (this.parentElement) {
       this.dependencies.setParentDependencies(this.parentElement?.closest('[ref]')?.dependencies);

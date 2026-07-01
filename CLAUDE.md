@@ -38,6 +38,7 @@ npm run lint                 # ESLint + Prettier check
 npm run format               # Auto-fix ESLint + Prettier
 npm run lint:types           # TypeScript type checking via JSDoc
 npm run docs                 # Generate Web Component Analyzer docs
+npx cypress run              # Run Cypress e2e tests - requires npm start first
 ```
 
 ## Testing

@@ -45,6 +45,34 @@ export class FxBind extends ForeElementMixin {
     this.inited = false;
   }
 
+  getDebugInfo() {
+    return {
+      ref: this.getAttribute('ref'),
+      id: this.id || null,
+      instanceId: this.instanceId,
+      bindType: this.bindType,
+
+      calculate: this.getAttribute('calculate'),
+      readonly: this.getAttribute('readonly'),
+      required: this.getAttribute('required'),
+      relevant: this.getAttribute('relevant'),
+      constraint: this.getAttribute('constraint'),
+      type: this.getAttribute('type'),
+
+      modelItemCount: this._debugModelItemCount?.() || null,
+    };
+  }
+
+  _debugModelItemCount() {
+    const model = this.getModel?.();
+
+    if (!model || !Array.isArray(model.modelItems)) {
+      return 0;
+    }
+
+    return model.modelItems.filter(item => item?.bind === this).length;
+  }
+
   connectedCallback() {
     // console.log('connectedCallback ', this);
     // this.id = this.hasAttribute('id')?this.getAttribute('id'):;

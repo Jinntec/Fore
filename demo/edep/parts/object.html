@@ -11,13 +11,6 @@
     </fx-output>
     <fieldset id="idnos">
         <legend>Identifier
-            <fx-trigger class="add">
-                <button>+</button>
-                <fx-insert
-                        context="."
-                        origin="instance('templates')/idno"
-                        ref="idno"></fx-insert>
-            </fx-trigger>
         </legend>
         <fx-repeat class="idno-repeat" ref="idno[@type != 'EDEp']">
             <template>
@@ -35,6 +28,14 @@
                 </fx-trigger>
             </template>
         </fx-repeat>
+        <fx-trigger class="add">
+            <button>+</button>
+            <fx-insert
+                    context="."
+                    origin="instance('templates')/idno"
+                    ref="idno"></fx-insert>
+        </fx-trigger>
+
     </fieldset>
 
 

@@ -8,17 +8,10 @@
                 <editor>Kajava</editor>
                 <editor role="digital">Wolfgang Meier</editor>
                 <respStmt>
-                    <resp when="1885">autopsy</resp>
-                    <persName>Helbig</persName>
-                </respStmt>
-                <respStmt>
                     <resp>photo</resp>
                     <persName>Kajava</persName>
                 </respStmt>
-                <editor role="digital">David Eibeck</editor>
-                <editor role="digital">Magdalena Turska</editor>
                 <editor role="digital">Joern Turner</editor>
-                <editor>Helbig</editor>
             </titleStmt>
             <publicationStmt>
                 <authority>Epigraphische Datenbank Heidelberg</authority>
@@ -84,7 +77,7 @@ intero (utero appiattito fortemente stilizzato?).”</note>
 datingMethod="http://en.wikipedia.org/wiki/Julian_calendar">Saeculo
 III a. Chr. n., potissimum medio, attribuit <ref type="biblio"
 target="#Europe">NONNIS</ref>.</origDate>
-                            <origPlace corresp="G003598"/>
+                            <origPlace corresp="G003584"/>
                         </origin>
                         <provenance type="found" notAfter="1885"><note type="context">Inter res
 votivas in via degli Asini (nunc via dell’Asilo) prope portam

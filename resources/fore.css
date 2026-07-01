@@ -66,12 +66,34 @@
         display: block;
     }
 
+    /*
+     * Native-constraint alert visibility: show fx-alert only after the user has
+     * interacted with the field (:user-invalid fires after first dirty interaction).
+     * Complements .visited[invalid] above, which covers Fore-driven (XPath) invalidity.
+     */
+    fx-control:has(input.widget:user-invalid) fx-alert {
+        display: block;
+    }
+
+    /*
+     * Fallback for browsers without :user-invalid support.
+     * :placeholder-shown is false when a value is present, approximating "user typed".
+     */
+    @supports not selector(input:user-invalid) {
+        fx-control[invalid]:has(input.widget:not(:placeholder-shown)) fx-alert {
+            display: block;
+        }
+    }
+
     /* case not displayed by default - if you want e.g. apply transitions you have to overwrite this rule with display='inline' or similar */
     fx-case {
         display: none;
     }
     fx-case.selected-case{
         display:block;
+    }
+    fx-case.deselected-case{
+        display:none;
     }
 
     fx-output[readonly] img {

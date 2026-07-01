@@ -741,6 +741,41 @@ function findInstanceReferences(xpathQuery) {
   return instanceReferences;
 }
 
+/**
+ * Finds the anonymous `<fx-instance data-src="...">` (created by
+ * `fx-control._ensureDataSrcInstance`) backing a `$src`/`$<data-id>` variable
+ * referenced in `xpathQuery`, if any. Used so the namespace resolver can pick up
+ * that instance's `xpath-default-namespace` instead of inheriting it from the
+ * form's default instance.
+ */
+function findDataSrcInstance(xpathQuery, formElement) {
+  if (!formElement || typeof formElement.querySelectorAll !== 'function') return null;
+
+  const varNames = [...xpathQuery.matchAll(/\$([A-Za-z_][\w.-]*)/g)].map(m => m[1]);
+  if (varNames.length === 0) return null;
+
+  const widgets = Array.from(formElement.querySelectorAll('[data-src]')).filter(
+    widget => widget.closest('fx-control') === formElement,
+  );
+  if (widgets.length === 0) return null;
+
+  const model = typeof formElement.getModel === 'function' ? formElement.getModel() : null;
+  if (!model) return null;
+
+  for (const varName of varNames) {
+    const widget = widgets.find(w => (w.getAttribute('data-id') || 'src') === varName);
+    if (!widget) continue;
+
+    const url = widget.getAttribute('data-src');
+    const instance = Array.from(model.children).find(
+      el => el.localName === 'fx-instance' && el.getAttribute('data-src') === url,
+    );
+    if (instance) return instance;
+  }
+
+  return null;
+}
+
 function getCachedNamespaceResolver(xpath, node) {
   if (!createdNamespaceResolversByXPathQueryAndNode.has(xpath)) return null;
   return createdNamespaceResolversByXPathQueryAndNode.get(xpath).get(node) || null;
@@ -776,6 +811,14 @@ export function createNamespaceResolver(xpathQuery, formElement) {
   };
 
   if (instanceReferences.length === 0) {
+    const dataSrcInstance = findDataSrcInstance(xpathQuery, formElement);
+    if (dataSrcInstance && dataSrcInstance.hasAttribute('xpath-default-namespace')) {
+      const xpathDefaultNamespace = dataSrcInstance.getAttribute('xpath-default-namespace');
+      const resolveNamespacePrefix = prefix => (!prefix ? xpathDefaultNamespace : undefined);
+      setCachedNamespaceResolver(xpathQuery, formElement, resolveNamespacePrefix);
+      return resolveNamespacePrefix;
+    }
+
     const ancestorComponent = closestRefExcludingSelf(formElement);
 
     if (ancestorComponent && ancestorComponent !== formElement) {

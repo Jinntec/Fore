@@ -343,7 +343,8 @@ export default class AbstractControl extends UIElement {
     const hasValue = this.modelItem.value !== '';
     const isRequired = this.modelItem.required;
     const isValidAccordingToRequired = isRequired ? hasValue : true;
-    const isValidNow = this.modelItem.constraint && isValidAccordingToRequired;
+    const nativeValid = this.modelItem.nativeValid !== false;
+    const isValidNow = this.modelItem.constraint && isValidAccordingToRequired && nativeValid;
 
     if (this.isValid() !== isValidNow) {
       if (isValidNow) {

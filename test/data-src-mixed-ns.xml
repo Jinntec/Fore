@@ -1,0 +1,6 @@
+<root xmlns="http://example.org/root">
+    <categories xmlns="http://example.org/categories">
+        <category corresp="x">XCategory</category>
+        <category corresp="y">YCategory</category>
+    </categories>
+</root>
