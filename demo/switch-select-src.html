@@ -1,0 +1,41 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>fx-switch select events with src-loaded cases</title>
+    <link href="../../resources/fore.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="wrapper">
+    <fx-fore>
+        <fx-model>
+            <fx-instance>
+                <data>
+                    <currentCase></currentCase>
+                </data>
+            </fx-instance>
+        </fx-model>
+        <fx-trigger id="t-synopsis">
+            <button>Synopsis</button>
+            <fx-toggle case="c-synopsis"></fx-toggle>
+        </fx-trigger>
+        <fx-trigger id="t-activities">
+            <button>Activities</button>
+            <fx-toggle case="c-activities"></fx-toggle>
+        </fx-trigger>
+        <fx-switch>
+            <fx-case id="c-synopsis" src="switch-select-src-synopsis.html"></fx-case>
+            <fx-case id="c-activities" src="switch-select-src-activities.html"></fx-case>
+        </fx-switch>
+        <fx-output id="output" ref="currentcase"></fx-output>
+
+        <pre>
+            <code>
+                {log('default')}
+            </code>
+        </pre>
+    </fx-fore>
+</div>
+<script type="module" src="./demo.js"></script>
+</body>
+</html>
