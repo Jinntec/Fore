@@ -7,6 +7,23 @@ const LOCAL_FUNCTIONS_NS = 'http://www.w3.org/2005/xquery-local-functions';
 // Keyed by resolved URL + prefix + mode.
 const _functionLibLoadCache = new Map();
 
+// registerFunction() enforces "first wins" for conflicting names, but library sources
+// (module imports, fetches) resolve asynchronously in whatever order the network/parser
+// finishes them in. To make "first" mean "first in document order" (deterministic, and
+// independent of load timing) rather than "first promise to resolve" (racy), every real
+// loader reserves its turn synchronously in connectedCallback -- before any await -- and
+// only applies its registrations once all earlier-reserved loaders have applied theirs.
+let _registrationOrderChain = Promise.resolve();
+
+function _reserveRegistrationTurn() {
+  const waitForTurn = _registrationOrderChain;
+  let releaseTurn;
+  _registrationOrderChain = new Promise(resolve => {
+    releaseTurn = resolve;
+  });
+  return { waitForTurn, releaseTurn };
+}
+
 function looksLikeModuleSrc(src) {
   return /\.m?js($|\?)/i.test(src);
 }
@@ -87,11 +104,19 @@ export class FxFunctionlib extends ForeElementMixin {
       return;
     }
 
+    // Reserve our place in the registration order now, synchronously, so it reflects
+    // document order rather than whichever loader's fetch/import happens to finish first.
+    const { waitForTurn, releaseTurn } = _reserveRegistrationTurn();
+
     const loadPromise = (async () => {
-      if (isModule) {
-        await this._loadModuleLibrary(resolvedUrl, src, prefix);
-      } else {
-        await this._loadHtmlLibrary(resolvedUrl, src, prefix);
+      try {
+        if (isModule) {
+          await this._loadModuleLibrary(resolvedUrl, src, prefix, waitForTurn);
+        } else {
+          await this._loadHtmlLibrary(resolvedUrl, src, prefix, waitForTurn);
+        }
+      } finally {
+        releaseTurn();
       }
     })();
 
@@ -130,10 +155,12 @@ export class FxFunctionlib extends ForeElementMixin {
     registerFunction({ ...functionObject, signature: sig }, this);
   }
 
-  async _loadModuleLibrary(resolvedUrl, src, prefix) {
+  async _loadModuleLibrary(resolvedUrl, src, prefix, waitForTurn) {
     const mod = await import(/* @vite-ignore */ resolvedUrl);
 
     const items = normalizeModuleExportToList(mod, src);
+
+    await waitForTurn;
 
     for (const item of items) {
       if (typeof item === 'function') {
@@ -154,7 +181,7 @@ export class FxFunctionlib extends ForeElementMixin {
     }
   }
 
-  async _loadHtmlLibrary(resolvedUrl, src, prefix) {
+  async _loadHtmlLibrary(resolvedUrl, src, prefix, waitForTurn) {
     const result = await fetch(resolvedUrl);
     if (!result.ok) {
       console.error(`Loading function library at ${src} failed.`);
@@ -165,6 +192,9 @@ export class FxFunctionlib extends ForeElementMixin {
     const document = new DOMParser().parseFromString(body, 'text/html');
 
     const functions = Array.from(document.querySelectorAll('fx-function'));
+
+    await waitForTurn;
+
     for (const func of functions) {
       const functionObject = {
         type: func.getAttribute('type'),
