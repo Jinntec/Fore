@@ -102,6 +102,7 @@ export class FxFore extends HTMLElement {
       },
       /**
        * merge-partial
+       * @deprecated
        */
       mergePartial: {
         type: Boolean,
@@ -346,15 +347,92 @@ export class FxFore extends HTMLElement {
     this.initialRun = true;
     this._scanForNewTemplateExpressionsNextRefresh = false;
     this.repeatsFromAttributesCreated = false;
+/*
     this.validateOn = this.hasAttribute('validate-on')
       ? this.getAttribute('validate-on')
       : 'update';
+*/
     // this.mergePartial = this.hasAttribute('merge-partial')? true:false;
     this.mergePartial = false;
     this.createNodes = this.hasAttribute('create-nodes') ? true : false;
     this._localNamesWithChanges = new Set();
     this.setAttribute('role', 'form'); // set aria role
     this._pendingRefresh = false;
+
+    this.debugInfo = {
+      id: this.id || null,
+      debugId: crypto.randomUUID ? crypto.randomUUID() : `fore-${Date.now()}`,
+      createdAt: performance.now(),
+      readyAt: null,
+      modelConstructStartedAt: null,
+      modelConstructDoneAt: null,
+      refreshCount: 0,
+      lastRefreshAt: null,
+      lastRefreshForce: null,
+      lastRefresh: null,
+    };
+  }
+
+  getDebugInfo() {
+    return {
+      ...this.debugInfo,
+      id: this.id || null,
+      ready: this.ready,
+      lazyRefresh: this.lazyRefresh,
+      createNodes: this.createNodes,
+
+      initOn: this.getAttribute('init-on') || null,
+      initOnTarget: this.getAttribute('init-on-target') || null,
+      ignoreExpressions: this.getAttribute('ignore-expressions') || null,
+
+      model: this.model?.getDebugInfo?.() || null,
+    };
+  }
+
+  getDebugSnapshot(options = {}) {
+    const model = this.model;
+
+    const debugRefElements = Array.from(this.querySelectorAll('[ref]'))
+        .filter(element => typeof element.getDebugInfo === 'function');
+
+    const bindingElements = debugRefElements
+        .filter(element => element.localName === 'fx-bind');
+
+    const boundElementNames = new Set([
+      'fx-control',
+      'fx-output',
+      'fx-upload',
+      'fx-group',
+      'fx-repeat',
+      'fx-switch',
+    ]);
+
+    const boundUiElements = debugRefElements
+        .filter(element => boundElementNames.has(element.localName));
+
+    const bindings = bindingElements.map(element => element.getDebugInfo());
+
+    const boundElements = boundUiElements.map(element => element.getDebugInfo());
+
+    const submissions = Array.from(this.querySelectorAll('fx-submission'))
+        .filter(element => typeof element.getDebugInfo === 'function')
+        .map(element => element.getDebugInfo());
+
+    return {
+      fore: this.getDebugInfo?.() || null,
+
+      model:
+          model?.getDebugInfo?.({
+            includeGraphs: options.includeGraphs === true,
+          }) || null,
+
+      instances: model?.instances?.map(instance => instance.getDebugInfo?.()) || [],
+      modelItems: model?.modelItems?.map(item => item.getDebugInfo?.()) || [],
+
+      bindings,
+      boundElements,
+      submissions
+    };
   }
 
   /**
@@ -638,7 +716,10 @@ export class FxFore extends HTMLElement {
       const libs = Array.from(this.querySelectorAll('fx-functionlib'));
       await Promise.all(libs.map(l => l.readyPromise || Promise.resolve()));
 
+      this.debugInfo.modelConstructStartedAt = performance.now();
       await modelElement.modelConstruct();
+      this.debugInfo.modelConstructDoneAt = performance.now();
+
       console.log('varbindings ', this._instanceVarBindings);
       this._handleModelConstructDone();
     }
@@ -713,9 +794,8 @@ export class FxFore extends HTMLElement {
               // e.stopImmediatePropagation();
             },true);
         */
-    this.ignoreExpressions = this.hasAttribute('ignore-expressions')
-      ? this.getAttribute('ignore-expressions')
-      : null;
+    const userIgnore = this.getAttribute('ignore-expressions');
+    this.ignoreExpressions = userIgnore ? `[pattern], ${userIgnore}` : '[pattern]';
 
     this.lazyRefresh = this.hasAttribute('refresh-on-view');
     if (this.lazyRefresh) {
@@ -956,6 +1036,11 @@ export class FxFore extends HTMLElement {
   async refresh(force) {
     // If we're already refreshing, do NOT drop the request.
     // Queue a hard refresh and return a promise that resolves when the next refresh finishes.
+
+    this.debugInfo.refreshCount += 1;
+    this.debugInfo.lastRefreshAt = performance.now();
+    this.debugInfo.lastRefreshForce = !!force;
+
     if (this.isRefreshing) {
       // keep "strongest" request: any true means hard refresh
       this._pendingRefresh = this._pendingRefresh || force === true;
@@ -968,8 +1053,12 @@ export class FxFore extends HTMLElement {
     this.isRefreshing = true;
     this.isRefreshPhase = true;
 
+    const refreshStart = performance.now();
+    const isFullRefresh = force === true || this.initialRun;
+    const batchedCount = this.batchedNotifications.size;
+
     try {
-      if (force === true || this.initialRun) {
+      if (isFullRefresh) {
         performance.mark('force-refresh-start');
         console.log('🔄 🔴🔴🔴 ### full refresh() on ', this);
         await Fore.refreshChildren(this, force);
@@ -995,6 +1084,15 @@ export class FxFore extends HTMLElement {
         'background:darkorange; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
         this.getModel().modelItems,
       );
+
+      // Record timing before dispatching 'refresh-done' since listeners (eg. fx-debugger)
+      // may synchronously read this.debugInfo.lastRefresh in response to the event.
+      this.debugInfo.lastRefresh = {
+        timestamp: performance.now(),
+        kind: isFullRefresh ? 'full' : 'partial',
+        durationMs: performance.now() - refreshStart,
+        batchedCount,
+      };
 
       Fore.dispatch(this, 'refresh-done', {});
 
@@ -1029,59 +1127,63 @@ export class FxFore extends HTMLElement {
   }
 
   /**
-   * Process all batched notifications at the end of the refresh phase
+   * Process all batched notifications at the end of the refresh phase.
+   * Async so that all control refresh() calls (which are themselves async) are awaited
+   * before refresh-done fires — prevents _isRefreshing from being true when the
+   * next user input event arrives.
    */
-  _processBatchedNotifications() {
+  async _processBatchedNotifications() {
     if (this.batchedNotifications.size > 0) {
       console.log(`🔄 🎯  ### processing ${this.batchedNotifications.size} batched notifications`);
       console.log('🔄 🎯  ### processing ', Array.from(this.batchedNotifications));
 
-      // console.log(`🔍 Processing ${this.batchedNotifications.size} batched notifications`);
+      const refreshPromises = [];
 
-      // Process all batched notifications
+      // Process all batched notifications.
+      // Note: Set.forEach visits items added during iteration (they are appended to the end),
+      // so controls added via observer.update() (which calls addToBatchedNotifications) are
+      // also visited and their refresh() promises collected.
       this.batchedNotifications.forEach(entry => {
-        // console.log('batched update', entry);
-        // handle repeatitems created via data-ref
         if (entry.classList && entry.classList.contains('fx-repeatitem')) {
-          Fore.refreshChildren(entry, true);
+          refreshPromises.push(Fore.refreshChildren(entry, true));
         }
         if (entry && typeof entry.refresh === 'function') {
-          // Entry is a Ui Element
-          // Force refresh for this whole subtree
           const uiElement = /** @type {import('./ui/UIElement.js').UIElement} */ (entry);
           if (!uiElement.ownerDocument.contains(uiElement)) {
-            // Something already removed this ui element. Skip.
             return;
           }
-          uiElement.refresh(true);
+          refreshPromises.push(uiElement.refresh(true));
         }
         const nonrelevant = Array.from(this.querySelectorAll('[nonrelevant]'));
-        // loop nonrelevant elements
         if (nonrelevant) {
-          nonrelevant.forEach(entry => {
-            if (entry.refresh) {
-              entry.refresh();
+          nonrelevant.forEach(el => {
+            if (el.refresh) {
+              refreshPromises.push(el.refresh());
             }
           });
         }
         if (entry.observers) {
-          // Item is a model item
           entry.observers.forEach(observer => {
-            // console.log('🔍 processing observer', observer);
             if (typeof observer.update === 'function') {
-              // console.log('updating observer', observer);
               observer.update(entry);
             }
           });
         }
       });
 
-      // Update template expressions after processing batched notifications
-      // This ensures template expressions are re-evaluated when data changes
       this._processTemplateExpressions();
-
-      // Clear the batch
       this.batchedNotifications.clear();
+
+      if (refreshPromises.length > 0) {
+        await Promise.all(refreshPromises);
+      }
+
+      // Items added to batchedNotifications during the async Promise.all phase
+      // (e.g. by a second event listener that fired after the batch was cleared)
+      // are picked up here so they aren't lost.
+      if (this.batchedNotifications.size > 0) {
+        await this._processBatchedNotifications();
+      }
     }
   }
 
@@ -1241,10 +1343,8 @@ export class FxFore extends HTMLElement {
   } // eslint-disable-next-line class-methods-use-this
   _getTemplateExpression(node) {
     if (this.ignoredNodes) {
-      if (node.nodeType === Node.ATTRIBUTE_NODE) {
-        node = node.ownerElement;
-      }
-      const found = this.ignoredNodes.find(n => n.contains(node));
+      const checkNode = node.nodeType === Node.ATTRIBUTE_NODE ? node.ownerElement : node;
+      const found = this.ignoredNodes.find(n => n.contains(checkNode));
       if (found) return null;
     }
     if (node.nodeType === Node.ATTRIBUTE_NODE) {
@@ -1263,6 +1363,7 @@ export class FxFore extends HTMLElement {
    * @private
    */
   _handleModelConstructDone() {
+    this.debugInfo.modelConstructDoneAt = performance.now();
     if (this.showConfirmation) {
       window.addEventListener('beforeunload', event => {
         if (this.dirtyState === dirtyStates.DIRTY) {
@@ -1429,6 +1530,7 @@ export class FxFore extends HTMLElement {
     // console.log(`### <<<<< ${this.id} ready >>>>>`);
 
     Fore.dispatch(this, 'ready', {});
+    this.debugInfo.readyAt = performance.now();
     // console.log('dataChanged', FxModel.dataChanged);
     this.markAsClean();
 

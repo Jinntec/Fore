@@ -339,4 +339,26 @@ lines
     expect(firstYear.textContent).to.equal('(1982)');
     expect(secondYear.textContent).to.equal('(2016)');
   });
+
+  it('ignores pattern attributes with curly braces by default (no ignore-expressions needed)', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <zip></zip>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <fx-control ref="zip">
+          <input class="widget" type="text" pattern="[0-9]{5}" placeholder="12345">
+        </fx-control>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const input = el.querySelector('input[pattern]');
+    expect(input.getAttribute('pattern')).to.equal('[0-9]{5}');
+  });
 });

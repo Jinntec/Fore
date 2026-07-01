@@ -1,0 +1,4 @@
+<categories xmlns="http://example.org/categories">
+    <category corresp="a">Alpha</category>
+    <category corresp="b">Beta</category>
+</categories>

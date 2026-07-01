@@ -56,8 +56,8 @@ export class FxItems extends FxControl {
     });
 
     this.addEventListener('click', e => {
-      e.preventDefault; // keep as-is (do not change behavior here)
-      e.stopPropagation();
+      // e.preventDefault(); // keep as-is (do not change behavior here)
+      // e.stopPropagation();
       const items = this.querySelectorAll('[value]');
 
       let val = '';
@@ -86,7 +86,7 @@ export class FxItems extends FxControl {
   }
 
   async refresh(force = false) {
-    super.refresh(force);
+    await super.refresh(force);
     // console.log('fx-items.refresh() called');
   }
 

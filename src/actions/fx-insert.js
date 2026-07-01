@@ -413,7 +413,7 @@ export class FxInsert extends AbstractAction {
       xpath,
     });
 
-    document.dispatchEvent(
+    this.dispatchEvent(
         new CustomEvent('index-changed', {
           composed: true,
           bubbles: true,
@@ -674,7 +674,7 @@ export class FxInsert extends AbstractAction {
       xpath,
     });
 
-    document.dispatchEvent(
+    this.dispatchEvent(
       new CustomEvent('index-changed', {
         composed: true,
         bubbles: true,

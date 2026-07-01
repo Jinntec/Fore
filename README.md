@@ -198,17 +198,14 @@ npx cypress run
 
 ## Building a package
 
-```npm run build``` creates two bundles in 'dist' directory.
+```npm run build``` creates two bundles in the `dist/` directory using Vite + esbuild:
 
-* fore.js - contains just the Fore classes without dependencies and is suitable for creating your own app-specific bundle
-* fore-all.js contains everything in one bundle (incl. dependencies) and is the easiest way to use it in your own project with a single module import. 
-The package is still huge but is expected to shrink massively.
+* `fore.js` — production bundle: minified, console output stripped, no devtools
+* `fore-dev.js` — development bundle: minified but retains console output and includes the Fore devtools panel
 
-Include the repective bundle in your webpage with a module import:
-```
-<script type="module">
-    import 'dist/fore-all.js';
-</script>
+Include the bundle in your webpage with a module import:
+```html
+<script type="module" src="dist/fore.js"></script>
 ```
 
 ## Giant shoulders

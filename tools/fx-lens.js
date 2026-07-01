@@ -1,3 +1,4 @@
+import { getPath } from '../src/xpath-path.js';
 /**
  * fx-lens — dependency-less instance viewer (light DOM, tree view)
  *
@@ -88,155 +89,193 @@ export class FxLens extends HTMLElement {
       fore.addEventListener('nonrelevant', () => this.update(false));
       fore.addEventListener('valid', () => this.update(false));
       fore.addEventListener('invalid', () => this.update(false));
+      fore.addEventListener('refresh-done', () => this.update(false));
     });
 
     // If fores are added later, re-scan on capturing ready
     document.addEventListener(
-      'ready',
-      ev => {
-        if (ev?.target?.tagName === 'FX-FORE') this._hookFores();
-      },
-      true,
+        'ready',
+        ev => {
+          if (ev?.target?.tagName === 'FX-FORE') this._hookFores();
+        },
+        true,
     );
   }
 
   render() {
     const style = `
+      /* Host & layout */
       fx-lens{
-        position:fixed;
-        display:block;
-        top:0;
-        right:0;
-        bottom:0;
-        height:100vh;
-        width:var(--inspector-handle-width, 28px);
-        overflow:hidden;
-        z-index:900;
-        max-width:calc(100vw - var(--inspector-handle-width, 28px));
-        min-width:var(--inspector-handle-width, 28px);
-        box-shadow:-2px -2px 8px rgba(0,0,0,0.3);
-        font:12px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-        color:#111;
-        background:aliceblue;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 900;
+        display: block;
+        height: 100vh;
+        width: var(--inspector-handle-width, 28px);
+        min-width: var(--inspector-handle-width, 28px);
+        max-width: calc(100vw - var(--inspector-handle-width, 28px));
+        overflow: hidden;
+        background: aliceblue;
+        box-shadow: -2px -2px 8px rgba(0, 0, 0, 0.3);
+        color: #111;
+        font: 12px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
       }
-      fx-lens[open]{ width:40vw; }
+      fx-lens[open]{ width: 40vw; }
       fx-lens .main{
-        padding-left:var(--inspector-handle-width, 28px);
-        height:100vh;
-        overflow:hidden;
-        background:ghostwhite;
+        height: 100vh;
+        padding-left: var(--inspector-handle-width, 28px);
+        overflow: hidden;
+        background: ghostwhite;
       }
       fx-lens .main > div{
-        height:100vh;
-        overflow:auto;
+        height: 100vh;
+        overflow: auto;
       }
 
+      /* Handle */
       fx-lens .handle{
-        display:flex;
-        justify-content:center;
-        height:100%;
-        width:var(--inspector-handle-width, 28px);
-        background:var(--inspector-handle-bg, #3b3b3b);
-        position:absolute;
-        left:0;
-        color:white;
-        cursor:pointer;
-        z-index:800;
+        position: absolute;
+        left: 0;
+        z-index: 800;
+        display: flex;
+        justify-content: center;
+        height: 100%;
+        width: var(--inspector-handle-width, 28px);
+        background: var(--inspector-handle-bg, #3b3b3b);
+        color: white;
+        cursor: pointer;
       }
       fx-lens .handle::before{
-        content:'Data Lens';
-        white-space:nowrap;
-        transform:rotate(-90deg);
-        display:inline-block;
-        position:absolute;
-        left:-85px;
-        width:200px;
-        top:-1rem;
-        z-index:801;
+        position: absolute;
+        z-index: 801;
+        top: -1rem;
+        left: -85px;
+        display: inline-block;
+        width: 200px;
+        content: 'Data Lens';
+        white-space: nowrap;
+        transform: rotate(-90deg);
       }
       fx-lens .handle a,
       fx-lens .handle a:visited,
       fx-lens .handle a:link{
-        text-decoration:none;
-        color:white;
-        width:1.5rem;
-        height:1.5rem;
-        display:inline-flex;
-        align-items:center;
-        justify-content:center;
-        position:absolute;
-        z-index:850;
+        position: absolute;
+        z-index: 850;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.5rem;
+        height: 1.5rem;
+        color: white;
+        text-decoration: none;
       }
 
-      fx-lens details.instance summary{
-        font-size:1.05rem;
-        background:ghostwhite;
-        padding:0.5rem;
-        border-bottom:1px solid rgba(0,0,0,0.08);
-        user-select:none;
-          padding:0.25rem 0.5rem;
+      /* Reset host-page <details>/<summary> styles (margin/padding/border/font)
+         so they don't bleed into the lens panel */
+      fx-lens details,
+      fx-lens details[open]{
+        position: static;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        border-radius: 0;
       }
-      fx-lens details.instance > summary {
-          background: #2196f3;
-          color: white;
+      fx-lens summary,
+      fx-lens details[open] summary{
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font: inherit;
       }
-      fx-lens details summary::marker{
-        color:#2196f3;
+
+      /* Instance panels */
+      fx-lens details.instance > summary{
+        padding: 0.25rem 0.5rem;
+        background: #2196f3;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        color: white;
+        font-size: 1.05rem;
+        user-select: none;
       }
+      fx-lens details summary::marker{ color: #2196f3; }
       fx-lens .instance-view{
-        margin:0;
-        padding:0.5rem 0.5rem 1rem 1.5rem;
-        overflow:auto;
-        background:white;
-        border-bottom:1px solid rgba(0,0,0,0.06);
+        margin: 0;
+        padding: 0.5rem 0.5rem 1rem 1.5rem;
+        overflow: auto;
+        background: white;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
       }
 
       /* Tree */
       fx-lens .tree{
-        font:12px/1.4 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+        font: 12px/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
       }
       fx-lens .tree ul{
-        list-style:none;
-        margin:0;
-        padding-left:1rem;
-        border-left:1px solid rgba(0,0,0,0.10);
+        margin: 0;
+        padding-left: 1rem;
+        list-style: none;
+        border-left: 1px solid rgba(0, 0, 0, 0.1);
       }
-      fx-lens .tree li{
-        margin:0;
-      }
+      fx-lens .tree li{ margin: 0; }
       fx-lens .tree details > summary{
-        cursor:pointer;
-        user-select:none;
-        background:#e3f2fd;
+        padding: 0.1rem 0.25rem;
+        background: #e3f2fd;
+        cursor: pointer;
+        user-select: none;
       }
-      fx-lens details > summary::marker{
-        color:#1976d2;
+      fx-lens details > summary::marker{ color: #1976d2; }
+      fx-lens .tree .k{ color: #0b5394; }
+      fx-lens .tree .t{ color: #38761d; }
+      fx-lens .tree .v{ color: #444; font-size: 0.9rem; }
+      fx-lens .tree .muted{ color: #777; }
+      fx-lens .tree .path-copy{
+        cursor: pointer;
+        text-decoration: underline;
+        text-decoration-style: dotted;
+        text-underline-offset: 2px;
       }
-      fx-lens .tree .k{ color:#0b5394; }
-      fx-lens .tree .t{ color:#38761d; }
-      fx-lens .tree .v{ 
-        color:#444;
-        font-size:0.9rem; 
+      
+      fx-lens .tree .path-copy::after{
+        display: none;
+        content: '↗';
+        margin-left: 0.25rem;
+        color: #777;
+        font-weight: 400;
       }
-      fx-lens .tree .muted{ color:#777; }
-
+      
+      fx-lens .tree .path-copy:hover::after,
+      fx-lens .tree .path-copy:focus::after{
+        display: inline;
+      }
+      
+      fx-lens .tree .path-copy:focus{
+        outline: 1px dotted currentColor;
+        outline-offset: 2px;
+      }
+      
+      fx-lens .tree .path-copy[data-copied='true']::after{
+        display: inline;
+        content: '✓';
+      }
       /* Placeholder for closed instance panels */
       fx-lens .placeholder{
-        color:#777;
-        font:12px/1.4 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
-        padding:0.5rem 0;
+        padding: 0.5rem 0;
+        color: #777;
+        font: 12px/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
       }
 
       /* Resizer */
       fx-lens .resizer{
-        width:0.25rem;
-        height:100vh;
-        background:rgba(215,220,235,0.3);
-        cursor:ew-resize;
-        position:absolute;
-        top:0;
-        left:0;
-        z-index:999;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 999;
+        width: 0.25rem;
+        height: 100vh;
+        background: rgba(215, 220, 235, 0.3);
+        cursor: ew-resize;
       }
     `;
 
@@ -381,20 +420,196 @@ export class FxLens extends HTMLElement {
   _renderInstances(instances) {
     const fores = Array.from(document.querySelectorAll('fx-fore'));
     return instances
-      .map((instance, index) => {
-        const fore = instance.closest('fx-fore');
-        const foreId = fore?.id || `fx-fore-${fores.indexOf(fore)}`;
-        const instId = instance.getAttribute('id') || 'default';
-        const key = `${foreId}#${instId}`;
+        .map((instance, index) => {
+          const { key, label } = this._instanceMeta(instance, fores);
 
-        return `
+          return `
           <details id="d${index}" class="instance" data-key="${key}">
-            <summary>${key}</summary>
+            <summary>${label}</summary>
             <div class="instance-view tree" data-key="${key}"></div>
           </details>
         `;
-      })
-      .join('');
+        })
+        .join('');
+  }
+
+  _xmlName(node) {
+    if (!node) return '';
+
+    // For real XML documents, nodeName preserves the original lexical spelling,
+    // including prefixes, e.g. tei:surfaceGrp.
+    const doc = node.ownerDocument;
+    const isHtmlDoc = doc?.contentType === 'text/html';
+
+    if (!isHtmlDoc) {
+      return node.nodeName;
+    }
+
+    // For HTML documents, tagName/nodeName are usually uppercase.
+    return node.localName || node.nodeName.toLowerCase();
+  }
+
+  _xmlNameSpan(el) {
+    const path = this._pathForXmlNode(el);
+    const span = this._span(this._xmlName(el), 'k path-copy');
+
+    if (path) {
+      span.setAttribute('title', `Click to copy path: ${path}`);
+      span.setAttribute('data-path', path);
+    } else {
+      span.setAttribute('title', 'Fore path unavailable');
+    }
+
+    span.setAttribute('role', 'button');
+    span.setAttribute('tabindex', '0');
+
+    span.addEventListener('click', event => {
+      event.preventDefault();
+      event.stopPropagation();
+      this._copyPathToClipboard(path, span);
+    });
+
+    span.addEventListener('keydown', event => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+
+      event.preventDefault();
+      event.stopPropagation();
+      this._copyPathToClipboard(path, span);
+    });
+
+    return span;
+  }
+
+  _pathForXmlNode(node) {
+    if (!node || node.nodeType !== 1) return '';
+
+    try {
+      const instance = this._instanceForXmlNode(node);
+      const instanceId = instance?.getAttribute('id') || 'default';
+      return getPath(node, instanceId);
+    } catch (err) {
+      console.warn('[fx-lens] could not compute Fore path for node:', err);
+      return '';
+    }
+  }
+
+  _instanceForXmlNode(node) {
+    if (!node) return null;
+
+    const instances = Array.from(document.querySelectorAll('fx-instance'));
+
+    return (
+        instances.find(instance => {
+          const raw = instance.instanceData;
+
+          if (!raw) return false;
+
+          // XML instance stored as Document
+          if (raw.nodeType === 9) {
+            return raw === node.ownerDocument;
+          }
+
+          // XML/HTML instance stored as Element or DocumentFragment
+          if (raw.nodeType === 1 || raw.nodeType === 11) {
+            return raw === node || (typeof raw.contains === 'function' && raw.contains(node));
+          }
+
+          // HTML instances may be stored as an HTMLCollection / array-like list
+          if (typeof raw.length === 'number') {
+            return Array.from(raw).some(
+                item =>
+                    item === node ||
+                    (item && typeof item.contains === 'function' && item.contains(node)),
+            );
+          }
+
+          return false;
+        }) || null
+    );
+  }
+
+  async _copyPathToClipboard(path, triggerEl = null) {
+    if (!path) return;
+
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(path);
+      } else {
+        this._fallbackCopyText(path);
+      }
+
+      this._showCopiedHint(triggerEl, path);
+    } catch (err) {
+      try {
+        this._fallbackCopyText(path);
+        this._showCopiedHint(triggerEl, path);
+      } catch (fallbackErr) {
+        console.warn('[fx-lens] could not copy Fore path:', err, fallbackErr);
+      }
+    }
+  }
+
+  _fallbackCopyText(text) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.setAttribute('readonly', 'readonly');
+    textarea.style.position = 'fixed';
+    textarea.style.left = '-9999px';
+    textarea.style.top = '0';
+
+    document.body.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
+
+    try {
+      document.execCommand('copy');
+    } finally {
+      textarea.remove();
+    }
+  }
+
+  _showCopiedHint(triggerEl, path) {
+    if (!triggerEl) return;
+
+    triggerEl.setAttribute('data-copied', 'true');
+    triggerEl.setAttribute('title', `Copied Fore path: ${path}`);
+
+    clearTimeout(triggerEl._fxLensCopiedTimer);
+    triggerEl._fxLensCopiedTimer = setTimeout(() => {
+      triggerEl.removeAttribute('data-copied');
+      triggerEl.setAttribute('title', `Click to copy Fore path: ${path}`);
+    }, 1200);
+  }
+
+  /**
+   * Derives a stable, unique key + display label for an `<fx-instance>`.
+   *
+   * Anonymous `data-src` lookup instances (created by fx-control for
+   * `data-src` lookup lists) have no `id`, so they would otherwise all
+   * collapse onto the same `${foreId}#default` key as the form's real
+   * default instance. Key those by their `data-src` URL instead.
+   *
+   * @param {Element} instance
+   * @param {Element[]} fores
+   * @returns {{key: string, label: string}}
+   */
+  _instanceMeta(instance, fores) {
+    const fore = instance.closest('fx-fore');
+    const foreId = fore?.id || `fx-fore-${fores.indexOf(fore)}`;
+    const id = instance.getAttribute('id');
+    const dataSrc = instance.getAttribute('data-src');
+
+    if (id) {
+      const key = `${foreId}#${id}`;
+      return { key, label: key };
+    }
+
+    if (dataSrc) {
+      return { key: `${foreId}#lookup:${dataSrc}`, label: `${foreId}#${dataSrc} (lookup)` };
+    }
+
+    const key = `${foreId}#default`;
+    return { key, label: key };
   }
 
   update(forceRebuild = false) {
@@ -443,19 +658,16 @@ export class FxLens extends HTMLElement {
       }
 
       const byKey = new Map(
-        Array.from(this.querySelectorAll('details.instance')).map(d => [
-          d.getAttribute('data-key') || '',
-          d,
-        ]),
+          Array.from(this.querySelectorAll('details.instance')).map(d => [
+            d.getAttribute('data-key') || '',
+            d,
+          ]),
       );
 
       // Only render trees for OPEN instance panels
       const fores = Array.from(document.querySelectorAll('fx-fore'));
       for (const inst of instances) {
-        const fore = inst.closest('fx-fore');
-        const foreId = fore?.id || `fx-fore-${fores.indexOf(fore)}`;
-        const instId = inst.getAttribute('id') || 'default';
-        const key = `${foreId}#${instId}`;
+        const { key } = this._instanceMeta(inst, fores);
 
         const detailsEl = byKey.get(key);
         if (!detailsEl) continue;
@@ -516,8 +728,14 @@ export class FxLens extends HTMLElement {
   }
 
   _findInstanceByKey(key) {
-    // key = `${foreId}#${instanceId}`
-    const [foreId, instId] = String(key).split('#');
+    // key = `${foreId}#${instanceId}`, where instanceId is either a real
+    // `id`, `lookup:<data-src-url>` for an anonymous data-src instance, or
+    // `default`. Split on the first '#' only, since data-src URLs may
+    // themselves contain '#'.
+    const keyStr = String(key);
+    const sep = keyStr.indexOf('#');
+    const foreId = sep === -1 ? keyStr : keyStr.slice(0, sep);
+    const instId = sep === -1 ? '' : keyStr.slice(sep + 1);
     let fore = null;
 
     if (foreId) {
@@ -525,24 +743,34 @@ export class FxLens extends HTMLElement {
       if (!fore || fore.tagName !== 'FX-FORE') fore = null;
     }
 
-    if (fore) {
-      const inst = fore.querySelector(`fx-instance#${CSS.escape(instId || 'default')}`);
-      if (inst) return inst;
-      // fallback: default instance without id
-      if ((instId || 'default') === 'default')
-        return fore.querySelector('fx-instance:not([id])') || null;
-      return null;
-    }
+    const scope = fore || document;
 
-    // Fallback search (less ideal but robust)
-    if ((instId || 'default') === 'default') {
+    if (instId.startsWith('lookup:')) {
+      const url = instId.slice('lookup:'.length);
       return (
-        document.querySelector('fx-instance:not([id])') ||
-        document.querySelector('fx-instance') ||
-        null
+          Array.from(scope.querySelectorAll('fx-instance[data-src]')).find(
+              el => el.getAttribute('data-src') === url,
+          ) || null
       );
     }
-    return document.querySelector(`fx-instance#${CSS.escape(instId)}`) || null;
+
+    const id = instId || 'default';
+
+    // Try an instance with this exact `id` first (the form's default
+    // instance commonly declares `id="default"` explicitly).
+    const byId = scope.querySelector(`fx-instance#${CSS.escape(id)}`);
+    if (byId) return byId;
+
+    // Fallback: the anonymous default instance (no id, not a data-src lookup
+    // instance), since a form's default instance may also be id-less.
+    if (id === 'default') {
+      return (
+          scope.querySelector('fx-instance:not([id]):not([data-src])') ||
+          (fore ? null : document.querySelector('fx-instance')) ||
+          null
+      );
+    }
+    return null;
   }
 
   // ---------- TREE BUILDERS (same as before) ----------
@@ -599,9 +827,9 @@ export class FxLens extends HTMLElement {
 
     // XML nodes: Document/Element/Fragment
     const isNode =
-      raw &&
-      typeof raw === 'object' &&
-      (raw.nodeType === 1 || raw.nodeType === 9 || raw.nodeType === 11);
+        raw &&
+        typeof raw === 'object' &&
+        (raw.nodeType === 1 || raw.nodeType === 9 || raw.nodeType === 11);
 
     if (isNode) {
       const node = raw.nodeType === 9 ? raw.documentElement : raw;
@@ -658,9 +886,9 @@ export class FxLens extends HTMLElement {
         ul.appendChild(li);
       }
       return this._details(
-        [this._span(label, 'k'), this._span(' ', ''), this._span(`[array ${value.length}]`, 't')],
-        ul,
-        true,
+          [this._span(label, 'k'), this._span(' ', ''), this._span(`[array ${value.length}]`, 't')],
+          ul,
+          true,
       );
     }
 
@@ -679,13 +907,13 @@ export class FxLens extends HTMLElement {
     const attrs = [];
     if (el.attributes && el.attributes.length) {
       for (const a of Array.from(el.attributes)) {
-        attrs.push(` ${a.name}="${a.value}"`);
+        attrs.push(` ${this._xmlAttributeName(a)}="${a.value}"`);
       }
     }
 
     const summaryParts = [
       this._span('<', 'muted'),
-      this._span(el.tagName.toLowerCase(), 'k'),
+      this._xmlNameSpan(el),
       this._span(attrs.join(''), 'v'),
       this._span('>', 'muted'),
     ];
@@ -718,6 +946,14 @@ export class FxLens extends HTMLElement {
     }
 
     return this._details(summaryParts, ul, true);
+  }
+
+  _xmlAttributeName(attr) {
+    if (!attr) return '';
+
+    // attr.name normally preserves prefixes and case for XML,
+    // e.g. xml:id, tei:rendition, sourceDesc-style camelCase attrs.
+    return attr.name;
   }
 }
 

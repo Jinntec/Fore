@@ -70,6 +70,35 @@ export class FxSubmission extends ForeElementMixin {
     this.shadowRoot.innerHTML = this.renderHTML();
   }
 
+  getDebugInfo() {
+    return {
+      localName: this.localName,
+      id: this.id || null,
+
+      method: this.getAttribute('method') || null,
+      url: this.getAttribute('url') || null,
+      action: this.getAttribute('action') || null,
+      resource: this.getAttribute('resource') || null,
+
+      ref: this.getAttribute('ref') || null,
+      instance: this.getAttribute('instance') || null,
+      targetref: this.getAttribute('targetref') || null,
+      target: this.getAttribute('target') || null,
+
+      replace: this.getAttribute('replace') || null,
+      mediatype: this.getAttribute('mediatype') || null,
+      encoding: this.getAttribute('encoding') || null,
+      serialization: this.getAttribute('serialization') || null,
+
+      validate: this.getAttribute('validate') || null,
+      relevant: this.getAttribute('relevant') || null,
+
+      hasResponse: Boolean(this.response),
+      responseStatus: this.response?.status || null,
+      responseStatusText: this.response?.statusText || null,
+    };
+  }
+
   // eslint-disable-next-line class-methods-use-this
   renderHTML() {
     return `

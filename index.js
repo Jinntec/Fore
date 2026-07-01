@@ -1,3 +1,4 @@
+import './tools/debug/auto-debugger.js';
 // core + models classes
 import './src/fx-bind.js';
 import './src/fx-connection.js';

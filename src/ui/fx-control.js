@@ -1,3 +1,4 @@
+import { createTypedValueFactory, domFacade as fontoDomFacade } from 'fontoxpath';
 import XfAbstractControl from './abstract-control.js';
 import {
   evaluateXPath,
@@ -10,8 +11,10 @@ import { debounce } from '../events.js';
 import { FxModel } from '../fx-model.js';
 import { DependencyNotifyingDomFacade } from '../DependencyNotifyingDomFacade';
 import { extractPredicateDependencies } from '../extract-predicate-deps.js';
+import '../fx-instance.js';
 
 const WIDGETCLASS = 'widget';
+const typedValueFactory = createTypedValueFactory('item()*');
 
 /**
  * `fx-control`
@@ -568,18 +571,107 @@ export default class FxControl extends XfAbstractControl {
     try {
       this._isRefreshing = true;
       // console.log('🔄 fx-control refresh', this);
-      super.refresh(force);
+      await super.refresh(force);
       // console.log('refresh template', this.template);
       // const {widget} = this;
 
       // ### if we find a ref on control we have a 'select' control of some kind
       const widget = this.getWidget();
+      await this._loadDataSrc(widget);
       this._handleBoundWidget(widget, force);
       this._handleDataAttributeBinding();
     } finally {
       this._isRefreshing = false;
     }
     await Fore.refreshChildren(this, force);
+  }
+
+  /**
+   * Finds (or lazily creates) the anonymous `<fx-instance>` backing a
+   * `data-src` lookup document for the given URL, deduped per-model by URL.
+   *
+   * The created instance has no `id`, so it stays invisible to the global
+   * `$default`/`$<id>` variable mechanism. It is appended as the last child
+   * of the model, so it is never mistaken for the first/default instance
+   * (which assumes the model already declares its own default instance).
+   *
+   * @param {string} url
+   * @param {string|null} type
+   * @returns {import('../fx-instance.js').FxInstance}
+   * @private
+   */
+  _ensureDataSrcInstance(url, type) {
+    const model = this.getModel();
+    let instEl = Array.from(model.children).find(
+      el => el.localName === 'fx-instance' && el.getAttribute('data-src') === url,
+    );
+
+    if (!instEl) {
+      instEl = document.createElement('fx-instance');
+      instEl.setAttribute('data-src', url);
+      instEl.setAttribute('src', url);
+      if (type) {
+        instEl.setAttribute('type', type);
+      }
+      model.appendChild(instEl);
+      instEl._loadPromise = instEl.init();
+    }
+    return instEl;
+  }
+
+  /**
+   * Implements the `data-src` lookup-list shortcut: if the bound widget
+   * declares `data-src="<url>"`, lazily loads that document via an anonymous
+   * `<fx-instance>` and binds its root element as a control-local XPath
+   * variable (`$src` by default, or `$<data-id>`), available to this
+   * control's own `ref` and template expressions.
+   *
+   * @param {HTMLElement} widget
+   * @private
+   */
+  async _loadDataSrc(widget) {
+    const url = widget.getAttribute && widget.getAttribute('data-src');
+    if (!url) return;
+
+    const varName = widget.getAttribute('data-id') || 'src';
+
+    if (this._dataSrcUrl === url) return;
+    this._dataSrcUrl = url;
+
+    // ### bind to an empty sequence until loaded so `ref` evaluation doesn't
+    // throw on the not-yet-bound variable; `_handleBoundWidget` bails out
+    // gracefully on an empty nodeset.
+    this.inScopeVariables.set(varName, typedValueFactory([], fontoDomFacade));
+
+    const instEl = this._ensureDataSrcInstance(url, widget.getAttribute('data-type'));
+
+    try {
+      await (instEl._loadPromise ?? Promise.resolve());
+
+      // ### derive the xpath default namespace for `$src`/`$<data-id>` once per
+      // anonymous instance: an explicit `data-xpath-ns` override wins, otherwise
+      // fall back to the namespace the loaded document declares on its root element.
+      if (!instEl.hasAttribute('xpath-default-namespace')) {
+        const override = widget.getAttribute('data-xpath-ns');
+        const root = instEl.getDefaultContext();
+        const ns = override || (root && root.namespaceURI);
+        if (ns) {
+          instEl.setAttribute('xpath-default-namespace', ns);
+        }
+      }
+
+      this.inScopeVariables.set(
+        varName,
+        typedValueFactory([instEl.getDefaultContext()], fontoDomFacade),
+      );
+      this.refresh(true);
+    } catch (error) {
+      Fore.dispatch(this, 'error', {
+        origin: this,
+        message: `control couldn't load data-src '${url}'`,
+        level: 'Error',
+      });
+    }
   }
 
   /**

@@ -104,8 +104,9 @@ nav #addFragment{
     left: 0;
     padding: 2rem 1rem 1rem 0.5rem;
     z-index: 10;
-    top: 4.2rem;
+    top: 0;
     overflow: auto;
+    height:100%;
 }
 
 nav{
@@ -229,6 +230,14 @@ nav{
     .panels {
         display: flex;
         flex-direction: row;
+    }
+}
+@media (max-width: 1024px) {
+    nav{
+        display:none;
+    }
+    main{
+        padding-left: 1rem;
     }
 }
 
@@ -428,7 +437,7 @@ button{
 fx-group[ref="teiHeader"]{
     padding:0;
     margin:0;
-    min-width: 46rem;
+    /*min-width: 46rem;*/
 }
 fx-group:has(> h2){
     border:thin solid var(--paper-grey-300);
