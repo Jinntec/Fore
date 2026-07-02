@@ -1,6 +1,6 @@
 {
   "name": "@jinntec/fore",
-  "version": "3.3.0",
+  "version": "3.3.1",
   "description": "Fore - declarative user interfaces in plain HTML",
   "module": "./index.js",
   "publishConfig": {
@@ -94,13 +94,14 @@
     "test:bs": "karma start karma.bs.config.js --coverage",
     "start:build": "cd dist && es-dev-server --open",
     "build": "rimraf dist && vite build --config vite.build.config.js && vite build --config vite.build-dev.config.js",
-    "build:rollup": "rimraf dist && rollup -c rollup.config.js",
     "start": "vite --open --port 8090 --host",
     "preversion": "npm run test",
     "prepare": "npm run build",
     "install-demos": "npm i && cd demo && npm i",
     "start-cypress": "npm run start",
-    "websocket-server": "node websocket-server.js"
+    "websocket-server": "node websocket-server.js",
+    "release": "bash scripts/release.sh",
+    "release:demo": "bash scripts/update-demo.sh"
   },
   "keywords": [
     "Fore",

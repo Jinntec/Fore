@@ -234,6 +234,11 @@
             <fx-bind readonly="true()"
                      ref="instance('vars')/is-fragment"
                      relevant="not(exists(instance('default')/@type))"></fx-bind>
+            <!-- dummy switches for the checkboxes in 'historic relevance' - not part of instance('default')
+                 so they don't inherit its readonly state and need their own -->
+            <fx-bind readonly="true()" ref="instance('vars')/history-term"></fx-bind>
+            <fx-bind readonly="true()" ref="instance('vars')/geography-term"></fx-bind>
+            <fx-bind readonly="true()" ref="instance('vars')/military-term"></fx-bind>
             <fx-bind ref="instance('vars')/can-delete" relevant="index('r-fragments') gt 1"></fx-bind>
             <fx-bind ref="instance('vars')/loggedin" relevant=".='true'"></fx-bind>
             <fx-bind

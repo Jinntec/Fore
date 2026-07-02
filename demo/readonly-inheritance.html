@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Readonly Inheritance</title>
+
+    <link href="../resources/fore.css" rel="stylesheet">
+    <link href="../resources/demo.css" rel="stylesheet">
+
+    <style>
+        fx-group {
+            display: block;
+            border: thin solid lightgrey;
+            border-radius: 4px;
+            padding: 1rem;
+            margin: 1rem 0;
+            transition: background-color 0.2s ease;
+        }
+
+        fx-group[readonly] {
+            background: #f5f5f5;
+        }
+
+        fx-control {
+            margin: 0.5rem 0;
+        }
+
+        fx-control[readonly] input {
+            background: #eeeeee;
+            color: #777777;
+            cursor: not-allowed;
+        }
+
+        fx-trigger {
+            display: inline-block;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body unresolved="unresolved">
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+
+<div class="wrapper">
+    <h1>Readonly Inheritance</h1>
+
+    <p>Per XForms semantics the <code>readonly</code> Model Item Property is <em>inheriting</em>: if a
+        <code><a href="https://jinntec.github.io/fore-docs/elements/model/bind/" target="_blank">fx-bind</a></code>
+        marks a node as readonly, every descendant node inherits that state too - even though none of them
+        carry a <code>readonly</code> attribute of their own.</p>
+
+    <p>Below a single <code>fx-bind</code> on the <code>address</code> node drives readonly dynamically from a
+        sibling <code>view</code> flag:</p>
+
+    <pre><code>&lt;fx-bind ref="address" readonly="if (../view = 'true') then true() else false()"&gt;&lt;/fx-bind&gt;</code></pre>
+
+    <p>The three controls for <code>street</code>, <code>city</code> and <code>zip</code> have <strong>no
+        binding of their own</strong> - they simply inherit the readonly state from their <code>address</code>
+        parent. Toggle the button to switch the whole group between readonly and readwrite.</p>
+
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-model>
+                    <fx-instance>
+                        <data>
+                            <view>true</view>
+                            <address>
+                                <street>221B Baker Street</street>
+                                <city>London</city>
+                                <zip>NW1 6XE</zip>
+                            </address>
+                        </data>
+                    </fx-instance>
+                    <fx-bind ref="address" readonly="if (../view = 'true') then true() else false()"></fx-bind>
+                </fx-model>
+
+                <fx-group ref="address">
+                    <fx-control ref="street">
+                        <label>Street</label>
+                        <input class="widget" type="text">
+                    </fx-control>
+                    <fx-control ref="city">
+                        <label>City</label>
+                        <input class="widget" type="text">
+                    </fx-control>
+                    <fx-control ref="zip">
+                        <label>Zip</label>
+                        <input class="widget" type="text">
+                    </fx-control>
+                </fx-group>
+
+                <fx-trigger>
+                    <button>Toggle readonly / readwrite</button>
+                    <fx-setvalue ref="view" value="if (. = 'true') then 'false' else 'true'"></fx-setvalue>
+                </fx-trigger>
+
+                <p>Current <code>view</code> value: <fx-output ref="view"></fx-output></p>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+
+    <h2>What is happening here?</h2>
+    <p>Only <code>address</code> has an explicit <code>readonly</code> expression. When <code>view</code> is
+        <code>'true'</code>, <code>address</code> becomes readonly, and every node underneath it -
+        <code>street</code>, <code>city</code>, <code>zip</code> - reports <code>readonly</code> as
+        <code>true</code> as well, purely by walking up the instance tree to the nearest ancestor with a
+        <code>ModelItem</code>. No binds, and no manual propagation, are needed on the children.</p>
+
+    <p>The same inheritance rule applies to <code>relevant</code>: a node is only relevant if it is relevant
+        itself <em>and</em> all its ancestors are relevant too.</p>
+</div>
+
+<script type="module" src="./demo.js"></script>
+</body>
+</html>

@@ -406,6 +406,7 @@ export class FxModel extends HTMLElement {
       // Tabula rasa for computed facets; keep identity (boundControls/observers)
       mi.readonly = ModelItem.READONLY_DEFAULT;
       mi.relevant = ModelItem.RELEVANT_DEFAULT;
+      mi._parentModelItem = undefined;
       mi.required = ModelItem.REQUIRED_DEFAULT;
       mi.constraint = ModelItem.CONSTRAINT_DEFAULT;
       mi.type = ModelItem.TYPE_DEFAULT;
