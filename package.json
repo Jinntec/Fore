@@ -94,7 +94,6 @@
     "test:bs": "karma start karma.bs.config.js --coverage",
     "start:build": "cd dist && es-dev-server --open",
     "build": "rimraf dist && vite build --config vite.build.config.js && vite build --config vite.build-dev.config.js",
-    "build:rollup": "rimraf dist && rollup -c rollup.config.js",
     "start": "vite --open --port 8090 --host",
     "preversion": "npm run test",
     "prepare": "npm run build",

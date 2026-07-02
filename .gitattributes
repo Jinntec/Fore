@@ -1,3 +1,3 @@
-rollup.config.js merge=ours
 demo/demo.js merge=ours
 demo/demo-build.js merge=ours
+vite.build-dev.config.js merge=ours
