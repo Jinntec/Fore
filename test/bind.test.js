@@ -519,4 +519,64 @@ describe('bind Tests', () => {
     const nestedBind = el.querySelector('#nested');
     expect(nestedBind.instanceId).to.equal('second');
   });
+
+  describe('readonly/relevant inheritance', () => {
+    it('inherits readonly and relevant down the instance tree, skipping unbound ancestors', async () => {
+      const el = await fixtureSync(html`
+        <fx-fore>
+          <fx-model id="inheritmodel">
+            <fx-instance>
+              <data>
+                <locked>
+                  <mid>
+                    <leaf>value</leaf>
+                  </mid>
+                </locked>
+                <hidden>
+                  <mid>
+                    <leaf>value</leaf>
+                  </mid>
+                </hidden>
+                <plain>
+                  <leaf>value</leaf>
+                </plain>
+              </data>
+            </fx-instance>
+            <fx-bind id="b-locked" ref="locked" readonly="true()"></fx-bind>
+            <fx-bind id="b-locked-leaf" ref="locked/mid/leaf" required="true()"></fx-bind>
+            <fx-bind id="b-hidden" ref="hidden" relevant="false()"></fx-bind>
+            <fx-bind id="b-hidden-leaf" ref="hidden/mid/leaf" required="true()"></fx-bind>
+            <fx-bind id="b-plain-leaf" ref="plain/leaf" required="true()"></fx-bind>
+          </fx-model>
+        </fx-fore>
+      `);
+
+      await oneEvent(el, 'ready');
+      const model = document.getElementById('inheritmodel');
+      const data = el.getModel().getDefaultContext();
+
+      const locked = model.getModelItem(data.querySelector('locked'));
+      expect(locked.readonly).to.equal(true);
+
+      // leaf has its own bind (for `required`) but no readonly attribute of its own,
+      // and its direct parent ("mid") has no bind/ModelItem at all - must still inherit
+      // readonly from "locked" by walking past the gap.
+      const lockedLeaf = model.getModelItem(data.querySelector('locked leaf'));
+      expect(lockedLeaf).to.exist;
+      expect(lockedLeaf.readonly).to.equal(true);
+
+      const hidden = model.getModelItem(data.querySelector('hidden'));
+      expect(hidden.relevant).to.equal(false);
+
+      // same gap-skipping check for relevant
+      const hiddenLeaf = model.getModelItem(data.querySelector('hidden leaf'));
+      expect(hiddenLeaf).to.exist;
+      expect(hiddenLeaf.relevant).to.equal(false);
+
+      // an unrelated branch must not be affected
+      const plainLeaf = model.getModelItem(data.querySelector('plain leaf'));
+      expect(plainLeaf.readonly).to.equal(false);
+      expect(plainLeaf.relevant).to.equal(true);
+    });
+  });
 });
