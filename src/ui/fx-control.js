@@ -545,6 +545,11 @@ export default class FxControl extends XfAbstractControl {
         dummy.replaceWith(imported);
       }
 
+      // `this.widget` was cached as the placeholder `dummy` input on init(); that
+      // node is now detached, so readonly/required handling would silently target
+      // a removed element. Point it at the embedded fx-fore, which now acts as the widget.
+      this.widget = imported;
+
       if (!theFore) {
         Fore.dispatch('error', {
           detail: {

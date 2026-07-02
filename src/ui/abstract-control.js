@@ -320,18 +320,29 @@ export default class AbstractControl extends UIElement {
 
   handleReadonly() {
     // console.log('mip readonly', this.modelItem.isReadonly);
-    if (this.isReadonly() !== this.modelItem.readonly) {
-      if (this.modelItem.readonly) {
+    const effectiveReadonly = this.modelItem.readonly || this.isHostReadonly();
+    if (this.isReadonly() !== effectiveReadonly) {
+      if (effectiveReadonly) {
         this.widget.setAttribute('readonly', '');
         this.setAttribute('readonly', '');
         this._dispatchEvent('readonly');
-      }
-      if (!this.modelItem.readonly) {
+      } else {
         this.widget.removeAttribute('readonly');
         this.removeAttribute('readonly');
         this._dispatchEvent('readwrite');
       }
     }
+  }
+
+  /**
+   * A control embedded via `src` (a whole nested `fx-fore` used as widget) has its
+   * own independent model, so it cannot see the readonly state of the outer
+   * ModelItem it represents. When the outer control becomes readonly, it marks its
+   * widget (the nested `fx-fore`) with a `readonly` attribute; nested controls pick
+   * that up here by checking their nearest enclosing `fx-fore`.
+   */
+  isHostReadonly() {
+    return !!this.closest('fx-fore')?.hasAttribute('readonly');
   }
 
   // todo - review alert handling altogether. There could be potentially multiple ones in model

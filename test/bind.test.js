@@ -578,5 +578,36 @@ describe('bind Tests', () => {
       expect(plainLeaf.readonly).to.equal(false);
       expect(plainLeaf.relevant).to.equal(true);
     });
+
+    it('inherits readonly down to attribute-bound modelItems', async () => {
+      // `Attr.parentNode` is always null per the DOM spec, so the inheritance
+      // walk must use `ownerElement` instead - otherwise attribute-bound
+      // controls never see the readonly state of their ancestor elements.
+      const el = await fixtureSync(html`
+        <fx-fore>
+          <fx-model id="attrinheritmodel">
+            <fx-instance>
+              <data>
+                <locked when=""></locked>
+              </data>
+            </fx-instance>
+            <fx-bind id="b-locked" ref="locked" readonly="true()">
+              <fx-bind id="b-locked-when" ref="./@when" required="true()"></fx-bind>
+            </fx-bind>
+          </fx-model>
+        </fx-fore>
+      `);
+
+      await oneEvent(el, 'ready');
+      const model = document.getElementById('attrinheritmodel');
+      const data = el.getModel().getDefaultContext();
+      const lockedEl = data.querySelector('locked');
+
+      // "when" has a bind of its own (for `required`) but no readonly attribute of
+      // its own - must still inherit readonly from "locked" via ownerElement.
+      const when = model.getModelItem(lockedEl.getAttributeNode('when'));
+      expect(when).to.exist;
+      expect(when.readonly).to.equal(true);
+    });
   });
 });

@@ -107,7 +107,17 @@ export class ModelItem {
     // case this inheritance walk needs to cover) have no `bind`, so fall back to
     // resolving the owning FxModel through the fx-fore element instead.
     const model = this.bind?.model || this.fore?.getModel?.();
-    let current = this.lens ? this.lens.parent : this.node?.parentNode;
+    // `Attr.parentNode` is always null per the DOM spec - attribute nodes only
+    // expose their owning element via `ownerElement`. Without this, readonly/
+    // relevant inheritance silently breaks for every attribute-bound ModelItem.
+    let current;
+    if (this.lens) {
+      current = this.lens.parent;
+    } else if (this.node?.nodeType === Node.ATTRIBUTE_NODE) {
+      current = this.node.ownerElement;
+    } else {
+      current = this.node?.parentNode;
+    }
 
     while (current) {
       if (
