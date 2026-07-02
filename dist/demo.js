@@ -16967,7 +16967,32 @@ class FxInstance extends HTMLElement {
 customElements.get("fx-instance") || customElements.define("fx-instance", FxInstance);
 const dn = class dn2 {
   constructor(ee, ne, ie, se, ce, de) {
-    this.path = ee, this.ref = ne, this.readonly = dn2.READONLY_DEFAULT, this.relevant = dn2.RELEVANT_DEFAULT, this.required = dn2.REQUIRED_DEFAULT, this.constraint = dn2.CONSTRAINT_DEFAULT, this.type = dn2.TYPE_DEFAULT, this.node = null, this.lens = null, ie?.get && ie?.set ? this.lens = ie : this.node = ie, this.bind = se, this.instanceId = ce, this.fore = de, this.changed = false, this.nativeValid = true, this.alerts = [], this.boundControls = [], this.observers = /* @__PURE__ */ new Set(), this.dependencies = /* @__PURE__ */ new Set(), this.stateExpressions = {}, this.state = {};
+    this.path = ee, this.ref = ne, this._readonly = dn2.READONLY_DEFAULT, this._relevant = dn2.RELEVANT_DEFAULT, this._parentModelItem = void 0, this.required = dn2.REQUIRED_DEFAULT, this.constraint = dn2.CONSTRAINT_DEFAULT, this.type = dn2.TYPE_DEFAULT, this.node = null, this.lens = null, ie?.get && ie?.set ? this.lens = ie : this.node = ie, this.bind = se, this.instanceId = ce, this.fore = de, this.changed = false, this.nativeValid = true, this.alerts = [], this.boundControls = [], this.observers = /* @__PURE__ */ new Set(), this.dependencies = /* @__PURE__ */ new Set(), this.stateExpressions = {}, this.state = {};
+  }
+  get readonly() {
+    return this._readonly || !!this.getParentModelItem()?.readonly;
+  }
+  set readonly(ee) {
+    this._readonly = ee;
+  }
+  get relevant() {
+    if (!this._relevant) return false;
+    const ee = this.getParentModelItem();
+    return ee ? ee.relevant : true;
+  }
+  set relevant(ee) {
+    this._relevant = ee;
+  }
+  getParentModelItem() {
+    if (this._parentModelItem !== void 0) return this._parentModelItem;
+    const ee = this.bind?.model || this.fore?.getModel?.();
+    let ne;
+    for (this.lens ? ne = this.lens.parent : this.node?.nodeType === Node.ATTRIBUTE_NODE ? ne = this.node.ownerElement : ne = this.node?.parentNode; ne && !(ne.nodeType === Node.DOCUMENT_NODE || ne.nodeType === Node.DOCUMENT_FRAGMENT_NODE); ) {
+      const ie = ee?.getModelItem(ne);
+      if (ie) return this._parentModelItem = ie, ie;
+      ne = ne.__jsonlens__ === true ? ne.parent : ne.parentNode;
+    }
+    return this._parentModelItem = null, null;
   }
   getDebugInfo() {
     return { path: this.path, ref: this.ref, instanceId: this.instanceId, type: this.type, value: this.value, facets: { readonly: this.readonly, relevant: this.relevant, required: this.required, constraint: this.constraint, changed: this.changed }, backing: this.lens ? "json-lens" : this.node ? "xml-node" : "unknown", observerCount: this.observers?.size || 0, boundControlCount: this.boundControls?.length || 0, dependencyCount: this.dependencies?.size || 0, alertCount: this.alerts?.length || 0, stateExpressions: this.stateExpressions, state: this.state };
@@ -17208,7 +17233,7 @@ class FxModel extends HTMLElement {
   registerModelItem(ee) {
     if (!ee) return null;
     const ne = ee.path, ie = (de) => {
-      de.readonly = ModelItem.READONLY_DEFAULT, de.relevant = ModelItem.RELEVANT_DEFAULT, de.required = ModelItem.REQUIRED_DEFAULT, de.constraint = ModelItem.CONSTRAINT_DEFAULT, de.type = ModelItem.TYPE_DEFAULT, "valid" in de && (de.valid = true), "enabled" in de && (de.enabled = true), de.changed = false, de.dependencies && typeof de.dependencies.clear == "function" && de.dependencies.clear(), de.stateExpressions && (de.stateExpressions = {}), de.state && (de.state = {});
+      de.readonly = ModelItem.READONLY_DEFAULT, de.relevant = ModelItem.RELEVANT_DEFAULT, de._parentModelItem = void 0, de.required = ModelItem.REQUIRED_DEFAULT, de.constraint = ModelItem.CONSTRAINT_DEFAULT, de.type = ModelItem.TYPE_DEFAULT, "valid" in de && (de.valid = true), "enabled" in de && (de.enabled = true), de.changed = false, de.dependencies && typeof de.dependencies.clear == "function" && de.dependencies.clear(), de.stateExpressions && (de.stateExpressions = {}), de.state && (de.state = {});
     }, se = (de, pe) => {
       pe.lens ? (de.lens = pe.lens, de.node = null) : pe.node && (de.node = pe.node, de.lens = null), pe.ref && (de.ref = pe.ref), pe.bind && (de.bind = pe.bind), pe.instanceId && (de.instanceId = pe.instanceId), pe.fore && (de.fore = pe.fore), ie(de), de.boundControls || (de.boundControls = []);
     };
@@ -18461,7 +18486,7 @@ const Gt = class Gt2 extends HTMLElement {
       }
       this._createRepeatsFromAttributes(), this.inited = true;
     });
-    this.version = "Version: 3.3.0 - built on 2026-07-01", this.model = null, this.inited = false, this._initGatesPromise = null, this._warnedWaitForDeprecation = false, this._srcLoadPromise = null, this.addEventListener("message", this._displayMessage), this.addEventListener("error", this._logError), this.addEventListener("warn", this._displayWarning), window.addEventListener("compute-exception", (se) => {
+    this.version = "Version: 3.3.2 - built on 2026-07-02", this.model = null, this.inited = false, this._initGatesPromise = null, this._warnedWaitForDeprecation = false, this._srcLoadPromise = null, this.addEventListener("message", this._displayMessage), this.addEventListener("error", this._logError), this.addEventListener("warn", this._displayWarning), window.addEventListener("compute-exception", (se) => {
       console.error("circular dependency: ", se);
     }), this.ready = false, this.storedTemplateExpressionByNode = /* @__PURE__ */ new Map(), this.outermostHandler = null, this.copiedElements = /* @__PURE__ */ new WeakSet(), this.dirtyState = dirtyStates.CLEAN, this.showConfirmation = false, this.isRefreshPhase = false, this.batchedNotifications = /* @__PURE__ */ new Set();
     const ne = `
@@ -19604,7 +19629,11 @@ class AbstractControl extends UIElement {
     }
   }
   handleReadonly() {
-    this.isReadonly() !== this.modelItem.readonly && (this.modelItem.readonly && (this.widget.setAttribute("readonly", ""), this.setAttribute("readonly", ""), this._dispatchEvent("readonly")), this.modelItem.readonly || (this.widget.removeAttribute("readonly"), this.removeAttribute("readonly"), this._dispatchEvent("readwrite")));
+    const ee = this.modelItem.readonly || this.isHostReadonly();
+    this.isReadonly() !== ee && (ee ? (this.widget.setAttribute("readonly", ""), this.setAttribute("readonly", ""), this._dispatchEvent("readonly")) : (this.widget.removeAttribute("readonly"), this.removeAttribute("readonly"), this._dispatchEvent("readwrite")));
+  }
+  isHostReadonly() {
+    return !!this.closest("fx-fore")?.hasAttribute("readonly");
   }
   handleValid() {
     const ee = this.modelItem.value !== "", ie = this.modelItem.required ? ee : true, se = this.modelItem.nativeValid !== false, ce = this.modelItem.constraint && ie && se;
@@ -19893,7 +19922,7 @@ class FxControl extends AbstractControl {
         ce.model = ce.querySelector("fx-model"), ce.model.updateModel(), ce.initialRun = true, ce.refresh(true);
       }, { once: true });
       const de = this.querySelector("input");
-      this.hasAttribute("shadow") ? (de.parentNode.removeChild(de), this.shadowRoot.appendChild(ce)) : this.loaded || de.replaceWith(ce), se || Fore.dispatch("error", { detail: { message: `Fore element not found in '${this.src}'. Maybe wrapped within 'template' element?` } }), Fore.dispatch("loaded", { detail: { fore: se } });
+      this.hasAttribute("shadow") ? (de.parentNode.removeChild(de), this.shadowRoot.appendChild(ce)) : this.loaded || de.replaceWith(ce), this.widget = ce, se || Fore.dispatch("error", { detail: { message: `Fore element not found in '${this.src}'. Maybe wrapped within 'template' element?` } }), Fore.dispatch("loaded", { detail: { fore: se } });
     } catch {
       Fore.dispatch(this, "error", { origin: this, message: `control couldn't be loaded from src '${this.src}'`, level: "Error" });
     }
@@ -24672,6 +24701,14 @@ class FxFunction extends ForeElementMixin {
 }
 customElements.get("fx-function") || customElements.define("fx-function", FxFunction);
 const LOCAL_FUNCTIONS_NS = "http://www.w3.org/2005/xquery-local-functions", _functionLibLoadCache = /* @__PURE__ */ new Map();
+let _registrationOrderChain = Promise.resolve();
+function _reserveRegistrationTurn() {
+  const ae = _registrationOrderChain;
+  let ee;
+  return _registrationOrderChain = new Promise((ne) => {
+    ee = ne;
+  }), { waitForTurn: ae, releaseTurn: ee };
+}
 function looksLikeModuleSrc(ae) {
   return /\.m?js($|\?)/i.test(ae);
 }
@@ -24708,14 +24745,18 @@ class FxFunctionlib extends ForeElementMixin {
       }
       return;
     }
-    const ye = (async () => {
-      se ? await this._loadModuleLibrary(ce, ee, ne) : await this._loadHtmlLibrary(ce, ee, ne);
+    const { waitForTurn: ye, releaseTurn: ve } = _reserveRegistrationTurn(), xe = (async () => {
+      try {
+        se ? await this._loadModuleLibrary(ce, ee, ne, ye) : await this._loadHtmlLibrary(ce, ee, ne, ye);
+      } finally {
+        ve();
+      }
     })();
-    _functionLibLoadCache.set(pe, ye);
+    _functionLibLoadCache.set(pe, xe);
     try {
-      await ye;
-    } catch (ve) {
-      _functionLibLoadCache.delete(pe), console.error(`fx-functionlib: Loading function library at ${ee} failed.`, ve);
+      await xe;
+    } catch (Ee) {
+      _functionLibLoadCache.delete(pe), console.error(`fx-functionlib: Loading function library at ${ee} failed.`, Ee);
     } finally {
       this._resolveLoading(void 0);
     }
@@ -24731,24 +24772,26 @@ class FxFunctionlib extends ForeElementMixin {
     const ie = ne ? applyPrefixToSignature(ee.signature, ne) : ee.signature;
     registerFunction({ ...ee, signature: ie }, this);
   }
-  async _loadModuleLibrary(ee, ne, ie) {
-    const se = await import(ee), ce = normalizeModuleExportToList(se, ne);
-    for (const de of ce) if (typeof de == "function") {
-      const { signature: pe } = de;
-      if (typeof pe != "string" || !pe.trim()) continue;
-      this._register({ type: "text/javascript", signature: pe.trim(), implementation: de }, ie);
-    } else de && typeof de == "object" && typeof de.signature == "string" && this._register(de, ie);
+  async _loadModuleLibrary(ee, ne, ie, se) {
+    const ce = await import(ee), de = normalizeModuleExportToList(ce, ne);
+    await se;
+    for (const pe of de) if (typeof pe == "function") {
+      const { signature: fe } = pe;
+      if (typeof fe != "string" || !fe.trim()) continue;
+      this._register({ type: "text/javascript", signature: fe.trim(), implementation: pe }, ie);
+    } else pe && typeof pe == "object" && typeof pe.signature == "string" && this._register(pe, ie);
   }
-  async _loadHtmlLibrary(ee, ne, ie) {
-    const se = await fetch(ee);
-    if (!se.ok) {
+  async _loadHtmlLibrary(ee, ne, ie, se) {
+    const ce = await fetch(ee);
+    if (!ce.ok) {
       console.error(`Loading function library at ${ne} failed.`);
       return;
     }
-    const ce = await se.text(), de = new DOMParser().parseFromString(ce, "text/html"), pe = Array.from(de.querySelectorAll("fx-function"));
-    for (const fe of pe) {
-      const ye = { type: fe.getAttribute("type"), signature: fe.getAttribute("signature"), functionBody: fe.innerText };
-      this._register(ye, ie);
+    const de = await ce.text(), pe = new DOMParser().parseFromString(de, "text/html"), fe = Array.from(pe.querySelectorAll("fx-function"));
+    await se;
+    for (const ye of fe) {
+      const ve = { type: ye.getAttribute("type"), signature: ye.getAttribute("signature"), functionBody: ye.innerText };
+      this._register(ve, ie);
     }
   }
 }
