@@ -77,7 +77,7 @@
                     xpath-default-namespace="http://www.tei-c.org/ns/1.0">
                 <data></data>
             </fx-instance>
-            <fx-bind ref="instance('default')" readonly="true()">
+            <fx-bind ref="instance('default')">
                 <!-- Fragments are relevant if they are actually there and if this TEI is of type partial -->
                 <fx-bind ref="@fragments" relevant="string() and not(../@type='partial')"></fx-bind>
                 <fx-bind ref="@type" relevant=". = 'partial'"></fx-bind>
