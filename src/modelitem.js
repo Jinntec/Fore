@@ -28,8 +28,10 @@ export class ModelItem {
   constructor(path, ref, nodeOrLens, bind, instance, fore) {
     this.path = path;
     this.ref = ref;
-    this.readonly = ModelItem.READONLY_DEFAULT;
-    this.relevant = ModelItem.RELEVANT_DEFAULT;
+    this._readonly = ModelItem.READONLY_DEFAULT;
+    this._relevant = ModelItem.RELEVANT_DEFAULT;
+    // undefined = not yet resolved; null = resolved, no ancestor ModelItem found
+    this._parentModelItem = undefined;
     this.required = ModelItem.REQUIRED_DEFAULT;
     this.constraint = ModelItem.CONSTRAINT_DEFAULT;
     this.type = ModelItem.TYPE_DEFAULT;
@@ -63,6 +65,79 @@ export class ModelItem {
     this.dependencies = new Set();
     this.stateExpressions = {}; // e.g. { required: { expr: '../x', type: 'boolean' } }
     this.state = {}; // evaluated expression results
+  }
+
+  /**
+   * `readonly` is inherited down the instance tree per XForms semantics: a node is
+   * readonly if its own bind says so, or if any ancestor node is readonly.
+   */
+  get readonly() {
+    return this._readonly || !!this.getParentModelItem()?.readonly;
+  }
+
+  set readonly(val) {
+    this._readonly = val;
+  }
+
+  /**
+   * `relevant` is inherited down the instance tree per XForms semantics: a node is
+   * relevant only if its own bind says so AND its parent is (effectively) relevant.
+   */
+  get relevant() {
+    if (!this._relevant) return false;
+    const parent = this.getParentModelItem();
+    return parent ? parent.relevant : true;
+  }
+
+  set relevant(val) {
+    this._relevant = val;
+  }
+
+  /**
+   * Resolves and caches the nearest ancestor ModelItem, walking past instance
+   * nodes that have no ModelItem of their own. Handles both XML DOM nodes
+   * (`node.parentNode`) and JSON lens nodes (`lens.parent`).
+   * @returns {ModelItem|null}
+   */
+  getParentModelItem() {
+    if (this._parentModelItem !== undefined) return this._parentModelItem;
+
+    // `bind` is only set for ModelItems created from an explicit <fx-bind ref="...">.
+    // Lazily-created ModelItems (e.g. controls without a dedicated bind - the exact
+    // case this inheritance walk needs to cover) have no `bind`, so fall back to
+    // resolving the owning FxModel through the fx-fore element instead.
+    const model = this.bind?.model || this.fore?.getModel?.();
+    // `Attr.parentNode` is always null per the DOM spec - attribute nodes only
+    // expose their owning element via `ownerElement`. Without this, readonly/
+    // relevant inheritance silently breaks for every attribute-bound ModelItem.
+    let current;
+    if (this.lens) {
+      current = this.lens.parent;
+    } else if (this.node?.nodeType === Node.ATTRIBUTE_NODE) {
+      current = this.node.ownerElement;
+    } else {
+      current = this.node?.parentNode;
+    }
+
+    while (current) {
+      if (
+        current.nodeType === Node.DOCUMENT_NODE ||
+        current.nodeType === Node.DOCUMENT_FRAGMENT_NODE
+      ) {
+        break;
+      }
+
+      const mi = model?.getModelItem(current);
+      if (mi) {
+        this._parentModelItem = mi;
+        return mi;
+      }
+
+      current = current.__jsonlens__ === true ? current.parent : current.parentNode;
+    }
+
+    this._parentModelItem = null;
+    return null;
   }
 
   getDebugInfo() {

@@ -100,6 +100,50 @@
         background: inherit;
     }
 
+    /*
+     * Default visual treatment for readonly controls (own or inherited via
+     * <fx-bind readonly="...">). Individual apps can override.
+     */
+    fx-control[readonly] .widget,
+    fx-control[readonly] input,
+    fx-control[readonly] textarea,
+    fx-control[readonly] select {
+        background: var(--paper-grey-200);
+        color: var(--paper-grey-600);
+        cursor: not-allowed;
+    }
+
+    /*
+     * The native `readonly` attribute is a no-op on checkboxes/radios per the HTML
+     * spec - only `disabled` blocks them, but that would also mute their styling
+     * and remove them from focus order. Fore already rejects the resulting
+     * value-changed on the model side (see fx-control#setValue), but without this
+     * the box still visibly toggles and snaps back, reading as "still clickable".
+     * Blocking pointer interaction avoids that flicker entirely.
+     */
+    fx-control[readonly] input[type="checkbox"],
+    fx-control[readonly] input[type="radio"] {
+        pointer-events: none;
+    }
+
+    /*
+     * Clicking a <label for="..."> forwards a native activation to its checkbox/
+     * radio that bypasses the input's own `pointer-events: none` entirely - the
+     * browser toggles the control directly, it's not a hit-test on the input. The
+     * label itself must be blocked too, or the box still visibly flips on click.
+     */
+    fx-control[readonly]:has(input[type="checkbox"]) label,
+    fx-control[readonly]:has(input[type="radio"]) label {
+        pointer-events: none;
+        cursor: not-allowed;
+    }
+
+    fx-trigger[readonly] .widget,
+    fx-trigger[readonly] button {
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+
     .error {
         background: var(--paper-red-500);
         display: flex;
