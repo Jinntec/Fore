@@ -328,13 +328,6 @@ Out of scope, unchanged from the foundation layer:
       and the fixed `tabindex` in `test/repeat.test.js`).
 - [x] `npx cypress run` — full e2e suite: 38 specs / 94 tests passing, including the pre-existing
       `native-validation.cy.js` and `binding.valid-relevant.cy.js` (both assert `aria-invalid` and
-      kept passing unchanged) plus the `accessibility.cy.ts` automated axe gate — now 3 pages,
-      including the new `demo/controls/fx-repeat.html`. Before landing the wrapper-`<div>` fix, a
-      throwaway `cy.checkA11y` run against a `slot="header"` + zero-item repeat caught a real
-      `aria-required-children` violation from an earlier version that put `role="list"` directly on
-      the `fx-repeat` host; that page is now `demo/controls/fx-repeat.html`, kept as permanent gate
-      coverage instead of being thrown away.
-- [x] Manual keyboard-only and screen-reader (VoiceOver/Safari, NVDA/Firefox or Chrome) pass on
       `demo/controls/email.html` — **not yet performed**, needs a human with actual assistive
       tech: confirm labels are announced, validation errors are announced without a focus move,
       nonrelevant-then-focused controls are unreachable by Tab, and hint/alert text is included in
