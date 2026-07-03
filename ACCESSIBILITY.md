@@ -318,6 +318,39 @@ Out of scope, unchanged from the foundation layer:
 - **2.4.7 Focus Visible** — CSS-level, not audited.
 - **3.3.3 Error Suggestion** — author-controlled (alert text is markup, not enforced).
 
+### 1. `fx-switch`/`fx-case` tab semantics (`src/ui/fx-switch.js`, `src/ui/fx-trigger.js`)
+
+`fx-switch` is polymorphic — it's used as a bound panel switcher (driven by a `<select>`, no
+trigger children at all), as a wizard, as an accordion (`fx-trigger`/`fx-case` pairs interleaved
+as children, each trigger immediately followed by its own panel), and as tabs. A real ARIA
+`tablist` may only own `tab` children, and `fx-trigger`↔`fx-case` linkage isn't structural — it's
+a by-ID reference buried in `fx-toggle`'s `case` attribute, resolved via
+`ownerForm.querySelector('#id')`. Applying `role="tablist"`/`"tab"`/`"tabpanel"` unconditionally
+would put invalid ARIA on wizards, accordions, and bound switches (axe's `aria-required-children`
+would flag the accordion pattern specifically, since its panels sit *inside* the switch as
+siblings of the triggers). So this ships as an **opt-in** `appearance="tabs"` attribute rather
+than default behavior on every `fx-switch` — see `demo/switch-tabs.html`.
+
+- With `appearance="tabs"`, `fx-switch` renders `<div role="tablist"><slot name="tab"></slot></div>`
+  followed by the regular default slot, in its shadow root. Direct-child `fx-trigger`s that carry
+  an `fx-toggle` targeting a sibling `fx-case` are assigned `slot="tab"` — this regroups them
+  under the tablist *in the flattened (accessibility) tree* without moving them in the light DOM,
+  so document order and existing markup stay untouched.
+- Each such trigger's widget gets `role="tab"`, `aria-controls` (pointing at its case), and a
+  roving `tabindex` (`0` for the selected tab, `-1` for the rest); its target `fx-case` gets
+  `role="tabpanel"`, `aria-labelledby` (pointing back at the tab), and `tabindex="0"`. IDs are
+  generated via `Fore.createUUID()` when missing, matching the pattern already used for label/hint
+  association in the foundation layer.
+- `fx-trigger.js`'s default `role="button"` assignment (in its `slotchange` handler) is now
+  guarded to skip elements that already carry an explicit `role` — a one-line change needed so
+  `fx-switch`'s `role="tab"` isn't raced/overwritten back to `"button"`.
+- Arrow-key navigation (Left/Right/Up/Down/Home/End) is wired via a single delegated `keydown`
+  listener on `fx-switch`, following the WAI-ARIA "automatic activation" tabs pattern: moving
+  focus to a tab also activates its case (calls the trigger's own `performActions()`, so it goes
+  through the normal `fx-toggle` path rather than duplicating switch logic).
+- Plain `fx-switch` usage (no `appearance="tabs"`) is completely unaffected — the attribute is
+  read once in `connectedCallback` and everything described above is skipped when absent.
+
 ## Verification
 
 - [x] `npm test` — karma/mocha unit suite: 858 passing (incl. new assertions for
