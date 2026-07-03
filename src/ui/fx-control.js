@@ -130,6 +130,8 @@ export default class FxControl extends XfAbstractControl {
         `;
 
     this.widget = this.getWidget();
+    this._associateLabel();
+    this._associateDescriptions();
 
     this.addEventListener('mousedown', e => {
       // ### prevent mousedown events on all control content that is not the widget or within the widget
@@ -327,6 +329,41 @@ export default class FxControl extends XfAbstractControl {
             }
 
         `;
+  }
+
+  /**
+   * Associates the control's label with its widget.
+   *
+   * Two label mechanisms exist: a light-DOM `<label>` child (slotted alongside the widget, so
+   * both share the same tree and `for`/`id` works), and the `label="..."` attribute (rendered as
+   * bare text into the *shadow root* by `renderHTML()` - a different tree than the light-DOM
+   * widget, so an id reference cannot cross that boundary and `aria-label` (a string, not an id
+   * reference) is used instead).
+   */
+  _associateLabel() {
+    const label = this.querySelector(':scope > label');
+    if (label) {
+      const id = label.getAttribute('for') || this.widget.id || `fx-${Fore.createUUID()}`;
+      if (!label.hasAttribute('for')) label.setAttribute('for', id);
+      if (!this.widget.id) this.widget.id = id;
+      return;
+    }
+    if (this.label) {
+      this.widget.setAttribute('aria-label', this.label);
+    }
+  }
+
+  /**
+   * Wires any statically-authored `<fx-hint>`/`<fx-alert>` light-DOM children into the widget's
+   * aria-describedby, so validation/help text is announced as part of the field's description.
+   * Dynamically-created alerts (from a `<fx-bind>`'s `alert`) are wired separately in
+   * `AbstractControl.handleValid()`.
+   */
+  _associateDescriptions() {
+    this.querySelectorAll(':scope > fx-hint, :scope > fx-alert').forEach(el => {
+      el.id = el.id || `fx-${el.localName}-${Fore.createUUID()}`;
+      this._addDescribedBy(el.id);
+    });
   }
 
   /**

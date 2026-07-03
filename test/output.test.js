@@ -32,6 +32,7 @@ describe('fx-output Tests', () => {
 
     const content = control.shadowRoot.querySelector('span');
     expect(content.textContent).to.equal('hey there');
+    expect(content.getAttribute('aria-label')).to.equal('Content of div:');
   });
 
   it('has correct value from instance when using "value"', async () => {

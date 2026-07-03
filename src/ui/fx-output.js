@@ -62,6 +62,26 @@ export class FxOutput extends XfAbstractControl {
     // console.log('widget ', this.widget);
     this.mediatype = this.hasAttribute('mediatype') ? this.getAttribute('mediatype') : null;
 
+    // The label is a slotted light-DOM element while the widget is a shadow-DOM <span> - an id
+    // reference (for/aria-labelledby) can't cross that boundary, so derive an aria-label string
+    // (which can) from the slotted label's text instead.
+    const labelSlot = this.shadowRoot.querySelector('slot[name="label"]');
+    const applyLabel = () => {
+      const text = labelSlot
+        .assignedNodes({ flatten: true })
+        .map(n => n.textContent)
+        .join('')
+        .trim();
+      const valueEl = this.getWidget();
+      if (text) {
+        valueEl.setAttribute('aria-label', text);
+      } else {
+        valueEl.removeAttribute('aria-label');
+      }
+    };
+    labelSlot.addEventListener('slotchange', applyLabel);
+    applyLabel();
+
     /*
     this.addEventListener('slotchange', e => {
       console.log('slotchange ', e);

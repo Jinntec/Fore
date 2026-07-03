@@ -32,6 +32,7 @@ describe('group tests', () => {
 
     console.log('failing expect here');
     expect(group.hasAttribute('relevant')).to.be.true;
+    expect(group.inert).to.be.false;
   });
 
   it('group does not show if bound to non-existing node', async () => {
@@ -60,6 +61,7 @@ describe('group tests', () => {
 
     await oneEvent(group, 'disabled');
     expect(group.hasAttribute('nonrelevant')).to.be.true;
+    expect(group.inert).to.be.true;
   });
 
   it('group changes state when becoming relevant/nonrelevant', async () => {

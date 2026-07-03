@@ -113,6 +113,7 @@ export class FxContainer extends UIElement {
       // console.log('container is not relevant');
       this.removeAttribute('relevant', '');
       this.setAttribute('nonrelevant', '');
+      this._reflectRelevantInert(false);
       this.dispatchEvent(new CustomEvent('disabled', {}));
       return;
     }
@@ -122,10 +123,12 @@ export class FxContainer extends UIElement {
         // this.style.display = 'block';
         this.removeAttribute('nonrelevant', '');
         this.setAttribute('relevant', '');
+        this._reflectRelevantInert(true);
         this.dispatchEvent(new CustomEvent('enabled', {}));
       } else {
         this.removeAttribute('relevant', '');
         this.setAttribute('nonrelevant', '');
+        this._reflectRelevantInert(false);
         this.dispatchEvent(new CustomEvent('disabled', {}));
       }
     }

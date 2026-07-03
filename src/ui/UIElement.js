@@ -96,6 +96,15 @@ export class UIElement extends ForeElementMixin {
   }
 */
 
+  /**
+   * Mirrors relevant/nonrelevant into the `inert` primitive so a nonrelevant control is
+   * unreachable by keyboard/AT even if CSS visibility rules ever change. CSS already hides
+   * nonrelevant elements (display:none), so this is a semantic backstop, not the primary mechanism.
+   */
+  _reflectRelevantInert(enabled) {
+    this.inert = !enabled;
+  }
+
   attachObserver() {
     const modelItem = this.getModelItem();
     if (!modelItem || typeof modelItem.addObserver !== 'function') return;

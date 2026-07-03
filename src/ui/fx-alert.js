@@ -7,6 +7,10 @@ export class FxAlert extends AbstractControl {
   }
 
   connectedCallback() {
+    this.setAttribute('role', 'alert');
+    this.setAttribute('aria-live', 'assertive');
+    this.setAttribute('aria-atomic', 'true');
+
     const style = `
       :host {
         height: auto;
