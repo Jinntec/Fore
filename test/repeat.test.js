@@ -642,4 +642,44 @@ describe('repeat Tests', () => {
     expect(rItems[1].hasAttribute('repeat-index')).to.be.true;
     expect(repeat.index).to.equal(2);
   });
+
+  it('exposes list/listitem roles and a focusable tabindex on repeat items', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <task>Pick up Milk</task>
+              <task>Make tutorial part 1</task>
+            </data>
+          </fx-instance>
+        </fx-model>
+
+        <fx-repeat id="r-todos" ref="task">
+          <template>
+            <fx-output ref="."></fx-output>
+          </template>
+        </fx-repeat>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const repeat = el.querySelector('#r-todos');
+    // role="list" lives on a shadow-DOM wrapper around the default slot, not on the host,
+    // so a `slot="header"` sibling (e.g. a <table> column header) isn't dragged into the
+    // list's accessibility subtree - see fx-repeat.js connectedCallback.
+    const listWrapper = repeat.shadowRoot.querySelector('[role="list"]');
+    expect(listWrapper).to.exist;
+
+    const rItems = repeat.querySelectorAll(':scope > fx-repeatitem');
+    expect(rItems.length).to.equal(2);
+    rItems.forEach(item => {
+      expect(item.getAttribute('role')).to.equal('listitem');
+      // `tabindex` (lowercase) is not a reflected IDL property; regression guard for the
+      // former `this.tabindex = 0` no-op that never set the real `tabindex` attribute.
+      expect(item.getAttribute('tabindex')).to.equal('0');
+      expect(item.tabIndex).to.equal(0);
+    });
+  });
 });

@@ -332,10 +332,24 @@ export class FxRepeat extends withDraggability(UIElement, false) {
           -webkit-animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
           animation: fade-out-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
       }
+      /* A bare <slot> renders as display:contents (layout-transparent), so demos that put
+         display:flex/grid on the fx-repeat host (e.g. demo/kanban.html's #column) get their
+         fx-repeatitems as direct flex/grid items. The [part=list] wrapper below must stay
+         equally transparent or it becomes the sole flex/grid item and items collapse into a
+         block stack inside it. role="list" survives display:contents in all supported browsers. */
+      [part="list"]{
+          display: contents;
+      }
    `;
+    // `role="list"` sits on a wrapper around the default slot only, not on the host itself:
+    // a named `slot="header"` (e.g. a `<table>` used as a column header row, see demo/api.html)
+    // is real, non-listitem content that would otherwise become an accessibility-tree child of
+    // the list and fail axe's aria-required-children check. Keeping it outside the wrapper avoids
+    // that while still giving the repeated `fx-repeatitem`s (each `role="listitem"`) a `list`
+    // parent.
     const html = `
           <slot name="header"></slot>
-          <slot></slot>
+          <div part="list" role="list"><slot></slot></div>
   `;
 
     this.shadowRoot.innerHTML = `

@@ -2,7 +2,7 @@
 // Deliberately scoped to pages not already known-flaky (see demo-with-issues.md), that actually
 // load Fore and a model (controls/ui.html has neither - see ACCESSIBILITY.md), and that don't
 // depend on the out-of-scope P1/backlog widget-pattern work (e.g. fx-dialog's focus trap).
-const pages = ['controls/email.html', 'controls/fx-output.html'];
+const pages = ['controls/email.html', 'controls/fx-output.html', 'controls/fx-repeat.html'];
 
 pages.forEach(page => {
   describe(`a11y: ${page}`, () => {

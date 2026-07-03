@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>The <code>fx-repeat</code> Element</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="wrapper">
+      <h1>The <code>fx-repeat</code> Element</h1>
+
+      <h2>Repeat with a header row (<code>slot="header"</code>)</h2>
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <item>a</item>
+              <item>b</item>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <fx-repeat ref="item">
+          <table slot="header">
+            <tr>
+              <td>Value</td>
+            </tr>
+          </table>
+          <template>
+            <fx-output ref="."></fx-output>
+          </template>
+        </fx-repeat>
+      </fx-fore>
+
+      <h2>Empty repeat</h2>
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data></data>
+          </fx-instance>
+        </fx-model>
+        <fx-repeat ref="item">
+          <template>
+            <fx-output ref="."></fx-output>
+          </template>
+        </fx-repeat>
+      </fx-fore>
+    </div>
+    <script type="module" src="../../index.js"></script>
+  </body>
+</html>
