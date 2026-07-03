@@ -104,7 +104,7 @@ list it.
 | `fx-switch`/`fx-case` | Correct `inert` toggling; opt-in `appearance="tabs"` adds `role="tablist"`/`"tab"`/`"tabpanel"`, `aria-selected`, roving tabindex, arrow-key navigation | **Fixed** (opt-in) |
 | `fx-dialog` | **Deprecated** in favor of native `<dialog>` (`fx-show`/`fx-hide` work against it unchanged), which provides `aria-modal`, focus trap, and Escape-to-close natively | **Fixed** (via deprecation) |
 | `fx-repeat`/`fx-repeatitem` | `role="list"`/`"listitem"`; `fx-repeatitem.js`'s `this.tabindex = 0` no-op fixed | **Fixed** |
-| `fx-control-menu` | Consumes `aria-label` from targets but its generated popup has no `role="menu"`/`"menuitem"`, no `aria-haspopup`/`aria-expanded`, no arrow-key navigation | Backlog |
+| `fx-control-menu` | `role="menu"`/`"menuitem"`, `aria-haspopup`/`aria-expanded` on the trigger, roving-tabindex arrow-key navigation | **Fixed** |
 
 ## Backlog (P1, out of scope for the foundation layer)
 
@@ -118,8 +118,8 @@ in a shared choke point" model the foundation layer used, because these controls
       write-up below.
 - [x] 3. **`fx-dialog` focus trap** — resolved by deprecation rather than a hand-rolled trap; see
       write-up below.
-- [ ] 4. **`fx-control-menu` menu semantics** — `role="menu"`/`"menuitem"`, `aria-haspopup`,
-      `aria-expanded` on the trigger, roving-tabindex arrow-key navigation.
+- [x] 4. **`fx-control-menu` menu semantics** — `role="menu"`/`"menuitem"`, `aria-haspopup`,
+      `aria-expanded` on the trigger, roving-tabindex arrow-key navigation. See write-up below.
 
 ### 1. `fx-switch`/`fx-case` tab semantics (`src/ui/fx-switch.js`, `src/ui/fx-trigger.js`)
 
@@ -251,6 +251,38 @@ switching to `<dialog>`.
   the dialog before scanning (a `display:none`/closed dialog is skipped by axe) plus giving the
   dialog an accessible name (`aria-labelledby` pointing at its heading), which native `<dialog>`
   doesn't provide by default either. Left as a future addition, not bundled into this deprecation.
+
+### 4. `fx-control-menu` menu semantics (`src/ui/fx-control-menu.js`)
+
+`fx-control-menu` renders a slotted trigger `<button>` plus a shadow-DOM popup listing
+currently-`[on-demand]` targets as plain `<a>` entries for activation (e.g. "add a field back
+after it was hidden"). It's a single, non-polymorphic widget — every instance is the same ARIA
+"menu button" pattern, so this ships unconditionally (unlike `fx-switch`'s opt-in tabs mode,
+which had to accommodate several unrelated usages of the same element).
+
+- The trigger `<button>` gets `aria-haspopup="true"` and `aria-expanded` (toggled open/close).
+  `aria-controls` was deliberately **not** added: the button is light-DOM (slotted) while the
+  popup lives in the shadow root, and an IDREF attribute can't cross that boundary — an
+  `aria-controls` pointing at a shadow-DOM id would just resolve to nothing for assistive tech,
+  the same cross-boundary problem the foundation layer's label association hit (see above,
+  "label" attribute form). `aria-controls` is optional in the APG menu-button pattern, so it's
+  omitted rather than shipped as a dangling reference. Previously `slotchange` re-attached the
+  click handler on every re-slot with no de-dupe guard; a `button !== this.triggerButton` check
+  was added so the ARIA attributes and reference are only (re-)wired once per button.
+- The popup (`div.menu`) gets `role="menu"`; each generated entry gets `role="menuitem"` and a
+  roving `tabindex` (`0` on the first item, `-1` on the rest, mirroring the pattern already used
+  for `fx-switch`'s tabs).
+- Opening the menu moves focus to the first item; Up/Down/Home/End move a roving tabindex between
+  items while open (`_handleMenuKeydown`), following the WAI-ARIA menu pattern. Closing via
+  Escape or an outside click restores focus to the trigger button; closing via item *selection*
+  deliberately does **not** steal focus back to the trigger, since `fx-control.activate()`
+  already moves focus to the newly-revealed widget one frame later — restoring focus to the
+  button first would just have the widget steal it back immediately after, which reads as
+  double focus movement to AT users.
+- Opening/closing/disabling is now centralized in `_openMenu()`/`_closeMenu()` rather than
+  toggling `classList`/`aria-expanded` ad hoc at each of the four call sites (button click,
+  outside click, Escape, zero-targets in `updateMenu()`), so the ARIA state can't drift out of
+  sync with the visible state.
 
 ## Verification
 

@@ -5,12 +5,15 @@ import XfAbstractControl from './abstract-control.js';
  * in a popup list for activation. 'on-demand' is not a state like 'relevant' but just
  * shows/hides controls on demand. The controls still behave as usual otherwise.
  *
- *
+ * Implements the ARIA "menu button" pattern: the slotted trigger gets `aria-haspopup`/
+ * `aria-expanded`/`aria-controls`, the popup gets `role="menu"` with `role="menuitem"`
+ * entries, and Up/Down/Home/End move a roving tabindex across the open menu.
  */
 export class FxControlMenu extends XfAbstractControl {
   connectedCallback() {
     this.attachShadow({ mode: 'open' });
     this.selectExpr = this.getAttribute('select');
+    this.triggerButton = null;
 
     const style = `
       :host {
@@ -52,10 +55,11 @@ export class FxControlMenu extends XfAbstractControl {
     this.shadowRoot.innerHTML = `
       <style>${style}</style>
       <slot></slot>
-      <div class="menu" part="menu"></div>
+      <div class="menu" part="menu" role="menu"></div>
     `;
 
     this.menuEl = this.shadowRoot.querySelector('.menu');
+    this.menuEl.addEventListener('keydown', e => this._handleMenuKeydown(e));
 
     // Slotted button click
     const slot = this.shadowRoot.querySelector('slot');
@@ -64,12 +68,19 @@ export class FxControlMenu extends XfAbstractControl {
       const button = nodes.find(
         node => node.nodeType === Node.ELEMENT_NODE && node.tagName === 'BUTTON',
       );
-      if (button) {
+      if (button && button !== this.triggerButton) {
+        this.triggerButton = button;
+        button.setAttribute('aria-haspopup', 'true');
+        button.setAttribute('aria-expanded', 'false');
         button.addEventListener('click', e => {
           e.preventDefault();
           e.stopPropagation();
           this.updateMenu();
-          this.menuEl.classList.toggle('visible');
+          if (this.menuEl.classList.contains('visible')) {
+            this._closeMenu();
+          } else {
+            this._openMenu();
+          }
         });
       }
     });
@@ -83,14 +94,14 @@ export class FxControlMenu extends XfAbstractControl {
     document.addEventListener('click', e => {
       const inside = this.contains(e.target) || this.shadowRoot.contains(e.target);
       if (!inside) {
-        this.menuEl.classList.remove('visible');
+        this._closeMenu();
       }
     });
 
-    // Close on Escape
+    // Close on Escape, returning focus to the trigger
     document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') {
-        this.menuEl.classList.remove('visible');
+      if (e.key === 'Escape' && this.menuEl.classList.contains('visible')) {
+        this._closeMenu({ restoreFocus: true });
       }
     });
 
@@ -132,6 +143,61 @@ export class FxControlMenu extends XfAbstractControl {
     return null;
   }
 
+  /**
+   * Opens the popup, reflects `aria-expanded` on the trigger, and moves focus to the
+   * first menu item (ARIA "menu button" pattern).
+   */
+  _openMenu() {
+    this.menuEl.classList.add('visible');
+    this.triggerButton?.setAttribute('aria-expanded', 'true');
+    this.menuEl.querySelector('a')?.focus();
+  }
+
+  /**
+   * Closes the popup and reflects `aria-expanded` on the trigger. Focus is only restored
+   * to the trigger for dismissal paths (Escape, outside click) - not on item selection,
+   * where `el.activate()` already moves focus to the newly revealed control.
+   */
+  _closeMenu({ restoreFocus = false } = {}) {
+    this.menuEl.classList.remove('visible');
+    this.triggerButton?.setAttribute('aria-expanded', 'false');
+    if (restoreFocus) {
+      this.triggerButton?.focus();
+    }
+  }
+
+  /**
+   * Roving-tabindex arrow-key navigation between menu items (Up/Down/Home/End), following
+   * the WAI-ARIA menu pattern.
+   */
+  _handleMenuKeydown(e) {
+    const items = Array.from(this.menuEl.querySelectorAll('a'));
+    if (items.length === 0) return;
+    const idx = items.indexOf(e.target);
+    if (idx === -1) return;
+
+    let newIdx;
+    switch (e.key) {
+      case 'ArrowDown':
+        newIdx = (idx + 1) % items.length;
+        break;
+      case 'ArrowUp':
+        newIdx = (idx - 1 + items.length) % items.length;
+        break;
+      case 'Home':
+        newIdx = 0;
+        break;
+      case 'End':
+        newIdx = items.length - 1;
+        break;
+      default:
+        return;
+    }
+    e.preventDefault();
+    items.forEach((item, i) => item.setAttribute('tabindex', i === newIdx ? '0' : '-1'));
+    items[newIdx].focus();
+  }
+
   updateMenu() {
     const container = this._getScopedContainer();
     if (!container) return;
@@ -163,7 +229,7 @@ export class FxControlMenu extends XfAbstractControl {
     }
 
     if (targets.length === 0) {
-      this.menuEl.classList.remove('visible');
+      this._closeMenu();
       return;
     }
 
@@ -182,6 +248,8 @@ export class FxControlMenu extends XfAbstractControl {
       const item = document.createElement('a');
       item.href = '#';
       item.textContent = label;
+      item.setAttribute('role', 'menuitem');
+      item.setAttribute('tabindex', index === 0 ? '0' : '-1');
 
       item.addEventListener('click', e => {
         e.preventDefault();
@@ -189,7 +257,7 @@ export class FxControlMenu extends XfAbstractControl {
           el.activate();
         }
 
-        this.menuEl.classList.remove('visible');
+        this._closeMenu();
 
         // Wait one frame to let DOM updates (like on-demand removal) take effect
         requestAnimationFrame(() => {
