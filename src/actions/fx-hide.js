@@ -39,7 +39,7 @@ export class FxHide extends AbstractAction {
 
     const dialog = resolveId(this.dialog, this);
     dialog.close();
-    Fore.dispatch(dialog, 'dialog-hidden', {});
+    await Fore.dispatch(dialog, 'dialog-hidden', {});
   }
 }
 

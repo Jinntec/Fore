@@ -207,12 +207,12 @@ export class UIElement extends ForeElementMixin {
     icon.style.cursor = 'pointer';
     icon.style.marginLeft = '0.5em';
 
-    icon.addEventListener('click', e => {
+    icon.addEventListener('click', async e => {
       e.stopPropagation();
       this.setAttribute('on-demand', 'true');
       this.style.display = 'none';
       document.dispatchEvent(new CustomEvent('update-control-menu'));
-      Fore.dispatch(this, 'hide-control', {});
+      await Fore.dispatch(this, 'hide-control', {});
     });
 
     this.appendChild(icon);

@@ -200,7 +200,7 @@ export class FxInsert extends AbstractAction {
       : null;
   }
 
-  _performJsonInsert(inscope, fore) {
+  async _performJsonInsert(inscope, fore) {
     // We need the ARRAY CONTAINER node, not the array children.
     // IMPORTANT: do not rely on xpath-evaluation here because action in-scope context
     // can be a DOM node (trigger/button), not a JSON lens node.
@@ -404,7 +404,7 @@ export class FxInsert extends AbstractAction {
     // Dispatch Fore insert event similarly to XML branch
     const xpath = insertedNode?.getPath ? insertedNode.getPath() : '';
 
-    Fore.dispatch(instance, 'insert', {
+    await Fore.dispatch(instance, 'insert', {
       insertedNodes: insertedNode,
       insertedParent: arrayNode,
       ref: this.ref,
@@ -665,7 +665,7 @@ export class FxInsert extends AbstractAction {
       }),
     );
 
-    Fore.dispatch(inst, 'insert', {
+    await Fore.dispatch(inst, 'insert', {
       insertedNodes: originSequenceClone,
       insertedParent: insertLocationNode.parentNode,
       ref: this.ref,

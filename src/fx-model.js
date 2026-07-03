@@ -329,7 +329,7 @@ export class FxModel extends HTMLElement {
     this.debugInfo.modelConstructCount += 1;
 
     // this.dispatchEvent(new CustomEvent('model-construct', { detail: this }));
-    Fore.dispatch(this, 'model-construct', { model: this });
+    await Fore.dispatch(this, 'model-construct', { model: this });
 
     // console.time('instance-loading');
     const instances = this.querySelectorAll('fx-instance');
@@ -654,14 +654,14 @@ export class FxModel extends HTMLElement {
       this.formElement.toRefresh = toRefresh;
 */
       this.changed = [];
-      Fore.dispatch(this, 'recalculate-done', { graph: this.subgraph, computes: this.computes });
+      await Fore.dispatch(this, 'recalculate-done', { graph: this.subgraph, computes: this.computes });
     } else {
       const v = this.mainGraph.overallOrder(false);
       v.forEach(path => {
         const node = this.mainGraph.getNodeData(path);
         this.compute(node, path);
       });
-      Fore.dispatch(this, 'recalculate-done', { graph: this.mainGraph, computes: this.computes });
+      await Fore.dispatch(this, 'recalculate-done', { graph: this.mainGraph, computes: this.computes });
     }
     console.log(`${this.parentElement.id} recalculate finished with modelItems `, this.modelItems);
   }
