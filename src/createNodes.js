@@ -82,6 +82,25 @@ function splitSteps(xpath) {
 }
 
 /**
+ * @param {string} possibleAttributeTest
+ */
+function extractAttributeTest(possibleAttributeTest) {
+  possibleAttributeTest = possibleAttributeTest.trim();
+  if (!possibleAttributeTest.startsWith('@')) {
+    return null;
+  }
+  const predicateRegex = /@(.*)\s*=\s*(['"])(.*)\2/g;
+  const match = predicateRegex.exec(possibleAttributeTest);
+  if (match) {
+    // Yep, this has the form `@type="my-type"`
+    return { name: match[1].trim(), value: match[3] };
+  }
+
+  // This is of the form `@attr`
+  return { name: possibleAttributeTest.substring(1), value: '' };
+}
+
+/**
  * @typedef {{form: 'attributes', found: {name: string, value: string}} | {form: 'nested-path', found: RawStep[]}} ParsedPredicate
  */
 
@@ -91,15 +110,12 @@ function splitSteps(xpath) {
  * @returns {ParsedPredicate}
  */
 function parsePredicate(predicate) {
-  const trimmed = predicate.trim();
-
-  const predicateRegex = /^\s*@(.*)\s*=\s*(['"])(.*)\2/g;
-  const match = predicateRegex.exec(trimmed);
-  if (match) {
+  const attributeTest = extractAttributeTest(predicate);
+  if (attributeTest) {
     // Yep, this has the form `@type="my-type"`
     return {
       form: 'attributes',
-      found: { name: match[1].trim(), value: match[3] },
+      found: attributeTest,
     };
   }
 
@@ -135,19 +151,21 @@ export default function createNodes(xpath, baseElement, foreElement) {
     const raw = token.trim();
 
     if (raw.startsWith('@')) {
-      const attrToken = raw.slice(1);
-      if (attrToken.startsWith('*:')) {
-        return { isAttribute: true, namespaceURI: null, localName: attrToken.substring(2) };
+      const { name, value } = extractAttributeTest(raw);
+
+      if (name.startsWith('*:')) {
+        return { isAttribute: true, namespaceURI: null, localName: name.substring(2) };
       }
-      if (attrToken.includes(':')) {
-        const [prefix, localName] = attrToken.split(':');
+      if (name.includes(':')) {
+        const [prefix, localName] = name.split(':');
         return {
           isAttribute: true,
           namespaceURI: prefix === '*' ? null : namespaceResolver(prefix) || null,
           localName,
+          value,
         };
       }
-      return { isAttribute: true, namespaceURI: null, localName: attrToken };
+      return { isAttribute: true, namespaceURI: null, localName: name, value };
     }
 
     if (raw.startsWith('*:')) {
@@ -200,12 +218,13 @@ export default function createNodes(xpath, baseElement, foreElement) {
     if (parsed.isAttribute) {
       if (!current) {
         const attr = ownerDoc.createAttribute(parsed.localName);
+        attr.value = parsed.value;
         return {
           action: 'return',
           attr,
         };
       }
-      current.setAttribute(parsed.localName, '');
+      current.setAttribute(parsed.localName, parsed.value);
       return {
         action: 'continue',
         element: current,
