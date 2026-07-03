@@ -84,12 +84,12 @@
             outline: 0.25rem solid orange;
         }
 
-        fx-dialog fx-control,
-        fx-dialog fx-control input {
+        dialog fx-control,
+        dialog fx-control input {
             width: 100%;
         }
 
-        fx-dialog fx-control label {
+        dialog fx-control label {
             display: block;
         }
 
@@ -178,7 +178,7 @@
                     </template>
                 </fx-repeat>
 
-                <fx-dialog id="add-controls">
+                <dialog id="add-controls">
                     <div class="dialog-content">
                         <fx-control ref="instance('vars')/selected">
                             <label>Select components to add</label>
@@ -206,7 +206,7 @@
                             </fx-action>
                         </fx-trigger>
                     </div>
-                </fx-dialog>
+                </dialog>
             </template>
         </fx-repeat>
     </main>

@@ -214,6 +214,39 @@
         position: relative;
     }
 
+    /* ### NATIVE <dialog> STYLES (preferred over fx-dialog, which is deprecated) ### */
+    /* ### NATIVE <dialog> STYLES (preferred over fx-dialog, which is deprecated) ### */
+    /* ### NATIVE <dialog> STYLES (preferred over fx-dialog, which is deprecated) ### */
+    dialog {
+        border: thin solid;
+        border-radius: 0.5rem;
+        padding: 0;
+        position: relative;
+    }
+
+    dialog::backdrop {
+        background: rgba(0, 0, 0, 0.5);
+    }
+
+    dialog .dialog-content {
+        padding: 1rem;
+    }
+
+    dialog .close-dialog {
+        position: absolute;
+        right: 0.4rem;
+        top: 0.2rem;
+        color: var(--paper-grey-900);
+        text-decoration: none;
+        font-size: 1.2rem;
+    }
+
+    dialog .action {
+        width: 100%;
+        text-align: center;
+        display: block;
+    }
+
     fx-hint {
         display: none;
     }

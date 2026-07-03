@@ -11,7 +11,7 @@ current state, the fixes shipped as the "foundation" layer, and what's still ope
 |---|---|---|
 | 1.1.1 Non-text Content | Icons (`fx-trigger`, `fx-control-menu`) need accessible names | Backlog |
 | 1.3.1 Info and Relationships | Label/hint/alert programmatically associated with their control | **Fixed** (foundation) |
-| 2.1.1/2.1.2 Keyboard / No Trap | All interactive widgets reachable and escapable via keyboard | Partial — `fx-trigger` OK, `fx-dialog` has no focus trap (Backlog) |
+| 2.1.1/2.1.2 Keyboard / No Trap | All interactive widgets reachable and escapable via keyboard | **Fixed** (`fx-trigger` OK; `fx-dialog` deprecated in favor of native `<dialog>`, which provides this natively — see below) |
 | 2.4.3 Focus Order | Nonrelevant controls must not be reachable by Tab | **Fixed** (foundation, via `inert`) |
 | 2.4.6 Labels or Instructions | Every control has a name | **Fixed** (foundation) |
 | 2.4.7 Focus Visible | Custom widgets show a visible focus indicator | Not audited (CSS-level, out of scope) |
@@ -102,7 +102,7 @@ list it.
 | `fx-hint` | Wired into `aria-describedby`; itself `@deprecated` in source, not restructured | **Fixed** (association only) |
 | `fx-group` | `role="group"` already set; no `aria-label`/`aria-labelledby` tying it to a visible group label | Backlog |
 | `fx-switch`/`fx-case` | Correct `inert` toggling; opt-in `appearance="tabs"` adds `role="tablist"`/`"tab"`/`"tabpanel"`, `aria-selected`, roving tabindex, arrow-key navigation | **Fixed** (opt-in) |
-| `fx-dialog` | `role="dialog"` set but `aria-modal` hardcoded `"false"` and never updated; no focus trap; focus set on connect, not on show | Backlog |
+| `fx-dialog` | **Deprecated** in favor of native `<dialog>` (`fx-show`/`fx-hide` work against it unchanged), which provides `aria-modal`, focus trap, and Escape-to-close natively | **Fixed** (via deprecation) |
 | `fx-repeat`/`fx-repeatitem` | `role="list"`/`"listitem"`; `fx-repeatitem.js`'s `this.tabindex = 0` no-op fixed | **Fixed** |
 | `fx-control-menu` | Consumes `aria-label` from targets but its generated popup has no `role="menu"`/`"menuitem"`, no `aria-haspopup`/`aria-expanded`, no arrow-key navigation | Backlog |
 
@@ -116,9 +116,8 @@ in a shared choke point" model the foundation layer used, because these controls
       see write-up below.
 - [x] 2. **`fx-repeat` list semantics** (`src/ui/fx-repeat.js`, `src/ui/fx-repeatitem.js`) — see
       write-up below.
-- [ ] 3. **`fx-dialog` focus trap** — real `aria-modal` toggling on show/hide, focus moved into the
-      dialog on open (not on connect) and restored to the trigger on close, Escape-to-close, and a
-      focus trap while open.
+- [x] 3. **`fx-dialog` focus trap** — resolved by deprecation rather than a hand-rolled trap; see
+      write-up below.
 - [ ] 4. **`fx-control-menu` menu semantics** — `role="menu"`/`"menuitem"`, `aria-haspopup`,
       `aria-expanded` on the trigger, roving-tabindex arrow-key navigation.
 
@@ -210,6 +209,48 @@ per bound node" — so `role="listitem"` ships unconditionally on every `fx-repe
   `setAttribute('tabindex', 0)` in `_createNewRepeatItem`) — sensible for master-detail row
   selection (the pattern `focusin` → `_dispatchIndexChange` already existed for), but worth knowing
   if a very long static list ever feels noisy under keyboard/AT navigation.
+
+### 3. `fx-dialog` focus trap (`src/ui/fx-dialog.js`)
+
+`fx-dialog` is a hand-rolled modal (`role="dialog"` + a `.show` class toggled by `fx-show`/
+`fx-hide`) with real gaps: `aria-modal` is hardcoded `"false"` and never updated, there's no focus
+trap, focus is set once on `connectedCallback` rather than on open, and the Escape-key handler in
+`showModal()` calls a `this.hide()` method that doesn't exist on the class (a silent no-op, so
+Escape never actually closed it).
+
+Building a correct focus trap (tracking tab order, wrapping at the first/last focusable element,
+capturing/restoring the triggering element, real `aria-modal` toggling) reimplements behavior the
+native HTML `<dialog>` element already provides for free: `showModal()` traps focus, sets the
+accessibility tree to modal, honors `autofocus`, and Escape-to-close is built in — and `fx-show`/
+`fx-hide` already work against `<dialog>` unchanged, since they only call the shared
+`.showModal()`/`.close()` method names via `resolveId()` (`demo/dialog.html` already demonstrated
+this pattern). Patching `fx-dialog` to reimplement what the platform does natively (and arguably
+worse, since hand-rolled traps are a common source of *new* a11y bugs) isn't worth it next to
+switching to `<dialog>`.
+
+- `src/ui/fx-dialog.js` is now marked `@deprecated` in its JSDoc, recommending native `<dialog>`.
+  No functional change was made to the element itself — it keeps working as-is for any external
+  pages still using it.
+- Every in-repo demo using `<fx-dialog>` was migrated to native `<dialog>`: `demo/controls/
+  fx-dialog.html`, `demo/controls/email.html`, `demo/generator/view-editor.html`, and
+  `demo/tp/layout-templates/simple-index.html`. The migration is markup-only — swap the tag name,
+  and (where a decorative `.close-dialog` link existed) wrap it in an `fx-trigger`/`fx-hide` pair
+  like the other close buttons, since `fx-dialog.js` used to special-case that class internally via
+  a raw `click` listener and native `<dialog>` has no equivalent.
+- `resources/fore.css` (and its byte-identical vendored copy `demo/edep/css/fore.css`) gained a
+  parallel `dialog`/`.dialog-content`/`.close-dialog`/`.action`/`::backdrop` rule set alongside the
+  pre-existing (now legacy) `fx-dialog` rules, so migrated demos keep the same visual language.
+  Centering/sizing rules that `fx-dialog` needed (`position:fixed`, manual `translate` centering)
+  were dropped — native `<dialog>` centers itself via the UA stylesheet.
+- `test/dialog.test.js` was updated to author `<dialog>` markup and assert `dialog.open` instead of
+  `dialog.classList.contains('show')`; the `dialog-shown`/`dialog-hidden` event assertions are
+  unchanged since those events are dispatched by the `fx-show`/`fx-hide` action classes, not by
+  `fx-dialog.js`.
+- The automated axe gate (`cypress/e2e/accessibility.cy.ts`) was not extended to cover a dialog
+  page — the demos above aren't in its page list, and a real coverage addition would need to open
+  the dialog before scanning (a `display:none`/closed dialog is skipped by axe) plus giving the
+  dialog an accessible name (`aria-labelledby` pointing at its heading), which native `<dialog>`
+  doesn't provide by default either. Left as a future addition, not bundled into this deprecation.
 
 ## Verification
 
