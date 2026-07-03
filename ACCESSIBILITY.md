@@ -351,6 +351,62 @@ than default behavior on every `fx-switch` — see `demo/switch-tabs.html`.
 - Plain `fx-switch` usage (no `appearance="tabs"`) is completely unaffected — the attribute is
   read once in `connectedCallback` and everything described above is skipped when absent.
 
+### 2. `fx-repeat` list semantics (`src/ui/fx-repeat.js`, `src/ui/fx-repeatitem.js`)
+
+Unlike `fx-switch`, `fx-repeat` isn't polymorphic — it only ever means "repeat this template once
+per bound node" — so `role="listitem"` ships unconditionally on every `fx-repeatitem`, the same way
+`fx-group` unconditionally sets `role="group"`.
+
+- Each `fx-repeatitem` sets `role="listitem"` on itself in `connectedCallback`.
+- `role="list"` does **not** go on the `fx-repeat` host itself. `fx-repeat` supports a named
+  `slot="header"` for non-repeated content rendered alongside the repeated items (e.g.
+  `demo/api.html`'s `<table slot="header">` column-header row). If `role="list"` were on the host,
+  that header content would land in the *list's* accessibility subtree in the flattened tree
+  (Shadow DOM slotting doesn't change the light-DOM parent, but it does change the accessibility
+  tree), and axe's `aria-required-children` flags it: a `<table>` (or anything with a role other
+  than `listitem`/`group`) isn't an allowed child of `role="list"` — confirmed empirically with a
+  throwaway `cy.checkA11y` run before landing this. So, matching the same wrapper technique
+  `fx-switch`'s tabs mode uses for `role="tablist"`, the shadow root now wraps only the *default*
+  slot (where `fx-repeatitem`s land) in `<div part="list" role="list">`, leaving
+  `<slot name="header">` outside it:
+  ```html
+  <slot name="header"></slot>
+  <div part="list" role="list"><slot></slot></div>
+  ```
+  An empty repeat (nodeset resolves to zero items, e.g. an "add your first item" pattern) was also
+  checked with axe — a `role="list"` wrapper with zero `listitem` children does **not** trigger
+  `aria-required-children`, so no extra guard was needed for that case.
+- The wrapper `<div>` also needed `display: contents` (added in `fx-repeat.js`'s shadow `<style>`).
+  A bare `<slot>` renders as layout-transparent (`display: contents`-like) by default, so demos
+  that put `display: flex`/`grid` directly on the `fx-repeat` host — e.g. `demo/kanban.html`'s
+  `#column { display: flex }`, used to lay out the board's columns side by side — relied on the
+  repeated `fx-repeatitem`s being direct flex items of the host. Without `display: contents` on the
+  wrapper, the wrapper itself becomes the sole flex item and the columns collapse into a vertical
+  stack instead of a row — a regression that every automated test in this repo (unit, axe, and the
+  functional `kanban.cy.ts` drag/drop specs) sailed straight through, because none of them assert
+  computed layout. Caught by rendering `demo/kanban.html` in a real browser and diffing
+  `getBoundingClientRect()` of the column `fx-repeatitem`s before/after (same `top`, increasing
+  `left` confirms the row layout held). `display: contents` has a history of dropping the element's
+  role from the accessibility tree in some browsers, so this was re-verified with a scoped
+  `cy.checkA11y('#column', { runOnly: ['aria-required-children', 'aria-required-parent'] })` run
+  against the live kanban page — both rules passed, confirming `role="list"` still parents the
+  `listitem`s correctly through the `display: contents` wrapper.
+- The unrelated table-repeat widget (`fx-repeat-attributes.js`, driven by `table[data-ref]`,
+  producing real `<tr class="fx-repeatitem">` rows) is untouched — real table rows already carry
+  an implicit `role="row"` and forcing `role="listitem"` onto them would be invalid ARIA. That
+  widget doesn't use the `<fx-repeatitem>` custom element at all, so it's unaffected by this change.
+- Fixed `fx-repeatitem.js`'s `this.tabindex = 0` — `tabindex` (lowercase) is not a reflected IDL
+  property on `HTMLElement` (only the camelCase `tabIndex` is), so the assignment was a silent
+  no-op that created a throwaway JS property instead of the `tabindex` attribute. Repeat items were
+  therefore never keyboard-focusable even though a `focusin` listener already existed to react to
+  them being focused (`_dispatchIndexChange`). Replaced with `setAttribute('tabindex', '0')`, which
+  makes every repeat item Tab-reachable and activates that existing focus-handling path. Note this
+  is a behavior change beyond "fixing a bug that did nothing": a large plain-data repeat now adds
+  one tab stop per row (previously only `draggable` items were focusable, via a separate
+  `setAttribute('tabindex', 0)` in `_createNewRepeatItem`) — sensible for master-detail row
+  selection (the pattern `focusin` → `_dispatchIndexChange` already existed for), but worth knowing
+  if a very long static list ever feels noisy under keyboard/AT navigation.
+
 ## Verification
 
 - [x] `npm test` — karma/mocha unit suite: 858 passing (incl. new assertions for
