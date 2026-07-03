@@ -385,6 +385,101 @@ describe('fx-switch Tests', () => {
     globalThis.fetch = originalFetch;
   });
 
+  it('wires ARIA tab semantics when appearance="tabs"', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-switch appearance="tabs">
+          <fx-trigger>
+            <button>Page one</button>
+            <fx-toggle case="one"></fx-toggle>
+          </fx-trigger>
+          <fx-trigger>
+            <button>Page two</button>
+            <fx-toggle case="two"></fx-toggle>
+          </fx-trigger>
+
+          <fx-case id="one">content one</fx-case>
+          <fx-case id="two">content two</fx-case>
+        </fx-switch>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const tablist = el.querySelector('fx-switch').shadowRoot.querySelector('[role="tablist"]');
+    expect(tablist).to.exist;
+
+    const triggers = el.querySelectorAll('fx-trigger');
+    const tabOne = triggers[0].querySelector('button');
+    const tabTwo = triggers[1].querySelector('button');
+    const caseOne = el.querySelector('#one');
+    const caseTwo = el.querySelector('#two');
+
+    expect(tabOne.getAttribute('role')).to.equal('tab');
+    expect(tabOne.getAttribute('aria-selected')).to.equal('true');
+    expect(tabOne.getAttribute('tabindex')).to.equal('0');
+    expect(tabOne.getAttribute('aria-controls')).to.equal('one');
+
+    expect(tabTwo.getAttribute('role')).to.equal('tab');
+    expect(tabTwo.getAttribute('aria-selected')).to.equal('false');
+    expect(tabTwo.getAttribute('tabindex')).to.equal('-1');
+
+    expect(caseOne.getAttribute('role')).to.equal('tabpanel');
+    expect(caseOne.getAttribute('aria-labelledby')).to.equal(tabOne.id);
+    expect(caseTwo.getAttribute('role')).to.equal('tabpanel');
+    expect(caseTwo.getAttribute('aria-labelledby')).to.equal(tabTwo.id);
+
+    await triggers[1].performActions();
+
+    expect(tabOne.getAttribute('aria-selected')).to.equal('false');
+    expect(tabOne.getAttribute('tabindex')).to.equal('-1');
+    expect(tabTwo.getAttribute('aria-selected')).to.equal('true');
+    expect(tabTwo.getAttribute('tabindex')).to.equal('0');
+  });
+
+  it('moves focus and activates case with arrow keys in tabs mode', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-switch appearance="tabs">
+          <fx-trigger>
+            <button>Page one</button>
+            <fx-toggle case="one"></fx-toggle>
+          </fx-trigger>
+          <fx-trigger>
+            <button>Page two</button>
+            <fx-toggle case="two"></fx-toggle>
+          </fx-trigger>
+
+          <fx-case id="one">content one</fx-case>
+          <fx-case id="two">content two</fx-case>
+        </fx-switch>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const fxSwitch = el.querySelector('fx-switch');
+    const triggers = el.querySelectorAll('fx-trigger');
+    const tabOne = triggers[0].querySelector('button');
+    const tabTwo = triggers[1].querySelector('button');
+
+    const keydown = new KeyboardEvent('keydown', {
+      key: 'ArrowRight',
+      bubbles: true,
+      composed: true,
+    });
+    Object.defineProperty(keydown, 'target', { value: tabOne });
+    fxSwitch.dispatchEvent(keydown);
+
+    await waitUntil(
+      () => tabTwo.getAttribute('aria-selected') === 'true',
+      'second tab should become selected after ArrowRight',
+    );
+
+    expect(tabOne.getAttribute('aria-selected')).to.equal('false');
+    expect(el.querySelector('#two').classList.contains('selected-case')).to.be.true;
+  });
+
 /*
   it('refreshes second case when toggled', async () => {
     const el = await fixtureSync(html`

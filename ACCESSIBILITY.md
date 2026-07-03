@@ -98,7 +98,7 @@ list it.
 | `fx-alert` | `role="alert"`, `aria-live`, `aria-atomic`, wired `aria-describedby` | **Fixed** |
 | `fx-hint` | Wired into `aria-describedby`; itself `@deprecated` in source, not restructured | **Fixed** (association only) |
 | `fx-group` | `role="group"` already set; no `aria-label`/`aria-labelledby` tying it to a visible group label | Backlog |
-| `fx-switch`/`fx-case` | Correct `inert` toggling already; no `role="tablist"`/`"tab"`/`"tabpanel"` despite tab-like behavior; no arrow-key navigation | Backlog |
+| `fx-switch`/`fx-case` | Correct `inert` toggling; opt-in `appearance="tabs"` adds `role="tablist"`/`"tab"`/`"tabpanel"`, `aria-selected`, roving tabindex, arrow-key navigation | **Fixed** (opt-in) |
 | `fx-dialog` | `role="dialog"` set but `aria-modal` hardcoded `"false"` and never updated; no focus trap; focus set on connect, not on show | Backlog |
 | `fx-repeat`/`fx-repeatitem` | `delegatesFocus` shadow root; no `role="list"`/`"listitem"`; `fx-repeatitem.js`'s `this.tabindex = 0` is very likely a no-op (should be `this.tabIndex = 0` or `setAttribute('tabindex','0')` — reflected IDL property is camelCase) | Backlog |
 | `fx-control-menu` | Consumes `aria-label` from targets but its generated popup has no `role="menu"`/`"menuitem"`, no `aria-haspopup`/`aria-expanded`, no arrow-key navigation | Backlog |
@@ -109,8 +109,8 @@ Each of these is genuine per-component widget-pattern work — it doesn't fit th
 in a shared choke point" model the foundation layer used, because these controls either bypass
 `AbstractControl`'s handlers or need bespoke DOM structure a generic mixin can't infer:
 
-- [ ] 1. **`fx-switch`/`fx-case` tab semantics** — `role="tablist"`/`"tab"`/`"tabpanel"`, `aria-selected`,
-      arrow-key navigation between cases.
+- [x] 1. **`fx-switch`/`fx-case` tab semantics** (`src/ui/fx-switch.js`, `src/ui/fx-trigger.js`) —
+      see write-up below.
 - [ ] 2. **`fx-repeat` list semantics** — `role="list"`/`"listitem"` (or `aria-rowcount`/`aria-posinset`
       for large lists), plus fixing the `fx-repeatitem.js` `tabindex` no-op.
 - [ ] 3. **`fx-dialog` focus trap** — real `aria-modal` toggling on show/hide, focus moved into the
@@ -119,11 +119,46 @@ in a shared choke point" model the foundation layer used, because these controls
 - [ ] 4. **`fx-control-menu` menu semantics** — `role="menu"`/`"menuitem"`, `aria-haspopup`,
       `aria-expanded` on the trigger, roving-tabindex arrow-key navigation.
 
+### 1. `fx-switch`/`fx-case` tab semantics (`src/ui/fx-switch.js`, `src/ui/fx-trigger.js`)
+
+`fx-switch` is polymorphic — it's used as a bound panel switcher (driven by a `<select>`, no
+trigger children at all), as a wizard, as an accordion (`fx-trigger`/`fx-case` pairs interleaved
+as children, each trigger immediately followed by its own panel), and as tabs. A real ARIA
+`tablist` may only own `tab` children, and `fx-trigger`↔`fx-case` linkage isn't structural — it's
+a by-ID reference buried in `fx-toggle`'s `case` attribute, resolved via
+`ownerForm.querySelector('#id')`. Applying `role="tablist"`/`"tab"`/`"tabpanel"` unconditionally
+would put invalid ARIA on wizards, accordions, and bound switches (axe's `aria-required-children`
+would flag the accordion pattern specifically, since its panels sit *inside* the switch as
+siblings of the triggers). So this ships as an **opt-in** `appearance="tabs"` attribute rather
+than default behavior on every `fx-switch` — see `demo/switch-tabs.html`.
+
+- With `appearance="tabs"`, `fx-switch` renders `<div role="tablist"><slot name="tab"></slot></div>`
+  followed by the regular default slot, in its shadow root. Direct-child `fx-trigger`s that carry
+  an `fx-toggle` targeting a sibling `fx-case` are assigned `slot="tab"` — this regroups them
+  under the tablist *in the flattened (accessibility) tree* without moving them in the light DOM,
+  so document order and existing markup stay untouched.
+- Each such trigger's widget gets `role="tab"`, `aria-controls` (pointing at its case), and a
+  roving `tabindex` (`0` for the selected tab, `-1` for the rest); its target `fx-case` gets
+  `role="tabpanel"`, `aria-labelledby` (pointing back at the tab), and `tabindex="0"`. IDs are
+  generated via `Fore.createUUID()` when missing, matching the pattern already used for label/hint
+  association in the foundation layer.
+- `fx-trigger.js`'s default `role="button"` assignment (in its `slotchange` handler) is now
+  guarded to skip elements that already carry an explicit `role` — a one-line change needed so
+  `fx-switch`'s `role="tab"` isn't raced/overwritten back to `"button"`.
+- Arrow-key navigation (Left/Right/Up/Down/Home/End) is wired via a single delegated `keydown`
+  listener on `fx-switch`, following the WAI-ARIA "automatic activation" tabs pattern: moving
+  focus to a tab also activates its case (calls the trigger's own `performActions()`, so it goes
+  through the normal `fx-toggle` path rather than duplicating switch logic).
+- Plain `fx-switch` usage (no `appearance="tabs"`) is completely unaffected — the attribute is
+  read once in `connectedCallback` and everything described above is skipped when absent.
+
 ## Verification
 
-- [x] `npm test` — karma/mocha unit suite: 852 passing (incl. new assertions for
+- [x] `npm test` — karma/mocha unit suite: 856 passing (incl. new assertions for
       `aria-required`, `aria-readonly`, `aria-invalid`, label association, `aria-describedby`,
-      `inert`, and the `fx-alert` live-region attributes).
+      `inert`, the `fx-alert` live-region attributes, and — new — `fx-switch`'s `appearance="tabs"`
+      role/`aria-selected`/roving-tabindex wiring and arrow-key navigation in
+      `test/switch.test.js`).
 - [x] `npx cypress run` — full e2e suite: 38 specs / 93 tests passing, including the pre-existing
       `native-validation.cy.js` and `binding.valid-relevant.cy.js` (both assert `aria-invalid` and
       kept passing unchanged) plus the new `accessibility.cy.ts` automated axe gate.

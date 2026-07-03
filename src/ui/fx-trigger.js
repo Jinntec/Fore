@@ -26,7 +26,7 @@ export class FxTrigger extends XfAbstractControl {
       if (!elements[0].getAttribute('tabindex')) {
         elements[0].setAttribute('tabindex', '0');
       }
-      if (elements[0].nodeName !== 'BUTTON') {
+      if (elements[0].nodeName !== 'BUTTON' && !elements[0].getAttribute('role')) {
         elements[0].setAttribute('role', 'button');
       }
 
