@@ -4,6 +4,14 @@
 
 (* fx-lens does not play with demo-snippet-vanilla yet)
 
+### controls/ui.html
+Missing `<script>` tag entirely - no version of Fore is loaded, so none of its custom elements
+(`fx-fore`, `fx-group`, `fx-control`) ever upgrade. Also references model paths (`to/email`,
+`subject`, `message`, `attachments`) with no `<fx-model>`/`<fx-instance>` defining them, and had a
+stray `<<fx-fore>` typo (fixed in passing while investigating). Found while wiring up an
+automated axe accessibility check (see ACCESSIBILITY.md), which is why the check targets
+`controls/email.html` instead.
+
 ## fixed
 ### shared-instances.html (insert behavior when adding to child)
 largely resolved but still requires some hard refreshes. Could be 
