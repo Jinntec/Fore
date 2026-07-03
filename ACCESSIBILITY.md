@@ -106,11 +106,12 @@ list it.
 | `fx-repeat`/`fx-repeatitem` | `role="list"`/`"listitem"`; `fx-repeatitem.js`'s `this.tabindex = 0` no-op fixed | **Fixed** |
 | `fx-control-menu` | `role="menu"`/`"menuitem"`, `aria-haspopup`/`aria-expanded` on the trigger, roving-tabindex arrow-key navigation | **Fixed** |
 
-## Backlog (P1, out of scope for the foundation layer)
+## Widget-pattern fixes (P1, shipped)
 
-Each of these is genuine per-component widget-pattern work — it doesn't fit the "implement once
+Each of these was genuine per-component widget-pattern work — it didn't fit the "implement once
 in a shared choke point" model the foundation layer used, because these controls either bypass
-`AbstractControl`'s handlers or need bespoke DOM structure a generic mixin can't infer:
+`AbstractControl`'s handlers or need bespoke DOM structure a generic mixin can't infer. All four
+are now done:
 
 - [x] 1. **`fx-switch`/`fx-case` tab semantics** (`src/ui/fx-switch.js`, `src/ui/fx-trigger.js`) —
       see write-up below.
@@ -283,6 +284,39 @@ which had to accommodate several unrelated usages of the same element).
   toggling `classList`/`aria-expanded` ad hoc at each of the four call sites (button click,
   outside click, Escape, zero-targets in `updateMenu()`), so the ARIA state can't drift out of
   sync with the visible state.
+
+## Backlog (P2, open)
+
+What's left after the foundation layer and the four P1 widget-pattern fixes above. None of these
+block the current release; they're the next candidates when accessibility work resumes.
+
+- [ ] 1. **Icon accessible names (1.1.1)** — icon-only controls (`fx-trigger`, `fx-control-menu`)
+      have no mechanism for naming a bare icon glyph. Needs a convention decision (e.g. an
+      `icon-label` attribute, or requiring authors to supply visible/SR-only text) before it's an
+      implementation task — confirmed no icon-related ARIA code currently exists in either file.
+- [ ] 2. **`fx-group` labelling** — `role="group"` is set unconditionally
+      (`src/ui/fx-group.js:39`) but there's no `aria-label`/`aria-labelledby` tying the group to a
+      visible heading, so AT users hit an unnamed group. Same shape as the label-association work
+      already done for `fx-control`/`fx-output`: prefer `aria-labelledby` when a heading child
+      exists, fall back to `aria-label`.
+- [ ] 3. **`fx-trigger` toggle/async state** — no `aria-pressed` or `aria-busy`; confirmed absent
+      from `src/ui/fx-trigger.js`. Only relevant if `fx-trigger` has actual toggle semantics
+      somewhere in the codebase — scope that before building it.
+- [ ] 4. **`fx-upload`** — confirmed zero ARIA beyond inherited Layer 1 mirroring
+      (required/readonly/invalid); no exposure of selected-file, progress, or upload-error state.
+      Real widget-pattern work, not a shared choke point — largest item on this list.
+- [ ] 5. **Manual keyboard-only and screen-reader pass** — carried over from the foundation layer's
+      verification checklist (still unperformed): VoiceOver/Safari and NVDA/Firefox-or-Chrome
+      pass on `demo/controls/email.html`, confirming labels are announced, validation errors are
+      announced without a focus move, nonrelevant-then-focused controls are unreachable by Tab,
+      and hint/alert text is included in the field's accessible description. The axe gate only
+      catches missing ARIA, not whether the result actually reads correctly — do this before
+      adding more surface area (items 1–4 above).
+
+Out of scope, unchanged from the foundation layer:
+
+- **2.4.7 Focus Visible** — CSS-level, not audited.
+- **3.3.3 Error Suggestion** — author-controlled (alert text is markup, not enforced).
 
 ## Verification
 
