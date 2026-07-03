@@ -447,7 +447,6 @@ export class FxSubmission extends ForeElementMixin {
 
       return result;
     }
-    1;
     // Fallback: last-resort scalar conversion
     try {
       if (typeof node.get === 'function') {
