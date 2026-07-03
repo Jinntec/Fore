@@ -2,15 +2,12 @@ import { Fore } from './fore.js';
 import './fx-instance.js';
 import { FxModel } from './fx-model.js';
 import '@jinntec/jinn-toast';
-import {
-  evaluateXPathToNodes,
-  evaluateXPathToString,
-  createNamespaceResolver,
-} from './xpath-evaluation.js';
+import { evaluateXPathToNodes, evaluateXPathToString } from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
 import { XPathUtil } from './xpath-util.js';
 import { FxRepeatAttributes } from './ui/fx-repeat-attributes.js';
 import { FxBind } from './fx-bind.js';
+import createNodes from './createNodes.js';
 
 /**
  * Makes the dirty state of the form.
@@ -24,21 +21,6 @@ const dirtyStates = {
   CLEAN: 'clean',
   DIRTY: 'dirty',
 };
-async function waitForFunctionLibs(rootEl) {
-  const libs = Array.from(rootEl.querySelectorAll('fx-functionlib'));
-  await Promise.all(libs.map(l => (l.readyPromise ? l.readyPromise : Promise.resolve())));
-}
-
-/*
- * Determine whether a string is a valid Name
- *
- * @param {string} name
- * @returns {boolean} whether the name is a valid one
- */
-function isValidName(name) {
-  const result = new DOMParser().parseFromString(`<${name}/>`, 'application/xml');
-  return result.querySelector('parsererror') === null;
-}
 
 /**
  * Main class for Fore.Outermost container element for each Fore application.
@@ -347,7 +329,7 @@ export class FxFore extends HTMLElement {
     this.initialRun = true;
     this._scanForNewTemplateExpressionsNextRefresh = false;
     this.repeatsFromAttributesCreated = false;
-/*
+    /*
     this.validateOn = this.hasAttribute('validate-on')
       ? this.getAttribute('validate-on')
       : 'update';
@@ -392,11 +374,11 @@ export class FxFore extends HTMLElement {
   getDebugSnapshot(options = {}) {
     const model = this.model;
 
-    const debugRefElements = Array.from(this.querySelectorAll('[ref]'))
-        .filter(element => typeof element.getDebugInfo === 'function');
+    const debugRefElements = Array.from(this.querySelectorAll('[ref]')).filter(
+      element => typeof element.getDebugInfo === 'function',
+    );
 
-    const bindingElements = debugRefElements
-        .filter(element => element.localName === 'fx-bind');
+    const bindingElements = debugRefElements.filter(element => element.localName === 'fx-bind');
 
     const boundElementNames = new Set([
       'fx-control',
@@ -407,31 +389,32 @@ export class FxFore extends HTMLElement {
       'fx-switch',
     ]);
 
-    const boundUiElements = debugRefElements
-        .filter(element => boundElementNames.has(element.localName));
+    const boundUiElements = debugRefElements.filter(element =>
+      boundElementNames.has(element.localName),
+    );
 
     const bindings = bindingElements.map(element => element.getDebugInfo());
 
     const boundElements = boundUiElements.map(element => element.getDebugInfo());
 
     const submissions = Array.from(this.querySelectorAll('fx-submission'))
-        .filter(element => typeof element.getDebugInfo === 'function')
-        .map(element => element.getDebugInfo());
+      .filter(element => typeof element.getDebugInfo === 'function')
+      .map(element => element.getDebugInfo());
 
     return {
       fore: this.getDebugInfo?.() || null,
 
       model:
-          model?.getDebugInfo?.({
-            includeGraphs: options.includeGraphs === true,
-          }) || null,
+        model?.getDebugInfo?.({
+          includeGraphs: options.includeGraphs === true,
+        }) || null,
 
       instances: model?.instances?.map(instance => instance.getDebugInfo?.()) || [],
       modelItems: model?.modelItems?.map(item => item.getDebugInfo?.()) || [],
 
       bindings,
       boundElements,
-      submissions
+      submissions,
     };
   }
 
@@ -1999,6 +1982,11 @@ export class FxFore extends HTMLElement {
       }
     }
   }
+  /**
+   * Create Nodes from an XPath
+   * @param {string} ref
+   * @param {Element} referenceNode
+   */
   _createNodes(ref, referenceNode) {
     if (!ref || !referenceNode) return null;
 
@@ -2013,6 +2001,8 @@ export class FxFore extends HTMLElement {
     const ownerDoc =
       referenceNode.nodeType === Node.DOCUMENT_NODE ? referenceNode : referenceNode.ownerDocument;
 
+    if (!ownerDoc) return null;
+
     const baseElement =
       referenceNode.nodeType === Node.DOCUMENT_NODE
         ? referenceNode.documentElement
@@ -2020,152 +2010,7 @@ export class FxFore extends HTMLElement {
           ? referenceNode.ownerElement
           : referenceNode;
 
-    if (!ownerDoc) return null;
-
-    const baseNamespace = baseElement?.namespaceURI || null;
-    const namespaceResolver = createNamespaceResolver(xpath, this);
-
-    const parseName = token => {
-      const raw = token.trim();
-
-      if (raw.startsWith('@')) {
-        const attrToken = raw.slice(1);
-        if (attrToken.startsWith('*:')) {
-          return { isAttribute: true, namespaceURI: null, localName: attrToken.substring(2) };
-        }
-        if (attrToken.includes(':')) {
-          const [prefix, localName] = attrToken.split(':');
-          return {
-            isAttribute: true,
-            namespaceURI: prefix === '*' ? null : namespaceResolver(prefix) || null,
-            localName,
-          };
-        }
-        return { isAttribute: true, namespaceURI: null, localName: attrToken };
-      }
-
-      if (raw.startsWith('*:')) {
-        return { isAttribute: false, namespaceURI: baseNamespace, localName: raw.substring(2) };
-      }
-      if (raw.includes(':')) {
-        const [prefix, localName] = raw.split(':');
-        return {
-          isAttribute: false,
-          namespaceURI: prefix === '*' ? baseNamespace : namespaceResolver(prefix) || baseNamespace,
-          localName,
-        };
-      }
-      return { isAttribute: false, namespaceURI: baseNamespace, localName: raw };
-    };
-
-    const parseStep = step => {
-      const trimmed = step.trim();
-      const nameMatch = trimmed.match(/^([^\[]+)/);
-      const token = nameMatch ? nameMatch[1].trim() : trimmed;
-      const predicates = [];
-
-      const predicateRegex = /\[\s*@([^\]\s=]+)\s*=\s*(['"])(.*?)\2\s*\]/g;
-      let match;
-      while ((match = predicateRegex.exec(trimmed)) !== null) {
-        predicates.push({ name: match[1], value: match[3] });
-      }
-      return { token, predicates };
-    };
-
-    const splitSteps = xpath => {
-      /**
-       * @type {string[]}
-       */
-      const steps = [];
-      let scratch = '';
-      let isInPredicate = false;
-      for (const char of xpath.split('')) {
-        if (char === '[') {
-          isInPredicate = true;
-          scratch += char;
-          continue;
-        }
-        if (char === ']') {
-          scratch += char;
-          isInPredicate = false;
-          continue;
-        }
-        if (!isInPredicate) {
-          // Just add to the scratch. Do not check for slashes within predicates
-          if (char === '/') {
-            // Consume this path step
-            if (scratch) {
-              steps.push(scratch);
-            }
-            scratch = '';
-            continue;
-          }
-        }
-        scratch += char;
-      }
-
-      if (scratch) {
-        // Flush it
-        steps.push(scratch);
-      }
-
-      return steps;
-    };
-
-    const steps = splitSteps(xpath)
-      .map(step => step.trim())
-      .filter(step => step && step !== '.');
-
-    if (!steps.length) return null;
-
-    let subtreeRoot = null;
-    let current = null;
-
-    for (const rawStep of steps) {
-      const { token, predicates } = parseStep(rawStep);
-      if (!token || token === '.') {
-        continue;
-      }
-
-      const parsed = parseName(token);
-
-      if (!isValidName(parsed.localName)) {
-        // This did not result in a valid name. Stop.
-        console.warn(
-          `Creating node for the XPath ${xpath} failed because the part ${parsed.localName} is not a valid Name.`,
-        );
-        return;
-      }
-
-      if (parsed.isAttribute) {
-        if (!current) {
-          const attr = ownerDoc.createAttribute(parsed.localName);
-          return attr;
-        }
-        current.setAttribute(parsed.localName, '');
-        continue;
-      }
-
-      const element = parsed.namespaceURI
-        ? ownerDoc.createElementNS(parsed.namespaceURI, parsed.localName)
-        : ownerDoc.createElement(parsed.localName);
-
-      for (const predicate of predicates) {
-        const attrName = predicate.name.includes(':')
-          ? predicate.name.split(':')[1]
-          : predicate.name;
-        element.setAttribute(attrName, predicate.value);
-      }
-
-      if (!subtreeRoot) {
-        subtreeRoot = element;
-      } else {
-        current.appendChild(element);
-      }
-      current = element;
-    }
-
-    return subtreeRoot;
+    return createNodes(ref, baseElement, this);
   }
 
   _handleDragStart(event) {

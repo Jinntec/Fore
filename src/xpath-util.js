@@ -31,123 +31,6 @@ export class XPathUtil {
   }
 
   /**
-   * creates DOM Nodes from an XPath locationpath expression. Support namespaced and un-namespaced
-   * nodes.
-   * E.g. 'foo/bar' creates an element 'foo' with an child element 'bar'
-   * 'foo/@bar' creates a 'foo' element with an 'bar' attribute
-   *
-   * supports multiple steps
-   *
-   * @param xpath
-   * @param doc {XMLDocument}
-   * @param fore
-   * @param namespaceResolver {function} optional namespace resolver function
-   * @return {Node|Attr}
-   */
-  static createNodesFromXPath(xpath, doc, fore, namespaceResolver = null) {
-    const resolveNamespace = namespaceResolver || (() => undefined);
-
-    if (!doc) {
-      doc = document.implementation.createDocument(null, null, null); // Create a new XML document if not provided
-    }
-
-    const parts = [];
-    let scratch = '';
-    let isInPredicate = false;
-    for (const char of xpath.split('')) {
-      if (!isInPredicate) {
-        // We are not in a predicate, the slash will terminate our step.
-        if (char === '/') {
-          parts.push(scratch);
-          scratch = '';
-          continue;
-        }
-
-        scratch += char;
-        if (char === '[') {
-          isInPredicate = true;
-        }
-        continue;
-      }
-      // We are in a predicate! So the only interesting token is ']', which means we're out of one.
-      scratch += char;
-
-      if (char === ']') {
-        isInPredicate = false;
-      }
-    }
-    // Flush the last step
-    parts.push(scratch);
-
-    let rootNode = null;
-    let currentNode = null;
-
-    for (const part of parts) {
-      if (!part) continue; // Skip empty parts (e.g., leading slashes)
-      if (part === '.') {
-        // A '.' does not introduce new elements
-        continue;
-      }
-
-      // Handle attributes
-      if (part.startsWith('@')) {
-        const attrName = part.slice(1); // Strip '@'
-        if (!currentNode) {
-          return doc.createAttribute(attrName, '');
-        }
-        currentNode.setAttribute(attrName, '');
-      } else {
-        // We are a predicate selector! Handle it
-        // This regex matches strings like:
-        // - listBibl
-        // - tei:listBibl
-        // - listBibl[@type="foo"]
-        // - listBibl[@type="foo"][@class="bar"]
-        // It will also match strings like
-        // - listBibl[ancestor-or-self::foo]
-        // which will be filtered out later.
-
-        const result = part.match(/^(?<name>[\w:-]+)(?<predicates>(\[[^]*\])*)$/);
-        if (!result) {
-          throw new Error(
-            `No element could be made from the XPath step ${part}. It must be of these forms: 'localName', 'prefix:name', 'name[@attr="value"]' et cetera.`,
-          );
-        }
-        const { name, predicates } = result.groups;
-        // Handle namespaces if present
-        const [prefix, localName] = name.includes(':') ? name.split(':') : [null, name];
-        const namespace = resolveNamespace(prefix);
-
-        const newElement = namespace
-          ? doc.createElementNS(namespace, localName)
-          : doc.createElement(localName);
-
-        if (predicates) {
-          const predicateExtractionRegex =
-            /(\[@(?<name>[\w:-]*)\s?=\s?["'](?<value>[^"']*)['"]\])+/g;
-          const parsedPredicates = predicates
-            .matchAll(predicateExtractionRegex)
-            .map(match => ({ attrName: match.groups.name, value: match.groups.value }));
-          for (const { attrName, value } of parsedPredicates) {
-            newElement.setAttribute(attrName, value);
-          }
-        }
-        if (!rootNode) {
-          rootNode = newElement; // Set as the root node
-        } else {
-          currentNode.appendChild(newElement);
-        }
-        currentNode = newElement;
-      }
-    }
-    if (!rootNode) {
-      throw new Error('Invalid XPath; no root element could be created.');
-    }
-
-    return rootNode;
-  }
-
-  /**
    * looks up namespace on ownerForm. Though not strictly in the sense of resolving namespaces in XML, the
    * fx-fore element is a convenient place to put namespace declarations for 2 reasons:
    * - this way namespaces are scoped to a Fore element
@@ -281,7 +164,11 @@ export class XPathUtil {
    */
   static isAbsolutePath(path) {
     return (
-      path != null && (path.startsWith('/') || path.startsWith('instance(') || path.startsWith('$') || path.startsWith('?'))
+      path != null &&
+      (path.startsWith('/') ||
+        path.startsWith('instance(') ||
+        path.startsWith('$') ||
+        path.startsWith('?'))
     );
   }
 
@@ -309,7 +196,7 @@ export class XPathUtil {
     // for dependency tracking, otherwise repeats won't refresh when they change.
     try {
       const host =
-          boundElement?.nodeType === Node.ATTRIBUTE_NODE ? boundElement.ownerElement : boundElement;
+        boundElement?.nodeType === Node.ATTRIBUTE_NODE ? boundElement.ownerElement : boundElement;
       const fore = host?.closest?.('fx-fore');
       const bindings = fore?._instanceVarBindings;
 
@@ -320,9 +207,7 @@ export class XPathUtil {
         // $<id> => instance <id> (only if it's a known binding key)
         for (const k of Object.keys(bindings)) {
           if (k === 'default') continue;
-          const re = new RegExp(
-              `\\$${k.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&')}(?![\\w.-])`,
-          );
+          const re = new RegExp(`\\$${k.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&')}(?![\\w.-])`);
           if (re.test(refStr)) return k;
         }
       }
@@ -347,14 +232,14 @@ export class XPathUtil {
     // Variable indirection (may ultimately point to instance(...))
     if (refStr.startsWith('$')) {
       const variableName = refStr.match(/^\$(?<variableName>[a-zA-Z0-9\-_]+)/)?.groups
-          ?.variableName;
+        ?.variableName;
 
       let closestActualFormElement = boundElement;
       while (closestActualFormElement && !('inScopeVariables' in closestActualFormElement)) {
         closestActualFormElement =
-            closestActualFormElement.nodeType === Node.ATTRIBUTE_NODE
-                ? closestActualFormElement.ownerElement
-                : closestActualFormElement.parentNode;
+          closestActualFormElement.nodeType === Node.ATTRIBUTE_NODE
+            ? closestActualFormElement.ownerElement
+            : closestActualFormElement.parentNode;
       }
 
       const correspondingVariable = closestActualFormElement?.inScopeVariables?.get(variableName);
