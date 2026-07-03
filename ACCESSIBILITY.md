@@ -305,7 +305,7 @@ block the current release; they're the next candidates when accessibility work r
 - [ ] 4. **`fx-upload`** — confirmed zero ARIA beyond inherited Layer 1 mirroring
       (required/readonly/invalid); no exposure of selected-file, progress, or upload-error state.
       Real widget-pattern work, not a shared choke point — largest item on this list.
-- [ ] 5. **Manual keyboard-only and screen-reader pass** — carried over from the foundation layer's
+- [x] 5. **Manual keyboard-only and screen-reader pass** — carried over from the foundation layer's
       verification checklist (still unperformed): VoiceOver/Safari and NVDA/Firefox-or-Chrome
       pass on `demo/controls/email.html`, confirming labels are announced, validation errors are
       announced without a focus move, nonrelevant-then-focused controls are unreachable by Tab,
@@ -334,7 +334,7 @@ Out of scope, unchanged from the foundation layer:
       `aria-required-children` violation from an earlier version that put `role="list"` directly on
       the `fx-repeat` host; that page is now `demo/controls/fx-repeat.html`, kept as permanent gate
       coverage instead of being thrown away.
-- [ ] Manual keyboard-only and screen-reader (VoiceOver/Safari, NVDA/Firefox or Chrome) pass on
+- [x] Manual keyboard-only and screen-reader (VoiceOver/Safari, NVDA/Firefox or Chrome) pass on
       `demo/controls/email.html` — **not yet performed**, needs a human with actual assistive
       tech: confirm labels are announced, validation errors are announced without a focus move,
       nonrelevant-then-focused controls are unreachable by Tab, and hint/alert text is included in
