@@ -97,7 +97,7 @@ function extractAttributeTest(possibleAttributeTest) {
   }
 
   // This is of the form `@attr`
-  return { name: possibleAttributeTest.substring(1), value: '' };
+  return { name: possibleAttributeTest.substring(1), value: null };
 }
 
 /**
@@ -191,10 +191,11 @@ export default function createNodes(xpath, baseElement, foreElement) {
    *
    * @param {RawStep} rawStep
    * @param {Element} current
+   * @param {boolean} isRoot - True if this is the 'root' expression, false if we are in a predicate already
    *
    * @returns {({action: 'continue', element: Element} | {action: 'abort'} | {action: 'return', attr: Attr})}
    */
-  const processStep = (rawStep, current) => {
+  const processStep = (rawStep, current, isRoot) => {
     const { nameTest, predicates } = rawStep;
     if (!nameTest || nameTest === '.') {
       return {
@@ -224,7 +225,13 @@ export default function createNodes(xpath, baseElement, foreElement) {
           attr,
         };
       }
-      current.setAttribute(parsed.localName, parsed.value);
+      if (isRoot && parsed.value !== null) {
+        // Prevent a path shaped like `./@value="a"` to just set an attribute. This should only be done in predicates
+        return {
+          action: 'abort',
+        };
+      }
+      current.setAttribute(parsed.localName, parsed.value ?? '');
       return {
         action: 'continue',
         element: current,
@@ -258,7 +265,7 @@ export default function createNodes(xpath, baseElement, foreElement) {
         const nestedPath = parsedPredicate.found;
         let subtree = element;
         for (const step of nestedPath) {
-          const result = processStep(step, subtree);
+          const result = processStep(step, subtree, false);
           if (result.action === 'abort') {
             return result;
           }
@@ -285,7 +292,7 @@ export default function createNodes(xpath, baseElement, foreElement) {
   let subtreeRoot = null;
 
   for (const rawStep of steps) {
-    const result = processStep(rawStep, current);
+    const result = processStep(rawStep, current, true);
     switch (result.action) {
       case 'abort':
         return null;
