@@ -1,5 +1,6 @@
 ![NPM](https://img.shields.io/npm/l/@jinntec/fore)
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/jinntec/fore/CI)
+![NPM Downloads](https://img.shields.io/npm/dm/@jinntec/fore)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Jinntec/Fore/main.yml?branch=dev)
 ![GitHub Discussions](https://img.shields.io/github/discussions/jinntec/fore)
 ![GitHub last commit](https://img.shields.io/github/last-commit/jinntec/fore)
 ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/jinntec/fore)
