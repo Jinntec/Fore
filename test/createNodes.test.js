@@ -67,4 +67,23 @@ describe('createNodes', () => {
 
     expect(node.outerHTML).to.equal('<listBibl type="transmission"><bibl/></listBibl>');
   });
+
+  describe('recursive processing', () => {
+    it('can make a path with new expressions in the predicate', () => {
+      const xpath = 'a[b/c]';
+      const result = createNodes(xpath, baseElement, foreElement);
+      expect(result).to.not.equal(null, 'The result should not be null');
+      expect(result.outerHTML).to.equal('<a><b><c/></b></a>');
+    });
+
+    it('Can make a structure with nested predicates: `p[b[@class="my-class"]]/@value`', () => {
+      const node = createNodes(
+        `p[b[@class="my-class"]][@value = "my-value"]`,
+        baseElement,
+        foreElement,
+      );
+
+      expect(node.outerHTML).to.equal('<p value="my-value"><b class="my-class"/></p>');
+    });
+  });
 });
