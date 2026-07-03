@@ -76,6 +76,16 @@
 
                     <h3>Using <code><a href="https://jinntec.github.io/fore-docs/elements/ui/output/#attributes" target="_blank">value</a></code> with predicate</h3>
                     <div><fx-output  value="b[last()]"></fx-output> ⇒ 3 </div>
+
+                    <h3>Using <code>slot="label"</code> for an accessible name</h3>
+                    <p>The slotted label is rendered as visible text and also wired to the shadow-DOM
+                    widget's <code>aria-label</code>, since a shadow-DOM boundary sits between the two
+                    and an <code>id</code>/<code>for</code> reference can't cross it.</p>
+                    <div>
+                        <fx-output ref="b">
+                            <label slot="label">Value of b: </label>
+                        </fx-output> ⇒ 2
+                    </div>
                 </section>
             </fx-fore>
         </template>
