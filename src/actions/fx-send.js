@@ -90,7 +90,7 @@ class FxSend extends AbstractAction {
     if (submission.replace === 'instance') {
       this.getModel().updateModel();
       // todo: this bypasses observers...
-      this.getOwnerForm().refresh(true); //whole instance changes - full refresh necessary
+      this.getOwnerForm().refresh(true); // whole instance changes - full refresh necessary
       // this.getOwnerForm().addToBatchedNotifications(this.getOwnerForm());
       // this.needsUpdate = true;
     }

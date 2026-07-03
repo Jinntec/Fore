@@ -202,7 +202,7 @@ export class FxControlMenu extends XfAbstractControl {
     const container = this._getScopedContainer();
     if (!container) return;
 
-    let targets = [];
+    const targets = [];
     // ✅ Include container itself if it has on-demand
     if (container.hasAttribute('on-demand')) {
       targets.push(container);

@@ -50,8 +50,7 @@ describe('Binding demo: valid/invalid + relevant/nonrelevant', () => {
     cy.get('fx-control#input').should('not.have.attr', 'valid');
 
     // The widget should reflect invalid state
-    cy.get('fx-control#input input')
-      .should('have.attr', 'aria-invalid', 'true');
+    cy.get('fx-control#input input').should('have.attr', 'aria-invalid', 'true');
 
     // Go valid again
     listenOnceOnControl('valid', 'onValid');
@@ -62,8 +61,7 @@ describe('Binding demo: valid/invalid + relevant/nonrelevant', () => {
     cy.get('fx-control#input').should('have.attr', 'valid');
     cy.get('fx-control#input').should('not.have.attr', 'invalid');
 
-    cy.get('fx-control#input input')
-      .should('have.attr', 'aria-invalid', 'false');
+    cy.get('fx-control#input input').should('have.attr', 'aria-invalid', 'false');
   });
 
   it('fires nonrelevant then relevant when toggling relevance, and updates attributes', () => {

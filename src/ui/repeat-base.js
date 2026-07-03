@@ -217,6 +217,7 @@ export class RepeatBase extends withDraggability(UIElement, false) {
 
     this.getOwnerForm().addToBatchedNotifications(newRepeatItem);
   }
+
   /**
    * @abstract
    *

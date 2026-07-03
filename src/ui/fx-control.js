@@ -726,7 +726,7 @@ export default class FxControl extends XfAbstractControl {
     if (dataRefd && dataRefd.closest('fx-control') === this) {
       this.boundList = dataRefd;
       const ref = dataRefd.getAttribute('data-ref');
-      this._handleBoundWidget(dataRefd, true); //todo: revisit !!! observer
+      this._handleBoundWidget(dataRefd, true); // todo: revisit !!! observer
     }
   }
 

@@ -318,10 +318,10 @@ export default class ForeElementMixin extends HTMLElement {
       if (existed) {
         // CRITICAL: retarget existing ModelItem to the current backing object
         const isLensObject =
-            targetNode &&
-            typeof targetNode === 'object' &&
-            typeof targetNode.get === 'function' &&
-            typeof targetNode.set === 'function';
+          targetNode &&
+          typeof targetNode === 'object' &&
+          typeof targetNode.get === 'function' &&
+          typeof targetNode.set === 'function';
 
         if (isLensObject) {
           existed.lens = targetNode;
@@ -341,6 +341,7 @@ export default class ForeElementMixin extends HTMLElement {
     this.modelItem = lazyCreatedModelItem;
     return lazyCreatedModelItem;
   }
+
   /**
    * Returns the effective value for the element.
    * a: look for 'value' attribute and if present evaluate it and return the resulting value

@@ -129,7 +129,7 @@ export class UIElement extends ForeElementMixin {
    * @param {import('../modelitem.js').ModelItem} modelItem - The ModelItem that changed
    */
 
-/*
+  /*
   update(modelItem) {
     if (this.isBound()) {
       // console.log('[UIElement] update()', modelItem);

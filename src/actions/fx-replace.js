@@ -46,7 +46,7 @@ export default class FxReplace extends AbstractAction {
 
   actionPerformed() {
     this.getModel().updateModel();
-    this.getOwnerForm().refresh(true); //todo: optimize and update only the affected subtree
+    this.getOwnerForm().refresh(true); // todo: optimize and update only the affected subtree
     this.dispatchActionPerformed();
   }
 

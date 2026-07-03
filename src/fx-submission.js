@@ -152,7 +152,9 @@ export class FxSubmission extends ForeElementMixin {
 
     const instance = this.getInstance();
     if (!instance) {
-      Fore.dispatch(this, 'warn', { message: `instance not found ${instance?.getAttribute?.('id')}` });
+      Fore.dispatch(this, 'warn', {
+        message: `instance not found ${instance?.getAttribute?.('id')}`,
+      });
     }
     const instType = instance.getAttribute('type');
 
@@ -244,8 +246,8 @@ export class FxSubmission extends ForeElementMixin {
 
       if (!response.ok || response.status > 400) {
         console.info(
-            `%csubmit-error #${this.id}`,
-            'background:red; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
+          `%csubmit-error #${this.id}`,
+          'background:red; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
         );
 
         Fore.dispatch(this, 'submit-error', {
@@ -322,13 +324,14 @@ export class FxSubmission extends ForeElementMixin {
     // If no payload was passed, derive it from instance default context/nodeset
     if (payload == null && instanceEl) {
       payload =
-          (typeof instanceEl.getDefaultContext === 'function' && instanceEl.getDefaultContext()) ||
-          instanceEl.nodeset ||
-          null;
+        (typeof instanceEl.getDefaultContext === 'function' && instanceEl.getDefaultContext()) ||
+        instanceEl.nodeset ||
+        null;
     }
 
     // Decide JSON vs XML by instance type (NOT by ref expression)
-    const isJsonInstance = instanceEl?.getAttribute?.('type') === 'json' || instanceEl?.type === 'json';
+    const isJsonInstance =
+      instanceEl?.getAttribute?.('type') === 'json' || instanceEl?.type === 'json';
 
     if (isJsonInstance) {
       // Convert JSON lens nodes to plain JS before stringify
@@ -346,8 +349,7 @@ export class FxSubmission extends ForeElementMixin {
     try {
       if (payload && payload.nodeType) {
         // Document => serialize documentElement, Node => serialize node
-        const node =
-            payload.nodeType === Node.DOCUMENT_NODE ? payload.documentElement : payload;
+        const node = payload.nodeType === Node.DOCUMENT_NODE ? payload.documentElement : payload;
         return new XMLSerializer().serializeToString(node);
       }
     } catch (_e) {
@@ -410,11 +412,11 @@ export class FxSubmission extends ForeElementMixin {
     const val = node.value;
 
     if (
-        val === null ||
-        val === undefined ||
-        typeof val === 'string' ||
-        typeof val === 'number' ||
-        typeof val === 'boolean'
+      val === null ||
+      val === undefined ||
+      typeof val === 'string' ||
+      typeof val === 'number' ||
+      typeof val === 'boolean'
     ) {
       return val ?? null;
     }
@@ -445,7 +447,7 @@ export class FxSubmission extends ForeElementMixin {
 
       return result;
     }
-1
+    1;
     // Fallback: last-resort scalar conversion
     try {
       if (typeof node.get === 'function') {
@@ -529,14 +531,14 @@ export class FxSubmission extends ForeElementMixin {
 
       if (this.targetref) {
         const [theTarget] = evaluateXPath(
-            this.targetref,
-            targetInstance.instanceData.firstElementChild,
-            this,
+          this.targetref,
+          targetInstance.instanceData.firstElementChild,
+          this,
         );
 
         if (
-            this.responseMediatype === 'application/xml' ||
-            this.responseMediatype === 'text/html'
+          this.responseMediatype === 'application/xml' ||
+          this.responseMediatype === 'text/html'
         ) {
           const clone = data.firstElementChild;
           const parent = theTarget.parentNode;
@@ -550,9 +552,9 @@ export class FxSubmission extends ForeElementMixin {
         }
       } else if (this.into) {
         const [theTarget] = evaluateXPath(
-            this.into,
-            targetInstance.instanceData.firstElementChild,
-            this,
+          this.into,
+          targetInstance.instanceData.firstElementChild,
+          this,
         );
         if (data?.nodeType === Node.DOCUMENT_NODE) {
           theTarget.appendChild(data.firstElementChild);
@@ -571,9 +573,9 @@ export class FxSubmission extends ForeElementMixin {
 
         // ✅ treat instance replacement as a structural change
         const fore =
-            (typeof this.getOwnerForm === 'function' && this.getOwnerForm()) ||
-            this.closest('fx-fore') ||
-            this.getModel()?.parentNode;
+          (typeof this.getOwnerForm === 'function' && this.getOwnerForm()) ||
+          this.closest('fx-fore') ||
+          this.getModel()?.parentNode;
 
         if (fore) {
           fore.someInstanceDataStructureChanged = true;

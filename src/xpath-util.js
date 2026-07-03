@@ -281,7 +281,11 @@ export class XPathUtil {
    */
   static isAbsolutePath(path) {
     return (
-      path != null && (path.startsWith('/') || path.startsWith('instance(') || path.startsWith('$') || path.startsWith('?'))
+      path != null &&
+      (path.startsWith('/') ||
+        path.startsWith('instance(') ||
+        path.startsWith('$') ||
+        path.startsWith('?'))
     );
   }
 
@@ -309,7 +313,7 @@ export class XPathUtil {
     // for dependency tracking, otherwise repeats won't refresh when they change.
     try {
       const host =
-          boundElement?.nodeType === Node.ATTRIBUTE_NODE ? boundElement.ownerElement : boundElement;
+        boundElement?.nodeType === Node.ATTRIBUTE_NODE ? boundElement.ownerElement : boundElement;
       const fore = host?.closest?.('fx-fore');
       const bindings = fore?._instanceVarBindings;
 
@@ -320,9 +324,7 @@ export class XPathUtil {
         // $<id> => instance <id> (only if it's a known binding key)
         for (const k of Object.keys(bindings)) {
           if (k === 'default') continue;
-          const re = new RegExp(
-              `\\$${k.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&')}(?![\\w.-])`,
-          );
+          const re = new RegExp(`\\$${k.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&')}(?![\\w.-])`);
           if (re.test(refStr)) return k;
         }
       }
@@ -347,14 +349,14 @@ export class XPathUtil {
     // Variable indirection (may ultimately point to instance(...))
     if (refStr.startsWith('$')) {
       const variableName = refStr.match(/^\$(?<variableName>[a-zA-Z0-9\-_]+)/)?.groups
-          ?.variableName;
+        ?.variableName;
 
       let closestActualFormElement = boundElement;
       while (closestActualFormElement && !('inScopeVariables' in closestActualFormElement)) {
         closestActualFormElement =
-            closestActualFormElement.nodeType === Node.ATTRIBUTE_NODE
-                ? closestActualFormElement.ownerElement
-                : closestActualFormElement.parentNode;
+          closestActualFormElement.nodeType === Node.ATTRIBUTE_NODE
+            ? closestActualFormElement.ownerElement
+            : closestActualFormElement.parentNode;
       }
 
       const correspondingVariable = closestActualFormElement?.inScopeVariables?.get(variableName);

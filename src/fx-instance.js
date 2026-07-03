@@ -59,7 +59,7 @@ export class FxInstance extends HTMLElement {
       createdAt: performance.now(),
       initializedAt: null,
       loadCount: 0,
-/*
+      /*
       mutationCount: 0,
       lastMutationAt: null,
 */

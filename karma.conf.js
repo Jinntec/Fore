@@ -30,8 +30,8 @@ module.exports = config => {
         captureConsole: false,
         mocha: {
           reporter: 'html',
-          ui: 'bdd'
-        }
+          ui: 'bdd',
+        },
       },
       logLevel: config.LOG_ERROR,
       // you can overwrite/extend the config further

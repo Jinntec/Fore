@@ -13,7 +13,7 @@ export default [
       'resources/',
       'doc/',
       'dist/',
-      '*jinn-codemirror*',
+      'tools/',
       'test/',
       'src/drawdown.js',
       '*.html',
