@@ -85,5 +85,12 @@ describe('createNodes', () => {
 
       expect(node.outerHTML).to.equal('<p value="my-value"><b class="my-class"/></p>');
     });
+
+    it('Can make a structure with nested predicates: `*:name[*:name/@attr="value"]`', () => {
+      const result = createNodes(`*:name[*:name/@attr='value']`, baseElement, foreElement);
+      expect(result).to.not.equal(null, 'The result should not be null');
+
+      expect(result.outerHTML).to.equal('<name><name attr="value"/></name>');
+    });
   });
 });
