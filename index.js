@@ -37,14 +37,13 @@ import './src/tools/fx-json-instance.js';
 import './src/ui/fx-upload.js';
 // import './src/tools/fx-minimap.js';
 
-// import './src/ui/fx-checkbox-group.js';
-
 // action classes
 import './src/actions/fx-append.js';
 import './src/actions/fx-delete.js';
 import './src/actions/fx-setfocus.js';
 import './src/actions/fx-insert.js';
-// import './src/actions/fx-insertchild.js';
+import './src/actions/fx-insertchild.js';
+import './src/actions/fx-copy.js';
 import './src/actions/fx-message.js';
 import './src/actions/fx-setvalue.js';
 import './src/actions/fx-send.js';
