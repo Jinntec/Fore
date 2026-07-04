@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>undo / redo</title>
+
+    <link href="../resources/fore.css" rel="stylesheet">
+    <script type="module" src="../tools/fx-lens.js"></script>
+
+    <style>
+        .toolbar {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .task {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            margin-bottom: 0.3rem;
+        }
+    </style>
+</head>
+<body>
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+
+<div class="wrapper">
+    <h1>undo / redo</h1>
+    <p>
+        Every action chain and every direct edit of a control creates an undo step. Rapid edits of
+        the same node (e.g. typing) are merged into one step. Use the buttons or - since this form
+        has the <code>keyboard-shortcuts</code> attribute - Ctrl/Cmd+Z and Ctrl/Cmd+Shift+Z.
+    </p>
+
+    <fx-fore id="basic" keyboard-shortcuts>
+        <fx-model undo undo-depth="50">
+            <fx-instance>
+                <data>
+                    <greeting>Hello Universe</greeting>
+                    <task done="false">wash the dishes</task>
+                    <task done="false">walk the dog</task>
+                </data>
+            </fx-instance>
+        </fx-model>
+
+        <div class="toolbar">
+            <fx-trigger id="undo-basic">
+                <button>undo</button>
+                <fx-undo></fx-undo>
+            </fx-trigger>
+            <fx-trigger id="redo-basic">
+                <button>redo</button>
+                <fx-redo></fx-redo>
+            </fx-trigger>
+            <fx-trigger id="reset-basic">
+                <button>reset</button>
+                <fx-reset instance="default"></fx-reset>
+            </fx-trigger>
+        </div>
+
+        <fx-control ref="greeting" label="Greeting"></fx-control>
+
+        <h3>Tasks</h3>
+        <fx-repeat ref="task">
+            <template>
+                <div class="task">
+                    <fx-control ref="."></fx-control>
+                    <fx-trigger class="delete-task">
+                        <button>delete</button>
+                        <fx-delete ref="."></fx-delete>
+                    </fx-trigger>
+                </div>
+            </template>
+        </fx-repeat>
+        <fx-trigger id="add-task">
+            <button>add task</button>
+            <fx-insert ref="task"></fx-insert>
+        </fx-trigger>
+
+    </fx-fore>
+
+    <h2>Shared instance across a nested fx-fore</h2>
+    <p>
+        The inner <code>fx-fore</code> below declares no <code>fx-instance</code> of its own - it
+        only reads and writes the outer form's <code>shared</code> instance. Its
+        <code>fx-undo</code>/<code>fx-redo</code> transparently operate on the outer model's undo
+        history, since that's where the shared data actually lives.
+    </p>
+    <p class="note">
+        Note: shared-instance refresh only propagates downward (see
+        <a href="shared-instances.html">shared-instances.html</a>) - the outer's own display below
+        only picks up inner-driven changes on its next own refresh, e.g. via <fx-lens>. This is a
+        pre-existing, unrelated framework behavior - not part of undo/redo.
+    </p>
+
+    <fx-fore id="shared-outer">
+        <fx-model undo>
+            <fx-instance id="counters" shared>
+                <data>
+                    <count>0</count>
+                </data>
+            </fx-instance>
+        </fx-model>
+
+        <p>Outer sees the shared count:
+            <fx-repeat ref="instance('counters')/count">
+                <template><fx-output ref="."></fx-output></template>
+            </fx-repeat>
+        </p>
+
+        <fx-fore id="shared-inner">
+            <!-- no fx-instance here on purpose: this fore only ever touches the outer's
+                 shared instance, which is exactly the case getEffectiveUndoManager() handles -->
+            <fx-model undo></fx-model>
+
+            <div class="toolbar">
+                <fx-trigger id="increment">
+                    <button>+1 (shared)</button>
+                    <fx-setvalue ref="instance('counters')/count" value="instance('counters')/count + 1"></fx-setvalue>
+                </fx-trigger>
+                <fx-trigger id="undo-shared">
+                    <button>undo</button>
+                    <fx-undo></fx-undo>
+                </fx-trigger>
+                <fx-trigger id="redo-shared">
+                    <button>redo</button>
+                    <fx-redo></fx-redo>
+                </fx-trigger>
+            </div>
+            <p>Inner sees the same shared count:
+                <fx-repeat ref="instance('counters')/count">
+                    <template><fx-output ref="."></fx-output></template>
+                </fx-repeat>
+            </p>
+        </fx-fore>
+    </fx-fore>
+
+</div>
+<fx-lens open></fx-lens>
+<script type="module" src="../index.js"></script>
+</body>
+</html>
