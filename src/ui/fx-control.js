@@ -588,13 +588,11 @@ export default class FxControl extends XfAbstractControl {
       this.widget = imported;
 
       if (!theFore) {
-        Fore.dispatch('error', {
-          detail: {
-            message: `Fore element not found in '${this.src}'. Maybe wrapped within 'template' element?`,
-          },
+        await Fore.dispatch(this, 'error', {
+          message: `Fore element not found in '${this.src}'. Maybe wrapped within 'template' element?`,
         });
       }
-      Fore.dispatch('loaded', { detail: { fore: theFore } });
+      await Fore.dispatch(this, 'loaded', { fore: theFore });
     } catch (error) {
       // console.log('error', error);
       Fore.dispatch(this, 'error', {

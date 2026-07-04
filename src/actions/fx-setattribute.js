@@ -47,7 +47,7 @@ export default class FxSetattribute extends AbstractAction {
     this.attrName = this.hasAttribute('name') ? this.getAttribute('name') : null;
     this.attrValue = this.hasAttribute('value') ? this.getAttribute('value') : '';
     if (!this.attrName) {
-      Fore.dispatch('this', 'error', { message: 'name or value not specified' });
+      Fore.dispatch(this, 'error', { message: 'name or value not specified' });
     }
   }
 
@@ -55,7 +55,7 @@ export default class FxSetattribute extends AbstractAction {
     super.perform();
     const mi = this.getModelItem();
     if (mi.node.nodeType !== Node.ELEMENT_NODE) {
-      Fore.dispatch('this', 'error', { message: 'referenced item is not an element' });
+      await Fore.dispatch(this, 'error', { message: 'referenced item is not an element' });
       return;
     }
     mi.node.setAttribute(this.attrName, this.attrValue);
