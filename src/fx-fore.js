@@ -813,6 +813,57 @@ export class FxFore extends HTMLElement {
     if (this.hasAttribute('show-confirmation')) {
       this.showConfirmation = true;
     }
+    if (this.hasAttribute('keyboard-shortcuts')) {
+      // opt-in: overrides native text-field undo within the form.
+      // Listens on document (not this element) so the shortcuts keep working when
+      // focus fell back to the body, e.g. right after an undo re-rendered the
+      // previously focused control.
+      this._undoRedoKeyListener = e => {
+        const target = e.composedPath ? e.composedPath()[0] : e.target;
+        if (
+          this.contains(target) ||
+          target === document.body ||
+          target === document.documentElement
+        ) {
+          this._handleUndoRedoKeys(e);
+        }
+      };
+      document.addEventListener('keydown', this._undoRedoKeyListener);
+    }
+  }
+
+  /**
+   * Commits any in-progress widget edit by blurring the focused element. Called before
+   * undo/redo so pending typing becomes its own undo step and no stale widget value
+   * can fire a late commit against the restored state (which would clear the redo stack).
+   */
+  flushPendingWidgetEdit() {
+    const active = document.activeElement;
+    if (active && active !== document.body && this.contains(active)) {
+      active.blur();
+    }
+  }
+
+  /**
+   * Ctrl/Cmd+Z -> undo, Ctrl/Cmd+Shift+Z or Ctrl/Cmd+Y -> redo.
+   * Only active when the `keyboard-shortcuts` attribute is present.
+   */
+  async _handleUndoRedoKeys(e) {
+    if (!(e.ctrlKey || e.metaKey) || !this.model) return;
+    const key = e.key.toLowerCase();
+    const isRedo = (key === 'z' && e.shiftKey) || key === 'y';
+    if (!isRedo && key !== 'z') return;
+    e.preventDefault();
+
+    this.flushPendingWidgetEdit();
+    const done = isRedo ? this.model.redo() : this.model.undo();
+    if (!done) return;
+    this.model.updateModel();
+    await this.refresh(true);
+    Fore.dispatch(this, isRedo ? 'redo-done' : 'undo-done', {
+      canUndo: this.model.canUndo(),
+      canRedo: this.model.canRedo(),
+    });
   }
 
   /**
@@ -994,6 +1045,10 @@ export class FxFore extends HTMLElement {
 
   disconnectedCallback() {
     this.removeEventListener('dragstart', this.dragstart);
+    if (this._undoRedoKeyListener) {
+      document.removeEventListener('keydown', this._undoRedoKeyListener);
+      this._undoRedoKeyListener = null;
+    }
     /*
             this.removeEventListener('model-construct-done', this._handleModelConstructDone);
             this.removeEventListener('message', this._displayMessage);

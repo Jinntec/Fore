@@ -325,6 +325,7 @@ export class AbstractAction extends ForeElementMixin {
     }
 
     // Outermost handling
+    this._acquiredOutermost = false;
     if (FxFore.outermostHandler === null) {
       const ownerForm = this.getOwnerFormSafe();
 
@@ -335,6 +336,8 @@ export class AbstractAction extends ForeElementMixin {
       );
 
       FxFore.outermostHandler = this;
+      this._acquiredOutermost = true;
+      this.getModel()?.getEffectiveUndoManager()?.beginCapture();
       this.dispatchEvent(
         new CustomEvent('outermost-action-start', {
           composed: true,
@@ -466,7 +469,23 @@ export class AbstractAction extends ForeElementMixin {
 
   _finalizePerform(resolveThisEvent) {
     this.currentEvent = null;
+    // capture before actionPerformed() - overrides may consume or propagate needsUpdate
+    const changed = this.needsUpdate;
     this.actionPerformed();
+    // decide on _acquiredOutermost, not on the static: actionPerformed()'s stale-handler
+    // check nulls FxFore.outermostHandler when this action removed itself from the
+    // document (e.g. fx-delete inside the repeat item it deletes)
+    if (this._acquiredOutermost) {
+      const undoManager = this.getModel()?.getEffectiveUndoManager();
+      if (undoManager) {
+        if (changed) {
+          undoManager.commit(this._getCoalesceKey());
+        } else {
+          undoManager.discard();
+        }
+      }
+      this._acquiredOutermost = false;
+    }
     if (FxFore.outermostHandler === this) {
       const ownerForm = this.getOwnerFormSafe();
 
@@ -516,6 +535,20 @@ export class AbstractAction extends ForeElementMixin {
       phase: 'before',
     }));
 */
+  }
+
+  /**
+   * Best-effort identification of the data node this action touched, used by the
+   * UndoManager to merge rapid successive edits of the same node into one undo step.
+   *
+   * Falls back to the raw `ref` string when no node was resolved (e.g. fx-insert),
+   * which may coalesce same-ref edits across different repeat items within the window.
+   */
+  _getCoalesceKey() {
+    const miNode = this.modelItem?.node;
+    if (miNode) return Array.isArray(miNode) ? miNode[0] : miNode;
+    if (this.nodeset) return Array.isArray(this.nodeset) ? this.nodeset[0] : this.nodeset;
+    return this.getAttribute('ref');
   }
 
   /**

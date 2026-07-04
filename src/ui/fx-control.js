@@ -9,6 +9,7 @@ import getInScopeContext from '../getInScopeContext.js';
 import { Fore } from '../fore.js';
 import { debounce } from '../events.js';
 import { FxModel } from '../fx-model.js';
+import { FxFore } from '../fx-fore.js';
 import { DependencyNotifyingDomFacade } from '../DependencyNotifyingDomFacade';
 import { extractPredicateDependencies } from '../extract-predicate-deps.js';
 import '../fx-instance.js';
@@ -274,18 +275,47 @@ export default class FxControl extends XfAbstractControl {
       return; // do nothing when modelItem is readonly
     }
 
+    // direct widget edits bypass the action pipeline (no execute()), so undo capture
+    // happens here - unless an action chain is already running and capturing, or the
+    // form is mid-refresh (teardown blurs replay stale widget values; recording those
+    // would clear the redo stack right after an undo)
+    const undoManager = this.getModel()?.getEffectiveUndoManager();
+    const captureUndo =
+      !!undoManager?.enabled &&
+      FxFore.outermostHandler === null &&
+      !this.getOwnerForm()?.isRefreshing;
+    if (captureUndo) undoManager.beginCapture();
+    const undoKey = captureUndo
+      ? Array.isArray(modelitem?.node)
+        ? modelitem.node[0]
+        : modelitem?.node
+      : null;
+    const valueBefore = captureUndo ? modelitem?.value : null;
+    const commitUndo = () => {
+      if (!captureUndo) return;
+      if (modelitem && modelitem.value !== valueBefore) {
+        undoManager.commit(undoKey);
+      } else {
+        undoManager.discard();
+      }
+    };
+
     if (this.getAttribute('as') === 'node') {
       const replace = this.shadowRoot.getElementById('replace');
       replace.replace(this.nodeset, val);
       if (modelitem && val && val !== modelitem.value) {
         modelitem.value = val;
         FxModel.dataChanged = true;
+        commitUndo();
         replace.actionPerformed();
+      } else {
+        commitUndo();
       }
       return;
     }
     const setval = this.shadowRoot.getElementById('setvalue');
     setval.setValue(modelitem, val);
+    commitUndo();
 
     /*
     if (this.modelItem instanceof ModelItem && !this.modelItem?.boundControls.includes(this)) {

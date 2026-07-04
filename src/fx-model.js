@@ -6,6 +6,7 @@ import { parseJsonRef, getPath } from './xpath-path.js';
 import { evaluateXPath, evaluateXPathToBoolean, evaluateXPathToNodes } from './xpath-evaluation.js';
 import { XPathUtil } from './xpath-util.js';
 import { getLensForNode } from './json/JSONNode.js';
+import { UndoManager } from './UndoManager.js';
 
 /**
  * The model of this Fore scope. It holds all the intances, binding, submissions and custom
@@ -40,6 +41,7 @@ export class FxModel extends HTMLElement {
     this.attachShadow({ mode: 'open' });
     this.computes = 0;
     this.fore = {};
+    this.undoManager = new UndoManager(this);
 
     /**
      * @type {import('./fx-bind.js').FxBind[]}
@@ -328,6 +330,18 @@ export class FxModel extends HTMLElement {
     console.info(`📌 model-construct for #${this.parentNode.id}`);
     this.debugInfo.modelConstructCount += 1;
 
+    // stale snapshots must not survive a full model (re)construction
+    this.undoManager.clear();
+    // opt-in: without this attribute the manager stays a no-op and no instance
+    // data is ever cloned, so normal (non-undo) forms pay nothing for this feature
+    this.undoManager.enabled = this.hasAttribute('undo');
+    if (this.hasAttribute('undo-depth')) {
+      const depth = Number(this.getAttribute('undo-depth'));
+      if (!Number.isNaN(depth) && depth > 0) {
+        this.undoManager.maxDepth = depth;
+      }
+    }
+
     // this.dispatchEvent(new CustomEvent('model-construct', { detail: this }));
     await Fore.dispatch(this, 'model-construct', { model: this });
 
@@ -510,6 +524,65 @@ export class FxModel extends HTMLElement {
       computes: this.computes || 0,
       modelItemCount: this.modelItems.length,
     };
+  }
+
+  /**
+   * Resolves the model whose undo history should record mutations reachable through
+   * this model.
+   *
+   * A model that declares no `<fx-instance>` of its own (e.g. a nested `fx-fore` that
+   * only consumes a `shared` instance from an ancestor) operates entirely on data it
+   * doesn't own. Its own `undoManager` would only ever see empty snapshots - not
+   * merely non-undoable, but silently WRONG: `canUndo()`/`undo()` would still report
+   * success against a snapshot that changes nothing. Such a model's undo/redo instead
+   * delegates to the nearest ancestor `fx-fore` whose model actually owns instances,
+   * mirroring the parent-lookup `getInstance()` uses for `shared` instances.
+   *
+   * Known gap: a model that owns SOME instances of its own but also mutates a shared
+   * instance discovered via `getInstance()`'s broader page-wide search (not a direct
+   * ancestor) is not covered here - only the "no instances of my own" case is.
+   *
+   * @returns {import('./UndoManager.js').UndoManager}
+   */
+  getEffectiveUndoManager() {
+    if (this.instances.length > 0) return this.undoManager;
+    const parentFore =
+      this.fore.parentNode?.nodeType === Node.DOCUMENT_FRAGMENT_NODE
+        ? this.fore.parentNode.host?.closest('fx-fore')
+        : this.fore.parentNode?.closest('fx-fore');
+    const parentModel = parentFore?.getModel();
+    if (parentModel && parentModel !== this) {
+      return parentModel.getEffectiveUndoManager();
+    }
+    return this.undoManager;
+  }
+
+  /**
+   * restores instance data to the state before the last undoable action chain.
+   * Callers are responsible for running updateModel() and a refresh afterwards.
+   *
+   * @returns {boolean} true if a step was undone
+   */
+  undo() {
+    return this.getEffectiveUndoManager().undo();
+  }
+
+  /**
+   * re-applies the most recently undone action chain.
+   * Callers are responsible for running updateModel() and a refresh afterwards.
+   *
+   * @returns {boolean} true if a step was redone
+   */
+  redo() {
+    return this.getEffectiveUndoManager().redo();
+  }
+
+  canUndo() {
+    return this.getEffectiveUndoManager().canUndo();
+  }
+
+  canRedo() {
+    return this.getEffectiveUndoManager().canRedo();
   }
 
   /**
