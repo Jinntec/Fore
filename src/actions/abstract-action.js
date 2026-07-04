@@ -325,8 +325,12 @@ export class AbstractAction extends ForeElementMixin {
     }
 
     // Outermost handling
-    this._acquiredOutermost = false;
-    if (FxFore.outermostHandler === null) {
+    // NOTE: kept as a local variable, not `this._acquiredOutermost` - action elements are
+    // singletons reused across clicks, so two overlapping execute() calls on the same
+    // element (rapid double-click) would otherwise clobber each other's flag and strand
+    // FxFore.outermostHandler or skip the undo commit in _finalizePerform().
+    const acquiredOutermost = FxFore.outermostHandler === null;
+    if (acquiredOutermost) {
       const ownerForm = this.getOwnerFormSafe();
 
       console.log(
@@ -336,7 +340,6 @@ export class AbstractAction extends ForeElementMixin {
       );
 
       FxFore.outermostHandler = this;
-      this._acquiredOutermost = true;
       this.getModel()?.getEffectiveUndoManager()?.beginCapture();
       this.dispatchEvent(
         new CustomEvent('outermost-action-start', {
@@ -367,20 +370,20 @@ export class AbstractAction extends ForeElementMixin {
     if (this.iterateExpr) {
       // Same as whileExpr, let it go update UI afterwards
       await this.handleIterateExpr();
-      this._finalizePerform(resolveThisEvent);
+      this._finalizePerform(resolveThisEvent, acquiredOutermost);
       return;
     }
 
     // Check if 'if' condition is true - otherwise exist right away
     if (this.ifExpr && !evaluateXPathToBoolean(this.ifExpr, getInScopeContext(this), this)) {
-      this._finalizePerform(resolveThisEvent);
+      this._finalizePerform(resolveThisEvent, acquiredOutermost);
       return;
     }
 
     if (this.whileExpr) {
       // After loop is done call actionPerformed to update the model and UI
       await this.handleWhileExpr();
-      this._finalizePerform(resolveThisEvent);
+      this._finalizePerform(resolveThisEvent, acquiredOutermost);
       return;
     }
 
@@ -397,7 +400,7 @@ export class AbstractAction extends ForeElementMixin {
     }
 
     await this.performSafe();
-    this._finalizePerform(resolveThisEvent);
+    this._finalizePerform(resolveThisEvent, acquiredOutermost);
   }
 
   async handleWhileExpr() {
@@ -467,15 +470,17 @@ export class AbstractAction extends ForeElementMixin {
     }
   }
 
-  _finalizePerform(resolveThisEvent) {
+  _finalizePerform(resolveThisEvent, acquiredOutermost) {
     this.currentEvent = null;
     // capture before actionPerformed() - overrides may consume or propagate needsUpdate
     const changed = this.needsUpdate;
     this.actionPerformed();
-    // decide on _acquiredOutermost, not on the static: actionPerformed()'s stale-handler
-    // check nulls FxFore.outermostHandler when this action removed itself from the
-    // document (e.g. fx-delete inside the repeat item it deletes)
-    if (this._acquiredOutermost) {
+    // decide on the acquiredOutermost param (captured locally in execute()), not on the
+    // static: actionPerformed()'s stale-handler check nulls FxFore.outermostHandler when
+    // this action removed itself from the document (e.g. fx-delete inside the repeat item
+    // it deletes) - a local var also survives a second, overlapping execute() call on the
+    // same (singleton, reused) action element clobbering shared instance state
+    if (acquiredOutermost) {
       const undoManager = this.getModel()?.getEffectiveUndoManager();
       if (undoManager) {
         if (changed) {
@@ -484,33 +489,36 @@ export class AbstractAction extends ForeElementMixin {
           undoManager.discard();
         }
       }
-      this._acquiredOutermost = false;
-    }
-    if (FxFore.outermostHandler === this) {
-      const ownerForm = this.getOwnerFormSafe();
 
-      console.log(
-        `%cfinalizing outermost Action on ${ownerForm?.id || ''}`,
-        'background:darkblue; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
-        this,
-      );
+      // Defensive re-check: actionPerformed()'s stale-handler recovery (above) can have
+      // already nulled FxFore.outermostHandler and let a *different* action acquire it
+      // before we get here - only clear/dispatch if it's still pointing at us.
+      if (FxFore.outermostHandler === this) {
+        const ownerForm = this.getOwnerFormSafe();
 
-      FxFore.outermostHandler = null;
-      /*
-                        console.info(
-                            `%coutermost Action done`,
-                            'background:#e65100; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
-                            this,
-                        );
-                        console.timeEnd('outermostHandler');
-            */
-      this.dispatchEvent(
-        new CustomEvent('outermost-action-end', {
-          composed: true,
-          bubbles: true,
-          cancelable: true,
-        }),
-      );
+        console.log(
+          `%cfinalizing outermost Action on ${ownerForm?.id || ''}`,
+          'background:darkblue; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
+          this,
+        );
+
+        FxFore.outermostHandler = null;
+        /*
+                          console.info(
+                              `%coutermost Action done`,
+                              'background:#e65100; color:white; padding:0.3rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;',
+                              this,
+                          );
+                          console.timeEnd('outermostHandler');
+              */
+        this.dispatchEvent(
+          new CustomEvent('outermost-action-end', {
+            composed: true,
+            bubbles: true,
+            cancelable: true,
+          }),
+        );
+      }
     }
     resolveThisEvent();
   }

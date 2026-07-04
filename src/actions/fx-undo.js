@@ -11,6 +11,14 @@ import { AbstractAction } from './abstract-action.js';
  */
 export class FxUndo extends AbstractAction {
   async perform() {
+    // this element is a singleton reused across clicks - guard against a rapid
+    // double-click re-entering perform() while the first click's undo is still applying
+    if (this._busy) {
+      this.needsUpdate = false;
+      return;
+    }
+    this._busy = true;
+
     this.dispatchEvent(
       new CustomEvent('execute-action', {
         composed: true,
@@ -40,6 +48,7 @@ export class FxUndo extends AbstractAction {
         canRedo: model.canRedo(),
       });
     }
+    this._busy = false;
     this.dispatchActionPerformed();
   }
 }

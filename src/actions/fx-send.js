@@ -92,9 +92,21 @@ class FxSend extends AbstractAction {
       // todo: this bypasses observers...
       this.getOwnerForm().refresh(true); // whole instance changes - full refresh necessary
       // this.getOwnerForm().addToBatchedNotifications(this.getOwnerForm());
-      // this.needsUpdate = true;
+      // needsUpdate is set (below, via actionPerformed override) so the undo hook records
+      // this replace as an undo step - it is NOT read by the default actionPerformed cycle
+      // here, since that would run a second, redundant recalculate/revalidate/refresh(false)
+      // on top of the full refresh(true) already done above
+      this.needsUpdate = true;
     }
     // if not of type fx-submission signal error
+  }
+
+  actionPerformed() {
+    // the instance-replace branch above already ran the full update+refresh cycle itself;
+    // skip the default gated cycle (see the comment at the needsUpdate assignment) while
+    // still calling dispatchActionPerformed() - the generic undo commit/discard hook in
+    // _finalizePerform() runs independently of this override and needs nothing extra here
+    this.dispatchActionPerformed();
   }
 
   _emitToChannel() {

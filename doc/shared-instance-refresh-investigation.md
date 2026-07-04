@@ -99,3 +99,26 @@ context on the second pass, distinct from the first (successful, full) initial r
 - Decide whether `modelConstruct()` should run `rebuild()` (or at least initialize
   `mainGraph`) even when `instances.length === 0`, so instance-less "consumer" fores get a
   real dependency graph instead of silently degraded partial refreshes.
+
+## Follow-up: the "mixed" shared+local instance case (undo/redo, deliberately not fixed)
+
+`FxModel.getEffectiveUndoManager()` (added alongside `UndoManager`) only redirects a model's
+undo/redo history to an ancestor when that model owns **zero** instances of its own (the
+`shared-inner` case above). A model that owns some instance(s) of its own *and* also mutates
+an unrelated `shared` instance belonging to a different model (reachable via `instance('id')`'s
+broader page-wide search in `FxModel.getInstance()`, not just a direct ancestor) keeps its own
+`undoManager` - so edits to that outside instance are silently un-tracked by any undo stack,
+even though the mutation itself succeeds.
+
+This was a deliberate scope decision (see `UndoManager._warnIfOutsideScope()`, called from
+`commit()`): rather than a full fix, a one-time `console.warn` fires when a commit's coalesce
+key is an XML node whose `ownerDocument` doesn't belong to the committing model's own
+`instances`. Covered by `test/undo-redo.test.js`, describe block "mixed shared+local instance
+usage".
+
+A full fix would mean keying undo history by *instance* (or even by node) rather than by
+*model* - every `beginCapture()`/`commit()` would need to determine, per touched node, which
+instance actually owns it (via `instance.closest`-style ownership, not just direct-ancestor
+walking) and route the snapshot to a shared, page-level registry rather than a per-model
+object. That's a materially bigger change to `UndoManager`'s core data model, touching every
+call site again - deferred until this actually bites a real app, per user decision.

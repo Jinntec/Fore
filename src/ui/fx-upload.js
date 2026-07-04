@@ -164,6 +164,10 @@ export default class FxUpload extends XfAbstractControl {
    * @param val the new value to be set
    */
   setValue(val) {
+    const model = this.getModel();
+    const undoManager = model?.getEffectiveUndoManager();
+    undoManager?.beginCapture();
+
     this.value = val;
     const modelitem = this.getModelItem();
 
@@ -190,6 +194,7 @@ export default class FxUpload extends XfAbstractControl {
 
     if (modelitem?.readonly) {
       console.warn('attempt to change readonly node', modelitem);
+      undoManager?.discard();
       return; // do nothing when modelItem is readonly
     }
 
@@ -201,7 +206,6 @@ export default class FxUpload extends XfAbstractControl {
       this.modelItem.boundControls.push(this);
     }
 */
-    const model = this.getModel();
     Fore.dispatch(this, 'value-changed', {
       path: this.modelItem.path,
       value: this.modelItem.value,
@@ -209,8 +213,9 @@ export default class FxUpload extends XfAbstractControl {
       instanceId: this.modelItem.instanceId,
       foreId: this.getOwnerForm().id,
     });
-    this.getModel().updateModel();
+    model.updateModel();
     this.getOwnerForm().refresh(true);
+    undoManager?.commit(modelitem?.node);
 
     // console.log('data', this.getOwnerForm().getModel().getDefaultInstanceData());
   }

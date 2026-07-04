@@ -79,6 +79,8 @@ export class UndoManager {
       this.lastCommit.key === coalesceKey &&
       now - this.lastCommit.timestamp < COALESCE_WINDOW_MS;
 
+    this._warnIfOutsideScope(coalesceKey);
+
     if (!coalesce) {
       this.undoStack.push(this.pendingSnapshot);
       while (this.undoStack.length > this.maxDepth) {
@@ -90,6 +92,34 @@ export class UndoManager {
     this.redoStack = [];
     this.lastCommit = { key: coalesceKey, timestamp: now };
     this.pendingSnapshot = null;
+  }
+
+  /**
+   * Best-effort, one-time diagnostic for the "mixed" case that `FxModel.getEffectiveUndoManager()`
+   * does NOT handle: a model that owns some instances of its own but also mutates a shared
+   * instance belonging to some other model. `getEffectiveUndoManager()` only redirects when a
+   * model owns NO instances at all - a model with a mix keeps its own manager, so an edit to
+   * an instance outside that model's own set is recorded in a snapshot that never actually
+   * contained it, i.e. it looks tracked but silently isn't.
+   *
+   * Only checkable for XML DOM nodes (via `ownerDocument`); JSON lenses and string/ref
+   * coalesce keys are skipped rather than risk a false positive.
+   */
+  _warnIfOutsideScope(coalesceKey) {
+    if (this._warnedOutsideScope) return;
+    if (!coalesceKey || !coalesceKey.ownerDocument) return;
+    const owningDoc = coalesceKey.ownerDocument;
+    const known = this.model.instances.some(
+      instance => instance.type === 'xml' && instance.instanceData === owningDoc,
+    );
+    if (!known) {
+      this._warnedOutsideScope = true;
+      console.warn(
+        "undo: an edit touched an instance outside this model's own scope (and outside " +
+          'any ancestor delegation - see FxModel.getEffectiveUndoManager()) and may not be ' +
+          'undoable. See doc/shared-instance-refresh-investigation.md.',
+      );
+    }
   }
 
   /**

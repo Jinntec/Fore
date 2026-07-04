@@ -1,6 +1,7 @@
 import { html, fixtureSync, expect, oneEvent } from '@open-wc/testing';
 
 import '../index.js';
+import { FxFore } from '../src/fx-fore.js';
 
 describe('undo/redo', () => {
   const instanceValue = (el, selector, instanceId = 'default') =>
@@ -130,6 +131,73 @@ describe('undo/redo', () => {
       expect(um.suspended).to.be.false;
     });
 
+    it('a realistic double-click (two separate click events) commits exactly once and does not strand the outermost handler', async () => {
+      const um = undoManagerOf(el);
+      const button = el.querySelector('#set-b button');
+      const nextMacrotask = () => new Promise(resolve => setTimeout(resolve, 0));
+
+      // real double-clicks are two separate browser events with a full microtask
+      // drain in between - simulate that with a macrotask boundary, not a bare
+      // back-to-back call (which is a stricter, same-tick scenario - see below)
+      button.click();
+      await nextMacrotask();
+      button.click();
+      await nextMacrotask();
+
+      expect(FxFore.outermostHandler).to.equal(null);
+      expect(um.undoStack.length).to.equal(1);
+      expect(instanceValue(el, 'value')).to.equal('B');
+
+      // and the mechanism keeps working normally afterwards (bypass coalescing here -
+      // this assertion is about commit correctness, not the coalescing window)
+      um.lastCommit = null;
+      await el.querySelector('#set-c').performActions();
+      expect(instanceValue(el, 'value')).to.equal('C');
+      expect(um.undoStack.length).to.equal(2);
+    });
+
+    it('two same-tick overlapping execute() calls never strand the outermost handler, even though the undo commit may be lost', async () => {
+      // NOTE: this is a stricter, same-tick scenario than a real double-click (which is
+      // two separate browser events with a full microtask drain between them - see the
+      // test above for that realistic case). Calling execute() twice with no yield at all
+      // means the second call's `this.needsUpdate = false` reset (abstract-action.js,
+      // top of execute()) can race the first call's still-pending _finalizePerform() and
+      // clobber the flag it's about to read - a pre-existing hazard of needsUpdate being a
+      // shared instance property, not specific to undo. What IS guaranteed by this fix is
+      // the part that used to fail permanently: FxFore.outermostHandler is never stranded,
+      // and the mechanism recovers cleanly for every subsequent action.
+      const um = undoManagerOf(el);
+      const setB = el.querySelector('#set-b fx-setvalue');
+
+      const first = setB.execute();
+      const second = setB.execute();
+      await Promise.all([first, second]);
+
+      expect(FxFore.outermostHandler).to.equal(null);
+      expect(instanceValue(el, 'value')).to.equal('B');
+
+      // recovery: a subsequent, normal action still commits correctly
+      await el.querySelector('#set-c').performActions();
+      expect(instanceValue(el, 'value')).to.equal('C');
+      expect(um.undoStack.length).to.equal(1);
+    });
+
+    it('rapid double-click on fx-undo itself is a no-op on the second click, not a corrupting re-entry', async () => {
+      const um = undoManagerOf(el);
+      await el.querySelector('#set-b').performActions();
+      expect(um.undoStack.length).to.equal(1);
+
+      const undo = el.querySelector('#undo fx-undo');
+      const first = undo.execute();
+      const second = undo.execute();
+      await Promise.all([first, second]);
+
+      expect(FxFore.outermostHandler).to.equal(null);
+      expect(instanceValue(el, 'value')).to.equal('A');
+      expect(um.canUndo()).to.be.false;
+      expect(undo._busy).to.be.false;
+    });
+
     it('redo snapshots do not alias the live instance document', async () => {
       const um = undoManagerOf(el);
       await el.querySelector('#set-b').performActions();
@@ -189,6 +257,80 @@ describe('undo/redo', () => {
       await el.querySelector('#undo').performActions();
       await undoDone;
       expect(tasks()).to.deep.equal(['one', 'two']);
+    });
+  });
+
+  describe('fx-send instance-replace', () => {
+    it('records an undo step for a submission that replaces the instance', async () => {
+      const el = await fixtureSync(html`
+        <fx-fore>
+          <fx-model undo>
+            <fx-instance>
+              <data><value>A</value></data>
+            </fx-instance>
+            <fx-submission id="submission" url="/unused" replace="instance"></fx-submission>
+          </fx-model>
+          <fx-trigger id="send"><button></button><fx-send submission="submission"></fx-send></fx-trigger>
+        </fx-fore>
+      `);
+      await oneEvent(el, 'refresh-done');
+      const model = el.querySelector('fx-model');
+      const submission = el.querySelector('#submission');
+
+      // stub the network round-trip: a real replace="instance" submission would swap in
+      // the response document - simulate exactly that side effect without a real request
+      submission.submit = async () => {
+        model.getInstance('default').instanceData.querySelector('value').textContent = 'B';
+      };
+
+      await el.querySelector('#send').performActions();
+      expect(instanceValue(el, 'value')).to.equal('B');
+      expect(model.undoManager.undoStack.length).to.equal(1);
+
+      expect(model.undo()).to.be.true;
+      expect(instanceValue(el, 'value')).to.equal('A');
+    });
+  });
+
+  describe('drag-and-drop reordering', () => {
+    it('records an undo step for a repeat-item reorder and restores the original order', async () => {
+      // NOTE: items deliberately on one line - withDraggability._drop()'s reorder logic
+      // compares `repeatItemNode.previousSibling` directly against the dragged data node;
+      // indentation whitespace between <item> elements becomes a text-node sibling that
+      // breaks that comparison and silently no-ops the reorder (pre-existing, unrelated
+      // to undo/redo - found while writing this test).
+      const el = await fixtureSync(html`
+        <fx-fore>
+          <fx-model undo>
+            <fx-instance><data><item>one</item><item>two</item></data></fx-instance>
+          </fx-model>
+          <fx-repeat ref="item" dnd>
+            <template><fx-control ref="."></fx-control></template>
+          </fx-repeat>
+        </fx-fore>
+      `);
+      await oneEvent(el, 'refresh-done');
+      const model = el.querySelector('fx-model');
+      const items = () =>
+        Array.from(
+          model.getInstance('default').instanceData.querySelectorAll('item'),
+        ).map(i => i.textContent);
+      expect(items()).to.deep.equal(['one', 'two']);
+
+      const [firstItem, secondItem] = el.querySelectorAll('fx-repeat > fx-repeatitem');
+      const noop = { stopPropagation() {}, preventDefault() {} };
+
+      // simulate dragging the first item and dropping it onto the second (reorder to
+      // 'two', 'one') - withDraggability reads the dragged element off the owner form
+      el.draggedItem = firstItem;
+      secondItem._drop(noop);
+      await new Promise(resolve => setTimeout(resolve, 50));
+
+      expect(items()).to.deep.equal(['two', 'one']);
+      expect(model.canUndo()).to.be.true;
+
+      expect(model.undo()).to.be.true;
+      expect(items()).to.deep.equal(['one', 'two']);
     });
   });
 
@@ -336,6 +478,52 @@ describe('undo/redo', () => {
     });
   });
 
+  describe('mixed shared+local instance usage (diagnostic only, not a full fix)', () => {
+    it('warns once when a model that owns its own instances also touches an unrelated shared instance', async () => {
+      const el = await fixtureSync(html`
+        <div>
+          <fx-fore id="owner">
+            <fx-model undo>
+              <fx-instance id="shared-data" shared><data><count>0</count></data></fx-instance>
+            </fx-model>
+          </fx-fore>
+          <fx-fore id="mixed">
+            <fx-model undo>
+              <fx-instance><data><local>x</local></data></fx-instance>
+            </fx-model>
+            <fx-trigger id="touch-shared"
+              ><button></button><fx-setvalue ref="instance('shared-data')/count">1</fx-setvalue></fx-trigger
+            >
+          </fx-fore>
+        </div>
+      `);
+      await Promise.all([oneEvent(el.querySelector('#owner'), 'refresh-done'), oneEvent(el.querySelector('#mixed'), 'refresh-done')]);
+
+      const mixedModel = el.querySelector('#mixed > fx-model');
+      // this model owns its own instance, so getEffectiveUndoManager() does NOT delegate -
+      // it is the documented, un-fixed "mixed" case
+      expect(mixedModel.instances.length).to.equal(1);
+      expect(mixedModel.getEffectiveUndoManager()).to.equal(mixedModel.undoManager);
+
+      const warnings = [];
+      const originalWarn = console.warn;
+      console.warn = (...args) => warnings.push(args.join(' '));
+      try {
+        await el.querySelector('#touch-shared').performActions();
+      } finally {
+        console.warn = originalWarn;
+      }
+
+      expect(warnings.some(w => w.includes('outside this model'))).to.be.true;
+      // the edit still happened (data-wise), it just isn't reliably undoable via this model
+      const sharedCount = el
+        .querySelector('#owner > fx-model')
+        .getInstance('shared-data')
+        .instanceData.querySelector('count').textContent;
+      expect(sharedCount).to.equal('1');
+    });
+  });
+
   describe('widget edits through fx-control', () => {
     it('records direct control edits as undo steps', async () => {
       const el = await fixtureSync(html`
@@ -468,6 +656,149 @@ describe('undo/redo', () => {
     });
   });
 
+  describe('long back-and-forth sequences', () => {
+    it('handles 20 sequential undos and 20 redos without losing consistency', async () => {
+      const el = await fixtureSync(html`
+        <fx-fore>
+          <fx-model undo undo-depth="50">
+            <fx-instance><data><value>0</value></data></fx-instance>
+          </fx-model>
+          <fx-control ref="value"></fx-control>
+        </fx-fore>
+      `);
+      await oneEvent(el, 'refresh-done');
+      const model = el.querySelector('fx-model');
+      const control = el.querySelector('fx-control');
+      const um = model.undoManager;
+      const value = () => instanceValue(el, 'value');
+
+      // yield a tick between edits - fx-control's undo capture deliberately skips while
+      // getOwnerForm().isRefreshing is still true (see fx-control.js), which stays true
+      // across a purely synchronous loop since nothing lets the pending refresh() settle
+      const settle = () => new Promise(resolve => setTimeout(resolve, 0));
+
+      const steps = 20;
+      for (let i = 1; i <= steps; i += 1) {
+        control.setValue(String(i));
+        await settle();
+        // each of these is meant to be a distinct edit, not a coalesced keystroke run
+        um.lastCommit = null;
+      }
+      expect(value()).to.equal(String(steps));
+      expect(um.undoStack.length).to.equal(steps);
+
+      // undo all the way back, checking the start, middle and end of the direction
+      for (let i = steps - 1; i >= 1; i -= 1) {
+        expect(model.undo()).to.be.true;
+        if (i === steps - 1 || i === Math.floor(steps / 2) || i === 1) {
+          expect(value()).to.equal(String(i));
+        }
+      }
+      expect(model.undo()).to.be.true;
+      expect(value()).to.equal('0');
+      expect(um.canUndo()).to.be.false;
+      expect(um.redoStack.length).to.equal(steps);
+
+      // redo all the way forward, same checkpoints
+      for (let i = 1; i <= steps; i += 1) {
+        expect(model.redo()).to.be.true;
+        if (i === 1 || i === Math.floor(steps / 2) || i === steps) {
+          expect(value()).to.equal(String(i));
+        }
+      }
+      expect(um.canRedo()).to.be.false;
+      expect(value()).to.equal(String(steps));
+    });
+
+    it('keeps invalidating the redo stack correctly across repeated undo/mutate/redo cycles', async () => {
+      const el = await fixtureSync(html`
+        <fx-fore>
+          <fx-model undo>
+            <fx-instance><data><value>0</value></data></fx-instance>
+          </fx-model>
+          <fx-control ref="value"></fx-control>
+          <fx-trigger id="undo"><button></button><fx-undo></fx-undo></fx-trigger>
+        </fx-fore>
+      `);
+      await oneEvent(el, 'refresh-done');
+      const model = el.querySelector('fx-model');
+      const control = el.querySelector('fx-control');
+      const um = model.undoManager;
+      const settle = () => new Promise(resolve => setTimeout(resolve, 0));
+
+      for (let cycle = 1; cycle <= 5; cycle += 1) {
+        control.setValue(`v${cycle}`);
+        await settle();
+        um.lastCommit = null;
+
+        // go through the real fx-undo action, like a user would - not the bare
+        // model.undo() primitive, which deliberately leaves updateModel()/refresh() to
+        // its caller and would leave modelItems stale for the next direct control edit.
+        // 'undo-done' only confirms the manager crossed, not that the fire-and-forget
+        // refresh(true) it kicked off has actually finished - wait for 'refresh-done' too,
+        // otherwise fx-control still sees isRefreshing===true and skips the next capture.
+        const undoDone = oneEvent(el, 'undo-done');
+        const refreshDone = oneEvent(el, 'refresh-done');
+        await el.querySelector('#undo').performActions();
+        await Promise.all([undoDone, refreshDone]);
+        expect(model.canRedo()).to.be.true;
+
+        // a fresh mutation after undo must invalidate that redo, every cycle - not just once
+        control.setValue(`w${cycle}`);
+        await settle();
+        um.lastCommit = null;
+        expect(model.canRedo()).to.be.false;
+        expect(instanceValue(el, 'value')).to.equal(`w${cycle}`);
+      }
+    });
+  });
+
+  describe('validation interaction', () => {
+    it('undo crossing a valid/invalid boundary restores the correct validity state', async () => {
+      const el = await fixtureSync(html`
+        <fx-fore>
+          <fx-model undo>
+            <fx-instance>
+              <data><a>A</a></data>
+            </fx-instance>
+            <fx-bind ref="a" constraint="string-length(.) = 1"></fx-bind>
+          </fx-model>
+          <fx-control id="input1" ref="a"></fx-control>
+          <fx-trigger id="undo"><button></button><fx-undo></fx-undo></fx-trigger>
+          <fx-trigger id="redo"><button></button><fx-redo></fx-redo></fx-trigger>
+        </fx-fore>
+      `);
+      await oneEvent(el, 'refresh-done');
+      const input = document.getElementById('input1');
+      const mi = input.getModelItem();
+      expect(mi.constraint).to.be.true;
+      expect(input.hasAttribute('invalid')).to.be.false;
+
+      // cross into invalid - the constraint requires exactly one character
+      input.setValue('too long');
+      await oneEvent(input, 'invalid');
+      expect(input.hasAttribute('invalid')).to.be.true;
+      expect(input.getModelItem().constraint).to.be.false;
+
+      // undo crosses back over the valid/invalid boundary
+      const validEvent = oneEvent(input, 'valid');
+      const undoDone = oneEvent(el, 'undo-done');
+      await el.querySelector('#undo').performActions();
+      await Promise.all([undoDone, validEvent]);
+      expect(input.hasAttribute('invalid')).to.be.false;
+      expect(input.getModelItem().constraint).to.be.true;
+      expect(instanceValue(el, 'a')).to.equal('A');
+
+      // redo crosses forward into invalid again
+      const invalidEvent = oneEvent(input, 'invalid');
+      const redoDone = oneEvent(el, 'redo-done');
+      await el.querySelector('#redo').performActions();
+      await Promise.all([redoDone, invalidEvent]);
+      expect(input.hasAttribute('invalid')).to.be.true;
+      expect(input.getModelItem().constraint).to.be.false;
+    });
+  });
+
   describe('opt-in: disabled by default', () => {
     it('records no undo steps and never clones instance data without the `undo` attribute', async () => {
       const el = await fixtureSync(html`
@@ -534,6 +865,90 @@ describe('undo/redo', () => {
       });
       // no undo happened - value change is untracked, but nothing throws either
       expect(instanceValue(el, 'value')).to.equal('B');
+    });
+  });
+
+  describe('JSON instances', () => {
+    it('undoes and redoes a setvalue on a JSON instance', async () => {
+      const el = await fixtureSync(html`
+        <fx-fore>
+          <fx-model undo>
+            <fx-instance type="json">{"value":"A"}</fx-instance>
+          </fx-model>
+          <fx-trigger id="set-b"><button></button><fx-setvalue ref="?value">B</fx-setvalue></fx-trigger>
+          <fx-trigger id="undo"><button></button><fx-undo></fx-undo></fx-trigger>
+          <fx-trigger id="redo"><button></button><fx-redo></fx-redo></fx-trigger>
+        </fx-fore>
+      `);
+      await oneEvent(el, 'refresh-done');
+      const model = el.querySelector('fx-model');
+      const value = () => model.getInstance('default').instanceData.value;
+
+      await el.querySelector('#set-b').performActions();
+      expect(value()).to.equal('B');
+      expect(model.undoManager.undoStack.length).to.equal(1);
+
+      await el.querySelector('#undo').performActions();
+      expect(value()).to.equal('A');
+
+      await el.querySelector('#redo').performActions();
+      expect(value()).to.equal('B');
+    });
+
+    it('coalesces rapid same-node edits on a JSON instance into one undo step', async () => {
+      const el = await fixtureSync(html`
+        <fx-fore>
+          <fx-model undo>
+            <fx-instance type="json">{"value":"A"}</fx-instance>
+          </fx-model>
+          <fx-trigger id="set-b"><button></button><fx-setvalue ref="?value">B</fx-setvalue></fx-trigger>
+          <fx-trigger id="set-c"><button></button><fx-setvalue ref="?value">C</fx-setvalue></fx-trigger>
+        </fx-fore>
+      `);
+      await oneEvent(el, 'refresh-done');
+      const model = el.querySelector('fx-model');
+
+      await el.querySelector('#set-b').performActions();
+      await el.querySelector('#set-c').performActions();
+      expect(model.undoManager.undoStack.length).to.equal(1);
+
+      await model.undo();
+      expect(model.getInstance('default').instanceData.value).to.equal('A');
+    });
+
+    it('restores a JSON instance and an XML instance independently in the same model', async () => {
+      const el = await fixtureSync(html`
+        <fx-fore>
+          <fx-model undo>
+            <fx-instance>
+              <data><value>A</value></data>
+            </fx-instance>
+            <fx-instance id="json" type="json">{"value":"A"}</fx-instance>
+          </fx-model>
+          <fx-trigger id="set-xml"><button></button><fx-setvalue ref="value">B</fx-setvalue></fx-trigger>
+          <fx-trigger id="set-json"
+            ><button></button><fx-setvalue ref="instance('json')?value">B</fx-setvalue></fx-trigger
+          >
+        </fx-fore>
+      `);
+      await oneEvent(el, 'refresh-done');
+      const model = el.querySelector('fx-model');
+
+      await el.querySelector('#set-xml').performActions();
+      expect(instanceValue(el, 'value')).to.equal('B');
+      expect(model.getInstance('json').instanceData.value).to.equal('A');
+
+      await el.querySelector('#set-json').performActions();
+      expect(model.getInstance('json').instanceData.value).to.equal('B');
+      expect(model.undoManager.undoStack.length).to.equal(2);
+
+      // undo the JSON edit first (last in, first out) - the XML instance is untouched
+      expect(model.undo()).to.be.true;
+      expect(model.getInstance('json').instanceData.value).to.equal('A');
+      expect(instanceValue(el, 'value')).to.equal('B');
+
+      expect(model.undo()).to.be.true;
+      expect(instanceValue(el, 'value')).to.equal('A');
     });
   });
 });
