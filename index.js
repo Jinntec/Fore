@@ -27,15 +27,8 @@ import './src/ui/fx-dialog.js';
 import './src/ui/fx-items.js';
 import './src/ui/fx-droptarget.js';
 
-import './src/tools/fx-action-log.js';
-import './src/tools/fx-log-settings.js';
-import './src/tools/fx-log-item.js';
-import './src/tools/fx-devtools.js';
-import './src/tools/fx-dom-inspector.js';
 import './src/lab/fore-component.js';
-import './src/tools/fx-json-instance.js';
 import './src/ui/fx-upload.js';
-// import './src/tools/fx-minimap.js';
 
 // action classes
 import './src/actions/fx-append.js';

@@ -889,17 +889,13 @@ export class FxFore extends HTMLElement {
   }
 
   _injectDevtools() {
-    if (this.ownerDocument.querySelector('fx-devtools')) {
-      // There's already a devtools, so we can ignore this one.
-      // One devtools can focus multiple fore elements
+    if (this.ownerDocument.querySelector('fx-lens')) {
+      // There's already a lens, so we can ignore this one.
+      // One lens can focus multiple fore elements
       return;
     }
     const { search } = window.location;
     const urlParams = new URLSearchParams(search);
-    if (urlParams.has('inspect')) {
-      const devtools = document.createElement('fx-devtools');
-      document.body.appendChild(devtools);
-    }
     if (urlParams.has('lens')) {
       const lens = document.createElement('fx-lens');
       document.body.appendChild(lens);
