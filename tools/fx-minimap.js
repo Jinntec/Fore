@@ -1,203 +1,358 @@
+const DEFAULT_STYLES = {
+  h1: 'rgba(20,20,20,0.55)',
+  'h2,h3,h4': 'rgba(20,20,20,0.35)',
+  nav: 'rgba(60,60,60,0.12)',
+  'details,section,article,fieldset': 'rgba(60,60,60,0.08)',
+  img: 'rgba(90,140,255,0.35)',
+  'input,textarea,select,button': 'rgba(90,140,255,0.18)',
+};
+
+/**
+ * `<fx-minimap>` renders a small, fixed-position overview of the page (or of
+ * a given scroll container) and lets the user click/drag on it to navigate,
+ * similar to minimaps in code editors or games.
+ *
+ * Attributes:
+ * - `selector`   CSS selector of the scrollable container to map. Defaults to the whole document.
+ * - `width`      Width of the minimap in px (default 180). The map is always scaled to this
+ *                width; height follows the page's aspect ratio and is not capped.
+ * - `max-height` Maximum visible height of the minimap in px. Defaults to the available
+ *                space between the panel and the bottom of the viewport, recomputed on
+ *                resize, so the map uses as much of the screen as it can. Taller pages
+ *                scroll within this bound instead of shrinking the width to fit.
+ * - `corner`     One of `top-right` (default), `top-left`, `bottom-right`, `bottom-left`.
+ * - `styles`     JSON object of `{ selector: cssColor }` merged over the built-in defaults.
+ * - `collapsed`  Start collapsed.
+ */
 class FxMinimap extends HTMLElement {
   constructor() {
     super();
-    this.canvas = document.createElement('canvas');
-    this.options = this.getAttribute('options') ? JSON.parse(this.getAttribute('options')) : {};
-    this.attachShadow({ mode: 'open' });
-    this.shadowRoot.appendChild(this.canvas);
-    this.WIN = window;
-    this.DOC = this.WIN.document;
-    this.DOC_EL = this.DOC.documentElement;
-    this.BODY = this.DOC.querySelector('body');
+    this._onScroll = this._onScroll.bind(this);
+    this._onResize = this._onResize.bind(this);
+    this._onPointerDown = this._onPointerDown.bind(this);
+    this._onPointerMove = this._onPointerMove.bind(this);
+    this._onPointerUp = this._onPointerUp.bind(this);
+    this._draw = this._draw.bind(this);
+    this._raf = null;
+    this._dragging = false;
+    this._scale = 1;
   }
 
   connectedCallback() {
-    this.ctx = this.canvas.getContext('2d');
-    this.black = pc => `rgba(0,0,0,${pc / 100})`;
-    this.viewport = this.querySelector(this.getAttribute('selector'));
-    this.settings = {
-      viewport: this.viewport,
-      styles: {
-        'header,footer,section,article': this.black(8),
-        'h1,a': this.black(10),
-        'h2,h3,h4': this.black(8),
-      },
-      back: this.black(2),
-      view: this.black(5),
-      drag: this.black(10),
-      interval: null,
-      ...this.options,
-    };
+    if (!this.shadowRoot) this._render();
 
-    const _listener = (el, method, types, fn) =>
-      types.split(/\s+/).forEach(type => el[method](type, fn));
-    this.on = (el, types, fn) => _listener(el, 'addEventListener', types, fn);
-    this.off = (el, types, fn) => _listener(el, 'removeEventListener', types, fn);
+    this.width = Number(this.getAttribute('width')) || 180;
+    this._fixedMaxHeight = Number(this.getAttribute('max-height')) || null;
 
-    this.Rect = (x, y, w, h) => ({
-      x,
-      y,
-      w,
-      h,
+    this.styles = { ...DEFAULT_STYLES };
+    const stylesAttr = this.getAttribute('styles');
+    if (stylesAttr) {
+      try {
+        Object.assign(this.styles, JSON.parse(stylesAttr));
+      } catch (e) {
+        console.warn('fx-minimap: could not parse "styles" attribute', e);
+      }
+    }
+
+    const selector = this.getAttribute('selector');
+    this.viewportEl = selector ? document.querySelector(selector) : null;
+
+    this._applyCorner();
+    this._updateMaxHeight();
+
+    this.collapsed = this.hasAttribute('collapsed') || localStorage.getItem('fx-minimap-collapsed') === 'true';
+    this._syncCollapsed();
+
+    this.canvas.addEventListener('pointerdown', this._onPointerDown);
+    this.toggleBtn.addEventListener('click', () => this._toggleCollapsed());
+
+    const scrollTarget = this.viewportEl || window;
+    scrollTarget.addEventListener('scroll', this._onScroll, { passive: true });
+    window.addEventListener('resize', this._onResize);
+    window.addEventListener('load', this._scheduleDraw.bind(this));
+
+    this._resizeObserver = new ResizeObserver(() => this._scheduleDraw());
+    this._resizeObserver.observe(this.viewportEl || document.scrollingElement || document.documentElement);
+
+    this._mutationObserver = new MutationObserver(() => this._scheduleDraw());
+    this._mutationObserver.observe(this.viewportEl || document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['open', 'class', 'style', 'hidden'],
     });
 
-    this.rect_rel_to = (rect, pos = { x: 0, y: 0 }) =>
-      this.Rect(rect.x - pos.x, rect.y - pos.y, rect.w, rect.h);
-
-    this.rect_of_doc = () =>
-      this.Rect(0, 0, document.documentElement.scrollWidth, document.documentElement.scrollHeight);
-
-    this.rect_of_win = () =>
-      this.Rect(
-        window.pageXOffset,
-        window.pageYOffset,
-        document.documentElement.clientWidth,
-        document.documentElement.clientHeight,
-      );
-
-    this.el_get_offset = el => {
-      const br = el.getBoundingClientRect();
-      return { x: br.left + window.pageXOffset, y: br.top + window.pageYOffset };
-    };
-
-    this.rect_of_el = el => {
-      const { x, y } = this.el_get_offset(el);
-      return this.Rect(x, y, el.offsetWidth, el.offsetHeight);
-    };
-
-    this.rect_of_viewport = el => {
-      const { x, y } = this.el_get_offset(el);
-      return this.Rect(x + el.clientLeft, y + el.clientTop, el.clientWidth, el.clientHeight);
-    };
-
-    this.rect_of_content = el => {
-      const { x, y } = this.el_get_offset(el);
-      return this.Rect(
-        x + el.clientLeft - el.scrollLeft,
-        y + el.clientTop - el.scrollTop,
-        el.scrollWidth,
-        el.scrollHeight,
-      );
-    };
-
-    this.calc_scale = (() => {
-      const width = this.canvas.clientWidth;
-      const height = this.canvas.clientHeight;
-      return (w, h) => Math.min(width / w, height / h);
-    })();
-
-    this.resize_canvas = (w, h) => {
-      this.canvas.width = w;
-      this.canvas.height = h;
-      this.canvas.style.width = `${w}px`;
-      this.canvas.style.height = `${h}px`;
-    };
-
-    this.viewport = this.settings.viewport;
-    this.find = sel => Array.from((this.viewport || document).querySelectorAll(sel));
-
-    this.drag = false;
-    this.root_rect = null;
-    this.view_rect = null;
-    this.scale = null;
-    this.drag_rx = null;
-    this.drag_ry = null;
+    this._scheduleDraw();
   }
 
-  draw_rect(rect, col) {
-    if (col) {
-      this.ctx.beginPath();
-      this.ctx.rect(rect.x, rect.y, rect.w, rect.h);
-      this.ctx.fillStyle = col;
-      this.ctx.fill();
+  disconnectedCallback() {
+    const scrollTarget = this.viewportEl || window;
+    scrollTarget.removeEventListener('scroll', this._onScroll);
+    window.removeEventListener('resize', this._onResize);
+    window.removeEventListener('pointermove', this._onPointerMove);
+    window.removeEventListener('pointerup', this._onPointerUp);
+    this._resizeObserver?.disconnect();
+    this._mutationObserver?.disconnect();
+    if (this._raf) cancelAnimationFrame(this._raf);
+  }
+
+  _render() {
+    const root = this.attachShadow({ mode: 'open' });
+    root.innerHTML = `
+      <style>
+        :host {
+          all: initial;
+          position: fixed;
+          z-index: 100000;
+          font-family: system-ui, sans-serif;
+          user-select: none;
+        }
+        .panel {
+          background: rgba(255,255,255,0.92);
+          border: 1px solid rgba(0,0,0,0.15);
+          border-radius: 6px;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.18);
+          overflow: hidden;
+        }
+        .bar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 2px 6px;
+          font-size: 10px;
+          color: #555;
+          background: rgba(0,0,0,0.04);
+          border-bottom: 1px solid rgba(0,0,0,0.08);
+        }
+        button {
+          all: unset;
+          cursor: pointer;
+          font-size: 11px;
+          line-height: 1;
+          padding: 0 4px;
+          color: #555;
+        }
+        button:hover { color: #000; }
+        .canvas-wrap {
+          overflow-y: auto;
+          overflow-x: hidden;
+        }
+        canvas {
+          display: block;
+          cursor: grab;
+        }
+        canvas.dragging { cursor: grabbing; }
+        :host([data-collapsed='true']) .canvas-wrap { display: none; }
+      </style>
+      <div class="panel">
+        <div class="bar">
+          <span>Map</span>
+          <button type="button" class="toggle" title="Toggle minimap">–</button>
+        </div>
+        <div class="canvas-wrap">
+          <canvas></canvas>
+        </div>
+      </div>
+    `;
+    this.bar = root.querySelector('.bar');
+    this.canvasWrap = root.querySelector('.canvas-wrap');
+    this.canvas = root.querySelector('canvas');
+    this.ctx = this.canvas.getContext('2d');
+    this.toggleBtn = root.querySelector('.toggle');
+  }
+
+  _applyCorner() {
+    const corner = this.getAttribute('corner') || 'top-right';
+    const offset = '1rem';
+    this.style.top = corner.startsWith('top') ? offset : '';
+    this.style.bottom = corner.startsWith('bottom') ? offset : '';
+    this.style.left = corner.endsWith('left') ? offset : '';
+    this.style.right = corner.endsWith('right') ? offset : '';
+  }
+
+  _toggleCollapsed() {
+    this.collapsed = !this.collapsed;
+    localStorage.setItem('fx-minimap-collapsed', String(this.collapsed));
+    this._syncCollapsed();
+  }
+
+  _syncCollapsed() {
+    this.setAttribute('data-collapsed', String(this.collapsed));
+    this.toggleBtn.textContent = this.collapsed ? '▢' : '–';
+    if (!this.collapsed) this._scheduleDraw();
+  }
+
+  _scheduleDraw() {
+    if (this._raf || this.collapsed) return;
+    this._raf = requestAnimationFrame(this._draw);
+  }
+
+  _onScroll() {
+    this._scheduleDraw();
+  }
+
+  _onResize() {
+    this._updateMaxHeight();
+    this._scheduleDraw();
+  }
+
+  _updateMaxHeight() {
+    if (this._fixedMaxHeight) {
+      this.canvasWrap.style.maxHeight = `${this._fixedMaxHeight}px`;
+      return;
     }
+    const bottomMargin = 16;
+    const hostTop = this.getBoundingClientRect().top;
+    const barHeight = this.bar.getBoundingClientRect().height;
+    const available = window.innerHeight - hostTop - barHeight - bottomMargin;
+    this.canvasWrap.style.maxHeight = `${Math.max(80, Math.round(available))}px`;
   }
 
-  find(sel) {
-    return Array.from((this.viewport || this.DOC).querySelectorAll(sel));
+  _rectOfDoc() {
+    const el = this.viewportEl || document.scrollingElement || document.documentElement;
+    return { w: el.scrollWidth, h: el.scrollHeight };
   }
 
-  apply_styles(styles) {
-    Object.keys(styles).forEach(sel => {
-      const col = styles[sel];
-      this.find(sel).forEach(el => {
-        this.draw_rect(this.rect_rel_to(this.rect_of_el(el), this.root_rect), col);
+  _rectOfViewport() {
+    const el = this.viewportEl || document.scrollingElement || document.documentElement;
+    return { x: el.scrollLeft, y: el.scrollTop, w: el.clientWidth, h: el.clientHeight };
+  }
+
+  _toContentCoords(rect) {
+    if (this.viewportEl) {
+      const cr = this.viewportEl.getBoundingClientRect();
+      return {
+        x: rect.left - cr.left + this.viewportEl.scrollLeft,
+        y: rect.top - cr.top + this.viewportEl.scrollTop,
+        w: rect.width,
+        h: rect.height,
+      };
+    }
+    return {
+      x: rect.left + window.scrollX,
+      y: rect.top + window.scrollY,
+      w: rect.width,
+      h: rect.height,
+    };
+  }
+
+  _resizeCanvas(cssW, cssH) {
+    const dpr = window.devicePixelRatio || 1;
+    const w = Math.max(1, Math.round(cssW * dpr));
+    const h = Math.max(1, Math.round(cssH * dpr));
+    if (this.canvas.width !== w) this.canvas.width = w;
+    if (this.canvas.height !== h) this.canvas.height = h;
+    this.canvas.style.width = `${cssW}px`;
+    this.canvas.style.height = `${cssH}px`;
+  }
+
+  _draw() {
+    this._raf = null;
+    const doc = this._rectOfDoc();
+    if (!doc.w || !doc.h) return;
+
+    const scale = this.width / doc.w;
+    this._scale = scale;
+    const cssW = this.width;
+    const cssH = Math.max(1, Math.round(doc.h * scale));
+    this._resizeCanvas(cssW, cssH);
+
+    const ctx = this.ctx;
+    const dpr = window.devicePixelRatio || 1;
+    ctx.setTransform(dpr * scale, 0, 0, dpr * scale, 0, 0);
+    ctx.clearRect(0, 0, doc.w, doc.h);
+    ctx.fillStyle = 'rgba(0,0,0,0.035)';
+    ctx.fillRect(0, 0, doc.w, doc.h);
+
+    const root = this.viewportEl || document;
+    Object.entries(this.styles).forEach(([sel, color]) => {
+      let nodes;
+      try {
+        nodes = root.querySelectorAll(sel);
+      } catch (e) {
+        return;
+      }
+      ctx.fillStyle = color;
+      nodes.forEach(el => {
+        // checkVisibility() (unlike offsetWidth/offsetHeight) correctly
+        // reports false for content inside a closed <details>: browsers
+        // hide that content via content-visibility, which by design keeps
+        // reporting its last-known geometry from offsetWidth/getBoundingClientRect.
+        if (typeof el.checkVisibility === 'function') {
+          if (!el.checkVisibility()) return;
+        } else if (el.offsetWidth === 0 && el.offsetHeight === 0) {
+          return;
+        }
+        // Skip nested elements matched by the same rule so overlapping
+        // containers (e.g. a fieldset inside a section inside a details)
+        // don't stack their translucent fills into a darker blotch.
+        if (el.parentElement && el.parentElement.closest(sel)) return;
+        const cs = getComputedStyle(el);
+        if (cs.position === 'fixed') return;
+        const r = this._toContentCoords(el.getBoundingClientRect());
+        ctx.fillRect(r.x, r.y, r.w, r.h);
       });
     });
+
+    const vp = this._rectOfViewport();
+    ctx.fillStyle = this._dragging ? 'rgba(37,99,235,0.35)' : 'rgba(37,99,235,0.18)';
+    ctx.fillRect(vp.x, vp.y, vp.w, vp.h);
+    ctx.strokeStyle = 'rgba(37,99,235,0.9)';
+    ctx.lineWidth = 1 / scale;
+    ctx.strokeRect(vp.x, vp.y, vp.w, vp.h);
+
+    this._ensureViewportVisible(vp, scale);
   }
 
-  draw() {
-    this.root_rect = this.viewport ? this.rect_of_content(this.viewport) : this.rect_of_doc();
-    this.view_rect = this.viewport ? this.rect_of_viewport(this.viewport) : this.rect_of_win();
-    this.scale = this.calc_scale(this.root_rect.w, this.root_rect.h);
-
-    this.resize_canvas(this.root_rect.w * this.scale, this.root_rect.h * this.scale);
-
-    this.ctx.setTransform(1, 0, 0, 1, 0, 0);
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.ctx.scale(this.scale, this.scale);
-
-    this.draw_rect(this.rect_rel_to(this.root_rect, this.root_rect), this.settings.back);
-    this.apply_styles(this.settings.styles);
-    this.draw_rect(
-      this.rect_rel_to(this.view_rect, this.root_rect),
-      this.drag ? this.settings.drag : this.settings.view,
-    );
+  _ensureViewportVisible(vp, scale) {
+    const wrap = this.canvasWrap;
+    const top = vp.y * scale;
+    const bottom = (vp.y + vp.h) * scale;
+    if (top < wrap.scrollTop) {
+      wrap.scrollTop = top;
+    } else if (bottom > wrap.scrollTop + wrap.clientHeight) {
+      wrap.scrollTop = bottom - wrap.clientHeight;
+    }
   }
 
-  on_drag(ev) {
-    ev.preventDefault();
-    const cr = this.rect_of_viewport(this.canvas);
-    const x = (ev.pageX - cr.x) / this.scale - this.view_rect.w * this.drag_rx;
-    const y = (ev.pageY - cr.y) / this.scale - this.view_rect.h * this.drag_ry;
+  _scrollToPointer(ev) {
+    const rect = this.canvas.getBoundingClientRect();
+    const x = (ev.clientX - rect.left) / this._scale;
+    const y = (ev.clientY - rect.top) / this._scale;
+    const vp = this._rectOfViewport();
+    const left = x - vp.w / 2;
+    const top = y - vp.h / 2;
 
-    if (this.viewport) {
-      this.viewport.scrollLeft = x;
-      this.viewport.scrollTop = y;
+    if (this.viewportEl) {
+      this.viewportEl.scrollTo({ left, top, behavior: 'instant' });
     } else {
-      this.WIN.scrollTo(x, y);
+      window.scrollTo({ left, top, behavior: 'instant' });
     }
-    this.draw();
+    this._scheduleDraw();
   }
 
-  on_drag_end(ev) {
-    this.drag = false;
-    this.canvas.style.cursor = 'pointer';
-    this.BODY.style.cursor = 'auto';
-    this.off(this.WIN, 'mousemove', this.on_drag);
-    this.off(this.WIN, 'mouseup', this.on_drag_end);
-    this.on_drag(ev);
+  _onPointerDown(ev) {
+    this._dragging = true;
+    this.canvas.classList.add('dragging');
+    window.addEventListener('pointermove', this._onPointerMove);
+    window.addEventListener('pointerup', this._onPointerUp);
+    this._scrollToPointer(ev);
   }
 
-  on_drag_start(ev) {
-    this.drag = true;
-
-    const cr = this.rect_of_viewport(this.canvas);
-    const vr = this.rect_rel_to(this.view_rect, this.root_rect);
-    this.drag_rx = ((ev.pageX - cr.x) / this.scale - vr.x) / vr.w;
-    this.drag_ry = ((ev.pageY - cr.y) / this.scale - vr.y) / vr.h;
-    if (this.drag_rx < 0 || this.drag_rx > 1 || this.drag_ry < 0 || this.drag_ry > 1) {
-      this.drag_rx = 0.5;
-      this.drag_ry = 0.5;
-    }
-
-    this.canvas.style.cursor = 'crosshair';
-    this.BODY.style.cursor = 'crosshair';
-    this.on(this.WIN, 'mousemove', this.on_drag);
-    this.on(this.WIN, 'mouseup', this.on_drag_end);
-    this.on_drag(ev);
+  _onPointerMove(ev) {
+    if (!this._dragging) return;
+    this._scrollToPointer(ev);
   }
 
-  init() {
-    this.canvas.style.cursor = 'pointer';
-    this.on(this.canvas, 'mousedown', this.on_drag_start);
-    this.on(this.viewport || this.WIN, 'load resize scroll', this.draw());
-    if (this.settings.interval > 0) {
-      setInterval(() => this.draw(), this.settings.interval);
-    }
-    this.draw();
+  _onPointerUp() {
+    this._dragging = false;
+    this.canvas.classList.remove('dragging');
+    window.removeEventListener('pointermove', this._onPointerMove);
+    window.removeEventListener('pointerup', this._onPointerUp);
+    this._scheduleDraw();
   }
 }
+
 if (!customElements.get('fx-minimap')) {
   customElements.define('fx-minimap', FxMinimap);
 }
