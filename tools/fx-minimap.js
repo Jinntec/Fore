@@ -23,6 +23,9 @@ const DEFAULT_STYLES = {
  * - `corner`     One of `top-right` (default), `top-left`, `bottom-right`, `bottom-left`.
  * - `styles`     JSON object of `{ selector: cssColor }` merged over the built-in defaults.
  * - `collapsed`  Start collapsed.
+ * - `area-scale` Multiplier (default 1) applied to every drawn marker box (control rects and
+ *                the focus marker), inflated around its own center, so small elements stay
+ *                visible on the map. Values > 1 enlarge; 1 is exact/true-to-size.
  */
 class FxMinimap extends HTMLElement {
   constructor() {
@@ -36,6 +39,8 @@ class FxMinimap extends HTMLElement {
     this._raf = null;
     this._dragging = false;
     this._scale = 1;
+    this._focusRect = null;
+    this._onFocusIn = this._onFocusIn.bind(this);
   }
 
   connectedCallback() {
@@ -43,6 +48,7 @@ class FxMinimap extends HTMLElement {
 
     this.width = Number(this.getAttribute('width')) || 180;
     this._fixedMaxHeight = Number(this.getAttribute('max-height')) || null;
+    this._areaScale = Number(this.getAttribute('area-scale')) || 1;
 
     this.styles = { ...DEFAULT_STYLES };
     const stylesAttr = this.getAttribute('styles');
@@ -71,6 +77,9 @@ class FxMinimap extends HTMLElement {
     window.addEventListener('resize', this._onResize);
     window.addEventListener('load', this._scheduleDraw.bind(this));
 
+    const focusRoot = this.viewportEl || document;
+    focusRoot.addEventListener('focusin', this._onFocusIn);
+
     this._resizeObserver = new ResizeObserver(() => this._scheduleDraw());
     this._resizeObserver.observe(this.viewportEl || document.scrollingElement || document.documentElement);
 
@@ -91,6 +100,8 @@ class FxMinimap extends HTMLElement {
     window.removeEventListener('resize', this._onResize);
     window.removeEventListener('pointermove', this._onPointerMove);
     window.removeEventListener('pointerup', this._onPointerUp);
+    const focusRoot = this.viewportEl || document;
+    focusRoot.removeEventListener('focusin', this._onFocusIn);
     this._resizeObserver?.disconnect();
     this._mutationObserver?.disconnect();
     if (this._raf) cancelAnimationFrame(this._raf);
@@ -196,6 +207,12 @@ class FxMinimap extends HTMLElement {
     this._scheduleDraw();
   }
 
+  _onFocusIn(ev) {
+    if (ev.target === this || this.contains(ev.target)) return;
+    this._focusRect = this._toContentCoords(ev.target.getBoundingClientRect());
+    this._scheduleDraw();
+  }
+
   _updateMaxHeight() {
     if (this._fixedMaxHeight) {
       this.canvasWrap.style.maxHeight = `${this._fixedMaxHeight}px`;
@@ -236,6 +253,13 @@ class FxMinimap extends HTMLElement {
     };
   }
 
+  _scaledRect(r) {
+    if (this._areaScale === 1) return r;
+    const w = r.w * this._areaScale;
+    const h = r.h * this._areaScale;
+    return { x: r.x - (w - r.w) / 2, y: r.y - (h - r.h) / 2, w, h };
+  }
+
   _resizeCanvas(cssW, cssH) {
     const dpr = window.devicePixelRatio || 1;
     const w = Math.max(1, Math.round(cssW * dpr));
@@ -272,7 +296,13 @@ class FxMinimap extends HTMLElement {
       } catch (e) {
         return;
       }
+      // Collect all matched rects into a single path and fill it once, rather
+      // than fillRect-ing each element individually: overlapping rects (e.g.
+      // a tightly packed toolbar, or boxes overlapping after area-scale
+      // inflation) would otherwise blend their translucent color on top of
+      // each other on every overlap, darkening into a solid blotch.
       ctx.fillStyle = color;
+      ctx.beginPath();
       nodes.forEach(el => {
         // checkVisibility() (unlike offsetWidth/offsetHeight) correctly
         // reports false for content inside a closed <details>: browsers
@@ -289,9 +319,10 @@ class FxMinimap extends HTMLElement {
         if (el.parentElement && el.parentElement.closest(sel)) return;
         const cs = getComputedStyle(el);
         if (cs.position === 'fixed') return;
-        const r = this._toContentCoords(el.getBoundingClientRect());
-        ctx.fillRect(r.x, r.y, r.w, r.h);
+        const r = this._scaledRect(this._toContentCoords(el.getBoundingClientRect()));
+        ctx.rect(r.x, r.y, r.w, r.h);
       });
+      ctx.fill();
     });
 
     const vp = this._rectOfViewport();
@@ -300,6 +331,15 @@ class FxMinimap extends HTMLElement {
     ctx.strokeStyle = 'rgba(37,99,235,0.9)';
     ctx.lineWidth = 1 / scale;
     ctx.strokeRect(vp.x, vp.y, vp.w, vp.h);
+
+    if (this._focusRect) {
+      const r = this._scaledRect(this._focusRect);
+      ctx.fillStyle = 'rgba(255,255,224,0.6)';
+      ctx.fillRect(r.x, r.y, r.w, r.h);
+      ctx.strokeStyle = 'rgba(255,255,224,0.9)';
+      ctx.lineWidth = 1.5 / scale;
+      ctx.strokeRect(r.x, r.y, r.w, r.h);
+    }
 
     this._ensureViewportVisible(vp, scale);
   }
