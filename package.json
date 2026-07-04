@@ -55,7 +55,7 @@
     "@webcomponents/webcomponentsjs": "^2.6.0",
     "axe-core": "^4.12.1",
     "chai": "^5.2.1",
-    "cypress": "^13.16.0",
+    "cypress": "^15.18.0",
     "cypress-axe": "^1.7.0",
     "deepmerge": "^4.2.2",
     "eslint": "^8.16.0",
