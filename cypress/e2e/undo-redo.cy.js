@@ -65,26 +65,28 @@ describe('undo/redo (demo/undo-redo.html)', () => {
   });
 
   it('inserting and deleting a task are both undoable', () => {
+    // each task renders two fx-control elements (a @done checkbox plus the text
+    // control) - scope to the text one (ref=".") to count tasks, not controls
     cy.get('#add-task button').click();
-    cy.get('fx-fore#basic fx-repeat fx-control', { includeShadowDom: true }).should(
+    cy.get('fx-fore#basic fx-repeat fx-control[ref="."]', { includeShadowDom: true }).should(
       'have.length',
       3,
     );
 
     cy.get('#undo-basic button').click();
-    cy.get('fx-fore#basic fx-repeat fx-control', { includeShadowDom: true }).should(
+    cy.get('fx-fore#basic fx-repeat fx-control[ref="."]', { includeShadowDom: true }).should(
       'have.length',
       2,
     );
 
     // delete triggered from inside the repeat item that gets removed
     cy.get('fx-fore#basic fx-repeat .delete-task button').first().click();
-    cy.get('fx-fore#basic fx-repeat fx-control input', { includeShadowDom: true })
+    cy.get('fx-fore#basic fx-repeat fx-control[ref="."] input', { includeShadowDom: true })
       .first()
       .should('have.value', 'walk the dog');
 
     cy.get('#undo-basic button').click();
-    cy.get('fx-fore#basic fx-repeat fx-control input', { includeShadowDom: true })
+    cy.get('fx-fore#basic fx-repeat fx-control[ref="."] input', { includeShadowDom: true })
       .first()
       .should('have.value', 'wash the dishes');
   });
@@ -140,9 +142,17 @@ describe('undo/redo (demo/undo-redo.html)', () => {
           $model =>
             $model[0].getInstance('counters').instanceData.querySelector('count').textContent,
         );
+    // fx-output renders into its shadow root, not light-DOM textContent - read the
+    // element's own .value property instead (same convention as fx-control.value elsewhere)
+    const outerDisplay = () => cy.get('#outer-count').its('0.value');
 
     cy.get('#increment button').click();
     sharedCount().should('equal', '1');
+    // the outer form's own display must reflect an inner-driven change too - it doesn't
+    // get this for free (shared-instance refresh only propagates downward, and only
+    // reliably for widget-driven edits), so each trigger explicitly asks #shared-outer
+    // to refresh via a plain <fx-dispatch name="refresh" targetid="shared-outer">
+    outerDisplay().should('equal', '1');
 
     cy.get('fx-fore#shared-inner > fx-model').should($model => {
       expect($model[0].instances.length).to.equal(0);
@@ -153,8 +163,10 @@ describe('undo/redo (demo/undo-redo.html)', () => {
 
     cy.get('#undo-shared button').click();
     sharedCount().should('equal', '0');
+    outerDisplay().should('equal', '0');
 
     cy.get('#redo-shared button').click();
     sharedCount().should('equal', '1');
+    outerDisplay().should('equal', '1');
   });
 });
