@@ -1,15 +1,27 @@
 # Undo/redo for Fore instance data — summary
 
-Status: implemented and hardened, **not yet committed**. Covered by 958 unit tests
-(`test/undo-redo.test.js`, 48 cases) and 6 Cypress e2e tests
+Status: implemented and hardened, **not yet committed**. Covered by 37 dedicated unit tests
+in `test/undo-redo.test.js` (966 total in the project's full suite) and 7 Cypress e2e tests
 (`cypress/e2e/undo-redo.cy.js`) against `demo/undo-redo.html`.
 
 ## What it does
 
 Every action chain (`fx-setvalue`, `fx-insert`, `fx-delete`, `fx-reset`, `fx-replace`,
 instance-replacing `fx-send`, `fx-upload`, drag-and-drop reordering) and every direct widget
-edit through `fx-control` can be undone and redone. Rapid edits to the same node (typing)
-coalesce into a single undo step, like a text editor.
+edit through `fx-control` can be undone and redone.
+
+Coalescing is deliberately split by the nature of the edit, not by a single time window:
+- **Action chains never coalesce.** Clicking the same button (or a counter's "+1") three
+  times fast produces three undo steps, not one - each chain is already a complete,
+  deliberate operation.
+- **Widget-driven typing coalesces while the widget stays focused**, closing on blur (or on
+  the explicit `<fx-commit-history>` action - see below). Bounded by focus, not by a fixed
+  delay, so it behaves the same whether typing takes one second or one minute.
+
+(An earlier version of this feature coalesced everything - actions included - within a
+1-second window of the same node. That conflated "the user is still typing" with "the user
+clicked the same button again quickly," which silently merged repeated button clicks into
+one undo step. Replaced with the focus/action split above before anything shipped.)
 
 Opt-in and zero-cost when unused:
 
@@ -29,6 +41,17 @@ New action elements:
 
 fire `undo-done` / `redo-done` with `{canUndo, canRedo}` in the detail.
 
+A third action forces a coalescing boundary on demand, without requiring blur - useful for a
+textarea where an author wants a checkpoint mid-edit (e.g. on Enter, or a "save draft"
+button):
+
+```html
+<fx-trigger><button>checkpoint</button><fx-commit-history></fx-commit-history></fx-trigger>
+```
+
+It never creates an undo step of its own - it only closes whatever widget-edit session is
+currently open, so the next edit (even to the same still-focused field) starts a new step.
+
 Optional keyboard shortcuts, opt-in per `<fx-fore>` (overrides native text-field undo, hence
 opt-in):
 
@@ -43,8 +66,19 @@ Ctrl/Cmd+Z → undo, Ctrl/Cmd+Shift+Z or Ctrl/Cmd+Y → redo.
 - **`src/UndoManager.js`** — one instance per `FxModel` (`model.undoManager`). Snapshot-based
   (memento pattern, not a command/operation log — see "Design choice" below): `beginCapture()`
   clones every instance in the model (`cloneNode(true)` for XML, `structuredClone()` for JSON)
-  before a chain runs; `commit()` pushes that clone onto the undo stack once the chain actually
-  mutated something; chains that end without a mutation are discarded.
+  before a chain runs. Two ways to turn that snapshot into an undo step:
+  - `commit(touchedNode)` — always pushes a new, distinct entry. Used by every action-driven
+    path (`AbstractAction`'s generic hook, `fx-upload`, drag-and-drop).
+  - `commitCoalesced(sessionKey)` — merges into the currently open session if `sessionKey`
+    matches it, otherwise opens a new one. Used only by `fx-control.js`'s direct widget edits,
+    and only when the widget is genuinely focused (`document.activeElement`) - a fully
+    programmatic call never opens a session, so it can't be left dangling for something
+    unrelated to merge into later.
+  - `endCoalescingSession()` closes the open session - called from `fx-control`'s `blur`
+    listener and from `<fx-commit-history>`. `commit()` also closes it defensively, so an
+    action firing while a field is still focused (no blur) can't let that field's next edit
+    wrongly merge across the action.
+  - Chains that end without a mutation are discarded via `discard()`.
 - **Chain boundary**: hooked into `AbstractAction.execute()` / `_finalizePerform()`
   (`src/actions/abstract-action.js`) at the exact point where `FxFore.outermostHandler` is
   acquired/released — nested/sequenced actions within one synchronous chain already share this
@@ -128,12 +162,12 @@ Full detail in `doc/shared-instance-refresh-investigation.md`:
 ## Files
 
 - `src/UndoManager.js` (new)
-- `src/actions/fx-undo.js`, `src/actions/fx-redo.js` (new)
+- `src/actions/fx-undo.js`, `src/actions/fx-redo.js`, `src/actions/fx-commit-history.js` (new)
 - `src/actions/abstract-action.js`, `src/fx-model.js`, `src/fx-fore.js`, `src/ui/fx-control.js`,
   `src/actions/fx-send.js`, `src/ui/fx-upload.js`, `src/withDraggability.js` (modified)
-- `index.js` (two new imports)
-- `test/undo-redo.test.js` (new, 48 tests)
-- `cypress/e2e/undo-redo.cy.js` (new, 6 tests)
+- `index.js` (three new imports)
+- `test/undo-redo.test.js` (new, 37 tests)
+- `cypress/e2e/undo-redo.cy.js` (new, 7 tests)
 - `demo/undo-redo.html` (new)
 - `doc/shared-instance-refresh-investigation.md` (new — the UI-refresh gap and the mixed-
   instance follow-up)

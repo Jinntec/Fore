@@ -64,6 +64,26 @@ describe('undo/redo (demo/undo-redo.html)', () => {
     );
   });
 
+  it('a checkpoint (fx-commit-history) splits typing into separate undo steps', () => {
+    // note: clicking the checkpoint button also blurs the textarea (a real click moves
+    // focus), so this exercises the end-to-end feature rather than isolating "checkpoint
+    // without blur" specifically - that precise case is covered by the unit test suite,
+    // which triggers the action via performActions() without touching real DOM focus
+    const notes = () =>
+      cy.get('fx-fore#basic fx-control[ref="notes"] textarea', { includeShadowDom: true });
+
+    notes().type('first half', { delay: 0 });
+    cy.get('#checkpoint button').click();
+    notes().type(' second half', { delay: 0 });
+    notes().should('have.value', 'first half second half');
+
+    cy.get('#undo-basic button').click();
+    notes().should('have.value', 'first half');
+
+    cy.get('#undo-basic button').click();
+    notes().should('have.value', '');
+  });
+
   it('inserting and deleting a task are both undoable', () => {
     // each task renders two fx-control elements (a @done checkbox plus the text
     // control) - scope to the text one (ref=".") to count tasks, not controls

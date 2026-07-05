@@ -69,16 +69,17 @@ describe('undo/redo', () => {
       expect(instance.originalInstance.querySelector('value').textContent).to.equal('A');
     });
 
-    it('coalesces rapid successive edits of the same node into one undo step', async () => {
+    it('records a distinct step for each action-driven edit, even to the same node in quick succession', async () => {
+      // action-driven mutations never coalesce - each chain is already a complete,
+      // deliberate operation (this is what fixes the "+1 button" confusion: clicking it
+      // three times fast must undo in three steps, not one)
       const um = undoManagerOf(el);
       await el.querySelector('#set-b').performActions();
       await el.querySelector('#set-c').performActions();
-      expect(um.undoStack.length).to.equal(1);
-
-      // past the coalescing window a new entry is created
-      um.lastCommit = null;
-      await el.querySelector('#set-d').performActions();
       expect(um.undoStack.length).to.equal(2);
+
+      await el.querySelector('#set-d').performActions();
+      expect(um.undoStack.length).to.equal(3);
     });
 
     it('does not coalesce edits of different nodes', async () => {
@@ -93,9 +94,7 @@ describe('undo/redo', () => {
       um.maxDepth = 2;
 
       await el.querySelector('#set-b').performActions();
-      um.lastCommit = null;
       await el.querySelector('#set-c').performActions();
-      um.lastCommit = null;
       await el.querySelector('#set-d').performActions();
       expect(um.undoStack.length).to.equal(2);
 
@@ -131,7 +130,7 @@ describe('undo/redo', () => {
       expect(um.suspended).to.be.false;
     });
 
-    it('a realistic double-click (two separate click events) commits exactly once and does not strand the outermost handler', async () => {
+    it('a realistic double-click (two separate click events) does not strand the outermost handler', async () => {
       const um = undoManagerOf(el);
       const button = el.querySelector('#set-b button');
       const nextMacrotask = () => new Promise(resolve => setTimeout(resolve, 0));
@@ -145,12 +144,12 @@ describe('undo/redo', () => {
       await nextMacrotask();
 
       expect(FxFore.outermostHandler).to.equal(null);
+      // #set-b always sets the same literal value - the second click is a genuine no-op
+      // (B unchanged), not a coalesced edit, so exactly one entry is expected either way
       expect(um.undoStack.length).to.equal(1);
       expect(instanceValue(el, 'value')).to.equal('B');
 
-      // and the mechanism keeps working normally afterwards (bypass coalescing here -
-      // this assertion is about commit correctness, not the coalescing window)
-      um.lastCommit = null;
+      // and the mechanism keeps working normally afterwards, for an edit that does change
       await el.querySelector('#set-c').performActions();
       expect(instanceValue(el, 'value')).to.equal('C');
       expect(um.undoStack.length).to.equal(2);
@@ -463,9 +462,9 @@ describe('undo/redo', () => {
       // .textContent - a nested fore with no <fx-instance> of its own never runs its own
       // rebuild(), so its UI does not reliably refresh after actions targeting the shared
       // instance (independent of undo/redo). See doc/shared-instance-refresh-investigation.md.
+      // this is the original "+1 button" scenario: action-driven edits never coalesce, so
+      // two rapid clicks are two undo steps, not one
       await el.querySelector('#increment').performActions();
-      // two rapid edits of the same node coalesce into one undo step (by design)
-      outerModel.undoManager.lastCommit = null;
       await el.querySelector('#increment').performActions();
       expect(count()).to.equal('2');
       expect(outerModel.undoManager.undoStack.length).to.equal(2);
@@ -565,6 +564,146 @@ describe('undo/redo', () => {
 
       el.querySelector('fx-control').setValue('A');
       expect(model.canUndo()).to.be.false;
+    });
+
+    it('coalesces widget edits into one undo step while the widget stays focused', async () => {
+      const el = await fixtureSync(html`
+        <fx-fore>
+          <fx-model undo>
+            <fx-instance><data><value>A</value></data></fx-instance>
+          </fx-model>
+          <fx-control ref="value"></fx-control>
+        </fx-fore>
+      `);
+      await oneEvent(el, 'refresh-done');
+      const model = el.querySelector('fx-model');
+      const control = el.querySelector('fx-control');
+      // setValue()'s own refresh cycle (which syncs the widget's DOM value from the
+      // model) is fire-and-forget, so give it a tick to settle between calls - otherwise
+      // a later setValue() or blur() can race it and read a stale widget value
+      const settle = () => new Promise(resolve => setTimeout(resolve, 0));
+
+      control.widget.focus();
+      control.setValue('AB');
+      await settle();
+      control.setValue('ABC');
+      await settle();
+      expect(model.undoManager.undoStack.length).to.equal(1);
+
+      control.widget.blur();
+      await settle();
+      expect(instanceValue(el, 'value')).to.equal('ABC');
+
+      // undo reverts the whole session at once, back to before the first keystroke -
+      // this is the typing behavior being preserved, now bounded by focus, not a timer
+      expect(model.undo()).to.be.true;
+      expect(instanceValue(el, 'value')).to.equal('A');
+    });
+
+    it('records a distinct step for each widget edit when the widget is not focused', async () => {
+      const el = await fixtureSync(html`
+        <fx-fore>
+          <fx-model undo>
+            <fx-instance><data><value>A</value></data></fx-instance>
+          </fx-model>
+          <fx-control ref="value"></fx-control>
+        </fx-fore>
+      `);
+      await oneEvent(el, 'refresh-done');
+      const model = el.querySelector('fx-model');
+      const control = el.querySelector('fx-control');
+      const settle = () => new Promise(resolve => setTimeout(resolve, 0));
+
+      // no .focus() call - indistinguishable from a programmatic/API-driven edit, so a
+      // session is never opened and each call is its own undo step
+      control.setValue('B');
+      await settle();
+      control.setValue('C');
+      await settle();
+      expect(model.undoManager.undoStack.length).to.equal(2);
+    });
+
+    it('fx-commit-history closes the open session, splitting a still-focused edit into its own step', async () => {
+      const el = await fixtureSync(html`
+        <fx-fore>
+          <fx-model undo>
+            <fx-instance><data><value>A</value></data></fx-instance>
+          </fx-model>
+          <fx-control ref="value"></fx-control>
+          <fx-trigger id="checkpoint"
+            ><button></button><fx-commit-history></fx-commit-history></fx-trigger
+          >
+        </fx-fore>
+      `);
+      await oneEvent(el, 'refresh-done');
+      const model = el.querySelector('fx-model');
+      const control = el.querySelector('fx-control');
+      const um = model.undoManager;
+      const settle = () => new Promise(resolve => setTimeout(resolve, 0));
+
+      control.widget.focus();
+      control.setValue('AB');
+      await settle();
+      control.setValue('ABC');
+      await settle();
+      expect(um.undoStack.length).to.equal(1);
+
+      // performActions() doesn't touch real DOM focus, so the widget stays focused - the
+      // checkpoint alone must be what closes the session, not an incidental blur
+      await el.querySelector('#checkpoint').performActions();
+      expect(document.activeElement).to.equal(control.widget);
+
+      control.setValue('ABCD');
+      await settle();
+      expect(um.undoStack.length).to.equal(2);
+
+      // undo only reverts the edit made after the checkpoint
+      expect(model.undo()).to.be.true;
+      expect(instanceValue(el, 'value')).to.equal('ABC');
+      expect(model.undo()).to.be.true;
+      expect(instanceValue(el, 'value')).to.equal('A');
+    });
+
+    it('an unrelated action-driven mutation closes an open widget-edit session instead of merging into it', async () => {
+      const el = await fixtureSync(html`
+        <fx-fore>
+          <fx-model undo>
+            <fx-instance>
+              <data><value>A</value><other>x</other></data>
+            </fx-instance>
+          </fx-model>
+          <fx-control ref="value"></fx-control>
+          <fx-trigger id="set-other"><button></button><fx-setvalue ref="other">y</fx-setvalue></fx-trigger>
+        </fx-fore>
+      `);
+      await oneEvent(el, 'refresh-done');
+      const model = el.querySelector('fx-model');
+      const control = el.querySelector('fx-control');
+      const um = model.undoManager;
+      const settle = () => new Promise(resolve => setTimeout(resolve, 0));
+
+      control.widget.focus();
+      control.setValue('B');
+      await settle();
+      expect(um.undoStack.length).to.equal(1);
+
+      // no blur - but an unrelated action fires while the field is still focused
+      await el.querySelector('#set-other').performActions();
+      expect(um.undoStack.length).to.equal(2);
+
+      // continuing to type into the still-focused field afterwards must not merge into
+      // the entry that predates the unrelated action
+      control.setValue('BC');
+      await settle();
+      expect(um.undoStack.length).to.equal(3);
+
+      expect(model.undo()).to.be.true;
+      expect(instanceValue(el, 'value')).to.equal('B');
+      expect(instanceValue(el, 'other')).to.equal('y');
+      expect(model.undo()).to.be.true;
+      expect(instanceValue(el, 'other')).to.equal('x');
+      expect(model.undo()).to.be.true;
+      expect(instanceValue(el, 'value')).to.equal('A');
     });
   });
 
@@ -679,10 +818,10 @@ describe('undo/redo', () => {
 
       const steps = 20;
       for (let i = 1; i <= steps; i += 1) {
+        // control.setValue() called directly, without ever focusing the widget, is always
+        // a distinct edit - no coalescing session is opened without real DOM focus
         control.setValue(String(i));
         await settle();
-        // each of these is meant to be a distinct edit, not a coalesced keystroke run
-        um.lastCommit = null;
       }
       expect(value()).to.equal(String(steps));
       expect(um.undoStack.length).to.equal(steps);
@@ -729,7 +868,6 @@ describe('undo/redo', () => {
       for (let cycle = 1; cycle <= 5; cycle += 1) {
         control.setValue(`v${cycle}`);
         await settle();
-        um.lastCommit = null;
 
         // go through the real fx-undo action, like a user would - not the bare
         // model.undo() primitive, which deliberately leaves updateModel()/refresh() to
@@ -746,7 +884,6 @@ describe('undo/redo', () => {
         // a fresh mutation after undo must invalidate that redo, every cycle - not just once
         control.setValue(`w${cycle}`);
         await settle();
-        um.lastCommit = null;
         expect(model.canRedo()).to.be.false;
         expect(instanceValue(el, 'value')).to.equal(`w${cycle}`);
       }
@@ -895,7 +1032,7 @@ describe('undo/redo', () => {
       expect(value()).to.equal('B');
     });
 
-    it('coalesces rapid same-node edits on a JSON instance into one undo step', async () => {
+    it('records a distinct step per action-driven edit on a JSON instance, even to the same node', async () => {
       const el = await fixtureSync(html`
         <fx-fore>
           <fx-model undo>
@@ -910,8 +1047,10 @@ describe('undo/redo', () => {
 
       await el.querySelector('#set-b').performActions();
       await el.querySelector('#set-c').performActions();
-      expect(model.undoManager.undoStack.length).to.equal(1);
+      expect(model.undoManager.undoStack.length).to.equal(2);
 
+      await model.undo();
+      expect(model.getInstance('default').instanceData.value).to.equal('B');
       await model.undo();
       expect(model.getInstance('default').instanceData.value).to.equal('A');
     });

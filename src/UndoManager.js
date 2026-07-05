@@ -6,20 +6,24 @@
  *
  * One instance lives on each `fx-model` as `model.undoManager`. Snapshots are captured
  * around each outermost action chain (see `AbstractAction.execute()` / `_finalizePerform()`):
- * `beginCapture()` clones the current instance data before the chain runs and `commit()`
- * pushes that clone onto the undo stack once the chain has actually mutated something.
- * Chains that end without a mutation are dropped via `discard()`.
+ * `beginCapture()` clones the current instance data before the chain runs, and either
+ * `commit()` or `commitCoalesced()` pushes that clone onto the undo stack once the chain has
+ * actually mutated something. Chains that end without a mutation are dropped via `discard()`.
  *
  * A snapshot holds one entry per snapshotable instance (`type` 'xml' or 'json'), keyed by
  * the `fx-instance` element itself. Keying by element (instead of id) also covers instances
  * without an explicit id, which are not addressable through `model.getInstance()`.
  *
- * Rapid successive commits with the same coalesce key (e.g. keystrokes into one field) are
- * merged into a single undo step, like text editors group typing.
+ * Two commit paths, deliberately different:
+ * - `commit()` - action-driven mutations (fx-setvalue, fx-insert, fx-delete, fx-reset,
+ *   fx-upload, drag-and-drop...). Each action chain is already a complete, deliberate
+ *   operation, so it always becomes its own undo step - clicking a "+1" button three times
+ *   undoes in three steps, not one.
+ * - `commitCoalesced()` - direct widget edits (typing into fx-control) while the widget is
+ *   genuinely focused. Merges into the currently open session until something closes it
+ *   (blur, or the explicit `<fx-commit-history>` action) - bounded by focus, not by a timer,
+ *   so it behaves the same whether typing takes one second or one minute.
  */
-/** time window in ms within which same-key commits are merged into one undo step */
-const COALESCE_WINDOW_MS = 1000;
-
 export class UndoManager {
   /**
    * @param {import('./fx-model.js').FxModel} model the model whose instances are managed
@@ -33,11 +37,16 @@ export class UndoManager {
     this.redoStack = [];
     this.pendingSnapshot = null;
     /**
-     * While true, the next commit()/discard() is swallowed without touching the stacks.
-     * Set by fx-undo/fx-redo so restoring a snapshot does not record itself as a new step.
+     * While true, the next commit()/commitCoalesced()/discard() is swallowed without
+     * touching the stacks. Set by fx-undo/fx-redo so restoring a snapshot does not record
+     * itself as a new step.
      */
     this.suspended = false;
-    this.lastCommit = null;
+    /**
+     * The currently open widget-edit coalescing session, if any: `{ key }`. Only one widget
+     * can be focused at a time, so a single slot is sufficient.
+     */
+    this.openSession = null;
   }
 
   /**
@@ -52,13 +61,14 @@ export class UndoManager {
   }
 
   /**
-   * Turns the pending snapshot into an undo step. Called at the end of an outermost
-   * action chain that mutated instance data.
+   * Turns the pending snapshot into its own, always-distinct undo step. Called at the end
+   * of an outermost action chain that mutated instance data - never coalesces, since an
+   * action chain is already a complete, deliberate operation.
    *
-   * @param {*} coalesceKey identifies the node (or ref) the chain touched; commits with
-   *        the same key within COALESCE_WINDOW_MS merge into the previous undo step
+   * @param {*} touchedNode best-effort identification of the node the chain touched, used
+   *        only for the outside-scope diagnostic below, not for merging
    */
-  commit(coalesceKey) {
+  commit(touchedNode) {
     if (!this.enabled) {
       this.suspended = false;
       this.pendingSnapshot = null;
@@ -71,27 +81,75 @@ export class UndoManager {
     }
     if (!this.pendingSnapshot) return;
 
-    const now = Date.now();
-    const coalesce =
-      coalesceKey !== null &&
-      coalesceKey !== undefined &&
-      this.lastCommit &&
-      this.lastCommit.key === coalesceKey &&
-      now - this.lastCommit.timestamp < COALESCE_WINDOW_MS;
+    this._warnIfOutsideScope(touchedNode);
 
-    this._warnIfOutsideScope(coalesceKey);
+    // a discrete, action-driven commit finalizes any in-progress widget-edit session too
+    // (belt-and-suspenders alongside fx-control's own blur handler)
+    this.openSession = null;
 
-    if (!coalesce) {
-      this.undoStack.push(this.pendingSnapshot);
-      while (this.undoStack.length > this.maxDepth) {
-        this.undoStack.shift();
-      }
+    this.undoStack.push(this.pendingSnapshot);
+    while (this.undoStack.length > this.maxDepth) {
+      this.undoStack.shift();
     }
-    // the top-of-stack entry already holds the state before the first coalesced edit
 
     this.redoStack = [];
-    this.lastCommit = { key: coalesceKey, timestamp: now };
     this.pendingSnapshot = null;
+  }
+
+  /**
+   * Turns the pending snapshot into an undo step, merging into the currently open session
+   * if `sessionKey` matches it. Used only for direct widget edits while the widget is
+   * genuinely focused (see fx-control.js) - the session stands in for "the user is still
+   * editing this field," bounded by focus/blur rather than a fixed time window.
+   *
+   * @param {*} sessionKey identifies the node being edited; commits with the same key while
+   *        the session is open merge into the same undo step
+   */
+  commitCoalesced(sessionKey) {
+    if (!this.enabled) {
+      this.suspended = false;
+      this.pendingSnapshot = null;
+      return;
+    }
+    if (this.suspended) {
+      this.suspended = false;
+      this.pendingSnapshot = null;
+      return;
+    }
+    if (!this.pendingSnapshot) return;
+
+    this._warnIfOutsideScope(sessionKey);
+
+    if (this.openSession && this.openSession.key === sessionKey) {
+      // merging into the open session - its earlier snapshot already covers this edit
+      this.redoStack = [];
+      this.pendingSnapshot = null;
+      return;
+    }
+
+    this.undoStack.push(this.pendingSnapshot);
+    while (this.undoStack.length > this.maxDepth) {
+      this.undoStack.shift();
+    }
+
+    this.redoStack = [];
+    this.pendingSnapshot = null;
+    this.openSession = { key: sessionKey };
+  }
+
+  /**
+   * Closes the open coalescing session, if any. Called from fx-control.js on blur (no key -
+   * only one widget can be focused, so closing unconditionally is safe) and from the
+   * explicit `<fx-commit-history>` action, so the next edit - even to a still-focused field -
+   * starts a new undo step instead of merging into the current one.
+   *
+   * @param {*} [sessionKey] if given, only closes the session when it matches
+   */
+  endCoalescingSession(sessionKey) {
+    if (!this.openSession) return;
+    if (sessionKey === undefined || this.openSession.key === sessionKey) {
+      this.openSession = null;
+    }
   }
 
   /**
@@ -103,12 +161,12 @@ export class UndoManager {
    * contained it, i.e. it looks tracked but silently isn't.
    *
    * Only checkable for XML DOM nodes (via `ownerDocument`); JSON lenses and string/ref
-   * coalesce keys are skipped rather than risk a false positive.
+   * keys are skipped rather than risk a false positive.
    */
-  _warnIfOutsideScope(coalesceKey) {
+  _warnIfOutsideScope(touchedNode) {
     if (this._warnedOutsideScope) return;
-    if (!coalesceKey || !coalesceKey.ownerDocument) return;
-    const owningDoc = coalesceKey.ownerDocument;
+    if (!touchedNode || !touchedNode.ownerDocument) return;
+    const owningDoc = touchedNode.ownerDocument;
     const known = this.model.instances.some(
       instance => instance.type === 'xml' && instance.instanceData === owningDoc,
     );
@@ -164,7 +222,7 @@ export class UndoManager {
     this.redoStack = [];
     this.pendingSnapshot = null;
     this.suspended = false;
-    this.lastCommit = null;
+    this.openSession = null;
   }
 
   _shift(from, to) {
@@ -173,7 +231,7 @@ export class UndoManager {
     // popped entry is exclusively owned now - safe to hand its data to the instances directly
     this._restore(from.pop());
     // never coalesce across an undo/redo boundary
-    this.lastCommit = null;
+    this.openSession = null;
     return true;
   }
 

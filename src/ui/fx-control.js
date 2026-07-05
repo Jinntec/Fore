@@ -158,6 +158,8 @@ export default class FxControl extends XfAbstractControl {
         listenOn = target;
       }
     }
+    // retained for setValue()'s undo-coalescing focus check (see there)
+    this._listenOn = listenOn;
 
     this.addEventListener('keyup', () => {
       FxModel.dataChanged = true;
@@ -175,6 +177,14 @@ export default class FxControl extends XfAbstractControl {
       });
       this.updateEvent = 'blur'; // needs to be registered too
     }
+    // blur both commits the final value and closes any open undo-coalescing session, so
+    // typing into this field again after leaving it starts a new undo step. Must be a
+    // normal (non-`once`) listener: a field can be focused/blurred more than once.
+    const onBlur = () => {
+      this.setValue(this._getValueOfWidget());
+      this.getModel()?.getEffectiveUndoManager()?.endCoalescingSession();
+    };
+
     if (this.debounceDelay) {
       listenOn.addEventListener(
         this.updateEvent,
@@ -188,6 +198,7 @@ export default class FxControl extends XfAbstractControl {
           this.debounceDelay,
         ),
       );
+      listenOn.addEventListener('blur', onBlur);
     } else {
       listenOn.addEventListener(this.updateEvent, event => {
         if (this._isRefreshing) {
@@ -196,13 +207,7 @@ export default class FxControl extends XfAbstractControl {
         }
         this.setValue(this._getValueOfWidget());
       });
-      listenOn.addEventListener(
-        'blur',
-        event => {
-          this.setValue(this._getValueOfWidget());
-        },
-        { once: true },
-      );
+      listenOn.addEventListener('blur', onBlur);
     }
 
     this.addEventListener('return', e => {
@@ -291,10 +296,24 @@ export default class FxControl extends XfAbstractControl {
         : modelitem?.node
       : null;
     const valueBefore = captureUndo ? modelitem?.value : null;
+    // coalesce only while the widget is genuinely focused - a session opened by a fully
+    // programmatic call (no real focus) would never see a blur to close it, and could
+    // silently absorb an unrelated later edit to the same node. Also coalesce when a
+    // session for this exact node is already open: the blur handler's own setValue() call
+    // fires *after* document.activeElement has already moved away, so without this it
+    // would wrongly split the final keystroke into its own entry instead of merging it
+    // into the session that blur is about to close.
+    const isFocused =
+      captureUndo &&
+      (document.activeElement === this._listenOn || undoManager?.openSession?.key === undoKey);
     const commitUndo = () => {
       if (!captureUndo) return;
       if (modelitem && modelitem.value !== valueBefore) {
-        undoManager.commit(undoKey);
+        if (isFocused) {
+          undoManager.commitCoalesced(undoKey);
+        } else {
+          undoManager.commit(undoKey);
+        }
       } else {
         undoManager.discard();
       }

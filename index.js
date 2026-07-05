@@ -53,6 +53,7 @@ import './src/actions/fx-reload.js';
 import './src/actions/fx-reset.js';
 import './src/actions/fx-undo.js';
 import './src/actions/fx-redo.js';
+import './src/actions/fx-commit-history.js';
 import './src/actions/fx-load.js';
 import './src/actions/fx-toggleboolean.js';
 import './src/actions/fx-call.js';
