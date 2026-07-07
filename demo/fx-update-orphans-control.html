@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>Bug: fx-update orphans the modelItem it was triggered from</title>
+    <link rel="stylesheet" href="../resources/fore.css">
+    <link href="../resources/demo.css" rel="stylesheet">
+    <style>
+        table { border-collapse: collapse; margin: 1rem 0; }
+        td, th { border: 1px solid #ccc; padding: 0.4rem 0.8rem; text-align: left; }
+        .expected-fail { color: #a33; font-weight: 600; }
+        .expected-pass { color: #3a3; font-weight: 600; }
+        dl { display: grid; grid-template-columns: max-content 1fr; gap: 0.3rem 1rem; }
+        dt { font-weight: 600; }
+    </style>
+</head>
+<body unresolved="unresolved">
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+
+<div class="wrapper">
+    <h1>Bug: <code>&lt;fx-update&gt;</code> orphans the modelItem it was triggered from</h1>
+
+    <p>
+        An <code>fx-control</code> with an <code>&lt;fx-update event="value-changed"&gt;</code>
+        child (the documented way to trigger a full rebuild + recalculate + revalidate whenever a
+        value changes) only reacts to the <em>first</em> value change. After that, any UI element
+        bound to <em>that same node</em> &mdash; the control itself, or any other
+        <code>fx-output</code>/<code>fx-control</code> pointed at it &mdash; silently stops
+        re-rendering, forever. No error, no warning. This is <strong>not</strong> a whole-page
+        freeze: other modelItems (even ones recalculated fresh on every keystroke, like the
+        character-count example below) keep updating correctly the entire time.
+    </p>
+
+    <p>
+        Root cause: <code>&lt;fx-update&gt;</code> calls <code>model.updateModel()</code>, which
+        runs <code>rebuild()</code>. <code>rebuild()</code> throws away <code>mainGraph</code> and
+        rebuilds <code>modelItems</code> from scratch, retargeting existing ModelItems by path
+        where possible (see the <code>_prevModelItemsByPath</code>/<code>retarget()</code> logic in
+        <code>fx-model.js</code>). This retarget runs <em>while the very node whose change
+        triggered the update is mid-flight</em> &mdash; and whatever list of bound UI
+        elements/observers that node's ModelItem carries doesn't survive the retarget intact.
+        Every other ModelItem, created fresh during that same rebuild with no such concurrent
+        write in flight, keeps working fine.
+    </p>
+
+    <fx-fore id="fx-test">
+        <fx-model>
+            <fx-instance id="data">
+                <data>
+                    <query></query>
+                    <counter>0</counter>
+                </data>
+            </fx-instance>
+            <fx-bind ref="instance('data')/counter" calculate="string-length(instance('data')/query)"></fx-bind>
+        </fx-model>
+
+        <fx-control id="ctrl" ref="instance('data')/query" update-event="input">
+            <label>Type here (has &lt;fx-update event="value-changed"&gt;)</label>
+            <input class="widget" id="input-query" type="text">
+            <fx-update event="value-changed"></fx-update>
+        </fx-control>
+
+        <dl>
+            <dt>Raw instance data (bypasses all UI rendering)</dt>
+            <dd><span class="expected-pass">always correct</span> &mdash; proves the data itself is fine</dd>
+
+            <dt><code>fx-output</code> bound to the <em>same</em> query node</dt>
+            <dd id="out-query-wrap"><fx-output id="out-query" ref="instance('data')/query"></fx-output>
+                <span class="expected-fail">freezes after the first keystroke</span></dd>
+
+            <dt><code>fx-output</code> bound to an unrelated <code>calculate</code>d node (character count)</dt>
+            <dd id="out-counter-wrap"><fx-output id="out-counter" ref="instance('data')/counter"></fx-output>
+                <span class="expected-pass">keeps updating every keystroke &mdash; not a whole-page freeze</span></dd>
+        </dl>
+
+        <table id="log-table">
+            <thead><tr><th>#</th><th>value-changed fired with value</th></tr></thead>
+            <tbody id="log-body"></tbody>
+        </table>
+        <p id="fired-count-line">
+            <code>value-changed</code> has fired <span id="fired-count">0</span> time(s)
+            <span class="expected-fail">(expected: once per commit; actual: once ever, on this control)</span>
+        </p>
+    </fx-fore>
+
+    <div class="nav-buttons">
+        <a class="redline prev" href="./bind-cross-instance-relevant.html">previous</a>
+        <a class="redline next" href="./variables.html">next</a>
+    </div>
+</div>
+<script type="module">
+  import './demo.js';
+  let n = 0;
+  document.getElementById('ctrl').addEventListener('value-changed', e => {
+    n += 1;
+    document.getElementById('fired-count').textContent = String(n);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${n}</td><td>${e.detail.value}</td>`;
+    document.getElementById('log-body').appendChild(tr);
+  });
+</script>
+</body>
+</html>

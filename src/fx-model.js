@@ -1107,6 +1107,25 @@ export class FxModel extends HTMLElement {
     return result;
   }
 
+  /**
+   * Reverse-lookup: given an XML node, find the id of the fx-instance whose document owns it.
+   *
+   * Used to canonicalize the path of a node referenced *across instances* (e.g. a `relevant`
+   * expression on a bind in instance A that reads a node from instance B) -- the referenced
+   * node's own instance id must be used, not the id of the instance the bind itself is on.
+   *
+   * @param {Node} node
+   * @returns {string|null}
+   */
+  getInstanceIdForNode(node) {
+    if (!node || node.nodeType === undefined) return null;
+    const doc = node.nodeType === Node.DOCUMENT_NODE ? node : node.ownerDocument;
+    if (!doc) return null;
+
+    const match = Array.from(this.instances).find(inst => inst.getInstanceData?.() === doc);
+    return match ? match.id : null;
+  }
+
 }
 
 if (!customElements.get('fx-model')) {

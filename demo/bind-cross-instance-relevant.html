@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>Fixed: cross-instance relevant binds now reactively update</title>
+    <link rel="stylesheet" href="../resources/fore.css">
+    <link href="../resources/demo.css" rel="stylesheet">
+    <style>
+        .panels { display: flex; gap: 2rem; flex-wrap: wrap; }
+        .panel { border: 1px solid #ccc; border-radius: 8px; padding: 1rem; min-width: 16rem; }
+        .panel h3 { margin-top: 0; }
+        fx-repeatitem[nonrelevant] { display: none; }
+        .item { padding: 0.25rem 0; }
+        .expected-fail { color: #a33; font-weight: 600; }
+        .expected-pass { color: #3a3; font-weight: 600; }
+        button { margin-top: 0.5rem; }
+    </style>
+</head>
+<body unresolved="unresolved">
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+
+<div class="wrapper">
+    <h1>Fixed: <code>fx-bind[relevant]</code> across instances now reactively updates</h1>
+
+    <p>
+        A bind's <code>relevant</code> (and, via the same code path, <code>calculate</code>/
+        <code>required</code>/<code>constraint</code>) facet reactively recomputes on a plain
+        <code>fx-control</code> value change &mdash; <strong>including when the expression
+        references a node in a <em>different</em> <code>fx-instance</code> than the bind's own
+        <code>ref</code></strong>. Previously that cross-instance case was evaluated once at load
+        and then never again, no matter how many times the referenced value changed.
+    </p>
+
+    <p>
+        Root cause: <code>fx-bind.js</code>'s <code>_buildBindGraph()</code> resolved
+        <code>instanceId</code> once from the bind's own <code>ref</code>, then reused that same
+        id to canonicalize the path of <em>every</em> node referenced inside <code>relevant</code>
+        (via <code>_addDependencies</code>). For a cross-instance reference this produced a
+        canonical path that didn't match the real node's path anywhere else in the model (e.g.
+        <code>getPath(queryNode, 'items')</code> instead of <code>getPath(queryNode, 'ui')</code>),
+        so <code>model.mainGraph.dependantsOf(realChangedPath)</code> never found the bind as a
+        dependant, and <code>compute()</code> was never called for it again.
+    </p>
+
+    <p>
+        Fix: <code>_addDependencies</code> now resolves each referenced node's <em>own</em>
+        instance id via <code>model.getInstanceIdForNode()</code> &mdash; a reverse lookup from
+        the node's <code>ownerDocument</code> to the owning <code>fx-instance</code>'s id &mdash;
+        instead of reusing the bind's own instance id for every reference.
+    </p>
+
+    <p>
+        Both panels below run <em>the exact same</em> <code>relevant</code> expression against
+        the exact same three items. The only difference is where <code>query</code> lives, and
+        both now react correctly.
+    </p>
+
+    <fx-fore id="fx-test">
+        <fx-model>
+            <!-- SAME-instance panel: query and items both live in instance('items') -->
+            <fx-instance id="items">
+                <data>
+                    <query></query>
+                    <item><name>Alpha</name></item>
+                    <item><name>Beta</name></item>
+                    <item><name>Gamma</name></item>
+                </data>
+            </fx-instance>
+
+            <!-- CROSS-instance panel: items live in instance('itemsCross')... -->
+            <fx-instance id="itemsCross">
+                <data>
+                    <item><name>Alpha</name></item>
+                    <item><name>Beta</name></item>
+                    <item><name>Gamma</name></item>
+                </data>
+            </fx-instance>
+
+            <!-- ...but the query that filters them lives in a separate instance('ui') -->
+            <fx-instance id="ui">
+                <data>
+                    <query></query>
+                </data>
+            </fx-instance>
+
+            <!-- SAME-instance bind -->
+            <fx-bind id="bind-same" ref="instance('items')/item"
+                     relevant="not(string(instance('items')/query)) or contains(lower-case(name), lower-case(instance('items')/query))">
+            </fx-bind>
+
+            <!-- CROSS-instance bind: identical expression shape, just a different instance for query -->
+            <fx-bind id="bind-cross" ref="instance('itemsCross')/item"
+                     relevant="not(string(instance('ui')/query)) or contains(lower-case(name), lower-case(instance('ui')/query))">
+            </fx-bind>
+        </fx-model>
+
+        <div class="panels">
+            <div class="panel">
+                <h3>Same instance <span class="expected-pass">(works)</span></h3>
+                <p>Query and items both live in <code>instance('items')</code>.</p>
+                <fx-control id="ctrl-same" ref="instance('items')/query" update-event="input">
+                    <label>query</label>
+                    <input class="widget" id="input-same" type="text">
+                </fx-control>
+                <div id="items-same">
+                    <fx-repeat id="r-items-same" ref="instance('items')/item">
+                        <template><div class="item" data-cy="item-same"><fx-output ref="name"></fx-output></div></template>
+                    </fx-repeat>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3>Cross instance <span class="expected-pass">(works)</span></h3>
+                <p>Items live in <code>instance('itemsCross')</code>, query lives in <code>instance('ui')</code>.</p>
+                <fx-control id="ctrl-cross" ref="instance('ui')/query" update-event="input">
+                    <label>query</label>
+                    <input class="widget" id="input-cross" type="text">
+                </fx-control>
+                <div id="items-cross">
+                    <fx-repeat id="r-items-cross" ref="instance('itemsCross')/item">
+                        <template><div class="item" data-cy="item-cross"><fx-output ref="name"></fx-output></div></template>
+                    </fx-repeat>
+                </div>
+                <button id="btn-updatemodel" type="button">model.updateModel() + refresh(true)</button>
+            </div>
+        </div>
+
+        <p>
+            Type into either field (e.g. "Alpha"): both panels correctly narrow to one item
+            immediately. The button above is the old manual-recovery path
+            (<code>model.updateModel()</code> followed by <code>fore.refresh(true)</code>) kept
+            here to confirm it's still harmless now that it's no longer needed for this case.
+        </p>
+    </fx-fore>
+
+    <div class="nav-buttons">
+        <a class="redline prev" href="./binding.html">previous</a>
+        <a class="redline next" href="./variables.html">next</a>
+    </div>
+</div>
+<script type="module">
+  import './demo.js';
+  document.getElementById('btn-updatemodel').addEventListener('click', async () => {
+    const fore = document.getElementById('fx-test');
+    fore.getModel().updateModel();
+    await fore.refresh(true);
+  });
+</script>
+</body>
+</html>

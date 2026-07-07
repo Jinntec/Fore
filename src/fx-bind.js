@@ -291,7 +291,12 @@ export class FxBind extends ForeElementMixin {
       }
 
       refs.forEach(ref => {
-        const otherPath = getPath(ref, instanceId);
+        // `ref` may live in a different fx-instance than this bind's own `ref` (e.g. a
+        // `relevant` expression that reads `instance('other')/...`). Canonicalize its path
+        // using ITS OWN instance id, not the bind's -- reusing the bind's id here mislabels
+        // the dependency so the "changed" subgraph walk in recalculate() never finds it again.
+        const refInstanceId = this.model.getInstanceIdForNode?.(ref) ?? instanceId;
+        const otherPath = getPath(ref, refInstanceId);
 
         // keep old XML-only hack
         if (this.bindType === 'xml' && otherPath.endsWith('text()[1]')) return;
