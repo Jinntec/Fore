@@ -12,25 +12,32 @@ stray `<<fx-fore>` typo (fixed in passing while investigating). Found while wiri
 automated axe accessibility check (see ACCESSIBILITY.md), which is why the check targets
 `controls/email.html` instead.
 
-### fx-update-orphans-control.html (new demo, documents a real bug)
-An `fx-control` with `<fx-update event="value-changed">` (the documented way to trigger a full
-update cycle whenever a value changes) only fires `value-changed` -- and re-renders any UI element
-bound to that same node -- for the *first* value commit. After that it's stuck forever, with no
-error. Confirmed this is **not** a whole-page freeze: an unrelated `fx-bind[calculate]` node,
-recomputed fresh on every keystroke, keeps updating the entire time; only UI bound to the node
-whose own change triggered the `<fx-update>` gets stuck.
-
-Root cause: `<fx-update>` calls `model.updateModel()` -> `rebuild()`, which retargets ModelItems by
-path while the very node whose change triggered the update is mid-flight. That node's bound-UI-
-element/observer list doesn't survive the retarget; every other ModelItem, built fresh with no
-concurrent write in flight, keeps working. The raw instance data and the widget's own displayed
-value stay correct throughout (the widget->model `setValue()` direction is unaffected) -- only the
-model->widget `refresh()` direction (where `value-changed` is dispatched) breaks, which is why the
-bug is easy to miss just by looking at the page.
-
-See `cypress/e2e/fx-update-orphans-control.cy.ts` for a passing regression test.
-
 ## fixed
+
+### fx-update-orphans-control.html (fx-update only fired on the first value commit)
+An `fx-control` with `<fx-update event="value-changed">` (the documented way to trigger a full
+update cycle whenever a value changes) only fired `value-changed` -- and re-rendered any UI element
+bound to that same node -- for the *first* value commit. After that it was stuck forever, with no
+error. Confirmed this was **not** a whole-page freeze: an unrelated `fx-bind[calculate]` node,
+recomputed fresh on every keystroke, kept updating the entire time; only UI bound to the node
+whose own change triggered the `<fx-update>` got stuck.
+
+Root cause: `rebuild()` in `fx-model.js` only re-registers ModelItems that go through an
+`<fx-bind>`'s `init()`. A ModelItem lazily created for a plain `fx-control`/`fx-output` `ref` with
+no `<fx-bind>` of its own (like `query` in the demo) never goes through that path, so it was
+silently dropped from `modelItems` on the very next `rebuild()` -- the UI elements kept their
+reference to the ModelItem, but it was no longer recalculated or notified, so its observers never
+fired again. The raw instance data and the widget's own displayed value stayed correct throughout
+(the widget->model `setValue()` direction was unaffected) -- only the model->widget `refresh()`
+direction (where `value-changed` is dispatched) broke, which is why the bug was easy to miss just
+by looking at the page.
+
+Resolution: `rebuild()` now reclaims any such lazily created ("synthetic") ModelItem whose backing
+node is still attached to its instance document, re-adding it to `modelItems` instead of silently
+discarding it.
+
+See `cypress/e2e/fx-update-orphans-control.cy.ts` for the regression test (now asserting fixed
+behavior).
 
 ### bind-cross-instance-relevant.html (cross-instance dependency canonicalization)
 An `fx-bind`'s `relevant` (and, via the same code path, `calculate`/`required`/`constraint`) facet

@@ -655,7 +655,21 @@ export class FxModel extends HTMLElement {
       this.formElement.initData();
     }
 
-    // Drop unused previous ModelItems (not re-registered this rebuild)
+    // Lazily created ModelItems (eg. an fx-control/fx-output whose `ref` has no
+    // <fx-bind> of its own) never go through bind.init() above, so without this they'd
+    // be silently dropped from modelItems on every rebuild. Since UI elements keep a
+    // direct reference to their ModelItem, they wouldn't error - they'd just stop being
+    // recalculated/notified forever (see fx-update-orphans-control.html). Reclaim any
+    // such item whose backing node is still attached to its instance document.
+    this._prevModelItemsByPath.forEach(mi => {
+      if (!mi.isSynthetic) return;
+      if (!mi.node || !mi.node.isConnected) return;
+      if (!this.modelItems.includes(mi)) {
+        this.modelItems.push(mi);
+      }
+    });
+
+    // Drop remaining unused previous ModelItems (not re-registered this rebuild)
     this._prevModelItemsByPath = null;
 
     console.log('mainGraph', this.mainGraph);

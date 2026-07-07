@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
-    <title>Bug: fx-update orphans the modelItem it was triggered from</title>
+    <title>Fixed: fx-update no longer orphans the modelItem it was triggered from</title>
     <link rel="stylesheet" href="../resources/fore.css">
     <link href="../resources/demo.css" rel="stylesheet">
     <style>
@@ -19,29 +19,35 @@
 <fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
 
 <div class="wrapper">
-    <h1>Bug: <code>&lt;fx-update&gt;</code> orphans the modelItem it was triggered from</h1>
+    <h1>Fixed: <code>&lt;fx-update&gt;</code> no longer orphans the modelItem it was triggered from</h1>
 
     <p>
         An <code>fx-control</code> with an <code>&lt;fx-update event="value-changed"&gt;</code>
         child (the documented way to trigger a full rebuild + recalculate + revalidate whenever a
-        value changes) only reacts to the <em>first</em> value change. After that, any UI element
-        bound to <em>that same node</em> &mdash; the control itself, or any other
-        <code>fx-output</code>/<code>fx-control</code> pointed at it &mdash; silently stops
-        re-rendering, forever. No error, no warning. This is <strong>not</strong> a whole-page
+        value changes) used to only react to the <em>first</em> value change. After that, any UI
+        element bound to <em>that same node</em> &mdash; the control itself, or any other
+        <code>fx-output</code>/<code>fx-control</code> pointed at it &mdash; silently stopped
+        re-rendering, forever. No error, no warning. This was <strong>not</strong> a whole-page
         freeze: other modelItems (even ones recalculated fresh on every keystroke, like the
-        character-count example below) keep updating correctly the entire time.
+        character-count example below) kept updating correctly the entire time, which is what
+        made the bug easy to miss.
     </p>
 
     <p>
-        Root cause: <code>&lt;fx-update&gt;</code> calls <code>model.updateModel()</code>, which
-        runs <code>rebuild()</code>. <code>rebuild()</code> throws away <code>mainGraph</code> and
-        rebuilds <code>modelItems</code> from scratch, retargeting existing ModelItems by path
-        where possible (see the <code>_prevModelItemsByPath</code>/<code>retarget()</code> logic in
-        <code>fx-model.js</code>). This retarget runs <em>while the very node whose change
-        triggered the update is mid-flight</em> &mdash; and whatever list of bound UI
-        elements/observers that node's ModelItem carries doesn't survive the retarget intact.
-        Every other ModelItem, created fresh during that same rebuild with no such concurrent
-        write in flight, keeps working fine.
+        Root cause: <code>rebuild()</code> in <code>fx-model.js</code> only re-registers
+        ModelItems that go through an <code>&lt;fx-bind&gt;</code>'s <code>init()</code>. A
+        ModelItem lazily created for a plain <code>fx-control</code>/<code>fx-output</code>
+        <code>ref</code> with no <code>&lt;fx-bind&gt;</code> of its own &mdash; like
+        <code>query</code> below &mdash; never goes through that path, so it was silently dropped
+        from <code>modelItems</code> on the very next <code>rebuild()</code>. The UI elements kept
+        their reference to the ModelItem, but that ModelItem was no longer recalculated or
+        notified, so its observers never fired again.
+    </p>
+
+    <p>
+        Fix: <code>rebuild()</code> now reclaims any such lazily created (&quot;synthetic&quot;)
+        ModelItem whose backing node is still attached to its instance document, re-adding it to
+        <code>modelItems</code> instead of silently discarding it.
     </p>
 
     <fx-fore id="fx-test">
@@ -67,7 +73,7 @@
 
             <dt><code>fx-output</code> bound to the <em>same</em> query node</dt>
             <dd id="out-query-wrap"><fx-output id="out-query" ref="instance('data')/query"></fx-output>
-                <span class="expected-fail">freezes after the first keystroke</span></dd>
+                <span class="expected-pass">keeps updating on every keystroke</span></dd>
 
             <dt><code>fx-output</code> bound to an unrelated <code>calculate</code>d node (character count)</dt>
             <dd id="out-counter-wrap"><fx-output id="out-counter" ref="instance('data')/counter"></fx-output>
@@ -80,7 +86,7 @@
         </table>
         <p id="fired-count-line">
             <code>value-changed</code> has fired <span id="fired-count">0</span> time(s)
-            <span class="expected-fail">(expected: once per commit; actual: once ever, on this control)</span>
+            <span class="expected-pass">(once per commit)</span>
         </p>
     </fx-fore>
 
