@@ -14,11 +14,130 @@ function shortenPath(path) {
   return tmp1.substring(tmp1.indexOf('/'), tmp.length);
 }
 
+// --- fast native path computation -------------------------------------------------
+//
+// fontoxpath's `path()` function is correct but calling it once per node has real fixed
+// overhead (compiling/interpreting the query, building a dynamic context, walking the
+// domFacade) that dominates in practice over the tree walk itself. getPath()/getDocPath()
+// are called once per node during bind-graph construction (fx-bind.js's _buildBindGraph())
+// AND once per node inside any `iterate` action (fx-setattribute.js, fx-setvalue.js) - so a
+// large sibling list (eg. an 800-row genericode codelist) previously meant 800+ separate
+// fontoxpath `path()` evaluations, each re-scanning preceding siblings to compute the index
+// -- measured at several seconds for UNTDID 1001 (802 Row elements) in
+// demo/codelists/codelist-editor.html.
+//
+// nativeDocPath() below replicates the exact string format `path()` produces (post
+// shortenPath) using plain DOM traversal - same asymptotic sibling-counting cost as
+// fontoxpath's own implementation, but without the XPath-engine overhead per call. It
+// returns `null` for anything it isn't confident matches fontoxpath's behavior exactly (eg.
+// exotic node types); callers fall back to the original fontoxpath-based path in that case,
+// so correctness never depends on this function handling every possible node shape.
+
+/**
+ * Identity used to count preceding siblings the way fn:path() does: same element name
+ * *and* namespace, or same text()/comment()/processing-instruction(target) kind. Two
+ * same-localName elements in different namespaces are (correctly) not siblings of the
+ * same "kind" here, matching fontoxpath indexing same-namespace elements independently.
+ * @param {Node} node
+ * @returns {string|null}
+ */
+function segmentKey(node) {
+  switch (node.nodeType) {
+    case Node.ELEMENT_NODE:
+      return `E|${node.namespaceURI || ''}|${node.localName || node.nodeName}`;
+    case Node.TEXT_NODE:
+    case Node.CDATA_SECTION_NODE:
+      return 'T';
+    case Node.COMMENT_NODE:
+      return 'C';
+    case Node.PROCESSING_INSTRUCTION_NODE:
+      return `P|${node.target}`;
+    default:
+      return null;
+  }
+}
+
+/**
+ * @param {Node} node
+ * @returns {string|null}
+ */
+function segmentLabel(node) {
+  switch (node.nodeType) {
+    case Node.ELEMENT_NODE:
+      return node.localName || node.nodeName;
+    case Node.TEXT_NODE:
+    case Node.CDATA_SECTION_NODE:
+      return 'text()';
+    case Node.COMMENT_NODE:
+      return 'comment()';
+    case Node.PROCESSING_INSTRUCTION_NODE:
+      return `processing-instruction(${node.target})`;
+    default:
+      return null;
+  }
+}
+
+/**
+ * 1-based index among preceding siblings sharing the same `segmentKey`.
+ * @param {Node} node
+ * @param {string} key
+ * @returns {number}
+ */
+function siblingIndex(node, key) {
+  let index = 1;
+  let sib = node.previousSibling;
+  while (sib) {
+    if (segmentKey(sib) === key) index += 1;
+    sib = sib.previousSibling;
+  }
+  return index;
+}
+
+/**
+ * @param {Node} node
+ * @returns {string|null} the fontoxpath-`path()`-equivalent doc path (eg. `/a[1]/b[2]`,
+ *   always starting with `/`), or `null` if this node shape isn't one this function is
+ *   confident about - the caller should fall back to the fontoxpath-based computation.
+ */
+function nativeDocPath(node) {
+  if (!node || node.nodeType === undefined) return null;
+
+  if (node.nodeType === Node.ATTRIBUTE_NODE) {
+    const owner = node.ownerElement;
+    if (!owner) return null;
+    const ownerPath = nativeDocPath(owner);
+    if (ownerPath === null) return null;
+    return `${ownerPath}/@${node.localName || node.name}`;
+  }
+
+  if (node.nodeType === Node.DOCUMENT_NODE) return '/';
+
+  // Build the segment chain from `node` up to (and including) the outermost ancestor
+  // that isn't a document node, then drop that outermost segment - matching the "cut-off
+  // root node ref" behavior of the original fontoxpath-based shortenPath().
+  const chain = [];
+  let current = node;
+  while (current && current.nodeType !== Node.DOCUMENT_NODE) {
+    const key = segmentKey(current);
+    const label = segmentLabel(current);
+    if (key === null || label === null) return null;
+    chain.push(`${label}[${siblingIndex(current, key)}]`);
+    current = current.parentNode;
+  }
+  chain.reverse();
+
+  if (chain.length > 1) chain.shift();
+  return chain.length ? `/${chain.join('/')}` : '/';
+}
+
 /**
  * @param {Node} node
  * @returns string
  */
 export function getDocPath(node) {
+  const native = nativeDocPath(node);
+  if (native !== null) return native;
+
   const path = fx.evaluateXPathToString('path()', node);
   // Path is like `$default/x[1]/y[1]`
   const shortened = shortenPath(path);
@@ -101,6 +220,9 @@ export function getPath(node, instanceId = 'default') {
 }
 
 function getXmlPath(node, instanceId) {
+  const native = nativeDocPath(node);
+  if (native !== null) return `$${instanceId}${native}`;
+
   const path = fx.evaluateXPathToString('path()', node);
   // Path is like `$default/x[1]/y[1]`
   const shortened = shortenPath(path);
