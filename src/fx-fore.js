@@ -1188,20 +1188,27 @@ export class FxFore extends HTMLElement {
           }
           refreshPromises.push(uiElement.refresh(true));
         }
-        const nonrelevant = Array.from(this.querySelectorAll('[nonrelevant]'));
-        if (nonrelevant) {
-          nonrelevant.forEach(el => {
-            if (el.refresh) {
-              refreshPromises.push(el.refresh());
-            }
-          });
-        }
         if (entry.observers) {
           entry.observers.forEach(observer => {
             if (typeof observer.update === 'function') {
               observer.update(entry);
             }
           });
+        }
+      });
+
+      // Nonrelevant subtrees are skipped by the normal recursive refresh traversal
+      // (Fore.refreshChildren), so they need an explicit refresh() here to pick up any
+      // other pending state changes. This only needs to run once per batch, not once per
+      // entry -- doing it inside the forEach above re-scanned the whole form and re-pushed
+      // a refresh() per nonrelevant element for EVERY batched entry, an O(entries x
+      // nonrelevant) blowup that hangs/crashes the tab once more than a couple hundred
+      // nodes change relevance at once (e.g. a cross-instance fx-bind[relevant] driving a
+      // large fx-repeat from a single filter keystroke).
+      const nonrelevant = Array.from(this.querySelectorAll('[nonrelevant]'));
+      nonrelevant.forEach(el => {
+        if (el.refresh) {
+          refreshPromises.push(el.refresh());
         }
       });
 
