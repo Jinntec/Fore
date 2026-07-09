@@ -11,6 +11,9 @@
     header.editor-header { position: sticky; top: 0; background: var(--body-bg, #fff); z-index: 5; padding: 1rem 1.25rem; margin: 0 -1.25rem; border-bottom: 2px solid #c0c8d8; }
     header.editor-header h1 { font-size: 1.3rem; margin: 0 0 0.75rem; color: #1a2a4a; }
     .toolbar { display: flex; flex-wrap: wrap; gap: 1.25rem; }
+    .toolbar > fx-control{display:block;}
+    .toolbar > fx-control > label{display:block;}
+
     .field { display: flex; flex-direction: column; font-size: 0.85rem; color: #444; gap: 0.2rem; padding:0; align-items: flex-start; }
     .field select, .field input { font-family: inherit; font-size: 0.9rem; padding: 0.3rem 0.5rem; border: 1px solid rgba(6,3,20,.4); border-radius: 0.3rem; }
 
@@ -26,7 +29,7 @@
     .filter-bar { display: flex; align-items: center; gap: 1rem; margin: 1rem 0 0.5rem; }
     .filter-bar .field { flex: 1; max-width: 24rem; }
     .filter-bar input[type="search"] { width: 100%; padding: 0.4rem 0.6rem; font-size: 0.9rem; }
-    .kept-count { font-size: 0.85rem; color: #446; white-space: nowrap; }
+    .kept-count { font-size: 0.85rem; color: #446; white-space: nowrap; align-self:end;}
 
     .bulk-actions { display: flex; gap: 0.5rem; margin: 0.5rem 0; }
     .bulk-actions button, #btn-remove-unchecked button, #btn-save button { font-family: inherit; font-size: 0.85rem; padding: 0.35rem 0.7rem; border: 1px solid rgba(6,3,20,.4); border-radius: 0.3rem; background: #fff; cursor: pointer; }
@@ -72,7 +75,7 @@
     #btn-save button { font-weight: 600; }
     fx-trigger{padding:0.25rem;}
 
-    .load-status { display: none; align-items: center; gap: 0.4rem; font-size: 0.85rem; color: #446; padding-bottom: 0.5rem; }
+    .load-status { display: none; align-items: center; gap: 0.4rem; font-size: 0.85rem; color: #446; padding-bottom: 0.5rem; align-self:end;}
     .load-status.active { display: inline-flex; }
     .load-status .spinner {
       width: 0.9rem; height: 0.9rem; border-radius: 50%;
@@ -144,17 +147,22 @@
       <fx-action event="submit-done">
         <fx-setattribute ref="." name="ui-keep" value="true" iterate="instance('codelist')/SimpleCodeList/Row"></fx-setattribute>
         <!-- Reconciliation against a previously saved custom codelist (see s-load-customsource):
-             only kicks in when customsource actually holds rows recorded against THIS filename --
-             a plain "Load selected" leaves every row 'true', identical to the create-step above. -->
+             only kicks in when customsource actually holds rows recorded against THIS filename.
+             The reconcile-needed check lives in `iterate` itself (not a separate `if` -- execute()
+             in abstract-action.js never consults `if` once `iterate` is set) so that a plain "Load
+             selected" -- customsource empty, nothing to reconcile -- makes this evaluate to an empty
+             sequence and skips the loop entirely instead of re-looping over every row just to
+             rewrite the 'true' the create-step above already set. Matters at codelist scale: this
+             is one full pass over every Row (802 for UNTDID 1001), each a separate notify(). -->
         <fx-setvalue ref="@ui-keep"
                      value="let $keyRef := instance('codelist')/ColumnSet/Key[1]/ColumnRef/@Ref,
-                                $myKey := Value[@ColumnRef = $keyRef]/SimpleValue,
-                                $reconcile := instance('customsource')/SimpleCodeList/Row
-                                              and instance('vars')/selectedfile = string(instance('customsource')/Identification/@ui-source-file)
-                            return if (not($reconcile)) then 'true'
-                                   else if (instance('customsource')/SimpleCodeList/Row[Value[@ColumnRef=$keyRef]/SimpleValue = $myKey])
+                                $myKey := Value[@ColumnRef = $keyRef]/SimpleValue
+                            return if (instance('customsource')/SimpleCodeList/Row[Value[@ColumnRef=$keyRef]/SimpleValue = $myKey])
                                    then 'true' else 'false'"
-                     iterate="instance('codelist')/SimpleCodeList/Row"></fx-setvalue>
+                     iterate="if (instance('customsource')/SimpleCodeList/Row
+                                  and instance('vars')/selectedfile = string(instance('customsource')/Identification/@ui-source-file))
+                              then instance('codelist')/SimpleCodeList/Row
+                              else ()"></fx-setvalue>
         <!-- The two bulk per-row actions above each notify() 250+ times in a tight loop right
              after a full instance replace; the checkbox controls' checked state visibly drifts
              out of sync with the underlying @ui-keep data in that scenario (confirmed: @ui-keep
@@ -231,7 +239,7 @@
         <fx-send submission="s-load-known" event="value-changed"></fx-send>
       </fx-control>
 
-      <label class="field">
+      <label class="field">Load custom list
         <input type="file" id="local-file-input" accept=".xml">
       </label>
       <fx-trigger id="trigger-load-local" style="display:none">
@@ -316,7 +324,7 @@
     <div class="actions-bar">
       <fx-trigger id="btn-remove-unchecked">
         <button type="button">Remove unchecked rows</button>
-        <fx-delete ref="instance('codelist')//Row[@ui-keep='false']"></fx-delete>
+        <fx-delete ref="instance('codelist')/SimpleCodeList/Row[@ui-keep='false']"></fx-delete>
       </fx-trigger>
 
       <fx-trigger id="btn-save"><button type="button">Save as custom codelist</button>
