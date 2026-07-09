@@ -115,7 +115,7 @@
          evaluates once at load and never again. -->
     <fx-bind ref="instance('codelist')/SimpleCodeList/Row"
               relevant="not(string(instance('vars')/filtertext))
-                         or contains(lower-case(Value[2]/SimpleValue), lower-case(instance('vars')/filtertext))"></fx-bind>
+                         or contains(lower-case(string-join(Value/SimpleValue, ' ')), lower-case(instance('vars')/filtertext))"></fx-bind>
 
     <fx-submission id="s-load-known"
                     url="{concat('data/codelists/xml/', instance('vars')/selectedfile)}"
