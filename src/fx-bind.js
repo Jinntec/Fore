@@ -482,22 +482,34 @@ export class FxBind extends ForeElementMixin {
   }
 
   /**
-   * Get the nodes that are referred by the given XPath expression
+   * Get the nodes that are referred by the given XPath expression, as evaluated against a
+   * single context node.
    *
    * @param  {string}  propertyExpr  The XPath to get the referenced nodes from
+   * @param  {Node}    node          The context node to evaluate propertyExpr against
    *
    * @return {Node[]}  The nodes that are referenced by the XPath
    *
    * todo: DependencyNotifyingDomFacade reports back too much in some cases like 'a[1]' and 'a[1]/text[1]'
    */
-  _getReferencesForProperty(propertyExpr) {
+  _getReferencesForProperty(propertyExpr, node) {
     if (propertyExpr) {
-      return this.getReferences(propertyExpr);
+      return this.getReferences(propertyExpr, node);
     }
     return [];
   }
 
-  getReferences(propertyExpr) {
+  /**
+   * NOTE: `node` must be the single row/context node this call is being made for (see
+   * _buildBindGraph()'s per-node loop) - NOT this.nodeset as a whole. Evaluating against the
+   * whole nodeset here previously meant that, for a bind matching N nodes (eg. N genericode
+   * `Row`s), building the dependency graph re-evaluated propertyExpr against all N nodes once
+   * per node in the outer loop - an O(N^2) blowup (802 Rows => ~643k evaluations) that measured
+   * at several seconds for UNTDID 1001 in demo/codelists/codelist-editor.html. It was also
+   * wrong: the touched-nodes set leaked in dependencies from every other node's evaluation, not
+   * just this node's own.
+   */
+  getReferences(propertyExpr, node) {
     // For XML, DependencyNotifyingDomFacade reliably reports the nodes touched during evaluation.
     // For JSON lens nodes, the domFacade hook does not fire (evaluation goes through our lens resolver),
     // so we must extract lookup tokens and resolve them explicitly.
@@ -509,16 +521,13 @@ export class FxBind extends ForeElementMixin {
       const touchedNodes = new Set();
       const tokens = this._extractJsonLookupTokens(propertyExpr);
 
-      // Evaluate each token in the *current* context node (each item in nodeset)
-      this.nodeset.forEach(node => {
-        tokens.forEach(token => {
-          try {
-            const refs = evaluateXPathToNodes(token, node, this);
-            refs.forEach(r => touchedNodes.add(r));
-          } catch (_e) {
-            // ignore: dependency extraction must never break bind initialization
-          }
-        });
+      tokens.forEach(token => {
+        try {
+          const refs = evaluateXPathToNodes(token, node, this);
+          refs.forEach(r => touchedNodes.add(r));
+        } catch (_e) {
+          // ignore: dependency extraction must never break bind initialization
+        }
       });
 
       return Array.from(touchedNodes.values());
@@ -527,9 +536,7 @@ export class FxBind extends ForeElementMixin {
     // XML path: use dom facade for accurate dependency tracking
     const touchedNodes = new Set();
     const domFacade = new DependencyNotifyingDomFacade(otherNode => touchedNodes.add(otherNode));
-    this.nodeset.forEach(node => {
-      evaluateXPathToString(propertyExpr, node, this, domFacade);
-    });
+    evaluateXPathToString(propertyExpr, node, this, domFacade);
     return Array.from(touchedNodes.values());
   }
   _extractJsonLookupTokens(expr) {
