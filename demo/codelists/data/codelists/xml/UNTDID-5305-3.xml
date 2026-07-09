@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gc:CodeList xmlns:gc="http://docs.oasis-open.org/codelist/ns/genericode/1.0/"
+             xmlns:xoev-cl-3="http://xoev.de/schemata/genericode/3"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <Annotation>
+      <Description>
+         <xoev-cl-3:nameKurz>UNTDID 5305</xoev-cl-3:nameKurz>
+         <xoev-cl-3:beschreibung-codeliste>Die Codeliste basiert auf der Codeliste 5305 (Duty or tax or fee category code) des United Trade Data Interchange Directory (UNTDID). Sie ist konform zur DIN EN16931-1:2017 und zu dem darauf basierenden Standard XRechnung. EN16931-3-2, 3-3, 3-4 Annex A definiert eine Untermenge dieser Liste. Des Weiteren enthält sie alle Einträge, die für die Nutzung im Kontext des Standards XBestellung benötigt werden.</xoev-cl-3:beschreibung-codeliste>
+         <xoev-cl-3:herausgebernameKurz>KoSIT</xoev-cl-3:herausgebernameKurz>
+         <xoev-cl-3:beschreibung-versionCodeliste>Die Konformität zur Datengrundlage in der Version D20a wurde überprüft. Es gibt keine neuen Inhalte. Die Methodik der Codeliste wurde auf das Codelistenhandbuch in der Version 1.1 aktualisiert.</xoev-cl-3:beschreibung-versionCodeliste>
+         <xoev-cl-3:versionCodelistenHandbuch>1.1</xoev-cl-3:versionCodelistenHandbuch>
+         <xoev-cl-3:aenderungZurVorversion>Die Konformität zur Datengrundlage in der Version D20a wurde überprüft.</xoev-cl-3:aenderungZurVorversion>
+      </Description>
+   </Annotation>
+   <Identification>
+      <ShortName>UNTDID.5305</ShortName>
+      <LongName>UNTDID 5305 Duty or tax or fee category code</LongName>
+      <Version>3</Version>
+      <CanonicalUri>urn:xoev-de:kosit:codeliste:untdid.5305</CanonicalUri>
+      <CanonicalVersionUri>urn:xoev-de:kosit:codeliste:untdid.5305_3</CanonicalVersionUri>
+      <Agency>
+         <LongName>Koordinierungsstelle für IT-Standards</LongName>
+      </Agency>
+   </Identification>
+   <ColumnSet>
+      <Column Id="code" Use="required">
+         <ShortName>code</ShortName>
+         <LongName>Code</LongName>
+         <Data Type="string"/>
+      </Column>
+      <Column Id="name" Use="optional">
+         <ShortName>name</ShortName>
+         <LongName>Name</LongName>
+         <Data Type="string"/>
+      </Column>
+      <Column Id="description" Use="optional">
+         <ShortName>description</ShortName>
+         <LongName>Description</LongName>
+         <Data Type="string"/>
+      </Column>
+      <Key Id="codeKey">
+         <Annotation>
+            <AppInfo>
+               <xoev-cl-3:empfohleneCodeSpalte/>
+            </AppInfo>
+         </Annotation>
+         <ShortName>codeKey</ShortName>
+         <ColumnRef Ref="code"/>
+      </Key>
+   </ColumnSet>
+   <SimpleCodeList>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>A</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Mixed tax rate</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Code specifying that the rate is based on mixed tax.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AA</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Lower rate</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Tax rate is lower than standard rate.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AB</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Exempt for resale</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A tax category code indicating the item is tax exempt when the item is bought for future resale.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AC</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Value Added Tax (VAT) not now due for payment</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A code to indicate that the Value Added Tax (VAT) amount which is due on the current invoice is to be paid on receipt of a separate VAT payment request.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AD</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Value Added Tax (VAT) due from a previous invoice</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A code to indicate that the Value Added Tax (VAT) amount of a previous invoice is to be paid.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>AE</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>VAT Reverse Charge</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Code specifying that the standard VAT rate is levied from the invoicee.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>B</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Transferred (VAT)</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>VAT not to be paid to the issuer of the invoice but directly to relevant tax authority.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>C</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Duty paid by supplier</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Duty associated with shipment of goods is paid by the supplier; customer receives goods with duty paid.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>D</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Value Added Tax (VAT) margin scheme - travel agents</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Indication that the VAT margin scheme for travel agents is applied.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>E</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Exempt from tax</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Code specifying that taxes are not applicable.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>F</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Value Added Tax (VAT) margin scheme - second-hand goods</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Indication that the VAT margin scheme for second-hand goods is applied.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>G</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Free export item, tax not charged</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Code specifying that the item is free export and taxes are not charged.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>H</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Higher rate</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Code specifying a higher rate of duty or tax or fee.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>I</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Value Added Tax (VAT) margin scheme - works of art Margin scheme — Works of art</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Indication that the VAT margin scheme for works of art is applied.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>J</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Value Added Tax (VAT) margin scheme - collector’s items and antiques</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Indication that the VAT margin scheme for collector’s items and antiques is applied.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>K</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>VAT exempt for EEA intra-community supply of goods and services</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A tax category code indicating the item is VAT exempt due to an intra-community supply in the European Economic Area.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>L</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Canary Islands general indirect tax</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Impuesto General Indirecto Canario (IGIC) is an indirect tax levied on goods and services supplied in the Canary Islands (Spain) by traders and professionals, as well as on import of goods.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>M</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Tax for production, services and importation in Ceuta and Melilla</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Impuesto sobre la Producción, los Servicios y la Importación (IPSI) is an indirect municipal tax, levied on the production, processing and import of all kinds of movable tangible property, the supply of services and the transfer of immovable property located in the cities of Ceuta and Melilla.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>O</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Services outside scope of tax</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Code specifying that taxes are not applicable to the services.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>S</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Standard rate</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Code specifying the standard rate.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>Z</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Zero rated goods</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Code specifying that the goods are at a zero rate.</SimpleValue>
+         </Value>
+      </Row>
+   </SimpleCodeList>
+</gc:CodeList>

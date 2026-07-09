@@ -1,0 +1,1209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gc:CodeList xmlns:gc="http://docs.oasis-open.org/codelist/ns/genericode/1.0/"
+             xmlns:xoev-cl-3="http://xoev.de/schemata/genericode/3"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <Annotation>
+      <Description>
+         <xoev-cl-3:nameKurz>UNTDID 5189</xoev-cl-3:nameKurz>
+         <xoev-cl-3:beschreibung-codeliste>Die Codeliste basiert auf der Codeliste 5189 (Allowance or charge identification code) des United Trade Data Interchange Directory (UNTDID). Sie ist konform zur DIN EN16931-1:2017 und zu dem darauf basierenden Standard XRechnung. EN16931-3-2, 3-3, 3-4 Annex A definiert eine Untermenge dieser Liste. Des Weiteren enthält sie alle Einträge, die für die Nutzung im Kontext des Standards XBestellung benötigt werden.</xoev-cl-3:beschreibung-codeliste>
+         <xoev-cl-3:herausgebernameKurz>KoSIT</xoev-cl-3:herausgebernameKurz>
+         <xoev-cl-3:beschreibung-versionCodeliste>Die Konformität zur Datengrundlage in der Version D20a wurde überprüft. Es gibt keine neuen Inhalte. Die Methodik der Codeliste wurde auf das Codelistenhandbuch in der Version 1.1 aktualisiert.</xoev-cl-3:beschreibung-versionCodeliste>
+         <xoev-cl-3:datumGueltigkeitAb>2019-07-10</xoev-cl-3:datumGueltigkeitAb>
+         <xoev-cl-3:versionCodelistenHandbuch>1.1</xoev-cl-3:versionCodelistenHandbuch>
+         <xoev-cl-3:aenderungZurVorversion>Die Konformität zur Datengrundlage in der Version D20a wurde überprüft.</xoev-cl-3:aenderungZurVorversion>
+      </Description>
+   </Annotation>
+   <Identification>
+      <ShortName>UNTDID.5189</ShortName>
+      <LongName>UNTDID 5189 Allowance or charge identification code</LongName>
+      <Version>3</Version>
+      <CanonicalUri>urn:xoev-de:kosit:codeliste:untdid.5189</CanonicalUri>
+      <CanonicalVersionUri>urn:xoev-de:kosit:codeliste:untdid.5189_3</CanonicalVersionUri>
+      <Agency>
+         <LongName>Koordinierungsstelle für IT-Standards</LongName>
+      </Agency>
+   </Identification>
+   <ColumnSet>
+      <Column Id="code" Use="required">
+         <ShortName>code</ShortName>
+         <LongName>Code</LongName>
+         <Data Type="string"/>
+      </Column>
+      <Column Id="name" Use="optional">
+         <ShortName>name</ShortName>
+         <LongName>Name</LongName>
+         <Data Type="string"/>
+      </Column>
+      <Column Id="description" Use="optional">
+         <ShortName>description</ShortName>
+         <LongName>Description</LongName>
+         <Data Type="string"/>
+      </Column>
+      <Key Id="codeKey">
+         <Annotation>
+            <AppInfo>
+               <xoev-cl-3:empfohleneCodeSpalte/>
+            </AppInfo>
+         </Annotation>
+         <ShortName>codeKey</ShortName>
+         <ColumnRef Ref="code"/>
+      </Key>
+   </ColumnSet>
+   <SimpleCodeList>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>1</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Handling commission</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Fee for the processing of documentary credit, collection and payment which are charged to the customer.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>2</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Amendment commission</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Fee for amendments in documentary credit and collection business (not extensions and increases of documentary credits).</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>3</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Acceptance commission</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Fee for the acceptance of draft in documentary credit and collection business which are drawn on us (also to be seen as a kind of 'guarantee commission').</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>4</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Commission for obtaining acceptance</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Fee for obtaining an acceptance under collections on the basis of 'documents against acceptance'.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>5</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Commission on delivery</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Fee for delivery of documents without corresponding payment.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>6</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Advising commission</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Fee for advising documentary credits (charged also in case of confirmed credits).</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>7</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Confirmation commission</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Fee for confirmation of credit.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>8</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Deferred payment commission</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Fee for the deferred payment period under documentary credits confirmed by bank. This fee are charges for the period from presentation of the document until due date of payment.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>9</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Commission for taking up documents</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Fee charged to the foreign bank for the processing of documentary credit.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>10</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Opening commission</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Fee for opening revocable documentary credit.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>11</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Fee for payment under reserve</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Fee charged to the customer for discrepancies in credit documents in the case of which the bank have to stipulate payment under reserve.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>12</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Discrepancy fee</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Fee charged to the foreign bank for discrepancies in credit documents.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>13</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Domicilation commission</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Fee for the domicilation of bills with the bank.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>14</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Commission for release of goods</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Commission for the release of goods sent to the bank.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>15</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Collection commission</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Fee for settling collections on the basis of 'documents against payments'.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>16</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Negotiation commission</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Fee for the purchase of documents under sight credit for the first ten days.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>17</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Return commission</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Fee for cheques, bills and collections returned unpaid and/or recalled.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>18</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>B/L splitting charges</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Fee for the splitting of bills of lading.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>19</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Trust commission</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Fee for the handling on a fiduciary basis of imported goods that have been warehoused.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>20</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Transfer commission</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Fee for the transfer of transferable documentary credits.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>21</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Commission for opening irrevocable documentary credits</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Fee for opening irrevocable documentary credits. This fee is a kind of 'Guarantee commission' as compensation for the commitment into which the bank have entered on the customers behalf; similar to confirmation commission, acceptance commission.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>22</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Pre-advice commission</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Fee for the pre-advice of a documentary credit.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>23</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Supervisory commission</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Fee for the supervising unconfirmed documentary credits with a deferred payment period.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>24</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Model charges</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Fee for decoding telex messages.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>25</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Risk commission</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Commission in addition to the confirmation commission for documentary credits from sensitive countries.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>26</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Guarantee commission</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Commission for drawing up guaranties.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>27</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Reimbursement commission</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Fee for reimbursement of, for example, documentary credits.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>28</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Stamp duty</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Tax payable on bills in accordance with national bill of exchange legislation.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>29</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Brokerage</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Brokers commission arising, in trade with foreign currencies.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>30</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bank charges</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Charges deducted/claimed by other banks involved in the transaction.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>31</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bank charges information</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Charges not included in the total charge amount i.e. the charges are for information only.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>32</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Courier fee</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Fee for use of courier service.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>33</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Phone fee</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Fee for use of phone.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>34</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Postage fee</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Fee for postage.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>35</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>S.W.I.F.T. fee</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Fee for use of S.W.I.F.T.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>36</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Telex fee</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Fee for telex.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>37</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Penalty for late delivery of documents</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Penalty imposed when documents are delivered late.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>38</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Penalty for late delivery of valuation of works</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Penalty imposed when valuation of works is delivered late.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>39</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Penalty for execution of works behind schedule</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Penalty imposed when the execution of works is behind schedule.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>40</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Other penalties</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Penalty imposed for other reasons.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>41</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Bonus for works ahead of schedule</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Bonus for completing work ahead of schedule.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>42</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Other bonus</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Bonus earned for other reasons.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>44</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Project management cost</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Cost for project management.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>45</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Pro rata retention</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Proportional retention charge.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>46</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Contractual retention</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Contractual retention charge.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>47</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Other retentions</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Retention charge not otherwise specified.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>48</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Interest on arrears</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Interest for late payment.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>49</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Interest</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Cost of using money.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>50</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Charge per credit cover</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Unit charge per credit cover established.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>51</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Charge per unused credit cover</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Unit charge per unused credit cover.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>52</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Minimum commission</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Minimum commission charge.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>53</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Factoring commission</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Commission charged for factoring services.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>54</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Chamber of commerce charge</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Identifies the charges from the chamber of commerce.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>55</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Transfer charges</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Charges for transfer.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>56</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Repatriation charges</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Charges for repatriation.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>57</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Miscellaneous charges</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Not specifically defined charges.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>58</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Foreign exchange charges</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Charges for foreign exchange.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>59</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Agreed debit interest charge</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Charge for agreed debit interest</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>60</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Manufacturer's consumer discount</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A discount given by the manufacturer which should be passed on to the consumer.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>61</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Fax advice charge</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Charge for fax advice.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>62</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Due to military status</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Allowance granted because of the military status.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>63</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Due to work accident</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Allowance granted to a victim of a work accident.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>64</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Special agreement</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>An allowance or charge as specified in a special agreement.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>65</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Production error discount</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A discount given for the purchase of a product with a production error.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>66</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>New outlet discount</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A discount given at the occasion of the opening of a new outlet.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>67</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Sample discount</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A discount given for the purchase of a sample of a product.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>68</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>End-of-range discount</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A discount given for the purchase of an end-of-range product.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>69</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Charge for a customer specific finish</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A charge for the addition of a customer specific finish to a product.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>70</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Incoterm discount</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A discount given for a specified Incoterm.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>71</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Point of sales threshold allowance</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Allowance for reaching or exceeding an agreed sales threshold at the point of sales.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>72</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Technical modification costs</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Costs for technical modifications to a product.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>73</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Job-order production costs</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Costs of job-order production.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>74</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Off-premises costs</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Expenses for non-local activities.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>75</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Additional processing costs</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Costs of additional processing.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>76</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Attesting charge</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Costs of official attestation.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>77</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Rush delivery surcharge</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Charge for increased delivery speed.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>78</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Special construction costs</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Charge for costs incurred as result of special constructions.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>79</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Freight charges</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Amount to be paid for moving goods, by whatever means, from one place to another.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>80</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Packing charge</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Charge for packing.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>81</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Repair charge</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Charge for repair.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>82</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Loading charge</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Charge for loading.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>83</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Setup charge</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Charge for setup.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>84</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Testing charge</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Charge for testing.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>85</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Warehousing charge</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Charge for storage and handling.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>86</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Gold surcharge</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Difference between current price and basic value contained in product price in relation to gold content.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>87</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Copper surcharge</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Difference between current price and basic value contained in product price in relation to copper content.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>88</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Material surcharge/deduction</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Surcharge/deduction, calculated for higher/ lower material's consumption.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>89</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Lead surcharge</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Difference between current price and basic value contained in product price in relation to lead content.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>90</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Price index surcharge</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Higher/lower price, resulting from change in costs between the times of making offer and delivery.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>91</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Platinum surcharge</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Difference between current price and basic value contained in product price in relation to platinum content.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>92</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Silver surcharge</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Difference between current price and basic value contained in product price in relation to silver content.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>93</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Wolfram surcharge</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Difference between current price and basic value contained in product price in relation to wolfram content.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>94</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Aluminum surcharge</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Difference between current price and basic value contained in product price in relation to aluminum content.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>95</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Discount</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A reduction from a usual or list price.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>96</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Insurance</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Charge for insurance.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>97</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Minimum order / minimum billing charge</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Charge for minimum order or minimum billing.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>98</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Material surcharge (special materials)</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>Surcharge for (special) materials.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>99</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Surcharge</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>An additional amount added to the usual charge.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>100</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Special rebate</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A return of part of an amount paid for goods or services, serving as a reduction or discount.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>101</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Carbon footprint charge</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A monetary amount charged for carbon footprint related to a regulatory requirement.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>102</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Fixed long term</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A fixed long term allowance or charge.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>103</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Temporary</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>A temporary allowance or charge.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>104</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Standard</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The standard available allowance or charge.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>105</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Yearly turnover</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>An allowance or charge based on yearly turnover.</SimpleValue>
+         </Value>
+      </Row>
+      <Row>
+         <Value ColumnRef="code">
+            <SimpleValue>106</SimpleValue>
+         </Value>
+         <Value ColumnRef="name">
+            <SimpleValue>Withheld taxes and social security contributions</SimpleValue>
+         </Value>
+         <Value ColumnRef="description">
+            <SimpleValue>The amount of taxes and contributions for social security, that is subtracted from the payable amount as it is to be paid separately.</SimpleValue>
+         </Value>
+      </Row>
+   </SimpleCodeList>
+</gc:CodeList>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gc:CodeList xmlns:gc="http://docs.oasis-open.org/codelist/ns/genericode/1.0/">
+  <Identification>
+    <ShortName></ShortName>
+    <LongName></LongName>
+    <Version></Version>
+  </Identification>
+  <ColumnSet></ColumnSet>
+  <SimpleCodeList></SimpleCodeList>
+</gc:CodeList>
