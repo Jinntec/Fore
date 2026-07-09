@@ -85,11 +85,19 @@
 <!--  <script type="module">import './resources/scripts/fore-dev.js';</script>-->
   <script type="module" src="../../index.js"></script>
   <script type="module" src="../../tools/fx-lens.js"></script>
+  <!-- fx-action is not part of the default index.js bundle; imported directly for sequencing
+       nested actions inside submission event handlers (see s-load-known / s-load-customsource). -->
+  <script type="module" src="../../src/actions/fx-action.js"></script>
 </head>
 <body>
 <fx-fore id="fx-codelist-editor">
   <fx-model>
     <fx-instance id="codelist" src="data/codelist-editor-empty.xml"></fx-instance>
+
+    <!-- Holds a locally-uploaded file for comparison only -- never bound to the UI directly.
+         Used to reconcile @ui-keep on a freshly (re)loaded original against a previously
+         saved custom codelist; see s-load-customsource and the @ui-keep fx-setvalue below. -->
+    <fx-instance id="customsource" src="data/codelist-editor-empty.xml"></fx-instance>
 
     <!-- Note: tag names here are lowercase on purpose. This markup is parsed by the
          browser's HTML parser (not an XML parser), which lowercases element names,
@@ -121,15 +129,65 @@
                     url="{concat('data/codelists/xml/', instance('vars')/selectedfile)}"
                     method="get" replace="instance" instance="codelist" validate="false">
       <fx-message event="submit-error">Could not load codelist file.</fx-message>
-      <fx-setattribute ref="." name="ui-keep" value="true" iterate="instance('codelist')/SimpleCodeList/Row" event="submit-done"></fx-setattribute>
+      <!-- fx-action sequences its children strictly in order (awaits each fully before the
+           next starts) -- needed because the reconciliation step below requires every row to
+           already carry a ui-keep attribute from the create step. Two independent actions each
+           listening on submit-done directly would start concurrently instead, racing their
+           row-by-row loops against each other. -->
+      <fx-action event="submit-done">
+        <fx-setattribute ref="." name="ui-keep" value="true" iterate="instance('codelist')/SimpleCodeList/Row"></fx-setattribute>
+        <!-- Reconciliation against a previously saved custom codelist (see s-load-customsource):
+             only kicks in when customsource actually holds rows recorded against THIS filename --
+             a plain "Load selected" leaves every row 'true', identical to the create-step above. -->
+        <fx-setvalue ref="@ui-keep"
+                     value="let $keyRef := instance('codelist')/ColumnSet/Key[1]/ColumnRef/@Ref,
+                                $myKey := Value[@ColumnRef = $keyRef]/SimpleValue,
+                                $reconcile := instance('customsource')/SimpleCodeList/Row
+                                              and instance('vars')/selectedfile = string(instance('customsource')/Identification/@ui-source-file)
+                            return if (not($reconcile)) then 'true'
+                                   else if (instance('customsource')/SimpleCodeList/Row[Value[@ColumnRef=$keyRef]/SimpleValue = $myKey])
+                                   then 'true' else 'false'"
+                     iterate="instance('codelist')/SimpleCodeList/Row"></fx-setvalue>
+        <!-- The two bulk per-row actions above each notify() 250+ times in a tight loop right
+             after a full instance replace; the checkbox controls' checked state visibly drifts
+             out of sync with the underlying @ui-keep data in that scenario (confirmed: @ui-keep
+             and the kept-count label are correct, only the rendered checkboxes are wrong) even
+             though a plain full refresh afterwards fixes it immediately. Forcing one here is
+             cheap and makes sure what's on screen matches the model once this settles. -->
+        <fx-refresh force></fx-refresh>
+      </fx-action>
     </fx-submission>
 
     <!-- url is populated dynamically from JS (blob: URL) right before submit() --
-         only the file name has to come from JS, since the File API isn't reachable from Fore -->
+         only the file name has to come from JS, since the File API isn't reachable from Fore.
+         Only fired (from s-load-customsource's fx-action below) when the uploaded file turns
+         out to carry NO provenance marker -- i.e. a plain/foreign upload, loaded verbatim. -->
     <fx-submission id="s-load-local"
                     url="" method="get" replace="instance" instance="codelist" validate="false">
       <fx-message event="submit-error">Could not load the selected local file.</fx-message>
       <fx-setattribute ref="." name="ui-keep" value="true" iterate="instance('codelist')/SimpleCodeList/Row" event="submit-done"></fx-setattribute>
+    </fx-submission>
+
+    <!-- Loads the uploaded local file into customsource FIRST, purely for inspection -- codelist
+         is deliberately left untouched until we know which of the two paths below applies.
+         Loading straight into codelist here (and only correcting it afterwards) would render a
+         wrong intermediate state: the trimmed custom rows, visible for a moment before being
+         replaced by the reconciled full original. -->
+    <fx-submission id="s-load-customsource"
+                    url="" method="get" replace="instance" instance="customsource" validate="false">
+      <fx-message event="submit-error">Could not read the selected local file.</fx-message>
+      <!-- fx-action sequences its children strictly in order -- whichever fx-send runs must not
+           start until instance('vars')/selectedfile has actually been updated by the fx-setvalue
+           before it; see the same-issue comment on s-load-known above. Exactly one of the two
+           fx-send children below fires, so codelist ends up populated exactly once. -->
+      <fx-action event="submit-done">
+        <fx-setvalue ref="instance('vars')/selectedfile" value="string(instance('customsource')/Identification/@ui-source-file)"
+                     if="string(instance('customsource')/Identification/@ui-source-file)"></fx-setvalue>
+        <!-- Marker found: re-fetch the true original from the server and reconcile against it. -->
+        <fx-send submission="s-load-known" if="string(instance('customsource')/Identification/@ui-source-file)"></fx-send>
+        <!-- No marker: plain/foreign upload, load it verbatim exactly as before. -->
+        <fx-send submission="s-load-local" if="not(string(instance('customsource')/Identification/@ui-source-file))"></fx-send>
+      </fx-action>
     </fx-submission>
 
     <fx-submission id="s-save"
@@ -172,7 +230,9 @@
       </label>
       <fx-trigger id="trigger-load-local" style="display:none">
         <button type="button">load local file (hidden, clicked programmatically)</button>
-        <fx-send submission="s-load-local"></fx-send>
+        <!-- s-load-local is not sent directly here -- it's only fired conditionally, from
+             s-load-customsource's own fx-action, once we know it's the right thing to do. -->
+        <fx-send submission="s-load-customsource"></fx-send>
       </fx-trigger>
 
       <span id="load-status" class="load-status" role="status" aria-live="polite">
@@ -254,6 +314,12 @@
       </fx-trigger>
 
       <fx-trigger id="btn-save"><button type="button">Save as custom codelist</button>
+        <!-- Stamp provenance so this file can be recognized and reconciled against its
+             original when re-loaded via the local file picker (see s-load-customsource).
+             Two steps because fx-setattribute's value is a literal, not XPath -- create
+             the attribute first, then compute its value with fx-setvalue. -->
+        <fx-setattribute ref="instance('codelist')/Identification" name="ui-source-file" value=""></fx-setattribute>
+        <fx-setvalue ref="instance('codelist')/Identification/@ui-source-file" value="string(instance('vars')/selectedfile)"></fx-setvalue>
         <fx-send submission="s-save"></fx-send>
       </fx-trigger>
     </div>
@@ -262,22 +328,31 @@
 <fx-lens></fx-lens>
 <script type="module">
   // The one thing genuinely outside Fore's reach: reading a local file the user picks
-  // from disk. Handed off to s-load-local as a blob: URL as soon as it's read; the
+  // from disk. Handed off to s-load-customsource as a blob: URL as soon as it's read; the
   // load itself still goes through the normal fx-trigger/fx-send/fx-submission pipeline.
+  // s-load-local shares the same blob: URL param since s-load-customsource's own fx-action
+  // may conditionally fire it too (see s-load-customsource above) once it knows there's no
+  // provenance marker -- whether that happens depends on the file's content, so it isn't
+  // known upfront here.
+  let previousBlobUrl = null;
   document.getElementById('local-file-input').addEventListener('change', async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+    // Revoke the previous upload's blob: URL now rather than tracking exactly when every
+    // submission that might have used it (including a possible chained s-load-local) is done
+    // reading it -- simpler, and the previous blob is certainly no longer needed by this point.
+    if (previousBlobUrl) URL.revokeObjectURL(previousBlobUrl);
     const text = await file.text();
     const blobUrl = URL.createObjectURL(new Blob([text], { type: 'application/xml' }));
-    const submission = document.getElementById('s-load-local');
-    submission.parameters.set('url', blobUrl);
+    previousBlobUrl = blobUrl;
+    document.getElementById('s-load-local').parameters.set('url', blobUrl);
+    document.getElementById('s-load-customsource').parameters.set('url', blobUrl);
 
     const varsInstance = document.getElementById('vars');
     varsInstance.instanceData.querySelector('selectedfile').textContent = file.name;
     document.getElementById('fx-codelist-editor').refresh(true);
 
     document.querySelector('#trigger-load-local button').click();
-    submission.addEventListener('submit-done', () => URL.revokeObjectURL(blobUrl), { once: true });
     e.target.value = '';
   });
 
@@ -304,6 +379,10 @@
   document.getElementById('s-load-local').addEventListener('submit', () => setLoading(true, 'Loading local file…'));
   document.getElementById('s-load-local').addEventListener('submit-done', () => setLoading(false));
   document.getElementById('s-load-local').addEventListener('submit-error', () => setLoading(false));
+
+  document.getElementById('s-load-customsource').addEventListener('submit', () => setLoading(true, 'Reading local file…'));
+  document.getElementById('s-load-customsource').addEventListener('submit-done', () => setLoading(false));
+  document.getElementById('s-load-customsource').addEventListener('submit-error', () => setLoading(false));
 
   // .kept-count's ref is a raw XPath count(), not backed by an fx-bind, so it isn't part of
   // Fore's dependency graph and never gets picked up by a targeted/partial refresh (only a
