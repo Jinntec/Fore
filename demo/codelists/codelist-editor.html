@@ -10,8 +10,8 @@
     body { max-width: 64rem; margin: 0 auto; padding: 0 1.25rem 3rem; }
     header.editor-header { position: sticky; top: 0; background: var(--body-bg, #fff); z-index: 5; padding: 1rem 1.25rem; margin: 0 -1.25rem; border-bottom: 2px solid #c0c8d8; }
     header.editor-header h1 { font-size: 1.3rem; margin: 0 0 0.75rem; color: #1a2a4a; }
-    .toolbar { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 1.25rem; }
-    .field { display: flex; flex-direction: column; font-size: 0.85rem; color: #444; gap: 0.2rem; padding:0;}
+    .toolbar { display: flex; flex-wrap: wrap; gap: 1.25rem; }
+    .field { display: flex; flex-direction: column; font-size: 0.85rem; color: #444; gap: 0.2rem; padding:0; align-items: flex-start; }
     .field select, .field input { font-family: inherit; font-size: 0.9rem; padding: 0.3rem 0.5rem; border: 1px solid rgba(6,3,20,.4); border-radius: 0.3rem; }
 
     /* fx-output's shadow root defaults to display:inline-block with an internal
@@ -80,7 +80,14 @@
       animation: load-spin 0.7s linear infinite;
     }
     @keyframes load-spin { to { transform: rotate(360deg); } }
-    .toolbar button[disabled], .toolbar input[disabled] { opacity: 0.6; cursor: not-allowed; }
+    .toolbar button[disabled], .toolbar input[disabled], .toolbar select[disabled] { opacity: 0.6; cursor: not-allowed; }
+
+    /* While a codelist is (re)loading the previous one is still on screen; dimming +
+       pointer-events:none on the whole editing area (rather than only the two toolbar
+       load controls) is what actually communicates "this is stale/frozen right now"
+       instead of just showing a spinner next to otherwise-normal-looking, still-clickable
+       rows/buttons. */
+    main.ui-locked { opacity: 0.5; pointer-events: none; transition: opacity 0.15s ease; }
   </style>
 <!--  <script type="module">import './resources/scripts/fore-dev.js';</script>-->
   <script type="module" src="../../index.js"></script>
@@ -221,9 +228,8 @@
           <option value="UN_ECE_Recommendation_N_21_3.xml">UN/ECE Rec. 21 — Passengers/Cargo/Packaging</option>
           <option value="VATEX-2019-12-11T08_43Z-yAZ.xml">VATEX — VAT exemption reason code</option>
         </select>
+        <fx-send submission="s-load-known" event="value-changed"></fx-send>
       </fx-control>
-
-      <fx-trigger><button type="button" id="btn-load-known">Load selected</button><fx-send submission="s-load-known"></fx-send></fx-trigger>
 
       <label class="field">
         <input type="file" id="local-file-input" accept=".xml">
@@ -242,7 +248,7 @@
     </div>
   </header>
 
-  <main>
+  <main id="editor-main">
     <div class="meta-panel">
       <fx-output ref="instance('codelist')/Identification/ShortName"><label slot="label">Short name</label></fx-output>
       <fx-output ref="instance('codelist')/Identification/LongName"><label slot="label">Long name</label></fx-output>
@@ -362,14 +368,20 @@
   // which is what makes the "start" half of this possible.
   const loadStatus = document.getElementById('load-status');
   const loadStatusText = document.getElementById('load-status-text');
-  const btnLoadKnown = document.getElementById('btn-load-known');
+  const fileSelect = document.getElementById('file-select');
   const localFileInput = document.getElementById('local-file-input');
+  const editorMain = document.getElementById('editor-main');
 
   function setLoading(isLoading, message) {
     loadStatus.classList.toggle('active', isLoading);
     loadStatusText.textContent = isLoading ? message : '';
-    btnLoadKnown.disabled = isLoading;
+    fileSelect.disabled = isLoading;
     localFileInput.disabled = isLoading;
+    // Dim + freeze the whole editing area too, not just the two load controls above --
+    // otherwise the previously-loaded codelist's rows/buttons stay fully interactive
+    // (and visually indistinguishable from "ready") while a new one is still loading.
+    editorMain.classList.toggle('ui-locked', isLoading);
+    editorMain.setAttribute('aria-busy', String(isLoading));
   }
 
   document.getElementById('s-load-known').addEventListener('submit', () => setLoading(true, 'Loading codelist…'));
