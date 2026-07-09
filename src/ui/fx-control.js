@@ -123,12 +123,19 @@ export default class FxControl extends XfAbstractControl {
       );
     }
 
-    this.shadowRoot.innerHTML = `
+    const controlHtml = this.renderHTML(this.ref);
+    const sheet = Fore.getSharedStyleSheet(style);
+    if (sheet) {
+      this.shadowRoot.innerHTML = controlHtml;
+      this.shadowRoot.adoptedStyleSheets = [sheet];
+    } else {
+      this.shadowRoot.innerHTML = `
             <style>
                 ${style}
             </style>
-            ${this.renderHTML(this.ref)}
+            ${controlHtml}
         `;
+    }
 
     this.widget = this.getWidget();
     this._associateLabel();

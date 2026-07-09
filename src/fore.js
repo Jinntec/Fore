@@ -23,6 +23,33 @@ export class Fore {
 
   static TYPE_DEFAULT = 'xs:string';
 
+  static _styleSheetCache = new Map();
+
+  /**
+   * Returns a `CSSStyleSheet` for the given (static) CSS text, memoized by the CSS text itself so
+   * that a repeated element (e.g. `fx-output`/`fx-control` inside an `fx-repeat` with hundreds or
+   * thousands of rows) shares one parsed sheet via `shadowRoot.adoptedStyleSheets` instead of every
+   * instance re-parsing an identical `<style>` block via `shadowRoot.innerHTML`. Returns `null` when
+   * constructable stylesheets aren't supported so callers can fall back to inline `<style>`.
+   *
+   * @param cssText {String} - static CSS, must not contain per-instance interpolation
+   * @returns {CSSStyleSheet|null}
+   */
+  static getSharedStyleSheet(cssText) {
+    if (typeof CSSStyleSheet === 'undefined') return null;
+    let sheet = Fore._styleSheetCache.get(cssText);
+    if (!sheet) {
+      try {
+        sheet = new CSSStyleSheet();
+        sheet.replaceSync(cssText);
+        Fore._styleSheetCache.set(cssText, sheet);
+      } catch (e) {
+        return null;
+      }
+    }
+    return sheet;
+  }
+
   /**
    * Loads and return a piece of HTML
    * @param url {String} - the Url to load from

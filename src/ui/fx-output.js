@@ -51,12 +51,18 @@ export class FxOutput extends XfAbstractControl {
             </span>
         `;
 
-    this.shadowRoot.innerHTML = `
+    const sheet = Fore.getSharedStyleSheet(style);
+    if (sheet) {
+      this.shadowRoot.innerHTML = outputHtml;
+      this.shadowRoot.adoptedStyleSheets = [sheet];
+    } else {
+      this.shadowRoot.innerHTML = `
             <style>
                 ${style}
             </style>
             ${outputHtml}
         `;
+    }
     // this.widget = this.shadowRoot.querySelector('#widget');
     // this.widget = this.getWidget();
     // console.log('widget ', this.widget);
@@ -67,11 +73,7 @@ export class FxOutput extends XfAbstractControl {
     // (which can) from the slotted label's text instead.
     const labelSlot = this.shadowRoot.querySelector('slot[name="label"]');
     const applyLabel = () => {
-      const text = labelSlot
-        .assignedNodes({ flatten: true })
-        .map(n => n.textContent)
-        .join('')
-        .trim();
+      const text = this._getLabelText();
       const valueEl = this.getWidget();
       if (text) {
         valueEl.setAttribute('aria-label', text);
@@ -123,6 +125,16 @@ export class FxOutput extends XfAbstractControl {
     return valueWrapper;
   }
 
+  _getLabelText() {
+    const labelSlot = this.shadowRoot.querySelector('slot[name="label"]');
+    if (!labelSlot) return '';
+    return labelSlot
+      .assignedNodes({ flatten: true })
+      .map(n => n.textContent)
+      .join('')
+      .trim();
+  }
+
   handleReadonly() {
     // An output is always read-only
     this.setAttribute('readonly', 'readonly');
@@ -158,6 +170,10 @@ export class FxOutput extends XfAbstractControl {
     if (this.mediatype === 'image') {
       const img = document.createElement('img');
       img.setAttribute('src', this.value);
+      // axe/WCAG require the accessible name directly on the <img> - aria-label on the
+      // wrapping #value span (see applyLabel() above) doesn't satisfy that for a descendant
+      // img. Empty alt is still valid (marks it decorative) when no label is given.
+      img.setAttribute('alt', this._getLabelText());
       // Reset the output before adding the image
       this.innerHTML = '';
       valueWrapper.appendChild(img);

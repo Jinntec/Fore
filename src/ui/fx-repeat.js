@@ -352,10 +352,16 @@ export class FxRepeat extends withDraggability(UIElement, false) {
           <div part="list" role="list"><slot></slot></div>
   `;
 
-    this.shadowRoot.innerHTML = `
+    const sheet = Fore.getSharedStyleSheet(style);
+    if (sheet) {
+      this.shadowRoot.innerHTML = html;
+      this.shadowRoot.adoptedStyleSheets = [sheet];
+    } else {
+      this.shadowRoot.innerHTML = `
       <style>${style}</style>
       ${html}
   `;
+    }
   }
 
   /**
@@ -1091,6 +1097,11 @@ export class FxRepeat extends withDraggability(UIElement, false) {
   }
 
   _initRepeatItems() {
+    // `createdNodeset` is only ever read once, as an insert template for a *new* row (see
+    // fx-insert.js), so only the clone from the last iteration below is ever observed - cloning
+    // and clearing every earlier row's nodeset was pure waste (O(n) discarded work, e.g. 799 of
+    // 800 clones for the UNTDID 1001 codelist).
+    const lastIndex = this.nodeset.length - 1;
     this.nodeset.forEach((item, index) => {
       const repeatItem = this._createNewRepeatItem();
       repeatItem.nodeset = this.nodeset[index];
@@ -1100,7 +1111,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
       if (this.getOwnerForm().createNodes) {
         this.getOwnerForm().initData(repeatItem);
-        if (repeatItem.nodeset.nodeType) {
+        if (index === lastIndex && repeatItem.nodeset.nodeType) {
           const repeatItemClone = repeatItem.nodeset.cloneNode(true);
           this.clearTextValues(repeatItemClone);
           this.createdNodeset = repeatItemClone;
