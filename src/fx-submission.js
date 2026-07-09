@@ -590,10 +590,11 @@ export class FxSubmission extends ForeElementMixin {
     }
 
     if (this.replace === 'download') {
-      const target = this._getProperty('target');
+      let target = this._getProperty('target');
       if (!target) {
         throw new Error(`${this.id} needs to specify "target" attribute`);
       }
+      target = this.evaluateAttributeTemplateExpression(target, this);
       const downloadLink = document.createElement('a');
       downloadLink.setAttribute('download', target);
       downloadLink.setAttribute('href', `data:${contentType},${encodeURIComponent(data)}`);
@@ -603,7 +604,10 @@ export class FxSubmission extends ForeElementMixin {
     }
 
     if (this.replace === 'all') {
-      const target = this._getProperty('target');
+      let target = this._getProperty('target');
+      if (target) {
+        target = this.evaluateAttributeTemplateExpression(target, this);
+      }
       if (target && target === '_blank') {
         const win = window.open('', '_blank');
         win.document.write(`<pre>${data}</pre>`);
@@ -618,7 +622,10 @@ export class FxSubmission extends ForeElementMixin {
     }
 
     if (this.replace === 'target') {
-      const target = this._getProperty('target');
+      let target = this._getProperty('target');
+      if (target) {
+        target = this.evaluateAttributeTemplateExpression(target, this);
+      }
       const targetNode = document.querySelector(target);
       if (targetNode) {
         if (contentType && contentType.startsWith('text/html')) {
