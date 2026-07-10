@@ -1360,7 +1360,7 @@ export function evaluateXPath(
       return fxEvaluateXPath(
         expr0,
         contextNode,
-        __jsonDomFacade,
+        domFacade ? domFacade.withInner(__jsonDomFacade) : __jsonDomFacade,
         { ...variablesInScope, ...variables },
         fxEvaluateXPath.ALL_RESULTS_TYPE,
         {
@@ -1781,14 +1781,20 @@ export function evaluateXPathToString(xpath, contextNode, formElement, domFacade
     // JSON context, non-lookup => evaluate via JSON facade
     if (_isJsonNode(contextNode) && !_looksLikeLookupExpr(expr0)) {
       const variablesInScope = getVariablesInScope(formElement);
-      const res = fxEvaluateXPathToString(expr0, contextNode, __jsonDomFacade, variablesInScope, {
-        currentContext: { formElement },
-        functionNameResolver,
-        moduleImports: { xf: XFORMS_NAMESPACE_URI },
-        namespaceResolver: null,
-        language: Language.XPATH_3_1_LANGUAGE,
-        xmlSerializer: new XMLSerializer(),
-      });
+      const res = fxEvaluateXPathToString(
+        expr0,
+        contextNode,
+        domFacade ? domFacade.withInner(__jsonDomFacade) : __jsonDomFacade,
+        variablesInScope,
+        {
+          currentContext: { formElement },
+          functionNameResolver,
+          moduleImports: { xf: XFORMS_NAMESPACE_URI },
+          namespaceResolver: null,
+          language: Language.XPATH_3_1_LANGUAGE,
+          xmlSerializer: new XMLSerializer(),
+        },
+      );
       return stringify(res);
     }
 
@@ -1906,7 +1912,7 @@ export function evaluateXPathToStrings(xpath, contextNode, formElement, domFacad
       const res = fxEvaluateXPathToStrings(
         expr0,
         contextNode,
-        __jsonDomFacade,
+        domFacade ? domFacade.withInner(__jsonDomFacade) : __jsonDomFacade,
         getVariablesInScope(formElement),
         {
           currentContext: { formElement },
@@ -1986,14 +1992,20 @@ export function evaluateXPathToNumber(xpath, contextNode, formElement, domFacade
 
     if (_isJsonNode(contextNode) && !_looksLikeLookupExpr(expr0)) {
       const variablesInScope = getVariablesInScope(formElement);
-      return fxEvaluateXPathToNumber(expr0, contextNode, __jsonDomFacade, variablesInScope, {
-        currentContext: { formElement },
-        functionNameResolver,
-        moduleImports: { xf: XFORMS_NAMESPACE_URI },
-        namespaceResolver: null,
-        language: Language.XPATH_3_1_LANGUAGE,
-        xmlSerializer: new XMLSerializer(),
-      });
+      return fxEvaluateXPathToNumber(
+        expr0,
+        contextNode,
+        domFacade ? domFacade.withInner(__jsonDomFacade) : __jsonDomFacade,
+        variablesInScope,
+        {
+          currentContext: { formElement },
+          functionNameResolver,
+          moduleImports: { xf: XFORMS_NAMESPACE_URI },
+          namespaceResolver: null,
+          language: Language.XPATH_3_1_LANGUAGE,
+          xmlSerializer: new XMLSerializer(),
+        },
+      );
     }
 
     if (_looksLikeLookupExpr(expr0)) {

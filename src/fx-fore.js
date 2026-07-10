@@ -693,6 +693,11 @@ export class FxFore extends HTMLElement {
           registerVariables(child);
         }
       })(this);
+      // Model-internal evaluations (calculate and other facets) pass the fx-model as
+      // scope element to evaluateXPath — hand it the registry so model variables
+      // resolve there. FxModel does not extend ForeElementMixin, so it would
+      // otherwise fall through to implicit instance bindings only.
+      modelElement.inScopeVariables = variables;
 
       // Ensure all function libraries are loaded/registered before model construction,
       // so binds/calculate/XPath evaluations can safely call them.
@@ -1099,7 +1104,14 @@ export class FxFore extends HTMLElement {
         performance.mark('force-refresh-end');
         performance.measure('force-refresh', 'force-refresh-start', 'force-refresh-end');
       } else {
+        // Evaluate UI variables synchronously so the batched-notification drain below
+        // still starts in the same tick as refresh() itself — sync listeners (e.g.
+        // action-performed) depend on that ordering.
+        const variableConsumerRefreshes = this._refreshUIVariables();
         await this._processBatchedNotifications();
+        if (variableConsumerRefreshes.length > 0) {
+          await Promise.all(variableConsumerRefreshes);
+        }
       }
 
       if (force === true || this.initialRun || this._scanForNewTemplateExpressionsNextRefresh) {
@@ -1152,6 +1164,66 @@ export class FxFore extends HTMLElement {
       // console.log('adding to batched notifications', item);
       this.batchedNotifications.add(item);
     }
+  }
+
+  /**
+   * XForms 2.0: variables outside a model and not within an action are evaluated in
+   * document order during a refresh. The full-refresh path covers them through the
+   * Fore.refreshChildren traversal; this pass covers partial refreshes, where fx-var
+   * elements were previously never re-evaluated (stale `$var` values).
+   *
+   * When a variable's value changed at this evaluation point, elements whose ref
+   * expressions reference it are refreshed. This is invalidation at the evaluation
+   * point — variables themselves are never re-evaluated reactively (spec: deletes and
+   * predicate changes do not affect a variable until its next evaluation point).
+   *
+   * Implicit per-instance bindings ($default / $<instance-id>) are not fx-var elements
+   * and are never touched here.
+   *
+   * Synchronous by design — refresh() must reach the batched-notification drain in the
+   * same tick. Returns the consumer refresh() promises for the caller to await after
+   * the drain.
+   *
+   * @returns {Promise[]}
+   * @private
+   */
+  _refreshUIVariables() {
+    const changedNames = [];
+    this.querySelectorAll('fx-var').forEach(variable => {
+      // Nested subforms evaluate their own variables
+      if (variable.closest('fx-fore') !== this) return;
+      // Model variables get their evaluation point in the model update cycle
+      if (variable.closest('fx-model')) return;
+      // Action-scoped variables are evaluated once per action execution
+      for (let anc = variable.parentElement; anc && anc !== this; anc = anc.parentElement) {
+        if (Fore.isActionElement(anc.nodeName)) return;
+      }
+      if (typeof variable.refreshAndReportChange !== 'function') return;
+      if (variable.refreshAndReportChange()) {
+        changedNames.push(variable.name);
+      }
+    });
+
+    if (changedNames.length === 0) return [];
+
+    const refreshPromises = [];
+    // [value] too: fx-output's value attribute is evaluated outside evalInContext and
+    // never reaches el.dependencies, so the raw attribute text is scanned as well.
+    this.querySelectorAll('[ref],[value]').forEach(el => {
+      if (el.closest('fx-fore') !== this) return;
+      if (typeof el.refresh !== 'function') return;
+      // Actions only evaluate during execution; fx-var got its evaluation point above
+      if (Fore.isActionElement(el.nodeName) || el.nodeName === 'FX-VAR') return;
+      const exprs = `${el.getAttribute('ref') ?? ''} ${el.getAttribute('value') ?? ''}`;
+      if (
+        changedNames.some(name => exprs.includes(`$${name}`)) ||
+        (typeof el.dependencies?.isInvalidatedByVariableChange === 'function' &&
+          el.dependencies.isInvalidatedByVariableChange(changedNames))
+      ) {
+        refreshPromises.push(el.refresh());
+      }
+    });
+    return refreshPromises;
   }
 
   /**

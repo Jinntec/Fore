@@ -545,6 +545,8 @@ export class FxModel extends HTMLElement {
     this.debugInfo.updateModelCount += 1;
     this.debugInfo.lastUpdateAt = performance.now();
 
+    this._refreshModelVariables();
+
     const rebuildStart = performance.now();
     this.rebuild();
     /*
@@ -720,11 +722,40 @@ export class FxModel extends HTMLElement {
    *
    * todo: use 'changed' flag on modelItems to determine subgraph for recalculation. Flag already exists but is not used.
    */
+  /**
+   * XForms 2.0: model variables are evaluated in document order immediately before
+   * rebuild, recalculate and refresh — never reactively in between. Called from
+   * updateModel() (before rebuild) and recalculate(), which covers both update paths
+   * (actions run recalculate/revalidate/refresh without updateModel).
+   *
+   * The dependency graph is variable-blind: facet expressions referencing $var have
+   * no edge to the nodes the variable reads. When a model variable changed at this
+   * evaluation point, coarsely invalidate by clearing `changed` so recalculate runs
+   * the full graph instead of the changed-nodes subgraph.
+   *
+   * @private
+   */
+  _refreshModelVariables() {
+    let modelVariablesChanged = false;
+    this.querySelectorAll('fx-var').forEach(variable => {
+      if (typeof variable.refreshAndReportChange === 'function') {
+        if (variable.refreshAndReportChange()) {
+          modelVariablesChanged = true;
+        }
+      }
+    });
+    if (modelVariablesChanged) {
+      this.changed = [];
+    }
+  }
+
   async recalculate() {
     this.debugInfo.recalculateCount += 1;
     if (!this.mainGraph) {
       return;
     }
+
+    this._refreshModelVariables();
 
     this.computes = 0;
 
