@@ -274,6 +274,7 @@ export class FxInstance extends HTMLElement {
   }
 
   createInstanceData() {
+    this._invalidateInstanceVarBindings();
     if (this.type === 'xml') {
       const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
       this._instanceData = doc;
@@ -338,7 +339,23 @@ export class FxInstance extends HTMLElement {
     }
   }
 
+  /**
+   * The owning fore caches implicit $default/$<instance-id> variable bindings
+   * (_instanceVarBindings). After a data replacement they would still point into the
+   * previous document — drop the cache so getVariablesInScope rebuilds it lazily
+   * against the current data.
+   *
+   * @private
+   */
+  _invalidateInstanceVarBindings() {
+    const fore = this.closest('fx-fore');
+    if (fore && fore._instanceVarBindings) {
+      fore._instanceVarBindings = null;
+    }
+  }
+
   _setInitialData(data) {
+    this._invalidateInstanceVarBindings();
     // IMPORTANT: always store in backing field so getter/setter stays consistent
     this._instanceData = data;
 

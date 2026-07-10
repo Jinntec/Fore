@@ -363,6 +363,40 @@ describe('var Tests', () => {
     ).to.equal('changed');
   });
 
+  it('rebuilds $default after instance data replacement (replace="instance")', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <value>old</value>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <fx-output id="out" value="$default/value"></fx-output>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const output = el.querySelector('#out');
+    expect(output.value).to.equal('old');
+
+    // what replace="instance" does: assign new instanceData, update the model, refresh
+    const instance = el.querySelector('fx-instance');
+    const newDoc = new DOMParser().parseFromString(
+      '<data><value>replaced</value></data>',
+      'application/xml',
+    );
+    instance.instanceData = newDoc;
+    el.querySelector('fx-model').updateModel();
+    await el.refresh(true);
+
+    // the implicit binding must point into the new document, not the replaced one
+    expect(el._instanceVarBindings.default.ownerDocument).to.equal(newDoc);
+    expect(output.value).to.equal('replaced');
+  });
+
   it('handles variables in actions', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
