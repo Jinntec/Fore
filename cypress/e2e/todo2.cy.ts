@@ -9,6 +9,13 @@ describe('todo2 demo spec', () => {
 
         cy.get('#clearbtn').click()
 
+        // #clearbtn triggers an async submission that deletes localStorage data, then
+        // fx-reload does a full window.location.reload() on submit-done. Wait for that
+        // reload to actually finish (repeat back to its initial 2 tasks) before
+        // interacting further, otherwise commands race the navigation and Cypress
+        // sees the target element detached mid-command.
+        cy.get('fx-repeatitem').should('have.length', 2)
+
         cy.get('.btn.add').click()
 
         cy.get('#task').type('foo')
