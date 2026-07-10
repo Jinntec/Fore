@@ -314,7 +314,7 @@ export default class ForeElementMixin extends HTMLElement {
     }
 
     if (path) {
-      existed = model.modelItems.find(item => item.path === path) || null;
+      existed = model._modelItemsByPath.get(path) || null;
       if (existed) {
         // CRITICAL: retarget existing ModelItem to the current backing object
         const isLensObject =
@@ -323,13 +323,10 @@ export default class ForeElementMixin extends HTMLElement {
           typeof targetNode.get === 'function' &&
           typeof targetNode.set === 'function';
 
-        if (isLensObject) {
-          existed.lens = targetNode;
-          existed.node = null;
-        } else {
-          existed.node = targetNode;
-          existed.lens = null;
-        }
+        model._setModelItemTarget(
+          existed,
+          isLensObject ? { lens: targetNode } : { node: targetNode },
+        );
 
         this.modelItem = existed;
         return existed;

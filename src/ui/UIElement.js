@@ -43,7 +43,6 @@ export class UIElement extends ForeElementMixin {
 
   disconnectedCallback() {
     if (this.modelItem && typeof this.modelItem.removeObserver === 'function') {
-      console.log(`[UIElement] Removing observer for ref="${this.ref}"`);
       this.modelItem.removeObserver(this);
     }
 
@@ -155,16 +154,13 @@ export class UIElement extends ForeElementMixin {
   //   throw new Error('You have to implement the method init!');
   // }
 
-  async refresh(force) {
-    console.log(`🔄 [UIElement] refresh() called for ref="${this.ref}"`);
-  }
+  async refresh(force) {}
 
   async refreshChildren(force) {
     await Fore.refreshChildren(this, force);
   }
 
   activate() {
-    console.log('UIElement.activate() called');
     this.removeAttribute('on-demand');
     this.style.display = '';
     if (this.isBound()) {

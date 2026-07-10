@@ -337,6 +337,75 @@ describe('repeat Tests', () => {
     expect(rItems.length).to.equal(3);
   });
 
+  it('keeps getModelItem resolvable per row through many inserts and deletes', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="record">
+          <fx-instance>
+            <data>
+              <task complete="false" due="2019-02-04">Pick up Milk</task>
+            </data>
+          </fx-instance>
+
+          <fx-bind ref="task">
+            <fx-bind ref="./text()" required="true()"></fx-bind>
+            <fx-bind ref="@complete" type="xs:boolean"></fx-bind>
+          </fx-bind>
+        </fx-model>
+        <fx-group>
+          <fx-repeat id="todos" ref="task" id="r-todos">
+            <template>
+              <fx-control ref="." id="task" type="text">
+                <label>Task</label>
+              </fx-control>
+              <fx-control ref="@complete" type="text">
+                <label>Complete</label>
+              </fx-control>
+            </template>
+          </fx-repeat>
+
+          <fx-trigger label="append">
+            <button>append</button>
+            <fx-append repeat="todos" ref="task"></fx-append>
+          </fx-trigger>
+          <fx-trigger label="delete-first">
+            <button>delete-first</button>
+            <fx-delete ref="task[1]"></fx-delete>
+          </fx-trigger>
+        </fx-group>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+    const model = el.querySelector('fx-model');
+    const [appendTrigger, deleteTrigger] = el.querySelectorAll('fx-trigger');
+
+    // covers the "dewey rewrite" path-mutation on insert (fx-repeat.js/repeat-base.js
+    // _createModelItemsRecursively), which must keep _modelItemsByPath in sync.
+    const ROW_COUNT = 60;
+    for (let i = 0; i < ROW_COUNT; i += 1) {
+      await appendTrigger.performActions();
+    }
+
+    expect(model.modelItems.length).to.be.greaterThan(ROW_COUNT);
+    expect(model._modelItemsByPath.size).to.equal(model.modelItems.length);
+    model.modelItems.forEach(mi => {
+      expect(model.getModelItem(mi.path)).to.equal(mi);
+      expect(model.getModelItem(mi.node)).to.equal(mi);
+    });
+
+    const DELETE_COUNT = 15;
+    for (let i = 0; i < DELETE_COUNT; i += 1) {
+      await deleteTrigger.performActions();
+    }
+
+    expect(model._modelItemsByPath.size).to.equal(model.modelItems.length);
+    model.modelItems.forEach(mi => {
+      expect(model.getModelItem(mi.path)).to.equal(mi);
+      expect(model.getModelItem(mi.node)).to.equal(mi);
+    });
+  });
+
   it('set the index to new item after append', async () => {
     const el = await fixtureSync(html`
       <fx-fore>

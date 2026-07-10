@@ -1113,12 +1113,6 @@ export class FxFore extends HTMLElement {
       this.initialRun = false;
       this.style.visibility = 'visible';
 
-      console.info(
-        `%c ✅ refresh-done on #${this.id}`,
-        'background:darkorange; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
-        this.getModel().modelItems,
-      );
-
       // Record timing before dispatching 'refresh-done' since listeners (eg. fx-debugger)
       // may synchronously read this.debugInfo.lastRefresh in response to the event.
       this.debugInfo.lastRefresh = {

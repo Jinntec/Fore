@@ -532,7 +532,10 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
       if (mi.path.startsWith(`${parentBaseInChildStyle}_`)) return;
 
-      mi.path = `${parentBaseInChildStyle}_${op}${mi.path.slice(parentBaseInChildStyle.length)}`;
+      this.getModel()._setModelItemPath(
+        mi,
+        `${parentBaseInChildStyle}_${op}${mi.path.slice(parentBaseInChildStyle.length)}`,
+      );
     };
 
     Array.from(parentNode.children).forEach(child => {

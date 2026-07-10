@@ -82,6 +82,42 @@ describe('model tests', () => {
     expect(mi3.path).to.equal('$default/c[1]');
   });
 
+  it('keeps _modelItemsByPath/_modelItemsByKey in sync with modelItems', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="model1">
+          <fx-instance>
+            <data>
+              <a>A</a>
+              <b>B</b>
+              <c>C</c>
+            </data>
+          </fx-instance>
+          <fx-bind ref="a"></fx-bind>
+          <fx-bind ref="b"></fx-bind>
+          <fx-bind ref="c"></fx-bind>
+        </fx-model>
+        <fx-group collapse="true">
+          <fx-control ref="a"><label slot="label">A</label></fx-control>
+          <fx-control ref="b"><label slot="label">B</label></fx-control>
+          <fx-control ref="c"><label slot="label">C</label></fx-control>
+        </fx-group>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+    const model = el.querySelector('fx-model');
+
+    expect(model._modelItemsByPath.size).to.equal(model.modelItems.length);
+
+    model.modelItems.forEach(mi => {
+      expect(model.getModelItem(mi.path)).to.equal(mi);
+      expect(model.getModelItem(mi.node)).to.equal(mi);
+      expect(model._modelItemsByPath.get(mi.path)).to.equal(mi);
+      expect(model._modelItemsByKey.get(mi.node)).to.equal(mi);
+    });
+  });
+
   it('rebuilds and recalcuates correctly after value change', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
