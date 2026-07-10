@@ -5,15 +5,66 @@ import { getBucketsForNode } from 'fontoxpath';
  * as the `depends` function, but less explicit and will automatically be called for any node that
  * will be touched in the XPath.
  *
+ * By default it reads from the live DOM. When an `inner` facade is provided (e.g. the
+ * JSONDomFacade), all accessors delegate to it instead, still notifying `onNodeTouched` —
+ * this lets non-DOM data models participate in dependency tracking.
+ *
  * Maybe some more granularity is better. Maybe only notify a node's attributes are touched?
  *
  */
 export class DependencyNotifyingDomFacade {
   /**
    * @param  onNodeTouched - onNodeTouched A function what will be executed whenever a node is 'touched' by the XPath
+   * @param  inner - optional facade to delegate all accessors to (e.g. JSONDomFacade)
    */
-  constructor(onNodeTouched) {
+  constructor(onNodeTouched, inner = null) {
     this._onNodeTouched = onNodeTouched;
+    this._inner = inner;
+  }
+
+  /**
+   * Returns a facade sharing the same onNodeTouched callback but delegating to `inner`.
+   * Used by xpath-evaluation.js to route JSON contexts through the JSONDomFacade
+   * without callers having to know the context type.
+   *
+   * @param  inner - the facade to delegate to
+   */
+  withInner(inner) {
+    return new DependencyNotifyingDomFacade(this._onNodeTouched, inner);
+  }
+
+  /**
+   * Node identity/shape reads (used by the JSONDomFacade surface). Not treated as
+   * data dependencies — no notification.
+   */
+  getNodeType(node) {
+    if (this._inner) return this._inner.getNodeType(node);
+    return node.nodeType;
+  }
+
+  getNodeName(node) {
+    if (this._inner) return this._inner.getNodeName(node);
+    return node.nodeName;
+  }
+
+  getNodeValue(node) {
+    this._onNodeTouched(node);
+    if (this._inner) return this._inner.getNodeValue(node);
+    return node.nodeValue;
+  }
+
+  getChildren(node) {
+    if (this._inner) {
+      const children = this._inner.getChildren(node);
+      children.forEach(child => this._onNodeTouched(child));
+      return children;
+    }
+    return this.getChildNodes(node);
+  }
+
+  getChildNodeCount(node) {
+    if (this._inner) return this._inner.getChildNodeCount(node);
+    return node.childNodes.length;
   }
 
   /**
@@ -22,9 +73,9 @@ export class DependencyNotifyingDomFacade {
    *
    * @param  node -
    */
-  // eslint-disable-next-line class-methods-use-this
   getAllAttributes(node) {
     this._onNodeTouched(node); // <== Important!
+    if (this._inner) return this._inner.getAllAttributes(node);
     return Array.from(node.attributes);
   }
 
@@ -34,10 +85,12 @@ export class DependencyNotifyingDomFacade {
    * @param  node -
    * @param  attributeName -
    */
-  // eslint-disable-next-line class-methods-use-this
   getAttribute(node, attributeName) {
+    if (this._inner) {
+      this._onNodeTouched(node);
+      return this._inner.getAttribute(node, attributeName);
+    }
     const attr = node.getAttributeNode(attributeName);
-    console.log('[DomFacade] getAttribute touched:', attr);
     if (attr) this._onNodeTouched(attr);
     return attr?.value ?? null;
   }
@@ -49,8 +102,12 @@ export class DependencyNotifyingDomFacade {
    * @param  node -
    * @param  bucket - The bucket that matches the attribute that will be used.
    */
-  // eslint-disable-next-line class-methods-use-this
   getChildNodes(node, bucket) {
+    if (this._inner) {
+      const children = this._inner.getChildNodes(node, bucket);
+      children.forEach(child => this._onNodeTouched(child));
+      return children;
+    }
     const matchingNodes = Array.from(node.childNodes).filter(
       childNode => !bucket || getBucketsForNode(childNode).includes(bucket),
     );
@@ -64,13 +121,15 @@ export class DependencyNotifyingDomFacade {
    * @param  node -
    */
   getData(node) {
+    if (this._inner) {
+      this._onNodeTouched(node);
+      return this._inner.getData(node);
+    }
     if (node.nodeType === Node.ATTRIBUTE_NODE) {
-      // console.log('[DomFacade] getData on attribute:', node);
       this._onNodeTouched(node);
       return node.value;
     }
     // Text node
-    // console.log('[DomFacade] getData on text node parent:', node.parentNode);
     this._onNodeTouched(node.parentNode);
     return node.data;
   }
@@ -83,6 +142,11 @@ export class DependencyNotifyingDomFacade {
    * @param  bucket - The bucket that matches the attribute that will be used.
    */
   getFirstChild(node, bucket) {
+    if (this._inner) {
+      const child = this._inner.getFirstChild(node, bucket);
+      if (child) this._onNodeTouched(child);
+      return child;
+    }
     for (const child of node.childNodes) {
       if (!bucket || getBucketsForNode(child).includes(bucket)) {
         this._onNodeTouched(child);
@@ -99,8 +163,12 @@ export class DependencyNotifyingDomFacade {
    * @param  node -
    * @param  bucket - The bucket that matches the attribute that will be used.
    */
-  // eslint-disable-next-line class-methods-use-this
   getLastChild(node, bucket) {
+    if (this._inner) {
+      const child = this._inner.getLastChild(node, bucket);
+      if (child) this._onNodeTouched(child);
+      return child;
+    }
     const children = Array.from(node.childNodes).filter(
       child => !bucket || getBucketsForNode(child).includes(bucket),
     );
@@ -116,8 +184,12 @@ export class DependencyNotifyingDomFacade {
    * @param  node -
    * @param  bucket - The bucket that matches the nextSibling that is requested.
    */
-  // eslint-disable-next-line class-methods-use-this
   getNextSibling(node, bucket) {
+    if (this._inner) {
+      const sibling = this._inner.getNextSibling(node, bucket);
+      if (sibling) this._onNodeTouched(sibling);
+      return sibling;
+    }
     for (let sibling = node.nextSibling; sibling; sibling = sibling.nextSibling) {
       if (bucket && !getBucketsForNode(sibling).includes(bucket)) {
         // eslint-disable-next-line no-continue
@@ -135,18 +207,10 @@ export class DependencyNotifyingDomFacade {
    *
    * @param  node - the starting node
    */
-  // eslint-disable-next-line class-methods-use-this
   getParentNode(node) {
-    const parent = node.parentNode;
-    /*
-    if (
-      parent &&
-      (parent.nodeType === Node.ELEMENT_NODE || parent.nodeType === Node.ATTRIBUTE_NODE)
-    ) {
-      this._onNodeTouched(parent);
-    }
-*/
-    return parent;
+    // Deliberately not notifying: navigating up must not register a dependency on the parent.
+    if (this._inner) return this._inner.getParentNode(node);
+    return node.parentNode;
   }
 
   /**
@@ -156,9 +220,14 @@ export class DependencyNotifyingDomFacade {
    * @param  node -
    * @param  bucket - The bucket that matches the attribute that will be used.
    */
-  // eslint-disable-next-line class-methods-use-this
   getPreviousSibling(node, bucket) {
+    if (this._inner) {
+      const sibling = this._inner.getPreviousSibling(node, bucket);
+      if (sibling) this._onNodeTouched(sibling);
+      return sibling;
+    }
     for (let sibling = node.previousSibling; sibling; sibling = sibling.previousSibling) {
+      // eslint-disable-next-line no-continue
       if (bucket && !getBucketsForNode(sibling).includes(bucket)) continue;
       this._onNodeTouched(sibling);
       return sibling;
