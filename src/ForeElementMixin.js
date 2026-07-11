@@ -9,6 +9,13 @@ import getInScopeContext from './getInScopeContext.js';
 import { Fore } from './fore.js';
 import DependentXPathQueries from './DependentXPathQueries.js';
 import { getPath } from './xpath-path.js';
+import { DependencyNotifyingDomFacade } from './DependencyNotifyingDomFacade.js';
+
+/**
+ * Matches any XPath function call, optionally prefixed (e.g. `count(`, `fn:string-join(`).
+ * Used by _refNeedsDependencyTracking after the navigation-anchor functions are stripped.
+ */
+const FUNCTION_CALL_RE = /[A-Za-z][\w.-]*(?::[A-Za-z][\w.-]*)?\s*\(/;
 
 /**
  * Mixin containing all general functions that are shared by all Fore element classes.
@@ -66,6 +73,15 @@ export default class ForeElementMixin extends HTMLElement {
 
     this.dependencies = new DependentXPathQueries();
     this.ownerForm = null;
+
+    /**
+     * ModelItems this element observes because its ref expression read their nodes.
+     * Bucket-keyed: fx-control tracks two independent expressions (its own ref and its
+     * widget's ref) — a single Set would make each eval wrongly unregister the other's
+     * observers when diffing.
+     * @type {Map<string, Set<import('./modelitem.js').ModelItem>>}
+     */
+    this._refTrackedModelItems = new Map();
   }
 
   getDebugInfo() {
@@ -135,6 +151,76 @@ export default class ForeElementMixin extends HTMLElement {
   }
 
   /**
+   * Decides whether a ref expression needs generic dependency tracking. Navigation-only
+   * refs bind to exactly the node they return — attachObserver() already covers those.
+   * A ref that filters (predicate) or computes (any function call) reads nodes it never
+   * binds to, so its result can go stale without tracking. instance() and index() are
+   * navigation anchors, not computations: instance() only selects the evaluation root,
+   * and index() is handled by a dedicated 'item-changed' listener in UIElement.
+   * Restricted to elements with an `update()` observer callback (skips fx-bind).
+   * `$var`-only refs are covered by the variable-change consumer instead.
+   *
+   * @param {string} [refString] the expression to check, defaults to this element's ref
+   * @returns {boolean}
+   */
+  _refNeedsDependencyTracking(refString = this.ref) {
+    if (!refString) return false;
+    if (typeof this.update !== 'function') return false;
+    if (refString.includes('[')) return true;
+    const stripped = refString.replace(/\b(?:instance|index)\s*\(/g, '');
+    return FUNCTION_CALL_RE.test(stripped);
+  }
+
+  /**
+   * Resolves a node touched during ref evaluation to its (possibly lazily created)
+   * ModelItem so this element can observe it.
+   *
+   * @param {import('./fx-model.js').FxModel} model
+   * @param {Node} touchedNode a node reported by DependencyNotifyingDomFacade
+   * @returns {import('./modelitem.js').ModelItem|null}
+   */
+  _resolveModelItemForTouchedNode(model, touchedNode) {
+    let targetNode = touchedNode;
+    if (targetNode?.nodeType === Node.TEXT_NODE) targetNode = targetNode.parentNode;
+    if (!targetNode) return null;
+    return (
+      model.getModelItem(targetNode) ??
+      // the touched node may live in a different instance than the ref's primary one —
+      // resolve its instance per node, not from the expression
+      FxModel.lazyCreateModelItem(
+        model,
+        this.ref,
+        targetNode,
+        this,
+        model.getInstanceIdForNode(targetNode),
+      )
+    );
+  }
+
+  /**
+   * Registers this element as observer on the ModelItems of all nodes its ref
+   * evaluation touched, and unregisters from ModelItems no longer read (per bucket).
+   *
+   * @param {Set<Node>} touchedNodes nodes reported by DependencyNotifyingDomFacade
+   * @param {string} [bucket] tracking bucket, e.g. 'ref' or 'widget'
+   */
+  _trackRefDependencies(touchedNodes, bucket = 'ref') {
+    const model = this.getModel();
+    if (!model) return;
+    const newModelItems = new Set();
+    touchedNodes.forEach(n => {
+      const mi = this._resolveModelItemForTouchedNode(model, n);
+      if (mi) newModelItems.add(mi);
+    });
+    const previous = this._refTrackedModelItems.get(bucket);
+    previous?.forEach(mi => {
+      if (!newModelItems.has(mi)) mi.removeObserver(this);
+    });
+    newModelItems.forEach(mi => mi.addObserver(this));
+    this._refTrackedModelItems.set(bucket, newModelItems);
+  }
+
+  /**
    * evaluation of fx-bind and UiElements differ in details so that each class needs it's own implementation.
    */
   evalInContext() {
@@ -159,6 +245,13 @@ export default class ForeElementMixin extends HTMLElement {
       // console.warn('using default context ', this);
       // return;
     }
+    let touchedNodes = null;
+    let domFacade = null;
+    if (this._refNeedsDependencyTracking()) {
+      touchedNodes = new Set();
+      domFacade = new DependencyNotifyingDomFacade(node => touchedNodes.add(node));
+    }
+
     if (this.ref === '') {
       this.nodeset = inscopeContext;
     } else if (Array.isArray(inscopeContext)) {
@@ -174,16 +267,19 @@ export default class ForeElementMixin extends HTMLElement {
       });
   */
       // this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext[0], this);
-      this.nodeset = evaluateXPath(this.ref, inscopeContext[0], this);
+      this.nodeset = evaluateXPath(this.ref, inscopeContext[0], this, {}, {}, domFacade);
     } else {
       // this.nodeset = fx.evaluateXPathToFirstNode(this.ref, inscopeContext, null, {namespaceResolver: this.namespaceResolver});
       if (!inscopeContext) return;
       if (this.nodeName === 'FX-REPEAT') {
         // Repeats are special: they have multiple nodes in their nodeset
-        this.nodeset = evaluateXPath(this.ref, inscopeContext, this);
+        this.nodeset = evaluateXPath(this.ref, inscopeContext, this, {}, {}, domFacade);
       } else {
-        this.nodeset = evaluateXPath(this.ref, inscopeContext, this)[0] || null;
+        this.nodeset = evaluateXPath(this.ref, inscopeContext, this, {}, {}, domFacade)[0] || null;
       }
+    }
+    if (touchedNodes) {
+      this._trackRefDependencies(touchedNodes);
     }
     // console.log('UiElement evaluated to nodeset: ', this.nodeset);
   }

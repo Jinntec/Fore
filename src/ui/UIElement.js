@@ -46,6 +46,11 @@ export class UIElement extends ForeElementMixin {
       this.modelItem.removeObserver(this);
     }
 
+    this._refTrackedModelItems.forEach(modelItems => {
+      modelItems.forEach(mi => mi.removeObserver(this));
+    });
+    this._refTrackedModelItems.clear();
+
     for (const removeEventListener of this._removeEventListeners) {
       removeEventListener();
     }

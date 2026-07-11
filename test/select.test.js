@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import { html, fixture, expect, elementUpdated, oneEvent } from '@open-wc/testing';
+import { html, fixture, fixtureSync, expect, oneEvent } from '@open-wc/testing';
 
 import '../index.js';
 
@@ -226,7 +226,9 @@ describe('fx-control with select tests', () => {
   });
 
   it('honours namespace declarations in the templates', async () => {
-    const el = await fixture(html`
+    // fixtureSync so the 'refresh-done' listener is attached before the async
+    // src instance load and initial refresh complete
+    const el = fixtureSync(html`
       <fx-fore xmlns:example="http://www.example.com/">
         <fx-model>
           <fx-instance>
@@ -253,8 +255,7 @@ describe('fx-control with select tests', () => {
       </fx-fore>
     `);
 
-    //    await oneEvent(el, 'ready');
-    await elementUpdated(el);
+    await oneEvent(el, 'refresh-done');
 
     const wildCardNamespace = el.querySelector('#wildcard-namespace');
 

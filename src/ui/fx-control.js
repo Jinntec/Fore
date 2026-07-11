@@ -11,7 +11,6 @@ import { debounce } from '../events.js';
 import { FxModel } from '../fx-model.js';
 import { FxFore } from '../fx-fore.js';
 import { DependencyNotifyingDomFacade } from '../DependencyNotifyingDomFacade';
-import { extractPredicateDependencies } from '../extract-predicate-deps.js';
 import '../fx-instance.js';
 
 const WIDGETCLASS = 'widget';
@@ -805,23 +804,21 @@ export default class FxControl extends XfAbstractControl {
       const inscope = getInScopeContext(this, ref);
       // const nodeset = evaluateXPathToNodes(ref, inscope, this);
 
-      const touchedNodes = new Set();
-      const domFacade = new DependencyNotifyingDomFacade(node => touchedNodes.add(node));
+      let touchedNodes = null;
+      let domFacade = null;
+      if (this._refNeedsDependencyTracking(ref)) {
+        touchedNodes = new Set();
+        domFacade = new DependencyNotifyingDomFacade(node => touchedNodes.add(node));
+      }
 
-      const nodeset = evaluateXPath(ref, inscope, this, domFacade);
+      const nodeset = evaluateXPath(ref, inscope, this, {}, {}, domFacade);
+
+      if (touchedNodes) {
+        this._trackRefDependencies(touchedNodes, 'widget');
+      }
 
       const contextNode = Array.isArray(inscope) ? inscope[0] : inscope;
-      // console.log('Extracting model', this.getModel());
-      // console.log('Extracting model inited', this.getModel().inited);
-      const model = this.getModel();
       if (!contextNode) return;
-      // console.log('Extracting predicate deps from ref:', ref);
-      extractPredicateDependencies(
-        ref,
-        model,
-        mi => mi.addObserver(this),
-        node => model.getModelItem(node),
-      );
 
       // ### bail out when nodeset is array and empty
       if (Array.isArray(nodeset) && nodeset.length === 0) return;

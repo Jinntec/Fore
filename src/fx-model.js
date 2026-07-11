@@ -248,10 +248,13 @@ export class FxModel extends HTMLElement {
    * @param {string}            ref          The XPath ref that led to this model item
    * @param {Node}              node         The node the XPath led to
    * @param {ForeElementMixin)}  formElement  The form element making this model. Used to resolve variables against
+   * @param {string}            [knownInstanceId] instance the node belongs to, when the caller already
+   *                            resolved it per node (a touched node may live in a different instance
+   *                            than the ref's primary one); falls back to deriving it from the ref
    * @returns {ModelItem}
    */
-  static lazyCreateModelItem(model, ref, node, formElement) {
-    const instanceId = XPathUtil.resolveInstance(formElement, ref);
+  static lazyCreateModelItem(model, ref, node, formElement, knownInstanceId = null) {
+    const instanceId = knownInstanceId ?? XPathUtil.resolveInstance(formElement, ref);
     const instance = model.getInstance(instanceId);
     const fore = model.formElement;
 

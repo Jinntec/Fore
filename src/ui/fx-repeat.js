@@ -10,6 +10,7 @@ import { UIElement } from './UIElement.js';
 import { getPath } from '../xpath-path.js';
 import { FxModel } from '../fx-model.js';
 import { FxBind } from '../fx-bind.js';
+import { DependencyNotifyingDomFacade } from '../DependencyNotifyingDomFacade.js';
 
 /**
  * `fx-repeat`
@@ -967,7 +968,18 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       });
     }
 
-    const rawNodeset = evaluateXPath(this.ref, inscope, this);
+    let touchedNodes = null;
+    let domFacade = null;
+    if (this._refNeedsDependencyTracking()) {
+      touchedNodes = new Set();
+      domFacade = new DependencyNotifyingDomFacade(node => touchedNodes.add(node));
+    }
+
+    const rawNodeset = evaluateXPath(this.ref, inscope, this, {}, {}, domFacade);
+
+    if (touchedNodes) {
+      this._trackRefDependencies(touchedNodes);
+    }
 
     this._observeJsonPredicateDependencies(inscope);
 

@@ -16,6 +16,7 @@
  */
 import { Fore } from '../fore.js';
 import { evaluateXPath } from '../xpath-evaluation.js';
+import { DependencyNotifyingDomFacade } from '../DependencyNotifyingDomFacade.js';
 import getInScopeContext from '../getInScopeContext.js';
 import { withDraggability } from '../withDraggability.js';
 import { UIElement } from './UIElement.js';
@@ -179,6 +180,7 @@ export class RepeatBase extends withDraggability(UIElement, false) {
   }
 
   disconnectedCallback() {
+    if (super.disconnectedCallback) super.disconnectedCallback();
     this.getOwnerForm().removeEventListener('deleted', this.handleDelete);
     this.getOwnerForm().removeEventListener('insert', this.handleInsert);
   }
@@ -254,17 +256,19 @@ export class RepeatBase extends withDraggability(UIElement, false) {
       });
     }
 
-    /*
-              this.touchedPaths = new Set();
-              const instance = XPathUtil.resolveInstance(this, this.ref);
-              const depTrackDomfacade = new DependencyNotifyingDomFacade((node) => {
-                  this.touchedPaths.add(XPathUtil.getPath(node, instance));
-              });
-              const rawNodeset = evaluateXPath(this.ref, inscope, this, {}, {}, depTrackDomfacade );
-        */
-    const rawNodeset = evaluateXPath(this.ref, inscope, this);
+    let touchedNodes = null;
+    let domFacade = null;
+    if (this._refNeedsDependencyTracking()) {
+      touchedNodes = new Set();
+      domFacade = new DependencyNotifyingDomFacade(node => touchedNodes.add(node));
+    }
 
-    // console.log('Touched!', this.ref, [...this.touchedPaths].join(', '));
+    const rawNodeset = evaluateXPath(this.ref, inscope, this, {}, {}, domFacade);
+
+    if (touchedNodes) {
+      this._trackRefDependencies(touchedNodes);
+    }
+
     if (rawNodeset.length === 1 && Array.isArray(rawNodeset[0])) {
       // This XPath likely returned an XPath array. Just collapse to that array
       this.nodeset = rawNodeset[0];
