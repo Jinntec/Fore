@@ -295,7 +295,7 @@ describe('var Tests', () => {
     expect(total.textContent).to.equal('30');
   });
 
-  it('dispatches xforms-binding-error when a variable is declared twice (shadowing)', async () => {
+  it('dispatches binding-error when a variable is declared twice (shadowing)', async () => {
     const el = fixtureSync(html`
       <fx-fore>
         <fx-model>
@@ -312,7 +312,7 @@ describe('var Tests', () => {
 
     // registration happens during async init — listen before refresh-done
     let bindingError = false;
-    el.addEventListener('xforms-binding-error', () => {
+    el.addEventListener('binding-error', () => {
       bindingError = true;
     });
     await oneEvent(el, 'refresh-done');

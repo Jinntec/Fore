@@ -103,7 +103,7 @@ export class FxVariable extends ForeElementMixin {
   setInScopeVariables(inScopeVariables) {
     if (inScopeVariables.has(this.name)) {
       console.error(`The variable ${this.name} is declared more than once`);
-      Fore.dispatch(this, 'xforms-binding-error', {});
+      Fore.dispatch(this, 'binding-error', {});
       return;
     }
     inScopeVariables.set(this.name, this);
