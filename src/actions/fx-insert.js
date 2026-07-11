@@ -630,7 +630,7 @@ export class FxInsert extends AbstractAction {
 
       if (this.position && this.position === 'before') {
         insertLocationNode.parentNode.insertBefore(originSequenceClone, insertLocationNode);
-        fore.signalChangeToElement(insertLocationNode.parentNode);
+        fore.signalChangeToElement(insertLocationNode.parentNode.localName);
         fore.signalChangeToElement(originSequenceClone.localName);
       }
 
@@ -638,16 +638,16 @@ export class FxInsert extends AbstractAction {
         index += 1;
         if (this.hasAttribute('context') && this.hasAttribute('ref')) {
           inscope.append(originSequenceClone);
-          fore.signalChangeToElement(insertLocationNode);
+          fore.signalChangeToElement(insertLocationNode.localName);
           fore.signalChangeToElement(originSequenceClone.localName);
         } else if (this.hasAttribute('context')) {
           index = 1;
           insertLocationNode.prepend(originSequenceClone);
-          fore.signalChangeToElement(insertLocationNode);
+          fore.signalChangeToElement(insertLocationNode.localName);
           fore.signalChangeToElement(originSequenceClone.localName);
         } else {
           insertLocationNode.insertAdjacentElement('afterend', originSequenceClone);
-          fore.signalChangeToElement(insertLocationNode);
+          fore.signalChangeToElement(insertLocationNode.localName);
           fore.signalChangeToElement(originSequenceClone.localName);
         }
       }

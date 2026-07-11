@@ -846,6 +846,14 @@ export class FxFore extends HTMLElement {
     const active = document.activeElement;
     if (active && active !== document.body && this.contains(active)) {
       active.blur();
+      // In a window without OS focus (background window, e.g. a windowed test run),
+      // blur() does not dispatch a 'blur' event — nothing is really focused at the OS
+      // level — so fx-control's commit listener never runs and the pending edit is
+      // silently lost. Dispatch a synthetic blur to commit it; harmless if redundant
+      // (an unchanged value discards its undo capture).
+      if (!document.hasFocus()) {
+        active.dispatchEvent(new FocusEvent('blur'));
+      }
     }
   }
 
@@ -966,6 +974,7 @@ export class FxFore extends HTMLElement {
    * @param {string} localNameOfElement
    */
   signalChangeToElement(localNameOfElement) {
+    if (typeof localNameOfElement !== 'string' || !localNameOfElement) return;
     this._localNamesWithChanges.add(localNameOfElement);
   }
 
@@ -1100,6 +1109,9 @@ export class FxFore extends HTMLElement {
       if (isFullRefresh) {
         performance.mark('force-refresh-start');
         console.log('🔄 🔴🔴🔴 ### full refresh() on ', this);
+        // A full refresh re-evaluates every ref anyway — pending structural-change
+        // signals are consumed by it.
+        this._localNamesWithChanges.clear();
         await Fore.refreshChildren(this, force);
         performance.mark('force-refresh-end');
         performance.measure('force-refresh', 'force-refresh-start', 'force-refresh-end');
@@ -1108,9 +1120,11 @@ export class FxFore extends HTMLElement {
         // still starts in the same tick as refresh() itself — sync listeners (e.g.
         // action-performed) depend on that ordering.
         const variableConsumerRefreshes = this._refreshUIVariables();
+        const structuralConsumerRefreshes = this._refreshStructuralDependents();
         await this._processBatchedNotifications();
-        if (variableConsumerRefreshes.length > 0) {
-          await Promise.all(variableConsumerRefreshes);
+        const consumerRefreshes = [...variableConsumerRefreshes, ...structuralConsumerRefreshes];
+        if (consumerRefreshes.length > 0) {
+          await Promise.all(consumerRefreshes);
         }
       }
 
@@ -1219,6 +1233,45 @@ export class FxFore extends HTMLElement {
         changedNames.some(name => exprs.includes(`$${name}`)) ||
         (typeof el.dependencies?.isInvalidatedByVariableChange === 'function' &&
           el.dependencies.isInvalidatedByVariableChange(changedNames))
+      ) {
+        refreshPromises.push(el.refresh());
+      }
+    });
+    return refreshPromises;
+  }
+
+  /**
+   * Consumes the structural-change signals produced by fx-insert/fx-delete/fx-append/
+   * fx-setattribute (signalChangeToElement). Elements whose ref expressions may be
+   * affected by child-list changes to nodes with the signalled local names are
+   * refreshed — this catches refs that hold no observer on the changed node itself
+   * (e.g. a count() over rows that were inserted or deleted, or an attribute that
+   * did not exist when the ref was last evaluated).
+   *
+   * Pessimistic substring matching (DependentXPathQueries.isInvalidatedByChildlistChanges):
+   * false positives are cheap extra refreshes.
+   *
+   * Synchronous by design, like _refreshUIVariables — returns the consumer refresh()
+   * promises for the caller to await after the batched-notification drain.
+   *
+   * @returns {Promise[]}
+   * @private
+   */
+  _refreshStructuralDependents() {
+    if (this._localNamesWithChanges.size === 0) return [];
+    const changedNames = Array.from(this._localNamesWithChanges);
+    this._localNamesWithChanges.clear();
+
+    const refreshPromises = [];
+    this.querySelectorAll('[ref]').forEach(el => {
+      // Nested subforms consume their own signals
+      if (el.closest('fx-fore') !== this) return;
+      if (typeof el.refresh !== 'function') return;
+      // Actions only evaluate during execution; fx-var snapshots are evaluation-point-only
+      if (Fore.isActionElement(el.nodeName) || el.nodeName === 'FX-VAR') return;
+      if (
+        typeof el.dependencies?.isInvalidatedByChildlistChanges === 'function' &&
+        el.dependencies.isInvalidatedByChildlistChanges(changedNames)
       ) {
         refreshPromises.push(el.refresh());
       }

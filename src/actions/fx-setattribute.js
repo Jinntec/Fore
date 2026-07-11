@@ -71,6 +71,10 @@ export default class FxSetattribute extends AbstractAction {
     this.getOwnerForm().addToBatchedNotifications(canonical);
     this.needsUpdate = true;
     canonical.notify();
+    // On first-time attribute creation the ModelItem has no observers yet (no ref
+    // could have read a nonexistent attribute), so notify() alone reaches nobody.
+    // Signal a structural change so refs matching the owner element re-evaluate.
+    this.getOwnerForm().signalChangeToElement(mi.node.localName);
   }
 }
 

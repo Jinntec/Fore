@@ -1,15 +1,24 @@
 # `codelist-editor.html`'s row filter: from plain JS to a Fore `fx-bind[relevant]`
 
-**Status: resolved.** `codelist-editor.html`'s "Filter codes" search box now
-uses the idiomatic Fore pattern — `fx-bind[relevant]` +
-`fx-repeatitem[nonrelevant] { display: none }` — instead of the plain
-JS/DOM filtering this document originally explained the need for. Three real
-Fore-adjacent bugs blocked that pattern and the surrounding editor UI; all
-three are now fixed (commits `ac13863f`, `815e1540`, the
-`_processBatchedNotifications` fix below, and the `.kept-count` fix in bug 3
-below). This document keeps the original root-cause analysis as a historical
-record, and adds the two further bugs found while actually wiring the fix up
-against real (250–800+ row) codelists.
+**Status: resolved — including the framework-level fix for raw refs.**
+`codelist-editor.html`'s "Filter codes" search box uses the idiomatic Fore
+pattern — `fx-bind[relevant]` + `fx-repeatitem[nonrelevant] { display: none }`
+— instead of the plain JS/DOM filtering this document originally explained the
+need for. Three real Fore-adjacent bugs blocked that pattern and the
+surrounding editor UI; all three are fixed (commits `ac13863f`, `815e1540`,
+the `_processBatchedNotifications` fix below, and bug 3 below). This document
+keeps the original root-cause analysis as a historical record, and adds the
+further bugs found while actually wiring the fix up against real (250–800+
+row) codelists.
+
+**Since then, Fore grew generic ref-dependency tracking** (the
+`ref-dependency-tracking` work, 2026-07): raw ref expressions containing
+predicates or function calls are now dependency-tracked via
+`DependencyNotifyingDomFacade` + ModelItem observers, and structural changes
+(insert/delete/append/first-time `fx-setattribute`) are picked up by a
+consumer of `signalChangeToElement()` in the partial-refresh path. The
+plain-JS `.kept-count` workaround that bug 3 originally introduced has been
+**deleted** — the count now updates through the framework itself.
 
 ## Bug 1 (fixed): cross-instance `relevant` never reactively recomputed
 
@@ -180,11 +189,12 @@ A predicate written directly on the repeat, with no `fx-bind` involved —
 
 — goes through a completely different code path
 (`fx-repeat.js`'s `_evalNodeset()`, called from `refresh()`) and is **not**
-part of the recalculate/dependency-graph system at all. It only re-evaluates
-when something calls `.refresh()` on the repeat element, which
-`Fore.refreshChildren` only does for `force === true` (a full/forced
-refresh) — not for the plain recalculate cycle that `fx-control.setValue()`
-triggers. This is true regardless of same- vs. cross-instance:
+part of the recalculate/dependency-graph system at all. At the time of this
+analysis it only re-evaluated when something called `.refresh()` on the
+repeat element, which `Fore.refreshChildren` only does for `force === true`
+(a full/forced refresh) — not for the plain recalculate cycle that
+`fx-control.setValue()` triggers. This was true regardless of same- vs.
+cross-instance:
 
 ```js
 // confirmed on a same-instance predicate — no cross-instance bug involved here at all
@@ -192,12 +202,22 @@ await fill(input, 'Alpha');           // repeatCount stays unchanged
 await fore.refresh(true);             // repeatCount now correctly filtered
 ```
 
-So: **`fx-bind[relevant]` is the one that's genuinely designed to be
-reactive on ordinary value changes — but only within a single instance.** A
-raw predicate on the repeat `ref` needs a forced refresh either way, and an
-`fx-var` feeding a repeat's `ref` is subject to the same "only updates on a
-forced refresh" limitation (`fx-var` is also a plain `UI_ELEMENT`, refreshed
-the same way `fx-repeat` is).
+**This limitation is now fixed by generic ref-dependency tracking**: a repeat
+ref containing a predicate or a function call evaluates through a
+`DependencyNotifyingDomFacade`, registers the repeat as observer on every
+node the expression read, and re-evaluates on the next plain refresh after
+any of those nodes change. `fx-bind[relevant]` remains the recommended
+pattern for large-scale filtering (it's cheaper: relevance flips, no repeat
+re-materialization), but a raw predicate ref no longer freezes stale.
+
+`fx-var` went a different, spec-driven way: variables are **snapshots**,
+evaluated at XForms 2.0 evaluation points (model vars before
+rebuild/recalculate/refresh, UI vars during every refresh, action vars once
+per action execution in sequence) — never reactively. When a variable's
+value changes at its evaluation point, elements whose refs reference `$name`
+are invalidated and refreshed. Between evaluation points a variable
+intentionally keeps the nodes its expression returned (deletes and predicate
+changes do not affect it), per spec.
 
 (A separate, now-corrected mistake made while investigating this: placing an
 `fx-var` inside `<fx-model>` initially seemed to be its own bug, since
@@ -292,10 +312,11 @@ pass after the change.
   count quadratically — bug 2 above, also fixed. Filtering large (hundreds+
   of rows) repeats via `fx-bind[relevant]` is now the recommended, reactive,
   idiomatic approach; it no longer needs a plain-JS DOM workaround.
-- A predicate directly on `fx-repeat`'s `ref` (with or without a helper
-  `fx-var`) is still a different mechanism entirely and only re-evaluates on
-  a forced (`force===true`) refresh — unaffected by either fix above, and
-  still not the recommended pattern for reactive filtering.
+- A predicate directly on `fx-repeat`'s `ref` **is now dependency-tracked**
+  (generic ref-dependency tracking, 2026-07) and updates on a plain refresh
+  after a tracked node changes. For large repeats, `fx-bind[relevant]`
+  remains the recommended filtering pattern for performance reasons, not
+  correctness ones.
 - `codelist-editor.html` now filters via
   `fx-bind[ref="instance('codelist')/SimpleCodeList/Row" relevant="..."]`
   reading `instance('vars')/filtertext`, with
@@ -305,14 +326,33 @@ pass after the change.
   recomputed as part of the normal rebuild/recalculate cycle), instead of
   needing an explicit `submit-done` listener to manually re-run the filter.
 - A raw XPath expression on a control's `ref` (no `fx-bind` backing it, e.g.
-  `.kept-count`'s `count(...)`) is *never* dependency-tracked, regardless of
-  which instance(s) it reads — it only gets recomputed on a full/forced
-  refresh. Bug 3 above worked around this declaratively, by force-refreshing
-  that one control from `action-performed`/`value-changed` once a relevant
-  change has actually settled, rather than by trying to fold a scalar
-  aggregate into the bind/dependency-graph machinery.
+  `.kept-count`'s `count(...)`) **is now dependency-tracked** when it
+  contains a predicate or a function call: evaluation records every node it
+  reads and observes their ModelItems. Structural changes that observation
+  cannot see — deleted rows, attributes created for the first time by
+  `fx-setattribute` — are covered by the `signalChangeToElement()` consumer
+  in the partial-refresh path (pessimistic local-name matching against ref
+  expressions via `DependentXPathQueries.isInvalidatedByChildlistChanges`).
+  The bug 3 workaround below is deleted from the demo.
+- Remaining known gaps: JSON lookup refs (`?key` syntax bypasses the
+  fontoxpath facade — untracked, still need a forced refresh), and custom
+  function bodies (`fx-function` with `text/xpath`/`xquery`/JS) that navigate
+  to instance nodes on their own (the body evaluation doesn't receive the
+  caller's tracking facade; the function's *arguments* are tracked).
+- Template expressions `{…}` need no tracking: they are brute-force
+  re-evaluated on every refresh and every batched-notification drain, so
+  they stay correct throughout — a candidate for later selective re-eval as
+  a pure performance optimization (the evaluation entry points already
+  accept a facade).
 
-## Bug 3 (fixed): `.kept-count` freezes stale on load (and on any bulk `ui-keep` change)
+## Bug 3 (fixed — workaround since replaced by framework tracking): `.kept-count` freezes stale on load (and on any bulk `ui-keep` change)
+
+> **2026-07 update:** the plain-JS force-refresh workaround described in "The
+> fix" below has been **removed** from `codelist-editor.html`. `.kept-count`'s
+> `count(...)` ref is now tracked by the generic ref-dependency mechanism
+> (observers on every node the expression reads) plus the structural-change
+> consumer (insert/delete/append/first-time-attribute signals). The analysis
+> below is kept as a historical record of why the workaround existed.
 
 While verifying the above, the `.kept-count` `fx-output`
 (`ref="concat(count(instance('codelist')//Row[@ui-keep='true']), ' of ', ...)"`)

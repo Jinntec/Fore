@@ -466,7 +466,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     this.size = size;
   }
 
-  setIndex(index) {
+  setIndex(index, notifyDependents = true) {
     this.index = index;
 
     const rItems = this.querySelectorAll(':scope > fx-repeatitem');
@@ -479,7 +479,9 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     //
     // When setIndex is invoked as a reaction to a repeatitem click/focus,
     // the repeatitem already dispatched item-changed and dependents already react.
-    if (!this._settingIndexFromItemChanged) {
+    // refresh() passes notifyDependents=false when neither the index nor the node at
+    // the index changed — a repeat refresh alone is not an index change.
+    if (!this._settingIndexFromItemChanged && notifyDependents) {
       this.dispatchEvent(
         new CustomEvent('item-changed', {
           composed: false,
@@ -1008,6 +1010,8 @@ export class FxRepeat extends withDraggability(UIElement, false) {
   async refresh(force) {
     if (!this.inited) this.init();
 
+    const prevNodeset = this.nodeset;
+
     this._evalNodeset();
 
     let repeatItems = this.querySelectorAll(':scope > fx-repeatitem');
@@ -1073,7 +1077,14 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       await Fore.refreshChildren(this, force);
     }
 
-    this.setIndex(this.index);
+    // Notify index() dependents only when THIS refresh changed the current item,
+    // i.e. re-evaluating the nodeset put a different node at the current index.
+    // Index changes made elsewhere (repeatitem click/focus, programmatic setIndex)
+    // dispatch their own 'item-changed' — comparing against them here would
+    // re-announce them, firing a spurious duplicate on every repeat refresh that
+    // overlaps a click (e.g. one triggered by the structural-change consumer).
+    const nodeAt = ns => (Array.isArray(ns) ? ns[this.index - 1] : ns);
+    this.setIndex(this.index, nodeAt(prevNodeset) !== nodeAt(this.nodeset));
   }
 
   _initTemplate() {

@@ -403,18 +403,6 @@
   document.getElementById('s-load-customsource').addEventListener('submit', () => setLoading(true, 'Reading local file…'));
   document.getElementById('s-load-customsource').addEventListener('submit-done', () => setLoading(false));
   document.getElementById('s-load-customsource').addEventListener('submit-error', () => setLoading(false));
-
-  // .kept-count's ref is a raw XPath count(), not backed by an fx-bind, so it isn't part of
-  // Fore's dependency graph and never gets picked up by a targeted/partial refresh (only a
-  // full/forced one). Every action that can change which Rows carry @ui-keep='true' fires one
-  // of these two events once its data change is settled: 'action-performed' for light-DOM
-  // actions (loading a codelist, select all/none, invert, removing unchecked rows), and
-  // 'value-changed' for direct widget edits (the per-row checkbox), whose own fx-setvalue
-  // action lives in fx-control's shadow DOM and so never dispatches a composed 'action-performed'
-  // that could bubble out. See fore-reactivity-bug-findings.md for the full timing analysis.
-  const refreshKeptCount = () => document.getElementById('kept-count').refresh(true);
-  document.getElementById('fx-codelist-editor').addEventListener('action-performed', refreshKeptCount);
-  document.getElementById('fx-codelist-editor').addEventListener('value-changed', refreshKeptCount);
 </script>
 </body>
 </html>
