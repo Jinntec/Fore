@@ -1126,3 +1126,425 @@ describe('repeat progressive rendering (size)', () => {
     expect(repeat.querySelectorAll(':scope > fx-repeatitem').length).to.equal(4);
   });
 });
+
+describe('repeat true windowed virtualization (size + virtual)', () => {
+  it('renders only `size` rows as the initial window, windowStart=0, nodeset stays full', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data></data>
+          </fx-instance>
+        </fx-model>
+        <div id="scroller" style="height:120px;overflow:auto;">
+          <fx-repeat id="r-virtual" ref="1 to 40" size="6" virtual>
+            <template>
+              <div style="height:60px;">{.}</div>
+            </template>
+          </fx-repeat>
+        </div>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const repeat = el.querySelector('#r-virtual');
+    expect(repeat.querySelectorAll(':scope > fx-repeatitem').length).to.equal(6);
+    expect(repeat.nodeset.length).to.equal(40);
+    expect(repeat._windowStart).to.equal(0);
+    // Window starts at the beginning: no leading sentinel yet, only the trailing one.
+    expect(repeat.querySelectorAll('.fx-repeat-sentinel-top').length).to.equal(0);
+    expect(repeat.querySelectorAll('.fx-repeat-sentinel').length).to.equal(1);
+  });
+
+  it('scrolling down slides the window forward and keeps the rendered DOM count bounded', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data></data>
+          </fx-instance>
+        </fx-model>
+        <div id="scroller" style="height:120px;overflow:auto;">
+          <fx-repeat id="r-virtual" ref="1 to 40" size="6" virtual>
+            <template>
+              <div style="height:60px;">{.}</div>
+            </template>
+          </fx-repeat>
+        </div>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const repeat = el.querySelector('#r-virtual');
+    const scroller = el.querySelector('#scroller');
+
+    scroller.scrollTop = scroller.scrollHeight;
+    await waitUntil(() => repeat._windowStart > 0);
+
+    expect(repeat._windowStart).to.be.greaterThan(0);
+    // DOM stays close to `size`, never grows toward the full nodeset (40).
+    expect(repeat.querySelectorAll(':scope > fx-repeatitem').length).to.be.lessThan(20);
+  });
+
+  it('scrolling back up slides the window backward, still bounded, back toward windowStart=0', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data></data>
+          </fx-instance>
+        </fx-model>
+        <div id="scroller" style="height:120px;overflow:auto;">
+          <fx-repeat id="r-virtual" ref="1 to 40" size="6" virtual>
+            <template>
+              <div style="height:60px;">{.}</div>
+            </template>
+          </fx-repeat>
+        </div>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const repeat = el.querySelector('#r-virtual');
+    const scroller = el.querySelector('#scroller');
+
+    scroller.scrollTop = scroller.scrollHeight;
+    await waitUntil(() => repeat._windowStart > 0);
+    const advancedStart = repeat._windowStart;
+
+    scroller.scrollTop = 0;
+    await waitUntil(() => repeat._windowStart < advancedStart);
+
+    expect(repeat._windowStart).to.be.lessThan(advancedStart);
+    expect(repeat.querySelectorAll(':scope > fx-repeatitem').length).to.be.lessThan(20);
+  });
+
+  it('a previously-evicted-then-revisited row rebinds to the SAME ModelItem, not a new one', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data></data>
+          </fx-instance>
+        </fx-model>
+        <div id="scroller" style="height:120px;overflow:auto;">
+          <fx-repeat id="r-virtual" ref="1 to 40" size="6" virtual>
+            <template>
+              <div style="height:60px;">{.}</div>
+            </template>
+          </fx-repeat>
+        </div>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const repeat = el.querySelector('#r-virtual');
+    const scroller = el.querySelector('#scroller');
+
+    const firstNode = repeat.nodeset[0];
+    const modelItemBefore = repeat.getModel().getModelItem(firstNode);
+    expect(modelItemBefore).to.exist;
+
+    // Scroll far enough to evict row 0, then scroll back to bring it into view again.
+    scroller.scrollTop = scroller.scrollHeight;
+    await waitUntil(() => repeat._windowStart > 0);
+
+    scroller.scrollTop = 0;
+    await waitUntil(() => repeat._windowStart === 0);
+
+    const modelItemAfter = repeat.getModel().getModelItem(firstNode);
+    expect(modelItemAfter).to.equal(modelItemBefore);
+  });
+
+  it('setIndex() to an index outside the window performs a hard jump and resets scrollTop', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data></data>
+          </fx-instance>
+        </fx-model>
+        <div id="scroller" style="height:120px;overflow:auto;">
+          <fx-repeat id="r-virtual" ref="1 to 40" size="6" virtual>
+            <template>
+              <div style="height:60px;">{.}</div>
+            </template>
+          </fx-repeat>
+        </div>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const repeat = el.querySelector('#r-virtual');
+    const scroller = el.querySelector('#scroller');
+
+    repeat.setIndex(30);
+
+    expect(repeat.index).to.equal(30);
+    expect(repeat._windowStart).to.equal(29);
+    expect(repeat.querySelectorAll(':scope > fx-repeatitem').length).to.equal(6);
+    expect(scroller.scrollTop).to.equal(0);
+  });
+
+  it('setIndex() to an index already inside the window does not destroy/recreate rows', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data></data>
+          </fx-instance>
+        </fx-model>
+        <div id="scroller" style="height:120px;overflow:auto;">
+          <fx-repeat id="r-virtual" ref="1 to 40" size="6" virtual>
+            <template>
+              <div style="height:60px;">{.}</div>
+            </template>
+          </fx-repeat>
+        </div>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const repeat = el.querySelector('#r-virtual');
+    const firstRowBefore = repeat.querySelector(':scope > fx-repeatitem');
+
+    repeat.setIndex(3);
+
+    const firstRowAfter = repeat.querySelector(':scope > fx-repeatitem');
+    expect(firstRowAfter).to.equal(firstRowBefore);
+  });
+
+  it('degenerates to a full render with no sentinels when size >= nodeset.length', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data></data>
+          </fx-instance>
+        </fx-model>
+        <fx-repeat id="r-virtual" ref="1 to 5" size="10" virtual>
+          <template>{.}</template>
+        </fx-repeat>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const repeat = el.querySelector('#r-virtual');
+    expect(repeat.querySelectorAll(':scope > fx-repeatitem').length).to.equal(5);
+    expect(repeat._windowStart).to.equal(0);
+    expect(repeat.querySelectorAll('.fx-repeat-sentinel').length).to.equal(0);
+  });
+
+  it('`virtual` without `size` behaves as fully uncapped, ignoring the attribute', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data></data>
+          </fx-instance>
+        </fx-model>
+        <fx-repeat id="r-virtual" ref="1 to 10" virtual>
+          <template>{.}</template>
+        </fx-repeat>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const repeat = el.querySelector('#r-virtual');
+    expect(repeat.querySelectorAll(':scope > fx-repeatitem').length).to.equal(10);
+    expect(repeat._windowStart).to.equal(0);
+    expect(repeat.querySelectorAll('.fx-repeat-sentinel').length).to.equal(0);
+  });
+
+  it('XML insert above the window shifts windowStart/renderTarget without touching rendered rows', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="record">
+          <fx-instance>
+            <data>
+              <task>1</task><task>2</task><task>3</task><task>4</task><task>5</task> <task>6</task
+              ><task>7</task><task>8</task><task>9</task><task>10</task> <task>11</task
+              ><task>12</task><task>13</task><task>14</task><task>15</task> <task>16</task
+              ><task>17</task><task>18</task><task>19</task><task>20</task> <task>21</task
+              ><task>22</task><task>23</task><task>24</task><task>25</task> <task>26</task
+              ><task>27</task><task>28</task><task>29</task><task>30</task>
+            </data>
+          </fx-instance>
+          <fx-bind ref="task"></fx-bind>
+        </fx-model>
+        <div id="scroller" style="height:120px;overflow:auto;">
+          <fx-repeat id="r-virtual" ref="task" size="10" virtual>
+            <template>
+              <div style="height:60px;"><fx-output ref="."></fx-output></div>
+            </template>
+          </fx-repeat>
+        </div>
+        <fx-trigger label="insert-first">
+          <button>insert-first</button>
+          <fx-insert ref="task" position="before" at="1"></fx-insert>
+        </fx-trigger>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const repeat = el.querySelector('#r-virtual');
+
+    // Deterministically establish a mid-list window rather than simulating scroll: reaching
+    // Zone A only requires windowStart > 0, and _seekWindowTo() is the exact same primitive
+    // setIndex() uses for a hard jump - scroll-simulation timing (append/evict racing to
+    // converge) is exercised separately by the "scrolling down/up" tests above.
+    repeat._seekWindowTo(5);
+    expect(repeat._windowStart).to.equal(5);
+
+    const windowStartBefore = repeat._windowStart;
+    const renderedNodesBefore = Array.from(repeat.querySelectorAll(':scope > fx-repeatitem')).map(
+      ri => ri.nodeset,
+    );
+
+    const button = el.querySelector('fx-trigger');
+    await button.performActions();
+
+    // Same rendered nodes, just shifted down by one logical position - no DOM churn.
+    expect(repeat._windowStart).to.equal(windowStartBefore + 1);
+    const renderedNodesAfter = Array.from(repeat.querySelectorAll(':scope > fx-repeatitem')).map(
+      ri => ri.nodeset,
+    );
+    expect(renderedNodesAfter).to.deep.equal(renderedNodesBefore);
+  });
+
+  it('insert within the window evicts one row from the bottom to preserve window size', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="record">
+          <fx-instance>
+            <data>
+              <task>one</task><task>two</task><task>three</task><task>four</task>
+              <task>five</task>
+            </data>
+          </fx-instance>
+          <fx-bind ref="task"></fx-bind>
+        </fx-model>
+        <fx-repeat id="r-virtual" ref="task" size="2" virtual>
+          <template>
+            <fx-output ref="."></fx-output>
+          </template>
+        </fx-repeat>
+        <fx-trigger label="insert-first">
+          <button>insert-first</button>
+          <fx-insert ref="task" position="before" at="1"></fx-insert>
+        </fx-trigger>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const repeat = el.querySelector('#r-virtual');
+    expect(repeat.querySelectorAll(':scope > fx-repeatitem').length).to.equal(2);
+
+    const button = el.querySelector('fx-trigger');
+    await button.performActions();
+
+    expect(repeat.nodeset.length).to.equal(6);
+    // window size preserved - not grown to 3
+    expect(repeat.querySelectorAll(':scope > fx-repeatitem').length).to.equal(2);
+  });
+
+  it('delete of a rendered row backfills one row at the tail to keep the window full', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="record">
+          <fx-instance>
+            <data>
+              <task>one</task><task>two</task><task>three</task><task>four</task>
+              <task>five</task>
+            </data>
+          </fx-instance>
+          <fx-bind ref="task"></fx-bind>
+        </fx-model>
+        <fx-repeat id="r-virtual" ref="task" size="2" virtual>
+          <template>
+            <fx-output ref="."></fx-output>
+            <fx-trigger label="delete">
+              <button class="del">delete</button>
+              <fx-delete ref="."></fx-delete>
+            </fx-trigger>
+          </template>
+        </fx-repeat>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const repeat = el.querySelector('#r-virtual');
+    expect(repeat.querySelectorAll(':scope > fx-repeatitem').length).to.equal(2);
+
+    const firstDeleteTrigger = repeat.querySelector('fx-repeatitem fx-trigger');
+    await firstDeleteTrigger.performActions();
+
+    expect(repeat.nodeset.length).to.equal(4);
+    // backfilled from the tail - window still full, unlike Phase-1's non-virtual behavior
+    expect(repeat.querySelectorAll(':scope > fx-repeatitem').length).to.equal(2);
+  });
+
+  it('a bulk delete shrinking the nodeset below window size rebuilds a clean window at 0', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="record">
+          <fx-instance>
+            <data>
+              <task>1</task><task>2</task><task>3</task><task>4</task><task>5</task> <task>6</task
+              ><task>7</task><task>8</task><task>9</task><task>10</task> <task>11</task
+              ><task>12</task><task>13</task><task>14</task><task>15</task> <task>16</task
+              ><task>17</task><task>18</task><task>19</task><task>20</task> <task>21</task
+              ><task>22</task><task>23</task><task>24</task><task>25</task> <task>26</task
+              ><task>27</task><task>28</task><task>29</task><task>30</task>
+            </data>
+          </fx-instance>
+          <fx-bind ref="task"></fx-bind>
+        </fx-model>
+        <div id="scroller" style="height:120px;overflow:auto;">
+          <fx-repeat id="r-virtual" ref="task" size="4" virtual>
+            <template>
+              <div style="height:60px;"><fx-output ref="."></fx-output></div>
+            </template>
+          </fx-repeat>
+        </div>
+        <fx-trigger label="delete-most">
+          <button>delete-most</button>
+          <fx-delete ref="task[position() > 2]"></fx-delete>
+        </fx-trigger>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const repeat = el.querySelector('#r-virtual');
+    const scroller = el.querySelector('#scroller');
+
+    // See the equivalent comment in the "XML insert above the window" test above re:
+    // re-scrolling to the (growing) bottom as each append reveals more scrollable room.
+    for (let i = 0; i < 10 && repeat._windowStart === 0; i += 1) {
+      scroller.scrollTop = scroller.scrollHeight;
+      // eslint-disable-next-line no-await-in-loop
+      await new Promise(r => setTimeout(r, 100));
+    }
+    await waitUntil(() => repeat._windowStart > 0);
+
+    const button = el.querySelector('fx-trigger');
+    await button.performActions();
+
+    expect(repeat.nodeset.length).to.equal(2);
+    expect(repeat._windowStart).to.equal(0);
+    expect(repeat.querySelectorAll(':scope > fx-repeatitem').length).to.equal(2);
+    expect(repeat.querySelectorAll('.fx-repeat-sentinel').length).to.equal(0);
+  });
+});

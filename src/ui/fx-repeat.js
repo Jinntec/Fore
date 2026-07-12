@@ -65,11 +65,20 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
     // Progressive rendering (size cap + IntersectionObserver sentinel).
     // `_sentinel !== null` is the single source of truth for "a cap is active and there
-    // is more to reveal" - see _syncSentinel().
+    // is more to reveal" - see _syncSentinels().
     this._sizeLimit = Infinity;
     this._renderTarget = 0;
     this._sentinel = null;
     this._sentinelObserver = null;
+
+    // True windowed virtualization (opt-in via `virtual` attribute + `size`).
+    // `_windowStart` is the 0-based logical index of the first RENDERED row; it is always 0
+    // when `_virtual` is false, which is what makes every `+ this._windowStart` offset below
+    // degenerate to exactly today's prefix-window math for non-virtual repeats.
+    this._virtual = false;
+    this._windowStart = 0;
+    this._topSentinel = null;
+    this._topSentinelObserver = null;
 
     this.handleInsertHandler = null;
     this.handleDeleteHandler = null;
@@ -158,6 +167,15 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     return Number.isFinite(n) && n > 0 ? n : Infinity;
   }
 
+  /**
+   * True windowed virtualization is opt-in via `virtual`, and only meaningful together with
+   * a finite `size` (which becomes the window size rather than a prefix cap). `virtual`
+   * without `size` degenerates to fully uncapped, exactly like `size` being absent.
+   */
+  _isVirtual() {
+    return this.hasAttribute('virtual') && this._getSizeLimit() !== Infinity;
+  }
+
   connectedCallback() {
     super.connectedCallback();
     this.template = this.querySelector('template');
@@ -228,6 +246,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
       const inserted = detail.insertedNodes;
       const insertionIndex = this.nodeset.indexOf(inserted) + 1; // 1-based
+      const relIdx = insertionIndex - 1; // 0-based logical index of the inserted row
 
       const repeatItems = Array.from(
         this.querySelectorAll(
@@ -238,24 +257,39 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       // Uncapped repeats always materialize immediately: `_renderTarget` is only resynced to
       // the full nodeset length inside refresh(), which may not have run yet between two
       // synchronous inserts, so it can't be trusted as a window boundary when uncapped.
-      const withinWindow = this._sizeLimit === Infinity || insertionIndex <= this._renderTarget;
+      // Zone B (within window): today's "within window" case, offset by `_windowStart`.
+      const withinWindow =
+        this._sizeLimit === Infinity ||
+        (relIdx >= this._windowStart && relIdx < this._renderTarget);
+      // Zone A (before window): only reachable in virtual mode - `_windowStart` is always 0
+      // off virtual mode, so `relIdx < 0` never holds.
+      const beforeWindow = this._virtual && relIdx < this._windowStart;
 
       if (withinWindow) {
+        const relativePos = relIdx - this._windowStart;
         const newRepeatItem = this._createNewRepeatItem();
 
-        const beforeNode = repeatItems[insertionIndex - 1] ?? this._sentinel ?? null;
+        const beforeNode = repeatItems[relativePos] ?? this._sentinel ?? null;
         this.insertBefore(newRepeatItem, beforeNode);
         newRepeatItem.index = insertionIndex;
         this._initVariables(newRepeatItem);
 
         newRepeatItem.nodeset = inserted;
 
-        for (let i = insertionIndex - 1; i < repeatItems.length; ++i) {
+        for (let i = relativePos; i < repeatItems.length; ++i) {
           repeatItems[i].index += 1;
         }
 
         this._renderTarget += 1;
-        this._syncSentinel();
+        // In virtual mode, an in-window insert momentarily grows the window past `size` -
+        // evict one row from the opposite (bottom) end to restore window size. This is a
+        // local, in-place insert, not a scroll-driven slide, so no scrollTop correction is
+        // needed either way (known limitation: this always evicts from the bottom regardless
+        // of where in the window the insert landed - see plan's "known limitation" note).
+        if (this._virtual && this._renderTarget - this._windowStart > this._sizeLimit) {
+          this._evictFromBottom(1);
+        }
+        this._syncSentinels();
 
         this.opNum++;
         let parentModelItem = FxBind.createModelItem(this.ref, inserted, newRepeatItem, this.opNum);
@@ -268,10 +302,36 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
         fore.scanForNewTemplateExpressionsNextRefresh();
         fore.addToBatchedNotifications(newRepeatItem);
+      } else if (beforeWindow) {
+        // Zone A: inserted above the rendered window. The rendered rows are still correct
+        // (same node identities) - only their logical position shifted by one. No DOM
+        // change; just shift the window's bookkeeping to match.
+        this._windowStart += 1;
+        this._renderTarget += 1;
+        this._reindexRenderedRows();
+        this._syncSentinels();
+
+        // IMPORTANT: do NOT fall through to the shared setIndex(insertionIndex) below, and do
+        // NOT route the index bump through setIndex() either - both would run the
+        // window-membership check and, since `this.index` (still pointing wherever it did
+        // before this insert - raw scrolling never updates it, only setIndex() does) may now
+        // resolve to a position outside the window we just deliberately left untouched,
+        // trigger an unwanted seek-jump that destroys/rebuilds this exact window. Nothing
+        // rendered actually moved (Zone A never touches DOM), so only the numeric index
+        // needs to shift to keep pointing at the same logical row - update the attribute
+        // directly. Known limitation: index()-dependents elsewhere in the form aren't
+        // notified of this silent renumbering (no 'item-changed' dispatch) - acceptable since
+        // Zone A only fires for inserts above an actively-scrolled-away window, an already
+        // rare interaction.
+        if (this.index >= insertionIndex) {
+          this.index += 1;
+        }
+        return;
       }
-      // else: inserted beyond the rendered window. this.nodeset already reflects the insert
-      // (re-evaluated above) - there's no DOM row to create yet. setIndex() below triggers
-      // growth-on-demand, which materializes it when/if navigation reaches that far.
+      // else: Zone C - inserted beyond the rendered window. this.nodeset already reflects
+      // the insert (re-evaluated above) - there's no DOM row to create yet. setIndex() below
+      // triggers growth-on-demand (non-virtual) or a seek jump (virtual) if navigation
+      // reaches that far.
 
       this.setIndex(insertionIndex);
     };
@@ -432,12 +492,16 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     const pos0 = insertionIndex1 - 1;
 
     // See the equivalent comment in the XML insert handler above.
-    const withinWindow = this._sizeLimit === Infinity || pos0 < this._renderTarget;
+    const withinWindow =
+      this._sizeLimit === Infinity || (pos0 >= this._windowStart && pos0 < this._renderTarget);
+    const beforeWindow = this._virtual && pos0 < this._windowStart;
 
     if (withinWindow) {
+      const relativePos = pos0 - this._windowStart;
+
       // 3) Insert DOM row: set nodeset/index BEFORE inserting into DOM.
       const before = repeatItems();
-      const beforeNode = before[pos0] ?? this._sentinel ?? null;
+      const beforeNode = before[relativePos] ?? this._sentinel ?? null;
 
       const newRepeatItem = this._createNewRepeatItem();
       newRepeatItem.index = pos0 + 1;
@@ -455,16 +519,21 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       fore.addToBatchedNotifications(newRepeatItem);
 
       this._renderTarget += 1;
-      this._syncSentinel();
+      // See the equivalent comment in the XML insert handler above.
+      if (this._virtual && this._renderTarget - this._windowStart > this._sizeLimit) {
+        this._evictFromBottom(1);
+      }
+      this._syncSentinels();
 
-      // 4) Rebind shifted rows (pos0+1..end) and refresh only those.
+      // 4) Rebind shifted rows (relativePos+1..end) and refresh only those.
       const after = repeatItems();
 
-      for (let i = pos0 + 1; i < after.length; i++) {
+      for (let i = relativePos + 1; i < after.length; i++) {
         const ri = after[i];
-        ri.index = i + 1;
+        const logicalIdx = this._windowStart + i;
+        ri.index = logicalIdx + 1;
 
-        const newNode = this.nodeset[i];
+        const newNode = this.nodeset[logicalIdx];
         if (ri.nodeset !== newNode) {
           ri.nodeset = newNode;
           if (fore.createNodes) fore.initData(ri);
@@ -472,9 +541,26 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
         fore.addToBatchedNotifications(ri);
       }
+    } else if (beforeWindow) {
+      // Zone A: see the equivalent comment in the XML insert handler above - must NOT go
+      // through setIndex() at all (neither for pos0+1 nor for an adjusted value), since
+      // `this.index` may already point outside this deliberately-untouched window (raw
+      // scrolling never updates it) and setIndex()'s window-membership check would treat
+      // that as an out-of-window navigation, triggering an unwanted seek-jump.
+      this._windowStart += 1;
+      this._renderTarget += 1;
+      this._reindexRenderedRows();
+      this._syncSentinels();
+
+      // insertionIndex1 (outer scope) already equals pos0 + 1.
+      if (this.index >= insertionIndex1) {
+        this.index += 1;
+      }
+      return;
     }
-    // else: inserted beyond the rendered window - no DOM row to create, nothing to rebind.
-    // setIndex() below triggers growth-on-demand if navigation reaches that far.
+    // else: Zone C - inserted beyond the rendered window - no DOM row to create, nothing to
+    // rebind. setIndex() below triggers growth-on-demand (non-virtual) or a seek jump
+    // (virtual) if navigation reaches that far.
 
     // Select inserted row
     this.setIndex(pos0 + 1);
@@ -503,6 +589,12 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       this._sentinelObserver = null;
     }
     this._sentinel = null;
+
+    if (this._topSentinelObserver) {
+      this._topSentinelObserver.disconnect();
+      this._topSentinelObserver = null;
+    }
+    this._topSentinel = null;
   }
 
   get repeatSize() {
@@ -520,14 +612,23 @@ export class FxRepeat extends withDraggability(UIElement, false) {
   setIndex(index, notifyDependents = true) {
     this.index = index;
 
-    // Growth-on-demand: navigation (keyboard, index('id') dependents, programmatic) to an
-    // index beyond the currently rendered window front-fills up through it.
     if (this._sizeLimit !== Infinity && Number.isFinite(index) && index >= 1) {
-      this._growRenderTarget(index);
+      if (this._virtual) {
+        // Sliding window: navigation to an index outside the window can't be front-filled
+        // (there's no stable prefix to grow from) - it's a hard jump instead. See
+        // _seekWindowTo(). Navigation to an index already inside the window is a no-op here.
+        const logicalIdx = index - 1;
+        const inWindow = logicalIdx >= this._windowStart && logicalIdx < this._renderTarget;
+        if (!inWindow) this._seekWindowTo(logicalIdx);
+      } else {
+        // Growth-on-demand: navigation (keyboard, index('id') dependents, programmatic) to
+        // an index beyond the currently rendered window front-fills up through it.
+        this._growRenderTarget(index);
+      }
     }
 
     const rItems = this.querySelectorAll(':scope > fx-repeatitem');
-    const selected = rItems[this.index - 1];
+    const selected = rItems[this.index - 1 - this._windowStart];
 
     this.applyIndex(selected);
 
@@ -664,36 +765,59 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       if (nextIndex1 > d1) nextIndex1 -= 1;
     }
 
+    // Three-zone split against [_windowStart, _renderTarget), using PRE-delete indices
+    // (indices0 already are pre-delete, via detail.deletedIndexes0 - no ordering hazard here,
+    // unlike the XML path's handleDelete()).
     const before = repeatItems();
+    let windowShiftFromAbove = 0; // count of Zone-A deletions (above the window)
+    let renderedRemovedCount = 0; // count of Zone-B deletions (actually rendered)
+
     for (const idx0 of indices0) {
-      const itemEl = before[idx0];
-      if (!itemEl) continue;
+      if (idx0 < this._windowStart) {
+        // Zone A: above window - rendered rows unaffected, window floor shifts down by one.
+        windowShiftFromAbove += 1;
+      } else if (idx0 < this._renderTarget) {
+        // Zone B: rendered.
+        const domPos = idx0 - this._windowStart;
+        const itemEl = before[domPos];
+        if (itemEl) {
+          try {
+            fore?.unRegisterLazyElement?.(itemEl);
+          } catch (_e) {}
 
-      try {
-        fore?.unRegisterLazyElement?.(itemEl);
-      } catch (_e) {}
-
-      itemEl.remove();
+          itemEl.remove();
+          renderedRemovedCount += 1;
+        }
+      }
+      // else: Zone C - below window, no DOM row.
     }
 
     this._evalNodeset();
 
-    const removedRenderedCount = indices0.filter(i0 => i0 < before.length).length;
-    this._renderTarget = Math.max(0, this._renderTarget - removedRenderedCount);
-    this._renderTarget = Math.min(
-      this._renderTarget,
-      Array.isArray(this.nodeset) ? this.nodeset.length : 0,
-    );
-    this._syncSentinel();
+    this._windowStart = Math.max(0, this._windowStart - windowShiftFromAbove);
+    this._renderTarget = this._windowStart + (before.length - renderedRemovedCount);
+    const totalAfterDelete = Array.isArray(this.nodeset) ? this.nodeset.length : 0;
+    this._renderTarget = Math.min(this._renderTarget, totalAfterDelete);
 
-    const start0 = Math.min(...indices0);
+    // Virtual mode: a mid-window delete is not a scroll event - the user still expects a
+    // full window, so backfill from the tail if more nodeset remains below.
+    if (this._virtual) {
+      const deficit = this._sizeLimit - (this._renderTarget - this._windowStart);
+      if (deficit > 0 && this._renderTarget < totalAfterDelete) {
+        this._slideWindowDown(deficit);
+      }
+    }
+    this._syncSentinels();
+
+    // Rebind every currently rendered row to its (possibly shifted) logical node. The
+    // `ri.nodeset !== newNode` guard below makes this cheap for rows that didn't move.
     const after = repeatItems();
-
-    for (let i = start0; i < after.length; i++) {
+    for (let i = 0; i < after.length; i++) {
       const ri = after[i];
-      ri.index = i + 1;
+      const logicalIdx = this._windowStart + i;
+      ri.index = logicalIdx + 1;
 
-      const newNode = Array.isArray(this.nodeset) ? this.nodeset[i] : null;
+      const newNode = Array.isArray(this.nodeset) ? this.nodeset[logicalIdx] : null;
       if (ri.nodeset !== newNode) {
         ri.nodeset = newNode;
         if (fore?.createNodes) fore.initData(ri);
@@ -702,19 +826,29 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       fore?.addToBatchedNotifications?.(ri);
     }
 
-    const newLen = after.length;
-    if (newLen === 0) {
+    // Clamp against the LOGICAL total, not the rendered DOM count - under a size cap the two
+    // differ, and clamping to the rendered count would make it impossible to navigate to a
+    // not-yet-rendered logical index (setIndex()'s own growth-on-demand/seek-jump handles
+    // materializing it).
+    if (totalAfterDelete === 0) {
       this.setAttribute('index', '0');
       this.index = 0;
       this._removeIndexMarker?.();
       return;
     }
 
-    nextIndex1 = Math.max(1, Math.min(nextIndex1, newLen));
+    nextIndex1 = Math.max(1, Math.min(nextIndex1, totalAfterDelete));
     this.setIndex(nextIndex1);
   }
 
   handleDelete(deleted) {
+    // Captured BEFORE _evalNodeset() runs below, so it reflects the PRE-delete logical
+    // position - needed to distinguish "deleted row was above the window" (Zone A) from
+    // "deleted row was below the window" (Zone C) when the row isn't found among rendered
+    // items. (_evalNodeset() already reflects the post-delete instance state by the time
+    // this handler runs, since the model mutation happens before the 'deleted' event fires.)
+    const priorIdx = Array.isArray(this.nodeset) ? this.nodeset.indexOf(deleted) : -1;
+
     const items = Array.from(
       this.querySelectorAll(
         ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
@@ -727,27 +861,50 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
     const indexToRemove = items.findIndex(item => item.nodeset === deleted);
     if (indexToRemove === -1) {
-      // Deleted node was never rendered (beyond the render window): no DOM row to remove,
-      // but the window ceiling may now exceed the shrunk nodeset.
+      if (this._virtual && priorIdx >= 0 && priorIdx < this._windowStart) {
+        // Zone A: deleted row was above the window - rendered rows unaffected (same node
+        // identities), only their logical position shifted down by one. No DOM change;
+        // shift the window's bookkeeping and current index to match (mirrors the XML
+        // insert handler's Zone-A shift, in reverse). Deliberately does NOT call setIndex()
+        // - see the equivalent comment on the insert side re: `this.index` possibly already
+        // being outside this deliberately-untouched window (raw scrolling never updates it),
+        // which would make setIndex()'s window-membership check trigger an unwanted seek.
+        this._windowStart = Math.max(0, this._windowStart - 1);
+        this._renderTarget = Math.max(this._windowStart, this._renderTarget - 1);
+        this._reindexRenderedRows();
+        this._syncSentinels();
+        this.index = Math.max(1, this.index - 1);
+        return;
+      }
+      // Zone C (or non-virtual beyond-window): deleted node was never rendered - no DOM row
+      // to remove, but the window ceiling may now exceed the shrunk nodeset.
       this._renderTarget = Math.min(this._renderTarget, total);
-      this._syncSentinel();
+      this._syncSentinels();
       return;
     }
+
+    // Zone B: rendered.
     const itemToRemove = items[indexToRemove];
     itemToRemove.remove();
 
-    this._renderTarget = Math.min(Math.max(0, this._renderTarget - 1), total);
-    this._syncSentinel();
+    this._renderTarget = Math.max(this._windowStart, this._renderTarget - 1);
+    // Virtual mode: a mid-window delete is not a scroll event - the user still expects a
+    // full window, so backfill from the tail if more nodeset remains below.
+    if (this._virtual) {
+      const deficit = this._sizeLimit - (this._renderTarget - this._windowStart);
+      if (deficit > 0 && this._renderTarget < total) {
+        this._slideWindowDown(deficit);
+      }
+    }
+    this._syncSentinels();
 
-    const newLength = this.querySelectorAll(
-      ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
-    ).length;
-
-    let nextIndex = indexToRemove + 1;
-    if (newLength === 0) {
+    // Clamp against the LOGICAL total, not the rendered DOM count - see the equivalent
+    // comment in _handleJsonDeleted above.
+    let nextIndex = this._windowStart + indexToRemove + 1;
+    if (total === 0) {
       nextIndex = 0;
-    } else if (nextIndex > newLength) {
-      nextIndex = newLength;
+    } else if (nextIndex > total) {
+      nextIndex = total;
     }
 
     this.setIndex(nextIndex);
@@ -797,7 +954,244 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       Fore.dispatch(this, 'item-created', { nodeset: newItem.nodeset, pos: position });
     }
     this._renderTarget = newTarget;
-    this._syncSentinel();
+    this._syncSentinels();
+  }
+
+  /**
+   * Renumbers .index on every currently rendered row to match its logical position
+   * (_windowStart + DOM offset). Needed after any operation that shifts _windowStart
+   * without individually touching every row's index (prepend, eviction, Zone-A shifts).
+   */
+  _reindexRenderedRows() {
+    const rows = this.querySelectorAll(':scope > fx-repeatitem');
+    rows.forEach((row, i) => {
+      row.index = this._windowStart + i + 1;
+    });
+  }
+
+  /**
+   * Evicts up to `count` rows from the top of the rendered window, correcting scrollTop by
+   * the EXACT measured height of the removed rows (not an estimate) so the still-visible
+   * content doesn't visually jump. Only meaningful in virtual mode.
+   *
+   * Only rows CONFIRMED already scrolled a safe margin above the visible viewport are
+   * evicted, even if that's fewer than `count` - a bottom-sentinel intersection only proves
+   * the user has scrolled near the bottom of the currently rendered content, not that
+   * they've scrolled past every row in the leading edge. Evicting unconditionally would
+   * remove rows the user is still looking at, forcing a scrollTop correction bigger than the
+   * current scroll position (clamped to 0) and visibly yanking the viewport.
+   *
+   * The `_EVICT_MARGIN_PX` buffer is what keeps the freshly-created top sentinel (inserted
+   * right after eviction, at the new window's start) genuinely off-screen rather than
+   * exactly at the viewport boundary: without it, the scrollTop correction above would land
+   * precisely where content ends and the new sentinel begins, and the sentinel's very first
+   * IntersectionObserver reading (which reports the CURRENT state, not just future changes)
+   * would immediately report it as visible - triggering an instant slide back up and
+   * oscillating forever. Leaving this margin of already-scrolled-past content unevicted
+   * means the sentinel ends up genuinely above the fold, only intersecting once the user
+   * scrolls up for real.
+   */
+  _evictFromTop(count) {
+    const EVICT_MARGIN_PX = 100;
+    const scrollRoot =
+      this._findSentinelRoot() || document.scrollingElement || document.documentElement;
+    const containerTop =
+      scrollRoot && scrollRoot.getBoundingClientRect ? scrollRoot.getBoundingClientRect().top : 0;
+
+    const candidates = Array.from(this.querySelectorAll(':scope > fx-repeatitem')).slice(0, count);
+    const rows = [];
+    for (const row of candidates) {
+      if (row.getBoundingClientRect().bottom <= containerTop - EVICT_MARGIN_PX) rows.push(row);
+      else break;
+    }
+    if (rows.length === 0) return;
+
+    const removedHeight =
+      rows[rows.length - 1].getBoundingClientRect().bottom - rows[0].getBoundingClientRect().top;
+    // Captured BEFORE removal: removing the rows shrinks scrollHeight immediately, and the
+    // browser auto-clamps scrollTop to the new (smaller) max as a side effect of that DOM
+    // mutation - reading scrollTop again afterward (e.g. via `-=`) would read the
+    // ALREADY-CLAMPED value and double-subtract from it, overshooting past 0.
+    const scrollTopBeforeRemoval = scrollRoot ? scrollRoot.scrollTop : 0;
+
+    const fore = this.getOwnerForm();
+    rows.forEach(row => {
+      fore.unRegisterLazyElement(row);
+      row.remove();
+    });
+
+    this._windowStart += rows.length;
+    if (scrollRoot) scrollRoot.scrollTop = scrollTopBeforeRemoval - removedHeight;
+    this._reindexRenderedRows();
+  }
+
+  /**
+   * Evicts up to `count` rows from the bottom of the rendered window. Symmetric safety check
+   * to _evictFromTop: only rows CONFIRMED already below the visible viewport are evicted, so
+   * a row the user is currently looking at never disappears out from under them. No scrollTop
+   * correction is needed here - removing confirmed-below-the-fold content doesn't shift what's
+   * currently shown.
+   */
+  _evictFromBottom(count) {
+    const scrollRoot =
+      this._findSentinelRoot() || document.scrollingElement || document.documentElement;
+    // scrollRoot always resolves to a real element (document.documentElement is the final
+    // fallback), so this always has a getBoundingClientRect - no further fallback needed.
+    const containerBottom = scrollRoot.getBoundingClientRect().bottom;
+
+    const allRows = Array.from(this.querySelectorAll(':scope > fx-repeatitem'));
+    const candidates = allRows.slice(-count);
+    const rows = [];
+    for (let i = candidates.length - 1; i >= 0; i -= 1) {
+      const row = candidates[i];
+      if (row.getBoundingClientRect().top >= containerBottom) rows.unshift(row);
+      else break;
+    }
+    if (rows.length === 0) return;
+
+    const fore = this.getOwnerForm();
+    rows.forEach(row => {
+      fore.unRegisterLazyElement(row);
+      row.remove();
+    });
+
+    this._renderTarget -= rows.length;
+  }
+
+  /**
+   * Virtual-mode bottom-sentinel response: appends the next `count` logical rows below the
+   * current window, then evicts from the top to bring the rendered count back down to
+   * `_sizeLimit`. The evict count is derived (not assumed equal to `count`) because the
+   * window may not have reached full size yet (e.g. very first slide after initial load).
+   */
+  _slideWindowDown(count) {
+    const total = Array.isArray(this.nodeset) ? this.nodeset.length : 0;
+    const oldEnd = this._renderTarget;
+    const newEnd = Math.min(oldEnd + count, total);
+    if (newEnd === oldEnd) return;
+
+    const fore = this.getOwnerForm();
+    for (let logicalIdx = oldEnd; logicalIdx < newEnd; logicalIdx += 1) {
+      const newItem = this._materializeRepeatItem(logicalIdx + 1);
+      if (fore.createNodes) fore.initData(newItem);
+      fore.scanForNewTemplateExpressionsNextRefresh();
+      fore.registerLazyElement(newItem);
+      newItem.refresh(true);
+      Fore.dispatch(this, 'item-created', { nodeset: newItem.nodeset, pos: logicalIdx + 1 });
+    }
+    this._renderTarget = newEnd;
+
+    const currentRendered = this._renderTarget - this._windowStart;
+    const evictCount = Math.max(0, Math.min(newEnd - oldEnd, currentRendered - this._sizeLimit));
+    if (evictCount > 0) this._evictFromTop(evictCount);
+
+    this._syncSentinels();
+  }
+
+  /**
+   * Virtual-mode top-sentinel response: prepends the previous `count` logical rows above the
+   * current window, then evicts from the bottom to bring the rendered count back down to
+   * `_sizeLimit`. Rows are created in ASCENDING logical order and inserted before a single
+   * anchor node captured once before the loop - this builds correct DOM order in one pass
+   * without recomputing the anchor (e.g. via repeated querySelector) on every iteration.
+   *
+   * Prepending content ABOVE the current scroll position pushes the previously-visible
+   * content further down the document without changing scrollTop, which would otherwise
+   * make the viewport appear to jump to different (earlier) content. Corrected the same way
+   * _evictFromTop() corrects for removal: capture scrollTop BEFORE the mutation, measure the
+   * EXACT height of what was just inserted, and set the new absolute scrollTop afterward
+   * (not `+=`, which - mirroring the eviction fix - could read a value already perturbed by
+   * the DOM mutation itself).
+   */
+  _slideWindowUp(count) {
+    const oldStart = this._windowStart;
+    const newStart = Math.max(0, oldStart - count);
+    if (newStart === oldStart) return;
+
+    const scrollRoot =
+      this._findSentinelRoot() || document.scrollingElement || document.documentElement;
+    const scrollTopBeforeInsert = scrollRoot ? scrollRoot.scrollTop : 0;
+
+    const fore = this.getOwnerForm();
+    const anchor =
+      (this._topSentinel && this._topSentinel.nextSibling) ||
+      this.firstElementChild ||
+      this._sentinel ||
+      null;
+
+    const insertedItems = [];
+    for (let logicalIdx = newStart; logicalIdx < oldStart; logicalIdx += 1) {
+      const newItem = this._createNewRepeatItem();
+      this.insertBefore(newItem, anchor);
+      this._initVariables(newItem);
+      newItem.nodeset = this.nodeset[logicalIdx];
+      newItem.index = logicalIdx + 1;
+      if (fore.createNodes) fore.initData(newItem);
+      fore.scanForNewTemplateExpressionsNextRefresh();
+      fore.registerLazyElement(newItem);
+      newItem.refresh(true);
+      Fore.dispatch(this, 'item-created', { nodeset: newItem.nodeset, pos: logicalIdx + 1 });
+      insertedItems.push(newItem);
+    }
+    this._windowStart = newStart;
+    this._reindexRenderedRows();
+
+    if (insertedItems.length > 0 && scrollRoot) {
+      const insertedHeight =
+        insertedItems[insertedItems.length - 1].getBoundingClientRect().bottom -
+        insertedItems[0].getBoundingClientRect().top;
+      scrollRoot.scrollTop = scrollTopBeforeInsert + insertedHeight;
+    }
+
+    const currentRendered = this._renderTarget - this._windowStart;
+    const evictCount = Math.max(
+      0,
+      Math.min(oldStart - newStart, currentRendered - this._sizeLimit),
+    );
+    if (evictCount > 0) this._evictFromBottom(evictCount);
+
+    this._syncSentinels();
+  }
+
+  /**
+   * Hard jump: destroys the entire current window and renders a fresh one starting at
+   * `logicalIdx` (start-at-target, not center-on-target - simpler, matches the roadmap's
+   * wording, and avoids asymmetric clamping near either end of the nodeset that centering
+   * would require anyway), then resets scroll position to the top of the fresh window. Used
+   * when navigation (setIndex, an index('id') dependent, an insert/append past the window)
+   * targets a logical index outside the current window - no smooth-scroll illusion, no
+   * incremental front-fill (that's Phase-1's answer and doesn't fit a sliding window).
+   */
+  _seekWindowTo(logicalIdx) {
+    const total = Array.isArray(this.nodeset) ? this.nodeset.length : 0;
+    const size = this._sizeLimit;
+
+    const newStart = Math.max(0, Math.min(logicalIdx, Math.max(0, total - size)));
+    const newEnd = Math.min(total, newStart + size);
+
+    const fore = this.getOwnerForm();
+    this.querySelectorAll(':scope > fx-repeatitem').forEach(item => {
+      fore.unRegisterLazyElement(item);
+      item.remove();
+    });
+    if (this._topSentinel) this._destroyTopSentinel();
+    if (this._sentinel) this._destroySentinel();
+
+    this._windowStart = newStart;
+    this._renderTarget = newEnd;
+    for (let li = newStart; li < newEnd; li += 1) {
+      const newItem = this._materializeRepeatItem(li + 1);
+      if (fore.createNodes) fore.initData(newItem);
+      fore.scanForNewTemplateExpressionsNextRefresh();
+      fore.registerLazyElement(newItem);
+      newItem.refresh(true);
+      Fore.dispatch(this, 'item-created', { nodeset: newItem.nodeset, pos: li + 1 });
+    }
+    this._syncSentinels();
+
+    const scrollRoot =
+      this._findSentinelRoot() || document.scrollingElement || document.documentElement;
+    if (scrollRoot) scrollRoot.scrollTop = 0;
   }
 
   _createSentinel() {
@@ -862,11 +1256,54 @@ export class FxRepeat extends withDraggability(UIElement, false) {
   }
 
   /**
-   * Ensures the trailing sentinel exists iff a size cap is active and there are still
-   * unrendered rows left. Called after every operation that can change _renderTarget or
-   * the nodeset length.
+   * Leading sentinel, symmetric to _createSentinel()/_destroySentinel() but placed as the
+   * first child instead of appended, and only ever active in virtual (windowed) mode - it
+   * signals "there is more nodeset above the rendered window", triggering a prepend+evict-
+   * from-bottom slide instead of the trailing sentinel's append+evict-from-top slide.
    */
-  _syncSentinel() {
+  _createTopSentinel() {
+    const sentinel = document.createElement('div');
+    sentinel.className = 'fx-repeat-sentinel fx-repeat-sentinel-top';
+    sentinel.setAttribute('aria-hidden', 'true');
+    sentinel.style.cssText = 'height:1px;pointer-events:none;';
+    this.insertBefore(sentinel, this.firstElementChild || null);
+    this._topSentinel = sentinel;
+
+    if (!this._topSentinelObserver) {
+      this._topSentinelObserver = new IntersectionObserver(
+        entries => this._onTopSentinelIntersect(entries),
+        {
+          root: this._findSentinelRoot(),
+          rootMargin: '0px',
+          threshold: 0,
+        },
+      );
+    }
+    this._topSentinelObserver.observe(sentinel);
+  }
+
+  _destroyTopSentinel() {
+    if (this._topSentinelObserver && this._topSentinel) {
+      this._topSentinelObserver.unobserve(this._topSentinel);
+    }
+    if (this._topSentinel) {
+      this._topSentinel.remove();
+      this._topSentinel = null;
+    }
+  }
+
+  /**
+   * Ensures the trailing sentinel exists iff a size cap is active and there are still
+   * unrendered rows left, and (virtual mode only) the leading sentinel exists iff the window
+   * has scrolled past the start of the nodeset. Called after every operation that can change
+   * _renderTarget, _windowStart, or the nodeset length.
+   */
+  _syncSentinels() {
+    this._syncBottomSentinel();
+    this._syncTopSentinel();
+  }
+
+  _syncBottomSentinel() {
     const total = Array.isArray(this.nodeset) ? this.nodeset.length : 0;
     const needsSentinel = this._sizeLimit !== Infinity && this._renderTarget < total;
 
@@ -879,10 +1316,37 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     }
   }
 
+  /**
+   * Only ever active in virtual mode (`_windowStart` is always 0 off virtual mode, so
+   * `needsTop` is always false there) - signals there is unrendered nodeset above the window.
+   */
+  _syncTopSentinel() {
+    const needsTop = this._virtual && this._windowStart > 0;
+
+    if (needsTop && !this._topSentinel) {
+      this._createTopSentinel();
+    } else if (!needsTop && this._topSentinel) {
+      this._destroyTopSentinel();
+    } else if (needsTop && this._topSentinel && this.firstElementChild !== this._topSentinel) {
+      this.insertBefore(this._topSentinel, this.firstElementChild);
+    }
+  }
+
   _onSentinelIntersect(entries) {
     const last = entries[entries.length - 1];
     if (!last || !last.isIntersecting) return;
-    this._growRenderTarget(this._renderTarget + this._sizeLimit);
+    if (this._virtual) {
+      this._slideWindowDown(this._sizeLimit);
+    } else {
+      this._growRenderTarget(this._renderTarget + this._sizeLimit);
+    }
+  }
+
+  _onTopSentinelIntersect(entries) {
+    const last = entries[entries.length - 1];
+    if (!last || !last.isIntersecting) return;
+    if (this._windowStart <= 0) return;
+    this._slideWindowUp(this._sizeLimit);
   }
 
   init() {
@@ -1208,6 +1672,13 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     this._evalNodeset();
     this._sizeLimit = this._getSizeLimit();
 
+    // Captured BEFORE any forcing/reclamping below, so it reflects what the DOM is
+    // currently windowed to - used afterward to detect the rare case where the floor
+    // itself needs to move (virtual toggled off, or the tail shrank out from under it).
+    const oldWindowStart = this._windowStart;
+    this._virtual = this._isVirtual();
+    if (!this._virtual) this._windowStart = 0;
+
     let repeatItems = this.querySelectorAll(':scope > fx-repeatitem');
     let repeatItemCount = repeatItems.length;
 
@@ -1221,28 +1692,51 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
     // Recompute the render target:
     //  - uncapped: always track the full nodeset (identical to the pre-cap `contextSize`)
-    //  - capped, nodeset grew since the last refresh cycle: this only happens through a path
-    //    that didn't already update _renderTarget itself (e.g. bulk/direct instance mutation
-    //    rather than an insert/append action) - re-arm the cap by raising the floor. Growth
-    //    already tracked by insert handlers or setIndex growth-on-demand does NOT hit this
-    //    branch: by the time refresh() runs again after those, this.nodeset was already
-    //    updated by them (they call _evalNodeset() themselves), so it hasn't grown further
-    //    within *this* cycle, and _renderTarget is left exactly as they already set it.
-    //    (An earlier version used sentinel-presence for this instead, which was unsafe:
-    //    growth-on-demand can destroy the sentinel by fully catching up the window in the
-    //    same synchronous operation that triggers this refresh - e.g. fx-append inserting
-    //    past the window - which snapped the window straight back down again.)
-    //  - capped, nodeset did not grow (shrank or same size): never grow the window here,
-    //    only clamp it down if it now exceeds a (possibly smaller) total.
+    //  - capped, non-virtual, nodeset grew since the last refresh cycle: this only happens
+    //    through a path that didn't already update _renderTarget itself (e.g. bulk/direct
+    //    instance mutation rather than an insert/append action) - re-arm the cap by raising
+    //    the floor. Growth already tracked by insert handlers or setIndex growth-on-demand
+    //    does NOT hit this branch: by the time refresh() runs again after those, this.nodeset
+    //    was already updated by them (they call _evalNodeset() themselves), so it hasn't
+    //    grown further within *this* cycle, and _renderTarget is left exactly as they
+    //    already set it.
+    //  - capped, non-virtual, nodeset did not grow (shrank or same size): never grow the
+    //    window here, only clamp it down if it now exceeds a (possibly smaller) total.
+    //  - capped, virtual: reclamp BOTH edges to the current total, preserving window size
+    //    where possible and sliding the floor back only if the tail shrank out from under
+    //    it. Does not auto-follow nodeset growth mid-window - matches the non-virtual
+    //    branch's "don't jump the user around" philosophy.
     if (this._sizeLimit === Infinity) {
       this._renderTarget = total;
-    } else if (total > prevTotal) {
-      this._renderTarget = Math.min(Math.max(this._renderTarget, this._sizeLimit), total);
+      this._windowStart = 0;
+    } else if (!this._virtual) {
+      if (total > prevTotal) {
+        this._renderTarget = Math.min(Math.max(this._renderTarget, this._sizeLimit), total);
+      } else {
+        this._renderTarget = Math.min(this._renderTarget, total);
+      }
     } else {
-      this._renderTarget = Math.min(this._renderTarget, total);
+      const newStart = Math.max(
+        0,
+        Math.min(this._windowStart, Math.max(0, total - this._sizeLimit)),
+      );
+      this._windowStart = newStart;
+      this._renderTarget = Math.min(total, newStart + this._sizeLimit);
     }
 
-    const goal = this._renderTarget;
+    if (this._windowStart !== oldWindowStart) {
+      // Rare: the window floor itself moved (virtual just turned off, or the reclamp above
+      // slid it back because the nodeset's tail shrank out from under the previous window).
+      // The tail-only shrink/grow loops below assume a stable floor and can't bridge a
+      // floor change, so rebuild the window fresh here instead of patching a partial diff.
+      repeatItems.forEach(item => {
+        item.parentNode.removeChild(item);
+        this.getOwnerForm().unRegisterLazyElement(item);
+      });
+      repeatItemCount = 0;
+    }
+
+    const goal = this._renderTarget - this._windowStart;
 
     if (goal < repeatItemCount) {
       for (let position = repeatItemCount; position > goal; position -= 1) {
@@ -1258,7 +1752,9 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
     if (goal > repeatItemCount) {
       for (let position = repeatItemCount + 1; position <= goal; position += 1) {
-        const newItem = this._materializeRepeatItem(position);
+        // `position` is 1-based WITHIN the window; _materializeRepeatItem takes a 1-based
+        // LOGICAL position, so offset by _windowStart (always 0 off virtual mode).
+        const newItem = this._materializeRepeatItem(this._windowStart + position);
 
         if (this.getOwnerForm().createNodes) {
           this.getOwnerForm().initData(newItem);
@@ -1276,17 +1772,19 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
     for (let position = 0; position < repeatItemCount; position += 1) {
       const item = repeatItems[position];
+      const logicalIdx = this._windowStart + position;
       this.getOwnerForm().registerLazyElement(item);
 
-      if (item.nodeset !== this.nodeset[position]) {
-        item.nodeset = this.nodeset[position];
+      if (item.nodeset !== this.nodeset[logicalIdx]) {
+        item.nodeset = this.nodeset[logicalIdx];
         if (this.getOwnerForm().createNodes) {
           this.getOwnerForm().initData(item);
         }
       }
+      item.index = logicalIdx + 1;
     }
 
-    this._syncSentinel();
+    this._syncSentinels();
 
     const fore = this.getOwnerForm();
     if (!fore.lazyRefresh || force) {
@@ -1340,6 +1838,8 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
   _initRepeatItems() {
     this._sizeLimit = this._getSizeLimit();
+    this._virtual = this._isVirtual();
+    this._windowStart = 0; // initial render always starts the window at the beginning
     const total = this.nodeset.length;
     this._renderTarget = Math.min(total, this._sizeLimit);
 
@@ -1372,7 +1872,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       Fore.dispatch(this, 'item-created', { nodeset: repeatItem.nodeset, pos: position });
     }
 
-    this._syncSentinel();
+    this._syncSentinels();
   }
 
   clearTextValues(node) {
