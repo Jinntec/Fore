@@ -80,6 +80,18 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     this._topSentinel = null;
     this._topSentinelObserver = null;
 
+    // Continuous scroll-driven trim (virtual mode only). The sentinels only fire once the
+    // window's leading/trailing edge is reached, which (given the sentinel sits at the very
+    // end of whatever was just rendered) forces scrolling through almost a full window's
+    // worth of content before a slide+evict happens - see _trimWindow() for why that alone
+    // lets the rendered count settle well above `size`. This listener evicts confirmed
+    // off-screen rows continuously as the user scrolls, so the window keeps converging on
+    // `size` instead of only trimming in bursts tied to sentinel crossings.
+    this._scrollTrimRoot = null;
+    this._scrollTrimHandler = null;
+    this._scrollTrimLastTop = 0;
+    this._trimScheduled = false;
+
     this.handleInsertHandler = null;
     this.handleDeleteHandler = null;
 
@@ -174,6 +186,17 @@ export class FxRepeat extends withDraggability(UIElement, false) {
    */
   _isVirtual() {
     return this.hasAttribute('virtual') && this._getSizeLimit() !== Infinity;
+  }
+
+  /**
+   * Upper bound on how many rows _evictFromTop()/_evictFromBottom() remove in a single call.
+   * A quarter of `size` (floor 4) keeps a single correction small no matter how large a
+   * backlog a caller asks to clear - see the comment on _evictFromTop() for why an uncapped
+   * batch turns into a scroll-speed-proportional scrollTop jump. Any excess beyond this cap
+   * simply drains on the next call (there always is one while scrolling continues).
+   */
+  _maxEvictBatch() {
+    return Math.max(4, Math.ceil(this._sizeLimit / 4));
   }
 
   connectedCallback() {
@@ -595,6 +618,12 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       this._topSentinelObserver = null;
     }
     this._topSentinel = null;
+
+    if (this._scrollTrimHandler && this._scrollTrimRoot) {
+      this._scrollTrimRoot.removeEventListener('scroll', this._scrollTrimHandler);
+    }
+    this._scrollTrimRoot = null;
+    this._scrollTrimHandler = null;
   }
 
   get repeatSize() {
@@ -993,12 +1022,23 @@ export class FxRepeat extends withDraggability(UIElement, false) {
    */
   _evictFromTop(count) {
     const EVICT_MARGIN_PX = 100;
+    // Bounded regardless of how large a deficit the caller asks to clear in one go: a fast
+    // scroll (or a long stretch since the last trim) can hand this a large `count`, and since
+    // eviction here is corrected by an immediate scrollTop jump of the exact removed height,
+    // an uncapped batch means an uncapped, scroll-speed-proportional jump - the faster you
+    // scroll, the heftier the correction. Capping the batch keeps each single correction small
+    // and roughly constant; any remainder simply drains on the next trim/slide call (there's
+    // always a next one while scrolling continues, via _trimWindow's own scroll listener).
+    const boundedCount = Math.min(count, this._maxEvictBatch());
     const scrollRoot =
       this._findSentinelRoot() || document.scrollingElement || document.documentElement;
     const containerTop =
       scrollRoot && scrollRoot.getBoundingClientRect ? scrollRoot.getBoundingClientRect().top : 0;
 
-    const candidates = Array.from(this.querySelectorAll(':scope > fx-repeatitem')).slice(0, count);
+    const candidates = Array.from(this.querySelectorAll(':scope > fx-repeatitem')).slice(
+      0,
+      boundedCount,
+    );
     const rows = [];
     for (const row of candidates) {
       if (row.getBoundingClientRect().bottom <= containerTop - EVICT_MARGIN_PX) rows.push(row);
@@ -1033,6 +1073,10 @@ export class FxRepeat extends withDraggability(UIElement, false) {
    * currently shown.
    */
   _evictFromBottom(count) {
+    // See the equivalent comment in _evictFromTop - same batch cap, kept symmetric even
+    // though this particular eviction needs no scrollTop correction, so a single very large
+    // batch here is cheap on its own; the cap mainly keeps top/bottom behavior consistent.
+    const boundedCount = Math.min(count, this._maxEvictBatch());
     const scrollRoot =
       this._findSentinelRoot() || document.scrollingElement || document.documentElement;
     // scrollRoot always resolves to a real element (document.documentElement is the final
@@ -1040,7 +1084,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     const containerBottom = scrollRoot.getBoundingClientRect().bottom;
 
     const allRows = Array.from(this.querySelectorAll(':scope > fx-repeatitem'));
-    const candidates = allRows.slice(-count);
+    const candidates = allRows.slice(-boundedCount);
     const rows = [];
     for (let i = candidates.length - 1; i >= 0; i -= 1) {
       const row = candidates[i];
@@ -1081,8 +1125,13 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     }
     this._renderTarget = newEnd;
 
+    // Deliberately NOT capped at `newEnd - oldEnd` (the count just added): a previous slide
+    // may have under-evicted (its rows weren't yet confirmed off-screen per _evictFromTop's
+    // safety margin), leaving a backlog above `_sizeLimit`. Requesting the full deficit here
+    // lets that backlog catch up once those rows really are off-screen, instead of the excess
+    // being locked in forever at whatever a single partial eviction left behind.
     const currentRendered = this._renderTarget - this._windowStart;
-    const evictCount = Math.max(0, Math.min(newEnd - oldEnd, currentRendered - this._sizeLimit));
+    const evictCount = Math.max(0, currentRendered - this._sizeLimit);
     if (evictCount > 0) this._evictFromTop(evictCount);
 
     this._syncSentinels();
@@ -1105,8 +1154,17 @@ export class FxRepeat extends withDraggability(UIElement, false) {
    */
   _slideWindowUp(count) {
     const oldStart = this._windowStart;
-    const newStart = Math.max(0, oldStart - count);
-    if (newStart === oldStart) return;
+    const target = Math.max(0, oldStart - count);
+    if (target === oldStart) return;
+
+    // Bounded the same way _evictFromTop()/_evictFromBottom() are (see _maxEvictBatch()): a
+    // single sentinel trigger requests sliding back a whole `size` worth at once, which would
+    // otherwise prepend that many rows and correct scrollTop forward by their full combined
+    // height in one jump. Prepending (and correcting for) only a small batch per call keeps
+    // any single jump small; the remainder is picked up by the requestAnimationFrame
+    // continuation below, converging to the same end state over a few frames instead of one.
+    const batch = Math.min(oldStart - target, this._maxEvictBatch());
+    const newStart = oldStart - batch;
 
     const scrollRoot =
       this._findSentinelRoot() || document.scrollingElement || document.documentElement;
@@ -1143,14 +1201,22 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       scrollRoot.scrollTop = scrollTopBeforeInsert + insertedHeight;
     }
 
+    // See the equivalent comment in _slideWindowDown - deliberately not capped at
+    // `oldStart - newStart` so a prior partial eviction's backlog can catch up here too.
     const currentRendered = this._renderTarget - this._windowStart;
-    const evictCount = Math.max(
-      0,
-      Math.min(oldStart - newStart, currentRendered - this._sizeLimit),
-    );
+    const evictCount = Math.max(0, currentRendered - this._sizeLimit);
     if (evictCount > 0) this._evictFromBottom(evictCount);
 
     this._syncSentinels();
+
+    // Batch was capped above (`batch < oldStart - target`): more prepending was requested
+    // than this call actually performed, so continue on the next frame instead of waiting for
+    // the top sentinel to re-cross (it may not - it's likely still off-screen after only a
+    // partial slide, so no new IntersectionObserver trigger would ever arrive on its own).
+    const remaining = newStart - target;
+    if (remaining > 0) {
+      requestAnimationFrame(() => this._slideWindowUp(remaining));
+    }
   }
 
   /**
@@ -1301,6 +1367,100 @@ export class FxRepeat extends withDraggability(UIElement, false) {
   _syncSentinels() {
     this._syncBottomSentinel();
     this._syncTopSentinel();
+    this._ensureScrollTrimListener();
+  }
+
+  /**
+   * Lazily attaches a 'scroll' listener on the nearest scrollable ancestor (virtual mode
+   * only) that keeps trimming the rendered window toward `size` as the user scrolls - see
+   * _trimWindow(). Re-attaches if the scrollable ancestor changes (e.g. repeat reparented)
+   * and detaches entirely once virtual mode is off.
+   */
+  _ensureScrollTrimListener() {
+    if (!this._virtual) {
+      if (this._scrollTrimHandler && this._scrollTrimRoot) {
+        this._scrollTrimRoot.removeEventListener('scroll', this._scrollTrimHandler);
+      }
+      this._scrollTrimRoot = null;
+      this._scrollTrimHandler = null;
+      return;
+    }
+
+    const root = this._findSentinelRoot() || document.scrollingElement || document.documentElement;
+    if (root === this._scrollTrimRoot && this._scrollTrimHandler) return;
+
+    if (this._scrollTrimHandler && this._scrollTrimRoot) {
+      this._scrollTrimRoot.removeEventListener('scroll', this._scrollTrimHandler);
+    }
+
+    this._scrollTrimRoot = root;
+    this._scrollTrimLastTop = root ? root.scrollTop : 0;
+    this._scrollTrimHandler = () => {
+      if (this._trimScheduled) return;
+      this._trimScheduled = true;
+      requestAnimationFrame(() => {
+        this._trimScheduled = false;
+        const cur = this._scrollTrimRoot ? this._scrollTrimRoot.scrollTop : 0;
+        const direction = cur - this._scrollTrimLastTop;
+        this._scrollTrimLastTop = cur;
+        this._trimWindow(direction);
+      });
+    };
+    root.addEventListener('scroll', this._scrollTrimHandler, { passive: true });
+  }
+
+  /**
+   * Evicts whatever is currently safely off-screen (top or bottom, via the same
+   * margin-guarded checks _slideWindowDown()/_slideWindowUp() already use) whenever the
+   * rendered count exceeds `size`. Sentinels alone only trigger a slide once the window's
+   * edge is reached - by which point almost a full window of content has already scrolled
+   * by - so the rendered count settles at roughly `size + one viewport's worth` instead of
+   * `size`. Running this continuously on scroll lets the excess drain away in small
+   * increments as it becomes confirmed off-screen, well before the next sentinel crossing.
+   *
+   * `direction` (signed scrollTop delta since the last call, 0 if unknown) picks a SINGLE
+   * side to evict from, matching which side is actually accumulating stale rows: scrolling
+   * down (positive) only makes rows above stale, scrolling up (negative) only makes rows
+   * below stale. Trying both sides unconditionally is wrong, not just redundant - while
+   * scrolling up specifically to shrink `_windowStart` back toward 0 (e.g. _slideWindowUp
+   * prepending rows), any leftover excess (from _evictFromBottom's own per-call batch cap
+   * not yet having caught up) would otherwise get partially evicted from the top here,
+   * incrementing `_windowStart` right back up and undoing part of the very prepend that
+   * just ran - directly fighting the scroll-up convergence instead of assisting it.
+   */
+  _trimWindow(direction = 0) {
+    if (!this._virtual) return;
+
+    let excess = this._renderTarget - this._windowStart - this._sizeLimit;
+    if (excess <= 0) return;
+
+    let evictedFromTop = 0;
+    let evictedFromBottom = 0;
+
+    if (direction < 0) {
+      const endBefore = this._renderTarget;
+      this._evictFromBottom(excess);
+      evictedFromBottom = endBefore - this._renderTarget;
+      excess -= evictedFromBottom;
+    } else {
+      const startBefore = this._windowStart;
+      this._evictFromTop(excess);
+      evictedFromTop = this._windowStart - startBefore;
+      excess -= evictedFromTop;
+    }
+
+    this._syncSentinels();
+
+    // `_evictFromTop`/`_evictFromBottom` cap themselves to a small batch per call (see
+    // _maxEvictBatch()), so a large backlog (e.g. after a very fast scroll) needs several
+    // passes to fully drain. While there's more to evict AND this pass actually made
+    // progress, keep draining on the next animation frame rather than waiting for another
+    // 'scroll' event that may never come if the user has already stopped scrolling. Stop
+    // once a pass evicts nothing - the remainder isn't confirmed off-screen yet, and will
+    // be picked up by the scroll listener once it is.
+    if (excess > 0 && (evictedFromTop > 0 || evictedFromBottom > 0)) {
+      requestAnimationFrame(() => this._trimWindow(direction));
+    }
   }
 
   _syncBottomSentinel() {

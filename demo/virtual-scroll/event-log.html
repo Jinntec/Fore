@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>Virtual Scrolling: 10,000-row Event Log — Fore</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #1a1d21;
+            --dim: #6b7280;
+            --rule: #e4e7ec;
+            --console-bg: #0d1117;
+            --console-line: #1c2128;
+            --console-text: #c9d1d9;
+            --console-dim: #6e7681;
+            --info: #64b5f6;
+            --warn: #ffa726;
+            --error: #ef5350;
+            --accent: #2dd4bf;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 3rem 1.5rem 5rem;
+            font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: var(--ink);
+            background: #fff;
+        }
+        .wrap {
+            max-width: 860px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 1.9rem;
+            font-weight: 700;
+            margin: 0 0 0.5rem;
+            letter-spacing: -0.01em;
+        }
+        .lede {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: #3b4048;
+            max-width: 62ch;
+            margin: 0 0 2rem;
+        }
+        .lede strong { color: var(--ink); }
+        code {
+            background: #f1f3f5;
+            padding: 0.1rem 0.4rem;
+            border-radius: 0.25rem;
+            font-size: 0.9em;
+        }
+
+        /* Live stats bar */
+        .stats {
+            display: flex;
+            gap: 2.25rem;
+            padding: 1rem 0 1.25rem;
+            border-bottom: 1px solid var(--rule);
+            margin-bottom: 0.75rem;
+        }
+        .stat .value {
+            display: block;
+            font-family: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+            font-size: 1.6rem;
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+            color: var(--ink);
+        }
+        .stat .label {
+            display: block;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--dim);
+            margin-top: 0.15rem;
+        }
+
+        /* Minimap: literally shows the window's position within the full dataset */
+        .minimap {
+            height: 8px;
+            border-radius: 4px;
+            background: var(--rule);
+            position: relative;
+            margin-bottom: 0.75rem;
+            overflow: hidden;
+        }
+        .minimap-window {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 2%;
+            border-radius: 4px;
+            background: var(--accent);
+            transition: left 0.12s ease-out, width 0.12s ease-out;
+        }
+        .minimap-caption {
+            font-size: 0.78rem;
+            color: var(--dim);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Console panel */
+        .console {
+            background: var(--console-bg);
+            border-radius: 0.6rem;
+            padding: 0.5rem 0;
+            height: 480px;
+            overflow-y: auto;
+            box-shadow: 0 8px 30px rgba(13, 17, 23, 0.25);
+        }
+        /* Level color is applied to the fx-repeatitem itself from JS (reading the bound
+           data node directly), not from a template expression - Fore's `{...}` template
+           expressions are only re-scanned on specific refresh cycles and don't reliably
+           reach rows materialized later by scrolling, only the ones present on first
+           render. fx-output sidesteps that entirely: each one resolves its own binding
+           independently, so it's correct no matter when the row was created. */
+        .console fx-repeatitem {
+            display: flex;
+            align-items: baseline;
+            gap: 0.75rem;
+            padding: 0.28rem 1.25rem;
+            font-family: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            border-left: 2px solid transparent;
+        }
+        .console fx-repeatitem:hover { background: var(--console-line); }
+        .console fx-output { display: contents; }
+        .time { color: var(--console-dim); flex: 0 0 5.5rem; }
+        .level {
+            text-transform: uppercase;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            flex: 0 0 3.5rem;
+        }
+        .msg { color: var(--console-text); overflow-wrap: anywhere; flex: 1; }
+        fx-repeatitem.lvl-info { border-left-color: var(--info); }
+        fx-repeatitem.lvl-info .level { color: var(--info); }
+        fx-repeatitem.lvl-warn { border-left-color: var(--warn); }
+        fx-repeatitem.lvl-warn .level { color: var(--warn); }
+        fx-repeatitem.lvl-error { border-left-color: var(--error); }
+        fx-repeatitem.lvl-error .level { color: var(--error); }
+
+        .legend {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1rem;
+            font-size: 0.82rem;
+            color: var(--dim);
+        }
+        .legend span { display: inline-flex; align-items: center; gap: 0.4rem; }
+        .legend i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+        .legend .lvl-info i { background: var(--info); }
+        .legend .lvl-warn i { background: var(--warn); }
+        .legend .lvl-error i { background: var(--error); }
+
+        .fx-repeat-sentinel { pointer-events: none; }
+    </style>
+    <script type="module" src="../../index.js"></script>
+    <script type="module" src="../../doc/fore-corner.js"></script>
+</head>
+<body>
+<fore-corner href="../../doc/demos.html" title="Back to Demos"></fore-corner>
+
+<div class="wrap">
+    <h1>True windowed virtualization</h1>
+    <p class="lede">
+        This log holds <strong>10,000</strong> events bound with <code>&lt;fx-repeat ref="event" size="50" virtual&gt;</code>.
+        Scroll through all of them — only the rows near your current position are ever materialized in the DOM.
+        Watch the counters below as you scroll.
+    </p>
+
+    <div class="stats">
+        <div class="stat"><span class="value" id="stat-rendered">–</span><span class="label">rendered rows</span></div>
+        <div class="stat"><span class="value" id="stat-window">–</span><span class="label">window</span></div>
+        <div class="stat"><span class="value" id="stat-total">–</span><span class="label">total events</span></div>
+    </div>
+
+    <div class="minimap"><div class="minimap-window" id="minimap-window"></div></div>
+    <p class="minimap-caption">The highlighted segment above is exactly where the rendered window sits within all 10,000 events.</p>
+
+    <fx-fore>
+        <fx-model>
+            <fx-instance src="event-log-10000.xml">
+                <data></data>
+            </fx-instance>
+        </fx-model>
+
+        <div class="console" id="console-scroll">
+            <fx-repeat id="log-repeat" ref="event" size="50" virtual>
+                <template>
+                    <fx-output class="time" ref="@time"></fx-output>
+                    <fx-output class="level" ref="@level"></fx-output>
+                    <fx-output class="msg" ref="."></fx-output>
+                </template>
+            </fx-repeat>
+        </div>
+    </fx-fore>
+
+    <div class="legend">
+        <span class="lvl-info"><i></i>info</span>
+        <span class="lvl-warn"><i></i>warn</span>
+        <span class="lvl-error"><i></i>error</span>
+    </div>
+</div>
+
+<script type="module">
+    const repeat = document.getElementById('log-repeat');
+    const statRendered = document.getElementById('stat-rendered');
+    const statWindow = document.getElementById('stat-window');
+    const statTotal = document.getElementById('stat-total');
+    const minimapWindow = document.getElementById('minimap-window');
+
+    function updateStats() {
+        const rows = repeat.querySelectorAll(':scope > fx-repeatitem');
+        const total = Array.isArray(repeat.nodeset) ? repeat.nodeset.length : 0;
+        if (rows.length === 0 || total === 0) return;
+
+        const first = rows[0].index;
+        const last = rows[rows.length - 1].index;
+
+        statRendered.textContent = String(rows.length);
+        statWindow.textContent = `${first}–${last}`;
+        statTotal.textContent = total.toLocaleString();
+
+        const leftPct = ((first - 1) / total) * 100;
+        const widthPct = Math.max(((last - first + 1) / total) * 100, 0.6);
+        minimapWindow.style.left = `${leftPct}%`;
+        minimapWindow.style.width = `${widthPct}%`;
+
+        // Read the level straight off the bound data node rather than the rendered text -
+        // avoids depending on Fore's template-expression rescan timing for a purely
+        // decorative accent color.
+        rows.forEach(row => {
+            const level = row.nodeset && row.nodeset.getAttribute && row.nodeset.getAttribute('level');
+            row.classList.remove('lvl-info', 'lvl-warn', 'lvl-error');
+            if (level) row.classList.add(`lvl-${level}`);
+        });
+    }
+
+    const observer = new MutationObserver(updateStats);
+    observer.observe(repeat, { childList: true });
+    updateStats();
+</script>
+</body>
+</html>
