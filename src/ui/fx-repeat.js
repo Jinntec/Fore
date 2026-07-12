@@ -60,9 +60,16 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     this.nodeset = [];
     this.inited = false;
     this.index = 1;
-    this.repeatSize = 0;
     this.attachShadow({ mode: 'open', delegatesFocus: true });
     this.opNum = 0; // global number of operations
+
+    // Progressive rendering (size cap + IntersectionObserver sentinel).
+    // `_sentinel !== null` is the single source of truth for "a cap is active and there
+    // is more to reveal" - see _syncSentinel().
+    this._sizeLimit = Infinity;
+    this._renderTarget = 0;
+    this._sentinel = null;
+    this._sentinelObserver = null;
 
     this.handleInsertHandler = null;
     this.handleDeleteHandler = null;
@@ -138,6 +145,17 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     }
 
     return true;
+  }
+
+  // ------------------------------------------------------------
+  // Progressive rendering (size cap)
+  // ------------------------------------------------------------
+
+  _getSizeLimit() {
+    const attr = this.getAttribute('size');
+    if (!attr) return Infinity;
+    const n = parseInt(attr, 10);
+    return Number.isFinite(n) && n > 0 ? n : Infinity;
   }
 
   connectedCallback() {
@@ -217,32 +235,45 @@ export class FxRepeat extends withDraggability(UIElement, false) {
         ),
       );
 
-      const newRepeatItem = this._createNewRepeatItem();
+      // Uncapped repeats always materialize immediately: `_renderTarget` is only resynced to
+      // the full nodeset length inside refresh(), which may not have run yet between two
+      // synchronous inserts, so it can't be trusted as a window boundary when uncapped.
+      const withinWindow = this._sizeLimit === Infinity || insertionIndex <= this._renderTarget;
 
-      const beforeNode = repeatItems[insertionIndex - 1] ?? null;
-      this.insertBefore(newRepeatItem, beforeNode);
-      newRepeatItem.index = insertionIndex;
-      this._initVariables(newRepeatItem);
+      if (withinWindow) {
+        const newRepeatItem = this._createNewRepeatItem();
 
-      newRepeatItem.nodeset = inserted;
+        const beforeNode = repeatItems[insertionIndex - 1] ?? this._sentinel ?? null;
+        this.insertBefore(newRepeatItem, beforeNode);
+        newRepeatItem.index = insertionIndex;
+        this._initVariables(newRepeatItem);
 
-      for (let i = insertionIndex - 1; i < repeatItems.length; ++i) {
-        repeatItems[i].index += 1;
+        newRepeatItem.nodeset = inserted;
+
+        for (let i = insertionIndex - 1; i < repeatItems.length; ++i) {
+          repeatItems[i].index += 1;
+        }
+
+        this._renderTarget += 1;
+        this._syncSentinel();
+
+        this.opNum++;
+        let parentModelItem = FxBind.createModelItem(this.ref, inserted, newRepeatItem, this.opNum);
+        // IMPORTANT: registerModelItem may return an existing canonical ModelItem for the same path.
+        // Always keep using the returned instance to avoid "ghost" ModelItems that still notify.
+        parentModelItem = this.getModel().registerModelItem(parentModelItem);
+        newRepeatItem.modelItem = parentModelItem;
+
+        this._createModelItemsRecursively(newRepeatItem, parentModelItem);
+
+        fore.scanForNewTemplateExpressionsNextRefresh();
+        fore.addToBatchedNotifications(newRepeatItem);
       }
+      // else: inserted beyond the rendered window. this.nodeset already reflects the insert
+      // (re-evaluated above) - there's no DOM row to create yet. setIndex() below triggers
+      // growth-on-demand, which materializes it when/if navigation reaches that far.
 
       this.setIndex(insertionIndex);
-
-      this.opNum++;
-      let parentModelItem = FxBind.createModelItem(this.ref, inserted, newRepeatItem, this.opNum);
-      // IMPORTANT: registerModelItem may return an existing canonical ModelItem for the same path.
-      // Always keep using the returned instance to avoid "ghost" ModelItems that still notify.
-      parentModelItem = this.getModel().registerModelItem(parentModelItem);
-      newRepeatItem.modelItem = parentModelItem;
-
-      this._createModelItemsRecursively(newRepeatItem, parentModelItem);
-
-      fore.scanForNewTemplateExpressionsNextRefresh();
-      fore.addToBatchedNotifications(newRepeatItem);
     };
 
     // ----------------
@@ -400,40 +431,50 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     insertionIndex1 = Math.max(1, Math.min(insertionIndex1, newLen));
     const pos0 = insertionIndex1 - 1;
 
-    // 3) Insert DOM row: set nodeset/index BEFORE inserting into DOM.
-    const before = repeatItems();
-    const beforeNode = before[pos0] ?? null;
+    // See the equivalent comment in the XML insert handler above.
+    const withinWindow = this._sizeLimit === Infinity || pos0 < this._renderTarget;
 
-    const newRepeatItem = this._createNewRepeatItem();
-    newRepeatItem.index = pos0 + 1;
-    this._initVariables(newRepeatItem);
-    newRepeatItem.nodeset = this.nodeset[pos0];
+    if (withinWindow) {
+      // 3) Insert DOM row: set nodeset/index BEFORE inserting into DOM.
+      const before = repeatItems();
+      const beforeNode = before[pos0] ?? this._sentinel ?? null;
 
-    this.insertBefore(newRepeatItem, beforeNode);
+      const newRepeatItem = this._createNewRepeatItem();
+      newRepeatItem.index = pos0 + 1;
+      this._initVariables(newRepeatItem);
+      newRepeatItem.nodeset = this.nodeset[pos0];
 
-    // Ensure it gets initialized/rendered
-    fore.registerLazyElement(newRepeatItem);
-    if (fore.createNodes) {
-      fore.initData(newRepeatItem);
-    }
-    fore.scanForNewTemplateExpressionsNextRefresh();
-    fore.addToBatchedNotifications(newRepeatItem);
+      this.insertBefore(newRepeatItem, beforeNode);
 
-    // 4) Rebind shifted rows (pos0+1..end) and refresh only those.
-    const after = repeatItems();
-
-    for (let i = pos0 + 1; i < after.length; i++) {
-      const ri = after[i];
-      ri.index = i + 1;
-
-      const newNode = this.nodeset[i];
-      if (ri.nodeset !== newNode) {
-        ri.nodeset = newNode;
-        if (fore.createNodes) fore.initData(ri);
+      // Ensure it gets initialized/rendered
+      fore.registerLazyElement(newRepeatItem);
+      if (fore.createNodes) {
+        fore.initData(newRepeatItem);
       }
+      fore.scanForNewTemplateExpressionsNextRefresh();
+      fore.addToBatchedNotifications(newRepeatItem);
 
-      fore.addToBatchedNotifications(ri);
+      this._renderTarget += 1;
+      this._syncSentinel();
+
+      // 4) Rebind shifted rows (pos0+1..end) and refresh only those.
+      const after = repeatItems();
+
+      for (let i = pos0 + 1; i < after.length; i++) {
+        const ri = after[i];
+        ri.index = i + 1;
+
+        const newNode = this.nodeset[i];
+        if (ri.nodeset !== newNode) {
+          ri.nodeset = newNode;
+          if (fore.createNodes) fore.initData(ri);
+        }
+
+        fore.addToBatchedNotifications(ri);
+      }
     }
+    // else: inserted beyond the rendered window - no DOM row to create, nothing to rebind.
+    // setIndex() below triggers growth-on-demand if navigation reaches that far.
 
     // Select inserted row
     this.setIndex(pos0 + 1);
@@ -456,6 +497,12 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
     document.removeEventListener('deleted', this.handleDeleteHandler, true);
     document.removeEventListener('insert', this.handleInsertHandler, true);
+
+    if (this._sentinelObserver) {
+      this._sentinelObserver.disconnect();
+      this._sentinelObserver = null;
+    }
+    this._sentinel = null;
   }
 
   get repeatSize() {
@@ -463,11 +510,21 @@ export class FxRepeat extends withDraggability(UIElement, false) {
   }
 
   set repeatSize(size) {
-    this.size = size;
+    if (!size) {
+      this.removeAttribute('size');
+    } else {
+      this.setAttribute('size', size);
+    }
   }
 
   setIndex(index, notifyDependents = true) {
     this.index = index;
+
+    // Growth-on-demand: navigation (keyboard, index('id') dependents, programmatic) to an
+    // index beyond the currently rendered window front-fills up through it.
+    if (this._sizeLimit !== Infinity && Number.isFinite(index) && index >= 1) {
+      this._growRenderTarget(index);
+    }
 
     const rItems = this.querySelectorAll(':scope > fx-repeatitem');
     const selected = rItems[this.index - 1];
@@ -621,6 +678,14 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
     this._evalNodeset();
 
+    const removedRenderedCount = indices0.filter(i0 => i0 < before.length).length;
+    this._renderTarget = Math.max(0, this._renderTarget - removedRenderedCount);
+    this._renderTarget = Math.min(
+      this._renderTarget,
+      Array.isArray(this.nodeset) ? this.nodeset.length : 0,
+    );
+    this._syncSentinel();
+
     const start0 = Math.min(...indices0);
     const after = repeatItems();
 
@@ -658,12 +723,21 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
     this._evalNodeset();
 
+    const total = Array.isArray(this.nodeset) ? this.nodeset.length : 0;
+
     const indexToRemove = items.findIndex(item => item.nodeset === deleted);
     if (indexToRemove === -1) {
+      // Deleted node was never rendered (beyond the render window): no DOM row to remove,
+      // but the window ceiling may now exceed the shrunk nodeset.
+      this._renderTarget = Math.min(this._renderTarget, total);
+      this._syncSentinel();
       return;
     }
     const itemToRemove = items[indexToRemove];
     itemToRemove.remove();
+
+    this._renderTarget = Math.min(Math.max(0, this._renderTarget - 1), total);
+    this._syncSentinel();
 
     const newLength = this.querySelectorAll(
       ':scope > fx-repeat-item, :scope > fx-repeatitem, :scope > .repeat-item',
@@ -690,6 +764,125 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     newItem.appendChild(clone);
 
     return newItem;
+  }
+
+  _materializeRepeatItem(position) {
+    const newItem = this._createNewRepeatItem();
+    this.insertBefore(newItem, this._sentinel || null);
+    this._initVariables(newItem);
+    newItem.nodeset = this.nodeset[position - 1];
+    newItem.index = position;
+    return newItem;
+  }
+
+  /**
+   * Grows the rendered window up to (at most) `desired` logical positions, materializing
+   * any not-yet-rendered rows in between. Used by the sentinel intersection callback and
+   * by setIndex() to front-fill on-demand navigation beyond the current window.
+   */
+  _growRenderTarget(desired) {
+    const total = Array.isArray(this.nodeset) ? this.nodeset.length : 0;
+    const newTarget = Math.max(this._renderTarget, Math.min(desired, total));
+    if (newTarget === this._renderTarget) return;
+
+    const fore = this.getOwnerForm();
+    for (let position = this._renderTarget + 1; position <= newTarget; position += 1) {
+      const newItem = this._materializeRepeatItem(position);
+      if (fore.createNodes) {
+        fore.initData(newItem);
+      }
+      fore.scanForNewTemplateExpressionsNextRefresh();
+      fore.registerLazyElement(newItem);
+      newItem.refresh(true);
+      Fore.dispatch(this, 'item-created', { nodeset: newItem.nodeset, pos: position });
+    }
+    this._renderTarget = newTarget;
+    this._syncSentinel();
+  }
+
+  _createSentinel() {
+    const sentinel = document.createElement('div');
+    sentinel.className = 'fx-repeat-sentinel';
+    sentinel.setAttribute('aria-hidden', 'true');
+    // Needs a real box for IntersectionObserver geometry, so it can't be display:contents
+    // like fx-repeat/fx-repeatitem typically are in grid/flex host layouts. Kept visually
+    // negligible; host pages using CSS grid directly on fx-repeat's light DOM may need to
+    // give `.fx-repeat-sentinel` a `grid-column` override.
+    sentinel.style.cssText = 'height:1px;pointer-events:none;';
+    this.appendChild(sentinel);
+    this._sentinel = sentinel;
+
+    if (!this._sentinelObserver) {
+      // An explicit root pointing at the nearest scrollable ancestor, not root:null (the
+      // implicit viewport), is required: root:null does not reliably re-fire when only a
+      // *nested* scrollable container scrolls (verified reproducible in headless Chrome and
+      // Electron - the top-level viewport itself never changes, so the browser doesn't
+      // always re-evaluate intersection for a target clipped by an inner scroll container).
+      // Falls back to null when no scrollable ancestor exists, i.e. the whole page scrolls.
+      this._sentinelObserver = new IntersectionObserver(
+        entries => this._onSentinelIntersect(entries),
+        {
+          root: this._findSentinelRoot(),
+          rootMargin: '0px',
+          threshold: 0,
+        },
+      );
+    }
+    this._sentinelObserver.observe(sentinel);
+  }
+
+  _findSentinelRoot() {
+    let node = this.parentNode;
+    while (node) {
+      if (node.nodeType === Node.DOCUMENT_FRAGMENT_NODE && node.host) {
+        node = node.host;
+        continue;
+      }
+      if (node.nodeType !== Node.ELEMENT_NODE || node === document.documentElement) {
+        node = node.parentNode;
+        continue;
+      }
+      const style = getComputedStyle(node);
+      if (/(auto|scroll)/.test(style.overflowY) || /(auto|scroll)/.test(style.overflow)) {
+        return node;
+      }
+      node = node.parentNode;
+    }
+    return null;
+  }
+
+  _destroySentinel() {
+    if (this._sentinelObserver && this._sentinel) {
+      this._sentinelObserver.unobserve(this._sentinel);
+    }
+    if (this._sentinel) {
+      this._sentinel.remove();
+      this._sentinel = null;
+    }
+  }
+
+  /**
+   * Ensures the trailing sentinel exists iff a size cap is active and there are still
+   * unrendered rows left. Called after every operation that can change _renderTarget or
+   * the nodeset length.
+   */
+  _syncSentinel() {
+    const total = Array.isArray(this.nodeset) ? this.nodeset.length : 0;
+    const needsSentinel = this._sizeLimit !== Infinity && this._renderTarget < total;
+
+    if (needsSentinel && !this._sentinel) {
+      this._createSentinel();
+    } else if (!needsSentinel && this._sentinel) {
+      this._destroySentinel();
+    } else if (needsSentinel && this._sentinel && this.lastElementChild !== this._sentinel) {
+      this.appendChild(this._sentinel);
+    }
+  }
+
+  _onSentinelIntersect(entries) {
+    const last = entries[entries.length - 1];
+    if (!last || !last.isIntersecting) return;
+    this._growRenderTarget(this._renderTarget + this._sizeLimit);
   }
 
   init() {
@@ -1013,6 +1206,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     const prevNodeset = this.nodeset;
 
     this._evalNodeset();
+    this._sizeLimit = this._getSizeLimit();
 
     let repeatItems = this.querySelectorAll(':scope > fx-repeatitem');
     let repeatItemCount = repeatItems.length;
@@ -1022,10 +1216,36 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       nodeCount = this.nodeset.length;
     }
 
-    const contextSize = nodeCount;
+    const total = nodeCount;
+    const prevTotal = Array.isArray(prevNodeset) ? prevNodeset.length : 1;
 
-    if (contextSize < repeatItemCount) {
-      for (let position = repeatItemCount; position > contextSize; position -= 1) {
+    // Recompute the render target:
+    //  - uncapped: always track the full nodeset (identical to the pre-cap `contextSize`)
+    //  - capped, nodeset grew since the last refresh cycle: this only happens through a path
+    //    that didn't already update _renderTarget itself (e.g. bulk/direct instance mutation
+    //    rather than an insert/append action) - re-arm the cap by raising the floor. Growth
+    //    already tracked by insert handlers or setIndex growth-on-demand does NOT hit this
+    //    branch: by the time refresh() runs again after those, this.nodeset was already
+    //    updated by them (they call _evalNodeset() themselves), so it hasn't grown further
+    //    within *this* cycle, and _renderTarget is left exactly as they already set it.
+    //    (An earlier version used sentinel-presence for this instead, which was unsafe:
+    //    growth-on-demand can destroy the sentinel by fully catching up the window in the
+    //    same synchronous operation that triggers this refresh - e.g. fx-append inserting
+    //    past the window - which snapped the window straight back down again.)
+    //  - capped, nodeset did not grow (shrank or same size): never grow the window here,
+    //    only clamp it down if it now exceeds a (possibly smaller) total.
+    if (this._sizeLimit === Infinity) {
+      this._renderTarget = total;
+    } else if (total > prevTotal) {
+      this._renderTarget = Math.min(Math.max(this._renderTarget, this._sizeLimit), total);
+    } else {
+      this._renderTarget = Math.min(this._renderTarget, total);
+    }
+
+    const goal = this._renderTarget;
+
+    if (goal < repeatItemCount) {
+      for (let position = repeatItemCount; position > goal; position -= 1) {
         const itemToRemove = repeatItems[position - 1];
         itemToRemove.parentNode.removeChild(itemToRemove);
         this.getOwnerForm().unRegisterLazyElement(itemToRemove);
@@ -1036,15 +1256,9 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     repeatItems = this.querySelectorAll(':scope > fx-repeatitem');
     repeatItemCount = repeatItems.length;
 
-    if (contextSize > repeatItemCount) {
-      for (let position = repeatItemCount + 1; position <= contextSize; position += 1) {
-        const newItem = this._createNewRepeatItem();
-        this.appendChild(newItem);
-
-        this._initVariables(newItem);
-
-        newItem.nodeset = this.nodeset[position - 1];
-        newItem.index = position;
+    if (goal > repeatItemCount) {
+      for (let position = repeatItemCount + 1; position <= goal; position += 1) {
+        const newItem = this._materializeRepeatItem(position);
 
         if (this.getOwnerForm().createNodes) {
           this.getOwnerForm().initData(newItem);
@@ -1071,6 +1285,8 @@ export class FxRepeat extends withDraggability(UIElement, false) {
         }
       }
     }
+
+    this._syncSentinel();
 
     const fore = this.getOwnerForm();
     if (!fore.lazyRefresh || force) {
@@ -1123,21 +1339,26 @@ export class FxRepeat extends withDraggability(UIElement, false) {
   }
 
   _initRepeatItems() {
-    // `createdNodeset` is only ever read once, as an insert template for a *new* row (see
-    // fx-insert.js), so only the clone from the last iteration below is ever observed - cloning
-    // and clearing every earlier row's nodeset was pure waste (O(n) discarded work, e.g. 799 of
-    // 800 clones for the UNTDID 1001 codelist).
-    const lastIndex = this.nodeset.length - 1;
-    this.nodeset.forEach((item, index) => {
-      const repeatItem = this._createNewRepeatItem();
-      repeatItem.nodeset = this.nodeset[index];
-      repeatItem.index = index + 1;
+    this._sizeLimit = this._getSizeLimit();
+    const total = this.nodeset.length;
+    this._renderTarget = Math.min(total, this._sizeLimit);
 
-      this.appendChild(repeatItem);
+    for (let position = 1; position <= this._renderTarget; position += 1) {
+      const repeatItem = this._materializeRepeatItem(position);
 
       if (this.getOwnerForm().createNodes) {
         this.getOwnerForm().initData(repeatItem);
-        if (index === lastIndex && repeatItem.nodeset.nodeType) {
+
+        // `createdNodeset` is only ever read once, as an insert template for a *new* row
+        // (see fx-insert.js), so it's taken from the LAST MATERIALIZED row - cloning and
+        // clearing every earlier row's nodeset was pure waste (O(n) discarded work, e.g.
+        // 799 of 800 clones for the UNTDID 1001 codelist). It must be snapshotted AFTER
+        // initData() above, which is what actually populates create-nodes-synthesized
+        // descendants (e.g. TaxCategory/ID, TaxCategory/Percent) onto the node - cloning
+        // before that yields an empty shell. Under a size cap this may not be the true
+        // last logical nodeset entry, but it's the best representative shape available
+        // (the true last entry may never be materialized).
+        if (position === this._renderTarget && repeatItem.nodeset.nodeType) {
           const repeatItemClone = repeatItem.nodeset.cloneNode(true);
           this.clearTextValues(repeatItemClone);
           this.createdNodeset = repeatItemClone;
@@ -1148,9 +1369,10 @@ export class FxRepeat extends withDraggability(UIElement, false) {
         this.applyIndex(repeatItem);
       }
 
-      Fore.dispatch(this, 'item-created', { nodeset: repeatItem.nodeset, pos: index + 1 });
-      this._initVariables(repeatItem);
-    });
+      Fore.dispatch(this, 'item-created', { nodeset: repeatItem.nodeset, pos: position });
+    }
+
+    this._syncSentinel();
   }
 
   clearTextValues(node) {

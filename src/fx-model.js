@@ -326,6 +326,7 @@ export class FxModel extends HTMLElement {
     console.info(`📌 model-construct for #${this.parentNode.id}`);
     this.debugInfo.modelConstructCount += 1;
 
+    // todo: documentation
     // stale snapshots must not survive a full model (re)construction
     this.undoManager.clear();
     // opt-in: without this attribute the manager stays a no-op and no instance

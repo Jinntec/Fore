@@ -752,3 +752,377 @@ describe('repeat Tests', () => {
     });
   });
 });
+
+async function waitUntil(predicate, { timeout = 2000, interval = 50 } = {}) {
+  const start = performance.now();
+  while (!predicate()) {
+    if (performance.now() - start > timeout) {
+      throw new Error('waitUntil: timed out waiting for condition');
+    }
+    // eslint-disable-next-line no-await-in-loop
+    await new Promise(resolve => setTimeout(resolve, interval));
+  }
+}
+
+describe('repeat progressive rendering (size)', () => {
+  it('caps initial materialization to size, keeping the full nodeset logically', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data></data>
+          </fx-instance>
+        </fx-model>
+        <fx-repeat id="r-cap" ref="1 to 10" size="3">
+          <template>{.}</template>
+        </fx-repeat>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const repeat = el.querySelector('#r-cap');
+    expect(repeat.querySelectorAll(':scope > fx-repeatitem').length).to.equal(3);
+    expect(repeat.nodeset.length).to.equal(10);
+  });
+
+  it('does not create a sentinel when size is at least the nodeset length', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data></data>
+          </fx-instance>
+        </fx-model>
+        <fx-repeat id="r-cap" ref="1 to 10" size="20">
+          <template>{.}</template>
+        </fx-repeat>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const repeat = el.querySelector('#r-cap');
+    expect(repeat.querySelectorAll(':scope > fx-repeatitem').length).to.equal(10);
+    expect(repeat.querySelectorAll('.fx-repeat-sentinel').length).to.equal(0);
+  });
+
+  it('does not cap or create a sentinel when size is absent', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data></data>
+          </fx-instance>
+        </fx-model>
+        <fx-repeat id="r-uncapped" ref="1 to 10">
+          <template>{.}</template>
+        </fx-repeat>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const repeat = el.querySelector('#r-uncapped');
+    expect(repeat.querySelectorAll(':scope > fx-repeatitem').length).to.equal(10);
+    expect(repeat.querySelectorAll('.fx-repeat-sentinel').length).to.equal(0);
+  });
+
+  it('reveals the next chunk when the sentinel intersects', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data></data>
+          </fx-instance>
+        </fx-model>
+        <div id="scroller" style="height:100px;overflow:auto;">
+          <fx-repeat id="r-scroll" ref="1 to 10" size="3">
+            <template>
+              <div style="height:40px;">{.}</div>
+            </template>
+          </fx-repeat>
+        </div>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const repeat = el.querySelector('#r-scroll');
+    expect(repeat.querySelectorAll(':scope > fx-repeatitem').length).to.equal(3);
+
+    const scroller = el.querySelector('#scroller');
+
+    scroller.scrollTop = scroller.scrollHeight;
+    await waitUntil(() => repeat.querySelectorAll(':scope > fx-repeatitem').length === 6);
+
+    scroller.scrollTop = scroller.scrollHeight;
+    await waitUntil(() => repeat.querySelectorAll(':scope > fx-repeatitem').length === 9);
+
+    scroller.scrollTop = scroller.scrollHeight;
+    await waitUntil(() => repeat.querySelectorAll(':scope > fx-repeatitem').length === 10);
+
+    expect(repeat.querySelectorAll('.fx-repeat-sentinel').length).to.equal(0);
+  });
+
+  it('setIndex grows the rendered window on demand', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data></data>
+          </fx-instance>
+        </fx-model>
+        <fx-repeat id="r-idx" ref="1 to 5" size="2">
+          <template>{.}</template>
+        </fx-repeat>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const repeat = el.querySelector('#r-idx');
+    expect(repeat.querySelectorAll(':scope > fx-repeatitem').length).to.equal(2);
+
+    repeat.setIndex(5);
+
+    const rItems = repeat.querySelectorAll(':scope > fx-repeatitem');
+    expect(rItems.length).to.equal(5);
+    expect(rItems[4].hasAttribute('repeat-index')).to.equal(true);
+  });
+
+  it('XML insert within the rendered window materializes a row and shifts indices', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="record">
+          <fx-instance>
+            <data>
+              <task>one</task>
+              <task>two</task>
+              <task>three</task>
+            </data>
+          </fx-instance>
+          <fx-bind ref="task"></fx-bind>
+        </fx-model>
+        <fx-repeat id="r-insert" ref="task" size="2">
+          <template>
+            <fx-output ref="."></fx-output>
+          </template>
+        </fx-repeat>
+        <fx-trigger label="insert-first">
+          <button>insert-first</button>
+          <fx-insert ref="task" position="before" at="1"></fx-insert>
+        </fx-trigger>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const repeat = el.querySelector('#r-insert');
+    expect(repeat.querySelectorAll(':scope > fx-repeatitem').length).to.equal(2);
+
+    const button = el.querySelector('fx-trigger');
+    await button.performActions();
+
+    const rItems = repeat.querySelectorAll(':scope > fx-repeatitem');
+    // window grew by exactly the one inserted row, not to the full new total (4)
+    expect(rItems.length).to.equal(3);
+    expect(repeat.nodeset.length).to.equal(4);
+    expect(rItems[1].index).to.equal(2);
+  });
+
+  it('XML insert beyond the rendered window does not eagerly materialize, but setIndex reveals it', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="record">
+          <fx-instance>
+            <data>
+              <task>one</task>
+              <task>two</task>
+              <task>three</task>
+            </data>
+          </fx-instance>
+          <fx-bind ref="task"></fx-bind>
+        </fx-model>
+        <fx-repeat id="r-append" ref="task" size="2">
+          <template>
+            <fx-output ref="."></fx-output>
+          </template>
+        </fx-repeat>
+        <fx-trigger label="append">
+          <button>append</button>
+          <fx-append repeat="r-append" ref="task"></fx-append>
+        </fx-trigger>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const repeat = el.querySelector('#r-append');
+    expect(repeat.querySelectorAll(':scope > fx-repeatitem').length).to.equal(2);
+
+    const button = el.querySelector('fx-trigger');
+    await button.performActions();
+
+    expect(repeat.nodeset.length).to.equal(4);
+    const rItems = repeat.querySelectorAll(':scope > fx-repeatitem');
+    expect(rItems.length).to.equal(4);
+    expect(rItems[3].hasAttribute('repeat-index')).to.equal(true);
+  });
+
+  it('delete within the rendered window shrinks it and does not re-render the tail', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="record">
+          <fx-instance>
+            <data>
+              <task>one</task>
+              <task>two</task>
+              <task>three</task>
+              <task>four</task>
+              <task>five</task>
+            </data>
+          </fx-instance>
+          <fx-bind ref="task"></fx-bind>
+        </fx-model>
+        <fx-repeat id="r-del" ref="task" size="2">
+          <template>
+            <fx-output ref="."></fx-output>
+            <fx-trigger label="delete">
+              <button class="del">delete</button>
+              <fx-delete ref="."></fx-delete>
+            </fx-trigger>
+          </template>
+        </fx-repeat>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const repeat = el.querySelector('#r-del');
+    expect(repeat.querySelectorAll(':scope > fx-repeatitem').length).to.equal(2);
+
+    const firstDeleteTrigger = repeat.querySelector('fx-repeatitem fx-trigger');
+    await firstDeleteTrigger.performActions();
+
+    expect(repeat.nodeset.length).to.equal(4);
+    // window shrinks by exactly the removed row - no auto-backfill from the hidden pool
+    // in Phase 1 (recycling/backfill is deferred to a later phase per the roadmap doc)
+    expect(repeat.querySelectorAll(':scope > fx-repeatitem').length).to.equal(1);
+  });
+
+  it('delete beyond the rendered window updates the nodeset without touching rendered rows', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="record">
+          <fx-instance>
+            <data>
+              <task>one</task>
+              <task>two</task>
+              <task>three</task>
+              <task>four</task>
+              <task>five</task>
+            </data>
+          </fx-instance>
+          <fx-bind ref="task"></fx-bind>
+        </fx-model>
+        <fx-repeat id="r-del2" ref="task" size="2">
+          <template>
+            <fx-output ref="."></fx-output>
+          </template>
+        </fx-repeat>
+        <fx-trigger label="delete-last">
+          <button>delete-last</button>
+          <fx-delete ref="task[5]"></fx-delete>
+        </fx-trigger>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const repeat = el.querySelector('#r-del2');
+    const before = Array.from(repeat.querySelectorAll(':scope > fx-repeatitem')).map(
+      ri => ri.nodeset,
+    );
+    expect(before.length).to.equal(2);
+
+    const button = el.querySelector('fx-trigger');
+    await button.performActions();
+
+    expect(repeat.nodeset.length).to.equal(4);
+    const after = Array.from(repeat.querySelectorAll(':scope > fx-repeatitem'));
+    expect(after.length).to.equal(2);
+    after.forEach((ri, i) => expect(ri.nodeset).to.equal(before[i]));
+  });
+
+  it('nested repeat inside a capped outer repeat renders independently', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <row><val>1</val><val>2</val><val>3</val></row>
+              <row><val>1</val><val>2</val><val>3</val></row>
+              <row><val>1</val><val>2</val><val>3</val></row>
+              <row><val>1</val><val>2</val><val>3</val></row>
+              <row><val>1</val><val>2</val><val>3</val></row>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <fx-repeat id="r-outer" ref="row" size="2">
+          <template>
+            <fx-repeat ref="val">
+              <template>
+                <fx-output ref="."></fx-output>
+              </template>
+            </fx-repeat>
+          </template>
+        </fx-repeat>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const outer = el.querySelector('#r-outer');
+    const outerItems = outer.querySelectorAll(':scope > fx-repeatitem');
+    expect(outerItems.length).to.equal(2);
+
+    outerItems.forEach(item => {
+      const innerRepeat = item.querySelector('fx-repeat');
+      expect(innerRepeat.querySelectorAll(':scope > fx-repeatitem').length).to.equal(3);
+    });
+  });
+
+  it('JSON repeat: caps initial materialization and reveals via sentinel', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance type="json">
+            { "items": [ {"id":1}, {"id":2}, {"id":3}, {"id":4}, {"id":5} ] }
+          </fx-instance>
+        </fx-model>
+        <div id="jscroller" style="height:100px;overflow:auto;">
+          <fx-repeat id="r-json" ref="?items" size="2">
+            <template>
+              <div style="height:40px;">
+                <fx-output ref="?id"></fx-output>
+              </div>
+            </template>
+          </fx-repeat>
+        </div>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const repeat = el.querySelector('#r-json');
+    expect(repeat.querySelectorAll(':scope > fx-repeatitem').length).to.equal(2);
+    expect(repeat.nodeset.length).to.equal(5);
+
+    const scroller = el.querySelector('#jscroller');
+    scroller.scrollTop = scroller.scrollHeight;
+
+    await waitUntil(() => repeat.querySelectorAll(':scope > fx-repeatitem').length === 4);
+    expect(repeat.querySelectorAll(':scope > fx-repeatitem').length).to.equal(4);
+  });
+});

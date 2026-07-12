@@ -55,6 +55,11 @@
     /* nonrelevant is set by fx-repeatitem itself from the Row's fx-bind[relevant] facet
        (see the cross-instance relevant fx-bind in fx-model above) */
     #r-rows fx-repeatitem[nonrelevant] { display: none; }
+    /* #r-rows uses fx-repeat's progressive-rendering `size` cap. The trailing sentinel
+       element can't be display:contents like fx-repeat/fx-repeatitem (it needs real
+       geometry for IntersectionObserver), so left alone it becomes a stray 1-column grid
+       item -- span it across the full row grid instead. */
+    #r-rows .fx-repeat-sentinel { grid-column: 1 / -1; }
     .row-header { font-weight: 600; }
     /* descendant selector (not ">") -- .col-header spans sit two levels down, inside the
        display:contents fx-repeat/fx-repeatitem wrappers, so a direct-child selector missed them
@@ -298,7 +303,8 @@
 
 
       <fx-repeat id="r-rows"
-                 ref="instance('codelist')/SimpleCodeList/Row">
+                 ref="instance('codelist')/SimpleCodeList/Row"
+                 size="20">
         <template>
           <div class="row">
             <fx-control class="keep-col" ref="@ui-keep" value-prop="checked" update-event="change">
