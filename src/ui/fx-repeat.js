@@ -1371,12 +1371,41 @@ export class FxRepeat extends withDraggability(UIElement, false) {
   }
 
   /**
+   * Suppresses the browser's native overscroll/rubber-band bounce on the actual scrolling
+   * ancestor, for ANY size-capped repeat - progressive rendering included, not just `virtual`.
+   * Both flavors can find themselves genuinely at the end of currently-rendered content while
+   * the user is still actively (momentum-)scrolling toward it - virtual mode via eviction
+   * shrinking the scrollable height out from under the scroll, progressive rendering simply
+   * because the next chunk hasn't been appended yet when the sentinel fires - and either one
+   * can trigger a visible bounce (briefly showing whatever is behind the container) right at
+   * that edge. This can't live in a shared stylesheet - the scrolling ancestor is whatever
+   * element the HOST PAGE gave `overflow: auto/scroll`, under any class name, so there's no
+   * fixed selector to hang it on. Setting it here, on the same element _findSentinelRoot()
+   * already resolves for virtual mode's scrollTop corrections, makes it automatic for any
+   * capped repeat regardless of the page's own markup - no CSS to remember. Deliberately
+   * excludes the whole-page fallback (no nested scrollable ancestor found): suppressing
+   * overscroll for the entire document would be a surprising side effect on a page that also
+   * scrolls for reasons unrelated to this repeat. Also skipped if the page already set this
+   * explicitly - never override an intentional choice.
+   */
+  _ensureOverscrollFix() {
+    if (this._sizeLimit === Infinity) return;
+
+    const root = this._findSentinelRoot();
+    if (root && getComputedStyle(root).overscrollBehaviorY === 'auto') {
+      root.style.overscrollBehavior = 'none';
+    }
+  }
+
+  /**
    * Lazily attaches a 'scroll' listener on the nearest scrollable ancestor (virtual mode
    * only) that keeps trimming the rendered window toward `size` as the user scrolls - see
    * _trimWindow(). Re-attaches if the scrollable ancestor changes (e.g. repeat reparented)
    * and detaches entirely once virtual mode is off.
    */
   _ensureScrollTrimListener() {
+    this._ensureOverscrollFix();
+
     if (!this._virtual) {
       if (this._scrollTrimHandler && this._scrollTrimRoot) {
         this._scrollTrimRoot.removeEventListener('scroll', this._scrollTrimHandler);
