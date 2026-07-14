@@ -817,9 +817,6 @@ export default class FxControl extends XfAbstractControl {
         this._trackRefDependencies(touchedNodes, 'widget');
       }
 
-      const contextNode = Array.isArray(inscope) ? inscope[0] : inscope;
-      if (!contextNode) return;
-
       // ### bail out when nodeset is array and empty
       if (Array.isArray(nodeset) && nodeset.length === 0) return;
 
