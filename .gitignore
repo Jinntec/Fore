@@ -13,3 +13,4 @@ CLAUDE.local.md
 .playwright-mcp/
 .local/
 .claude/plans/
+cypress/downloads/
