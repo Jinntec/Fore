@@ -5,3 +5,5 @@ import './js/demo-snippet-vanilla.js';
 import '../index.js';
 import '../doc/fore-corner.js';
 import '../tools/fx-lens.js';
+import '../tools/fx-minimap.js';
+import '../src/actions/fx-action.js';
