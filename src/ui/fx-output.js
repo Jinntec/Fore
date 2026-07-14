@@ -51,16 +51,38 @@ export class FxOutput extends XfAbstractControl {
             </span>
         `;
 
-    this.shadowRoot.innerHTML = `
+    const sheet = Fore.getSharedStyleSheet(style);
+    if (sheet) {
+      this.shadowRoot.innerHTML = outputHtml;
+      this.shadowRoot.adoptedStyleSheets = [sheet];
+    } else {
+      this.shadowRoot.innerHTML = `
             <style>
                 ${style}
             </style>
             ${outputHtml}
         `;
+    }
     // this.widget = this.shadowRoot.querySelector('#widget');
     // this.widget = this.getWidget();
     // console.log('widget ', this.widget);
     this.mediatype = this.hasAttribute('mediatype') ? this.getAttribute('mediatype') : null;
+
+    // The label is a slotted light-DOM element while the widget is a shadow-DOM <span> - an id
+    // reference (for/aria-labelledby) can't cross that boundary, so derive an aria-label string
+    // (which can) from the slotted label's text instead.
+    const labelSlot = this.shadowRoot.querySelector('slot[name="label"]');
+    const applyLabel = () => {
+      const text = this._getLabelText();
+      const valueEl = this.getWidget();
+      if (text) {
+        valueEl.setAttribute('aria-label', text);
+      } else {
+        valueEl.removeAttribute('aria-label');
+      }
+    };
+    labelSlot.addEventListener('slotchange', applyLabel);
+    applyLabel();
 
     /*
     this.addEventListener('slotchange', e => {
@@ -103,6 +125,16 @@ export class FxOutput extends XfAbstractControl {
     return valueWrapper;
   }
 
+  _getLabelText() {
+    const labelSlot = this.shadowRoot.querySelector('slot[name="label"]');
+    if (!labelSlot) return '';
+    return labelSlot
+      .assignedNodes({ flatten: true })
+      .map(n => n.textContent)
+      .join('')
+      .trim();
+  }
+
   handleReadonly() {
     // An output is always read-only
     this.setAttribute('readonly', 'readonly');
@@ -138,6 +170,10 @@ export class FxOutput extends XfAbstractControl {
     if (this.mediatype === 'image') {
       const img = document.createElement('img');
       img.setAttribute('src', this.value);
+      // axe/WCAG require the accessible name directly on the <img> - aria-label on the
+      // wrapping #value span (see applyLabel() above) doesn't satisfy that for a descendant
+      // img. Empty alt is still valid (marks it decorative) when no label is given.
+      img.setAttribute('alt', this._getLabelText());
       // Reset the output before adding the image
       this.innerHTML = '';
       valueWrapper.appendChild(img);

@@ -39,6 +39,7 @@ export default class FxUpload extends XfAbstractControl {
       },
     };
   }
+
   connectedCallback() {
     this.updateEvent = 'change';
     this.accept = this.hasAttribute('accept') ? this.getAttribute('accept') : '';
@@ -68,7 +69,7 @@ export default class FxUpload extends XfAbstractControl {
     });
 
     // console.log('widget ', this.widget);
-    let listenOn = this.widget; // default: usually listening on widget
+    const listenOn = this.widget; // default: usually listening on widget
 
     // ### convenience marker event
     if (this.debounceDelay) {
@@ -137,7 +138,7 @@ export default class FxUpload extends XfAbstractControl {
       const readMethod = isTextFile ? 'readAsText' : 'readAsDataURL';
 
       reader.onload = () => {
-        const result = reader.result;
+        const { result } = reader;
         // If it's a binary file, return only the Base64 content without the MIME prefix
         if (!isTextFile) {
           const base64Content = result.split(',')[1]; // Remove MIME prefix
@@ -163,6 +164,10 @@ export default class FxUpload extends XfAbstractControl {
    * @param val the new value to be set
    */
   setValue(val) {
+    const model = this.getModel();
+    const undoManager = model?.getEffectiveUndoManager();
+    undoManager?.beginCapture();
+
     this.value = val;
     const modelitem = this.getModelItem();
 
@@ -189,6 +194,7 @@ export default class FxUpload extends XfAbstractControl {
 
     if (modelitem?.readonly) {
       console.warn('attempt to change readonly node', modelitem);
+      undoManager?.discard();
       return; // do nothing when modelItem is readonly
     }
 
@@ -200,7 +206,6 @@ export default class FxUpload extends XfAbstractControl {
       this.modelItem.boundControls.push(this);
     }
 */
-    const model = this.getModel();
     Fore.dispatch(this, 'value-changed', {
       path: this.modelItem.path,
       value: this.modelItem.value,
@@ -208,8 +213,9 @@ export default class FxUpload extends XfAbstractControl {
       instanceId: this.modelItem.instanceId,
       foreId: this.getOwnerForm().id,
     });
-    this.getModel().updateModel();
+    model.updateModel();
     this.getOwnerForm().refresh(true);
+    undoManager?.commit(modelitem?.node);
 
     // console.log('data', this.getOwnerForm().getModel().getDefaultInstanceData());
   }

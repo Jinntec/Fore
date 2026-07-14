@@ -43,6 +43,11 @@ export class FxAction extends AbstractAction {
     } else {
       for (const actionOrVar of children) {
         if (actionOrVar.localName === 'fx-var') {
+          // XForms 2.0: action variables are evaluated in sequence between sibling
+          // actions, once per execution of the action content (per iteration when
+          // `iterate`/`while` re-runs perform()).
+          actionOrVar.refresh();
+          // eslint-disable-next-line no-continue
           continue;
         }
         const action = actionOrVar;

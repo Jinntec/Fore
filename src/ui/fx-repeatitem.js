@@ -54,7 +54,10 @@ export class FxRepeatitem extends withDraggability(UIElement, true) {
     // Its children already get their context from the repeatitem via getInScopeContext().
     this.ref = `${this.parentNode.ref}`;
 
-    this.tabindex = 0;
+    this.setAttribute('role', 'listitem');
+    // `tabindex` (lowercase) is not a reflected IDL property - assigning it was a silent no-op.
+    // Use the actual attribute so repeat items are keyboard-focusable.
+    this.setAttribute('tabindex', '0');
   }
 
   disconnectedCallback() {

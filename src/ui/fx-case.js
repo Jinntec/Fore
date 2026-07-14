@@ -93,7 +93,7 @@ export class FxCase extends FxContainer {
       ownerForm.addToBatchedNotifications(target);
       ownerForm.refresh(false);
     });
-    this.addEventListener('deselect', (event) => {
+    this.addEventListener('deselect', event => {
       const ownerForm = this.getOwnerForm();
       ownerForm.addToBatchedNotifications(event.target);
     });

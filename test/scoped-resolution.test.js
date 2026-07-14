@@ -1,7 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import {
-  html, oneEvent, fixtureSync, expect, elementUpdated,
-} from '@open-wc/testing';
+import { html, oneEvent, fixtureSync, expect, elementUpdated } from '@open-wc/testing';
 
 import '../index.js';
 
@@ -105,13 +103,21 @@ describe('scoped resolution tests', () => {
     await oneEvent(el, 'ready');
     await elementUpdated(el);
 
-    el.querySelectorAll('.thumb .fingername').forEach((fingerOutput) => {
+    el.querySelectorAll('.thumb .fingername').forEach(fingerOutput => {
       expect(fingerOutput.value).to.equal('thumb');
     });
-    el.querySelectorAll('.pointer .fingername').forEach(fingerOutput => expect(fingerOutput.value).to.equal('pointer'));
-    el.querySelectorAll('.middle .fingername').forEach(fingerOutput => expect(fingerOutput.value).to.equal('middle'));
-    el.querySelectorAll('.ring .fingername').forEach(fingerOutput => expect(fingerOutput.value).to.equal('ring'));
-    el.querySelectorAll('.pinky .fingername').forEach(fingerOutput => expect(fingerOutput.value).to.equal('pinky'));
+    el.querySelectorAll('.pointer .fingername').forEach(fingerOutput =>
+      expect(fingerOutput.value).to.equal('pointer'),
+    );
+    el.querySelectorAll('.middle .fingername').forEach(fingerOutput =>
+      expect(fingerOutput.value).to.equal('middle'),
+    );
+    el.querySelectorAll('.ring .fingername').forEach(fingerOutput =>
+      expect(fingerOutput.value).to.equal('ring'),
+    );
+    el.querySelectorAll('.pinky .fingername').forEach(fingerOutput =>
+      expect(fingerOutput.value).to.equal('pinky'),
+    );
   });
 
   it('inscopeContext for second child bind is equal to its parent', async () => {
@@ -291,7 +297,9 @@ describe('scoped resolution tests', () => {
     const model = el.querySelector('fx-model');
 
     await oneEvent(el, 'refresh-done');
-    expect(model.modelItems.length).to.equal(8);
+    // 8 bound modelitems plus one synthetic modelitem lazily created by
+    // ref-dependency tracking for the data root read by output3's absolute path
+    expect(model.modelItems.length).to.equal(9);
 
     let out = el.querySelector('#output');
     expect(out.modelItem.value).to.equal('index');
@@ -357,8 +365,13 @@ describe('scoped resolution tests', () => {
       <fx-fore>
         <fx-model>
           <fx-instance>
-<data><ol><li><p>66</p></li><li><p>78</p></li></ol></data>
-</fx-instance>
+            <data
+              ><ol>
+                <li><p>66</p></li>
+                <li><p>78</p></li>
+              </ol></data
+            >
+          </fx-instance>
         </fx-model>
         <fx-group ref="ol">
           <fx-repeat ref="//li">
@@ -388,13 +401,16 @@ describe('scoped resolution tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance src="/base/test/HD025278.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
+          <fx-instance
+            src="/base/test/HD025278.xml"
+            xpath-default-namespace="http://www.tei-c.org/ns/1.0"
+          ></fx-instance>
         </fx-model>
         <fx-group ref="teiHeader">
-{count(//*:msPart)}
+          {count(//*:msPart)}
           <fx-repeat ref=".//msPart">
             <template>
----{name(.)}---
+              ---{name(.)}---
               <fx-group ref="physDesc/objectDesc/supportDesc/support/dimensions">
                 <fx-control ref="width">
                   <label>Breite2</label>

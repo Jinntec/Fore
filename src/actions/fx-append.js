@@ -60,7 +60,7 @@ class FxAppend extends AbstractAction {
   async perform() {
     super.perform();
 
-    this._dataFromTemplate();
+    await this._dataFromTemplate();
     /*
         const instData = new XMLSerializer().serializeToString(
             this.getModel()
@@ -87,7 +87,7 @@ class FxAppend extends AbstractAction {
    *
    * @private
    */
-  _dataFromTemplate() {
+  async _dataFromTemplate() {
     const inscope = this.getInScopeContext();
     const parentForm = this.getOwnerForm();
     const repeat = parentForm.querySelector(`#${this.repeat}`);
@@ -121,7 +121,7 @@ class FxAppend extends AbstractAction {
 
     const fore = this.getOwnerForm();
 
-    Fore.dispatch(inst, 'insert', {
+    await Fore.dispatch(inst, 'insert', {
       insertedNodes: data,
       insertedParent: inscope,
       ref: this.ref,

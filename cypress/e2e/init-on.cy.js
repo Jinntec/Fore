@@ -71,5 +71,4 @@ describe('fx-fore init gating demos (demo/on-event.html)', () => {
       includeShadowDom: true,
     }).should('contain.text', 'Initialized after A and B were ready.');
   });
-
 });

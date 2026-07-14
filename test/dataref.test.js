@@ -1,6 +1,12 @@
 /* eslint-disable no-unused-expressions */
 import {
-  html, fixture, fixtureSync, expect, elementUpdated, oneEvent, fixtureCleanup
+  html,
+  fixture,
+  fixtureSync,
+  expect,
+  elementUpdated,
+  oneEvent,
+  fixtureCleanup,
 } from '@open-wc/testing';
 
 import '../index.js';
@@ -47,9 +53,36 @@ describe('data-ref Tests', () => {
         </fx-model>
 
         <h1>Simple Table via attributes</h1>
-        <p>To bind data nodes the <code><a href="https://jinntec.github.io/fore-docs/glossary/#binding-expression" target="_blank">data-ref</a></code> attribute is used instead of the usual <code><a href="https://jinntec.github.io/fore-docs/glossary/#binding-expression" target="_blank">ref</a></code> found
-          on the Fore elements.</p>
-        <p>You still have to wrap the repeated content in a <code><a href="https://jinntec.github.io/fore-docs/elements/ui/repeat/#description" target="_blank">template</a></code> as with usual repeats.</p>
+        <p>
+          To bind data nodes the
+          <code
+            ><a
+              href="https://jinntec.github.io/fore-docs/glossary/#binding-expression"
+              target="_blank"
+              >data-ref</a
+            ></code
+          >
+          attribute is used instead of the usual
+          <code
+            ><a
+              href="https://jinntec.github.io/fore-docs/glossary/#binding-expression"
+              target="_blank"
+              >ref</a
+            ></code
+          >
+          found on the Fore elements.
+        </p>
+        <p>
+          You still have to wrap the repeated content in a
+          <code
+            ><a
+              href="https://jinntec.github.io/fore-docs/elements/ui/repeat/#description"
+              target="_blank"
+              >template</a
+            ></code
+          >
+          as with usual repeats.
+        </p>
         <table data-ref="item">
           <template>
             <tr>
@@ -78,63 +111,25 @@ describe('data-ref Tests', () => {
     `);
 
     //      await elementUpdated(el);
-	  await oneEvent(el, 'ready');
+    await oneEvent(el, 'ready');
     //check model
     const model = el.querySelector('fx-model');
-    expect(model.modelItems.length).to.equal(18);
-    expect(model.modelItems[0].path).to.equal('$default/item[1]/field[1]');
-    expect(model.modelItems[0].observers.size).to.equal(1);
+    // 18 bound field modelitems plus 18 synthetic ones lazily created by
+    // ref-dependency tracking (one per @name attribute read by the output predicates)
+    expect(model.modelItems.length).to.equal(36);
+    for (let item = 1; item <= 3; item += 1) {
+      for (let field = 1; field <= 6; field += 1) {
+        const fieldMi = model.getModelItem(`$default/item[${item}]/field[${field}]`);
+        expect(fieldMi, `field modelitem item[${item}]/field[${field}]`).to.exist;
+        // all six outputs of a row read every field of that row while evaluating
+        // their predicates, so each field is observed by the whole row
+        expect(fieldMi.observers.size).to.equal(6);
 
-    expect(model.modelItems[1].path).to.equal('$default/item[1]/field[2]');
-    expect(model.modelItems[1].observers.size).to.equal(1);
-
-    expect(model.modelItems[2].path).to.equal('$default/item[1]/field[3]');
-    expect(model.modelItems[2].observers.size).to.equal(1);
-
-    expect(model.modelItems[3].path).to.equal('$default/item[1]/field[4]');
-    expect(model.modelItems[3].observers.size).to.equal(1);
-
-    expect(model.modelItems[4].path).to.equal('$default/item[1]/field[5]');
-    expect(model.modelItems[4].observers.size).to.equal(1);
-
-    expect(model.modelItems[5].path).to.equal('$default/item[1]/field[6]');
-    expect(model.modelItems[5].observers.size).to.equal(1);
-
-    expect(model.modelItems[6].path).to.equal('$default/item[2]/field[1]');
-    expect(model.modelItems[6].observers.size).to.equal(1);
-
-    expect(model.modelItems[7].path).to.equal('$default/item[2]/field[2]');
-    expect(model.modelItems[7].observers.size).to.equal(1);
-
-    expect(model.modelItems[8].path).to.equal('$default/item[2]/field[3]');
-    expect(model.modelItems[8].observers.size).to.equal(1);
-
-    expect(model.modelItems[9].path).to.equal('$default/item[2]/field[4]');
-    expect(model.modelItems[9].observers.size).to.equal(1);
-
-    expect(model.modelItems[10].path).to.equal('$default/item[2]/field[5]');
-    expect(model.modelItems[10].observers.size).to.equal(1);
-
-    expect(model.modelItems[11].path).to.equal('$default/item[2]/field[6]');
-    expect(model.modelItems[11].observers.size).to.equal(1);
-
-    expect(model.modelItems[12].path).to.equal('$default/item[3]/field[1]');
-    expect(model.modelItems[12].observers.size).to.equal(1);
-
-    expect(model.modelItems[13].path).to.equal('$default/item[3]/field[2]');
-    expect(model.modelItems[13].observers.size).to.equal(1);
-
-    expect(model.modelItems[14].path).to.equal('$default/item[3]/field[3]');
-    expect(model.modelItems[14].observers.size).to.equal(1);
-
-    expect(model.modelItems[15].path).to.equal('$default/item[3]/field[4]');
-    expect(model.modelItems[15].observers.size).to.equal(1);
-
-    expect(model.modelItems[16].path).to.equal('$default/item[3]/field[5]');
-    expect(model.modelItems[16].observers.size).to.equal(1);
-
-    expect(model.modelItems[17].path).to.equal('$default/item[3]/field[6]');
-    expect(model.modelItems[17].observers.size).to.equal(1);
+        const attrMi = model.getModelItem(`$default/item[${item}]/field[${field}]/@name`);
+        expect(attrMi, `attribute modelitem item[${item}]/field[${field}]/@name`).to.exist;
+        expect(attrMi.observers.size).to.equal(6);
+      }
+    }
 
     //check ui
     const repeat = el.querySelector('fx-repeat-attributes');
@@ -150,5 +145,4 @@ describe('data-ref Tests', () => {
     expect(repeatitems[1].hasAttribute('repeat-index')).to.be.true;
     expect(repeat.getAttribute('index')).to.equal('2');
   });
-
 });

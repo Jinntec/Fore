@@ -86,15 +86,37 @@ class FxSend extends AbstractAction {
       submission.parameters.set('target', resolved);
     }
 
+    // Capture before submit.submit() runs: fx-submission#_handleResponse() itself already
+    // runs the full updateModel()+refresh(true) cycle for a replace="instance" response,
+    // unless the model wasn't inited yet (see the `model.inited` guard there) - in that one
+    // case it skips its own cycle and we still need to do it below. Reading `inited` now (not
+    // after submit()) avoids mistaking "became inited during this very submit()" for "was
+    // already inited", which would wrongly skip the only cycle that ran.
+    const modelWasInited = this.getModel().inited;
     await submission.submit();
     if (submission.replace === 'instance') {
-      this.getModel().updateModel();
-      // todo: this bypasses observers...
-      this.getOwnerForm().refresh(true); //whole instance changes - full refresh necessary
-      // this.getOwnerForm().addToBatchedNotifications(this.getOwnerForm());
-      // this.needsUpdate = true;
+      if (!modelWasInited) {
+        this.getModel().updateModel();
+        // todo: this bypasses observers...
+        this.getOwnerForm().refresh(true); // whole instance changes - full refresh necessary
+        // this.getOwnerForm().addToBatchedNotifications(this.getOwnerForm());
+      }
+      // needsUpdate is set (below, via actionPerformed override) so the undo hook records
+      // this replace as an undo step - it is NOT read by the default actionPerformed cycle
+      // here, since that would run a second, redundant recalculate/revalidate/refresh(false)
+      // on top of the full refresh(true) already done (either just above, or inside
+      // fx-submission#_handleResponse)
+      this.needsUpdate = true;
     }
     // if not of type fx-submission signal error
+  }
+
+  actionPerformed() {
+    // the instance-replace branch above already ran the full update+refresh cycle itself;
+    // skip the default gated cycle (see the comment at the needsUpdate assignment) while
+    // still calling dispatchActionPerformed() - the generic undo commit/discard hook in
+    // _finalizePerform() runs independently of this override and needs nothing extra here
+    this.dispatchActionPerformed();
   }
 
   _emitToChannel() {

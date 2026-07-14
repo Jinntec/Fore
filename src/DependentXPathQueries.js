@@ -58,10 +58,23 @@ export default class DependentXPathQueries {
   }
 
   /**
-   * Add an XPath to the dependencies
+   * Detects whether any tracked XPath references one of the given variables.
    *
-   * @param {string} xpath the XPath to add
+   * Pessimistic substring scan (`$name` also matches `$names`) — false positives are
+   * cheap extra refreshes, mirroring isInvalidatedByChildlistChanges.
+   *
+   * @param {string[]} varNames variable names without the leading '$'
    */
+  isInvalidatedByVariableChange(varNames) {
+    for (const xpath of this._xpaths) {
+      if (varNames.some(name => xpath.includes(`$${name}`))) {
+        return true;
+      }
+    }
+    // We can also depend on these variables if they were used in our ancestry
+    return !!this._parentDependencies?.isInvalidatedByVariableChange(varNames);
+  }
+
   /**
    * Add an XPath to the dependencies
    *

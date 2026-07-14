@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>fx-switch tabs</title>
+    <link href="../resources/fore.css" rel="stylesheet">
+    <link href="../resources/demo.css" rel="stylesheet">
+
+    <style>
+        fx-switch[appearance="tabs"] div[part="tablist"] {
+            display: flex;
+            gap: 6px;
+        }
+        fx-switch[appearance="tabs"] fx-trigger {
+            display: inline-block;
+        }
+        fx-switch[appearance="tabs"] fx-trigger button {
+            position: relative;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border: thin solid gray;
+            border-bottom: none;
+            background: #eee;
+        }
+        fx-switch[appearance="tabs"] fx-trigger button[aria-selected="true"] {
+            background: white;
+            font-weight: bold;
+        }
+        fx-switch[appearance="tabs"] fx-trigger button:focus-visible {
+            z-index: 1;
+            outline: 3px solid #1a73e8;
+            outline-offset: 2px;
+        }
+        fx-case {
+            border: thin solid gray;
+            padding: 1rem;
+        }
+        .hint {
+            background: #eef6ff;
+            border: thin solid #1a73e8;
+            padding: 0.75rem 1rem;
+        }
+        kbd {
+            border: thin solid #999;
+            border-bottom-width: 2px;
+            border-radius: 3px;
+            padding: 0 0.35rem;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body unresolved="unresolved">
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+
+<div class="wrapper">
+    <h1><code>fx-switch</code> tabs</h1>
+    <p>
+        Setting <code>appearance="tabs"</code> on <code>fx-switch</code> turns it into a proper
+        ARIA tabs widget: the switch renders <code>role="tablist"</code> around its
+        <code>fx-trigger</code> children, each trigger's widget gets <code>role="tab"</code> and
+        <code>aria-selected</code>, and each targeted <code>fx-case</code> gets
+        <code>role="tabpanel"</code> plus <code>aria-labelledby</code> pointing back to its tab.
+        Arrow keys (Left/Right/Up/Down/Home/End) move focus between tabs and activate the
+        corresponding case, following the WAI-ARIA "automatic activation" tabs pattern. This
+        requires the <code>fx-trigger</code>/<code>fx-toggle</code> pairs to be direct children
+        of <code>fx-switch</code>, alongside the <code>fx-case</code> elements they target -
+        plain <code>fx-switch</code> usage elsewhere (bound switches, wizards, accordions) is
+        unaffected.
+    </p>
+
+    <p class="hint">
+        <strong>Keyboard:</strong> <kbd>Tab</kbd> into the strip to focus the selected tab, then
+        use <kbd>&larr;</kbd>/<kbd>&rarr;</kbd> (or <kbd>&uarr;</kbd>/<kbd>&darr;</kbd>) to move
+        between tabs - moving focus also activates the corresponding case.
+        <kbd>Home</kbd>/<kbd>End</kbd> jump to the first/last tab.
+    </p>
+    <p>Focused tab: <output id="focus-status">&mdash;</output></p>
+
+    <demo-snippet>
+        <template>
+<fx-fore>
+    <fx-switch appearance="tabs">
+        <fx-trigger>
+            <button>Page one</button>
+            <fx-toggle case="one"></fx-toggle>
+        </fx-trigger>
+        <fx-trigger>
+            <button>Page two</button>
+            <fx-toggle case="two"></fx-toggle>
+        </fx-trigger>
+        <fx-trigger>
+            <button>Page three</button>
+            <fx-toggle case="three"></fx-toggle>
+        </fx-trigger>
+
+        <fx-case id="one">
+            <h2>Page one</h2>
+            <p>Selected by default.</p>
+        </fx-case>
+        <fx-case id="two">
+            <h2>Page two</h2>
+            <p>Some further content.</p>
+        </fx-case>
+        <fx-case id="three">
+            <h2>Page three</h2>
+            <p>Some completely unneeded content.</p>
+        </fx-case>
+    </fx-switch>
+</fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+
+<script type="module" src="./demo.js"></script>
+<script type="module">
+    const snippet = document.querySelector('demo-snippet');
+    snippet.addEventListener('dom-ready', () => {
+        const tabSwitch = snippet.querySelector('fx-switch[appearance="tabs"]');
+        const status = document.getElementById('focus-status');
+        tabSwitch.addEventListener('focusin', e => {
+            if (e.target.getAttribute('role') === 'tab') {
+                status.textContent = e.target.textContent.trim();
+            }
+        });
+    });
+</script>
+</body>
+</html>

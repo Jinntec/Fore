@@ -30,8 +30,12 @@ module.exports = config => {
         captureConsole: false,
         mocha: {
           reporter: 'html',
-          ui: 'bdd'
-        }
+          ui: 'bdd',
+          // Default 2000ms is too tight for tests that fetch external instances
+          // (e.g. src="base/test/answer.xml") while both browsers run the suite
+          // concurrently on a loaded machine — sporadic timeouts, not real failures.
+          timeout: 10000,
+        },
       },
       logLevel: config.LOG_ERROR,
       // you can overwrite/extend the config further

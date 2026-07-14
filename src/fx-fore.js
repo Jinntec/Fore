@@ -2,15 +2,12 @@ import { Fore } from './fore.js';
 import './fx-instance.js';
 import { FxModel } from './fx-model.js';
 import '@jinntec/jinn-toast';
-import {
-  evaluateXPathToNodes,
-  evaluateXPathToString,
-  createNamespaceResolver,
-} from './xpath-evaluation.js';
+import { evaluateXPathToNodes, evaluateXPathToString } from './xpath-evaluation.js';
 import getInScopeContext from './getInScopeContext.js';
 import { XPathUtil } from './xpath-util.js';
 import { FxRepeatAttributes } from './ui/fx-repeat-attributes.js';
 import { FxBind } from './fx-bind.js';
+import createNodes from './createNodes.js';
 
 /**
  * Makes the dirty state of the form.
@@ -24,21 +21,6 @@ const dirtyStates = {
   CLEAN: 'clean',
   DIRTY: 'dirty',
 };
-async function waitForFunctionLibs(rootEl) {
-  const libs = Array.from(rootEl.querySelectorAll('fx-functionlib'));
-  await Promise.all(libs.map(l => (l.readyPromise ? l.readyPromise : Promise.resolve())));
-}
-
-/*
- * Determine whether a string is a valid Name
- *
- * @param {string} name
- * @returns {boolean} whether the name is a valid one
- */
-function isValidName(name) {
-  const result = new DOMParser().parseFromString(`<${name}/>`, 'application/xml');
-  return result.querySelector('parsererror') === null;
-}
 
 /**
  * Main class for Fore.Outermost container element for each Fore application.
@@ -347,7 +329,7 @@ export class FxFore extends HTMLElement {
     this.initialRun = true;
     this._scanForNewTemplateExpressionsNextRefresh = false;
     this.repeatsFromAttributesCreated = false;
-/*
+    /*
     this.validateOn = this.hasAttribute('validate-on')
       ? this.getAttribute('validate-on')
       : 'update';
@@ -392,11 +374,11 @@ export class FxFore extends HTMLElement {
   getDebugSnapshot(options = {}) {
     const model = this.model;
 
-    const debugRefElements = Array.from(this.querySelectorAll('[ref]'))
-        .filter(element => typeof element.getDebugInfo === 'function');
+    const debugRefElements = Array.from(this.querySelectorAll('[ref]')).filter(
+      element => typeof element.getDebugInfo === 'function',
+    );
 
-    const bindingElements = debugRefElements
-        .filter(element => element.localName === 'fx-bind');
+    const bindingElements = debugRefElements.filter(element => element.localName === 'fx-bind');
 
     const boundElementNames = new Set([
       'fx-control',
@@ -407,31 +389,32 @@ export class FxFore extends HTMLElement {
       'fx-switch',
     ]);
 
-    const boundUiElements = debugRefElements
-        .filter(element => boundElementNames.has(element.localName));
+    const boundUiElements = debugRefElements.filter(element =>
+      boundElementNames.has(element.localName),
+    );
 
     const bindings = bindingElements.map(element => element.getDebugInfo());
 
     const boundElements = boundUiElements.map(element => element.getDebugInfo());
 
     const submissions = Array.from(this.querySelectorAll('fx-submission'))
-        .filter(element => typeof element.getDebugInfo === 'function')
-        .map(element => element.getDebugInfo());
+      .filter(element => typeof element.getDebugInfo === 'function')
+      .map(element => element.getDebugInfo());
 
     return {
       fore: this.getDebugInfo?.() || null,
 
       model:
-          model?.getDebugInfo?.({
-            includeGraphs: options.includeGraphs === true,
-          }) || null,
+        model?.getDebugInfo?.({
+          includeGraphs: options.includeGraphs === true,
+        }) || null,
 
       instances: model?.instances?.map(instance => instance.getDebugInfo?.()) || [],
       modelItems: model?.modelItems?.map(item => item.getDebugInfo?.()) || [],
 
       bindings,
       boundElements,
-      submissions
+      submissions,
     };
   }
 
@@ -710,6 +693,11 @@ export class FxFore extends HTMLElement {
           registerVariables(child);
         }
       })(this);
+      // Model-internal evaluations (calculate and other facets) pass the fx-model as
+      // scope element to evaluateXPath — hand it the registry so model variables
+      // resolve there. FxModel does not extend ForeElementMixin, so it would
+      // otherwise fall through to implicit instance bindings only.
+      modelElement.inScopeVariables = variables;
 
       // Ensure all function libraries are loaded/registered before model construction,
       // so binds/calculate/XPath evaluations can safely call them.
@@ -830,6 +818,65 @@ export class FxFore extends HTMLElement {
     if (this.hasAttribute('show-confirmation')) {
       this.showConfirmation = true;
     }
+    if (this.hasAttribute('keyboard-shortcuts')) {
+      // opt-in: overrides native text-field undo within the form.
+      // Listens on document (not this element) so the shortcuts keep working when
+      // focus fell back to the body, e.g. right after an undo re-rendered the
+      // previously focused control.
+      this._undoRedoKeyListener = e => {
+        const target = e.composedPath ? e.composedPath()[0] : e.target;
+        if (
+          this.contains(target) ||
+          target === document.body ||
+          target === document.documentElement
+        ) {
+          this._handleUndoRedoKeys(e);
+        }
+      };
+      document.addEventListener('keydown', this._undoRedoKeyListener);
+    }
+  }
+
+  /**
+   * Commits any in-progress widget edit by blurring the focused element. Called before
+   * undo/redo so pending typing becomes its own undo step and no stale widget value
+   * can fire a late commit against the restored state (which would clear the redo stack).
+   */
+  flushPendingWidgetEdit() {
+    const active = document.activeElement;
+    if (active && active !== document.body && this.contains(active)) {
+      active.blur();
+      // In a window without OS focus (background window, e.g. a windowed test run),
+      // blur() does not dispatch a 'blur' event — nothing is really focused at the OS
+      // level — so fx-control's commit listener never runs and the pending edit is
+      // silently lost. Dispatch a synthetic blur to commit it; harmless if redundant
+      // (an unchanged value discards its undo capture).
+      if (!document.hasFocus()) {
+        active.dispatchEvent(new FocusEvent('blur'));
+      }
+    }
+  }
+
+  /**
+   * Ctrl/Cmd+Z -> undo, Ctrl/Cmd+Shift+Z or Ctrl/Cmd+Y -> redo.
+   * Only active when the `keyboard-shortcuts` attribute is present.
+   */
+  async _handleUndoRedoKeys(e) {
+    if (!(e.ctrlKey || e.metaKey) || !this.model) return;
+    const key = e.key.toLowerCase();
+    const isRedo = (key === 'z' && e.shiftKey) || key === 'y';
+    if (!isRedo && key !== 'z') return;
+    e.preventDefault();
+
+    this.flushPendingWidgetEdit();
+    const done = isRedo ? this.model.redo() : this.model.undo();
+    if (!done) return;
+    this.model.updateModel();
+    await this.refresh(true);
+    Fore.dispatch(this, isRedo ? 'redo-done' : 'undo-done', {
+      canUndo: this.model.canUndo(),
+      canRedo: this.model.canRedo(),
+    });
   }
 
   /**
@@ -906,17 +953,13 @@ export class FxFore extends HTMLElement {
   }
 
   _injectDevtools() {
-    if (this.ownerDocument.querySelector('fx-devtools')) {
-      // There's already a devtools, so we can ignore this one.
-      // One devtools can focus multiple fore elements
+    if (this.ownerDocument.querySelector('fx-lens')) {
+      // There's already a lens, so we can ignore this one.
+      // One lens can focus multiple fore elements
       return;
     }
     const { search } = window.location;
     const urlParams = new URLSearchParams(search);
-    if (urlParams.has('inspect')) {
-      const devtools = document.createElement('fx-devtools');
-      document.body.appendChild(devtools);
-    }
     if (urlParams.has('lens')) {
       const lens = document.createElement('fx-lens');
       document.body.appendChild(lens);
@@ -931,6 +974,7 @@ export class FxFore extends HTMLElement {
    * @param {string} localNameOfElement
    */
   signalChangeToElement(localNameOfElement) {
+    if (typeof localNameOfElement !== 'string' || !localNameOfElement) return;
     this._localNamesWithChanges.add(localNameOfElement);
   }
 
@@ -1015,6 +1059,10 @@ export class FxFore extends HTMLElement {
 
   disconnectedCallback() {
     this.removeEventListener('dragstart', this.dragstart);
+    if (this._undoRedoKeyListener) {
+      document.removeEventListener('keydown', this._undoRedoKeyListener);
+      this._undoRedoKeyListener = null;
+    }
     /*
             this.removeEventListener('model-construct-done', this._handleModelConstructDone);
             this.removeEventListener('message', this._displayMessage);
@@ -1061,11 +1109,23 @@ export class FxFore extends HTMLElement {
       if (isFullRefresh) {
         performance.mark('force-refresh-start');
         console.log('🔄 🔴🔴🔴 ### full refresh() on ', this);
+        // A full refresh re-evaluates every ref anyway — pending structural-change
+        // signals are consumed by it.
+        this._localNamesWithChanges.clear();
         await Fore.refreshChildren(this, force);
         performance.mark('force-refresh-end');
         performance.measure('force-refresh', 'force-refresh-start', 'force-refresh-end');
       } else {
+        // Evaluate UI variables synchronously so the batched-notification drain below
+        // still starts in the same tick as refresh() itself — sync listeners (e.g.
+        // action-performed) depend on that ordering.
+        const variableConsumerRefreshes = this._refreshUIVariables();
+        const structuralConsumerRefreshes = this._refreshStructuralDependents();
         await this._processBatchedNotifications();
+        const consumerRefreshes = [...variableConsumerRefreshes, ...structuralConsumerRefreshes];
+        if (consumerRefreshes.length > 0) {
+          await Promise.all(consumerRefreshes);
+        }
       }
 
       if (force === true || this.initialRun || this._scanForNewTemplateExpressionsNextRefresh) {
@@ -1078,12 +1138,6 @@ export class FxFore extends HTMLElement {
       this.isRefreshPhase = false;
       this.initialRun = false;
       this.style.visibility = 'visible';
-
-      console.info(
-        `%c ✅ refresh-done on #${this.id}`,
-        'background:darkorange; color:black; padding:.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
-        this.getModel().modelItems,
-      );
 
       // Record timing before dispatching 'refresh-done' since listeners (eg. fx-debugger)
       // may synchronously read this.debugInfo.lastRefresh in response to the event.
@@ -1127,6 +1181,105 @@ export class FxFore extends HTMLElement {
   }
 
   /**
+   * XForms 2.0: variables outside a model and not within an action are evaluated in
+   * document order during a refresh. The full-refresh path covers them through the
+   * Fore.refreshChildren traversal; this pass covers partial refreshes, where fx-var
+   * elements were previously never re-evaluated (stale `$var` values).
+   *
+   * When a variable's value changed at this evaluation point, elements whose ref
+   * expressions reference it are refreshed. This is invalidation at the evaluation
+   * point — variables themselves are never re-evaluated reactively (spec: deletes and
+   * predicate changes do not affect a variable until its next evaluation point).
+   *
+   * Implicit per-instance bindings ($default / $<instance-id>) are not fx-var elements
+   * and are never touched here.
+   *
+   * Synchronous by design — refresh() must reach the batched-notification drain in the
+   * same tick. Returns the consumer refresh() promises for the caller to await after
+   * the drain.
+   *
+   * @returns {Promise[]}
+   * @private
+   */
+  _refreshUIVariables() {
+    const changedNames = [];
+    this.querySelectorAll('fx-var').forEach(variable => {
+      // Nested subforms evaluate their own variables
+      if (variable.closest('fx-fore') !== this) return;
+      // Model variables get their evaluation point in the model update cycle
+      if (variable.closest('fx-model')) return;
+      // Action-scoped variables are evaluated once per action execution
+      for (let anc = variable.parentElement; anc && anc !== this; anc = anc.parentElement) {
+        if (Fore.isActionElement(anc.nodeName)) return;
+      }
+      if (typeof variable.refreshAndReportChange !== 'function') return;
+      if (variable.refreshAndReportChange()) {
+        changedNames.push(variable.name);
+      }
+    });
+
+    if (changedNames.length === 0) return [];
+
+    const refreshPromises = [];
+    // [value] too: fx-output's value attribute is evaluated outside evalInContext and
+    // never reaches el.dependencies, so the raw attribute text is scanned as well.
+    this.querySelectorAll('[ref],[value]').forEach(el => {
+      if (el.closest('fx-fore') !== this) return;
+      if (typeof el.refresh !== 'function') return;
+      // Actions only evaluate during execution; fx-var got its evaluation point above
+      if (Fore.isActionElement(el.nodeName) || el.nodeName === 'FX-VAR') return;
+      const exprs = `${el.getAttribute('ref') ?? ''} ${el.getAttribute('value') ?? ''}`;
+      if (
+        changedNames.some(name => exprs.includes(`$${name}`)) ||
+        (typeof el.dependencies?.isInvalidatedByVariableChange === 'function' &&
+          el.dependencies.isInvalidatedByVariableChange(changedNames))
+      ) {
+        refreshPromises.push(el.refresh());
+      }
+    });
+    return refreshPromises;
+  }
+
+  /**
+   * Consumes the structural-change signals produced by fx-insert/fx-delete/fx-append/
+   * fx-setattribute (signalChangeToElement). Elements whose ref expressions may be
+   * affected by child-list changes to nodes with the signalled local names are
+   * refreshed — this catches refs that hold no observer on the changed node itself
+   * (e.g. a count() over rows that were inserted or deleted, or an attribute that
+   * did not exist when the ref was last evaluated).
+   *
+   * Pessimistic substring matching (DependentXPathQueries.isInvalidatedByChildlistChanges):
+   * false positives are cheap extra refreshes.
+   *
+   * Synchronous by design, like _refreshUIVariables — returns the consumer refresh()
+   * promises for the caller to await after the batched-notification drain.
+   *
+   * @returns {Promise[]}
+   * @private
+   */
+  _refreshStructuralDependents() {
+    if (this._localNamesWithChanges.size === 0) return [];
+    const changedNames = Array.from(this._localNamesWithChanges);
+    this._localNamesWithChanges.clear();
+
+    const refreshPromises = [];
+    this.querySelectorAll('[ref]').forEach(el => {
+      // Nested subforms consume their own signals
+      if (el.closest('fx-fore') !== this) return;
+      if (typeof el.refresh !== 'function') return;
+      // Actions only evaluate during execution; fx-var snapshots are evaluation-point-only
+      if (Fore.isActionElement(el.nodeName) || el.nodeName === 'FX-VAR') return;
+      if (
+        typeof el.dependencies?.isInvalidatedByChildlistChanges === 'function' &&
+        el.dependencies.isInvalidatedByChildlistChanges(changedNames)
+      ) {
+        refreshPromises.push(el.refresh());
+      }
+    });
+    return refreshPromises;
+  }
+
+  /**
    * Process all batched notifications at the end of the refresh phase.
    * Async so that all control refresh() calls (which are themselves async) are awaited
    * before refresh-done fires — prevents _isRefreshing from being true when the
@@ -1154,20 +1307,27 @@ export class FxFore extends HTMLElement {
           }
           refreshPromises.push(uiElement.refresh(true));
         }
-        const nonrelevant = Array.from(this.querySelectorAll('[nonrelevant]'));
-        if (nonrelevant) {
-          nonrelevant.forEach(el => {
-            if (el.refresh) {
-              refreshPromises.push(el.refresh());
-            }
-          });
-        }
         if (entry.observers) {
           entry.observers.forEach(observer => {
             if (typeof observer.update === 'function') {
               observer.update(entry);
             }
           });
+        }
+      });
+
+      // Nonrelevant subtrees are skipped by the normal recursive refresh traversal
+      // (Fore.refreshChildren), so they need an explicit refresh() here to pick up any
+      // other pending state changes. This only needs to run once per batch, not once per
+      // entry -- doing it inside the forEach above re-scanned the whole form and re-pushed
+      // a refresh() per nonrelevant element for EVERY batched entry, an O(entries x
+      // nonrelevant) blowup that hangs/crashes the tab once more than a couple hundred
+      // nodes change relevance at once (e.g. a cross-instance fx-bind[relevant] driving a
+      // large fx-repeat from a single filter keystroke).
+      const nonrelevant = Array.from(this.querySelectorAll('[nonrelevant]'));
+      nonrelevant.forEach(el => {
+        if (el.refresh) {
+          refreshPromises.push(el.refresh());
         }
       });
 
@@ -1999,6 +2159,11 @@ export class FxFore extends HTMLElement {
       }
     }
   }
+  /**
+   * Create Nodes from an XPath
+   * @param {string} ref
+   * @param {Element} referenceNode
+   */
   _createNodes(ref, referenceNode) {
     if (!ref || !referenceNode) return null;
 
@@ -2013,6 +2178,8 @@ export class FxFore extends HTMLElement {
     const ownerDoc =
       referenceNode.nodeType === Node.DOCUMENT_NODE ? referenceNode : referenceNode.ownerDocument;
 
+    if (!ownerDoc) return null;
+
     const baseElement =
       referenceNode.nodeType === Node.DOCUMENT_NODE
         ? referenceNode.documentElement
@@ -2020,152 +2187,7 @@ export class FxFore extends HTMLElement {
           ? referenceNode.ownerElement
           : referenceNode;
 
-    if (!ownerDoc) return null;
-
-    const baseNamespace = baseElement?.namespaceURI || null;
-    const namespaceResolver = createNamespaceResolver(xpath, this);
-
-    const parseName = token => {
-      const raw = token.trim();
-
-      if (raw.startsWith('@')) {
-        const attrToken = raw.slice(1);
-        if (attrToken.startsWith('*:')) {
-          return { isAttribute: true, namespaceURI: null, localName: attrToken.substring(2) };
-        }
-        if (attrToken.includes(':')) {
-          const [prefix, localName] = attrToken.split(':');
-          return {
-            isAttribute: true,
-            namespaceURI: prefix === '*' ? null : namespaceResolver(prefix) || null,
-            localName,
-          };
-        }
-        return { isAttribute: true, namespaceURI: null, localName: attrToken };
-      }
-
-      if (raw.startsWith('*:')) {
-        return { isAttribute: false, namespaceURI: baseNamespace, localName: raw.substring(2) };
-      }
-      if (raw.includes(':')) {
-        const [prefix, localName] = raw.split(':');
-        return {
-          isAttribute: false,
-          namespaceURI: prefix === '*' ? baseNamespace : namespaceResolver(prefix) || baseNamespace,
-          localName,
-        };
-      }
-      return { isAttribute: false, namespaceURI: baseNamespace, localName: raw };
-    };
-
-    const parseStep = step => {
-      const trimmed = step.trim();
-      const nameMatch = trimmed.match(/^([^\[]+)/);
-      const token = nameMatch ? nameMatch[1].trim() : trimmed;
-      const predicates = [];
-
-      const predicateRegex = /\[\s*@([^\]\s=]+)\s*=\s*(['"])(.*?)\2\s*\]/g;
-      let match;
-      while ((match = predicateRegex.exec(trimmed)) !== null) {
-        predicates.push({ name: match[1], value: match[3] });
-      }
-      return { token, predicates };
-    };
-
-    const splitSteps = xpath => {
-      /**
-       * @type {string[]}
-       */
-      const steps = [];
-      let scratch = '';
-      let isInPredicate = false;
-      for (const char of xpath.split('')) {
-        if (char === '[') {
-          isInPredicate = true;
-          scratch += char;
-          continue;
-        }
-        if (char === ']') {
-          scratch += char;
-          isInPredicate = false;
-          continue;
-        }
-        if (!isInPredicate) {
-          // Just add to the scratch. Do not check for slashes within predicates
-          if (char === '/') {
-            // Consume this path step
-            if (scratch) {
-              steps.push(scratch);
-            }
-            scratch = '';
-            continue;
-          }
-        }
-        scratch += char;
-      }
-
-      if (scratch) {
-        // Flush it
-        steps.push(scratch);
-      }
-
-      return steps;
-    };
-
-    const steps = splitSteps(xpath)
-      .map(step => step.trim())
-      .filter(step => step && step !== '.');
-
-    if (!steps.length) return null;
-
-    let subtreeRoot = null;
-    let current = null;
-
-    for (const rawStep of steps) {
-      const { token, predicates } = parseStep(rawStep);
-      if (!token || token === '.') {
-        continue;
-      }
-
-      const parsed = parseName(token);
-
-      if (!isValidName(parsed.localName)) {
-        // This did not result in a valid name. Stop.
-        console.warn(
-          `Creating node for the XPath ${xpath} failed because the part ${parsed.localName} is not a valid Name.`,
-        );
-        return;
-      }
-
-      if (parsed.isAttribute) {
-        if (!current) {
-          const attr = ownerDoc.createAttribute(parsed.localName);
-          return attr;
-        }
-        current.setAttribute(parsed.localName, '');
-        continue;
-      }
-
-      const element = parsed.namespaceURI
-        ? ownerDoc.createElementNS(parsed.namespaceURI, parsed.localName)
-        : ownerDoc.createElement(parsed.localName);
-
-      for (const predicate of predicates) {
-        const attrName = predicate.name.includes(':')
-          ? predicate.name.split(':')[1]
-          : predicate.name;
-        element.setAttribute(attrName, predicate.value);
-      }
-
-      if (!subtreeRoot) {
-        subtreeRoot = element;
-      } else {
-        current.appendChild(element);
-      }
-      current = element;
-    }
-
-    return subtreeRoot;
+    return createNodes(ref, baseElement, this);
   }
 
   _handleDragStart(event) {

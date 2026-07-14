@@ -1,0 +1,2002 @@
+<data>
+  <event id="1" level="info" time="01:39:57">connection established to order-processor-5723</event>
+  <event id="2" level="info" time="01:39:53">request completed in 434ms</event>
+  <event id="3" level="info" time="01:39:50">request completed in 898ms</event>
+  <event id="4" level="info" time="01:39:46">scaled order-processor to 9014 replicas</event>
+  <event id="5" level="info" time="01:39:41">cache hit for key user:5231</event>
+  <event id="6" level="info" time="01:39:39">config reloaded without restart</event>
+  <event id="7" level="warn" time="01:39:36">retrying job #3155 (attempt 2/5)</event>
+  <event id="8" level="info" time="01:39:34">snapshot 1562 written to cold storage</event>
+  <event id="9" level="info" time="01:39:29">cache hit for key user:1195</event>
+  <event id="10" level="info" time="01:39:24">connection established to edge-router-5379</event>
+  <event id="11" level="warn" time="01:39:20">slow query on billing-worker took 718ms</event>
+  <event id="12" level="info" time="01:39:15">health check passed for edge-router</event>
+  <event id="13" level="info" time="01:39:11">job #5757 finished successfully</event>
+  <event id="14" level="warn" time="01:39:06">cache miss for key user:7204, falling back to origin</event>
+  <event id="15" level="info" time="01:39:04">job #1548 finished successfully</event>
+  <event id="16" level="info" time="01:38:59">snapshot 4629 written to cold storage</event>
+  <event id="17" level="warn" time="01:38:57">rate limit approaching for auth-gateway-6535</event>
+  <event id="18" level="info" time="01:38:55">snapshot 1845 written to cold storage</event>
+  <event id="19" level="error" time="01:38:52">circuit breaker opened for order-processor</event>
+  <event id="20" level="info" time="01:38:47">heartbeat received from edge-router-6609</event>
+  <event id="21" level="error" time="01:38:44">circuit breaker opened for notify-svc</event>
+  <event id="22" level="info" time="01:38:39">job #4503 finished successfully</event>
+  <event id="23" level="info" time="01:38:36">cache hit for key user:8280</event>
+  <event id="24" level="info" time="01:38:33">request completed in 275ms</event>
+  <event id="25" level="info" time="01:38:28">config reloaded without restart</event>
+  <event id="26" level="info" time="01:38:26">scaled session-cache to 5206 replicas</event>
+  <event id="27" level="info" time="01:38:23">rotated log segment 8332</event>
+  <event id="28" level="info" time="01:38:21">connection established to audit-collector-5470</event>
+  <event id="29" level="info" time="01:38:19">snapshot 8669 written to cold storage</event>
+  <event id="30" level="warn" time="01:38:15">deprecated endpoint called by auth-gateway</event>
+  <event id="31" level="info" time="01:38:11">job #8721 finished successfully</event>
+  <event id="32" level="info" time="01:38:08">cache hit for key user:5983</event>
+  <event id="33" level="info" time="01:38:05">connection established to order-processor-1098</event>
+  <event id="34" level="info" time="01:38:00">connection established to session-cache-9609</event>
+  <event id="35" level="info" time="01:37:55">connection established to billing-worker-6496</event>
+  <event id="36" level="warn" time="01:37:53">slow query on notify-svc took 394ms</event>
+  <event id="37" level="error" time="01:37:49">connection to session-cache-9027 timed out after 802ms</event>
+  <event id="38" level="info" time="01:37:45">connection established to edge-router-1231</event>
+  <event id="39" level="info" time="01:37:43">rotated log segment 2882</event>
+  <event id="40" level="info" time="01:37:40">snapshot 2583 written to cold storage</event>
+  <event id="41" level="info" time="01:37:36">job #1494 finished successfully</event>
+  <event id="42" level="info" time="01:37:31">config reloaded without restart</event>
+  <event id="43" level="error" time="01:37:26">out of memory in worker 3604</event>
+  <event id="44" level="info" time="01:37:22">cache hit for key user:8072</event>
+  <event id="45" level="warn" time="01:37:18">cache miss for key user:3941, falling back to origin</event>
+  <event id="46" level="error" time="01:37:16">failed to acquire lock for resource 4707</event>
+  <event id="47" level="error" time="01:37:14">job #3053 failed: unhandled exception</event>
+  <event id="48" level="info" time="01:37:12">snapshot 1397 written to cold storage</event>
+  <event id="49" level="info" time="01:37:09">rotated log segment 6076</event>
+  <event id="50" level="info" time="01:37:06">snapshot 6337 written to cold storage</event>
+  <event id="51" level="warn" time="01:37:04">deprecated endpoint called by audit-collector</event>
+  <event id="52" level="info" time="01:37:02">scaled inventory-sync to 3438 replicas</event>
+  <event id="53" level="info" time="01:36:59">heartbeat received from audit-collector-2063</event>
+  <event id="54" level="info" time="01:36:57">job #3340 finished successfully</event>
+  <event id="55" level="info" time="01:36:54">scaled edge-router to 1315 replicas</event>
+  <event id="56" level="info" time="01:36:51">config reloaded without restart</event>
+  <event id="57" level="error" time="01:36:49">job #8796 failed: unhandled exception</event>
+  <event id="58" level="info" time="01:36:44">config reloaded without restart</event>
+  <event id="59" level="warn" time="01:36:40">disk usage at 87% on /var/log</event>
+  <event id="60" level="info" time="01:36:38">request completed in 65ms</event>
+  <event id="61" level="info" time="01:36:36">connection established to notify-svc-3300</event>
+  <event id="62" level="info" time="01:36:32">request completed in 410ms</event>
+  <event id="63" level="info" time="01:36:30">health check passed for audit-collector</event>
+  <event id="64" level="warn" time="01:36:27">slow query on audit-collector took 854ms</event>
+  <event id="65" level="warn" time="01:36:23">connection pool at 94% capacity</event>
+  <event id="66" level="info" time="01:36:19">cache hit for key user:6474</event>
+  <event id="67" level="info" time="01:36:16">heartbeat received from search-index-2573</event>
+  <event id="68" level="info" time="01:36:14">health check passed for audit-collector</event>
+  <event id="69" level="info" time="01:36:12">job #4117 finished successfully</event>
+  <event id="70" level="info" time="01:36:07">health check passed for session-cache</event>
+  <event id="71" level="info" time="01:36:02">snapshot 5250 written to cold storage</event>
+  <event id="72" level="info" time="01:35:58">connection established to billing-worker-7938</event>
+  <event id="73" level="info" time="01:35:54">rotated log segment 3537</event>
+  <event id="74" level="info" time="01:35:51">health check passed for order-processor</event>
+  <event id="75" level="warn" time="01:35:46">deprecated endpoint called by billing-worker</event>
+  <event id="76" level="info" time="01:35:43">scaled search-index to 7087 replicas</event>
+  <event id="77" level="info" time="01:35:38">request completed in 879ms</event>
+  <event id="78" level="info" time="01:35:34">scaled inventory-sync to 1711 replicas</event>
+  <event id="79" level="warn" time="01:35:30">deprecated endpoint called by search-index</event>
+  <event id="80" level="info" time="01:35:28">scaled audit-collector to 4269 replicas</event>
+  <event id="81" level="error" time="01:35:26">connection to audit-collector-4845 timed out after 504ms</event>
+  <event id="82" level="warn" time="01:35:23">deprecated endpoint called by audit-collector</event>
+  <event id="83" level="info" time="01:35:18">snapshot 3695 written to cold storage</event>
+  <event id="84" level="warn" time="01:35:13">rate limit approaching for audit-collector-6332</event>
+  <event id="85" level="info" time="01:35:11">rotated log segment 5102</event>
+  <event id="86" level="info" time="01:35:09">snapshot 8753 written to cold storage</event>
+  <event id="87" level="warn" time="01:35:05">connection pool at 73% capacity</event>
+  <event id="88" level="info" time="01:35:00">cache hit for key user:9715</event>
+  <event id="89" level="warn" time="01:34:55">cache miss for key user:4845, falling back to origin</event>
+  <event id="90" level="error" time="01:34:53">job #3392 failed: unhandled exception</event>
+  <event id="91" level="warn" time="01:34:49">rate limit approaching for search-index-3051</event>
+  <event id="92" level="info" time="01:34:46">cache hit for key user:7299</event>
+  <event id="93" level="info" time="01:34:44">request completed in 608ms</event>
+  <event id="94" level="error" time="01:34:39">job #3547 failed: unhandled exception</event>
+  <event id="95" level="info" time="01:34:34">health check passed for image-pipeline</event>
+  <event id="96" level="info" time="01:34:29">job #5540 finished successfully</event>
+  <event id="97" level="info" time="01:34:26">rotated log segment 6955</event>
+  <event id="98" level="info" time="01:34:22">job #2694 finished successfully</event>
+  <event id="99" level="warn" time="01:34:20">rate limit approaching for auth-gateway-4789</event>
+  <event id="100" level="info" time="01:34:15">connection established to search-index-5522</event>
+  <event id="101" level="error" time="01:34:11">job #9588 failed: unhandled exception</event>
+  <event id="102" level="info" time="01:34:07">heartbeat received from session-cache-5908</event>
+  <event id="103" level="info" time="01:34:04">connection established to search-index-8788</event>
+  <event id="104" level="error" time="01:33:59">job #5917 failed: unhandled exception</event>
+  <event id="105" level="info" time="01:33:54">snapshot 5618 written to cold storage</event>
+  <event id="106" level="info" time="01:33:49">heartbeat received from billing-worker-6429</event>
+  <event id="107" level="info" time="01:33:45">job #4606 finished successfully</event>
+  <event id="108" level="info" time="01:33:43">snapshot 4307 written to cold storage</event>
+  <event id="109" level="info" time="01:33:40">scaled order-processor to 9703 replicas</event>
+  <event id="110" level="info" time="01:33:36">rotated log segment 8634</event>
+  <event id="111" level="info" time="01:33:32">cache hit for key user:5123</event>
+  <event id="112" level="info" time="01:33:28">cache hit for key user:9770</event>
+  <event id="113" level="warn" time="01:33:24">deprecated endpoint called by image-pipeline</event>
+  <event id="114" level="error" time="01:33:19">job #7770 failed: unhandled exception</event>
+  <event id="115" level="info" time="01:33:17">request completed in 164ms</event>
+  <event id="116" level="info" time="01:33:12">cache hit for key user:7937</event>
+  <event id="117" level="info" time="01:33:07">config reloaded without restart</event>
+  <event id="118" level="info" time="01:33:02">cache hit for key user:3708</event>
+  <event id="119" level="warn" time="01:32:59">retrying job #9273 (attempt 2/5)</event>
+  <event id="120" level="warn" time="01:32:57">disk usage at 94% on /var/log</event>
+  <event id="121" level="error" time="01:32:54">failed to acquire lock for resource 9124</event>
+  <event id="122" level="info" time="01:32:51">heartbeat received from order-processor-1114</event>
+  <event id="123" level="info" time="01:32:47">scaled auth-gateway to 6094 replicas</event>
+  <event id="124" level="info" time="01:32:45">config reloaded without restart</event>
+  <event id="125" level="info" time="01:32:41">connection established to audit-collector-4576</event>
+  <event id="126" level="warn" time="01:32:37">deprecated endpoint called by image-pipeline</event>
+  <event id="127" level="error" time="01:32:34">5xx response from search-index-2286</event>
+  <event id="128" level="info" time="01:32:29">job #4074 finished successfully</event>
+  <event id="129" level="info" time="01:32:25">snapshot 9326 written to cold storage</event>
+  <event id="130" level="info" time="01:32:23">rotated log segment 7577</event>
+  <event id="131" level="info" time="01:32:20">heartbeat received from auth-gateway-6286</event>
+  <event id="132" level="info" time="01:32:18">request completed in 455ms</event>
+  <event id="133" level="info" time="01:32:14">job #6736 finished successfully</event>
+  <event id="134" level="warn" time="01:32:10">cache miss for key user:8715, falling back to origin</event>
+  <event id="135" level="info" time="01:32:06">scaled inventory-sync to 4201 replicas</event>
+  <event id="136" level="info" time="01:32:01">scaled billing-worker to 2993 replicas</event>
+  <event id="137" level="warn" time="01:31:56">cache miss for key user:8018, falling back to origin</event>
+  <event id="138" level="info" time="01:31:53">scaled search-index to 6905 replicas</event>
+  <event id="139" level="info" time="01:31:50">request completed in 467ms</event>
+  <event id="140" level="warn" time="01:31:46">rate limit approaching for order-processor-1358</event>
+  <event id="141" level="info" time="01:31:44">job #4455 finished successfully</event>
+  <event id="142" level="warn" time="01:31:39">rate limit approaching for edge-router-2867</event>
+  <event id="143" level="info" time="01:31:37">snapshot 9815 written to cold storage</event>
+  <event id="144" level="warn" time="01:31:33">rate limit approaching for audit-collector-2069</event>
+  <event id="145" level="info" time="01:31:30">rotated log segment 6265</event>
+  <event id="146" level="error" time="01:31:27">circuit breaker opened for billing-worker</event>
+  <event id="147" level="error" time="01:31:25">job #7438 failed: unhandled exception</event>
+  <event id="148" level="info" time="01:31:20">job #8147 finished successfully</event>
+  <event id="149" level="info" time="01:31:16">heartbeat received from search-index-8342</event>
+  <event id="150" level="info" time="01:31:11">connection established to edge-router-7972</event>
+  <event id="151" level="info" time="01:31:06">job #5496 finished successfully</event>
+  <event id="152" level="info" time="01:31:04">connection established to session-cache-8778</event>
+  <event id="153" level="info" time="01:31:00">health check passed for image-pipeline</event>
+  <event id="154" level="info" time="01:30:58">scaled auth-gateway to 6234 replicas</event>
+  <event id="155" level="info" time="01:30:53">job #4929 finished successfully</event>
+  <event id="156" level="info" time="01:30:51">request completed in 723ms</event>
+  <event id="157" level="info" time="01:30:49">snapshot 4087 written to cold storage</event>
+  <event id="158" level="error" time="01:30:46">circuit breaker opened for order-processor</event>
+  <event id="159" level="info" time="01:30:41">health check passed for edge-router</event>
+  <event id="160" level="info" time="01:30:36">request completed in 895ms</event>
+  <event id="161" level="info" time="01:30:32">config reloaded without restart</event>
+  <event id="162" level="info" time="01:30:30">rotated log segment 6625</event>
+  <event id="163" level="info" time="01:30:28">request completed in 741ms</event>
+  <event id="164" level="warn" time="01:30:25">slow query on audit-collector took 505ms</event>
+  <event id="165" level="info" time="01:30:21">request completed in 149ms</event>
+  <event id="166" level="info" time="01:30:18">health check passed for auth-gateway</event>
+  <event id="167" level="info" time="01:30:13">connection established to order-processor-3312</event>
+  <event id="168" level="info" time="01:30:10">scaled audit-collector to 6721 replicas</event>
+  <event id="169" level="info" time="01:30:05">job #6664 finished successfully</event>
+  <event id="170" level="info" time="01:30:01">request completed in 160ms</event>
+  <event id="171" level="info" time="01:29:56">rotated log segment 6915</event>
+  <event id="172" level="info" time="01:29:52">config reloaded without restart</event>
+  <event id="173" level="info" time="01:29:50">request completed in 129ms</event>
+  <event id="174" level="info" time="01:29:46">job #2212 finished successfully</event>
+  <event id="175" level="info" time="01:29:44">connection established to order-processor-8086</event>
+  <event id="176" level="error" time="01:29:41">5xx response from auth-gateway-2992</event>
+  <event id="177" level="info" time="01:29:38">scaled image-pipeline to 3957 replicas</event>
+  <event id="178" level="info" time="01:29:34">scaled session-cache to 9490 replicas</event>
+  <event id="179" level="info" time="01:29:30">cache hit for key user:6992</event>
+  <event id="180" level="info" time="01:29:25">cache hit for key user:7479</event>
+  <event id="181" level="error" time="01:29:21">circuit breaker opened for image-pipeline</event>
+  <event id="182" level="info" time="01:29:18">heartbeat received from edge-router-3798</event>
+  <event id="183" level="info" time="01:29:16">connection established to billing-worker-1397</event>
+  <event id="184" level="info" time="01:29:12">config reloaded without restart</event>
+  <event id="185" level="info" time="01:29:09">scaled inventory-sync to 3214 replicas</event>
+  <event id="186" level="error" time="01:29:04">out of memory in worker 5237</event>
+  <event id="187" level="info" time="01:29:00">health check passed for session-cache</event>
+  <event id="188" level="warn" time="01:28:55">slow query on order-processor took 707ms</event>
+  <event id="189" level="info" time="01:28:51">health check passed for auth-gateway</event>
+  <event id="190" level="info" time="01:28:48">snapshot 4863 written to cold storage</event>
+  <event id="191" level="info" time="01:28:46">snapshot 4785 written to cold storage</event>
+  <event id="192" level="warn" time="01:28:44">cache miss for key user:6484, falling back to origin</event>
+  <event id="193" level="error" time="01:28:39">connection to edge-router-4459 timed out after 712ms</event>
+  <event id="194" level="info" time="01:28:37">snapshot 1934 written to cold storage</event>
+  <event id="195" level="info" time="01:28:34">heartbeat received from search-index-9209</event>
+  <event id="196" level="info" time="01:28:29">snapshot 8686 written to cold storage</event>
+  <event id="197" level="info" time="01:28:24">config reloaded without restart</event>
+  <event id="198" level="info" time="01:28:20">job #4059 finished successfully</event>
+  <event id="199" level="error" time="01:28:18">5xx response from audit-collector-8668</event>
+  <event id="200" level="info" time="01:28:13">snapshot 6664 written to cold storage</event>
+  <event id="201" level="info" time="01:28:10">connection established to auth-gateway-6309</event>
+  <event id="202" level="info" time="01:28:05">scaled audit-collector to 4326 replicas</event>
+  <event id="203" level="info" time="01:28:00">cache hit for key user:5047</event>
+  <event id="204" level="info" time="01:27:57">job #5124 finished successfully</event>
+  <event id="205" level="warn" time="01:27:53">cache miss for key user:3422, falling back to origin</event>
+  <event id="206" level="info" time="01:27:49">request completed in 648ms</event>
+  <event id="207" level="info" time="01:27:45">connection established to search-index-2526</event>
+  <event id="208" level="info" time="01:27:40">rotated log segment 3586</event>
+  <event id="209" level="info" time="01:27:35">job #5537 finished successfully</event>
+  <event id="210" level="warn" time="01:27:33">slow query on inventory-sync took 470ms</event>
+  <event id="211" level="info" time="01:27:29">job #4026 finished successfully</event>
+  <event id="212" level="error" time="01:27:25">out of memory in worker 5028</event>
+  <event id="213" level="info" time="01:27:22">job #6262 finished successfully</event>
+  <event id="214" level="info" time="01:27:17">config reloaded without restart</event>
+  <event id="215" level="info" time="01:27:14">snapshot 8292 written to cold storage</event>
+  <event id="216" level="info" time="01:27:12">snapshot 3125 written to cold storage</event>
+  <event id="217" level="warn" time="01:27:09">deprecated endpoint called by auth-gateway</event>
+  <event id="218" level="info" time="01:27:04">cache hit for key user:5438</event>
+  <event id="219" level="info" time="01:27:02">health check passed for auth-gateway</event>
+  <event id="220" level="error" time="01:27:00">failed to acquire lock for resource 8320</event>
+  <event id="221" level="warn" time="01:26:57">disk usage at 64% on /var/log</event>
+  <event id="222" level="info" time="01:26:55">request completed in 116ms</event>
+  <event id="223" level="info" time="01:26:50">health check passed for notify-svc</event>
+  <event id="224" level="info" time="01:26:47">config reloaded without restart</event>
+  <event id="225" level="error" time="01:26:43">circuit breaker opened for auth-gateway</event>
+  <event id="226" level="info" time="01:26:41">config reloaded without restart</event>
+  <event id="227" level="info" time="01:26:36">snapshot 8297 written to cold storage</event>
+  <event id="228" level="info" time="01:26:31">request completed in 754ms</event>
+  <event id="229" level="info" time="01:26:26">scaled inventory-sync to 9756 replicas</event>
+  <event id="230" level="info" time="01:26:23">request completed in 833ms</event>
+  <event id="231" level="info" time="01:26:20">rotated log segment 1884</event>
+  <event id="232" level="info" time="01:26:16">snapshot 1302 written to cold storage</event>
+  <event id="233" level="info" time="01:26:13">request completed in 612ms</event>
+  <event id="234" level="info" time="01:26:10">connection established to search-index-3103</event>
+  <event id="235" level="error" time="01:26:05">circuit breaker opened for search-index</event>
+  <event id="236" level="info" time="01:26:01">rotated log segment 7818</event>
+  <event id="237" level="warn" time="01:25:58">disk usage at 69% on /var/log</event>
+  <event id="238" level="warn" time="01:25:54">disk usage at 66% on /var/log</event>
+  <event id="239" level="info" time="01:25:49">snapshot 2561 written to cold storage</event>
+  <event id="240" level="info" time="01:25:47">scaled billing-worker to 1447 replicas</event>
+  <event id="241" level="warn" time="01:25:42">deprecated endpoint called by notify-svc</event>
+  <event id="242" level="info" time="01:25:40">rotated log segment 1144</event>
+  <event id="243" level="info" time="01:25:36">rotated log segment 8641</event>
+  <event id="244" level="error" time="01:25:34">job #7326 failed: unhandled exception</event>
+  <event id="245" level="info" time="01:25:30">heartbeat received from session-cache-7724</event>
+  <event id="246" level="info" time="01:25:26">snapshot 2537 written to cold storage</event>
+  <event id="247" level="warn" time="01:25:22">connection pool at 71% capacity</event>
+  <event id="248" level="warn" time="01:25:18">cache miss for key user:2246, falling back to origin</event>
+  <event id="249" level="info" time="01:25:15">job #9846 finished successfully</event>
+  <event id="250" level="info" time="01:25:13">heartbeat received from image-pipeline-6924</event>
+  <event id="251" level="info" time="01:25:11">request completed in 794ms</event>
+  <event id="252" level="info" time="01:25:06">rotated log segment 7101</event>
+  <event id="253" level="info" time="01:25:02">health check passed for session-cache</event>
+  <event id="254" level="info" time="01:24:59">cache hit for key user:9990</event>
+  <event id="255" level="info" time="01:24:56">request completed in 13ms</event>
+  <event id="256" level="info" time="01:24:54">snapshot 8726 written to cold storage</event>
+  <event id="257" level="info" time="01:24:52">health check passed for order-processor</event>
+  <event id="258" level="warn" time="01:24:48">deprecated endpoint called by search-index</event>
+  <event id="259" level="info" time="01:24:45">job #3395 finished successfully</event>
+  <event id="260" level="warn" time="01:24:42">cache miss for key user:1812, falling back to origin</event>
+  <event id="261" level="info" time="01:24:37">rotated log segment 4877</event>
+  <event id="262" level="warn" time="01:24:32">slow query on search-index took 744ms</event>
+  <event id="263" level="error" time="01:24:28">failed to acquire lock for resource 6443</event>
+  <event id="264" level="info" time="01:24:26">heartbeat received from search-index-5522</event>
+  <event id="265" level="info" time="01:24:22">request completed in 239ms</event>
+  <event id="266" level="info" time="01:24:19">request completed in 737ms</event>
+  <event id="267" level="warn" time="01:24:17">cache miss for key user:6004, falling back to origin</event>
+  <event id="268" level="info" time="01:24:14">connection established to notify-svc-7529</event>
+  <event id="269" level="error" time="01:24:10">connection to audit-collector-2828 timed out after 523ms</event>
+  <event id="270" level="info" time="01:24:06">config reloaded without restart</event>
+  <event id="271" level="info" time="01:24:02">request completed in 55ms</event>
+  <event id="272" level="info" time="01:23:58">rotated log segment 8180</event>
+  <event id="273" level="info" time="01:23:54">heartbeat received from billing-worker-2420</event>
+  <event id="274" level="info" time="01:23:49">cache hit for key user:5309</event>
+  <event id="275" level="info" time="01:23:46">job #1124 finished successfully</event>
+  <event id="276" level="info" time="01:23:43">config reloaded without restart</event>
+  <event id="277" level="info" time="01:23:40">connection established to session-cache-1035</event>
+  <event id="278" level="info" time="01:23:37">request completed in 109ms</event>
+  <event id="279" level="info" time="01:23:35">request completed in 662ms</event>
+  <event id="280" level="info" time="01:23:32">rotated log segment 3919</event>
+  <event id="281" level="info" time="01:23:28">config reloaded without restart</event>
+  <event id="282" level="warn" time="01:23:24">cache miss for key user:8693, falling back to origin</event>
+  <event id="283" level="info" time="01:23:21">health check passed for search-index</event>
+  <event id="284" level="warn" time="01:23:19">slow query on inventory-sync took 701ms</event>
+  <event id="285" level="warn" time="01:23:17">rate limit approaching for session-cache-1893</event>
+  <event id="286" level="info" time="01:23:12">job #4565 finished successfully</event>
+  <event id="287" level="warn" time="01:23:08">disk usage at 78% on /var/log</event>
+  <event id="288" level="info" time="01:23:03">rotated log segment 2758</event>
+  <event id="289" level="warn" time="01:22:59">cache miss for key user:7600, falling back to origin</event>
+  <event id="290" level="warn" time="01:22:56">deprecated endpoint called by inventory-sync</event>
+  <event id="291" level="info" time="01:22:53">scaled edge-router to 8101 replicas</event>
+  <event id="292" level="info" time="01:22:51">heartbeat received from notify-svc-2290</event>
+  <event id="293" level="error" time="01:22:46">circuit breaker opened for auth-gateway</event>
+  <event id="294" level="error" time="01:22:41">5xx response from edge-router-7854</event>
+  <event id="295" level="info" time="01:22:37">snapshot 1553 written to cold storage</event>
+  <event id="296" level="info" time="01:22:35">scaled inventory-sync to 3076 replicas</event>
+  <event id="297" level="error" time="01:22:33">circuit breaker opened for auth-gateway</event>
+  <event id="298" level="info" time="01:22:31">cache hit for key user:2648</event>
+  <event id="299" level="info" time="01:22:29">health check passed for search-index</event>
+  <event id="300" level="warn" time="01:22:26">connection pool at 61% capacity</event>
+  <event id="301" level="info" time="01:22:24">rotated log segment 7380</event>
+  <event id="302" level="info" time="01:22:22">connection established to audit-collector-3505</event>
+  <event id="303" level="info" time="01:22:18">cache hit for key user:7679</event>
+  <event id="304" level="info" time="01:22:16">scaled auth-gateway to 7838 replicas</event>
+  <event id="305" level="info" time="01:22:11">connection established to image-pipeline-7901</event>
+  <event id="306" level="info" time="01:22:07">heartbeat received from billing-worker-9264</event>
+  <event id="307" level="info" time="01:22:03">health check passed for audit-collector</event>
+  <event id="308" level="info" time="01:22:01">rotated log segment 5337</event>
+  <event id="309" level="info" time="01:21:56">scaled billing-worker to 6979 replicas</event>
+  <event id="310" level="info" time="01:21:53">cache hit for key user:2971</event>
+  <event id="311" level="info" time="01:21:51">request completed in 882ms</event>
+  <event id="312" level="info" time="01:21:46">health check passed for image-pipeline</event>
+  <event id="313" level="info" time="01:21:41">cache hit for key user:3289</event>
+  <event id="314" level="info" time="01:21:36">request completed in 108ms</event>
+  <event id="315" level="info" time="01:21:31">heartbeat received from auth-gateway-4104</event>
+  <event id="316" level="info" time="01:21:29">job #1257 finished successfully</event>
+  <event id="317" level="info" time="01:21:26">cache hit for key user:7858</event>
+  <event id="318" level="info" time="01:21:23">rotated log segment 2294</event>
+  <event id="319" level="info" time="01:21:19">request completed in 813ms</event>
+  <event id="320" level="info" time="01:21:16">health check passed for auth-gateway</event>
+  <event id="321" level="error" time="01:21:11">out of memory in worker 8952</event>
+  <event id="322" level="error" time="01:21:09">connection to billing-worker-1056 timed out after 847ms</event>
+  <event id="323" level="info" time="01:21:07">job #9494 finished successfully</event>
+  <event id="324" level="warn" time="01:21:03">deprecated endpoint called by billing-worker</event>
+  <event id="325" level="info" time="01:20:58">snapshot 4287 written to cold storage</event>
+  <event id="326" level="info" time="01:20:53">health check passed for edge-router</event>
+  <event id="327" level="info" time="01:20:48">scaled auth-gateway to 3370 replicas</event>
+  <event id="328" level="info" time="01:20:43">scaled auth-gateway to 2468 replicas</event>
+  <event id="329" level="info" time="01:20:39">rotated log segment 6440</event>
+  <event id="330" level="info" time="01:20:36">snapshot 9402 written to cold storage</event>
+  <event id="331" level="warn" time="01:20:34">rate limit approaching for session-cache-1815</event>
+  <event id="332" level="info" time="01:20:32">snapshot 4315 written to cold storage</event>
+  <event id="333" level="info" time="01:20:30">job #6421 finished successfully</event>
+  <event id="334" level="info" time="01:20:28">rotated log segment 9570</event>
+  <event id="335" level="info" time="01:20:26">rotated log segment 5598</event>
+  <event id="336" level="info" time="01:20:24">scaled audit-collector to 3313 replicas</event>
+  <event id="337" level="info" time="01:20:20">heartbeat received from search-index-4294</event>
+  <event id="338" level="info" time="01:20:17">cache hit for key user:3809</event>
+  <event id="339" level="info" time="01:20:13">scaled search-index to 2548 replicas</event>
+  <event id="340" level="warn" time="01:20:11">connection pool at 88% capacity</event>
+  <event id="341" level="info" time="01:20:07">health check passed for image-pipeline</event>
+  <event id="342" level="info" time="01:20:02">config reloaded without restart</event>
+  <event id="343" level="warn" time="01:20:00">disk usage at 61% on /var/log</event>
+  <event id="344" level="info" time="01:19:58">config reloaded without restart</event>
+  <event id="345" level="info" time="01:19:55">rotated log segment 1051</event>
+  <event id="346" level="info" time="01:19:52">cache hit for key user:7423</event>
+  <event id="347" level="info" time="01:19:48">job #3938 finished successfully</event>
+  <event id="348" level="info" time="01:19:46">request completed in 640ms</event>
+  <event id="349" level="info" time="01:19:42">job #2511 finished successfully</event>
+  <event id="350" level="info" time="01:19:37">config reloaded without restart</event>
+  <event id="351" level="warn" time="01:19:35">deprecated endpoint called by audit-collector</event>
+  <event id="352" level="info" time="01:19:33">rotated log segment 4148</event>
+  <event id="353" level="warn" time="01:19:29">retrying job #4457 (attempt 2/5)</event>
+  <event id="354" level="warn" time="01:19:26">deprecated endpoint called by order-processor</event>
+  <event id="355" level="info" time="01:19:22">health check passed for notify-svc</event>
+  <event id="356" level="info" time="01:19:20">cache hit for key user:4113</event>
+  <event id="357" level="warn" time="01:19:17">connection pool at 81% capacity</event>
+  <event id="358" level="info" time="01:19:15">connection established to audit-collector-7559</event>
+  <event id="359" level="info" time="01:19:13">config reloaded without restart</event>
+  <event id="360" level="info" time="01:19:11">request completed in 728ms</event>
+  <event id="361" level="info" time="01:19:08">health check passed for session-cache</event>
+  <event id="362" level="info" time="01:19:06">connection established to audit-collector-7290</event>
+  <event id="363" level="info" time="01:19:03">job #8461 finished successfully</event>
+  <event id="364" level="info" time="01:19:00">connection established to image-pipeline-3337</event>
+  <event id="365" level="info" time="01:18:56">heartbeat received from image-pipeline-8366</event>
+  <event id="366" level="info" time="01:18:53">connection established to order-processor-6762</event>
+  <event id="367" level="warn" time="01:18:49">slow query on inventory-sync took 669ms</event>
+  <event id="368" level="info" time="01:18:44">snapshot 3843 written to cold storage</event>
+  <event id="369" level="info" time="01:18:42">connection established to image-pipeline-2635</event>
+  <event id="370" level="info" time="01:18:37">connection established to notify-svc-4808</event>
+  <event id="371" level="info" time="01:18:33">cache hit for key user:4623</event>
+  <event id="372" level="info" time="01:18:30">connection established to auth-gateway-1815</event>
+  <event id="373" level="info" time="01:18:28">job #1923 finished successfully</event>
+  <event id="374" level="info" time="01:18:25">cache hit for key user:4310</event>
+  <event id="375" level="info" time="01:18:21">rotated log segment 6733</event>
+  <event id="376" level="info" time="01:18:16">scaled session-cache to 4221 replicas</event>
+  <event id="377" level="info" time="01:18:14">heartbeat received from audit-collector-4467</event>
+  <event id="378" level="info" time="01:18:10">job #3728 finished successfully</event>
+  <event id="379" level="info" time="01:18:06">job #4255 finished successfully</event>
+  <event id="380" level="info" time="01:18:03">rotated log segment 3259</event>
+  <event id="381" level="warn" time="01:18:01">deprecated endpoint called by inventory-sync</event>
+  <event id="382" level="warn" time="01:17:56">cache miss for key user:8358, falling back to origin</event>
+  <event id="383" level="info" time="01:17:53">snapshot 9921 written to cold storage</event>
+  <event id="384" level="info" time="01:17:49">scaled audit-collector to 2302 replicas</event>
+  <event id="385" level="info" time="01:17:46">scaled edge-router to 4191 replicas</event>
+  <event id="386" level="info" time="01:17:42">request completed in 15ms</event>
+  <event id="387" level="info" time="01:17:37">job #1847 finished successfully</event>
+  <event id="388" level="warn" time="01:17:33">deprecated endpoint called by auth-gateway</event>
+  <event id="389" level="info" time="01:17:31">job #7706 finished successfully</event>
+  <event id="390" level="info" time="01:17:27">health check passed for audit-collector</event>
+  <event id="391" level="info" time="01:17:23">cache hit for key user:4073</event>
+  <event id="392" level="info" time="01:17:18">rotated log segment 7533</event>
+  <event id="393" level="info" time="01:17:15">config reloaded without restart</event>
+  <event id="394" level="error" time="01:17:10">5xx response from search-index-3706</event>
+  <event id="395" level="info" time="01:17:05">connection established to billing-worker-5646</event>
+  <event id="396" level="warn" time="01:17:01">rate limit approaching for auth-gateway-3463</event>
+  <event id="397" level="error" time="01:16:56">out of memory in worker 7923</event>
+  <event id="398" level="info" time="01:16:51">scaled image-pipeline to 8095 replicas</event>
+  <event id="399" level="info" time="01:16:46">snapshot 9173 written to cold storage</event>
+  <event id="400" level="info" time="01:16:41">rotated log segment 4387</event>
+  <event id="401" level="info" time="01:16:37">config reloaded without restart</event>
+  <event id="402" level="warn" time="01:16:33">connection pool at 60% capacity</event>
+  <event id="403" level="warn" time="01:16:28">connection pool at 74% capacity</event>
+  <event id="404" level="info" time="01:16:23">scaled auth-gateway to 1391 replicas</event>
+  <event id="405" level="info" time="01:16:19">health check passed for search-index</event>
+  <event id="406" level="info" time="01:16:17">config reloaded without restart</event>
+  <event id="407" level="info" time="01:16:15">snapshot 8773 written to cold storage</event>
+  <event id="408" level="error" time="01:16:11">job #4179 failed: unhandled exception</event>
+  <event id="409" level="info" time="01:16:07">snapshot 9629 written to cold storage</event>
+  <event id="410" level="warn" time="01:16:02">cache miss for key user:5444, falling back to origin</event>
+  <event id="411" level="info" time="01:15:58">job #1500 finished successfully</event>
+  <event id="412" level="warn" time="01:15:53">connection pool at 88% capacity</event>
+  <event id="413" level="info" time="01:15:50">health check passed for auth-gateway</event>
+  <event id="414" level="info" time="01:15:46">config reloaded without restart</event>
+  <event id="415" level="info" time="01:15:43">scaled edge-router to 5512 replicas</event>
+  <event id="416" level="info" time="01:15:41">cache hit for key user:4281</event>
+  <event id="417" level="info" time="01:15:36">job #2217 finished successfully</event>
+  <event id="418" level="warn" time="01:15:33">slow query on billing-worker took 306ms</event>
+  <event id="419" level="info" time="01:15:31">config reloaded without restart</event>
+  <event id="420" level="info" time="01:15:26">scaled billing-worker to 1568 replicas</event>
+  <event id="421" level="info" time="01:15:22">request completed in 615ms</event>
+  <event id="422" level="info" time="01:15:18">scaled search-index to 2766 replicas</event>
+  <event id="423" level="info" time="01:15:16">rotated log segment 7080</event>
+  <event id="424" level="info" time="01:15:12">config reloaded without restart</event>
+  <event id="425" level="info" time="01:15:10">scaled inventory-sync to 2148 replicas</event>
+  <event id="426" level="info" time="01:15:05">rotated log segment 6799</event>
+  <event id="427" level="info" time="01:15:02">request completed in 586ms</event>
+  <event id="428" level="info" time="01:15:00">health check passed for audit-collector</event>
+  <event id="429" level="info" time="01:14:58">snapshot 9097 written to cold storage</event>
+  <event id="430" level="warn" time="01:14:55">rate limit approaching for search-index-2647</event>
+  <event id="431" level="warn" time="01:14:50">retrying job #1755 (attempt 2/5)</event>
+  <event id="432" level="error" time="01:14:48">5xx response from inventory-sync-5618</event>
+  <event id="433" level="info" time="01:14:45">connection established to audit-collector-6428</event>
+  <event id="434" level="info" time="01:14:43">heartbeat received from image-pipeline-6585</event>
+  <event id="435" level="info" time="01:14:41">job #8652 finished successfully</event>
+  <event id="436" level="info" time="01:14:36">heartbeat received from billing-worker-5511</event>
+  <event id="437" level="info" time="01:14:32">heartbeat received from audit-collector-2596</event>
+  <event id="438" level="info" time="01:14:30">cache hit for key user:6644</event>
+  <event id="439" level="info" time="01:14:27">config reloaded without restart</event>
+  <event id="440" level="info" time="01:14:24">scaled inventory-sync to 7807 replicas</event>
+  <event id="441" level="warn" time="01:14:19">rate limit approaching for edge-router-2473</event>
+  <event id="442" level="warn" time="01:14:17">deprecated endpoint called by search-index</event>
+  <event id="443" level="info" time="01:14:13">heartbeat received from auth-gateway-2810</event>
+  <event id="444" level="info" time="01:14:10">rotated log segment 5274</event>
+  <event id="445" level="info" time="01:14:05">cache hit for key user:1288</event>
+  <event id="446" level="info" time="01:14:02">snapshot 6364 written to cold storage</event>
+  <event id="447" level="info" time="01:13:59">job #3584 finished successfully</event>
+  <event id="448" level="info" time="01:13:55">config reloaded without restart</event>
+  <event id="449" level="info" time="01:13:51">config reloaded without restart</event>
+  <event id="450" level="info" time="01:13:46">config reloaded without restart</event>
+  <event id="451" level="info" time="01:13:44">job #7392 finished successfully</event>
+  <event id="452" level="error" time="01:13:41">circuit breaker opened for image-pipeline</event>
+  <event id="453" level="warn" time="01:13:39">connection pool at 73% capacity</event>
+  <event id="454" level="warn" time="01:13:35">deprecated endpoint called by image-pipeline</event>
+  <event id="455" level="warn" time="01:13:32">retrying job #9747 (attempt 2/5)</event>
+  <event id="456" level="info" time="01:13:30">health check passed for auth-gateway</event>
+  <event id="457" level="info" time="01:13:27">connection established to session-cache-6585</event>
+  <event id="458" level="info" time="01:13:23">request completed in 140ms</event>
+  <event id="459" level="info" time="01:13:21">snapshot 2653 written to cold storage</event>
+  <event id="460" level="info" time="01:13:18">config reloaded without restart</event>
+  <event id="461" level="error" time="01:13:15">5xx response from session-cache-4760</event>
+  <event id="462" level="info" time="01:13:13">heartbeat received from edge-router-6735</event>
+  <event id="463" level="info" time="01:13:10">snapshot 1207 written to cold storage</event>
+  <event id="464" level="info" time="01:13:07">config reloaded without restart</event>
+  <event id="465" level="info" time="01:13:05">rotated log segment 6453</event>
+  <event id="466" level="info" time="01:13:03">heartbeat received from edge-router-5050</event>
+  <event id="467" level="info" time="01:12:58">cache hit for key user:3385</event>
+  <event id="468" level="info" time="01:12:54">health check passed for inventory-sync</event>
+  <event id="469" level="error" time="01:12:50">circuit breaker opened for auth-gateway</event>
+  <event id="470" level="info" time="01:12:45">connection established to notify-svc-3060</event>
+  <event id="471" level="info" time="01:12:40">heartbeat received from inventory-sync-9631</event>
+  <event id="472" level="warn" time="01:12:37">retrying job #7438 (attempt 2/5)</event>
+  <event id="473" level="info" time="01:12:35">config reloaded without restart</event>
+  <event id="474" level="info" time="01:12:30">health check passed for inventory-sync</event>
+  <event id="475" level="info" time="01:12:26">cache hit for key user:5801</event>
+  <event id="476" level="error" time="01:12:22">connection to order-processor-3762 timed out after 337ms</event>
+  <event id="477" level="info" time="01:12:18">cache hit for key user:8814</event>
+  <event id="478" level="info" time="01:12:14">job #4758 finished successfully</event>
+  <event id="479" level="info" time="01:12:09">scaled billing-worker to 9312 replicas</event>
+  <event id="480" level="warn" time="01:12:04">cache miss for key user:6753, falling back to origin</event>
+  <event id="481" level="info" time="01:12:00">snapshot 8996 written to cold storage</event>
+  <event id="482" level="warn" time="01:11:57">slow query on billing-worker took 293ms</event>
+  <event id="483" level="error" time="01:11:54">5xx response from billing-worker-3121</event>
+  <event id="484" level="info" time="01:11:50">heartbeat received from order-processor-5487</event>
+  <event id="485" level="info" time="01:11:45">cache hit for key user:1013</event>
+  <event id="486" level="info" time="01:11:40">scaled image-pipeline to 5445 replicas</event>
+  <event id="487" level="info" time="01:11:35">connection established to order-processor-2695</event>
+  <event id="488" level="info" time="01:11:31">heartbeat received from inventory-sync-9486</event>
+  <event id="489" level="info" time="01:11:26">rotated log segment 3645</event>
+  <event id="490" level="info" time="01:11:24">request completed in 888ms</event>
+  <event id="491" level="info" time="01:11:20">health check passed for image-pipeline</event>
+  <event id="492" level="info" time="01:11:18">scaled order-processor to 3507 replicas</event>
+  <event id="493" level="error" time="01:11:16">connection to auth-gateway-7409 timed out after 296ms</event>
+  <event id="494" level="warn" time="01:11:13">connection pool at 98% capacity</event>
+  <event id="495" level="info" time="01:11:09">heartbeat received from image-pipeline-9613</event>
+  <event id="496" level="warn" time="01:11:05">slow query on billing-worker took 325ms</event>
+  <event id="497" level="info" time="01:11:03">connection established to notify-svc-5918</event>
+  <event id="498" level="info" time="01:11:00">rotated log segment 2703</event>
+  <event id="499" level="warn" time="01:10:57">disk usage at 70% on /var/log</event>
+  <event id="500" level="info" time="01:10:53">connection established to audit-collector-1615</event>
+  <event id="501" level="info" time="01:10:49">scaled billing-worker to 6853 replicas</event>
+  <event id="502" level="info" time="01:10:46">scaled auth-gateway to 1502 replicas</event>
+  <event id="503" level="info" time="01:10:42">cache hit for key user:5553</event>
+  <event id="504" level="info" time="01:10:39">snapshot 5633 written to cold storage</event>
+  <event id="505" level="info" time="01:10:35">heartbeat received from audit-collector-4041</event>
+  <event id="506" level="info" time="01:10:30">config reloaded without restart</event>
+  <event id="507" level="info" time="01:10:25">cache hit for key user:4614</event>
+  <event id="508" level="info" time="01:10:22">heartbeat received from order-processor-5154</event>
+  <event id="509" level="info" time="01:10:19">request completed in 809ms</event>
+  <event id="510" level="info" time="01:10:14">cache hit for key user:4710</event>
+  <event id="511" level="info" time="01:10:12">cache hit for key user:5075</event>
+  <event id="512" level="info" time="01:10:08">job #7022 finished successfully</event>
+  <event id="513" level="info" time="01:10:04">config reloaded without restart</event>
+  <event id="514" level="info" time="01:10:02">rotated log segment 7573</event>
+  <event id="515" level="info" time="01:09:57">snapshot 8276 written to cold storage</event>
+  <event id="516" level="info" time="01:09:54">rotated log segment 4421</event>
+  <event id="517" level="info" time="01:09:51">scaled inventory-sync to 3770 replicas</event>
+  <event id="518" level="warn" time="01:09:49">rate limit approaching for edge-router-8444</event>
+  <event id="519" level="info" time="01:09:44">connection established to billing-worker-4007</event>
+  <event id="520" level="info" time="01:09:40">job #2133 finished successfully</event>
+  <event id="521" level="info" time="01:09:38">request completed in 357ms</event>
+  <event id="522" level="error" time="01:09:36">failed to acquire lock for resource 7728</event>
+  <event id="523" level="info" time="01:09:31">heartbeat received from order-processor-9980</event>
+  <event id="524" level="info" time="01:09:27">connection established to image-pipeline-9417</event>
+  <event id="525" level="error" time="01:09:22">out of memory in worker 4441</event>
+  <event id="526" level="info" time="01:09:18">request completed in 622ms</event>
+  <event id="527" level="info" time="01:09:14">snapshot 7082 written to cold storage</event>
+  <event id="528" level="warn" time="01:09:12">rate limit approaching for billing-worker-5658</event>
+  <event id="529" level="warn" time="01:09:10">cache miss for key user:9606, falling back to origin</event>
+  <event id="530" level="info" time="01:09:06">scaled audit-collector to 8267 replicas</event>
+  <event id="531" level="info" time="01:09:02">scaled billing-worker to 4492 replicas</event>
+  <event id="532" level="info" time="01:08:58">rotated log segment 3196</event>
+  <event id="533" level="warn" time="01:08:55">disk usage at 79% on /var/log</event>
+  <event id="534" level="info" time="01:08:52">cache hit for key user:7857</event>
+  <event id="535" level="info" time="01:08:49">job #7709 finished successfully</event>
+  <event id="536" level="info" time="01:08:44">job #8369 finished successfully</event>
+  <event id="537" level="info" time="01:08:40">health check passed for search-index</event>
+  <event id="538" level="warn" time="01:08:36">retrying job #1505 (attempt 2/5)</event>
+  <event id="539" level="error" time="01:08:32">failed to acquire lock for resource 6496</event>
+  <event id="540" level="info" time="01:08:30">rotated log segment 7167</event>
+  <event id="541" level="warn" time="01:08:27">connection pool at 83% capacity</event>
+  <event id="542" level="info" time="01:08:24">snapshot 5408 written to cold storage</event>
+  <event id="543" level="info" time="01:08:22">connection established to image-pipeline-2604</event>
+  <event id="544" level="info" time="01:08:17">snapshot 2377 written to cold storage</event>
+  <event id="545" level="info" time="01:08:13">connection established to image-pipeline-2906</event>
+  <event id="546" level="info" time="01:08:10">request completed in 473ms</event>
+  <event id="547" level="info" time="01:08:07">job #5929 finished successfully</event>
+  <event id="548" level="info" time="01:08:03">scaled image-pipeline to 2906 replicas</event>
+  <event id="549" level="info" time="01:08:00">health check passed for search-index</event>
+  <event id="550" level="info" time="01:07:58">request completed in 712ms</event>
+  <event id="551" level="info" time="01:07:54">job #8465 finished successfully</event>
+  <event id="552" level="info" time="01:07:49">snapshot 2822 written to cold storage</event>
+  <event id="553" level="info" time="01:07:44">connection established to auth-gateway-3845</event>
+  <event id="554" level="info" time="01:07:42">heartbeat received from notify-svc-9123</event>
+  <event id="555" level="warn" time="01:07:38">deprecated endpoint called by image-pipeline</event>
+  <event id="556" level="info" time="01:07:35">snapshot 7746 written to cold storage</event>
+  <event id="557" level="info" time="01:07:30">snapshot 7320 written to cold storage</event>
+  <event id="558" level="info" time="01:07:26">rotated log segment 1880</event>
+  <event id="559" level="info" time="01:07:21">snapshot 2032 written to cold storage</event>
+  <event id="560" level="info" time="01:07:17">config reloaded without restart</event>
+  <event id="561" level="error" time="01:07:13">circuit breaker opened for order-processor</event>
+  <event id="562" level="info" time="01:07:09">connection established to audit-collector-1362</event>
+  <event id="563" level="info" time="01:07:07">scaled auth-gateway to 2959 replicas</event>
+  <event id="564" level="info" time="01:07:04">cache hit for key user:5630</event>
+  <event id="565" level="info" time="01:07:02">request completed in 699ms</event>
+  <event id="566" level="info" time="01:07:00">connection established to audit-collector-5333</event>
+  <event id="567" level="info" time="01:06:55">config reloaded without restart</event>
+  <event id="568" level="info" time="01:06:52">connection established to order-processor-2462</event>
+  <event id="569" level="info" time="01:06:48">scaled search-index to 9691 replicas</event>
+  <event id="570" level="info" time="01:06:46">request completed in 552ms</event>
+  <event id="571" level="info" time="01:06:42">health check passed for billing-worker</event>
+  <event id="572" level="warn" time="01:06:38">deprecated endpoint called by billing-worker</event>
+  <event id="573" level="info" time="01:06:35">snapshot 7745 written to cold storage</event>
+  <event id="574" level="error" time="01:06:32">job #1271 failed: unhandled exception</event>
+  <event id="575" level="info" time="01:06:30">scaled edge-router to 8458 replicas</event>
+  <event id="576" level="info" time="01:06:26">scaled order-processor to 8504 replicas</event>
+  <event id="577" level="info" time="01:06:21">health check passed for edge-router</event>
+  <event id="578" level="info" time="01:06:19">scaled search-index to 8646 replicas</event>
+  <event id="579" level="info" time="01:06:15">connection established to inventory-sync-1836</event>
+  <event id="580" level="info" time="01:06:11">heartbeat received from edge-router-8314</event>
+  <event id="581" level="info" time="01:06:06">scaled notify-svc to 6699 replicas</event>
+  <event id="582" level="info" time="01:06:01">connection established to order-processor-7925</event>
+  <event id="583" level="info" time="01:05:59">snapshot 8576 written to cold storage</event>
+  <event id="584" level="info" time="01:05:56">config reloaded without restart</event>
+  <event id="585" level="info" time="01:05:54">config reloaded without restart</event>
+  <event id="586" level="info" time="01:05:49">health check passed for search-index</event>
+  <event id="587" level="warn" time="01:05:44">cache miss for key user:2471, falling back to origin</event>
+  <event id="588" level="warn" time="01:05:39">disk usage at 84% on /var/log</event>
+  <event id="589" level="error" time="01:05:36">out of memory in worker 9763</event>
+  <event id="590" level="info" time="01:05:34">snapshot 8174 written to cold storage</event>
+  <event id="591" level="info" time="01:05:30">heartbeat received from session-cache-8113</event>
+  <event id="592" level="info" time="01:05:25">snapshot 7807 written to cold storage</event>
+  <event id="593" level="warn" time="01:05:21">retrying job #7109 (attempt 2/5)</event>
+  <event id="594" level="info" time="01:05:17">heartbeat received from notify-svc-9661</event>
+  <event id="595" level="info" time="01:05:14">snapshot 5941 written to cold storage</event>
+  <event id="596" level="warn" time="01:05:10">retrying job #2727 (attempt 2/5)</event>
+  <event id="597" level="info" time="01:05:06">job #6368 finished successfully</event>
+  <event id="598" level="warn" time="01:05:02">deprecated endpoint called by image-pipeline</event>
+  <event id="599" level="info" time="01:04:58">snapshot 6494 written to cold storage</event>
+  <event id="600" level="info" time="01:04:54">rotated log segment 5893</event>
+  <event id="601" level="warn" time="01:04:51">deprecated endpoint called by billing-worker</event>
+  <event id="602" level="info" time="01:04:47">snapshot 8828 written to cold storage</event>
+  <event id="603" level="error" time="01:04:45">circuit breaker opened for billing-worker</event>
+  <event id="604" level="info" time="01:04:41">cache hit for key user:9478</event>
+  <event id="605" level="info" time="01:04:38">health check passed for session-cache</event>
+  <event id="606" level="info" time="01:04:35">heartbeat received from notify-svc-6110</event>
+  <event id="607" level="info" time="01:04:32">connection established to billing-worker-5948</event>
+  <event id="608" level="info" time="01:04:28">snapshot 4443 written to cold storage</event>
+  <event id="609" level="info" time="01:04:26">heartbeat received from billing-worker-9541</event>
+  <event id="610" level="warn" time="01:04:21">slow query on image-pipeline took 903ms</event>
+  <event id="611" level="info" time="01:04:19">snapshot 4557 written to cold storage</event>
+  <event id="612" level="info" time="01:04:16">job #3119 finished successfully</event>
+  <event id="613" level="info" time="01:04:12">job #4889 finished successfully</event>
+  <event id="614" level="info" time="01:04:10">scaled inventory-sync to 1607 replicas</event>
+  <event id="615" level="error" time="01:04:06">5xx response from search-index-5625</event>
+  <event id="616" level="info" time="01:04:01">config reloaded without restart</event>
+  <event id="617" level="info" time="01:03:59">snapshot 9254 written to cold storage</event>
+  <event id="618" level="info" time="01:03:57">health check passed for audit-collector</event>
+  <event id="619" level="info" time="01:03:52">health check passed for audit-collector</event>
+  <event id="620" level="info" time="01:03:47">heartbeat received from auth-gateway-5133</event>
+  <event id="621" level="info" time="01:03:43">cache hit for key user:1665</event>
+  <event id="622" level="info" time="01:03:40">rotated log segment 3823</event>
+  <event id="623" level="info" time="01:03:38">rotated log segment 7207</event>
+  <event id="624" level="info" time="01:03:33">rotated log segment 6351</event>
+  <event id="625" level="info" time="01:03:28">config reloaded without restart</event>
+  <event id="626" level="error" time="01:03:26">out of memory in worker 4261</event>
+  <event id="627" level="info" time="01:03:24">connection established to image-pipeline-3406</event>
+  <event id="628" level="info" time="01:03:22">scaled session-cache to 5009 replicas</event>
+  <event id="629" level="info" time="01:03:20">rotated log segment 9336</event>
+  <event id="630" level="error" time="01:03:16">connection to edge-router-5488 timed out after 355ms</event>
+  <event id="631" level="info" time="01:03:12">cache hit for key user:1733</event>
+  <event id="632" level="info" time="01:03:10">job #2158 finished successfully</event>
+  <event id="633" level="info" time="01:03:05">rotated log segment 4274</event>
+  <event id="634" level="info" time="01:03:00">job #6485 finished successfully</event>
+  <event id="635" level="info" time="01:02:57">snapshot 8550 written to cold storage</event>
+  <event id="636" level="info" time="01:02:53">connection established to audit-collector-5034</event>
+  <event id="637" level="error" time="01:02:48">failed to acquire lock for resource 2331</event>
+  <event id="638" level="info" time="01:02:46">config reloaded without restart</event>
+  <event id="639" level="info" time="01:02:44">job #5939 finished successfully</event>
+  <event id="640" level="info" time="01:02:40">cache hit for key user:8583</event>
+  <event id="641" level="info" time="01:02:36">health check passed for audit-collector</event>
+  <event id="642" level="info" time="01:02:32">heartbeat received from image-pipeline-8522</event>
+  <event id="643" level="error" time="01:02:30">circuit breaker opened for inventory-sync</event>
+  <event id="644" level="info" time="01:02:28">heartbeat received from session-cache-1719</event>
+  <event id="645" level="info" time="01:02:24">scaled audit-collector to 1702 replicas</event>
+  <event id="646" level="info" time="01:02:22">health check passed for audit-collector</event>
+  <event id="647" level="error" time="01:02:17">connection to search-index-1950 timed out after 37ms</event>
+  <event id="648" level="info" time="01:02:13">heartbeat received from order-processor-4271</event>
+  <event id="649" level="info" time="01:02:09">request completed in 465ms</event>
+  <event id="650" level="error" time="01:02:05">circuit breaker opened for edge-router</event>
+  <event id="651" level="info" time="01:02:01">request completed in 201ms</event>
+  <event id="652" level="info" time="01:01:58">cache hit for key user:2078</event>
+  <event id="653" level="info" time="01:01:56">request completed in 160ms</event>
+  <event id="654" level="warn" time="01:01:53">rate limit approaching for search-index-6477</event>
+  <event id="655" level="info" time="01:01:48">cache hit for key user:8545</event>
+  <event id="656" level="error" time="01:01:44">connection to order-processor-3277 timed out after 166ms</event>
+  <event id="657" level="info" time="01:01:41">config reloaded without restart</event>
+  <event id="658" level="info" time="01:01:39">connection established to search-index-3351</event>
+  <event id="659" level="info" time="01:01:36">scaled order-processor to 1039 replicas</event>
+  <event id="660" level="info" time="01:01:34">connection established to audit-collector-8420</event>
+  <event id="661" level="info" time="01:01:31">connection established to order-processor-8488</event>
+  <event id="662" level="info" time="01:01:26">rotated log segment 4609</event>
+  <event id="663" level="warn" time="01:01:24">rate limit approaching for audit-collector-3374</event>
+  <event id="664" level="warn" time="01:01:19">deprecated endpoint called by image-pipeline</event>
+  <event id="665" level="info" time="01:01:15">job #1963 finished successfully</event>
+  <event id="666" level="info" time="01:01:12">cache hit for key user:5986</event>
+  <event id="667" level="info" time="01:01:07">health check passed for image-pipeline</event>
+  <event id="668" level="info" time="01:01:02">connection established to audit-collector-1342</event>
+  <event id="669" level="info" time="01:01:00">connection established to notify-svc-1724</event>
+  <event id="670" level="info" time="01:00:55">connection established to audit-collector-8830</event>
+  <event id="671" level="error" time="01:00:50">job #9030 failed: unhandled exception</event>
+  <event id="672" level="error" time="01:00:46">circuit breaker opened for image-pipeline</event>
+  <event id="673" level="info" time="01:00:42">connection established to auth-gateway-3649</event>
+  <event id="674" level="info" time="01:00:38">job #6327 finished successfully</event>
+  <event id="675" level="error" time="01:00:35">5xx response from edge-router-3566</event>
+  <event id="676" level="info" time="01:00:33">request completed in 603ms</event>
+  <event id="677" level="warn" time="01:00:29">cache miss for key user:1240, falling back to origin</event>
+  <event id="678" level="info" time="01:00:25">request completed in 404ms</event>
+  <event id="679" level="info" time="01:00:20">rotated log segment 5704</event>
+  <event id="680" level="info" time="01:00:15">rotated log segment 2917</event>
+  <event id="681" level="warn" time="01:00:13">rate limit approaching for edge-router-5440</event>
+  <event id="682" level="info" time="01:00:08">heartbeat received from edge-router-6500</event>
+  <event id="683" level="info" time="01:00:04">scaled auth-gateway to 3754 replicas</event>
+  <event id="684" level="info" time="01:00:00">request completed in 390ms</event>
+  <event id="685" level="info" time="00:59:55">health check passed for billing-worker</event>
+  <event id="686" level="warn" time="00:59:51">deprecated endpoint called by auth-gateway</event>
+  <event id="687" level="info" time="00:59:49">snapshot 4898 written to cold storage</event>
+  <event id="688" level="info" time="00:59:47">scaled notify-svc to 8637 replicas</event>
+  <event id="689" level="error" time="00:59:42">5xx response from session-cache-3394</event>
+  <event id="690" level="info" time="00:59:39">request completed in 762ms</event>
+  <event id="691" level="error" time="00:59:37">connection to image-pipeline-8383 timed out after 333ms</event>
+  <event id="692" level="info" time="00:59:35">scaled edge-router to 5794 replicas</event>
+  <event id="693" level="info" time="00:59:31">heartbeat received from session-cache-1610</event>
+  <event id="694" level="warn" time="00:59:29">disk usage at 98% on /var/log</event>
+  <event id="695" level="warn" time="00:59:25">disk usage at 64% on /var/log</event>
+  <event id="696" level="info" time="00:59:22">job #7690 finished successfully</event>
+  <event id="697" level="info" time="00:59:20">config reloaded without restart</event>
+  <event id="698" level="info" time="00:59:16">config reloaded without restart</event>
+  <event id="699" level="info" time="00:59:14">rotated log segment 9838</event>
+  <event id="700" level="info" time="00:59:09">heartbeat received from image-pipeline-2644</event>
+  <event id="701" level="info" time="00:59:06">config reloaded without restart</event>
+  <event id="702" level="warn" time="00:59:04">deprecated endpoint called by inventory-sync</event>
+  <event id="703" level="info" time="00:58:59">health check passed for order-processor</event>
+  <event id="704" level="info" time="00:58:54">connection established to order-processor-2508</event>
+  <event id="705" level="warn" time="00:58:50">disk usage at 77% on /var/log</event>
+  <event id="706" level="info" time="00:58:47">rotated log segment 3304</event>
+  <event id="707" level="info" time="00:58:43">request completed in 734ms</event>
+  <event id="708" level="error" time="00:58:41">connection to billing-worker-9205 timed out after 893ms</event>
+  <event id="709" level="info" time="00:58:36">heartbeat received from order-processor-3221</event>
+  <event id="710" level="info" time="00:58:34">cache hit for key user:9578</event>
+  <event id="711" level="error" time="00:58:31">connection to notify-svc-1021 timed out after 838ms</event>
+  <event id="712" level="info" time="00:58:26">request completed in 604ms</event>
+  <event id="713" level="info" time="00:58:21">cache hit for key user:2695</event>
+  <event id="714" level="info" time="00:58:19">heartbeat received from audit-collector-9917</event>
+  <event id="715" level="info" time="00:58:14">config reloaded without restart</event>
+  <event id="716" level="info" time="00:58:10">config reloaded without restart</event>
+  <event id="717" level="info" time="00:58:08">cache hit for key user:1548</event>
+  <event id="718" level="info" time="00:58:05">rotated log segment 7647</event>
+  <event id="719" level="warn" time="00:58:01">disk usage at 64% on /var/log</event>
+  <event id="720" level="info" time="00:57:59">connection established to image-pipeline-5028</event>
+  <event id="721" level="info" time="00:57:56">cache hit for key user:3337</event>
+  <event id="722" level="error" time="00:57:51">5xx response from order-processor-3507</event>
+  <event id="723" level="info" time="00:57:47">cache hit for key user:4417</event>
+  <event id="724" level="info" time="00:57:45">heartbeat received from billing-worker-1031</event>
+  <event id="725" level="info" time="00:57:40">health check passed for image-pipeline</event>
+  <event id="726" level="info" time="00:57:37">rotated log segment 3448</event>
+  <event id="727" level="warn" time="00:57:33">cache miss for key user:4314, falling back to origin</event>
+  <event id="728" level="warn" time="00:57:30">connection pool at 74% capacity</event>
+  <event id="729" level="info" time="00:57:28">config reloaded without restart</event>
+  <event id="730" level="warn" time="00:57:24">cache miss for key user:1291, falling back to origin</event>
+  <event id="731" level="warn" time="00:57:19">rate limit approaching for edge-router-3758</event>
+  <event id="732" level="info" time="00:57:15">snapshot 5173 written to cold storage</event>
+  <event id="733" level="info" time="00:57:10">snapshot 4927 written to cold storage</event>
+  <event id="734" level="error" time="00:57:08">job #5789 failed: unhandled exception</event>
+  <event id="735" level="info" time="00:57:03">scaled notify-svc to 1253 replicas</event>
+  <event id="736" level="info" time="00:56:59">heartbeat received from audit-collector-6523</event>
+  <event id="737" level="error" time="00:56:54">connection to auth-gateway-9641 timed out after 770ms</event>
+  <event id="738" level="info" time="00:56:52">job #7042 finished successfully</event>
+  <event id="739" level="info" time="00:56:48">scaled billing-worker to 5252 replicas</event>
+  <event id="740" level="info" time="00:56:45">job #2922 finished successfully</event>
+  <event id="741" level="info" time="00:56:40">rotated log segment 2085</event>
+  <event id="742" level="info" time="00:56:37">health check passed for image-pipeline</event>
+  <event id="743" level="info" time="00:56:32">job #7150 finished successfully</event>
+  <event id="744" level="info" time="00:56:30">rotated log segment 1699</event>
+  <event id="745" level="info" time="00:56:25">request completed in 486ms</event>
+  <event id="746" level="info" time="00:56:20">cache hit for key user:5193</event>
+  <event id="747" level="warn" time="00:56:15">slow query on notify-svc took 106ms</event>
+  <event id="748" level="info" time="00:56:10">heartbeat received from notify-svc-2419</event>
+  <event id="749" level="info" time="00:56:07">heartbeat received from session-cache-2760</event>
+  <event id="750" level="warn" time="00:56:05">cache miss for key user:7526, falling back to origin</event>
+  <event id="751" level="info" time="00:56:00">request completed in 795ms</event>
+  <event id="752" level="info" time="00:55:56">health check passed for session-cache</event>
+  <event id="753" level="info" time="00:55:52">snapshot 5109 written to cold storage</event>
+  <event id="754" level="info" time="00:55:47">health check passed for billing-worker</event>
+  <event id="755" level="info" time="00:55:43">request completed in 250ms</event>
+  <event id="756" level="info" time="00:55:39">connection established to auth-gateway-5905</event>
+  <event id="757" level="info" time="00:55:37">health check passed for search-index</event>
+  <event id="758" level="warn" time="00:55:35">cache miss for key user:8146, falling back to origin</event>
+  <event id="759" level="info" time="00:55:30">rotated log segment 9580</event>
+  <event id="760" level="info" time="00:55:26">snapshot 9969 written to cold storage</event>
+  <event id="761" level="info" time="00:55:21">cache hit for key user:9301</event>
+  <event id="762" level="info" time="00:55:16">health check passed for order-processor</event>
+  <event id="763" level="info" time="00:55:11">heartbeat received from session-cache-2986</event>
+  <event id="764" level="info" time="00:55:08">job #7076 finished successfully</event>
+  <event id="765" level="info" time="00:55:04">request completed in 240ms</event>
+  <event id="766" level="error" time="00:55:01">job #5792 failed: unhandled exception</event>
+  <event id="767" level="error" time="00:54:56">out of memory in worker 3991</event>
+  <event id="768" level="info" time="00:54:54">heartbeat received from order-processor-4936</event>
+  <event id="769" level="warn" time="00:54:52">connection pool at 88% capacity</event>
+  <event id="770" level="info" time="00:54:48">job #2524 finished successfully</event>
+  <event id="771" level="warn" time="00:54:45">rate limit approaching for audit-collector-1534</event>
+  <event id="772" level="info" time="00:54:43">snapshot 6072 written to cold storage</event>
+  <event id="773" level="info" time="00:54:41">scaled edge-router to 7752 replicas</event>
+  <event id="774" level="info" time="00:54:38">config reloaded without restart</event>
+  <event id="775" level="info" time="00:54:34">snapshot 1327 written to cold storage</event>
+  <event id="776" level="info" time="00:54:31">config reloaded without restart</event>
+  <event id="777" level="info" time="00:54:29">config reloaded without restart</event>
+  <event id="778" level="info" time="00:54:27">request completed in 844ms</event>
+  <event id="779" level="info" time="00:54:24">request completed in 84ms</event>
+  <event id="780" level="info" time="00:54:19">request completed in 536ms</event>
+  <event id="781" level="info" time="00:54:16">connection established to order-processor-2858</event>
+  <event id="782" level="warn" time="00:54:12">slow query on edge-router took 745ms</event>
+  <event id="783" level="error" time="00:54:10">circuit breaker opened for audit-collector</event>
+  <event id="784" level="warn" time="00:54:06">connection pool at 95% capacity</event>
+  <event id="785" level="info" time="00:54:02">scaled edge-router to 4584 replicas</event>
+  <event id="786" level="info" time="00:53:57">connection established to session-cache-3822</event>
+  <event id="787" level="info" time="00:53:52">connection established to search-index-7852</event>
+  <event id="788" level="warn" time="00:53:50">deprecated endpoint called by session-cache</event>
+  <event id="789" level="info" time="00:53:48">config reloaded without restart</event>
+  <event id="790" level="warn" time="00:53:43">retrying job #9623 (attempt 2/5)</event>
+  <event id="791" level="info" time="00:53:38">health check passed for image-pipeline</event>
+  <event id="792" level="info" time="00:53:33">rotated log segment 6691</event>
+  <event id="793" level="info" time="00:53:28">request completed in 459ms</event>
+  <event id="794" level="info" time="00:53:23">request completed in 789ms</event>
+  <event id="795" level="info" time="00:53:18">connection established to search-index-5599</event>
+  <event id="796" level="warn" time="00:53:16">cache miss for key user:7664, falling back to origin</event>
+  <event id="797" level="info" time="00:53:13">scaled image-pipeline to 5106 replicas</event>
+  <event id="798" level="info" time="00:53:11">connection established to audit-collector-1098</event>
+  <event id="799" level="info" time="00:53:07">heartbeat received from auth-gateway-7736</event>
+  <event id="800" level="info" time="00:53:05">health check passed for audit-collector</event>
+  <event id="801" level="info" time="00:53:01">request completed in 174ms</event>
+  <event id="802" level="info" time="00:52:57">request completed in 833ms</event>
+  <event id="803" level="warn" time="00:52:55">retrying job #4700 (attempt 2/5)</event>
+  <event id="804" level="info" time="00:52:51">cache hit for key user:7010</event>
+  <event id="805" level="info" time="00:52:49">config reloaded without restart</event>
+  <event id="806" level="warn" time="00:52:45">cache miss for key user:4723, falling back to origin</event>
+  <event id="807" level="warn" time="00:52:40">slow query on inventory-sync took 668ms</event>
+  <event id="808" level="error" time="00:52:36">failed to acquire lock for resource 1520</event>
+  <event id="809" level="warn" time="00:52:34">retrying job #8016 (attempt 2/5)</event>
+  <event id="810" level="error" time="00:52:32">failed to acquire lock for resource 3168</event>
+  <event id="811" level="info" time="00:52:28">connection established to notify-svc-2173</event>
+  <event id="812" level="warn" time="00:52:26">rate limit approaching for notify-svc-6584</event>
+  <event id="813" level="info" time="00:52:24">config reloaded without restart</event>
+  <event id="814" level="info" time="00:52:20">config reloaded without restart</event>
+  <event id="815" level="info" time="00:52:17">cache hit for key user:9931</event>
+  <event id="816" level="warn" time="00:52:13">slow query on order-processor took 463ms</event>
+  <event id="817" level="info" time="00:52:09">cache hit for key user:6812</event>
+  <event id="818" level="error" time="00:52:07">circuit breaker opened for billing-worker</event>
+  <event id="819" level="info" time="00:52:03">scaled inventory-sync to 5097 replicas</event>
+  <event id="820" level="warn" time="00:51:59">cache miss for key user:7317, falling back to origin</event>
+  <event id="821" level="info" time="00:51:55">scaled billing-worker to 7037 replicas</event>
+  <event id="822" level="info" time="00:51:53">snapshot 6413 written to cold storage</event>
+  <event id="823" level="info" time="00:51:51">health check passed for notify-svc</event>
+  <event id="824" level="info" time="00:51:47">scaled order-processor to 3878 replicas</event>
+  <event id="825" level="warn" time="00:51:45">slow query on edge-router took 755ms</event>
+  <event id="826" level="info" time="00:51:42">heartbeat received from session-cache-1914</event>
+  <event id="827" level="info" time="00:51:37">config reloaded without restart</event>
+  <event id="828" level="info" time="00:51:33">health check passed for order-processor</event>
+  <event id="829" level="warn" time="00:51:31">deprecated endpoint called by search-index</event>
+  <event id="830" level="error" time="00:51:28">job #8603 failed: unhandled exception</event>
+  <event id="831" level="error" time="00:51:26">job #6034 failed: unhandled exception</event>
+  <event id="832" level="info" time="00:51:21">connection established to edge-router-1773</event>
+  <event id="833" level="info" time="00:51:17">request completed in 721ms</event>
+  <event id="834" level="warn" time="00:51:15">rate limit approaching for billing-worker-4593</event>
+  <event id="835" level="info" time="00:51:11">job #2336 finished successfully</event>
+  <event id="836" level="warn" time="00:51:08">rate limit approaching for search-index-4211</event>
+  <event id="837" level="info" time="00:51:03">cache hit for key user:3632</event>
+  <event id="838" level="warn" time="00:51:01">deprecated endpoint called by image-pipeline</event>
+  <event id="839" level="info" time="00:50:56">request completed in 28ms</event>
+  <event id="840" level="info" time="00:50:52">config reloaded without restart</event>
+  <event id="841" level="info" time="00:50:49">config reloaded without restart</event>
+  <event id="842" level="warn" time="00:50:44">connection pool at 77% capacity</event>
+  <event id="843" level="info" time="00:50:39">heartbeat received from auth-gateway-5545</event>
+  <event id="844" level="info" time="00:50:36">rotated log segment 6158</event>
+  <event id="845" level="info" time="00:50:34">health check passed for order-processor</event>
+  <event id="846" level="info" time="00:50:31">request completed in 616ms</event>
+  <event id="847" level="info" time="00:50:29">cache hit for key user:5342</event>
+  <event id="848" level="info" time="00:50:26">snapshot 9223 written to cold storage</event>
+  <event id="849" level="info" time="00:50:22">cache hit for key user:2687</event>
+  <event id="850" level="info" time="00:50:17">request completed in 375ms</event>
+  <event id="851" level="info" time="00:50:15">heartbeat received from session-cache-8885</event>
+  <event id="852" level="info" time="00:50:10">snapshot 2716 written to cold storage</event>
+  <event id="853" level="info" time="00:50:06">job #5636 finished successfully</event>
+  <event id="854" level="info" time="00:50:02">scaled search-index to 2633 replicas</event>
+  <event id="855" level="info" time="00:49:59">heartbeat received from audit-collector-8233</event>
+  <event id="856" level="error" time="00:49:55">circuit breaker opened for session-cache</event>
+  <event id="857" level="info" time="00:49:51">config reloaded without restart</event>
+  <event id="858" level="info" time="00:49:46">snapshot 8065 written to cold storage</event>
+  <event id="859" level="error" time="00:49:41">connection to session-cache-5296 timed out after 57ms</event>
+  <event id="860" level="info" time="00:49:37">snapshot 9605 written to cold storage</event>
+  <event id="861" level="info" time="00:49:32">scaled edge-router to 8935 replicas</event>
+  <event id="862" level="warn" time="00:49:28">retrying job #3790 (attempt 2/5)</event>
+  <event id="863" level="warn" time="00:49:24">deprecated endpoint called by search-index</event>
+  <event id="864" level="info" time="00:49:21">rotated log segment 6368</event>
+  <event id="865" level="info" time="00:49:19">health check passed for image-pipeline</event>
+  <event id="866" level="error" time="00:49:16">job #3768 failed: unhandled exception</event>
+  <event id="867" level="error" time="00:49:12">out of memory in worker 1451</event>
+  <event id="868" level="info" time="00:49:09">rotated log segment 2223</event>
+  <event id="869" level="info" time="00:49:06">heartbeat received from auth-gateway-7575</event>
+  <event id="870" level="warn" time="00:49:02">connection pool at 70% capacity</event>
+  <event id="871" level="info" time="00:48:58">job #6752 finished successfully</event>
+  <event id="872" level="info" time="00:48:56">snapshot 3085 written to cold storage</event>
+  <event id="873" level="info" time="00:48:53">request completed in 895ms</event>
+  <event id="874" level="info" time="00:48:51">request completed in 682ms</event>
+  <event id="875" level="info" time="00:48:49">config reloaded without restart</event>
+  <event id="876" level="info" time="00:48:44">scaled billing-worker to 8385 replicas</event>
+  <event id="877" level="info" time="00:48:42">connection established to auth-gateway-9119</event>
+  <event id="878" level="warn" time="00:48:37">cache miss for key user:3791, falling back to origin</event>
+  <event id="879" level="info" time="00:48:35">request completed in 666ms</event>
+  <event id="880" level="info" time="00:48:30">job #5478 finished successfully</event>
+  <event id="881" level="info" time="00:48:28">scaled billing-worker to 6518 replicas</event>
+  <event id="882" level="error" time="00:48:23">failed to acquire lock for resource 9836</event>
+  <event id="883" level="info" time="00:48:18">heartbeat received from edge-router-6963</event>
+  <event id="884" level="warn" time="00:48:14">disk usage at 80% on /var/log</event>
+  <event id="885" level="info" time="00:48:10">heartbeat received from session-cache-9758</event>
+  <event id="886" level="info" time="00:48:06">snapshot 1598 written to cold storage</event>
+  <event id="887" level="info" time="00:48:01">heartbeat received from inventory-sync-2858</event>
+  <event id="888" level="warn" time="00:47:59">slow query on billing-worker took 29ms</event>
+  <event id="889" level="info" time="00:47:54">health check passed for notify-svc</event>
+  <event id="890" level="info" time="00:47:50">config reloaded without restart</event>
+  <event id="891" level="error" time="00:47:45">failed to acquire lock for resource 3809</event>
+  <event id="892" level="warn" time="00:47:40">rate limit approaching for session-cache-3147</event>
+  <event id="893" level="info" time="00:47:35">config reloaded without restart</event>
+  <event id="894" level="info" time="00:47:33">rotated log segment 1804</event>
+  <event id="895" level="info" time="00:47:30">health check passed for notify-svc</event>
+  <event id="896" level="info" time="00:47:26">config reloaded without restart</event>
+  <event id="897" level="warn" time="00:47:21">retrying job #8755 (attempt 2/5)</event>
+  <event id="898" level="info" time="00:47:18">scaled auth-gateway to 9349 replicas</event>
+  <event id="899" level="info" time="00:47:15">heartbeat received from billing-worker-2455</event>
+  <event id="900" level="info" time="00:47:12">health check passed for image-pipeline</event>
+  <event id="901" level="info" time="00:47:08">rotated log segment 9072</event>
+  <event id="902" level="info" time="00:47:06">cache hit for key user:6941</event>
+  <event id="903" level="info" time="00:47:02">scaled notify-svc to 4752 replicas</event>
+  <event id="904" level="info" time="00:46:57">connection established to audit-collector-6019</event>
+  <event id="905" level="info" time="00:46:55">job #6400 finished successfully</event>
+  <event id="906" level="info" time="00:46:51">rotated log segment 7513</event>
+  <event id="907" level="warn" time="00:46:48">disk usage at 85% on /var/log</event>
+  <event id="908" level="info" time="00:46:46">scaled inventory-sync to 7735 replicas</event>
+  <event id="909" level="info" time="00:46:44">config reloaded without restart</event>
+  <event id="910" level="info" time="00:46:42">health check passed for auth-gateway</event>
+  <event id="911" level="info" time="00:46:39">snapshot 2032 written to cold storage</event>
+  <event id="912" level="info" time="00:46:35">job #5864 finished successfully</event>
+  <event id="913" level="info" time="00:46:32">job #7041 finished successfully</event>
+  <event id="914" level="info" time="00:46:28">scaled image-pipeline to 8188 replicas</event>
+  <event id="915" level="info" time="00:46:23">snapshot 8437 written to cold storage</event>
+  <event id="916" level="info" time="00:46:19">request completed in 107ms</event>
+  <event id="917" level="error" time="00:46:16">connection to notify-svc-7557 timed out after 731ms</event>
+  <event id="918" level="error" time="00:46:12">failed to acquire lock for resource 8506</event>
+  <event id="919" level="error" time="00:46:09">failed to acquire lock for resource 7883</event>
+  <event id="920" level="info" time="00:46:07">snapshot 7340 written to cold storage</event>
+  <event id="921" level="info" time="00:46:04">cache hit for key user:4074</event>
+  <event id="922" level="info" time="00:46:02">job #9337 finished successfully</event>
+  <event id="923" level="warn" time="00:45:59">connection pool at 79% capacity</event>
+  <event id="924" level="error" time="00:45:54">job #3955 failed: unhandled exception</event>
+  <event id="925" level="info" time="00:45:50">health check passed for notify-svc</event>
+  <event id="926" level="info" time="00:45:48">scaled session-cache to 7806 replicas</event>
+  <event id="927" level="info" time="00:45:44">snapshot 2850 written to cold storage</event>
+  <event id="928" level="info" time="00:45:42">health check passed for search-index</event>
+  <event id="929" level="info" time="00:45:37">heartbeat received from auth-gateway-7420</event>
+  <event id="930" level="info" time="00:45:33">scaled billing-worker to 7838 replicas</event>
+  <event id="931" level="info" time="00:45:30">connection established to auth-gateway-7205</event>
+  <event id="932" level="error" time="00:45:25">job #3699 failed: unhandled exception</event>
+  <event id="933" level="info" time="00:45:20">rotated log segment 5829</event>
+  <event id="934" level="info" time="00:45:15">request completed in 251ms</event>
+  <event id="935" level="info" time="00:45:11">request completed in 779ms</event>
+  <event id="936" level="info" time="00:45:06">heartbeat received from session-cache-1739</event>
+  <event id="937" level="info" time="00:45:01">connection established to notify-svc-3265</event>
+  <event id="938" level="info" time="00:44:57">heartbeat received from search-index-6255</event>
+  <event id="939" level="warn" time="00:44:52">connection pool at 60% capacity</event>
+  <event id="940" level="info" time="00:44:50">request completed in 103ms</event>
+  <event id="941" level="info" time="00:44:48">snapshot 3807 written to cold storage</event>
+  <event id="942" level="info" time="00:44:46">cache hit for key user:2019</event>
+  <event id="943" level="info" time="00:44:43">snapshot 8943 written to cold storage</event>
+  <event id="944" level="info" time="00:44:41">job #1406 finished successfully</event>
+  <event id="945" level="info" time="00:44:37">config reloaded without restart</event>
+  <event id="946" level="info" time="00:44:33">health check passed for session-cache</event>
+  <event id="947" level="info" time="00:44:29">heartbeat received from order-processor-7409</event>
+  <event id="948" level="info" time="00:44:26">connection established to search-index-7055</event>
+  <event id="949" level="info" time="00:44:24">config reloaded without restart</event>
+  <event id="950" level="error" time="00:44:22">failed to acquire lock for resource 3553</event>
+  <event id="951" level="info" time="00:44:19">cache hit for key user:4092</event>
+  <event id="952" level="info" time="00:44:17">heartbeat received from order-processor-8577</event>
+  <event id="953" level="warn" time="00:44:14">slow query on search-index took 308ms</event>
+  <event id="954" level="info" time="00:44:09">connection established to notify-svc-9201</event>
+  <event id="955" level="info" time="00:44:05">rotated log segment 4533</event>
+  <event id="956" level="info" time="00:44:01">connection established to search-index-8077</event>
+  <event id="957" level="warn" time="00:43:57">deprecated endpoint called by audit-collector</event>
+  <event id="958" level="info" time="00:43:53">request completed in 470ms</event>
+  <event id="959" level="info" time="00:43:48">health check passed for billing-worker</event>
+  <event id="960" level="warn" time="00:43:46">slow query on billing-worker took 695ms</event>
+  <event id="961" level="info" time="00:43:41">scaled edge-router to 8161 replicas</event>
+  <event id="962" level="info" time="00:43:36">job #9988 finished successfully</event>
+  <event id="963" level="warn" time="00:43:33">rate limit approaching for notify-svc-6326</event>
+  <event id="964" level="info" time="00:43:28">snapshot 5972 written to cold storage</event>
+  <event id="965" level="warn" time="00:43:26">deprecated endpoint called by image-pipeline</event>
+  <event id="966" level="info" time="00:43:23">connection established to search-index-7866</event>
+  <event id="967" level="info" time="00:43:19">heartbeat received from image-pipeline-6474</event>
+  <event id="968" level="info" time="00:43:14">job #2485 finished successfully</event>
+  <event id="969" level="info" time="00:43:12">snapshot 5198 written to cold storage</event>
+  <event id="970" level="warn" time="00:43:09">retrying job #1372 (attempt 2/5)</event>
+  <event id="971" level="info" time="00:43:04">snapshot 7036 written to cold storage</event>
+  <event id="972" level="info" time="00:43:02">config reloaded without restart</event>
+  <event id="973" level="info" time="00:42:58">connection established to inventory-sync-2930</event>
+  <event id="974" level="info" time="00:42:54">config reloaded without restart</event>
+  <event id="975" level="info" time="00:42:49">config reloaded without restart</event>
+  <event id="976" level="info" time="00:42:47">snapshot 5464 written to cold storage</event>
+  <event id="977" level="info" time="00:42:43">rotated log segment 3407</event>
+  <event id="978" level="info" time="00:42:38">health check passed for auth-gateway</event>
+  <event id="979" level="info" time="00:42:36">job #6294 finished successfully</event>
+  <event id="980" level="warn" time="00:42:31">disk usage at 71% on /var/log</event>
+  <event id="981" level="info" time="00:42:26">rotated log segment 3448</event>
+  <event id="982" level="info" time="00:42:22">heartbeat received from search-index-4757</event>
+  <event id="983" level="warn" time="00:42:19">deprecated endpoint called by billing-worker</event>
+  <event id="984" level="error" time="00:42:16">5xx response from order-processor-9685</event>
+  <event id="985" level="info" time="00:42:13">health check passed for edge-router</event>
+  <event id="986" level="info" time="00:42:10">rotated log segment 3442</event>
+  <event id="987" level="warn" time="00:42:06">deprecated endpoint called by audit-collector</event>
+  <event id="988" level="warn" time="00:42:01">rate limit approaching for session-cache-2634</event>
+  <event id="989" level="info" time="00:41:59">cache hit for key user:1599</event>
+  <event id="990" level="info" time="00:41:56">rotated log segment 1178</event>
+  <event id="991" level="info" time="00:41:52">request completed in 264ms</event>
+  <event id="992" level="info" time="00:41:49">snapshot 9316 written to cold storage</event>
+  <event id="993" level="info" time="00:41:44">rotated log segment 8508</event>
+  <event id="994" level="info" time="00:41:41">cache hit for key user:4198</event>
+  <event id="995" level="info" time="00:41:37">request completed in 459ms</event>
+  <event id="996" level="info" time="00:41:32">request completed in 525ms</event>
+  <event id="997" level="info" time="00:41:28">request completed in 750ms</event>
+  <event id="998" level="info" time="00:41:25">job #9688 finished successfully</event>
+  <event id="999" level="info" time="00:41:21">request completed in 326ms</event>
+  <event id="1000" level="info" time="00:41:19">health check passed for order-processor</event>
+  <event id="1001" level="info" time="00:41:14">scaled notify-svc to 8733 replicas</event>
+  <event id="1002" level="warn" time="00:41:12">connection pool at 66% capacity</event>
+  <event id="1003" level="info" time="00:41:08">connection established to notify-svc-4131</event>
+  <event id="1004" level="info" time="00:41:06">health check passed for session-cache</event>
+  <event id="1005" level="info" time="00:41:02">scaled inventory-sync to 9693 replicas</event>
+  <event id="1006" level="info" time="00:41:00">request completed in 558ms</event>
+  <event id="1007" level="info" time="00:40:55">cache hit for key user:5146</event>
+  <event id="1008" level="info" time="00:40:50">rotated log segment 3956</event>
+  <event id="1009" level="warn" time="00:40:47">rate limit approaching for auth-gateway-4869</event>
+  <event id="1010" level="info" time="00:40:42">snapshot 7369 written to cold storage</event>
+  <event id="1011" level="warn" time="00:40:38">retrying job #1144 (attempt 2/5)</event>
+  <event id="1012" level="info" time="00:40:36">job #6059 finished successfully</event>
+  <event id="1013" level="info" time="00:40:34">cache hit for key user:4186</event>
+  <event id="1014" level="info" time="00:40:29">config reloaded without restart</event>
+  <event id="1015" level="info" time="00:40:24">health check passed for edge-router</event>
+  <event id="1016" level="info" time="00:40:22">snapshot 1877 written to cold storage</event>
+  <event id="1017" level="warn" time="00:40:17">slow query on search-index took 231ms</event>
+  <event id="1018" level="warn" time="00:40:15">connection pool at 63% capacity</event>
+  <event id="1019" level="info" time="00:40:13">config reloaded without restart</event>
+  <event id="1020" level="warn" time="00:40:10">deprecated endpoint called by audit-collector</event>
+  <event id="1021" level="info" time="00:40:06">request completed in 264ms</event>
+  <event id="1022" level="warn" time="00:40:04">disk usage at 71% on /var/log</event>
+  <event id="1023" level="info" time="00:40:02">job #2861 finished successfully</event>
+  <event id="1024" level="info" time="00:39:58">request completed in 89ms</event>
+  <event id="1025" level="info" time="00:39:53">rotated log segment 1322</event>
+  <event id="1026" level="info" time="00:39:51">snapshot 6702 written to cold storage</event>
+  <event id="1027" level="info" time="00:39:46">rotated log segment 4020</event>
+  <event id="1028" level="error" time="00:39:41">5xx response from image-pipeline-9125</event>
+  <event id="1029" level="info" time="00:39:38">config reloaded without restart</event>
+  <event id="1030" level="warn" time="00:39:36">cache miss for key user:2942, falling back to origin</event>
+  <event id="1031" level="info" time="00:39:34">health check passed for audit-collector</event>
+  <event id="1032" level="info" time="00:39:32">rotated log segment 1204</event>
+  <event id="1033" level="error" time="00:39:28">failed to acquire lock for resource 2567</event>
+  <event id="1034" level="warn" time="00:39:26">connection pool at 94% capacity</event>
+  <event id="1035" level="info" time="00:39:23">rotated log segment 2115</event>
+  <event id="1036" level="error" time="00:39:18">out of memory in worker 9398</event>
+  <event id="1037" level="error" time="00:39:16">failed to acquire lock for resource 6133</event>
+  <event id="1038" level="info" time="00:39:12">request completed in 86ms</event>
+  <event id="1039" level="info" time="00:39:10">job #9739 finished successfully</event>
+  <event id="1040" level="info" time="00:39:08">scaled order-processor to 3078 replicas</event>
+  <event id="1041" level="info" time="00:39:04">request completed in 901ms</event>
+  <event id="1042" level="info" time="00:39:02">connection established to notify-svc-1413</event>
+  <event id="1043" level="info" time="00:38:57">request completed in 96ms</event>
+  <event id="1044" level="warn" time="00:38:52">disk usage at 76% on /var/log</event>
+  <event id="1045" level="warn" time="00:38:49">slow query on order-processor took 766ms</event>
+  <event id="1046" level="info" time="00:38:47">heartbeat received from audit-collector-4990</event>
+  <event id="1047" level="error" time="00:38:45">failed to acquire lock for resource 6737</event>
+  <event id="1048" level="info" time="00:38:41">config reloaded without restart</event>
+  <event id="1049" level="info" time="00:38:36">request completed in 236ms</event>
+  <event id="1050" level="info" time="00:38:33">snapshot 8314 written to cold storage</event>
+  <event id="1051" level="error" time="00:38:31">failed to acquire lock for resource 5655</event>
+  <event id="1052" level="info" time="00:38:29">snapshot 7028 written to cold storage</event>
+  <event id="1053" level="info" time="00:38:25">scaled order-processor to 3589 replicas</event>
+  <event id="1054" level="info" time="00:38:21">heartbeat received from session-cache-2216</event>
+  <event id="1055" level="info" time="00:38:18">snapshot 5936 written to cold storage</event>
+  <event id="1056" level="info" time="00:38:16">heartbeat received from search-index-9666</event>
+  <event id="1057" level="info" time="00:38:11">rotated log segment 2930</event>
+  <event id="1058" level="info" time="00:38:07">heartbeat received from session-cache-2477</event>
+  <event id="1059" level="info" time="00:38:05">config reloaded without restart</event>
+  <event id="1060" level="info" time="00:38:01">config reloaded without restart</event>
+  <event id="1061" level="info" time="00:37:59">request completed in 573ms</event>
+  <event id="1062" level="info" time="00:37:55">heartbeat received from search-index-9202</event>
+  <event id="1063" level="info" time="00:37:53">health check passed for search-index</event>
+  <event id="1064" level="error" time="00:37:49">job #1892 failed: unhandled exception</event>
+  <event id="1065" level="info" time="00:37:44">connection established to inventory-sync-4292</event>
+  <event id="1066" level="info" time="00:37:41">job #3338 finished successfully</event>
+  <event id="1067" level="info" time="00:37:36">connection established to notify-svc-8208</event>
+  <event id="1068" level="info" time="00:37:32">health check passed for order-processor</event>
+  <event id="1069" level="info" time="00:37:28">health check passed for session-cache</event>
+  <event id="1070" level="info" time="00:37:23">config reloaded without restart</event>
+  <event id="1071" level="info" time="00:37:19">cache hit for key user:8318</event>
+  <event id="1072" level="warn" time="00:37:14">rate limit approaching for billing-worker-2094</event>
+  <event id="1073" level="warn" time="00:37:09">retrying job #7275 (attempt 2/5)</event>
+  <event id="1074" level="info" time="00:37:07">cache hit for key user:2049</event>
+  <event id="1075" level="info" time="00:37:04">snapshot 5536 written to cold storage</event>
+  <event id="1076" level="info" time="00:36:59">job #2675 finished successfully</event>
+  <event id="1077" level="info" time="00:36:57">snapshot 3942 written to cold storage</event>
+  <event id="1078" level="warn" time="00:36:55">retrying job #5964 (attempt 2/5)</event>
+  <event id="1079" level="info" time="00:36:53">connection established to session-cache-6924</event>
+  <event id="1080" level="warn" time="00:36:48">slow query on notify-svc took 733ms</event>
+  <event id="1081" level="info" time="00:36:44">cache hit for key user:5685</event>
+  <event id="1082" level="info" time="00:36:41">health check passed for image-pipeline</event>
+  <event id="1083" level="info" time="00:36:36">scaled edge-router to 3431 replicas</event>
+  <event id="1084" level="info" time="00:36:32">health check passed for inventory-sync</event>
+  <event id="1085" level="info" time="00:36:28">request completed in 719ms</event>
+  <event id="1086" level="info" time="00:36:26">cache hit for key user:3734</event>
+  <event id="1087" level="info" time="00:36:22">scaled session-cache to 8991 replicas</event>
+  <event id="1088" level="warn" time="00:36:18">cache miss for key user:1021, falling back to origin</event>
+  <event id="1089" level="info" time="00:36:16">rotated log segment 9324</event>
+  <event id="1090" level="info" time="00:36:12">job #3744 finished successfully</event>
+  <event id="1091" level="info" time="00:36:09">scaled inventory-sync to 8711 replicas</event>
+  <event id="1092" level="info" time="00:36:07">cache hit for key user:7573</event>
+  <event id="1093" level="warn" time="00:36:05">slow query on notify-svc took 157ms</event>
+  <event id="1094" level="error" time="00:36:03">out of memory in worker 2398</event>
+  <event id="1095" level="info" time="00:36:00">rotated log segment 5163</event>
+  <event id="1096" level="info" time="00:35:58">cache hit for key user:6139</event>
+  <event id="1097" level="info" time="00:35:54">snapshot 7722 written to cold storage</event>
+  <event id="1098" level="error" time="00:35:49">job #4309 failed: unhandled exception</event>
+  <event id="1099" level="info" time="00:35:46">snapshot 1060 written to cold storage</event>
+  <event id="1100" level="error" time="00:35:42">connection to inventory-sync-5764 timed out after 10ms</event>
+  <event id="1101" level="info" time="00:35:40">health check passed for billing-worker</event>
+  <event id="1102" level="warn" time="00:35:36">deprecated endpoint called by order-processor</event>
+  <event id="1103" level="info" time="00:35:34">scaled notify-svc to 9592 replicas</event>
+  <event id="1104" level="info" time="00:35:32">cache hit for key user:9707</event>
+  <event id="1105" level="info" time="00:35:27">job #6726 finished successfully</event>
+  <event id="1106" level="warn" time="00:35:23">disk usage at 90% on /var/log</event>
+  <event id="1107" level="info" time="00:35:19">config reloaded without restart</event>
+  <event id="1108" level="info" time="00:35:17">health check passed for billing-worker</event>
+  <event id="1109" level="error" time="00:35:13">connection to inventory-sync-9353 timed out after 438ms</event>
+  <event id="1110" level="info" time="00:35:11">heartbeat received from notify-svc-7998</event>
+  <event id="1111" level="warn" time="00:35:07">slow query on image-pipeline took 591ms</event>
+  <event id="1112" level="info" time="00:35:02">snapshot 8465 written to cold storage</event>
+  <event id="1113" level="info" time="00:34:58">rotated log segment 7855</event>
+  <event id="1114" level="info" time="00:34:53">health check passed for inventory-sync</event>
+  <event id="1115" level="info" time="00:34:49">health check passed for search-index</event>
+  <event id="1116" level="info" time="00:34:44">config reloaded without restart</event>
+  <event id="1117" level="info" time="00:34:42">rotated log segment 8159</event>
+  <event id="1118" level="warn" time="00:34:39">retrying job #2168 (attempt 2/5)</event>
+  <event id="1119" level="error" time="00:34:34">circuit breaker opened for search-index</event>
+  <event id="1120" level="error" time="00:34:31">connection to inventory-sync-6537 timed out after 831ms</event>
+  <event id="1121" level="info" time="00:34:27">cache hit for key user:3065</event>
+  <event id="1122" level="info" time="00:34:24">connection established to search-index-5093</event>
+  <event id="1123" level="info" time="00:34:22">snapshot 3125 written to cold storage</event>
+  <event id="1124" level="error" time="00:34:17">circuit breaker opened for order-processor</event>
+  <event id="1125" level="info" time="00:34:14">snapshot 7576 written to cold storage</event>
+  <event id="1126" level="info" time="00:34:12">config reloaded without restart</event>
+  <event id="1127" level="info" time="00:34:09">request completed in 456ms</event>
+  <event id="1128" level="info" time="00:34:05">cache hit for key user:8636</event>
+  <event id="1129" level="info" time="00:34:03">snapshot 2325 written to cold storage</event>
+  <event id="1130" level="info" time="00:34:00">request completed in 499ms</event>
+  <event id="1131" level="info" time="00:33:56">job #8140 finished successfully</event>
+  <event id="1132" level="info" time="00:33:54">rotated log segment 4391</event>
+  <event id="1133" level="error" time="00:33:49">out of memory in worker 1509</event>
+  <event id="1134" level="info" time="00:33:46">cache hit for key user:7456</event>
+  <event id="1135" level="info" time="00:33:41">snapshot 2686 written to cold storage</event>
+  <event id="1136" level="info" time="00:33:39">rotated log segment 8857</event>
+  <event id="1137" level="info" time="00:33:35">snapshot 3924 written to cold storage</event>
+  <event id="1138" level="info" time="00:33:32">rotated log segment 8258</event>
+  <event id="1139" level="info" time="00:33:29">rotated log segment 2797</event>
+  <event id="1140" level="info" time="00:33:26">snapshot 2618 written to cold storage</event>
+  <event id="1141" level="info" time="00:33:21">rotated log segment 5633</event>
+  <event id="1142" level="warn" time="00:33:18">connection pool at 93% capacity</event>
+  <event id="1143" level="info" time="00:33:15">snapshot 3700 written to cold storage</event>
+  <event id="1144" level="info" time="00:33:10">request completed in 790ms</event>
+  <event id="1145" level="info" time="00:33:08">heartbeat received from billing-worker-7182</event>
+  <event id="1146" level="info" time="00:33:06">heartbeat received from notify-svc-6604</event>
+  <event id="1147" level="error" time="00:33:03">connection to session-cache-2872 timed out after 215ms</event>
+  <event id="1148" level="error" time="00:32:59">failed to acquire lock for resource 6176</event>
+  <event id="1149" level="info" time="00:32:57">heartbeat received from inventory-sync-5540</event>
+  <event id="1150" level="info" time="00:32:55">connection established to inventory-sync-4645</event>
+  <event id="1151" level="error" time="00:32:52">failed to acquire lock for resource 6671</event>
+  <event id="1152" level="info" time="00:32:48">rotated log segment 1297</event>
+  <event id="1153" level="info" time="00:32:44">request completed in 469ms</event>
+  <event id="1154" level="info" time="00:32:39">heartbeat received from order-processor-8444</event>
+  <event id="1155" level="info" time="00:32:34">snapshot 9007 written to cold storage</event>
+  <event id="1156" level="info" time="00:32:32">heartbeat received from inventory-sync-5327</event>
+  <event id="1157" level="info" time="00:32:27">snapshot 1736 written to cold storage</event>
+  <event id="1158" level="info" time="00:32:23">rotated log segment 2005</event>
+  <event id="1159" level="info" time="00:32:21">scaled inventory-sync to 1633 replicas</event>
+  <event id="1160" level="info" time="00:32:16">request completed in 454ms</event>
+  <event id="1161" level="info" time="00:32:12">request completed in 407ms</event>
+  <event id="1162" level="info" time="00:32:10">rotated log segment 2632</event>
+  <event id="1163" level="info" time="00:32:05">connection established to audit-collector-9372</event>
+  <event id="1164" level="info" time="00:32:00">request completed in 96ms</event>
+  <event id="1165" level="warn" time="00:31:57">connection pool at 91% capacity</event>
+  <event id="1166" level="info" time="00:31:54">cache hit for key user:3588</event>
+  <event id="1167" level="info" time="00:31:49">config reloaded without restart</event>
+  <event id="1168" level="info" time="00:31:47">cache hit for key user:5790</event>
+  <event id="1169" level="error" time="00:31:43">failed to acquire lock for resource 9023</event>
+  <event id="1170" level="info" time="00:31:41">heartbeat received from inventory-sync-2273</event>
+  <event id="1171" level="info" time="00:31:38">health check passed for order-processor</event>
+  <event id="1172" level="info" time="00:31:34">config reloaded without restart</event>
+  <event id="1173" level="info" time="00:31:32">heartbeat received from image-pipeline-8066</event>
+  <event id="1174" level="info" time="00:31:30">connection established to edge-router-1718</event>
+  <event id="1175" level="info" time="00:31:26">heartbeat received from billing-worker-6669</event>
+  <event id="1176" level="error" time="00:31:23">out of memory in worker 8946</event>
+  <event id="1177" level="info" time="00:31:19">snapshot 2962 written to cold storage</event>
+  <event id="1178" level="warn" time="00:31:16">connection pool at 76% capacity</event>
+  <event id="1179" level="info" time="00:31:11">cache hit for key user:7916</event>
+  <event id="1180" level="info" time="00:31:08">connection established to billing-worker-2424</event>
+  <event id="1181" level="info" time="00:31:05">request completed in 858ms</event>
+  <event id="1182" level="info" time="00:31:01">rotated log segment 1763</event>
+  <event id="1183" level="error" time="00:30:57">failed to acquire lock for resource 6272</event>
+  <event id="1184" level="warn" time="00:30:54">rate limit approaching for audit-collector-2872</event>
+  <event id="1185" level="info" time="00:30:49">health check passed for billing-worker</event>
+  <event id="1186" level="info" time="00:30:45">health check passed for inventory-sync</event>
+  <event id="1187" level="info" time="00:30:42">heartbeat received from search-index-2644</event>
+  <event id="1188" level="warn" time="00:30:39">rate limit approaching for search-index-4833</event>
+  <event id="1189" level="info" time="00:30:34">heartbeat received from session-cache-9808</event>
+  <event id="1190" level="info" time="00:30:29">cache hit for key user:4738</event>
+  <event id="1191" level="info" time="00:30:25">scaled notify-svc to 1546 replicas</event>
+  <event id="1192" level="info" time="00:30:21">snapshot 7212 written to cold storage</event>
+  <event id="1193" level="info" time="00:30:19">scaled image-pipeline to 6529 replicas</event>
+  <event id="1194" level="warn" time="00:30:17">deprecated endpoint called by session-cache</event>
+  <event id="1195" level="info" time="00:30:12">connection established to order-processor-2516</event>
+  <event id="1196" level="error" time="00:30:10">circuit breaker opened for order-processor</event>
+  <event id="1197" level="info" time="00:30:05">health check passed for session-cache</event>
+  <event id="1198" level="info" time="00:30:03">cache hit for key user:5056</event>
+  <event id="1199" level="info" time="00:30:00">job #8247 finished successfully</event>
+  <event id="1200" level="warn" time="00:29:58">deprecated endpoint called by notify-svc</event>
+  <event id="1201" level="error" time="00:29:55">connection to session-cache-2599 timed out after 160ms</event>
+  <event id="1202" level="info" time="00:29:53">connection established to notify-svc-1861</event>
+  <event id="1203" level="info" time="00:29:49">snapshot 3784 written to cold storage</event>
+  <event id="1204" level="error" time="00:29:45">circuit breaker opened for image-pipeline</event>
+  <event id="1205" level="info" time="00:29:42">scaled billing-worker to 3283 replicas</event>
+  <event id="1206" level="error" time="00:29:39">job #4651 failed: unhandled exception</event>
+  <event id="1207" level="info" time="00:29:34">snapshot 6989 written to cold storage</event>
+  <event id="1208" level="warn" time="00:29:32">rate limit approaching for search-index-7763</event>
+  <event id="1209" level="info" time="00:29:29">health check passed for session-cache</event>
+  <event id="1210" level="info" time="00:29:24">job #3498 finished successfully</event>
+  <event id="1211" level="info" time="00:29:21">scaled session-cache to 6973 replicas</event>
+  <event id="1212" level="info" time="00:29:17">scaled audit-collector to 6936 replicas</event>
+  <event id="1213" level="info" time="00:29:14">health check passed for billing-worker</event>
+  <event id="1214" level="info" time="00:29:10">request completed in 790ms</event>
+  <event id="1215" level="info" time="00:29:07">rotated log segment 3050</event>
+  <event id="1216" level="error" time="00:29:04">job #6828 failed: unhandled exception</event>
+  <event id="1217" level="warn" time="00:28:59">disk usage at 92% on /var/log</event>
+  <event id="1218" level="info" time="00:28:55">config reloaded without restart</event>
+  <event id="1219" level="info" time="00:28:51">scaled session-cache to 6912 replicas</event>
+  <event id="1220" level="info" time="00:28:48">cache hit for key user:5879</event>
+  <event id="1221" level="info" time="00:28:45">heartbeat received from auth-gateway-7847</event>
+  <event id="1222" level="warn" time="00:28:41">retrying job #8291 (attempt 2/5)</event>
+  <event id="1223" level="info" time="00:28:38">cache hit for key user:4342</event>
+  <event id="1224" level="info" time="00:28:34">cache hit for key user:5124</event>
+  <event id="1225" level="info" time="00:28:30">scaled inventory-sync to 3328 replicas</event>
+  <event id="1226" level="info" time="00:28:27">job #9715 finished successfully</event>
+  <event id="1227" level="error" time="00:28:24">circuit breaker opened for image-pipeline</event>
+  <event id="1228" level="info" time="00:28:22">config reloaded without restart</event>
+  <event id="1229" level="info" time="00:28:18">config reloaded without restart</event>
+  <event id="1230" level="info" time="00:28:16">heartbeat received from order-processor-6121</event>
+  <event id="1231" level="info" time="00:28:12">job #1525 finished successfully</event>
+  <event id="1232" level="info" time="00:28:10">request completed in 697ms</event>
+  <event id="1233" level="warn" time="00:28:07">connection pool at 91% capacity</event>
+  <event id="1234" level="info" time="00:28:04">config reloaded without restart</event>
+  <event id="1235" level="info" time="00:28:01">cache hit for key user:1767</event>
+  <event id="1236" level="info" time="00:27:58">heartbeat received from image-pipeline-5541</event>
+  <event id="1237" level="warn" time="00:27:53">disk usage at 61% on /var/log</event>
+  <event id="1238" level="info" time="00:27:50">request completed in 386ms</event>
+  <event id="1239" level="info" time="00:27:48">rotated log segment 3915</event>
+  <event id="1240" level="info" time="00:27:43">request completed in 813ms</event>
+  <event id="1241" level="info" time="00:27:39">snapshot 1442 written to cold storage</event>
+  <event id="1242" level="error" time="00:27:36">out of memory in worker 8783</event>
+  <event id="1243" level="info" time="00:27:32">rotated log segment 4233</event>
+  <event id="1244" level="info" time="00:27:29">cache hit for key user:7062</event>
+  <event id="1245" level="info" time="00:27:25">heartbeat received from search-index-1065</event>
+  <event id="1246" level="info" time="00:27:20">health check passed for session-cache</event>
+  <event id="1247" level="info" time="00:27:16">heartbeat received from billing-worker-7286</event>
+  <event id="1248" level="info" time="00:27:11">config reloaded without restart</event>
+  <event id="1249" level="info" time="00:27:07">snapshot 6731 written to cold storage</event>
+  <event id="1250" level="info" time="00:27:05">request completed in 337ms</event>
+  <event id="1251" level="warn" time="00:27:00">disk usage at 74% on /var/log</event>
+  <event id="1252" level="warn" time="00:26:58">slow query on search-index took 895ms</event>
+  <event id="1253" level="info" time="00:26:54">request completed in 529ms</event>
+  <event id="1254" level="info" time="00:26:51">rotated log segment 7717</event>
+  <event id="1255" level="info" time="00:26:48">snapshot 3000 written to cold storage</event>
+  <event id="1256" level="info" time="00:26:44">health check passed for notify-svc</event>
+  <event id="1257" level="info" time="00:26:40">health check passed for search-index</event>
+  <event id="1258" level="info" time="00:26:35">heartbeat received from auth-gateway-2874</event>
+  <event id="1259" level="info" time="00:26:30">job #5033 finished successfully</event>
+  <event id="1260" level="info" time="00:26:27">health check passed for image-pipeline</event>
+  <event id="1261" level="info" time="00:26:23">job #1004 finished successfully</event>
+  <event id="1262" level="info" time="00:26:20">connection established to order-processor-4164</event>
+  <event id="1263" level="info" time="00:26:15">scaled inventory-sync to 5475 replicas</event>
+  <event id="1264" level="info" time="00:26:12">scaled image-pipeline to 4351 replicas</event>
+  <event id="1265" level="info" time="00:26:08">snapshot 3412 written to cold storage</event>
+  <event id="1266" level="info" time="00:26:03">connection established to notify-svc-2069</event>
+  <event id="1267" level="info" time="00:25:59">snapshot 1842 written to cold storage</event>
+  <event id="1268" level="info" time="00:25:54">connection established to image-pipeline-6070</event>
+  <event id="1269" level="error" time="00:25:49">failed to acquire lock for resource 1383</event>
+  <event id="1270" level="info" time="00:25:45">job #3181 finished successfully</event>
+  <event id="1271" level="warn" time="00:25:42">connection pool at 89% capacity</event>
+  <event id="1272" level="warn" time="00:25:37">deprecated endpoint called by auth-gateway</event>
+  <event id="1273" level="info" time="00:25:34">health check passed for session-cache</event>
+  <event id="1274" level="info" time="00:25:30">heartbeat received from order-processor-9316</event>
+  <event id="1275" level="info" time="00:25:25">cache hit for key user:2964</event>
+  <event id="1276" level="info" time="00:25:23">scaled notify-svc to 6722 replicas</event>
+  <event id="1277" level="info" time="00:25:20">health check passed for notify-svc</event>
+  <event id="1278" level="info" time="00:25:18">config reloaded without restart</event>
+  <event id="1279" level="info" time="00:25:14">connection established to order-processor-5692</event>
+  <event id="1280" level="warn" time="00:25:12">slow query on inventory-sync took 527ms</event>
+  <event id="1281" level="info" time="00:25:08">scaled inventory-sync to 5932 replicas</event>
+  <event id="1282" level="info" time="00:25:03">snapshot 9961 written to cold storage</event>
+  <event id="1283" level="info" time="00:24:59">health check passed for audit-collector</event>
+  <event id="1284" level="info" time="00:24:54">connection established to order-processor-8000</event>
+  <event id="1285" level="info" time="00:24:50">connection established to edge-router-1789</event>
+  <event id="1286" level="info" time="00:24:46">job #4809 finished successfully</event>
+  <event id="1287" level="info" time="00:24:44">snapshot 7149 written to cold storage</event>
+  <event id="1288" level="info" time="00:24:39">config reloaded without restart</event>
+  <event id="1289" level="info" time="00:24:37">rotated log segment 7985</event>
+  <event id="1290" level="info" time="00:24:34">connection established to inventory-sync-4076</event>
+  <event id="1291" level="info" time="00:24:32">connection established to image-pipeline-9362</event>
+  <event id="1292" level="info" time="00:24:27">snapshot 6890 written to cold storage</event>
+  <event id="1293" level="warn" time="00:24:22">slow query on notify-svc took 534ms</event>
+  <event id="1294" level="info" time="00:24:17">job #9219 finished successfully</event>
+  <event id="1295" level="info" time="00:24:12">heartbeat received from search-index-2373</event>
+  <event id="1296" level="info" time="00:24:08">cache hit for key user:9282</event>
+  <event id="1297" level="info" time="00:24:03">config reloaded without restart</event>
+  <event id="1298" level="info" time="00:23:58">heartbeat received from billing-worker-1993</event>
+  <event id="1299" level="warn" time="00:23:54">slow query on audit-collector took 904ms</event>
+  <event id="1300" level="error" time="00:23:52">job #4552 failed: unhandled exception</event>
+  <event id="1301" level="info" time="00:23:50">config reloaded without restart</event>
+  <event id="1302" level="info" time="00:23:48">heartbeat received from audit-collector-7024</event>
+  <event id="1303" level="info" time="00:23:43">config reloaded without restart</event>
+  <event id="1304" level="info" time="00:23:41">job #9899 finished successfully</event>
+  <event id="1305" level="warn" time="00:23:39">connection pool at 62% capacity</event>
+  <event id="1306" level="info" time="00:23:35">request completed in 78ms</event>
+  <event id="1307" level="info" time="00:23:32">request completed in 214ms</event>
+  <event id="1308" level="info" time="00:23:28">connection established to billing-worker-8762</event>
+  <event id="1309" level="info" time="00:23:25">scaled session-cache to 4083 replicas</event>
+  <event id="1310" level="info" time="00:23:23">scaled billing-worker to 5268 replicas</event>
+  <event id="1311" level="info" time="00:23:20">rotated log segment 4105</event>
+  <event id="1312" level="info" time="00:23:16">health check passed for inventory-sync</event>
+  <event id="1313" level="info" time="00:23:14">snapshot 1800 written to cold storage</event>
+  <event id="1314" level="warn" time="00:23:09">cache miss for key user:3060, falling back to origin</event>
+  <event id="1315" level="info" time="00:23:07">scaled edge-router to 5764 replicas</event>
+  <event id="1316" level="info" time="00:23:03">snapshot 3082 written to cold storage</event>
+  <event id="1317" level="info" time="00:23:00">request completed in 720ms</event>
+  <event id="1318" level="info" time="00:22:58">cache hit for key user:6304</event>
+  <event id="1319" level="info" time="00:22:55">snapshot 5824 written to cold storage</event>
+  <event id="1320" level="error" time="00:22:53">connection to inventory-sync-9815 timed out after 684ms</event>
+  <event id="1321" level="error" time="00:22:50">job #4435 failed: unhandled exception</event>
+  <event id="1322" level="error" time="00:22:46">job #2478 failed: unhandled exception</event>
+  <event id="1323" level="info" time="00:22:42">config reloaded without restart</event>
+  <event id="1324" level="info" time="00:22:37">rotated log segment 2686</event>
+  <event id="1325" level="info" time="00:22:35">config reloaded without restart</event>
+  <event id="1326" level="info" time="00:22:32">request completed in 515ms</event>
+  <event id="1327" level="error" time="00:22:30">connection to search-index-8526 timed out after 564ms</event>
+  <event id="1328" level="info" time="00:22:27">job #2865 finished successfully</event>
+  <event id="1329" level="info" time="00:22:22">heartbeat received from auth-gateway-4926</event>
+  <event id="1330" level="info" time="00:22:20">config reloaded without restart</event>
+  <event id="1331" level="info" time="00:22:15">heartbeat received from image-pipeline-6788</event>
+  <event id="1332" level="error" time="00:22:13">failed to acquire lock for resource 5309</event>
+  <event id="1333" level="info" time="00:22:08">health check passed for image-pipeline</event>
+  <event id="1334" level="info" time="00:22:03">heartbeat received from search-index-8071</event>
+  <event id="1335" level="error" time="00:22:00">circuit breaker opened for inventory-sync</event>
+  <event id="1336" level="info" time="00:21:55">scaled auth-gateway to 5120 replicas</event>
+  <event id="1337" level="info" time="00:21:53">config reloaded without restart</event>
+  <event id="1338" level="error" time="00:21:50">out of memory in worker 1061</event>
+  <event id="1339" level="info" time="00:21:46">connection established to edge-router-7866</event>
+  <event id="1340" level="info" time="00:21:43">connection established to image-pipeline-4595</event>
+  <event id="1341" level="info" time="00:21:40">config reloaded without restart</event>
+  <event id="1342" level="info" time="00:21:35">cache hit for key user:5537</event>
+  <event id="1343" level="info" time="00:21:31">heartbeat received from image-pipeline-6743</event>
+  <event id="1344" level="info" time="00:21:29">snapshot 1696 written to cold storage</event>
+  <event id="1345" level="info" time="00:21:26">snapshot 9926 written to cold storage</event>
+  <event id="1346" level="info" time="00:21:24">health check passed for edge-router</event>
+  <event id="1347" level="warn" time="00:21:20">slow query on notify-svc took 88ms</event>
+  <event id="1348" level="info" time="00:21:15">request completed in 329ms</event>
+  <event id="1349" level="info" time="00:21:11">cache hit for key user:3754</event>
+  <event id="1350" level="error" time="00:21:08">circuit breaker opened for inventory-sync</event>
+  <event id="1351" level="info" time="00:21:05">config reloaded without restart</event>
+  <event id="1352" level="error" time="00:21:02">5xx response from search-index-4933</event>
+  <event id="1353" level="info" time="00:20:59">rotated log segment 7559</event>
+  <event id="1354" level="info" time="00:20:56">job #9626 finished successfully</event>
+  <event id="1355" level="warn" time="00:20:54">cache miss for key user:3083, falling back to origin</event>
+  <event id="1356" level="info" time="00:20:49">job #8738 finished successfully</event>
+  <event id="1357" level="info" time="00:20:47">cache hit for key user:5298</event>
+  <event id="1358" level="info" time="00:20:44">rotated log segment 9566</event>
+  <event id="1359" level="info" time="00:20:39">cache hit for key user:7873</event>
+  <event id="1360" level="info" time="00:20:35">request completed in 190ms</event>
+  <event id="1361" level="info" time="00:20:31">snapshot 3339 written to cold storage</event>
+  <event id="1362" level="info" time="00:20:26">rotated log segment 5855</event>
+  <event id="1363" level="info" time="00:20:24">connection established to billing-worker-6738</event>
+  <event id="1364" level="error" time="00:20:20">circuit breaker opened for session-cache</event>
+  <event id="1365" level="warn" time="00:20:16">disk usage at 62% on /var/log</event>
+  <event id="1366" level="info" time="00:20:13">request completed in 639ms</event>
+  <event id="1367" level="info" time="00:20:08">health check passed for auth-gateway</event>
+  <event id="1368" level="info" time="00:20:06">rotated log segment 2270</event>
+  <event id="1369" level="info" time="00:20:01">request completed in 866ms</event>
+  <event id="1370" level="error" time="00:19:57">5xx response from edge-router-3314</event>
+  <event id="1371" level="info" time="00:19:53">rotated log segment 3078</event>
+  <event id="1372" level="warn" time="00:19:48">deprecated endpoint called by session-cache</event>
+  <event id="1373" level="warn" time="00:19:43">slow query on image-pipeline took 17ms</event>
+  <event id="1374" level="info" time="00:19:41">cache hit for key user:7405</event>
+  <event id="1375" level="info" time="00:19:38">health check passed for notify-svc</event>
+  <event id="1376" level="info" time="00:19:35">cache hit for key user:4862</event>
+  <event id="1377" level="info" time="00:19:33">heartbeat received from edge-router-4939</event>
+  <event id="1378" level="info" time="00:19:29">heartbeat received from notify-svc-3966</event>
+  <event id="1379" level="info" time="00:19:25">health check passed for inventory-sync</event>
+  <event id="1380" level="error" time="00:19:23">job #1568 failed: unhandled exception</event>
+  <event id="1381" level="warn" time="00:19:19">cache miss for key user:6690, falling back to origin</event>
+  <event id="1382" level="info" time="00:19:17">health check passed for auth-gateway</event>
+  <event id="1383" level="info" time="00:19:12">request completed in 54ms</event>
+  <event id="1384" level="info" time="00:19:10">request completed in 864ms</event>
+  <event id="1385" level="info" time="00:19:06">request completed in 859ms</event>
+  <event id="1386" level="info" time="00:19:04">request completed in 418ms</event>
+  <event id="1387" level="info" time="00:19:00">cache hit for key user:7282</event>
+  <event id="1388" level="warn" time="00:18:58">deprecated endpoint called by search-index</event>
+  <event id="1389" level="info" time="00:18:54">scaled inventory-sync to 6311 replicas</event>
+  <event id="1390" level="warn" time="00:18:50">slow query on auth-gateway took 409ms</event>
+  <event id="1391" level="info" time="00:18:48">config reloaded without restart</event>
+  <event id="1392" level="info" time="00:18:43">snapshot 4225 written to cold storage</event>
+  <event id="1393" level="info" time="00:18:38">snapshot 7616 written to cold storage</event>
+  <event id="1394" level="info" time="00:18:35">rotated log segment 1350</event>
+  <event id="1395" level="error" time="00:18:33">out of memory in worker 1642</event>
+  <event id="1396" level="info" time="00:18:29">connection established to search-index-1665</event>
+  <event id="1397" level="info" time="00:18:27">health check passed for search-index</event>
+  <event id="1398" level="info" time="00:18:22">scaled search-index to 6239 replicas</event>
+  <event id="1399" level="warn" time="00:18:20">disk usage at 91% on /var/log</event>
+  <event id="1400" level="info" time="00:18:15">snapshot 6004 written to cold storage</event>
+  <event id="1401" level="info" time="00:18:12">request completed in 576ms</event>
+  <event id="1402" level="info" time="00:18:07">cache hit for key user:8769</event>
+  <event id="1403" level="info" time="00:18:05">cache hit for key user:4666</event>
+  <event id="1404" level="warn" time="00:18:00">cache miss for key user:2921, falling back to origin</event>
+  <event id="1405" level="info" time="00:17:58">config reloaded without restart</event>
+  <event id="1406" level="warn" time="00:17:53">connection pool at 65% capacity</event>
+  <event id="1407" level="info" time="00:17:48">health check passed for notify-svc</event>
+  <event id="1408" level="warn" time="00:17:46">deprecated endpoint called by edge-router</event>
+  <event id="1409" level="info" time="00:17:44">cache hit for key user:1966</event>
+  <event id="1410" level="info" time="00:17:42">snapshot 9349 written to cold storage</event>
+  <event id="1411" level="info" time="00:17:40">rotated log segment 8522</event>
+  <event id="1412" level="warn" time="00:17:38">cache miss for key user:9190, falling back to origin</event>
+  <event id="1413" level="info" time="00:17:33">request completed in 681ms</event>
+  <event id="1414" level="info" time="00:17:31">request completed in 86ms</event>
+  <event id="1415" level="info" time="00:17:27">connection established to auth-gateway-9790</event>
+  <event id="1416" level="info" time="00:17:22">heartbeat received from inventory-sync-9493</event>
+  <event id="1417" level="error" time="00:17:18">5xx response from notify-svc-9619</event>
+  <event id="1418" level="info" time="00:17:16">health check passed for auth-gateway</event>
+  <event id="1419" level="info" time="00:17:13">rotated log segment 8625</event>
+  <event id="1420" level="warn" time="00:17:10">slow query on search-index took 135ms</event>
+  <event id="1421" level="info" time="00:17:05">scaled inventory-sync to 1904 replicas</event>
+  <event id="1422" level="info" time="00:17:02">scaled notify-svc to 6244 replicas</event>
+  <event id="1423" level="info" time="00:16:59">job #2464 finished successfully</event>
+  <event id="1424" level="info" time="00:16:56">config reloaded without restart</event>
+  <event id="1425" level="info" time="00:16:53">connection established to inventory-sync-1440</event>
+  <event id="1426" level="info" time="00:16:50">rotated log segment 9372</event>
+  <event id="1427" level="info" time="00:16:45">heartbeat received from notify-svc-3413</event>
+  <event id="1428" level="info" time="00:16:40">health check passed for inventory-sync</event>
+  <event id="1429" level="info" time="00:16:36">connection established to edge-router-8587</event>
+  <event id="1430" level="info" time="00:16:33">scaled inventory-sync to 9248 replicas</event>
+  <event id="1431" level="info" time="00:16:30">connection established to audit-collector-4023</event>
+  <event id="1432" level="info" time="00:16:27">connection established to audit-collector-1080</event>
+  <event id="1433" level="warn" time="00:16:22">cache miss for key user:4227, falling back to origin</event>
+  <event id="1434" level="info" time="00:16:18">heartbeat received from billing-worker-4321</event>
+  <event id="1435" level="info" time="00:16:14">cache hit for key user:8995</event>
+  <event id="1436" level="info" time="00:16:10">request completed in 32ms</event>
+  <event id="1437" level="info" time="00:16:07">snapshot 5455 written to cold storage</event>
+  <event id="1438" level="info" time="00:16:03">scaled search-index to 9528 replicas</event>
+  <event id="1439" level="info" time="00:15:58">config reloaded without restart</event>
+  <event id="1440" level="info" time="00:15:55">cache hit for key user:6601</event>
+  <event id="1441" level="info" time="00:15:51">health check passed for audit-collector</event>
+  <event id="1442" level="warn" time="00:15:48">disk usage at 90% on /var/log</event>
+  <event id="1443" level="info" time="00:15:44">config reloaded without restart</event>
+  <event id="1444" level="info" time="00:15:39">rotated log segment 3279</event>
+  <event id="1445" level="info" time="00:15:36">health check passed for search-index</event>
+  <event id="1446" level="error" time="00:15:34">circuit breaker opened for inventory-sync</event>
+  <event id="1447" level="info" time="00:15:29">job #5143 finished successfully</event>
+  <event id="1448" level="info" time="00:15:26">rotated log segment 8813</event>
+  <event id="1449" level="info" time="00:15:24">health check passed for order-processor</event>
+  <event id="1450" level="info" time="00:15:20">rotated log segment 9841</event>
+  <event id="1451" level="info" time="00:15:17">snapshot 8447 written to cold storage</event>
+  <event id="1452" level="warn" time="00:15:12">retrying job #5991 (attempt 2/5)</event>
+  <event id="1453" level="info" time="00:15:07">health check passed for image-pipeline</event>
+  <event id="1454" level="warn" time="00:15:02">connection pool at 72% capacity</event>
+  <event id="1455" level="error" time="00:14:57">failed to acquire lock for resource 7620</event>
+  <event id="1456" level="info" time="00:14:53">job #4489 finished successfully</event>
+  <event id="1457" level="info" time="00:14:50">cache hit for key user:3933</event>
+  <event id="1458" level="info" time="00:14:47">health check passed for audit-collector</event>
+  <event id="1459" level="warn" time="00:14:43">rate limit approaching for auth-gateway-7839</event>
+  <event id="1460" level="info" time="00:14:40">config reloaded without restart</event>
+  <event id="1461" level="error" time="00:14:35">failed to acquire lock for resource 2520</event>
+  <event id="1462" level="info" time="00:14:31">connection established to auth-gateway-4984</event>
+  <event id="1463" level="info" time="00:14:26">scaled search-index to 4274 replicas</event>
+  <event id="1464" level="info" time="00:14:21">rotated log segment 2100</event>
+  <event id="1465" level="info" time="00:14:19">scaled image-pipeline to 6413 replicas</event>
+  <event id="1466" level="info" time="00:14:14">cache hit for key user:5196</event>
+  <event id="1467" level="info" time="00:14:12">heartbeat received from search-index-3903</event>
+  <event id="1468" level="info" time="00:14:07">job #9714 finished successfully</event>
+  <event id="1469" level="info" time="00:14:04">config reloaded without restart</event>
+  <event id="1470" level="info" time="00:14:01">job #9598 finished successfully</event>
+  <event id="1471" level="info" time="00:13:58">job #2356 finished successfully</event>
+  <event id="1472" level="warn" time="00:13:53">slow query on auth-gateway took 767ms</event>
+  <event id="1473" level="info" time="00:13:49">connection established to inventory-sync-4027</event>
+  <event id="1474" level="info" time="00:13:45">snapshot 7639 written to cold storage</event>
+  <event id="1475" level="info" time="00:13:40">rotated log segment 3799</event>
+  <event id="1476" level="info" time="00:13:38">heartbeat received from search-index-1027</event>
+  <event id="1477" level="info" time="00:13:34">rotated log segment 1646</event>
+  <event id="1478" level="info" time="00:13:29">snapshot 4635 written to cold storage</event>
+  <event id="1479" level="error" time="00:13:24">job #9742 failed: unhandled exception</event>
+  <event id="1480" level="info" time="00:13:21">snapshot 2723 written to cold storage</event>
+  <event id="1481" level="info" time="00:13:16">job #7350 finished successfully</event>
+  <event id="1482" level="warn" time="00:13:11">slow query on inventory-sync took 200ms</event>
+  <event id="1483" level="info" time="00:13:08">job #1292 finished successfully</event>
+  <event id="1484" level="info" time="00:13:06">connection established to notify-svc-1957</event>
+  <event id="1485" level="info" time="00:13:02">job #3266 finished successfully</event>
+  <event id="1486" level="info" time="00:12:59">rotated log segment 7012</event>
+  <event id="1487" level="info" time="00:12:56">connection established to audit-collector-3164</event>
+  <event id="1488" level="info" time="00:12:52">snapshot 7938 written to cold storage</event>
+  <event id="1489" level="info" time="00:12:50">health check passed for image-pipeline</event>
+  <event id="1490" level="info" time="00:12:46">snapshot 1614 written to cold storage</event>
+  <event id="1491" level="info" time="00:12:44">snapshot 9065 written to cold storage</event>
+  <event id="1492" level="info" time="00:12:39">config reloaded without restart</event>
+  <event id="1493" level="info" time="00:12:34">heartbeat received from session-cache-4590</event>
+  <event id="1494" level="info" time="00:12:30">config reloaded without restart</event>
+  <event id="1495" level="info" time="00:12:28">job #4958 finished successfully</event>
+  <event id="1496" level="error" time="00:12:23">out of memory in worker 4458</event>
+  <event id="1497" level="info" time="00:12:18">request completed in 674ms</event>
+  <event id="1498" level="error" time="00:12:13">connection to audit-collector-9387 timed out after 719ms</event>
+  <event id="1499" level="info" time="00:12:10">job #1513 finished successfully</event>
+  <event id="1500" level="info" time="00:12:05">job #9086 finished successfully</event>
+  <event id="1501" level="warn" time="00:12:03">deprecated endpoint called by order-processor</event>
+  <event id="1502" level="info" time="00:11:58">rotated log segment 1016</event>
+  <event id="1503" level="info" time="00:11:54">cache hit for key user:3999</event>
+  <event id="1504" level="info" time="00:11:51">config reloaded without restart</event>
+  <event id="1505" level="warn" time="00:11:48">deprecated endpoint called by search-index</event>
+  <event id="1506" level="info" time="00:11:45">snapshot 7407 written to cold storage</event>
+  <event id="1507" level="info" time="00:11:40">rotated log segment 8631</event>
+  <event id="1508" level="info" time="00:11:38">request completed in 353ms</event>
+  <event id="1509" level="info" time="00:11:35">config reloaded without restart</event>
+  <event id="1510" level="info" time="00:11:30">job #7376 finished successfully</event>
+  <event id="1511" level="info" time="00:11:25">snapshot 1619 written to cold storage</event>
+  <event id="1512" level="info" time="00:11:23">rotated log segment 5358</event>
+  <event id="1513" level="info" time="00:11:19">scaled audit-collector to 1770 replicas</event>
+  <event id="1514" level="info" time="00:11:15">snapshot 5420 written to cold storage</event>
+  <event id="1515" level="info" time="00:11:12">cache hit for key user:1194</event>
+  <event id="1516" level="error" time="00:11:08">circuit breaker opened for search-index</event>
+  <event id="1517" level="info" time="00:11:05">cache hit for key user:2179</event>
+  <event id="1518" level="info" time="00:11:03">health check passed for edge-router</event>
+  <event id="1519" level="info" time="00:11:01">job #8992 finished successfully</event>
+  <event id="1520" level="warn" time="00:10:58">connection pool at 67% capacity</event>
+  <event id="1521" level="error" time="00:10:55">circuit breaker opened for image-pipeline</event>
+  <event id="1522" level="info" time="00:10:51">config reloaded without restart</event>
+  <event id="1523" level="info" time="00:10:46">snapshot 4415 written to cold storage</event>
+  <event id="1524" level="error" time="00:10:43">circuit breaker opened for search-index</event>
+  <event id="1525" level="info" time="00:10:40">connection established to billing-worker-6590</event>
+  <event id="1526" level="info" time="00:10:36">rotated log segment 8188</event>
+  <event id="1527" level="info" time="00:10:34">snapshot 8546 written to cold storage</event>
+  <event id="1528" level="warn" time="00:10:32">retrying job #5973 (attempt 2/5)</event>
+  <event id="1529" level="info" time="00:10:28">job #6053 finished successfully</event>
+  <event id="1530" level="info" time="00:10:23">request completed in 133ms</event>
+  <event id="1531" level="warn" time="00:10:18">deprecated endpoint called by image-pipeline</event>
+  <event id="1532" level="info" time="00:10:13">scaled auth-gateway to 7998 replicas</event>
+  <event id="1533" level="info" time="00:10:08">snapshot 4480 written to cold storage</event>
+  <event id="1534" level="info" time="00:10:04">scaled image-pipeline to 1700 replicas</event>
+  <event id="1535" level="info" time="00:10:00">heartbeat received from inventory-sync-2360</event>
+  <event id="1536" level="error" time="00:09:57">out of memory in worker 9723</event>
+  <event id="1537" level="info" time="00:09:52">heartbeat received from inventory-sync-8153</event>
+  <event id="1538" level="warn" time="00:09:50">connection pool at 97% capacity</event>
+  <event id="1539" level="info" time="00:09:46">cache hit for key user:9498</event>
+  <event id="1540" level="info" time="00:09:43">scaled billing-worker to 8491 replicas</event>
+  <event id="1541" level="info" time="00:09:40">scaled billing-worker to 7002 replicas</event>
+  <event id="1542" level="error" time="00:09:36">circuit breaker opened for audit-collector</event>
+  <event id="1543" level="info" time="00:09:31">job #7743 finished successfully</event>
+  <event id="1544" level="warn" time="00:09:29">cache miss for key user:3613, falling back to origin</event>
+  <event id="1545" level="info" time="00:09:26">rotated log segment 5146</event>
+  <event id="1546" level="warn" time="00:09:24">deprecated endpoint called by edge-router</event>
+  <event id="1547" level="info" time="00:09:20">heartbeat received from image-pipeline-7623</event>
+  <event id="1548" level="info" time="00:09:17">health check passed for audit-collector</event>
+  <event id="1549" level="warn" time="00:09:15">rate limit approaching for auth-gateway-2938</event>
+  <event id="1550" level="error" time="00:09:10">failed to acquire lock for resource 4282</event>
+  <event id="1551" level="info" time="00:09:05">connection established to auth-gateway-2379</event>
+  <event id="1552" level="info" time="00:09:02">request completed in 602ms</event>
+  <event id="1553" level="warn" time="00:09:00">deprecated endpoint called by image-pipeline</event>
+  <event id="1554" level="info" time="00:08:58">health check passed for billing-worker</event>
+  <event id="1555" level="info" time="00:08:53">cache hit for key user:1455</event>
+  <event id="1556" level="info" time="00:08:50">health check passed for auth-gateway</event>
+  <event id="1557" level="info" time="00:08:45">job #6211 finished successfully</event>
+  <event id="1558" level="info" time="00:08:42">request completed in 443ms</event>
+  <event id="1559" level="info" time="00:08:37">health check passed for order-processor</event>
+  <event id="1560" level="warn" time="00:08:35">retrying job #1260 (attempt 2/5)</event>
+  <event id="1561" level="info" time="00:08:30">snapshot 5585 written to cold storage</event>
+  <event id="1562" level="info" time="00:08:27">job #4788 finished successfully</event>
+  <event id="1563" level="info" time="00:08:23">health check passed for edge-router</event>
+  <event id="1564" level="info" time="00:08:19">connection established to billing-worker-1280</event>
+  <event id="1565" level="info" time="00:08:14">health check passed for session-cache</event>
+  <event id="1566" level="info" time="00:08:10">rotated log segment 3113</event>
+  <event id="1567" level="info" time="00:08:08">cache hit for key user:9159</event>
+  <event id="1568" level="error" time="00:08:05">connection to image-pipeline-7349 timed out after 160ms</event>
+  <event id="1569" level="error" time="00:08:03">circuit breaker opened for billing-worker</event>
+  <event id="1570" level="warn" time="00:08:01">slow query on inventory-sync took 504ms</event>
+  <event id="1571" level="info" time="00:07:56">job #2615 finished successfully</event>
+  <event id="1572" level="info" time="00:07:52">snapshot 1231 written to cold storage</event>
+  <event id="1573" level="warn" time="00:07:50">disk usage at 68% on /var/log</event>
+  <event id="1574" level="info" time="00:07:46">config reloaded without restart</event>
+  <event id="1575" level="info" time="00:07:43">heartbeat received from auth-gateway-6210</event>
+  <event id="1576" level="info" time="00:07:41">config reloaded without restart</event>
+  <event id="1577" level="error" time="00:07:37">failed to acquire lock for resource 2319</event>
+  <event id="1578" level="warn" time="00:07:35">connection pool at 65% capacity</event>
+  <event id="1579" level="info" time="00:07:33">cache hit for key user:6527</event>
+  <event id="1580" level="info" time="00:07:28">job #1411 finished successfully</event>
+  <event id="1581" level="info" time="00:07:23">health check passed for auth-gateway</event>
+  <event id="1582" level="info" time="00:07:20">rotated log segment 6176</event>
+  <event id="1583" level="info" time="00:07:18">job #4091 finished successfully</event>
+  <event id="1584" level="info" time="00:07:14">connection established to order-processor-9443</event>
+  <event id="1585" level="info" time="00:07:10">scaled inventory-sync to 4200 replicas</event>
+  <event id="1586" level="info" time="00:07:06">snapshot 5054 written to cold storage</event>
+  <event id="1587" level="warn" time="00:07:03">cache miss for key user:4221, falling back to origin</event>
+  <event id="1588" level="info" time="00:06:58">connection established to order-processor-7323</event>
+  <event id="1589" level="info" time="00:06:54">job #5743 finished successfully</event>
+  <event id="1590" level="info" time="00:06:49">request completed in 418ms</event>
+  <event id="1591" level="warn" time="00:06:46">connection pool at 68% capacity</event>
+  <event id="1592" level="info" time="00:06:42">config reloaded without restart</event>
+  <event id="1593" level="info" time="00:06:37">rotated log segment 1309</event>
+  <event id="1594" level="info" time="00:06:34">request completed in 218ms</event>
+  <event id="1595" level="info" time="00:06:29">health check passed for order-processor</event>
+  <event id="1596" level="info" time="00:06:27">request completed in 8ms</event>
+  <event id="1597" level="error" time="00:06:24">failed to acquire lock for resource 6445</event>
+  <event id="1598" level="error" time="00:06:19">job #9897 failed: unhandled exception</event>
+  <event id="1599" level="warn" time="00:06:16">slow query on image-pipeline took 249ms</event>
+  <event id="1600" level="info" time="00:06:14">health check passed for billing-worker</event>
+  <event id="1601" level="error" time="00:06:09">circuit breaker opened for inventory-sync</event>
+  <event id="1602" level="info" time="00:06:07">connection established to session-cache-6836</event>
+  <event id="1603" level="warn" time="00:06:02">retrying job #2814 (attempt 2/5)</event>
+  <event id="1604" level="info" time="00:06:00">heartbeat received from image-pipeline-7919</event>
+  <event id="1605" level="info" time="00:05:55">health check passed for edge-router</event>
+  <event id="1606" level="error" time="00:05:53">job #3213 failed: unhandled exception</event>
+  <event id="1607" level="info" time="00:05:49">health check passed for inventory-sync</event>
+  <event id="1608" level="info" time="00:05:45">health check passed for notify-svc</event>
+  <event id="1609" level="info" time="00:05:43">snapshot 2522 written to cold storage</event>
+  <event id="1610" level="info" time="00:05:38">request completed in 47ms</event>
+  <event id="1611" level="info" time="00:05:34">config reloaded without restart</event>
+  <event id="1612" level="info" time="00:05:29">rotated log segment 9740</event>
+  <event id="1613" level="info" time="00:05:26">request completed in 234ms</event>
+  <event id="1614" level="info" time="00:05:21">job #6127 finished successfully</event>
+  <event id="1615" level="info" time="00:05:18">scaled edge-router to 4472 replicas</event>
+  <event id="1616" level="info" time="00:05:13">cache hit for key user:3263</event>
+  <event id="1617" level="info" time="00:05:11">cache hit for key user:9458</event>
+  <event id="1618" level="error" time="00:05:06">out of memory in worker 8394</event>
+  <event id="1619" level="info" time="00:05:02">heartbeat received from inventory-sync-8255</event>
+  <event id="1620" level="warn" time="00:04:59">slow query on search-index took 154ms</event>
+  <event id="1621" level="info" time="00:04:54">health check passed for session-cache</event>
+  <event id="1622" level="info" time="00:04:49">rotated log segment 6227</event>
+  <event id="1623" level="warn" time="00:04:44">rate limit approaching for edge-router-2215</event>
+  <event id="1624" level="info" time="00:04:39">scaled search-index to 4272 replicas</event>
+  <event id="1625" level="info" time="00:04:34">config reloaded without restart</event>
+  <event id="1626" level="error" time="00:04:32">failed to acquire lock for resource 1783</event>
+  <event id="1627" level="info" time="00:04:28">health check passed for auth-gateway</event>
+  <event id="1628" level="info" time="00:04:25">request completed in 388ms</event>
+  <event id="1629" level="info" time="00:04:22">snapshot 3365 written to cold storage</event>
+  <event id="1630" level="error" time="00:04:19">circuit breaker opened for order-processor</event>
+  <event id="1631" level="warn" time="00:04:16">disk usage at 92% on /var/log</event>
+  <event id="1632" level="info" time="00:04:14">rotated log segment 6265</event>
+  <event id="1633" level="info" time="00:04:12">health check passed for order-processor</event>
+  <event id="1634" level="info" time="00:04:07">health check passed for order-processor</event>
+  <event id="1635" level="info" time="00:04:02">connection established to session-cache-5414</event>
+  <event id="1636" level="error" time="00:04:00">circuit breaker opened for session-cache</event>
+  <event id="1637" level="info" time="00:03:57">job #9678 finished successfully</event>
+  <event id="1638" level="info" time="00:03:53">rotated log segment 5052</event>
+  <event id="1639" level="info" time="00:03:48">scaled auth-gateway to 1044 replicas</event>
+  <event id="1640" level="info" time="00:03:43">connection established to order-processor-3109</event>
+  <event id="1641" level="info" time="00:03:39">snapshot 7319 written to cold storage</event>
+  <event id="1642" level="warn" time="00:03:36">connection pool at 65% capacity</event>
+  <event id="1643" level="warn" time="00:03:34">deprecated endpoint called by image-pipeline</event>
+  <event id="1644" level="info" time="00:03:32">health check passed for inventory-sync</event>
+  <event id="1645" level="info" time="00:03:30">cache hit for key user:4884</event>
+  <event id="1646" level="warn" time="00:03:26">disk usage at 60% on /var/log</event>
+  <event id="1647" level="info" time="00:03:23">connection established to order-processor-6158</event>
+  <event id="1648" level="info" time="00:03:19">scaled inventory-sync to 9426 replicas</event>
+  <event id="1649" level="info" time="00:03:17">cache hit for key user:3563</event>
+  <event id="1650" level="info" time="00:03:13">rotated log segment 6750</event>
+  <event id="1651" level="warn" time="00:03:08">connection pool at 65% capacity</event>
+  <event id="1652" level="warn" time="00:03:05">slow query on notify-svc took 541ms</event>
+  <event id="1653" level="info" time="00:03:02">request completed in 225ms</event>
+  <event id="1654" level="warn" time="00:02:59">disk usage at 74% on /var/log</event>
+  <event id="1655" level="info" time="00:02:57">job #6009 finished successfully</event>
+  <event id="1656" level="warn" time="00:02:53">disk usage at 86% on /var/log</event>
+  <event id="1657" level="info" time="00:02:49">rotated log segment 4999</event>
+  <event id="1658" level="info" time="00:02:44">snapshot 8377 written to cold storage</event>
+  <event id="1659" level="warn" time="00:02:40">connection pool at 89% capacity</event>
+  <event id="1660" level="warn" time="00:02:36">disk usage at 79% on /var/log</event>
+  <event id="1661" level="info" time="00:02:34">connection established to billing-worker-6802</event>
+  <event id="1662" level="warn" time="00:02:29">disk usage at 84% on /var/log</event>
+  <event id="1663" level="info" time="00:02:27">heartbeat received from audit-collector-7736</event>
+  <event id="1664" level="warn" time="00:02:22">cache miss for key user:7894, falling back to origin</event>
+  <event id="1665" level="info" time="00:02:20">snapshot 7207 written to cold storage</event>
+  <event id="1666" level="info" time="00:02:17">snapshot 1315 written to cold storage</event>
+  <event id="1667" level="info" time="00:02:14">request completed in 224ms</event>
+  <event id="1668" level="info" time="00:02:11">connection established to order-processor-7749</event>
+  <event id="1669" level="info" time="00:02:08">snapshot 9552 written to cold storage</event>
+  <event id="1670" level="info" time="00:02:04">connection established to search-index-7860</event>
+  <event id="1671" level="warn" time="00:02:02">rate limit approaching for audit-collector-4788</event>
+  <event id="1672" level="info" time="00:02:00">snapshot 5289 written to cold storage</event>
+  <event id="1673" level="info" time="00:01:56">job #8642 finished successfully</event>
+  <event id="1674" level="info" time="00:01:54">heartbeat received from order-processor-3971</event>
+  <event id="1675" level="info" time="00:01:52">health check passed for billing-worker</event>
+  <event id="1676" level="info" time="00:01:49">scaled billing-worker to 4763 replicas</event>
+  <event id="1677" level="warn" time="00:01:44">deprecated endpoint called by billing-worker</event>
+  <event id="1678" level="info" time="00:01:41">heartbeat received from image-pipeline-9052</event>
+  <event id="1679" level="info" time="00:01:39">config reloaded without restart</event>
+  <event id="1680" level="info" time="00:01:34">rotated log segment 4248</event>
+  <event id="1681" level="warn" time="00:01:30">rate limit approaching for image-pipeline-1291</event>
+  <event id="1682" level="warn" time="00:01:26">deprecated endpoint called by search-index</event>
+  <event id="1683" level="info" time="00:01:24">connection established to image-pipeline-5777</event>
+  <event id="1684" level="info" time="00:01:19">cache hit for key user:1937</event>
+  <event id="1685" level="info" time="00:01:14">rotated log segment 1573</event>
+  <event id="1686" level="info" time="00:01:09">request completed in 53ms</event>
+  <event id="1687" level="info" time="00:01:05">request completed in 512ms</event>
+  <event id="1688" level="info" time="00:01:01">rotated log segment 7850</event>
+  <event id="1689" level="info" time="00:00:56">request completed in 230ms</event>
+  <event id="1690" level="info" time="00:00:51">health check passed for search-index</event>
+  <event id="1691" level="info" time="00:00:46">scaled notify-svc to 5237 replicas</event>
+  <event id="1692" level="error" time="00:00:43">failed to acquire lock for resource 3648</event>
+  <event id="1693" level="info" time="00:00:38">snapshot 3183 written to cold storage</event>
+  <event id="1694" level="info" time="00:00:36">cache hit for key user:7324</event>
+  <event id="1695" level="info" time="00:00:33">cache hit for key user:7024</event>
+  <event id="1696" level="warn" time="00:00:28">slow query on image-pipeline took 721ms</event>
+  <event id="1697" level="error" time="00:00:26">failed to acquire lock for resource 9639</event>
+  <event id="1698" level="info" time="00:00:22">job #1643 finished successfully</event>
+  <event id="1699" level="info" time="00:00:17">config reloaded without restart</event>
+  <event id="1700" level="info" time="00:00:15">scaled inventory-sync to 9868 replicas</event>
+  <event id="1701" level="info" time="00:00:12">cache hit for key user:4860</event>
+  <event id="1702" level="info" time="00:00:08">request completed in 732ms</event>
+  <event id="1703" level="info" time="00:00:03">connection established to search-index-4822</event>
+  <event id="1704" level="info" time="00:00:01">cache hit for key user:5878</event>
+  <event id="1705" level="info" time="-1:-1:-1">config reloaded without restart</event>
+  <event id="1706" level="info" time="-1:-1:-5">heartbeat received from notify-svc-4040</event>
+  <event id="1707" level="info" time="-1:-1:-10">heartbeat received from inventory-sync-2245</event>
+  <event id="1708" level="info" time="-1:-1:-12">config reloaded without restart</event>
+  <event id="1709" level="error" time="-1:-1:-17">5xx response from image-pipeline-1230</event>
+  <event id="1710" level="info" time="-1:-1:-19">cache hit for key user:5350</event>
+  <event id="1711" level="info" time="-1:-1:-23">request completed in 620ms</event>
+  <event id="1712" level="info" time="-1:-1:-28">heartbeat received from search-index-4887</event>
+  <event id="1713" level="info" time="-1:-1:-32">cache hit for key user:8364</event>
+  <event id="1714" level="info" time="-1:-1:-37">heartbeat received from billing-worker-9093</event>
+  <event id="1715" level="info" time="-1:-1:-41">snapshot 6747 written to cold storage</event>
+  <event id="1716" level="info" time="-1:-1:-45">health check passed for search-index</event>
+  <event id="1717" level="info" time="-1:-1:-49">heartbeat received from edge-router-6442</event>
+  <event id="1718" level="info" time="-1:-1:-54">cache hit for key user:5562</event>
+  <event id="1719" level="error" time="-1:-1:-59">out of memory in worker 2884</event>
+  <event id="1720" level="info" time="-1:-2:-1">scaled auth-gateway to 2398 replicas</event>
+  <event id="1721" level="warn" time="-1:-2:-5">cache miss for key user:2101, falling back to origin</event>
+  <event id="1722" level="info" time="-1:-2:-8">rotated log segment 6282</event>
+  <event id="1723" level="warn" time="-1:-2:-10">deprecated endpoint called by notify-svc</event>
+  <event id="1724" level="info" time="-1:-2:-13">scaled audit-collector to 6365 replicas</event>
+  <event id="1725" level="info" time="-1:-2:-16">cache hit for key user:5326</event>
+  <event id="1726" level="warn" time="-1:-2:-18">retrying job #2466 (attempt 2/5)</event>
+  <event id="1727" level="info" time="-1:-2:-22">heartbeat received from edge-router-8747</event>
+  <event id="1728" level="info" time="-1:-2:-25">snapshot 1130 written to cold storage</event>
+  <event id="1729" level="info" time="-1:-2:-30">scaled search-index to 3912 replicas</event>
+  <event id="1730" level="info" time="-1:-2:-33">cache hit for key user:9693</event>
+  <event id="1731" level="info" time="-1:-2:-37">connection established to image-pipeline-8970</event>
+  <event id="1732" level="info" time="-1:-2:-40">rotated log segment 9967</event>
+  <event id="1733" level="info" time="-1:-2:-42">job #6565 finished successfully</event>
+  <event id="1734" level="info" time="-1:-2:-47">job #5085 finished successfully</event>
+  <event id="1735" level="info" time="-1:-2:-51">job #2078 finished successfully</event>
+  <event id="1736" level="info" time="-1:-2:-53">snapshot 8253 written to cold storage</event>
+  <event id="1737" level="warn" time="-1:-2:-58">rate limit approaching for image-pipeline-6321</event>
+  <event id="1738" level="info" time="-1:-2:00">connection established to audit-collector-1690</event>
+  <event id="1739" level="warn" time="-1:-3:-5">disk usage at 79% on /var/log</event>
+  <event id="1740" level="info" time="-1:-3:-9">request completed in 181ms</event>
+  <event id="1741" level="info" time="-1:-3:-14">config reloaded without restart</event>
+  <event id="1742" level="info" time="-1:-3:-18">request completed in 342ms</event>
+  <event id="1743" level="info" time="-1:-3:-22">heartbeat received from inventory-sync-1867</event>
+  <event id="1744" level="info" time="-1:-3:-27">cache hit for key user:8888</event>
+  <event id="1745" level="info" time="-1:-3:-30">config reloaded without restart</event>
+  <event id="1746" level="error" time="-1:-3:-32">out of memory in worker 8040</event>
+  <event id="1747" level="warn" time="-1:-3:-34">retrying job #8348 (attempt 2/5)</event>
+  <event id="1748" level="info" time="-1:-3:-37">job #3308 finished successfully</event>
+  <event id="1749" level="info" time="-1:-3:-42">scaled billing-worker to 2043 replicas</event>
+  <event id="1750" level="info" time="-1:-3:-45">config reloaded without restart</event>
+  <event id="1751" level="error" time="-1:-3:-50">5xx response from image-pipeline-6271</event>
+  <event id="1752" level="info" time="-1:-3:-55">health check passed for edge-router</event>
+  <event id="1753" level="info" time="-1:-3:-57">rotated log segment 1638</event>
+  <event id="1754" level="info" time="-1:-4:-2">snapshot 6275 written to cold storage</event>
+  <event id="1755" level="info" time="-1:-4:-5">job #7266 finished successfully</event>
+  <event id="1756" level="info" time="-1:-4:-10">heartbeat received from audit-collector-6029</event>
+  <event id="1757" level="info" time="-1:-4:-14">connection established to notify-svc-5190</event>
+  <event id="1758" level="info" time="-1:-4:-19">request completed in 35ms</event>
+  <event id="1759" level="warn" time="-1:-4:-24">connection pool at 95% capacity</event>
+  <event id="1760" level="info" time="-1:-4:-27">heartbeat received from notify-svc-3077</event>
+  <event id="1761" level="info" time="-1:-4:-29">heartbeat received from session-cache-1281</event>
+  <event id="1762" level="info" time="-1:-4:-34">request completed in 226ms</event>
+  <event id="1763" level="error" time="-1:-4:-37">circuit breaker opened for order-processor</event>
+  <event id="1764" level="info" time="-1:-4:-39">health check passed for image-pipeline</event>
+  <event id="1765" level="info" time="-1:-4:-44">snapshot 1483 written to cold storage</event>
+  <event id="1766" level="warn" time="-1:-4:-49">slow query on edge-router took 324ms</event>
+  <event id="1767" level="info" time="-1:-4:-51">scaled session-cache to 9301 replicas</event>
+  <event id="1768" level="info" time="-1:-4:-55">health check passed for image-pipeline</event>
+  <event id="1769" level="info" time="-1:-4:-57">health check passed for auth-gateway</event>
+  <event id="1770" level="info" time="-1:-4:-59">rotated log segment 9149</event>
+  <event id="1771" level="error" time="-1:-5:-1">failed to acquire lock for resource 7780</event>
+  <event id="1772" level="info" time="-1:-5:-6">health check passed for inventory-sync</event>
+  <event id="1773" level="info" time="-1:-5:-10">heartbeat received from order-processor-4948</event>
+  <event id="1774" level="info" time="-1:-5:-12">rotated log segment 4802</event>
+  <event id="1775" level="warn" time="-1:-5:-17">rate limit approaching for inventory-sync-1494</event>
+  <event id="1776" level="info" time="-1:-5:-22">job #5794 finished successfully</event>
+  <event id="1777" level="info" time="-1:-5:-25">snapshot 7936 written to cold storage</event>
+  <event id="1778" level="info" time="-1:-5:-27">rotated log segment 9856</event>
+  <event id="1779" level="info" time="-1:-5:-31">health check passed for search-index</event>
+  <event id="1780" level="info" time="-1:-5:-33">request completed in 15ms</event>
+  <event id="1781" level="info" time="-1:-5:-37">snapshot 1807 written to cold storage</event>
+  <event id="1782" level="warn" time="-1:-5:-40">deprecated endpoint called by notify-svc</event>
+  <event id="1783" level="error" time="-1:-5:-42">failed to acquire lock for resource 2799</event>
+  <event id="1784" level="info" time="-1:-5:-47">cache hit for key user:1304</event>
+  <event id="1785" level="info" time="-1:-5:-52">config reloaded without restart</event>
+  <event id="1786" level="info" time="-1:-5:-55">job #4795 finished successfully</event>
+  <event id="1787" level="warn" time="-1:-5:-57">disk usage at 82% on /var/log</event>
+  <event id="1788" level="info" time="-1:-6:-2">request completed in 298ms</event>
+  <event id="1789" level="info" time="-1:-6:-6">snapshot 7339 written to cold storage</event>
+  <event id="1790" level="info" time="-1:-6:-11">scaled notify-svc to 6243 replicas</event>
+  <event id="1791" level="info" time="-1:-6:-15">scaled search-index to 9975 replicas</event>
+  <event id="1792" level="info" time="-1:-6:-18">connection established to order-processor-5103</event>
+  <event id="1793" level="info" time="-1:-6:-23">connection established to auth-gateway-5601</event>
+  <event id="1794" level="info" time="-1:-6:-27">heartbeat received from image-pipeline-6679</event>
+  <event id="1795" level="info" time="-1:-6:-32">config reloaded without restart</event>
+  <event id="1796" level="warn" time="-1:-6:-35">connection pool at 83% capacity</event>
+  <event id="1797" level="info" time="-1:-6:-40">config reloaded without restart</event>
+  <event id="1798" level="info" time="-1:-6:-42">config reloaded without restart</event>
+  <event id="1799" level="info" time="-1:-6:-47">health check passed for search-index</event>
+  <event id="1800" level="info" time="-1:-6:-50">job #3657 finished successfully</event>
+  <event id="1801" level="info" time="-1:-6:-55">snapshot 5956 written to cold storage</event>
+  <event id="1802" level="warn" time="-1:-6:-57">rate limit approaching for auth-gateway-7766</event>
+  <event id="1803" level="info" time="-1:-6:00">cache hit for key user:4432</event>
+  <event id="1804" level="info" time="-1:-7:-3">rotated log segment 8952</event>
+  <event id="1805" level="info" time="-1:-7:-5">cache hit for key user:2112</event>
+  <event id="1806" level="info" time="-1:-7:-9">connection established to inventory-sync-1777</event>
+  <event id="1807" level="info" time="-1:-7:-12">request completed in 421ms</event>
+  <event id="1808" level="info" time="-1:-7:-14">snapshot 2458 written to cold storage</event>
+  <event id="1809" level="error" time="-1:-7:-19">circuit breaker opened for image-pipeline</event>
+  <event id="1810" level="info" time="-1:-7:-23">connection established to image-pipeline-6926</event>
+  <event id="1811" level="info" time="-1:-7:-27">job #3956 finished successfully</event>
+  <event id="1812" level="info" time="-1:-7:-29">config reloaded without restart</event>
+  <event id="1813" level="error" time="-1:-7:-31">connection to auth-gateway-5296 timed out after 741ms</event>
+  <event id="1814" level="info" time="-1:-7:-35">cache hit for key user:4806</event>
+  <event id="1815" level="warn" time="-1:-7:-38">rate limit approaching for image-pipeline-4551</event>
+  <event id="1816" level="info" time="-1:-7:-40">scaled edge-router to 2035 replicas</event>
+  <event id="1817" level="info" time="-1:-7:-43">scaled session-cache to 7851 replicas</event>
+  <event id="1818" level="warn" time="-1:-7:-45">disk usage at 84% on /var/log</event>
+  <event id="1819" level="info" time="-1:-7:-48">rotated log segment 6329</event>
+  <event id="1820" level="info" time="-1:-7:-52">config reloaded without restart</event>
+  <event id="1821" level="info" time="-1:-7:-55">config reloaded without restart</event>
+  <event id="1822" level="info" time="-1:-7:-59">rotated log segment 5083</event>
+  <event id="1823" level="warn" time="-1:-8:-4">slow query on order-processor took 75ms</event>
+  <event id="1824" level="info" time="-1:-8:-8">job #2793 finished successfully</event>
+  <event id="1825" level="info" time="-1:-8:-13">heartbeat received from inventory-sync-1399</event>
+  <event id="1826" level="info" time="-1:-8:-17">request completed in 500ms</event>
+  <event id="1827" level="info" time="-1:-8:-21">heartbeat received from inventory-sync-9916</event>
+  <event id="1828" level="warn" time="-1:-8:-26">cache miss for key user:1014, falling back to origin</event>
+  <event id="1829" level="info" time="-1:-8:-28">job #9438 finished successfully</event>
+  <event id="1830" level="info" time="-1:-8:-30">heartbeat received from audit-collector-5361</event>
+  <event id="1831" level="error" time="-1:-8:-34">job #7600 failed: unhandled exception</event>
+  <event id="1832" level="info" time="-1:-8:-38">heartbeat received from edge-router-7328</event>
+  <event id="1833" level="warn" time="-1:-8:-41">connection pool at 88% capacity</event>
+  <event id="1834" level="info" time="-1:-8:-43">health check passed for billing-worker</event>
+  <event id="1835" level="warn" time="-1:-8:-45">disk usage at 86% on /var/log</event>
+  <event id="1836" level="info" time="-1:-8:-47">heartbeat received from session-cache-9499</event>
+  <event id="1837" level="error" time="-1:-8:-50">connection to search-index-1386 timed out after 84ms</event>
+  <event id="1838" level="info" time="-1:-8:-53">snapshot 8512 written to cold storage</event>
+  <event id="1839" level="info" time="-1:-8:-58">job #6861 finished successfully</event>
+  <event id="1840" level="info" time="-1:-9:-1">health check passed for auth-gateway</event>
+  <event id="1841" level="info" time="-1:-9:-4">scaled notify-svc to 7539 replicas</event>
+  <event id="1842" level="info" time="-1:-9:-8">cache hit for key user:9873</event>
+  <event id="1843" level="error" time="-1:-9:-11">failed to acquire lock for resource 8493</event>
+  <event id="1844" level="info" time="-1:-9:-13">connection established to edge-router-4185</event>
+  <event id="1845" level="warn" time="-1:-9:-16">deprecated endpoint called by inventory-sync</event>
+  <event id="1846" level="info" time="-1:-9:-20">rotated log segment 9063</event>
+  <event id="1847" level="info" time="-1:-9:-23">job #4702 finished successfully</event>
+  <event id="1848" level="info" time="-1:-9:-28">rotated log segment 9038</event>
+  <event id="1849" level="info" time="-1:-9:-32">snapshot 1424 written to cold storage</event>
+  <event id="1850" level="info" time="-1:-9:-37">config reloaded without restart</event>
+  <event id="1851" level="info" time="-1:-9:-41">job #2924 finished successfully</event>
+  <event id="1852" level="info" time="-1:-9:-43">connection established to edge-router-9352</event>
+  <event id="1853" level="info" time="-1:-9:-46">health check passed for order-processor</event>
+  <event id="1854" level="info" time="-1:-9:-49">heartbeat received from session-cache-2864</event>
+  <event id="1855" level="warn" time="-1:-9:-54">deprecated endpoint called by inventory-sync</event>
+  <event id="1856" level="info" time="-1:-9:-58">config reloaded without restart</event>
+  <event id="1857" level="error" time="-1:-9:00">circuit breaker opened for notify-svc</event>
+  <event id="1858" level="info" time="-1:-10:-5">health check passed for auth-gateway</event>
+  <event id="1859" level="warn" time="-1:-10:-10">disk usage at 66% on /var/log</event>
+  <event id="1860" level="info" time="-1:-10:-13">config reloaded without restart</event>
+  <event id="1861" level="info" time="-1:-10:-18">config reloaded without restart</event>
+  <event id="1862" level="info" time="-1:-10:-23">health check passed for inventory-sync</event>
+  <event id="1863" level="error" time="-1:-10:-27">circuit breaker opened for inventory-sync</event>
+  <event id="1864" level="info" time="-1:-10:-30">cache hit for key user:5428</event>
+  <event id="1865" level="info" time="-1:-10:-35">health check passed for billing-worker</event>
+  <event id="1866" level="info" time="-1:-10:-38">request completed in 282ms</event>
+  <event id="1867" level="warn" time="-1:-10:-42">connection pool at 77% capacity</event>
+  <event id="1868" level="info" time="-1:-10:-47">rotated log segment 2075</event>
+  <event id="1869" level="info" time="-1:-10:-50">health check passed for audit-collector</event>
+  <event id="1870" level="info" time="-1:-10:-52">connection established to audit-collector-5168</event>
+  <event id="1871" level="info" time="-1:-10:-54">job #3768 finished successfully</event>
+  <event id="1872" level="info" time="-1:-10:-57">job #6647 finished successfully</event>
+  <event id="1873" level="info" time="-1:-11:-2">connection established to auth-gateway-7051</event>
+  <event id="1874" level="info" time="-1:-11:-4">rotated log segment 9172</event>
+  <event id="1875" level="info" time="-1:-11:-6">scaled order-processor to 5190 replicas</event>
+  <event id="1876" level="warn" time="-1:-11:-8">rate limit approaching for search-index-8510</event>
+  <event id="1877" level="info" time="-1:-11:-11">job #4536 finished successfully</event>
+  <event id="1878" level="warn" time="-1:-11:-14">disk usage at 66% on /var/log</event>
+  <event id="1879" level="info" time="-1:-11:-17">config reloaded without restart</event>
+  <event id="1880" level="warn" time="-1:-11:-19">retrying job #1472 (attempt 2/5)</event>
+  <event id="1881" level="info" time="-1:-11:-22">rotated log segment 7260</event>
+  <event id="1882" level="info" time="-1:-11:-26">config reloaded without restart</event>
+  <event id="1883" level="error" time="-1:-11:-29">out of memory in worker 4610</event>
+  <event id="1884" level="info" time="-1:-11:-33">health check passed for search-index</event>
+  <event id="1885" level="info" time="-1:-11:-37">scaled inventory-sync to 1307 replicas</event>
+  <event id="1886" level="warn" time="-1:-11:-39">disk usage at 70% on /var/log</event>
+  <event id="1887" level="info" time="-1:-11:-41">connection established to audit-collector-9110</event>
+  <event id="1888" level="error" time="-1:-11:-43">connection to notify-svc-2331 timed out after 858ms</event>
+  <event id="1889" level="info" time="-1:-11:-47">rotated log segment 8891</event>
+  <event id="1890" level="info" time="-1:-11:-52">cache hit for key user:2949</event>
+  <event id="1891" level="info" time="-1:-11:-55">snapshot 6400 written to cold storage</event>
+  <event id="1892" level="info" time="-1:-11:-57">scaled session-cache to 2678 replicas</event>
+  <event id="1893" level="info" time="-1:-11:-59">snapshot 2996 written to cold storage</event>
+  <event id="1894" level="info" time="-1:-12:-4">rotated log segment 8911</event>
+  <event id="1895" level="info" time="-1:-12:-7">health check passed for audit-collector</event>
+  <event id="1896" level="info" time="-1:-12:-9">rotated log segment 3435</event>
+  <event id="1897" level="info" time="-1:-12:-12">connection established to audit-collector-5736</event>
+  <event id="1898" level="info" time="-1:-12:-14">job #7831 finished successfully</event>
+  <event id="1899" level="info" time="-1:-12:-19">connection established to image-pipeline-9079</event>
+  <event id="1900" level="info" time="-1:-12:-23">connection established to auth-gateway-3397</event>
+  <event id="1901" level="info" time="-1:-12:-26">scaled billing-worker to 2405 replicas</event>
+  <event id="1902" level="info" time="-1:-12:-30">job #2958 finished successfully</event>
+  <event id="1903" level="info" time="-1:-12:-33">cache hit for key user:6524</event>
+  <event id="1904" level="info" time="-1:-12:-37">scaled order-processor to 4868 replicas</event>
+  <event id="1905" level="info" time="-1:-12:-40">config reloaded without restart</event>
+  <event id="1906" level="error" time="-1:-12:-44">circuit breaker opened for auth-gateway</event>
+  <event id="1907" level="info" time="-1:-12:-47">connection established to billing-worker-8809</event>
+  <event id="1908" level="info" time="-1:-12:-52">request completed in 55ms</event>
+  <event id="1909" level="info" time="-1:-12:-55">config reloaded without restart</event>
+  <event id="1910" level="warn" time="-1:-12:00">disk usage at 85% on /var/log</event>
+  <event id="1911" level="info" time="-1:-13:-4">cache hit for key user:3978</event>
+  <event id="1912" level="warn" time="-1:-13:-8">slow query on search-index took 382ms</event>
+  <event id="1913" level="info" time="-1:-13:-11">request completed in 348ms</event>
+  <event id="1914" level="info" time="-1:-13:-15">config reloaded without restart</event>
+  <event id="1915" level="error" time="-1:-13:-19">5xx response from notify-svc-2815</event>
+  <event id="1916" level="info" time="-1:-13:-21">job #4091 finished successfully</event>
+  <event id="1917" level="info" time="-1:-13:-25">cache hit for key user:5022</event>
+  <event id="1918" level="info" time="-1:-13:-28">heartbeat received from image-pipeline-1896</event>
+  <event id="1919" level="info" time="-1:-13:-33">snapshot 4144 written to cold storage</event>
+  <event id="1920" level="info" time="-1:-13:-37">config reloaded without restart</event>
+  <event id="1921" level="warn" time="-1:-13:-41">rate limit approaching for auth-gateway-5297</event>
+  <event id="1922" level="error" time="-1:-13:-45">out of memory in worker 5521</event>
+  <event id="1923" level="info" time="-1:-13:-50">snapshot 7210 written to cold storage</event>
+  <event id="1924" level="info" time="-1:-13:-52">request completed in 228ms</event>
+  <event id="1925" level="warn" time="-1:-13:-56">slow query on order-processor took 71ms</event>
+  <event id="1926" level="info" time="-1:-13:00">connection established to audit-collector-7753</event>
+  <event id="1927" level="warn" time="-1:-14:-4">rate limit approaching for audit-collector-7851</event>
+  <event id="1928" level="info" time="-1:-14:-8">rotated log segment 2517</event>
+  <event id="1929" level="info" time="-1:-14:-10">config reloaded without restart</event>
+  <event id="1930" level="warn" time="-1:-14:-14">disk usage at 95% on /var/log</event>
+  <event id="1931" level="error" time="-1:-14:-16">connection to order-processor-9674 timed out after 656ms</event>
+  <event id="1932" level="info" time="-1:-14:-19">heartbeat received from inventory-sync-4969</event>
+  <event id="1933" level="warn" time="-1:-14:-24">slow query on billing-worker took 663ms</event>
+  <event id="1934" level="info" time="-1:-14:-27">heartbeat received from auth-gateway-8036</event>
+  <event id="1935" level="warn" time="-1:-14:-29">deprecated endpoint called by notify-svc</event>
+  <event id="1936" level="info" time="-1:-14:-34">heartbeat received from edge-router-9598</event>
+  <event id="1937" level="info" time="-1:-14:-38">rotated log segment 1379</event>
+  <event id="1938" level="info" time="-1:-14:-40">connection established to search-index-2165</event>
+  <event id="1939" level="warn" time="-1:-14:-43">disk usage at 83% on /var/log</event>
+  <event id="1940" level="warn" time="-1:-14:-46">connection pool at 81% capacity</event>
+  <event id="1941" level="info" time="-1:-14:-50">health check passed for billing-worker</event>
+  <event id="1942" level="warn" time="-1:-14:-52">rate limit approaching for session-cache-2797</event>
+  <event id="1943" level="info" time="-1:-14:-55">config reloaded without restart</event>
+  <event id="1944" level="warn" time="-1:-14:00">rate limit approaching for search-index-9048</event>
+  <event id="1945" level="info" time="-1:-15:-3">health check passed for image-pipeline</event>
+  <event id="1946" level="info" time="-1:-15:-5">rotated log segment 7753</event>
+  <event id="1947" level="info" time="-1:-15:-10">rotated log segment 4513</event>
+  <event id="1948" level="info" time="-1:-15:-15">snapshot 2108 written to cold storage</event>
+  <event id="1949" level="info" time="-1:-15:-20">snapshot 5486 written to cold storage</event>
+  <event id="1950" level="info" time="-1:-15:-25">request completed in 24ms</event>
+  <event id="1951" level="info" time="-1:-15:-29">connection established to edge-router-3188</event>
+  <event id="1952" level="info" time="-1:-15:-33">connection established to notify-svc-2221</event>
+  <event id="1953" level="info" time="-1:-15:-38">snapshot 8192 written to cold storage</event>
+  <event id="1954" level="info" time="-1:-15:-42">health check passed for auth-gateway</event>
+  <event id="1955" level="info" time="-1:-15:-47">rotated log segment 9195</event>
+  <event id="1956" level="info" time="-1:-15:-51">rotated log segment 5597</event>
+  <event id="1957" level="info" time="-1:-15:-53">heartbeat received from inventory-sync-7290</event>
+  <event id="1958" level="info" time="-1:-15:-58">health check passed for notify-svc</event>
+  <event id="1959" level="info" time="-1:-16:-2">health check passed for order-processor</event>
+  <event id="1960" level="info" time="-1:-16:-7">cache hit for key user:6335</event>
+  <event id="1961" level="info" time="-1:-16:-9">snapshot 1894 written to cold storage</event>
+  <event id="1962" level="warn" time="-1:-16:-14">disk usage at 70% on /var/log</event>
+  <event id="1963" level="info" time="-1:-16:-18">connection established to image-pipeline-2285</event>
+  <event id="1964" level="info" time="-1:-16:-21">scaled search-index to 4592 replicas</event>
+  <event id="1965" level="info" time="-1:-16:-23">connection established to edge-router-5521</event>
+  <event id="1966" level="info" time="-1:-16:-27">connection established to image-pipeline-9422</event>
+  <event id="1967" level="error" time="-1:-16:-32">job #1010 failed: unhandled exception</event>
+  <event id="1968" level="info" time="-1:-16:-36">health check passed for edge-router</event>
+  <event id="1969" level="warn" time="-1:-16:-40">connection pool at 78% capacity</event>
+  <event id="1970" level="info" time="-1:-16:-42">request completed in 593ms</event>
+  <event id="1971" level="info" time="-1:-16:-45">heartbeat received from notify-svc-7303</event>
+  <event id="1972" level="info" time="-1:-16:-47">cache hit for key user:3343</event>
+  <event id="1973" level="info" time="-1:-16:-50">heartbeat received from image-pipeline-9662</event>
+  <event id="1974" level="info" time="-1:-16:-54">heartbeat received from notify-svc-8199</event>
+  <event id="1975" level="error" time="-1:-16:-58">failed to acquire lock for resource 8485</event>
+  <event id="1976" level="warn" time="-1:-17:-1">deprecated endpoint called by auth-gateway</event>
+  <event id="1977" level="info" time="-1:-17:-3">heartbeat received from search-index-2408</event>
+  <event id="1978" level="info" time="-1:-17:-7">job #8204 finished successfully</event>
+  <event id="1979" level="warn" time="-1:-17:-12">deprecated endpoint called by inventory-sync</event>
+  <event id="1980" level="error" time="-1:-17:-14">job #8394 failed: unhandled exception</event>
+  <event id="1981" level="warn" time="-1:-17:-19">slow query on billing-worker took 857ms</event>
+  <event id="1982" level="info" time="-1:-17:-22">scaled billing-worker to 2202 replicas</event>
+  <event id="1983" level="warn" time="-1:-17:-27">connection pool at 92% capacity</event>
+  <event id="1984" level="info" time="-1:-17:-32">health check passed for search-index</event>
+  <event id="1985" level="warn" time="-1:-17:-34">deprecated endpoint called by billing-worker</event>
+  <event id="1986" level="info" time="-1:-17:-37">snapshot 2008 written to cold storage</event>
+  <event id="1987" level="info" time="-1:-17:-41">scaled search-index to 5012 replicas</event>
+  <event id="1988" level="info" time="-1:-17:-44">job #3425 finished successfully</event>
+  <event id="1989" level="info" time="-1:-17:-46">config reloaded without restart</event>
+  <event id="1990" level="info" time="-1:-17:-49">config reloaded without restart</event>
+  <event id="1991" level="info" time="-1:-17:-54">config reloaded without restart</event>
+  <event id="1992" level="warn" time="-1:-17:-56">retrying job #4798 (attempt 2/5)</event>
+  <event id="1993" level="info" time="-1:-17:00">health check passed for image-pipeline</event>
+  <event id="1994" level="warn" time="-1:-18:-5">connection pool at 86% capacity</event>
+  <event id="1995" level="info" time="-1:-18:-7">cache hit for key user:4996</event>
+  <event id="1996" level="info" time="-1:-18:-10">snapshot 1697 written to cold storage</event>
+  <event id="1997" level="info" time="-1:-18:-15">scaled auth-gateway to 5715 replicas</event>
+  <event id="1998" level="info" time="-1:-18:-19">config reloaded without restart</event>
+  <event id="1999" level="info" time="-1:-18:-22">request completed in 690ms</event>
+  <event id="2000" level="info" time="-1:-18:-26">rotated log segment 2668</event>
+</data>
