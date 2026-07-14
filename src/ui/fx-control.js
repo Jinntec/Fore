@@ -868,6 +868,12 @@ export default class FxControl extends XfAbstractControl {
           this.updateEntry(newEntry, nodeset);
         }
         this.boundInitialized = true;
+
+        // Newly created entries may carry template expressions in attributes that
+        // updateEntry() does not know about (e.g. a `name="{$qno}"` on a generated
+        // radio input). Flag them for scanning on the next fx-fore refresh, the same
+        // way fx-repeat does for newly rendered repeat items.
+        this.getOwnerForm()?.scanForNewTemplateExpressionsNextRefresh();
       }
 
       if (this.valueProp === 'selectedOptions') {
@@ -894,8 +900,7 @@ export default class FxControl extends XfAbstractControl {
     }
 
     const valueExpr = valueAttribute;
-    const cutted = valueExpr.substring(1, valueExpr.length - 1);
-    const evaluated = evaluateXPathToString(cutted, node, this);
+    const evaluated = Fore.evaluateTemplateString(valueExpr, node, this);
     newEntry.setAttribute('value', evaluated);
 
     if (this.value === evaluated) {
@@ -903,10 +908,9 @@ export default class FxControl extends XfAbstractControl {
     }
 
     if (newEntry.hasAttribute('title')) {
-      let titleExpr = newEntry.getAttribute('title');
-      titleExpr = titleExpr.substring(1, titleExpr.length - 1);
-      const evaluated = evaluateXPathToString(titleExpr, node, newEntry);
-      newEntry.setAttribute('title', evaluated);
+      const titleExpr = newEntry.getAttribute('title');
+      const evaluatedTitle = Fore.evaluateTemplateString(titleExpr, node, newEntry);
+      newEntry.setAttribute('title', evaluatedTitle);
     }
     // ### set label
     const optionLabel = newEntry.textContent.trim();
@@ -921,10 +925,10 @@ export default class FxControl extends XfAbstractControl {
    * @param {HTMLElement} newEntry
    */
   evalLabel(optionLabel, node, newEntry) {
-    const labelExpr = optionLabel.trim().substring(1, optionLabel.length - 1);
+    const labelExpr = optionLabel.trim();
     if (!labelExpr) return;
 
-    const label = evaluateXPathToString(labelExpr, node, this);
+    const label = Fore.evaluateTemplateString(labelExpr, node, this);
     newEntry.textContent = label;
   }
 

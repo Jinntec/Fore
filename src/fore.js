@@ -188,6 +188,32 @@ export class Fore {
   }
 
   /**
+   * Evaluates all `{expr}` occurrences within a string against a given context node and
+   * form element, substituting each with its evaluated string value while leaving any
+   * surrounding static text untouched (e.g. `'foo {name}'` -> `'foo bar'`).
+   *
+   * Unlike `getExpression()`, this does not require the whole string to be a single
+   * expression - it supports static text mixed with one or more `{expr}` placeholders.
+   *
+   * @param {string} input the string possibly containing one or more `{expr}` placeholders
+   * @param {Node} contextNode the node the expression(s) are evaluated against
+   * @param {HTMLElement} formElement the Fore element providing variable/namespace scope
+   * @returns {string}
+   */
+  static evaluateTemplateString(input, contextNode, formElement) {
+    return String(input ?? '').replace(/{[^}]*}/g, match => {
+      if (match === '{}') return match;
+      const naked = match.substring(1, match.length - 1);
+      try {
+        return evaluateXPathToString(naked, contextNode, formElement);
+      } catch (error) {
+        console.warn('ignoring unparseable expr', error);
+        return match;
+      }
+    });
+  }
+
+  /**
    * returns the next `fx-fore` element upwards in tree
    *
    * @param {HTMLElement|Text} start
@@ -466,24 +492,6 @@ export class Fore {
     }
     return 'done';
   }
-
-  /*
-  static evaluateAttributeTemplateExpression(expr, node) {
-    const matches = expr.match(/{[^}]*}/g);
-    if (matches) {
-      matches.forEach(match => {
-        console.log('match ', match);
-        const naked = match.substring(1, match.length - 1);
-        const inscope = getInScopeContext(node, naked);
-        const result = evaluateXPathToString(naked, inscope, node.getOwnerForm());
-        const replaced = expr.replaceAll(match, result);
-        console.log('replacing ', expr, ' with ', replaced);
-        expr = replaced;
-      });
-    }
-    return expr;
-  }
-*/
 
   static fadeInElement(element) {
     const duration = 600;

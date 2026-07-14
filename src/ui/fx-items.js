@@ -1,4 +1,4 @@
-import { evaluateXPath, evaluateXPathToString, resolveId } from '../xpath-evaluation.js';
+import { resolveId } from '../xpath-evaluation.js';
 import FxControl from './fx-control.js';
 import { Fore } from '../fore.js';
 import { XPathUtil } from '../xpath-util.js';
@@ -119,11 +119,12 @@ export class FxItems extends FxControl {
 
     // ### handle 'label'
     const label = newEntry.querySelector('label');
-    const lblExpr = Fore.getExpression(label.textContent);
 
     // ROOT FIX: JSON lens nodes are objects; do NOT use direct JS property access.
     // Always go through evaluateXPathToString() for JSON too.
-    const lblEvaluated = evaluateXPathToString(lblExpr, node, this);
+    // Use evaluateTemplateString() rather than getExpression() as the label may mix
+    // static text with one or more `{expr}` placeholders (e.g. "foo {name}").
+    const lblEvaluated = Fore.evaluateTemplateString(label.textContent, node, this);
     // console.log('lblEvaluated ', lblEvaluated);
     label.textContent = lblEvaluated;
 
@@ -134,10 +135,9 @@ export class FxItems extends FxControl {
     const input = newEntry.querySelector('[value]');
     // getting expr
     const expr = input.value;
-    const cutted = Fore.getExpression(expr);
 
     // ROOT FIX: same here
-    const evaluated = evaluateXPathToString(cutted, node, this);
+    const evaluated = Fore.evaluateTemplateString(expr, node, this);
     // console.log('evaluated ', lblEvaluated);
 
     // Set both property and attribute so *any* downstream code path works

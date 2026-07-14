@@ -472,4 +472,96 @@ describe('fx-items tests', () => {
     expect(labels[1].textContent).to.equal('Prayer');
     expect(labels[2].textContent).to.equal('Calendar');
     expect(labels[3].textContent).to.equal('Directory');  });
+
+  it('handles static text mixed with an expression in label and value (issue #246)', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <listitem></listitem>
+              <fruit value="apple">Apple</fruit>
+              <fruit value="orange">Orange</fruit>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <fx-control ref="listitem">
+          <fx-items ref="instance('default')//fruit" class="widget">
+            <template>
+              <span class="fx-checkbox">
+                <input id="check" name="fruit" type="checkbox" value="pre-{@value}" />
+                <label>fruit: {.}</label>
+              </span>
+            </template>
+          </fx-items>
+        </fx-control>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const checkboxes = el.querySelectorAll('input');
+    expect(checkboxes[0].value).to.equal('pre-apple');
+    expect(checkboxes[1].value).to.equal('pre-orange');
+
+    const labels = el.querySelectorAll('label');
+    expect(labels[0].textContent).to.equal('fruit: Apple');
+    expect(labels[1].textContent).to.equal('fruit: Orange');
+  });
+
+  it('re-resolves attribute template expressions after a click-triggered refresh recreates entries (issue #246)', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <answers>
+                <answer qno="1"></answer>
+              </answers>
+            </data>
+          </fx-instance>
+          <fx-instance id="opts">
+            <options>
+              <item id="A">Option A</item>
+              <item id="B">Option B</item>
+            </options>
+          </fx-instance>
+        </fx-model>
+        <fx-repeat ref="//answer">
+          <template>
+            <fx-var name="qno" value="@qno"></fx-var>
+            <fx-control ref="." update-event="change">
+              <fx-items ref="instance('opts')//item" class="widget">
+                <template>
+                  <span class="fx-radio">
+                    <input type="radio" name="q{$qno}" value="{@id}" />
+                    <label>{.}</label>
+                  </span>
+                </template>
+              </fx-items>
+            </fx-control>
+          </template>
+        </fx-repeat>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    let radios = el.querySelectorAll('input[type="radio"]');
+    expect(radios.length).to.equal(2);
+    expect(radios[0].name).to.equal('q1');
+    expect(radios[1].name).to.equal('q1');
+
+    radios[1].click();
+    await oneEvent(el, 'refresh-done');
+
+    // the click triggers a value change, which forces fx-control to destroy and
+    // recreate the fx-items entries from the raw <template>; the `name="{$qno}"`
+    // attribute on the freshly created inputs must still resolve to 'q1', not
+    // remain as the literal, unresolved template text.
+    radios = el.querySelectorAll('input[type="radio"]');
+    expect(radios[0].name).to.equal('q1');
+    expect(radios[1].name).to.equal('q1');
+    expect(radios[1].checked).to.be.true;
+  });
 });
