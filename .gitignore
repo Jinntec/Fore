@@ -12,3 +12,4 @@ CLAUDE.local.md
 .claude/settings.local.json
 .playwright-mcp/
 .local/
+.claude/plans/
