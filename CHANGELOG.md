@@ -3,6 +3,37 @@
 All notable changes to this project are documented here, one section per published release.
 Entries are sourced from the project's GitHub release notes. For full commit-level diffs between any two versions, see https://github.com/Jinntec/Fore/releases or compare tags directly, e.g. `https://github.com/Jinntec/Fore/compare/vX.Y.Z...vA.B.C`.
 
+## [4.0.0] - 2026-07-14
+
+### breaking
+
+* XForms 2.0 spec-compliant variable evaluation points - stabilized and covered with new tests
+
+### new
+
+* configurable undo/redo capability with keyboard shortcuts
+* new `fx-minimap` for navigation
+* progressive and virtualized `fx-repeat` rendering for large row counts
+* new ACCESSIBILITY.md documenting WCAG 2.1 AA conformance, plus fixes on reported elements
+* new issue and PR templates
+* recursive node creation for `create-nodes` mode (#361, thanks @DrRataplan)
+
+### performance
+
+* major performance improvements to ModelItem handling - indexed lookups replace linear scans in registration/deregistration and rebuild retargeting
+* shared stylesheet caching across repeated controls
+* fixed a critical bug in path generation and tuned it to run 3x faster with 73x fewer XPath calls
+
+### fixes
+
+* #246 #359 #353 #349 and further bugs
+* many additional test cases added
+
+### chores
+
+* upgraded cypress
+* dependency cleanup
+
 ## [3.3.2] - 2026-07-02
 
 ### new
