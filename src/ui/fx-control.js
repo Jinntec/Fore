@@ -9,8 +9,8 @@ import getInScopeContext from '../getInScopeContext.js';
 import { Fore } from '../fore.js';
 import { debounce } from '../events.js';
 import { FxModel } from '../fx-model.js';
+import { FxFore } from '../fx-fore.js';
 import { DependencyNotifyingDomFacade } from '../DependencyNotifyingDomFacade';
-import { extractPredicateDependencies } from '../extract-predicate-deps.js';
 import '../fx-instance.js';
 
 const WIDGETCLASS = 'widget';
@@ -122,14 +122,23 @@ export default class FxControl extends XfAbstractControl {
       );
     }
 
-    this.shadowRoot.innerHTML = `
+    const controlHtml = this.renderHTML(this.ref);
+    const sheet = Fore.getSharedStyleSheet(style);
+    if (sheet) {
+      this.shadowRoot.innerHTML = controlHtml;
+      this.shadowRoot.adoptedStyleSheets = [sheet];
+    } else {
+      this.shadowRoot.innerHTML = `
             <style>
                 ${style}
             </style>
-            ${this.renderHTML(this.ref)}
+            ${controlHtml}
         `;
+    }
 
     this.widget = this.getWidget();
+    this._associateLabel();
+    this._associateDescriptions();
 
     this.addEventListener('mousedown', e => {
       // ### prevent mousedown events on all control content that is not the widget or within the widget
@@ -155,6 +164,8 @@ export default class FxControl extends XfAbstractControl {
         listenOn = target;
       }
     }
+    // retained for setValue()'s undo-coalescing focus check (see there)
+    this._listenOn = listenOn;
 
     this.addEventListener('keyup', () => {
       FxModel.dataChanged = true;
@@ -172,6 +183,14 @@ export default class FxControl extends XfAbstractControl {
       });
       this.updateEvent = 'blur'; // needs to be registered too
     }
+    // blur both commits the final value and closes any open undo-coalescing session, so
+    // typing into this field again after leaving it starts a new undo step. Must be a
+    // normal (non-`once`) listener: a field can be focused/blurred more than once.
+    const onBlur = () => {
+      this.setValue(this._getValueOfWidget());
+      this.getModel()?.getEffectiveUndoManager()?.endCoalescingSession();
+    };
+
     if (this.debounceDelay) {
       listenOn.addEventListener(
         this.updateEvent,
@@ -185,6 +204,7 @@ export default class FxControl extends XfAbstractControl {
           this.debounceDelay,
         ),
       );
+      listenOn.addEventListener('blur', onBlur);
     } else {
       listenOn.addEventListener(this.updateEvent, event => {
         if (this._isRefreshing) {
@@ -193,13 +213,7 @@ export default class FxControl extends XfAbstractControl {
         }
         this.setValue(this._getValueOfWidget());
       });
-      listenOn.addEventListener(
-        'blur',
-        event => {
-          this.setValue(this._getValueOfWidget());
-        },
-        { once: true },
-      );
+      listenOn.addEventListener('blur', onBlur);
     }
 
     this.addEventListener('return', e => {
@@ -272,18 +286,61 @@ export default class FxControl extends XfAbstractControl {
       return; // do nothing when modelItem is readonly
     }
 
+    // direct widget edits bypass the action pipeline (no execute()), so undo capture
+    // happens here - unless an action chain is already running and capturing, or the
+    // form is mid-refresh (teardown blurs replay stale widget values; recording those
+    // would clear the redo stack right after an undo)
+    const undoManager = this.getModel()?.getEffectiveUndoManager();
+    const captureUndo =
+      !!undoManager?.enabled &&
+      FxFore.outermostHandler === null &&
+      !this.getOwnerForm()?.isRefreshing;
+    if (captureUndo) undoManager.beginCapture();
+    const undoKey = captureUndo
+      ? Array.isArray(modelitem?.node)
+        ? modelitem.node[0]
+        : modelitem?.node
+      : null;
+    const valueBefore = captureUndo ? modelitem?.value : null;
+    // coalesce only while the widget is genuinely focused - a session opened by a fully
+    // programmatic call (no real focus) would never see a blur to close it, and could
+    // silently absorb an unrelated later edit to the same node. Also coalesce when a
+    // session for this exact node is already open: the blur handler's own setValue() call
+    // fires *after* document.activeElement has already moved away, so without this it
+    // would wrongly split the final keystroke into its own entry instead of merging it
+    // into the session that blur is about to close.
+    const isFocused =
+      captureUndo &&
+      (document.activeElement === this._listenOn || undoManager?.openSession?.key === undoKey);
+    const commitUndo = () => {
+      if (!captureUndo) return;
+      if (modelitem && modelitem.value !== valueBefore) {
+        if (isFocused) {
+          undoManager.commitCoalesced(undoKey);
+        } else {
+          undoManager.commit(undoKey);
+        }
+      } else {
+        undoManager.discard();
+      }
+    };
+
     if (this.getAttribute('as') === 'node') {
       const replace = this.shadowRoot.getElementById('replace');
       replace.replace(this.nodeset, val);
       if (modelitem && val && val !== modelitem.value) {
         modelitem.value = val;
         FxModel.dataChanged = true;
+        commitUndo();
         replace.actionPerformed();
+      } else {
+        commitUndo();
       }
       return;
     }
     const setval = this.shadowRoot.getElementById('setvalue');
     setval.setValue(modelitem, val);
+    commitUndo();
 
     /*
     if (this.modelItem instanceof ModelItem && !this.modelItem?.boundControls.includes(this)) {
@@ -327,6 +384,41 @@ export default class FxControl extends XfAbstractControl {
             }
 
         `;
+  }
+
+  /**
+   * Associates the control's label with its widget.
+   *
+   * Two label mechanisms exist: a light-DOM `<label>` child (slotted alongside the widget, so
+   * both share the same tree and `for`/`id` works), and the `label="..."` attribute (rendered as
+   * bare text into the *shadow root* by `renderHTML()` - a different tree than the light-DOM
+   * widget, so an id reference cannot cross that boundary and `aria-label` (a string, not an id
+   * reference) is used instead).
+   */
+  _associateLabel() {
+    const label = this.querySelector(':scope > label');
+    if (label) {
+      const id = label.getAttribute('for') || this.widget.id || `fx-${Fore.createUUID()}`;
+      if (!label.hasAttribute('for')) label.setAttribute('for', id);
+      if (!this.widget.id) this.widget.id = id;
+      return;
+    }
+    if (this.label) {
+      this.widget.setAttribute('aria-label', this.label);
+    }
+  }
+
+  /**
+   * Wires any statically-authored `<fx-hint>`/`<fx-alert>` light-DOM children into the widget's
+   * aria-describedby, so validation/help text is announced as part of the field's description.
+   * Dynamically-created alerts (from a `<fx-bind>`'s `alert`) are wired separately in
+   * `AbstractControl.handleValid()`.
+   */
+  _associateDescriptions() {
+    this.querySelectorAll(':scope > fx-hint, :scope > fx-alert').forEach(el => {
+      el.id = el.id || `fx-${el.localName}-${Fore.createUUID()}`;
+      this._addDescribedBy(el.id);
+    });
   }
 
   /**
@@ -551,13 +643,11 @@ export default class FxControl extends XfAbstractControl {
       this.widget = imported;
 
       if (!theFore) {
-        Fore.dispatch('error', {
-          detail: {
-            message: `Fore element not found in '${this.src}'. Maybe wrapped within 'template' element?`,
-          },
+        await Fore.dispatch(this, 'error', {
+          message: `Fore element not found in '${this.src}'. Maybe wrapped within 'template' element?`,
         });
       }
-      Fore.dispatch('loaded', { detail: { fore: theFore } });
+      await Fore.dispatch(this, 'loaded', { fore: theFore });
     } catch (error) {
       // console.log('error', error);
       Fore.dispatch(this, 'error', {
@@ -689,7 +779,7 @@ export default class FxControl extends XfAbstractControl {
     if (dataRefd && dataRefd.closest('fx-control') === this) {
       this.boundList = dataRefd;
       const ref = dataRefd.getAttribute('data-ref');
-      this._handleBoundWidget(dataRefd, true); //todo: revisit !!! observer
+      this._handleBoundWidget(dataRefd, true); // todo: revisit !!! observer
     }
   }
 
@@ -714,23 +804,18 @@ export default class FxControl extends XfAbstractControl {
       const inscope = getInScopeContext(this, ref);
       // const nodeset = evaluateXPathToNodes(ref, inscope, this);
 
-      const touchedNodes = new Set();
-      const domFacade = new DependencyNotifyingDomFacade(node => touchedNodes.add(node));
+      let touchedNodes = null;
+      let domFacade = null;
+      if (this._refNeedsDependencyTracking(ref)) {
+        touchedNodes = new Set();
+        domFacade = new DependencyNotifyingDomFacade(node => touchedNodes.add(node));
+      }
 
-      const nodeset = evaluateXPath(ref, inscope, this, domFacade);
+      const nodeset = evaluateXPath(ref, inscope, this, {}, {}, domFacade);
 
-      const contextNode = Array.isArray(inscope) ? inscope[0] : inscope;
-      // console.log('Extracting model', this.getModel());
-      // console.log('Extracting model inited', this.getModel().inited);
-      const model = this.getModel();
-      if (!contextNode) return;
-      // console.log('Extracting predicate deps from ref:', ref);
-      extractPredicateDependencies(
-        ref,
-        model,
-        mi => mi.addObserver(this),
-        node => model.getModelItem(node),
-      );
+      if (touchedNodes) {
+        this._trackRefDependencies(touchedNodes, 'widget');
+      }
 
       // ### bail out when nodeset is array and empty
       if (Array.isArray(nodeset) && nodeset.length === 0) return;
@@ -783,6 +868,12 @@ export default class FxControl extends XfAbstractControl {
           this.updateEntry(newEntry, nodeset);
         }
         this.boundInitialized = true;
+
+        // Newly created entries may carry template expressions in attributes that
+        // updateEntry() does not know about (e.g. a `name="{$qno}"` on a generated
+        // radio input). Flag them for scanning on the next fx-fore refresh, the same
+        // way fx-repeat does for newly rendered repeat items.
+        this.getOwnerForm()?.scanForNewTemplateExpressionsNextRefresh();
       }
 
       if (this.valueProp === 'selectedOptions') {
@@ -809,8 +900,7 @@ export default class FxControl extends XfAbstractControl {
     }
 
     const valueExpr = valueAttribute;
-    const cutted = valueExpr.substring(1, valueExpr.length - 1);
-    const evaluated = evaluateXPathToString(cutted, node, this);
+    const evaluated = Fore.evaluateTemplateString(valueExpr, node, this);
     newEntry.setAttribute('value', evaluated);
 
     if (this.value === evaluated) {
@@ -818,10 +908,9 @@ export default class FxControl extends XfAbstractControl {
     }
 
     if (newEntry.hasAttribute('title')) {
-      let titleExpr = newEntry.getAttribute('title');
-      titleExpr = titleExpr.substring(1, titleExpr.length - 1);
-      const evaluated = evaluateXPathToString(titleExpr, node, newEntry);
-      newEntry.setAttribute('title', evaluated);
+      const titleExpr = newEntry.getAttribute('title');
+      const evaluatedTitle = Fore.evaluateTemplateString(titleExpr, node, newEntry);
+      newEntry.setAttribute('title', evaluatedTitle);
     }
     // ### set label
     const optionLabel = newEntry.textContent.trim();
@@ -836,10 +925,10 @@ export default class FxControl extends XfAbstractControl {
    * @param {HTMLElement} newEntry
    */
   evalLabel(optionLabel, node, newEntry) {
-    const labelExpr = optionLabel.trim().substring(1, optionLabel.length - 1);
+    const labelExpr = optionLabel.trim();
     if (!labelExpr) return;
 
-    const label = evaluateXPathToString(labelExpr, node, this);
+    const label = Fore.evaluateTemplateString(labelExpr, node, this);
     newEntry.textContent = label;
   }
 

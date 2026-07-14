@@ -31,6 +31,8 @@ function isDifferent(oldNodeValue, oldControlValue, newControlValue) {
  * is a general base class for control elements.
  *
  */
+const NATIVE_FORM_TAGS = new Set(['INPUT', 'SELECT', 'TEXTAREA', 'BUTTON']);
+
 export default class AbstractControl extends UIElement {
   constructor() {
     super();
@@ -48,6 +50,31 @@ export default class AbstractControl extends UIElement {
   // eslint-disable-next-line class-methods-use-this
   getWidget() {
     throw new Error('You have to implement the method getWidget!');
+  }
+
+  /**
+   * Native form elements (input/select/textarea/button) already expose required/readonly/disabled
+   * to assistive tech via their native attributes - mirroring those into aria-* would be redundant
+   * ARIA. Non-native widgets (custom elements used as `.widget`) have no such native mapping, so
+   * they need the explicit aria-* attributes.
+   */
+  // eslint-disable-next-line class-methods-use-this
+  _isNativeFormWidget(widget) {
+    return !!widget && NATIVE_FORM_TAGS.has(widget.tagName);
+  }
+
+  /**
+   * Appends `id` to the widget's aria-describedby without clobbering any existing references
+   * (e.g. a hint that already contributed its id).
+   */
+  _addDescribedBy(id) {
+    if (!id) return;
+    const widget = this.getWidget?.() || this.widget;
+    if (!widget) return;
+    const existing = (widget.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean);
+    if (!existing.includes(id)) {
+      widget.setAttribute('aria-describedby', [...existing, id].join(' '));
+    }
   }
 
   /**
@@ -232,6 +259,9 @@ export default class AbstractControl extends UIElement {
     if (!this.modelItem.required) {
       this.widget.removeAttribute('required');
       this.removeAttribute('required');
+      if (!this._isNativeFormWidget(this.widget)) {
+        this.widget.removeAttribute('aria-required');
+      }
       if (wasRequired !== this.modelItem.required) {
         this._dispatchEvent('optional');
       }
@@ -250,6 +280,9 @@ export default class AbstractControl extends UIElement {
     }
     this.widget.setAttribute('required', '');
     this.setAttribute('required', '');
+    if (!this._isNativeFormWidget(this.widget)) {
+      this.widget.setAttribute('aria-required', 'true');
+    }
     if (wasRequired !== this.modelItem.required) {
       this._dispatchEvent('required');
     }
@@ -325,10 +358,16 @@ export default class AbstractControl extends UIElement {
       if (effectiveReadonly) {
         this.widget.setAttribute('readonly', '');
         this.setAttribute('readonly', '');
+        if (!this._isNativeFormWidget(this.widget)) {
+          this.widget.setAttribute('aria-readonly', 'true');
+        }
         this._dispatchEvent('readonly');
       } else {
         this.widget.removeAttribute('readonly');
         this.removeAttribute('readonly');
+        if (!this._isNativeFormWidget(this.widget)) {
+          this.widget.removeAttribute('aria-readonly');
+        }
         this._dispatchEvent('readwrite');
       }
     }
@@ -346,7 +385,6 @@ export default class AbstractControl extends UIElement {
   }
 
   // todo - review alert handling altogether. There could be potentially multiple ones in model
-  // TODO: both required and handleValid set valid attrs and aria attrs. Duplicate code
   handleValid() {
     // console.log('mip valid', this.modelItem.required);
 
@@ -363,12 +401,10 @@ export default class AbstractControl extends UIElement {
         this._dispatchEvent('valid');
         this.setAttribute('valid', '');
         this.removeAttribute('invalid');
-        this.getWidget().setAttribute('aria-invalid', 'false');
         // also reset other dependent CSS classes
         this.classList.remove('isEmpty');
       } else {
         this.setAttribute('invalid', '');
-        this.getWidget().setAttribute('aria-invalid', 'true');
         this.removeAttribute('valid');
         // ### constraint is invalid - handle alerts
         /*
@@ -384,10 +420,15 @@ export default class AbstractControl extends UIElement {
             alerts.forEach(modelAlert => {
               const newAlert = document.createElement('fx-alert');
               // const newAlert = document.createElement('span');
+              newAlert.id = newAlert.id || `fx-alert-${Fore.createUUID()}`;
               newAlert.innerHTML = modelAlert;
               this.appendChild(newAlert);
+              this._addDescribedBy(newAlert.id);
               // newAlert.style.display = 'block';
             });
+          } else {
+            controlAlert.id = controlAlert.id || `fx-alert-${Fore.createUUID()}`;
+            this._addDescribedBy(controlAlert.id);
           }
         }
 
@@ -425,6 +466,7 @@ export default class AbstractControl extends UIElement {
       this.setAttribute('nonrelevant', '');
       this.removeAttribute('relevant');
     }
+    this._reflectRelevantInert(newEnabled);
 
     // Dispatch only on actual change
     if (wasEnabled !== newEnabled) {

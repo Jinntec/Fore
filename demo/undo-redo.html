@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>undo / redo</title>
+
+    <link href="../resources/demo.css" rel="stylesheet">
+    <script type="module" src="../tools/fx-lens.js"></script>
+
+    <style>
+        .eyebrow {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.12rem;
+            text-transform: uppercase;
+            color: var(--paper-blue-700);
+            margin-bottom: 0.25rem;
+        }
+        .demo-section {
+            background: white;
+            border: thin solid var(--paper-grey-300);
+            border-radius: 0.6rem;
+            padding: 1.5rem 1.75rem;
+            margin-bottom: 2rem;
+        }
+        .demo-section h2 {
+            margin-top: 0;
+        }
+        .toolbar {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0 1.5rem;
+        }
+        .btn {
+            appearance: none;
+            border: thin solid var(--paper-grey-300);
+            background: white;
+            color: var(--paper-grey-900);
+            font: inherit;
+            font-size: 0.95rem;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 0.4rem;
+            cursor: pointer;
+            transition: background 0.15s ease, border-color 0.15s ease;
+        }
+        .btn:hover {
+            border-color: var(--paper-blue-700);
+        }
+        .btn:active {
+            background: var(--paper-blue-100);
+        }
+        .btn.primary {
+            background: var(--paper-blue-700);
+            border-color: var(--paper-blue-700);
+            color: white;
+        }
+        .btn.primary:hover {
+            background: #1565c0;
+        }
+        .btn.ghost {
+            border-color: transparent;
+            color: var(--paper-grey-600, #757575);
+        }
+        .btn.ghost:hover {
+            border-color: var(--paper-grey-300);
+            color: var(--paper-grey-900);
+        }
+        .history {
+            font-size: 0.85rem;
+            color: var(--paper-grey-600, #757575);
+            margin-left: 0.25rem;
+        }
+        .history strong {
+            color: var(--paper-grey-900);
+        }
+        kbd {
+            font-family: "SF Mono", "Menlo", "Consolas", monospace;
+            font-size: 0.8rem;
+            padding: 0.15rem 0.45rem;
+            border-radius: 0.3rem;
+            border: thin solid var(--paper-grey-300);
+            border-bottom-width: 2px;
+            background: var(--paper-grey-100, #f5f5f5);
+            color: var(--paper-grey-900);
+        }
+        .field {
+            margin-bottom: 1.25rem;
+        }
+        .field label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--paper-grey-600, #757575);
+            margin-bottom: 0.3rem;
+        }
+        .tasks {
+            list-style: none;
+            margin: 0 0 1rem;
+            padding: 0;
+        }
+        .task {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.4rem 0;
+            border-bottom: thin solid var(--paper-grey-300);
+        }
+        .task fx-control[ref="."] {
+            flex: 1;
+        }
+        .task.is-done fx-control[ref="."] input.widget {
+            text-decoration: line-through;
+            color: var(--paper-grey-600, #757575);
+        }
+        .shared-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        .shared-column {
+            background: var(--paper-grey-100, #f5f5f5);
+            border-radius: 0.5rem;
+            padding: 1rem 1.25rem;
+        }
+        .shared-column h3 {
+            margin-top: 0;
+            font-size: 1rem;
+        }
+        .count {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--paper-blue-700);
+            margin: 0.25rem 0 0.75rem;
+        }
+        @media (max-width: 640px) {
+            .shared-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+        fx-repeatitem fx-control{
+            width:auto;
+        }
+    </style>
+</head>
+<body>
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+
+<div class="wrapper">
+    <h1>undo / redo</h1>
+    <p>
+        Clicking a button - insert, delete, reset, or the counter below - always creates its
+        own undo step, even if you click it several times fast: three clicks undo in three
+        steps, not one. Typing into a field is different: it coalesces into a single undo step
+        for as long as the field stays focused, the way a text editor groups keystrokes -
+        bounded by focus, not by how fast you type. Turn it on per model with
+        <code>&lt;fx-model undo&gt;</code>.
+    </p>
+
+    <section class="demo-section">
+        <span class="eyebrow">Basic usage</span>
+        <h2>A form with undo, redo and reset</h2>
+        <p>
+            This form has <code>keyboard-shortcuts</code> enabled, so <kbd>&#8984;Z</kbd> /
+            <kbd>Ctrl Z</kbd> undoes and <kbd>&#8984;&#8679;Z</kbd> / <kbd>Ctrl &#8679; Z</kbd>
+            redoes - alongside the buttons below.
+        </p>
+
+        <fx-fore id="basic" keyboard-shortcuts>
+            <fx-model undo undo-depth="50">
+                <fx-instance>
+                    <data>
+                        <greeting>Hello Universe</greeting>
+                        <notes></notes>
+                        <task done="false">wash the dishes</task>
+                        <task done="false">walk the dog</task>
+                    </data>
+                </fx-instance>
+            </fx-model>
+
+            <div class="toolbar">
+                <fx-trigger id="undo-basic">
+                    <button class="btn primary">Undo</button>
+                    <fx-undo></fx-undo>
+                </fx-trigger>
+                <fx-trigger id="redo-basic">
+                    <button class="btn primary">Redo</button>
+                    <fx-redo></fx-redo>
+                </fx-trigger>
+                <fx-trigger id="reset-basic">
+                    <button class="btn ghost">Reset</button>
+                    <fx-reset instance="default"></fx-reset>
+                </fx-trigger>
+                <span class="history" id="history-basic">History: empty</span>
+            </div>
+
+            <div class="field">
+                <label for="greeting-widget">Greeting</label>
+                <fx-control ref="greeting"><input id="greeting-widget" class="widget"></fx-control>
+            </div>
+
+            <div class="field">
+                <label for="notes-widget">Notes</label>
+                <fx-control ref="notes" update-event="input"
+                    ><textarea id="notes-widget" class="widget" rows="3"></textarea
+                ></fx-control>
+                <fx-trigger id="checkpoint">
+                    <button class="btn ghost">Checkpoint</button>
+                    <fx-commit-history></fx-commit-history>
+                </fx-trigger>
+                <p class="note">
+                    Type here without pausing, click <strong>Checkpoint</strong> mid-sentence,
+                    then keep typing - still without leaving the field. Undo once and only the
+                    text typed after the checkpoint disappears, not the whole note.
+                    <code>&lt;fx-commit-history&gt;</code> forces that boundary without
+                    requiring a blur.
+                </p>
+            </div>
+
+            <div class="field">
+                <label>Tasks</label>
+                <ul class="tasks">
+                    <fx-repeat ref="task">
+                        <template>
+                            <li class="task {if (@done = 'true') then 'is-done' else ''}">
+                                <fx-control ref="@done" value-prop="checked" update-event="input">
+                                    <input class="widget" type="checkbox">
+                                </fx-control>
+                                <fx-control ref="."></fx-control>
+                                <fx-trigger class="delete-task">
+                                    <button class="btn ghost">Delete</button>
+                                    <fx-delete ref="."></fx-delete>
+                                </fx-trigger>
+                            </li>
+                        </template>
+                    </fx-repeat>
+                </ul>
+                <fx-trigger id="add-task">
+                    <button class="btn ghost">+ Add task</button>
+                    <fx-insert ref="task"></fx-insert>
+                </fx-trigger>
+            </div>
+        </fx-fore>
+    </section>
+
+    <section class="demo-section">
+        <span class="eyebrow">Nested fx-fore</span>
+        <h2>Undo across a shared instance</h2>
+        <p>
+            The inner form below declares no <code>fx-instance</code> of its own - it only reads
+            and writes the outer form's <code>shared</code> instance. Its undo and redo buttons
+            still work correctly: they operate on the outer form's history, since that's where
+            the shared data actually lives.
+        </p>
+        <p class="note">
+            Shared-instance refresh only propagates downward (see
+            <a href="shared-instances.html">shared-instances.html</a>), and only reliably for
+            widget-driven edits - not for action-driven ones like <code>fx-setvalue</code>,
+            <code>fx-undo</code> or <code>fx-redo</code>. Each button below explicitly asks the
+            outer form to refresh once it has changed the shared data, via a plain
+            <code>&lt;fx-dispatch name="refresh" targetid="shared-outer"&gt;</code> - that's an
+            existing, unrelated framework quirk, not part of undo/redo itself.
+        </p>
+
+        <fx-fore id="shared-outer">
+            <fx-model undo>
+                <fx-instance id="counters" shared>
+                    <data>
+                        <count>0</count>
+                    </data>
+                </fx-instance>
+            </fx-model>
+
+            <div class="shared-columns">
+                <div class="shared-column">
+                    <h3>Outer form</h3>
+                    <div class="count">
+                        <fx-repeat ref="instance('counters')/count">
+                            <template><fx-output id="outer-count" ref="."></fx-output></template>
+                        </fx-repeat>
+                    </div>
+                    <span class="history" id="history-outer">History: empty</span>
+                </div>
+
+                <fx-fore id="shared-inner" class="shared-column">
+                    <!-- no fx-instance here on purpose: this fore only ever touches the
+                         outer's shared instance, which is exactly the case
+                         getEffectiveUndoManager() handles -->
+                    <fx-model undo></fx-model>
+
+                    <h3>Inner form</h3>
+                    <div class="count">
+                        <fx-repeat ref="instance('counters')/count">
+                            <template><fx-output ref="."></fx-output></template>
+                        </fx-repeat>
+                    </div>
+                    <div class="toolbar">
+                        <!-- shared-instance refresh only propagates downward (see
+                             shared-instances.html and doc/shared-instance-refresh-investigation.md),
+                             and only reliably for widget-driven edits, not action-driven ones
+                             like fx-setvalue/fx-undo/fx-redo here - so each trigger explicitly
+                             asks the outer fore to refresh once the shared data has changed,
+                             rather than relying on a 'value-changed' event nothing here fires -->
+                        <fx-trigger id="increment">
+                            <button class="btn primary">+1</button>
+                            <fx-setvalue
+                                ref="instance('counters')/count"
+                                value="instance('counters')/count + 1"
+                            ></fx-setvalue>
+                            <fx-dispatch name="refresh" targetid="shared-outer"></fx-dispatch>
+                        </fx-trigger>
+                        <fx-trigger id="undo-shared">
+                            <button class="btn">Undo</button>
+                            <fx-undo></fx-undo>
+                            <fx-dispatch name="refresh" targetid="shared-outer"></fx-dispatch>
+                        </fx-trigger>
+                        <fx-trigger id="redo-shared">
+                            <button class="btn">Redo</button>
+                            <fx-redo></fx-redo>
+                            <fx-dispatch name="refresh" targetid="shared-outer"></fx-dispatch>
+                        </fx-trigger>
+                    </div>
+                    <span class="history" id="history-inner">History: empty</span>
+                </fx-fore>
+            </div>
+        </fx-fore>
+    </section>
+</div>
+
+<fx-lens open></fx-lens>
+<script type="module" src="../index.js"></script>
+<script type="module">
+    // Small glue script, not part of the undo/redo feature itself: keeps the "History: N"
+    // labels above in sync so the effect of each action is visible at a glance, without
+    // having to open the data lens.
+    function wireHistoryBadge(foreSelector, labelId) {
+        const fore = document.querySelector(foreSelector);
+        const label = document.getElementById(labelId);
+        const render = () => {
+            const model = fore.querySelector(':scope > fx-model') || fore.getModel?.();
+            // getEffectiveUndoManager(), not .undoManager directly: a fore with no
+            // fx-instance of its own (like #shared-inner) delegates its history to the
+            // ancestor that actually owns the shared data - reading .undoManager here
+            // would always show "empty" for it.
+            const um = model && model.getEffectiveUndoManager();
+            if (!um || !um.enabled) return;
+            const back = um.undoStack.length;
+            const forward = um.redoStack.length;
+            label.innerHTML =
+                back === 0 && forward === 0
+                    ? 'History: empty'
+                    : `<strong>${back}</strong> back${forward ? `, <strong>${forward}</strong> forward` : ''}`;
+        };
+        fore.addEventListener('refresh-done', render);
+        render();
+    }
+
+    wireHistoryBadge('#basic', 'history-basic');
+    wireHistoryBadge('#shared-outer', 'history-outer');
+    wireHistoryBadge('#shared-inner', 'history-inner');
+</script>
+</body>
+</html>

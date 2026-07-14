@@ -53,11 +53,20 @@ describe('control tests', () => {
     const alert1 = document.getElementById('alert1');
     expect(alert1).to.exist;
     expect(alert1.firstElementChild).to.be.null; // should not contain further elements
+    expect(alert1.getAttribute('role')).to.equal('alert');
+    expect(alert1.getAttribute('aria-live')).to.equal('assertive');
+
+    const input1 = document.getElementById('input1');
+    const hint1 = input1.querySelector('fx-hint');
+    const describedBy1 = input1.widget.getAttribute('aria-describedby');
+    expect(describedBy1).to.include('alert1');
+    expect(describedBy1).to.include(hint1.id);
 
     const input2 = document.getElementById('input2');
     const alert2 = input2.firstElementChild;
     console.log('alert 2 ', alert2);
     expect(alert2).to.exist;
+    expect(input2.widget.getAttribute('aria-describedby')).to.include(alert2.id);
 
     // expect(window.getComputedStyle(alert2, null).display).to.equal('none');
   });
@@ -247,6 +256,9 @@ describe('control tests', () => {
     expect(mi.readonly).to.be.true;
     expect(input.widget).to.exist;
     expect(input.hasAttribute('readonly')).to.be.true;
+    // native <input> already exposes readonly to AT - no redundant aria-readonly needed
+    expect(input.widget.tagName).to.equal('INPUT');
+    expect(input.widget.hasAttribute('aria-readonly')).to.be.false;
   });
 
   it('gets required state attribute', async () => {
@@ -272,6 +284,34 @@ describe('control tests', () => {
     expect(mi.required).to.be.true;
     expect(input.widget).to.exist;
     expect(input.hasAttribute('required')).to.be.true;
+    // native <input> already exposes required to AT - no redundant aria-required needed
+    expect(input.widget.tagName).to.equal('INPUT');
+    expect(input.widget.hasAttribute('aria-required')).to.be.false;
+  });
+
+  it('sets aria-required/aria-readonly for non-native widgets', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="model1">
+          <fx-instance>
+            <data>
+              <a>A</a>
+            </data>
+          </fx-instance>
+          <fx-bind ref="a" required="true()" readonly="true()"></fx-bind>
+        </fx-model>
+
+        <fx-control id="input1" ref="a">
+          <div class="widget" tabindex="0"></div>
+        </fx-control>
+      </fx-fore>
+    `);
+
+    await elementUpdated(el);
+    const input = document.getElementById('input1');
+    expect(input.widget.tagName).to.equal('DIV');
+    expect(input.widget.getAttribute('aria-required')).to.equal('true');
+    expect(input.widget.getAttribute('aria-readonly')).to.equal('true');
   });
 
   /*
@@ -340,6 +380,74 @@ describe('control tests', () => {
     input.setValue('foo'); // modified to trigger first refresh that shows validity state
     await oneEvent(input, 'invalid');
     expect(input.hasAttribute('invalid')).to.be.true;
+    expect(input.widget.getAttribute('aria-invalid')).to.equal('true');
+  });
+
+  it('associates a light-DOM label child with the widget via for/id', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="model1">
+          <fx-instance>
+            <data>
+              <a>A</a>
+            </data>
+          </fx-instance>
+        </fx-model>
+
+        <fx-control id="input1" ref="a">
+          <label>Name</label>
+        </fx-control>
+      </fx-fore>
+    `);
+
+    await elementUpdated(el);
+    const input = document.getElementById('input1');
+    const label = input.querySelector('label');
+    expect(label.getAttribute('for')).to.exist;
+    expect(input.widget.id).to.equal(label.getAttribute('for'));
+  });
+
+  it('sets aria-label from the label attribute (shadow-rendered text)', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="model1">
+          <fx-instance>
+            <data>
+              <a>A</a>
+            </data>
+          </fx-instance>
+        </fx-model>
+
+        <fx-control id="input1" label="Name" ref="a"></fx-control>
+      </fx-fore>
+    `);
+
+    await elementUpdated(el);
+    const input = document.getElementById('input1');
+    expect(input.widget.getAttribute('aria-label')).to.equal('Name');
+  });
+
+  it('reflects nonrelevant as inert', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="model1">
+          <fx-instance>
+            <data>
+              <a>A</a>
+              <flag>false</flag>
+            </data>
+          </fx-instance>
+          <fx-bind ref="a" relevant="../flag = 'true'"></fx-bind>
+        </fx-model>
+
+        <fx-control id="input1" ref="a"></fx-control>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+    const input = document.getElementById('input1');
+    expect(input.hasAttribute('nonrelevant')).to.be.true;
+    expect(input.inert).to.be.true;
   });
 
   it('updates isEmpty class', async () => {

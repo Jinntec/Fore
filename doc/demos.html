@@ -29,6 +29,9 @@
             border-bottom:thin solid rgba(0,0,0,0.2);
             height: auto;
         }
+        figure img{
+            max-width:40rem;
+        }
     </style>
     <!-- Matomo -->
     <script>
@@ -82,6 +85,7 @@
             <a href="#functions">Functions</a>
             <a href="#json">JSON</a>
             <a href="#bricks">Bricks</a>
+            <a href="#app">App</a>
             <a href="#other">Other</a>
         </nav>
 
@@ -110,11 +114,12 @@
 -->
 
         <h2>Featured Demo</h2>
-        <blockquote>This example shows a pure JSON-driven Movies Explorer that uses XPath Maps/Arrays syntax for binding. </blockquote>
+        <blockquote>Big repeats are not an issue anymore. Progressive loading keeps load time short by just rendering a sized window and
+        adding entries as you scroll. Virtualized repeats keep the DOM-size stable and memory consumption low.</blockquote>
         <figure>
-            <a href="#json"><img src="../resources/images/movies.png" alt="a demo of JinnTap WYSIWYG TEI editor"></a>
+            <a href="#container"><img src="../resources/images/virtualized.png" alt="showing progressive and virtual repeats"></a>
             <figcaption>
-                A movie explorer using JSON
+                Repeats now support progressive loading and virtualized repeatitems.
             </figcaption>
         </figure>
 
@@ -178,6 +183,11 @@
             <a href="../demo/native-validation.html"><div class="updated">
                 <h3>native HTML validation</h3>
                 <p>Using native browser validation alongside Fores'</p>
+            </div></a>
+            <a href="../demo/undo-redo.html"><div class="updated">
+                <h3>undo / redo</h3>
+                <p>Turning on <code>&lt;fx-model undo&gt;</code> makes every action undoable, with
+                    keystroke coalescing and undo across shared instances.</p>
             </div></a>
         </section>
 
@@ -326,7 +336,7 @@
                 <p>building radio button groups</p>
             </div></a>
             <a href="../demo/upload.html"><div><h3><code>fx-upload</code></h3>
-                <p><code>fx-upload</code> allows to upload content and embed it into XML.</p>
+                <p><code>fx-upload</code> allows to <uplo></uplo>ad content and embed it into XML.</p>
             </div></a>
             <a href="../demo/lab/on-demand.html"><div>
                 <h3>On Demand controls</h3>
@@ -365,6 +375,10 @@
                 <h3>Switch/Case with <code>src</code></h3>
                 <p>Use lazy-loading for complex views</p>
             </div></a>
+            <a href="../demo/switch-tabs.html"><div class="updated">
+                <h3>fx-switch tabs</h3>
+                <p>keyboard navigatable tabcontainer with appearance="tabs"</p>
+            </div></a>
             <a href="../demo/wizard.html"><div class="updated">
                 <h3>fx-switch wizard</h3>
                 <p>a wizard witrh progress indicator</p>
@@ -376,6 +390,14 @@
             <a href="../demo/repeat-atomic.html"><div>
                 <h3>Repeat atomic values</h3>
                 <p>Repeating plain values from a sequence</p>
+            </div></a>
+            <a href="../demo/virtual-scroll/event-log.html"><div class="updated">
+                <h3>True windowed virtualization</h3>
+                <p>Scroll a 10,000-row event log with <code>size</code> + <code>virtual</code> — only the visible rows are ever in the DOM</p>
+            </div></a>
+            <a href="../demo/virtual-scroll/progressive-vs-virtual.html"><div class="updated">
+                <h3>Progressive rendering vs. true windowing</h3>
+                <p>Side-by-side: a repeat that only grows (<code>size</code>) next to one that stays bounded (<code>size</code> + <code>virtual</code>)</p>
             </div></a>
             <a href="../demo/group-relevance.html"><div>
                 <h3>Group relevance</h3>
@@ -433,8 +455,16 @@
                 <p>Show a repeat on demand.</p>
             </div></a>
             <a href="../demo/controls/fx-dialog.html"><div>
-                <h3>The fx-dialog element</h3>
-                <p>Modal dialog with <code>fx-dialog</code> and associated actions</p>
+                <h3>The fx-dialog element (deprecated)</h3>
+                <p>Deprecated modal dialog element — see native <code>dialog</code> below instead</p>
+            </div></a>
+            <a href="../demo/dialog.html"><div class="updated">
+                <h3>HTML dialog element</h3>
+                <p>Modal dialog with native <code>dialog</code></p>
+            </div></a>
+            <a href="../demo/dialog.html"><div class="updated">
+                <h3>HTML dialog element</h3>
+                <p>Modal dialog with native <code>dialog</code></p>
             </div></a>
             <a href="../demo/include.html"><div class="updated">
                 <h3>The fx-include element</h3>
@@ -626,6 +656,18 @@
             </div></a>
         </section>
 
+        <h2>Apps</h2>
+        <section id="app" class="three-col">
+            <a href="../demo/edep/edit.html"><div class="updated">
+                <h3>A complete EpiDoc editor</h3>
+                <p>A complex form with lazy-loaded sections, custom controls and a minimap</p>
+            </div></a>
+            <a href="../demo/codelists/codelist-editor.html"><div class="updated">
+                <h3>A editor for codelists</h3>
+                <p>This editor allows to customize codelists that follow the OASIS genericode standard.</p>
+            </div></a>
+
+        </section>
         <h2>Other examples</h2>
         <section id="other" class="three-col">
 
@@ -695,11 +737,11 @@
                 <h3>Auto-create XML structure with create-nodes</h3>
                 <p>Complex example creating a complete UBL document from UI binding expressions.</p>
             </div></a>
-            <a id="featured" href="../demo/jinntap.html"><div>
+            <a href="../demo/jinntap.html"><div>
                 <h3>Using JinnTap as control</h3>
                 <p>Using JinnTap WYSIWYG TEI editor as a Fore control.</p>
             </div></a>
-            <a id="featured" href="../demo/authoring-check.html"><div class="updated">
+            <a href="../demo/authoring-check.html"><div class="updated">
                 <h3>Authoring checks</h3>
                 <p>Fore checks for authoring problems by default.</p>
             </div></a>

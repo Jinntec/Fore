@@ -1,5 +1,10 @@
 import { Fore } from '../fore.js';
 
+/**
+ * @deprecated - use the native HTML `<dialog>` element instead, which already provides a
+ * focus trap, `aria-modal`, and Escape-to-close for free. `fx-show`/`fx-hide` work unchanged
+ * against `<dialog>` (see `demo/dialog.html`), so this is a markup-only migration.
+ */
 export class FxDialog extends HTMLElement {
   static get properties() {
     return {

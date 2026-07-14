@@ -26,7 +26,7 @@ export class FxTrigger extends XfAbstractControl {
       if (!elements[0].getAttribute('tabindex')) {
         elements[0].setAttribute('tabindex', '0');
       }
-      if (elements[0].nodeName !== 'BUTTON') {
+      if (elements[0].nodeName !== 'BUTTON' && !elements[0].getAttribute('role')) {
         elements[0].setAttribute('role', 'button');
       }
 
@@ -98,11 +98,16 @@ export class FxTrigger extends XfAbstractControl {
       repeatedItem.click();
     }
 
-    // Update all child variables, but only once
-    this.querySelectorAll('fx-var').forEach(variableElement => variableElement.refresh());
-
     for (let i = 0; i < this.children.length; i += 1) {
       const child = this.children[i];
+      // XForms 2.0: action variables are evaluated in sequence between sibling
+      // actions — a variable after an action sees that action's effects. Variables
+      // nested inside an fx-action child are evaluated by fx-action.perform().
+      if (child.localName === 'fx-var') {
+        child.refresh();
+        // eslint-disable-next-line no-continue
+        continue;
+      }
       if (typeof child.execute === 'function') {
         if (e) {
           // We are handling the event. Stop it from going further

@@ -43,9 +43,13 @@ export class UIElement extends ForeElementMixin {
 
   disconnectedCallback() {
     if (this.modelItem && typeof this.modelItem.removeObserver === 'function') {
-      console.log(`[UIElement] Removing observer for ref="${this.ref}"`);
       this.modelItem.removeObserver(this);
     }
+
+    this._refTrackedModelItems.forEach(modelItems => {
+      modelItems.forEach(mi => mi.removeObserver(this));
+    });
+    this._refTrackedModelItems.clear();
 
     for (const removeEventListener of this._removeEventListeners) {
       removeEventListener();
@@ -96,6 +100,15 @@ export class UIElement extends ForeElementMixin {
   }
 */
 
+  /**
+   * Mirrors relevant/nonrelevant into the `inert` primitive so a nonrelevant control is
+   * unreachable by keyboard/AT even if CSS visibility rules ever change. CSS already hides
+   * nonrelevant elements (display:none), so this is a semantic backstop, not the primary mechanism.
+   */
+  _reflectRelevantInert(enabled) {
+    this.inert = !enabled;
+  }
+
   attachObserver() {
     const modelItem = this.getModelItem();
     if (!modelItem || typeof modelItem.addObserver !== 'function') return;
@@ -120,7 +133,7 @@ export class UIElement extends ForeElementMixin {
    * @param {import('../modelitem.js').ModelItem} modelItem - The ModelItem that changed
    */
 
-/*
+  /*
   update(modelItem) {
     if (this.isBound()) {
       // console.log('[UIElement] update()', modelItem);
@@ -146,16 +159,13 @@ export class UIElement extends ForeElementMixin {
   //   throw new Error('You have to implement the method init!');
   // }
 
-  async refresh(force) {
-    console.log(`🔄 [UIElement] refresh() called for ref="${this.ref}"`);
-  }
+  async refresh(force) {}
 
   async refreshChildren(force) {
     await Fore.refreshChildren(this, force);
   }
 
   activate() {
-    console.log('UIElement.activate() called');
     this.removeAttribute('on-demand');
     this.style.display = '';
     if (this.isBound()) {
@@ -198,12 +208,12 @@ export class UIElement extends ForeElementMixin {
     icon.style.cursor = 'pointer';
     icon.style.marginLeft = '0.5em';
 
-    icon.addEventListener('click', e => {
+    icon.addEventListener('click', async e => {
       e.stopPropagation();
       this.setAttribute('on-demand', 'true');
       this.style.display = 'none';
       document.dispatchEvent(new CustomEvent('update-control-menu'));
-      Fore.dispatch(this, 'hide-control', {});
+      await Fore.dispatch(this, 'hide-control', {});
     });
 
     this.appendChild(icon);

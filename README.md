@@ -1,5 +1,6 @@
 ![NPM](https://img.shields.io/npm/l/@jinntec/fore)
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/jinntec/fore/CI)
+![NPM Downloads](https://img.shields.io/npm/dm/@jinntec/fore)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Jinntec/Fore/main.yml?branch=dev)
 ![GitHub Discussions](https://img.shields.io/github/discussions/jinntec/fore)
 ![GitHub last commit](https://img.shields.io/github/last-commit/jinntec/fore)
 ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/jinntec/fore)
@@ -10,8 +11,8 @@
 
 >'situated in front of something else' - Merriam Webster
 
-[Homepage](https://jinntec.github.io/Fore/) | 
-[Documentation](https://jinntec.github.io/fore-docs/) |
+[Homepage](https://jinntec.github.io/Fore/) |
+[Documentation](https://jinntec.github.io/fore-docs/)
 
 
 # Declarative applications in plain HTML
@@ -31,55 +32,73 @@ By using the bare metal of the browser
 platform, Fore integrates well with any other library you might want to use in
 conjunction with it.
 
+## Contents
+
+* [Features](#features)
+* [An xformish framework in Web Components](#an-xformish-framework-in-web-components)
+* [Framework-agnostic](#framework-agnostic)
+* [Development and Contributions](#development-and-contributions)
+* [Running from CDN](#running-from-cdn)
+* [Installation with npm](#installation-with-npm)
+* [Developing](#developing)
+* [Running demos and docs](#running-demos-and-docs)
+* [Running test suite](#running-test-suite)
+* [Linting, formatting and type checking](#linting-formatting-and-type-checking)
+* [Running the integration tests](#running-the-integration-tests)
+* [Building a package](#building-a-package)
+* [Giant shoulders](#giant-shoulders)
+* [License](#license)
+
 ## Features
 
+**Architecture**
+
 * implemented as vanilla web components in ES6
-* fully descriptive - just HTML5
-* MVC architecture 
-* state engine with dependency tracking for optimized updating
-* lifecycle with detailed state events
-* descriptive actions for data mutations (setvalue, insert, delete)
-* binding for structured data like XML, HTML and JSON
-* group, repeat, dialog + switch container components
-* generic UI control binding any native control or third-party component 
-* auto-updating Template Expressions
-* powerful XPath/XQuery 3.1 support in the browser
-* Submission module declaratively wrapping the fetch API
-* efficient partial DOM updates
 * no build (tool) required
+* MVC architecture
+* state engine with dependency tracking for optimized updating
+* efficient partial DOM updates
+
+**Data & binding**
+
+* fully descriptive - just HTML5
+* binding for structured data like XML, HTML and JSON
+* powerful XPath/XQuery 3.1 support in the browser
+* descriptive actions for data mutations (setvalue, insert, delete)
+* Submission module declaratively wrapping the fetch API
+
+**UI & lifecycle**
+
+* group, repeat, dialog + switch container components
+* generic UI control binding any native control or third-party component
+* auto-updating Template Expressions
+* lifecycle with detailed state events
 
 
 ## An xformish framework in Web Components
 
-Fore is a model-driven language that follows the ideas of the XForms 2.0
-Standard but applies those to the world of HTML5 Web Components.
- 
-Going beyond just forms it nicely integrates with Web Components, allowing to configure, 
-orchestrate and interact with them by binding their properties to data instances.
+Fore is a model-driven language that follows the ideas of the
+[XForms 2.0](https://www.w3.org/community/xformsusers/wiki/XForms_2.0) standard but applies
+those to the world of HTML5 Web Components. Going beyond just forms it nicely integrates with
+Web Components, allowing to configure, orchestrate and interact with them by binding their
+properties to data instances.
 
-Fore uses XML as it's main data model but allows to use JSON alternatively or at the same time. 
-
-Through the wonderful [fontoXPath library](https://github.com/FontoXML/fontoxpath) Fore is able to process XML in the client with XPath 3.1 and 
-XQuery 3.1 support.
-
-Being as close as possible to the web platform standards available in browsers natively, Fore combines well with any other 
-JS framework or component library.
+Fore uses XML as its main data model but allows to use JSON alternatively or at the same time.
+Through the wonderful [fontoXPath library](https://github.com/FontoXML/fontoxpath) Fore is able
+to process XML in the client with XPath 3.1 and XQuery 3.1 support.
 
 
 ## Framework-agnostic
 
-Fore focuses on providing a stable processing engine for model-driven
-apps. Major premise for a longer-term solution is to stick closely to the features
-of the browser platform and avoid specific frameworks for the implementation.
+Fore focuses on providing a stable processing engine for model-driven apps. Major premise for
+a longer-term solution is to stick closely to the features of the browser platform and avoid
+specific frameworks for the implementation. That said it's obvious that Fore does not provide
+a set of controls by itself but allows you to use whatever uber-fancy components you have found
+elsewhere. May it be some material-design date-picker or that nice jquery(sic!) timeline nobody
+has done better yet.
 
-That said it's obvious that Fore does not provide a set of controls
-by itself but allows you to use whatever uber-fancy components you have
-found elsewhere. May it be some material-design date-picker or 
-that nice jquery(sic!) timeline nobody has done better yet. 
-
-That comes to the price of slightly more markup up-front
-but allows big flexibility and makes it compatible with any framework
-that plays by the rules of the platform.
+That comes to the price of slightly more markup up-front but allows big flexibility and makes
+it compatible with any framework that plays by the rules of the platform.
 
 To use whatever component in Fore you wrap it up in the generic
 `fx-control` element.
@@ -99,62 +118,54 @@ customize the wiring of the widget you use.
 </fx-control>
 ```
 
-More examples are found in the demos (see running)
+More examples are found in the [`demo`](./demo) folder, or interactively in [Running demos and docs](#running-demos-and-docs) below.
 
 
 ## Development and Contributions
 
-Default branch of development is 'dev'.
-Feature additions or bugfixes will always there.
+`dev` is the default branch and where feature additions and bugfixes land.
+`master` is only used for releases.
 
-The master branch is only used for releases. 
+Contributions are always welcome — see [contributing.md](./contributing.md) for what to
+contribute (code, demos, docs) and how, and [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md) for
+community guidelines.
 
-Contributions are always welcome.  
-
-### what to contribute
-
-It's not all about code. 
-
-Any feedback is welcome and appreciated. Please use the ['discussions'](https://github.com/Jinntec/Fore/discussions) or
-['issues'](https://github.com/Jinntec/Fore/issues) as appropriate to suggest features or ask your questions.
-
-New demo files are highly welcome as always something new can be learned. 
-There is a directory called 'template' that contains some blueprints that can be copied to quickly get going.
-
-When working on demos it is recommended to copy your file to the 'demo' folder
-and make it work there. If you have additional files you can create
-a subdirectory for the new demo.
+Any feedback is welcome and appreciated. Please use the
+['discussions'](https://github.com/Jinntec/Fore/discussions) or
+['issues'](https://github.com/Jinntec/Fore/issues) as appropriate to suggest features or ask
+your questions.
 
 ## Running from CDN
 
 Include the following snippet at end of body:
 
+```html
+<script type="module" src="https://cdn.jsdelivr.net/npm/@jinntec/fore@latest/dist/fore.js"></script>
 ```
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@jinntec/fore@latest/dist/fore-all.js"></script>
+
+## Installation with npm
+
+Run `npm install @jinntec/fore` in your project to install it.
+
+If you're using a bundler (Vite, webpack, Rollup, ...), import it normally:
+
+```js
+import '@jinntec/fore';
 ```
-## Installation width npm
 
-Run
+If you're serving plain HTML without a bundler, reference the built bundle directly by its
+path inside `node_modules` (or copy `dist/fore.js` alongside your page):
 
-```npm install @jinntec/fore```
-
-in your project to install it.
-
-
-Import it in your HTML page like so:
-
-```
-<script type="module">
-    import 'node_modules/@jinntec/fore/dist/fore.js';
-</script>
+```html
+<script type="module" src="node_modules/@jinntec/fore/dist/fore.js"></script>
 ```
 
 ## Developing
 
 If you intend to hack it yourself ...
 
-> you need to have node installed on your machine (using 15.1.0)
-    
+> you need to have node installed on your machine (>= 16.19.1, see `engines` in `package.json`)
+
 * clone this repo to your machine
 * run `npm i` to install dependencies
 
@@ -179,26 +190,39 @@ Alternatively you can run the test suite from the commandline once:
 npm run test
 ```
 
+## Linting, formatting and type checking
+
+```bash
+npm run lint         # ESLint + Prettier check
+npm run format       # Auto-fix ESLint + Prettier
+npm run lint:types   # TypeScript type checking via JSDoc
+```
+
 ## Running the integration tests
 
-Start the demo server and open cypress. Choose your browser and run all tests from there.
+Integration tests use Cypress and require the demo server (see [Running demos and
+docs](#running-demos-and-docs)) to be running first:
 
 ```
 npm run start
+```
+
+Then, in another terminal, either open the interactive Cypress UI and choose your browser:
+
+```
 npx cypress open
 ```
 
-Alternatively, start the demo server and run the tests headlessly:
+or run the tests headlessly:
 
 ```
-npm run start
 npx cypress run
 ```
 
 
 ## Building a package
 
-```npm run build``` creates two bundles in the `dist/` directory using Vite + esbuild:
+`npm run build` creates two bundles in the `dist/` directory using Vite + esbuild:
 
 * `fore.js` — production bundle: minified, console output stripped, no devtools
 * `fore-dev.js` — development bundle: minified but retains console output and includes the Fore devtools panel
@@ -217,5 +241,9 @@ The giants that made Fore possible:
 * [depGraph](https://github.com/jriecken/dependency-graph) - finding this gem saved a big bunch of work. 
 
 Thanks to all giants!
+
+## License
+
+MIT — see [LICENSE](./LICENSE).
 
 

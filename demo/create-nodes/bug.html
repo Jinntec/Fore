@@ -1,0 +1,60 @@
+<!DOCTYPE HTML>
+<html xmlns:func="generator-functions">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport">
+    <title></title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+    <link href="../../resources/vars.css" rel="stylesheet">
+    <link href="../../resources/toastify.css" rel="stylesheet">
+    <link href="../../resources/default.css" rel="stylesheet">
+    <script type="module">
+    // import './scripts/fore-dev.js';
+    /*
+    Alternative to above import:
+    to run from local clone of Fore uncomment the next line and run 'npm start' in Fore homedir.
+    */
+           import '../../index.js';
+           import '../../tools/fx-lens.js';
+</script></head>
+<body>
+<fx-fore xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" create-nodes="create-nodes" id="fx-invoice">
+    <fx-var name="invoice" value="instance('default')"></fx-var>
+    <fx-model>
+        <fx-instance src="test/04.03a-INVOICE_ubl.xml"></fx-instance>
+        <fx-instance id="vars"><data></data></fx-instance>
+        <fx-submission id="s-save" url="#echo" method="post" replace="download" target="invoice.xml" validate="false">
+            <fx-message event="submit-error">Saving failed</fx-message>
+        </fx-submission>
+    </fx-model>
+    <main>
+        <fx-group id="outer" ref="instance()" show-icon="true">
+            <section id="mainview">
+                <header>Invoice</header>
+                <div class="view-content">
+                    <div id="general">
+                        <fx-control id="BT-8" ref="cac:InvoicePeriod/cbc:DescriptionCode" >
+                            <label for="BT-8-input">Value added tax point date code</label>
+                            <select id="BT-8-input" class="widget" selection="open">
+                                <option value="" title="Select a value added tax point date code."></option>
+                                <option value="1" title="Actual date/time on which the service was completed.">Service completion date/time, actual</option>
+                                <option value="2" title="(2105) Date on which buyer requests goods to be delivered.">Delivery date/time, requested</option>
+                                <option value="3" title="[2377] Date of issue of an invoice.">Invoice document issue date time</option>
+                            </select>
+                        </fx-control>
+                        <fx-output ref="cac:InvoicePeriod/cbc:DescriptionCode"></fx-output>
+                        <fx-group id="BG-14" ref="cac:InvoicePeriod" class="BG-14" aria-label="Invoicing Period">
+                            <fx-control id="BT-73" ref="cbc:StartDate"><label for="BT-73-input">Invoicing period start date</label><input id="BT-73-input" type="date"></fx-control>
+                            <fx-control id="BT-74" ref="cbc:EndDate"><label for="BT-74-input">Invoicing period end date</label><input id="BT-74-input" type="date"></fx-control>
+                        </fx-group>
+                    </div>
+            </section>
+        </fx-group>
+    </main>
+    <footer>
+        <fx-trigger class="save-button"><button>save</button><fx-send submission="s-save"></fx-send>
+        </fx-trigger>
+    </footer>
+</fx-fore>
+</body>
+</html>

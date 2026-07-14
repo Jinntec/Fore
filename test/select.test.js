@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import { html, fixture, expect, elementUpdated, oneEvent } from '@open-wc/testing';
+import { html, fixture, fixtureSync, expect, oneEvent } from '@open-wc/testing';
 
 import '../index.js';
 
@@ -134,6 +134,41 @@ describe('fx-control with select tests', () => {
     expect(select.children[3].textContent).to.equal('option3');
   });
 
+  it('handles static text mixed with an expression in option label and value (issue #246)', async () => {
+    const el = await fixture(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <item>foobar</item>
+            </data>
+          </fx-instance>
+          <fx-instance id="second">
+            <data>
+              <option>option1</option>
+              <option>option2</option>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <fx-control ref="item">
+          <select class="widget" ref="instance('second')/option">
+            <template>
+              <option value="pre-{.}">label: {.}</option>
+            </template>
+          </select>
+        </fx-control>
+      </fx-fore>
+    `);
+
+    const select = el.querySelector('.widget');
+    const options = select.querySelectorAll('option');
+    expect(options.length).to.equal(2);
+    expect(options[0].value).to.equal('pre-option1');
+    expect(options[0].textContent).to.equal('label: option1');
+    expect(options[1].value).to.equal('pre-option2');
+    expect(options[1].textContent).to.equal('label: option2');
+  });
+
   it('ignores whitespace around the template expression in options', async () => {
     const el = await fixture(html`
       <fx-fore>
@@ -226,7 +261,9 @@ describe('fx-control with select tests', () => {
   });
 
   it('honours namespace declarations in the templates', async () => {
-    const el = await fixture(html`
+    // fixtureSync so the 'refresh-done' listener is attached before the async
+    // src instance load and initial refresh complete
+    const el = fixtureSync(html`
       <fx-fore xmlns:example="http://www.example.com/">
         <fx-model>
           <fx-instance>
@@ -253,8 +290,7 @@ describe('fx-control with select tests', () => {
       </fx-fore>
     `);
 
-    //    await oneEvent(el, 'ready');
-    await elementUpdated(el);
+    await oneEvent(el, 'refresh-done');
 
     const wildCardNamespace = el.querySelector('#wildcard-namespace');
 

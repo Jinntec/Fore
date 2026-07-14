@@ -76,6 +76,16 @@
 
                     <h3>Using <code><a href="https://jinntec.github.io/fore-docs/elements/ui/output/#attributes" target="_blank">value</a></code> with predicate</h3>
                     <div><fx-output  value="b[last()]"></fx-output> ⇒ 3 </div>
+
+                    <h3>Using <code>slot="label"</code> for an accessible name</h3>
+                    <p>The slotted label is rendered as visible text and also wired to the shadow-DOM
+                    widget's <code>aria-label</code>, since a shadow-DOM boundary sits between the two
+                    and an <code>id</code>/<code>for</code> reference can't cross it.</p>
+                    <div>
+                        <fx-output ref="b">
+                            <label slot="label">Value of b: </label>
+                        </fx-output> ⇒ 2
+                    </div>
                 </section>
             </fx-fore>
         </template>
@@ -115,13 +125,15 @@
                 </fx-model>
 
 
-                <div class="img-out"><fx-output ref="pic" mediatype="image"></fx-output></div>
+                <div class="img-out"><fx-output ref="pic" mediatype="image">
+                    <label slot="label">A light bulb</label>
+                </fx-output></div>
 
                 <h4>Same but different</h4>
                 <p>Same result can be achieved with a simple template expression. However for accessibility reasons (label)
                 and potentially attaching listeners the <code><a href="https://jinntec.github.io/fore-docs/elements/ui/output/" target="_blank">fx-output</a></code> variant is still valid.</p>
 
-                <img src="{pic}">
+                <img src="{pic}" alt="A decorative light bulb">
             </fx-fore>
         </template>
     </demo-snippet>
@@ -154,7 +166,7 @@ this is a paragraph
         </fx-function>
     </fx-model>
     <div class="side-by-side">
-        <fx-control id="textarea" ref="instance()/md-page" debounce="300" update-event="input">
+        <fx-control id="textarea" ref="instance()/md-page" debounce="300" update-event="input" label="Markdown source">
             <textarea class="widget"></textarea>
         </fx-control>
         <fx-output value="markdown(md-page/text())" mediatype="markdown">

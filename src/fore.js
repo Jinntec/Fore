@@ -23,6 +23,33 @@ export class Fore {
 
   static TYPE_DEFAULT = 'xs:string';
 
+  static _styleSheetCache = new Map();
+
+  /**
+   * Returns a `CSSStyleSheet` for the given (static) CSS text, memoized by the CSS text itself so
+   * that a repeated element (e.g. `fx-output`/`fx-control` inside an `fx-repeat` with hundreds or
+   * thousands of rows) shares one parsed sheet via `shadowRoot.adoptedStyleSheets` instead of every
+   * instance re-parsing an identical `<style>` block via `shadowRoot.innerHTML`. Returns `null` when
+   * constructable stylesheets aren't supported so callers can fall back to inline `<style>`.
+   *
+   * @param cssText {String} - static CSS, must not contain per-instance interpolation
+   * @returns {CSSStyleSheet|null}
+   */
+  static getSharedStyleSheet(cssText) {
+    if (typeof CSSStyleSheet === 'undefined') return null;
+    let sheet = Fore._styleSheetCache.get(cssText);
+    if (!sheet) {
+      try {
+        sheet = new CSSStyleSheet();
+        sheet.replaceSync(cssText);
+        Fore._styleSheetCache.set(cssText, sheet);
+      } catch (e) {
+        return null;
+      }
+    }
+    return sheet;
+  }
+
   /**
    * Loads and return a piece of HTML
    * @param url {String} - the Url to load from
@@ -158,6 +185,32 @@ export class Fore {
       return input.substring(1, input.length - 1);
     }
     return input;
+  }
+
+  /**
+   * Evaluates all `{expr}` occurrences within a string against a given context node and
+   * form element, substituting each with its evaluated string value while leaving any
+   * surrounding static text untouched (e.g. `'foo {name}'` -> `'foo bar'`).
+   *
+   * Unlike `getExpression()`, this does not require the whole string to be a single
+   * expression - it supports static text mixed with one or more `{expr}` placeholders.
+   *
+   * @param {string} input the string possibly containing one or more `{expr}` placeholders
+   * @param {Node} contextNode the node the expression(s) are evaluated against
+   * @param {HTMLElement} formElement the Fore element providing variable/namespace scope
+   * @returns {string}
+   */
+  static evaluateTemplateString(input, contextNode, formElement) {
+    return String(input ?? '').replace(/{[^}]*}/g, match => {
+      if (match === '{}') return match;
+      const naked = match.substring(1, match.length - 1);
+      try {
+        return evaluateXPathToString(naked, contextNode, formElement);
+      } catch (error) {
+        console.warn('ignoring unparseable expr', error);
+        return match;
+      }
+    });
   }
 
   /**
@@ -439,24 +492,6 @@ export class Fore {
     }
     return 'done';
   }
-
-  /*
-  static evaluateAttributeTemplateExpression(expr, node) {
-    const matches = expr.match(/{[^}]*}/g);
-    if (matches) {
-      matches.forEach(match => {
-        console.log('match ', match);
-        const naked = match.substring(1, match.length - 1);
-        const inscope = getInScopeContext(node, naked);
-        const result = evaluateXPathToString(naked, inscope, node.getOwnerForm());
-        const replaced = expr.replaceAll(match, result);
-        console.log('replacing ', expr, ' with ', replaced);
-        expr = replaced;
-      });
-    }
-    return expr;
-  }
-*/
 
   static fadeInElement(element) {
     const duration = 600;

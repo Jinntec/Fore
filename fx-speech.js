@@ -8,23 +8,23 @@ class FxSpeech extends HTMLElement {
     this.reservedWords = {
       finish: 'finish',
       skip: 'skip to',
-      next: 'next'
+      next: 'next',
     };
-    
+
     // Initialize speech recognition
     this.recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
     this.recognition.continuous = true;
     this.recognition.interimResults = true;
-    
+
     // Initialize speech synthesis
     this.synthesis = window.speechSynthesis;
-    
+
     this.setupRecognition();
     this.render();
   }
 
   setupRecognition() {
-    this.recognition.onresult = (event) => {
+    this.recognition.onresult = event => {
       const transcript = Array.from(event.results)
         .map(result => result[0].transcript)
         .join('')
@@ -37,7 +37,7 @@ class FxSpeech extends HTMLElement {
       }
     };
 
-    this.recognition.onerror = (event) => {
+    this.recognition.onerror = event => {
       console.error('Speech recognition error:', event.error);
       this.speak('Error in speech recognition');
     };
@@ -101,23 +101,26 @@ class FxSpeech extends HTMLElement {
     if (!form) return null;
 
     // Try to find by label text
-    const labelElement = Array.from(form.querySelectorAll('label'))
-      .find(l => l.textContent.toLowerCase().includes(label.toLowerCase()));
-    
+    const labelElement = Array.from(form.querySelectorAll('label')).find(l =>
+      l.textContent.toLowerCase().includes(label.toLowerCase()),
+    );
+
     if (labelElement && labelElement.htmlFor) {
       return form.querySelector(`#${labelElement.htmlFor}`);
     }
 
     // Try to find by placeholder
-    const inputByPlaceholder = Array.from(form.querySelectorAll('input, textarea'))
-      .find(input => input.placeholder.toLowerCase().includes(label.toLowerCase()));
-    
+    const inputByPlaceholder = Array.from(form.querySelectorAll('input, textarea')).find(input =>
+      input.placeholder.toLowerCase().includes(label.toLowerCase()),
+    );
+
     if (inputByPlaceholder) return inputByPlaceholder;
 
     // Try to find by aria-label
-    const inputByAriaLabel = Array.from(form.querySelectorAll('input, textarea'))
-      .find(input => input.getAttribute('aria-label')?.toLowerCase().includes(label.toLowerCase()));
-    
+    const inputByAriaLabel = Array.from(form.querySelectorAll('input, textarea')).find(input =>
+      input.getAttribute('aria-label')?.toLowerCase().includes(label.toLowerCase()),
+    );
+
     return inputByAriaLabel || null;
   }
 
@@ -127,7 +130,7 @@ class FxSpeech extends HTMLElement {
 
     const inputs = Array.from(form.querySelectorAll('input, textarea'));
     const currentIndex = inputs.indexOf(this.currentField);
-    
+
     if (currentIndex < inputs.length - 1) {
       this.currentField = inputs[currentIndex + 1];
       this.speakFieldLabel(this.currentField);
@@ -228,9 +231,13 @@ class FxSpeech extends HTMLElement {
 
     // Add event listeners
     this.shadowRoot.getElementById('toggleMode').addEventListener('click', () => this.toggleMode());
-    this.shadowRoot.getElementById('startRecording').addEventListener('click', () => this.startRecording());
-    this.shadowRoot.getElementById('stopRecording').addEventListener('click', () => this.stopRecording());
+    this.shadowRoot
+      .getElementById('startRecording')
+      .addEventListener('click', () => this.startRecording());
+    this.shadowRoot
+      .getElementById('stopRecording')
+      .addEventListener('click', () => this.stopRecording());
   }
 }
 
-customElements.define('fx-speech', FxSpeech); 
+customElements.define('fx-speech', FxSpeech);

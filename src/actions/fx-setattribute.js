@@ -47,7 +47,7 @@ export default class FxSetattribute extends AbstractAction {
     this.attrName = this.hasAttribute('name') ? this.getAttribute('name') : null;
     this.attrValue = this.hasAttribute('value') ? this.getAttribute('value') : '';
     if (!this.attrName) {
-      Fore.dispatch('this', 'error', { message: 'name or value not specified' });
+      Fore.dispatch(this, 'error', { message: 'name or value not specified' });
     }
   }
 
@@ -55,7 +55,7 @@ export default class FxSetattribute extends AbstractAction {
     super.perform();
     const mi = this.getModelItem();
     if (mi.node.nodeType !== Node.ELEMENT_NODE) {
-      Fore.dispatch('this', 'error', { message: 'referenced item is not an element' });
+      await Fore.dispatch(this, 'error', { message: 'referenced item is not an element' });
       return;
     }
     mi.node.setAttribute(this.attrName, this.attrValue);
@@ -65,12 +65,16 @@ export default class FxSetattribute extends AbstractAction {
       this,
       null,
     );
-  // IMPORTANT: registerModelItem may return an existing canonical ModelItem for the same path.
-  // Always use the returned instance for notifications.
-  const canonical = this.getOwnerForm().getModel().registerModelItem(newModelItem);
-  this.getOwnerForm().addToBatchedNotifications(canonical);
+    // IMPORTANT: registerModelItem may return an existing canonical ModelItem for the same path.
+    // Always use the returned instance for notifications.
+    const canonical = this.getOwnerForm().getModel().registerModelItem(newModelItem);
+    this.getOwnerForm().addToBatchedNotifications(canonical);
     this.needsUpdate = true;
-  canonical.notify();
+    canonical.notify();
+    // On first-time attribute creation the ModelItem has no observers yet (no ref
+    // could have read a nonexistent attribute), so notify() alone reaches nobody.
+    // Signal a structural change so refs matching the owner element re-evaluate.
+    this.getOwnerForm().signalChangeToElement(mi.node.localName);
   }
 }
 

@@ -33,7 +33,7 @@ export class FxReload extends AbstractAction {
       }),
     );
 
-    Fore.dispatch(this, 'reload', {});
+    await Fore.dispatch(this, 'reload', {});
   }
 }
 

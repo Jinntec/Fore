@@ -6,6 +6,7 @@ import { parseJsonRef, getPath } from './xpath-path.js';
 import { evaluateXPath, evaluateXPathToBoolean, evaluateXPathToNodes } from './xpath-evaluation.js';
 import { XPathUtil } from './xpath-util.js';
 import { getLensForNode } from './json/JSONNode.js';
+import { UndoManager } from './UndoManager.js';
 
 /**
  * The model of this Fore scope. It holds all the intances, binding, submissions and custom
@@ -31,6 +32,10 @@ export class FxModel extends HTMLElement {
      * @type {import('./modelitem.js').ModelItem[]}
      */
     this.modelItems = [];
+    /** @type {Map<string, import('./modelitem.js').ModelItem>} path -> ModelItem index, kept in sync with modelItems */
+    this._modelItemsByPath = new Map();
+    /** @type {Map<Node|object, import('./modelitem.js').ModelItem>} node/lens -> ModelItem index, kept in sync with modelItems */
+    this._modelItemsByKey = new Map();
     this.defaultContext = {};
     this.changed = [];
 
@@ -40,6 +45,7 @@ export class FxModel extends HTMLElement {
     this.attachShadow({ mode: 'open' });
     this.computes = 0;
     this.fore = {};
+    this.undoManager = new UndoManager(this);
 
     /**
      * @type {import('./fx-bind.js').FxBind[]}
@@ -103,7 +109,7 @@ export class FxModel extends HTMLElement {
       computeNodeCount: nodes.filter(node => typeof node === 'string' && node.includes(':')).length,
       calculationOrderCount: calculationOrder.length,
       calculationOrder: calculationOrder.map((path, index) =>
-          this.getDebugGraphNodeInfo(graph, path, index),
+        this.getDebugGraphNodeInfo(graph, path, index),
       ),
     };
   }
@@ -136,14 +142,10 @@ export class FxModel extends HTMLElement {
     }
 
     const basePath =
-        typeof path === 'string' && path.includes(':')
-            ? path.substring(0, path.indexOf(':'))
-            : path;
+      typeof path === 'string' && path.includes(':') ? path.substring(0, path.indexOf(':')) : path;
 
     const facet =
-        typeof path === 'string' && path.includes(':')
-            ? path.substring(path.indexOf(':') + 1)
-            : null;
+      typeof path === 'string' && path.includes(':') ? path.substring(path.indexOf(':') + 1) : null;
 
     const modelItem = this.getModelItem(basePath);
 
@@ -157,12 +159,12 @@ export class FxModel extends HTMLElement {
       instanceId: modelItem?.instanceId || null,
       value: modelItem?.value,
       dataType: data?.__jsonlens__
-          ? 'json-lens'
-          : data?.nodeType
-              ? 'xml-node'
-              : data === null || data === undefined
-                  ? null
-                  : typeof data,
+        ? 'json-lens'
+        : data?.nodeType
+          ? 'xml-node'
+          : data === null || data === undefined
+            ? null
+            : typeof data,
       dependencies: graph.outgoingEdges?.[path] || [],
       dependants: graph.incomingEdges?.[path] || [],
     };
@@ -246,10 +248,13 @@ export class FxModel extends HTMLElement {
    * @param {string}            ref          The XPath ref that led to this model item
    * @param {Node}              node         The node the XPath led to
    * @param {ForeElementMixin)}  formElement  The form element making this model. Used to resolve variables against
+   * @param {string}            [knownInstanceId] instance the node belongs to, when the caller already
+   *                            resolved it per node (a touched node may live in a different instance
+   *                            than the ref's primary one); falls back to deriving it from the ref
    * @returns {ModelItem}
    */
-  static lazyCreateModelItem(model, ref, node, formElement) {
-    const instanceId = XPathUtil.resolveInstance(formElement, ref);
+  static lazyCreateModelItem(model, ref, node, formElement, knownInstanceId = null) {
+    const instanceId = knownInstanceId ?? XPathUtil.resolveInstance(formElement, ref);
     const instance = model.getInstance(instanceId);
     const fore = model.formElement;
 
@@ -285,19 +290,12 @@ export class FxModel extends HTMLElement {
 
     // If ModelItem for same path exists, RETARGET it (node OR lens)
     if (path) {
-      const existingModelItem = model.modelItems.find(mi => mi.path === path);
+      const existingModelItem = model._modelItemsByPath.get(path);
       if (existingModelItem) {
-        if (isLensObject) {
-          if (existingModelItem.lens !== targetNode) {
-            existingModelItem.lens = targetNode;
-            existingModelItem.node = null;
-          }
-        } else {
-          if (existingModelItem.node !== targetNode) {
-            existingModelItem.node = targetNode;
-            existingModelItem.lens = null;
-          }
-        }
+        model._setModelItemTarget(
+          existingModelItem,
+          isLensObject ? { lens: targetNode } : { node: targetNode },
+        );
         return existingModelItem;
       }
     }
@@ -328,8 +326,21 @@ export class FxModel extends HTMLElement {
     console.info(`📌 model-construct for #${this.parentNode.id}`);
     this.debugInfo.modelConstructCount += 1;
 
+    // todo: documentation
+    // stale snapshots must not survive a full model (re)construction
+    this.undoManager.clear();
+    // opt-in: without this attribute the manager stays a no-op and no instance
+    // data is ever cloned, so normal (non-undo) forms pay nothing for this feature
+    this.undoManager.enabled = this.hasAttribute('undo');
+    if (this.hasAttribute('undo-depth')) {
+      const depth = Number(this.getAttribute('undo-depth'));
+      if (!Number.isNaN(depth) && depth > 0) {
+        this.undoManager.maxDepth = depth;
+      }
+    }
+
     // this.dispatchEvent(new CustomEvent('model-construct', { detail: this }));
-    Fore.dispatch(this, 'model-construct', { model: this });
+    await Fore.dispatch(this, 'model-construct', { model: this });
 
     // console.time('instance-loading');
     const instances = this.querySelectorAll('fx-instance');
@@ -397,6 +408,62 @@ export class FxModel extends HTMLElement {
     this.inited = true;
   }
 
+  /**
+   * Adds a ModelItem to modelItems (if not already present) and keeps the
+   * path/node/lens indexes (_modelItemsByPath, _modelItemsByKey) in sync.
+   * Safe to call repeatedly for the same item (idempotent).
+   */
+  _indexModelItem(mi) {
+    if (!this.modelItems.includes(mi)) {
+      this.modelItems.push(mi);
+    }
+    if (mi.path) this._modelItemsByPath.set(mi.path, mi);
+    const key = mi.node ?? mi.lens;
+    if (key != null) this._modelItemsByKey.set(key, mi);
+  }
+
+  /**
+   * Reassigns a ModelItem's `path` (eg. the repeat-insert "dewey rewrite" that
+   * disambiguates a freshly inserted row's subtree) and keeps _modelItemsByPath
+   * in sync. This is the single place that changes modelItem.path after initial
+   * registration - a direct `mi.path = ...` assignment would leave the path
+   * index stale.
+   */
+  _setModelItemPath(mi, newPath) {
+    if (mi.path === newPath) return;
+    if (mi.path) this._modelItemsByPath.delete(mi.path);
+    mi.path = newPath;
+    if (newPath) this._modelItemsByPath.set(newPath, mi);
+  }
+
+  /**
+   * Removes a ModelItem from modelItems and its indexes.
+   */
+  _deindexModelItem(mi) {
+    const index = this.modelItems.indexOf(mi);
+    if (index !== -1) this.modelItems.splice(index, 1);
+    if (mi.path) this._modelItemsByPath.delete(mi.path);
+    const key = mi.node ?? mi.lens;
+    if (key != null) this._modelItemsByKey.delete(key);
+  }
+
+  /**
+   * Reassigns a ModelItem's backing node/lens (mutually exclusive) and keeps
+   * _modelItemsByKey in sync. This is the single place that changes
+   * modelItem.node/modelItem.lens after initial registration - any other
+   * assignment would leave the key index stale.
+   */
+  _setModelItemTarget(modelItem, { node = null, lens = null } = {}) {
+    const oldKey = modelItem.node ?? modelItem.lens;
+    const newKey = lens ?? node;
+    if (oldKey !== newKey) {
+      if (oldKey != null) this._modelItemsByKey.delete(oldKey);
+      if (newKey != null) this._modelItemsByKey.set(newKey, modelItem);
+    }
+    modelItem.node = node;
+    modelItem.lens = lens;
+  }
+
   registerModelItem(modelItem) {
     if (!modelItem) return null;
 
@@ -425,11 +492,9 @@ export class FxModel extends HTMLElement {
     const retarget = (target, source) => {
       // point to current backing node/lens
       if (source.lens) {
-        target.lens = source.lens;
-        target.node = null;
+        this._setModelItemTarget(target, { lens: source.lens });
       } else if (source.node) {
-        target.node = source.node;
-        target.lens = null;
+        this._setModelItemTarget(target, { node: source.node });
       }
 
       // keep metadata current
@@ -451,10 +516,7 @@ export class FxModel extends HTMLElement {
       const prev = this._prevModelItemsByPath.get(path);
       if (prev) {
         retarget(prev, modelItem);
-
-        if (!this.modelItems.includes(prev)) {
-          this.modelItems.push(prev);
-        }
+        this._indexModelItem(prev);
 
         this._prevModelItemsByPath.delete(path);
         return prev;
@@ -464,15 +526,15 @@ export class FxModel extends HTMLElement {
     // ---- normal path ----
     if (!path) {
       // No path => can't reuse; keep as-is
-      this.modelItems.push(modelItem);
+      this._indexModelItem(modelItem);
       return modelItem;
     }
 
-    const existing = this.modelItems.find(mi => mi.path === path);
+    const existing = this._modelItemsByPath.get(path);
     if (!existing) {
       // New canonical item
       resetComputedState(modelItem);
-      this.modelItems.push(modelItem);
+      this._indexModelItem(modelItem);
       return modelItem;
     }
 
@@ -486,6 +548,8 @@ export class FxModel extends HTMLElement {
   updateModel() {
     this.debugInfo.updateModelCount += 1;
     this.debugInfo.lastUpdateAt = performance.now();
+
+    this._refreshModelVariables();
 
     const rebuildStart = performance.now();
     this.rebuild();
@@ -513,6 +577,65 @@ export class FxModel extends HTMLElement {
   }
 
   /**
+   * Resolves the model whose undo history should record mutations reachable through
+   * this model.
+   *
+   * A model that declares no `<fx-instance>` of its own (e.g. a nested `fx-fore` that
+   * only consumes a `shared` instance from an ancestor) operates entirely on data it
+   * doesn't own. Its own `undoManager` would only ever see empty snapshots - not
+   * merely non-undoable, but silently WRONG: `canUndo()`/`undo()` would still report
+   * success against a snapshot that changes nothing. Such a model's undo/redo instead
+   * delegates to the nearest ancestor `fx-fore` whose model actually owns instances,
+   * mirroring the parent-lookup `getInstance()` uses for `shared` instances.
+   *
+   * Known gap: a model that owns SOME instances of its own but also mutates a shared
+   * instance discovered via `getInstance()`'s broader page-wide search (not a direct
+   * ancestor) is not covered here - only the "no instances of my own" case is.
+   *
+   * @returns {import('./UndoManager.js').UndoManager}
+   */
+  getEffectiveUndoManager() {
+    if (this.instances.length > 0) return this.undoManager;
+    const parentFore =
+      this.fore.parentNode?.nodeType === Node.DOCUMENT_FRAGMENT_NODE
+        ? this.fore.parentNode.host?.closest('fx-fore')
+        : this.fore.parentNode?.closest('fx-fore');
+    const parentModel = parentFore?.getModel();
+    if (parentModel && parentModel !== this) {
+      return parentModel.getEffectiveUndoManager();
+    }
+    return this.undoManager;
+  }
+
+  /**
+   * restores instance data to the state before the last undoable action chain.
+   * Callers are responsible for running updateModel() and a refresh afterwards.
+   *
+   * @returns {boolean} true if a step was undone
+   */
+  undo() {
+    return this.getEffectiveUndoManager().undo();
+  }
+
+  /**
+   * re-applies the most recently undone action chain.
+   * Callers are responsible for running updateModel() and a refresh afterwards.
+   *
+   * @returns {boolean} true if a step was redone
+   */
+  redo() {
+    return this.getEffectiveUndoManager().redo();
+  }
+
+  canUndo() {
+    return this.getEffectiveUndoManager().canUndo();
+  }
+
+  canRedo() {
+    return this.getEffectiveUndoManager().canRedo();
+  }
+
+  /**
    * (Recursively) remove the model item of a node.
    * @param {Node} node - The node for which to remove the model item
    */
@@ -520,13 +643,11 @@ export class FxModel extends HTMLElement {
     if (!node) return;
 
     // Support both XML nodes (mi.node) and JSON lens nodes (mi.lens)
-    const index = this.modelItems.findIndex(mi => mi.node === node || mi.lens === node);
+    const mi = this._modelItemsByKey.get(node);
 
     // The model item is not always there. Might be the case if a node is 'skipped' during rendering.
     // It may still have descendants that can have model items.
-    if (index !== -1) {
-      const mi = this.modelItems[index];
-
+    if (mi) {
       // IMPORTANT:
       // Before removing the ModelItem, enqueue all observers (bound UI controls) for refresh.
       // Otherwise, deleting a bound node can orphan controls (eg. fx-group) because their ModelItem
@@ -544,7 +665,7 @@ export class FxModel extends HTMLElement {
         // ignore
       }
 
-      this.modelItems.splice(index, 1);
+      this._deindexModelItem(mi);
     }
 
     // Recurse for XML descendants only
@@ -556,7 +677,6 @@ export class FxModel extends HTMLElement {
   }
 
   rebuild() {
-    console.log(`🔷   rebuild() '${this.fore.id}'`);
     this.debugInfo.rebuildCount += 1;
 
     // Build a lookup for existing ModelItems so we can reuse them by path (approach A)
@@ -568,6 +688,8 @@ export class FxModel extends HTMLElement {
 
     this.mainGraph = new DepGraph(false);
     this.modelItems = [];
+    this._modelItemsByPath = new Map();
+    this._modelItemsByKey = new Map();
 
     const binds = this.querySelectorAll('fx-model > fx-bind');
     if (binds.length === 0) {
@@ -582,11 +704,20 @@ export class FxModel extends HTMLElement {
       this.formElement.initData();
     }
 
-    // Drop unused previous ModelItems (not re-registered this rebuild)
-    this._prevModelItemsByPath = null;
+    // Lazily created ModelItems (eg. an fx-control/fx-output whose `ref` has no
+    // <fx-bind> of its own) never go through bind.init() above, so without this they'd
+    // be silently dropped from modelItems on every rebuild. Since UI elements keep a
+    // direct reference to their ModelItem, they wouldn't error - they'd just stop being
+    // recalculated/notified forever (see fx-update-orphans-control.html). Reclaim any
+    // such item whose backing node is still attached to its instance document.
+    this._prevModelItemsByPath.forEach(mi => {
+      if (!mi.isSynthetic) return;
+      if (!mi.node || !mi.node.isConnected) return;
+      this._indexModelItem(mi);
+    });
 
-    console.log('mainGraph', this.mainGraph);
-    console.log('rebuild mainGraph calc order', this.mainGraph.overallOrder());
+    // Drop remaining unused previous ModelItems (not re-registered this rebuild)
+    this._prevModelItemsByPath = null;
 
     Fore.dispatch(this, 'rebuild-done', { maingraph: this.mainGraph });
   }
@@ -595,15 +726,41 @@ export class FxModel extends HTMLElement {
    *
    * todo: use 'changed' flag on modelItems to determine subgraph for recalculation. Flag already exists but is not used.
    */
+  /**
+   * XForms 2.0: model variables are evaluated in document order immediately before
+   * rebuild, recalculate and refresh — never reactively in between. Called from
+   * updateModel() (before rebuild) and recalculate(), which covers both update paths
+   * (actions run recalculate/revalidate/refresh without updateModel).
+   *
+   * The dependency graph is variable-blind: facet expressions referencing $var have
+   * no edge to the nodes the variable reads. When a model variable changed at this
+   * evaluation point, coarsely invalidate by clearing `changed` so recalculate runs
+   * the full graph instead of the changed-nodes subgraph.
+   *
+   * @private
+   */
+  _refreshModelVariables() {
+    let modelVariablesChanged = false;
+    this.querySelectorAll('fx-var').forEach(variable => {
+      if (typeof variable.refreshAndReportChange === 'function') {
+        if (variable.refreshAndReportChange()) {
+          modelVariablesChanged = true;
+        }
+      }
+    });
+    if (modelVariablesChanged) {
+      this.changed = [];
+    }
+  }
+
   async recalculate() {
     this.debugInfo.recalculateCount += 1;
     if (!this.mainGraph) {
       return;
     }
 
-    console.log(`🔷🔷 recalculate() '${this.fore.id}'`);
+    this._refreshModelVariables();
 
-    // console.log('changed nodes ', this.changed);
     this.computes = 0;
 
     this.subgraph = new DepGraph(false);
@@ -654,16 +811,21 @@ export class FxModel extends HTMLElement {
       this.formElement.toRefresh = toRefresh;
 */
       this.changed = [];
-      Fore.dispatch(this, 'recalculate-done', { graph: this.subgraph, computes: this.computes });
+      await Fore.dispatch(this, 'recalculate-done', {
+        graph: this.subgraph,
+        computes: this.computes,
+      });
     } else {
       const v = this.mainGraph.overallOrder(false);
       v.forEach(path => {
         const node = this.mainGraph.getNodeData(path);
         this.compute(node, path);
       });
-      Fore.dispatch(this, 'recalculate-done', { graph: this.mainGraph, computes: this.computes });
+      await Fore.dispatch(this, 'recalculate-done', {
+        graph: this.mainGraph,
+        computes: this.computes,
+      });
     }
-    console.log(`${this.parentElement.id} recalculate finished with modelItems `, this.modelItems);
   }
 
   /*
@@ -817,8 +979,6 @@ export class FxModel extends HTMLElement {
     this.debugInfo.revalidateCount += 1;
     if (this.modelItems.length === 0) return true;
 
-    console.log(`🔷🔷🔷 revalidate() '${this.fore.id}'`);
-
     // reset submission validation
     // this.parentNode.classList.remove('submit-validation-failed')
     let valid = true;
@@ -839,7 +999,6 @@ export class FxModel extends HTMLElement {
             // this.formElement.addToRefresh(modelItem); // let fore know that modelItem needs refresh
             modelItem.notify(); // Notify observers directly
             if (!compute) {
-              console.log('validation failed on modelitem ', modelItem);
               valid = false;
             }
           }
@@ -891,16 +1050,6 @@ export class FxModel extends HTMLElement {
       if (!nativeValid) valid = false;
     });
 
-    console.log('modelItems after revalidate: ', this.modelItems);
-    console.log('changed after revalidate: ', this.changed);
-    console.log(
-      'changed after revalidate changed: ',
-      Array.from(this.parentNode._localNamesWithChanges),
-    );
-    console.log(
-      'changed after revalidate batchedNotifications: ',
-      Array.from(this.parentNode.batchedNotifications),
-    );
     return valid;
   }
 
@@ -923,11 +1072,11 @@ export class FxModel extends HTMLElement {
       const key = nodeOrPath.includes(':')
         ? nodeOrPath.substring(0, nodeOrPath.indexOf(':'))
         : nodeOrPath;
-      return this.modelItems.find(mi => mi.path === key) || null;
+      return this._modelItemsByPath.get(key) ?? null;
     }
 
     // Node/lens lookup
-    return this.modelItems.find(mi => mi.node === nodeOrPath || mi.lens === nodeOrPath) || null;
+    return this._modelItemsByKey.get(nodeOrPath) ?? null;
   }
 
   /**
@@ -1034,6 +1183,24 @@ export class FxModel extends HTMLElement {
     return result;
   }
 
+  /**
+   * Reverse-lookup: given an XML node, find the id of the fx-instance whose document owns it.
+   *
+   * Used to canonicalize the path of a node referenced *across instances* (e.g. a `relevant`
+   * expression on a bind in instance A that reads a node from instance B) -- the referenced
+   * node's own instance id must be used, not the id of the instance the bind itself is on.
+   *
+   * @param {Node} node
+   * @returns {string|null}
+   */
+  getInstanceIdForNode(node) {
+    if (!node || node.nodeType === undefined) return null;
+    const doc = node.nodeType === Node.DOCUMENT_NODE ? node : node.ownerDocument;
+    if (!doc) return null;
+
+    const match = Array.from(this.instances).find(inst => inst.getInstanceData?.() === doc);
+    return match ? match.id : null;
+  }
 }
 
 if (!customElements.get('fx-model')) {

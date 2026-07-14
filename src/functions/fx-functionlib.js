@@ -134,7 +134,7 @@ export class FxFunctionlib extends ForeElementMixin {
 
   _ensurePrefixDeclared(prefix) {
     const ownerForm =
-        (typeof this.getOwnerForm === 'function' && this.getOwnerForm()) || this.closest('fx-fore');
+      (typeof this.getOwnerForm === 'function' && this.getOwnerForm()) || this.closest('fx-fore');
 
     if (!ownerForm) return;
 
@@ -149,8 +149,8 @@ export class FxFunctionlib extends ForeElementMixin {
 
     // If prefix is given: register ONLY the prefixed signature (no unprefixed alias).
     const sig = prefix
-        ? applyPrefixToSignature(functionObject.signature, prefix)
-        : functionObject.signature;
+      ? applyPrefixToSignature(functionObject.signature, prefix)
+      : functionObject.signature;
 
     registerFunction({ ...functionObject, signature: sig }, this);
   }
@@ -168,12 +168,12 @@ export class FxFunctionlib extends ForeElementMixin {
         if (typeof signature !== 'string' || !signature.trim()) continue;
 
         this._register(
-            {
-              type: 'text/javascript',
-              signature: signature.trim(),
-              implementation: item,
-            },
-            prefix,
+          {
+            type: 'text/javascript',
+            signature: signature.trim(),
+            implementation: item,
+          },
+          prefix,
         );
       } else if (item && typeof item === 'object' && typeof item.signature === 'string') {
         this._register(item, prefix);

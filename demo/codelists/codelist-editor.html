@@ -1,0 +1,428 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+  <title>Codelist Editor</title>
+  <link href="resources/css/fore.css" rel="stylesheet">
+  <link href="resources/css/default.css" rel="stylesheet">
+  <style>
+    body { max-width: 64rem; margin: 0 auto; padding: 0 1.25rem 3rem; }
+    header.editor-header { position: sticky; top: 0; background: var(--body-bg, #fff); z-index: 5; padding: 1rem 1.25rem; margin: 0 -1.25rem; border-bottom: 2px solid #c0c8d8; }
+    header.editor-header h1 { font-size: 1.3rem; margin: 0 0 0.75rem; color: #1a2a4a; }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 1.25rem; }
+    .toolbar > fx-control{display:block;}
+    .toolbar > fx-control > label{display:block;}
+
+    .field { display: flex; flex-direction: column; font-size: 0.85rem; color: #444; gap: 0.2rem; padding:0; align-items: flex-start; }
+    .field select, .field input { font-family: inherit; font-size: 0.9rem; padding: 0.3rem 0.5rem; border: 1px solid rgba(6,3,20,.4); border-radius: 0.3rem; }
+
+    /* fx-output's shadow root defaults to display:inline-block with an internal
+       <slot name="label"> + <span id="value"> -- stacking label above value here
+       (rather than forcing them side-by-side via flex) avoids fighting that
+       internal layout and lets long values (e.g. the export filename) wrap
+       inside their own card instead of overflowing the panel. */
+    .meta-panel { display: flex; flex-wrap: wrap; gap: 1.5rem; margin: 1rem 0; padding: 0.75rem 1rem; background: #f0f4ff; border: 1px dashed #a0b0d0; border-radius: 0.375rem; font-size: 0.85rem; }
+    .meta-panel fx-output { display: flex; flex-direction: column; gap: 0.15rem; min-width: 6rem; max-width: 100%; overflow-wrap: anywhere; }
+    .meta-panel fx-output label { color: #667; font-size: 0.75rem; }
+
+    .filter-bar { display: flex; align-items: center; gap: 1rem; margin: 1rem 0 0.5rem; }
+    .filter-bar .field { flex: 1; max-width: 24rem; }
+    .filter-bar input[type="search"] { width: 100%; padding: 0.4rem 0.6rem; font-size: 0.9rem; }
+    .kept-count { font-size: 0.85rem; color: #446; white-space: nowrap; align-self:end;}
+
+    .bulk-actions { display: flex; gap: 0.5rem; margin: 0.5rem 0; }
+    .bulk-actions button, #btn-remove-unchecked button, #btn-save button { font-family: inherit; font-size: 0.85rem; padding: 0.35rem 0.7rem; border: 1px solid rgba(6,3,20,.4); border-radius: 0.3rem; background: #fff; cursor: pointer; }
+    .bulk-actions button:hover, #btn-remove-unchecked button:hover, #btn-save button:hover { background: #eef2ff; }
+
+    /* Grid lives on .row-list; .row/.row-header/fx-repeat/fx-repeatitem are all
+       display:contents so every cell becomes a direct grid item sharing one set
+       of column tracks -- this is what keeps columns aligned across rows, since
+       column count/content differs per codelist and flex can't guarantee that. */
+    .row-list {
+      border: 1px solid #d8dce8; border-radius: 0.375rem; max-height: 50vh; overflow-y: auto;
+    }
+    /* Each row is its own grid (rather than one shared grid spanning the whole list) so a
+       row with fewer Values than ColumnSet/Column (an omitted optional column, e.g. EAS's
+       "remark") can't shift the auto-placement cursor and misalign every row after it --
+       each .col-value below is placed at an explicit grid-column derived from its ColumnRef
+       instead of relying on document-order auto-placement. */
+    .row, .row-header {
+      display: grid;
+      grid-template-columns: 4rem repeat(var(--col-count, 1), minmax(6rem, 1fr));
+    }
+    /* Whole row toggles Keep (see the row-scoped fx-setvalue[event=click] in the row
+       template below) -- cursor:pointer signals that affordance; excludes the sticky
+       header row, which isn't clickable. */
+    .row-list .row:not(.row-header) { cursor: pointer; }
+    .row-list fx-repeat, .row-list fx-repeatitem { display: contents; }
+    /* nonrelevant is set by fx-repeatitem itself from the Row's fx-bind[relevant] facet
+       (see the cross-instance relevant fx-bind in fx-model above) */
+    #r-rows fx-repeatitem[nonrelevant] { display: none; }
+    /* #r-rows uses fx-repeat's progressive-rendering `size` cap. The trailing sentinel
+       element can't be display:contents like fx-repeat/fx-repeatitem (it needs real
+       geometry for IntersectionObserver), so left alone it becomes a stray 1-column grid
+       item -- span it across the full row grid instead. */
+    #r-rows .fx-repeat-sentinel { grid-column: 1 / -1; }
+    .row-header { font-weight: 600; }
+    /* descendant selector (not ">") -- .col-header spans sit two levels down, inside the
+       display:contents fx-repeat/fx-repeatitem wrappers, so a direct-child selector missed them
+       and only .keep-col ever stuck. */
+    .row-header .keep-col, .row-header .col-header { position: sticky; top: 0; background: #eef1fa; z-index: 1; }
+    .row > * { border-bottom: 1px solid #edf0f7; font-size: 0.85rem; }
+    .row .col-value, .row .col-header, .row .keep-col { padding: 0.3rem 0.6rem; overflow-wrap: anywhere; align-self: center; }
+    /* default.css's blanket `input, select, textarea { width: calc(100% - 2.5rem) }`
+       has no checkbox exclusion, which blew up this checkbox to ~200px; undo it here
+       rather than touching the shared stylesheet. */
+    .row .keep-col input[type="checkbox"] { width: auto; }
+    /* Standard visually-hidden pattern: keeps the label in the accessibility tree
+       (so clicking/focusing the checkbox announces "Keep this code") without it
+       taking up layout space -- unlike display:none, which would remove both. */
+    .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+    .actions-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 0.75rem; }
+    #btn-save button { font-weight: 600; }
+    fx-trigger{padding:0.25rem;}
+
+    .load-status { display: none; align-items: center; gap: 0.4rem; font-size: 0.85rem; color: #446; padding-bottom: 0.5rem; align-self:end;}
+    .load-status.active { display: inline-flex; }
+    .load-status .spinner {
+      width: 0.9rem; height: 0.9rem; border-radius: 50%;
+      border: 2px solid #c0c8d8; border-top-color: #3355aa;
+      animation: load-spin 0.7s linear infinite;
+    }
+    @keyframes load-spin { to { transform: rotate(360deg); } }
+    .toolbar button[disabled], .toolbar input[disabled], .toolbar select[disabled] { opacity: 0.6; cursor: not-allowed; }
+
+    /* While a codelist is (re)loading the previous one is still on screen; dimming +
+       pointer-events:none on the whole editing area (rather than only the two toolbar
+       load controls) is what actually communicates "this is stale/frozen right now"
+       instead of just showing a spinner next to otherwise-normal-looking, still-clickable
+       rows/buttons. */
+    main.ui-locked { opacity: 0.5; pointer-events: none; transition: opacity 0.15s ease; }
+  </style>
+<!--  <script type="module">import './resources/scripts/fore-dev.js';</script>-->
+  <script type="module" src="../../index.js"></script>
+  <script type="module" src="../../tools/fx-lens.js"></script>
+  <!-- fx-action is not part of the default index.js bundle; imported directly for sequencing
+       nested actions inside submission event handlers (see s-load-known / s-load-customsource). -->
+  <script type="module" src="../../src/actions/fx-action.js"></script>
+</head>
+<body>
+<fx-fore id="fx-codelist-editor">
+  <fx-model>
+    <fx-instance id="codelist" src="data/codelist-editor-empty.xml"></fx-instance>
+
+    <!-- Holds a locally-uploaded file for comparison only -- never bound to the UI directly.
+         Used to reconcile @ui-keep on a freshly (re)loaded original against a previously
+         saved custom codelist; see s-load-customsource and the @ui-keep fx-setvalue below. -->
+    <fx-instance id="customsource" src="data/codelist-editor-empty.xml"></fx-instance>
+
+    <!-- Note: tag names here are lowercase on purpose. This markup is parsed by the
+         browser's HTML parser (not an XML parser), which lowercases element names,
+         so any camelCase here would silently stop matching the XPath refs below. -->
+    <fx-instance id="vars">
+      <data>
+        <selectedfile></selectedfile>
+        <exportfilename></exportfilename>
+        <filtertext></filtertext>
+      </data>
+    </fx-instance>
+
+    <fx-bind ref="instance('vars')/exportfilename"
+              calculate="let $base := substring-before(instance('vars')/selectedfile, '.xml')
+                         return if (ends-with($base, '-custom'))
+                                then concat($base, '.xml')
+                                else concat($base, '-custom.xml')"></fx-bind>
+
+    <!-- Cross-instance relevant: filtertext lives in instance('vars'), the Row nodes it
+         filters live in instance('codelist'). This relies on the fx-bind.js fix in
+         _addDependencies() that canonicalizes each referenced node's path using ITS OWN
+         instance id (see fore-reactivity-bug-findings.md) -- without that fix this bind
+         evaluates once at load and never again. -->
+    <fx-bind ref="instance('codelist')/SimpleCodeList/Row"
+              relevant="not(string(instance('vars')/filtertext))
+                         or contains(lower-case(string-join(Value/SimpleValue, ' ')), lower-case(instance('vars')/filtertext))"></fx-bind>
+
+    <fx-submission id="s-load-known"
+                    url="{concat('data/codelists/xml/', instance('vars')/selectedfile)}"
+                    method="get" replace="instance" instance="codelist" validate="false">
+      <fx-message event="submit-error">Could not load codelist file.</fx-message>
+      <!-- fx-action sequences its children strictly in order (awaits each fully before the
+           next starts) -- needed because the reconciliation step below requires every row to
+           already carry a ui-keep attribute from the create step. Two independent actions each
+           listening on submit-done directly would start concurrently instead, racing their
+           row-by-row loops against each other. -->
+      <fx-action event="submit-done">
+        <fx-setattribute ref="." name="ui-keep" value="true" iterate="instance('codelist')/SimpleCodeList/Row"></fx-setattribute>
+        <!-- Reconciliation against a previously saved custom codelist (see s-load-customsource):
+             only kicks in when customsource actually holds rows recorded against THIS filename.
+             The reconcile-needed check lives in `iterate` itself (not a separate `if` -- execute()
+             in abstract-action.js never consults `if` once `iterate` is set) so that a plain "Load
+             selected" -- customsource empty, nothing to reconcile -- makes this evaluate to an empty
+             sequence and skips the loop entirely instead of re-looping over every row just to
+             rewrite the 'true' the create-step above already set. Matters at codelist scale: this
+             is one full pass over every Row (802 for UNTDID 1001), each a separate notify(). -->
+        <fx-setvalue ref="@ui-keep"
+                     value="let $keyRef := instance('codelist')/ColumnSet/Key[1]/ColumnRef/@Ref,
+                                $myKey := Value[@ColumnRef = $keyRef]/SimpleValue
+                            return if (instance('customsource')/SimpleCodeList/Row[Value[@ColumnRef=$keyRef]/SimpleValue = $myKey])
+                                   then 'true' else 'false'"
+                     iterate="if (instance('customsource')/SimpleCodeList/Row
+                                  and instance('vars')/selectedfile = string(instance('customsource')/Identification/@ui-source-file))
+                              then instance('codelist')/SimpleCodeList/Row
+                              else ()"></fx-setvalue>
+        <!-- The two bulk per-row actions above each notify() 250+ times in a tight loop right
+             after a full instance replace; the checkbox controls' checked state visibly drifts
+             out of sync with the underlying @ui-keep data in that scenario (confirmed: @ui-keep
+             and the kept-count label are correct, only the rendered checkboxes are wrong) even
+             though a plain full refresh afterwards fixes it immediately. Forcing one here is
+             cheap and makes sure what's on screen matches the model once this settles. -->
+        <fx-refresh force></fx-refresh>
+      </fx-action>
+    </fx-submission>
+
+    <!-- url is populated dynamically from JS (blob: URL) right before submit() --
+         only the file name has to come from JS, since the File API isn't reachable from Fore.
+         Only fired (from s-load-customsource's fx-action below) when the uploaded file turns
+         out to carry NO provenance marker -- i.e. a plain/foreign upload, loaded verbatim. -->
+    <fx-submission id="s-load-local"
+                    url="" method="get" replace="instance" instance="codelist" validate="false">
+      <fx-message event="submit-error">Could not load the selected local file.</fx-message>
+      <fx-setattribute ref="." name="ui-keep" value="true" iterate="instance('codelist')/SimpleCodeList/Row" event="submit-done"></fx-setattribute>
+    </fx-submission>
+
+    <!-- Loads the uploaded local file into customsource FIRST, purely for inspection -- codelist
+         is deliberately left untouched until we know which of the two paths below applies.
+         Loading straight into codelist here (and only correcting it afterwards) would render a
+         wrong intermediate state: the trimmed custom rows, visible for a moment before being
+         replaced by the reconciled full original. -->
+    <fx-submission id="s-load-customsource"
+                    url="" method="get" replace="instance" instance="customsource" validate="false">
+      <fx-message event="submit-error">Could not read the selected local file.</fx-message>
+      <!-- fx-action sequences its children strictly in order -- whichever fx-send runs must not
+           start until instance('vars')/selectedfile has actually been updated by the fx-setvalue
+           before it; see the same-issue comment on s-load-known above. Exactly one of the two
+           fx-send children below fires, so codelist ends up populated exactly once. -->
+      <fx-action event="submit-done">
+        <fx-setvalue ref="instance('vars')/selectedfile" value="string(instance('customsource')/Identification/@ui-source-file)"
+                     if="string(instance('customsource')/Identification/@ui-source-file)"></fx-setvalue>
+        <!-- Marker found: re-fetch the true original from the server and reconcile against it. -->
+        <fx-send submission="s-load-known" if="string(instance('customsource')/Identification/@ui-source-file)"></fx-send>
+        <!-- No marker: plain/foreign upload, load it verbatim exactly as before. -->
+        <fx-send submission="s-load-local" if="not(string(instance('customsource')/Identification/@ui-source-file))"></fx-send>
+      </fx-action>
+    </fx-submission>
+
+    <fx-submission id="s-save"
+                    url="#echo" method="post" replace="download"
+                    target="{instance('vars')/exportfilename}"
+                    ref="instance('codelist')" validate="false">
+    </fx-submission>
+  </fx-model>
+
+  <header class="editor-header">
+    <h1>genericode Codelist Editor</h1>
+    <div class="toolbar">
+      <fx-control ref="instance('vars')/selectedfile" update-event="change">
+        <label for="file-select">Codelist</label>
+        <select id="file-select" class="widget" selection="open">
+          <option value="" selected>Select a codelist</option>
+          <option value="Country-Codes-7.xml">Country Codes (ISO 3166-1 / DESTATIS)</option>
+          <option value="Currency-Codes-3.xml">Currency Codes (ISO 4217)</option>
+          <option value="EAS-4.xml">Electronic Address Scheme (EAS)</option>
+          <option value="ICD-4.xml">Identifier Scheme Code (ICD, ISO/IEC 6523)</option>
+          <option value="1001.xml">UNTDID 1001 — Document name code</option>
+          <option value="2005.xml">UNTDID 2005 — Date/time/period function code qualifier</option>
+          <option value="4451.xml">UNTDID 4451 — Text subject code qualifier</option>
+          <option value="7143.xml">UNTDID 7143 — Item type identification code</option>
+          <option value="UNTDID-1153-3.xml">UNTDID 1153 — Reference code qualifier</option>
+          <option value="UNTDID-4461-3.xml">UNTDID 4461 — Payment means code</option>
+          <option value="UNTDID-5189-3.xml">UNTDID 5189 — Allowance or charge identification cod</option>
+          <option value="UNTDID-5305-3.xml">UNTDID 5305 — Duty/tax/fee category code</option>
+          <option value="UNTDID-7161-3.xml">UNTDID 7161 — Special service description code</option>
+          <option value="UN_ECE_Recommendation_N_20_3.xml">UN/ECE Rec. 20 — Units of Measure</option>
+          <option value="UN_ECE_Recommendation_N_21_3.xml">UN/ECE Rec. 21 — Passengers/Cargo/Packaging</option>
+          <option value="VATEX-2019-12-11T08_43Z-yAZ.xml">VATEX — VAT exemption reason code</option>
+        </select>
+        <fx-send submission="s-load-known" event="value-changed"></fx-send>
+      </fx-control>
+
+      <label class="field">Load custom list
+        <input type="file" id="local-file-input" accept=".xml">
+      </label>
+      <fx-trigger id="trigger-load-local" style="display:none">
+        <button type="button">load local file (hidden, clicked programmatically)</button>
+        <!-- s-load-local is not sent directly here -- it's only fired conditionally, from
+             s-load-customsource's own fx-action, once we know it's the right thing to do. -->
+        <fx-send submission="s-load-customsource"></fx-send>
+      </fx-trigger>
+
+      <span id="load-status" class="load-status" role="status" aria-live="polite">
+        <span class="spinner" aria-hidden="true"></span>
+        <span id="load-status-text"></span>
+      </span>
+    </div>
+  </header>
+
+  <main id="editor-main">
+    <div class="meta-panel">
+      <fx-output ref="instance('codelist')/Identification/ShortName"><label slot="label">Short name</label></fx-output>
+      <fx-output ref="instance('codelist')/Identification/LongName"><label slot="label">Long name</label></fx-output>
+      <fx-output ref="instance('codelist')/Identification/Version"><label slot="label">Version</label></fx-output>
+      <fx-output ref="instance('vars')/exportfilename"><label slot="label">Will export as</label></fx-output>
+    </div>
+
+    <div class="filter-bar">
+      <fx-control class="field" ref="instance('vars')/filtertext" update-event="input" debounce="200">
+        <label for="filter-input">Filter codes</label>
+        <input id="filter-input" type="search" placeholder="type to filter by value...">
+      </fx-control>
+      <fx-output id="kept-count" class="kept-count"
+                 ref="concat(count(instance('codelist')/SimpleCodeList/Row[@ui-keep='true']), ' of ', count(instance('codelist')/SimpleCodeList/Row), ' codes kept')">
+      </fx-output>
+    </div>
+
+    <div class="bulk-actions">
+      <fx-trigger id="btn-select-all"><button type="button">Select all</button>
+        <fx-setattribute ref="." name="ui-keep" value="true" iterate="instance('codelist')/SimpleCodeList/Row"></fx-setattribute>
+      </fx-trigger>
+      <fx-trigger id="btn-select-none"><button type="button">Select none</button>
+        <fx-setattribute ref="." name="ui-keep" value="false" iterate="instance('codelist')/SimpleCodeList/Row"></fx-setattribute>
+      </fx-trigger>
+      <fx-trigger id="btn-invert"><button type="button">Invert selection</button>
+        <fx-setvalue ref="@ui-keep" value="if (@ui-keep = 'true') then 'false' else 'true'" iterate="instance('codelist')/SimpleCodeList/Row"></fx-setvalue>
+      </fx-trigger>
+    </div>
+    
+    <div class="row-list" style="&#45;&#45;col-count: {count(instance('codelist')/ColumnSet/Column)};">
+      <div class="row row-header">
+        <span class="keep-col">Keep</span>
+        <fx-repeat id="r-columns" ref="instance('codelist')/ColumnSet/Column">
+          <template>
+            <span class="col-header"><fx-output ref="LongName"></fx-output></span>
+          </template>
+        </fx-repeat>
+      </div>
+
+
+      <fx-repeat id="r-rows"
+                 ref="instance('codelist')/SimpleCodeList/Row"
+                 size="20">
+        <template>
+          <div class="row">
+            <!-- Row-scoped action: ref/value resolve against this row's own context node
+                 (the fx-repeatitem ancestor created per row), same as the fx-output/fx-control
+                 refs below -- no `iterate` needed, unlike the bulk select-all/none/invert
+                 triggers in the toolbar above, which act across all rows at once. No `target`
+                 attribute means it listens on its own parentNode (this .row div), so any click
+                 landing on the row (bubbled from a col-value/col-header) toggles Keep. -->
+            <fx-setvalue ref="@ui-keep" value="if (@ui-keep = 'true') then 'false' else 'true'" event="click"></fx-setvalue>
+            <fx-control class="keep-col" ref="@ui-keep" value-prop="checked" update-event="change">
+              <label class="visually-hidden">Keep this code</label>
+              <!-- Stops the click from also bubbling to the row's fx-setvalue above, which
+                   would immediately toggle @ui-keep a second time and cancel out the native
+                   checkbox click. -->
+              <input type="checkbox" onclick="event.stopPropagation()">
+            </fx-control>
+            <fx-repeat ref="Value">
+              <template>
+                <!-- grid-column is derived from ColumnRef (not document order) so a row
+                     missing an optional column's Value still lands its remaining values
+                     under the correct header instead of shifting left. -->
+                <span class="col-value"
+                      style="grid-column: {let $ref := @ColumnRef return count(instance('codelist')/ColumnSet/Column[@Id = $ref]/preceding-sibling::Column) + 2};">
+                  <fx-output ref="SimpleValue"></fx-output>
+                </span>
+              </template>
+            </fx-repeat>
+          </div>
+        </template>
+      </fx-repeat>
+    </div>
+
+    <div class="actions-bar">
+      <fx-trigger id="btn-remove-unchecked">
+        <button type="button">Remove unchecked rows</button>
+        <fx-delete ref="instance('codelist')/SimpleCodeList/Row[@ui-keep='false']"></fx-delete>
+      </fx-trigger>
+
+      <fx-trigger id="btn-save"><button type="button">Save as custom codelist</button>
+        <!-- Stamp provenance so this file can be recognized and reconciled against its
+             original when re-loaded via the local file picker (see s-load-customsource).
+             Two steps because fx-setattribute's value is a literal, not XPath -- create
+             the attribute first, then compute its value with fx-setvalue. -->
+        <fx-setattribute ref="instance('codelist')/Identification" name="ui-source-file" value=""></fx-setattribute>
+        <fx-setvalue ref="instance('codelist')/Identification/@ui-source-file" value="string(instance('vars')/selectedfile)"></fx-setvalue>
+        <fx-send submission="s-save"></fx-send>
+      </fx-trigger>
+    </div>
+  </main>
+</fx-fore>
+<fx-lens></fx-lens>
+<script type="module">
+  // The one thing genuinely outside Fore's reach: reading a local file the user picks
+  // from disk. Handed off to s-load-customsource as a blob: URL as soon as it's read; the
+  // load itself still goes through the normal fx-trigger/fx-send/fx-submission pipeline.
+  // s-load-local shares the same blob: URL param since s-load-customsource's own fx-action
+  // may conditionally fire it too (see s-load-customsource above) once it knows there's no
+  // provenance marker -- whether that happens depends on the file's content, so it isn't
+  // known upfront here.
+  let previousBlobUrl = null;
+  document.getElementById('local-file-input').addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    // Revoke the previous upload's blob: URL now rather than tracking exactly when every
+    // submission that might have used it (including a possible chained s-load-local) is done
+    // reading it -- simpler, and the previous blob is certainly no longer needed by this point.
+    if (previousBlobUrl) URL.revokeObjectURL(previousBlobUrl);
+    const text = await file.text();
+    const blobUrl = URL.createObjectURL(new Blob([text], { type: 'application/xml' }));
+    previousBlobUrl = blobUrl;
+    document.getElementById('s-load-local').parameters.set('url', blobUrl);
+    document.getElementById('s-load-customsource').parameters.set('url', blobUrl);
+
+    const varsInstance = document.getElementById('vars');
+    varsInstance.instanceData.querySelector('selectedfile').textContent = file.name;
+    document.getElementById('fx-codelist-editor').refresh(true);
+
+    document.querySelector('#trigger-load-local button').click();
+    e.target.value = '';
+  });
+
+  // Loading feedback: codelist files can take a few seconds to fetch/parse, so surface
+  // a spinner and disable the load controls for the duration of either submission. Fore
+  // fires a plain "submit" event right before the request starts (not just on completion),
+  // which is what makes the "start" half of this possible.
+  const loadStatus = document.getElementById('load-status');
+  const loadStatusText = document.getElementById('load-status-text');
+  const fileSelect = document.getElementById('file-select');
+  const localFileInput = document.getElementById('local-file-input');
+  const editorMain = document.getElementById('editor-main');
+
+  function setLoading(isLoading, message) {
+    loadStatus.classList.toggle('active', isLoading);
+    loadStatusText.textContent = isLoading ? message : '';
+    fileSelect.disabled = isLoading;
+    localFileInput.disabled = isLoading;
+    // Dim + freeze the whole editing area too, not just the two load controls above --
+    // otherwise the previously-loaded codelist's rows/buttons stay fully interactive
+    // (and visually indistinguishable from "ready") while a new one is still loading.
+    editorMain.classList.toggle('ui-locked', isLoading);
+    editorMain.setAttribute('aria-busy', String(isLoading));
+  }
+
+  document.getElementById('s-load-known').addEventListener('submit', () => setLoading(true, 'Loading codelist…'));
+  document.getElementById('s-load-known').addEventListener('submit-done', () => setLoading(false));
+  document.getElementById('s-load-known').addEventListener('submit-error', () => setLoading(false));
+
+  document.getElementById('s-load-local').addEventListener('submit', () => setLoading(true, 'Loading local file…'));
+  document.getElementById('s-load-local').addEventListener('submit-done', () => setLoading(false));
+  document.getElementById('s-load-local').addEventListener('submit-error', () => setLoading(false));
+
+  document.getElementById('s-load-customsource').addEventListener('submit', () => setLoading(true, 'Reading local file…'));
+  document.getElementById('s-load-customsource').addEventListener('submit-done', () => setLoading(false));
+  document.getElementById('s-load-customsource').addEventListener('submit-error', () => setLoading(false));
+</script>
+</body>
+</html>

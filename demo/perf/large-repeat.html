@@ -1,44 +1,66 @@
 <!doctype html>
 <html lang="en">
-<head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes"
+      name="viewport"
+    />
     <title>template</title>
-    <link href="../../resources/fore.css" rel="stylesheet">
+    <link href="../../resources/fore.css" rel="stylesheet" />
     <style>
-        fx-repeatitem{
-            display: block;
-            content-visibility: auto;
-            contain-intrinsic-size: 100px;
-        }
-        fx-control{
-            content-visibility: auto;
-        }
-        .fx-ready fx-repeatitem{
-            content-visibility: auto;
-        }
-        fx-div{
-            width: 280px;
-            display: inline-block;
-        }
+      fx-repeatitem {
+        display: block;
+        content-visibility: auto;
+        contain-intrinsic-size: 100px;
+      }
+      fx-control {
+        content-visibility: auto;
+      }
+      .fx-ready fx-repeatitem {
+        content-visibility: auto;
+      }
+      fx-div {
+        width: 280px;
+        display: inline-block;
+      }
+      /* True windowed virtualization (`size` + `virtual`) needs a real scrollable ancestor
+           for _findSentinelRoot() to observe - the plain page-scroll fallback still works,
+           but a bounded container is what actually proves the DOM stays O(window size)
+           regardless of nodeset size. */
+      .scroll-container {
+        height: 480px;
+        overflow-y: auto;
+        border: 1px solid #ccc;
+      }
+      /* content-visibility:auto was a paint-skip optimization for the OLD (fully-rendered,
+           unbounded-DOM) version of this demo. True windowing already keeps the DOM to
+           `size` rows, so this now only fights the virtualization: the browser's own
+           auto-measurement of skipped/revealed content shifts scrollHeight as the user
+           scrolls, which triggers native scroll-anchoring corrections that fight the
+           _evictFromTop() scrollTop correction. Disable it inside the windowed container. */
+      .scroll-container fx-repeatitem,
+      .scroll-container fx-control {
+        content-visibility: visible;
+      }
     </style>
     <script type="module" src="../../index.js"></script>
-</head>
-<body>
-
-<!--<div class="wrapper">-->
+  </head>
+  <body>
+    <!--<div class="wrapper">-->
     <fx-fore>
-        <fx-message event="ready">Done</fx-message>
-        <fx-model>
-            <fx-message event="model-construct-done">Model is ready</fx-message>
+      <fx-message event="ready">Done</fx-message>
+      <fx-model>
+        <fx-message event="model-construct-done">Model is ready</fx-message>
 
-            <fx-instance src="item-1000.xml">
-                <data></data>
-            </fx-instance>
-        </fx-model>
+        <fx-instance src="item-1000.xml">
+          <data></data>
+        </fx-instance>
+      </fx-model>
 
-        <fx-repeat ref="item">
-<!--
+      <div class="scroll-container">
+        <fx-repeat ref="item" size="50" virtual>
+          <!--
             <template>
                 <fx-div tabindex="0">
                     <label>item</label> {.}
@@ -60,7 +82,7 @@
                 </fx-div>
             </template>
 -->
-<!--
+          <!--
             <template>
                 <fx-output ref=".">
                     <label>item</label>
@@ -82,28 +104,29 @@
                 </fx-output>
             </template>
 -->
-            <template>
-                <fx-control ref=".">
-                    <label>item</label>
-                </fx-control>
-                <fx-control ref="@prop1">
-                    <label>prop1</label>
-                </fx-control>
-                <fx-control ref="@prop2">
-                    <label>prop2</label>
-                </fx-control>
-                <fx-control ref="@prop3">
-                    <label>prop3</label>
-                </fx-control>
-                <fx-control ref="@prop4">
-                    <label>prop4</label>
-                </fx-control>
-                <fx-control ref="@prop5">
-                    <label>prop5</label>
-                </fx-control>
-            </template>
+          <template>
+            <fx-control ref=".">
+              <label>item</label>
+            </fx-control>
+            <fx-control ref="@prop1">
+              <label>prop1</label>
+            </fx-control>
+            <fx-control ref="@prop2">
+              <label>prop2</label>
+            </fx-control>
+            <fx-control ref="@prop3">
+              <label>prop3</label>
+            </fx-control>
+            <fx-control ref="@prop4">
+              <label>prop4</label>
+            </fx-control>
+            <fx-control ref="@prop5">
+              <label>prop5</label>
+            </fx-control>
+          </template>
         </fx-repeat>
+      </div>
     </fx-fore>
-<!--</div>-->
-</body>
+    <!--</div>-->
+  </body>
 </html>

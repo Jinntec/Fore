@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>Progressive Rendering vs. True Windowing — Fore</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #1a1d21;
+            --dim: #6b7280;
+            --rule: #e4e7ec;
+            --console-bg: #0d1117;
+            --console-line: #1c2128;
+            --console-text: #c9d1d9;
+            --console-dim: #6e7681;
+            --info: #64b5f6;
+            --warn: #ffa726;
+            --error: #ef5350;
+            --growing: #ff8a65;
+            --bounded: #2dd4bf;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 3rem 1.5rem 5rem;
+            font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: var(--ink);
+            background: #fff;
+        }
+        .wrap { max-width: 1080px; margin: 0 auto; }
+        h1 {
+            font-size: 1.9rem;
+            font-weight: 700;
+            margin: 0 0 0.5rem;
+            letter-spacing: -0.01em;
+        }
+        .lede {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: #3b4048;
+            max-width: 68ch;
+            margin: 0 0 2.5rem;
+        }
+        .lede strong { color: var(--ink); }
+        code {
+            background: #f1f3f5;
+            padding: 0.1rem 0.4rem;
+            border-radius: 0.25rem;
+            font-size: 0.9em;
+        }
+
+        .compare-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+        }
+        @media (max-width: 760px) {
+            .compare-grid { grid-template-columns: 1fr; }
+        }
+
+        .panel h2 {
+            font-size: 1.05rem;
+            margin: 0 0 0.15rem;
+        }
+        .panel .sub {
+            font-size: 0.85rem;
+            color: var(--dim);
+            margin: 0 0 1rem;
+        }
+
+        .counter {
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .counter .value {
+            font-family: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+            font-size: 2.4rem;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            transition: color 0.2s ease;
+        }
+        .counter .value.growing { color: var(--growing); }
+        .counter .value.bounded { color: var(--bounded); }
+        .counter .label {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--dim);
+        }
+
+        .console {
+            background: var(--console-bg);
+            border-radius: 0.6rem;
+            padding: 0.4rem 0;
+            height: 400px;
+            overflow-y: auto;
+            box-shadow: 0 8px 30px rgba(13, 17, 23, 0.25);
+        }
+        /* See event-log.html for why level color is applied via JS from the bound data
+           node rather than a template expression class binding. */
+        .console fx-repeatitem {
+            display: flex;
+            align-items: baseline;
+            gap: 0.6rem;
+            padding: 0.24rem 1rem;
+            font-family: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+            font-size: 0.8rem;
+            line-height: 1.5;
+            border-left: 2px solid transparent;
+        }
+        .console fx-repeatitem:hover { background: var(--console-line); }
+        .console fx-output { display: contents; }
+        .time { color: var(--console-dim); flex: 0 0 4.5rem; }
+        .msg { color: var(--console-text); overflow-wrap: anywhere; flex: 1; }
+        fx-repeatitem.lvl-info { border-left-color: var(--info); }
+        fx-repeatitem.lvl-warn { border-left-color: var(--warn); }
+        fx-repeatitem.lvl-error { border-left-color: var(--error); }
+
+        .hint {
+            font-size: 0.82rem;
+            color: var(--dim);
+            margin-top: 0.75rem;
+        }
+        .fx-repeat-sentinel, .fx-repeat-sentinel-top { pointer-events: none; }
+    </style>
+    <script type="module" src="../../index.js"></script>
+    <script type="module" src="../../doc/fore-corner.js"></script>
+</head>
+<body>
+<fore-corner href="../../doc/demos.html" title="Back to Demos"></fore-corner>
+
+<div class="wrap">
+    <h1>Progressive rendering vs. true windowing</h1>
+    <p class="lede">
+        Both panels below hold the same <strong>2,000</strong> events, capped at <code>size="30"</code>.
+        Scroll each one down, then back up, and watch its counter. The left repeat only ever
+        <em>adds</em> rows as you scroll (Phase 1); the right repeat also <em>evicts</em> off-screen
+        rows, so it stays flat no matter how far you scroll (Phase 2, <code>virtual</code>).
+    </p>
+
+    <div class="compare-grid">
+        <fx-fore>
+            <fx-model>
+                <fx-instance id="log-a" src="event-log-2000.xml">
+                    <data></data>
+                </fx-instance>
+            </fx-model>
+
+            <div class="panel">
+                <h2><code>size="30"</code></h2>
+                <p class="sub">Progressive rendering — a growing prefix, never un-rendered</p>
+                <div class="counter">
+                    <span class="value growing" id="count-a">–</span>
+                    <span class="label">rows in DOM</span>
+                </div>
+                <div class="console" id="scroll-a">
+                    <fx-repeat id="repeat-a" ref="instance('log-a')/event" size="30">
+                        <template>
+                            <fx-output class="time" ref="@time"></fx-output>
+                            <fx-output class="msg" ref="."></fx-output>
+                        </template>
+                    </fx-repeat>
+                </div>
+                <p class="hint">Scroll to the bottom a few times - this number only ever goes up.</p>
+            </div>
+        </fx-fore>
+
+        <fx-fore>
+            <fx-model>
+                <fx-instance id="log-b" src="event-log-2000.xml">
+                    <data></data>
+                </fx-instance>
+            </fx-model>
+
+            <div class="panel">
+                <h2><code>size="30" virtual</code></h2>
+                <p class="sub">True windowed virtualization — DOM stays ~30 rows</p>
+                <div class="counter">
+                    <span class="value bounded" id="count-b">–</span>
+                    <span class="label">rows in DOM</span>
+                </div>
+                <div class="console" id="scroll-b">
+                    <fx-repeat id="repeat-b" ref="instance('log-b')/event" size="30" virtual>
+                        <template>
+                            <fx-output class="time" ref="@time"></fx-output>
+                            <fx-output class="msg" ref="."></fx-output>
+                        </template>
+                    </fx-repeat>
+                </div>
+                <p class="hint">Scroll all the way through - this number holds steady around 30.</p>
+            </div>
+        </fx-fore>
+    </div>
+</div>
+
+<script type="module">
+    function wireCounter(repeatId, countId) {
+        const repeat = document.getElementById(repeatId);
+        const countEl = document.getElementById(countId);
+
+        function update() {
+            const rows = repeat.querySelectorAll(':scope > fx-repeatitem');
+            countEl.textContent = String(rows.length);
+            // Level color read from the bound data node directly - see event-log.html for why.
+            rows.forEach(row => {
+                const level = row.nodeset && row.nodeset.getAttribute && row.nodeset.getAttribute('level');
+                row.classList.remove('lvl-info', 'lvl-warn', 'lvl-error');
+                if (level) row.classList.add(`lvl-${level}`);
+            });
+        }
+
+        new MutationObserver(update).observe(repeat, { childList: true });
+        update();
+    }
+
+    wireCounter('repeat-a', 'count-a');
+    wireCounter('repeat-b', 'count-b');
+</script>
+</body>
+</html>

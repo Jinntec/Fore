@@ -177,6 +177,10 @@ export const withDraggability = (superclass, isAlsoDraggable) =>
 				this.replaceChildren(draggedItem);
 			}
 */
+        // NOTE: this branch (fx-droptarget) reorders live DOM/UI elements directly, not
+        // instance data - there is nothing here for UndoManager's instance-data snapshots
+        // to capture, so it is intentionally not wrapped with undo capture (see the
+        // dataNode branch below for the case that IS undoable).
         event.preventDefault();
         this.getOwnerForm().getModel().updateModel();
         this.getOwnerForm().refresh(true);
@@ -186,6 +190,10 @@ export const withDraggability = (superclass, isAlsoDraggable) =>
       if (!dataNode) {
         return;
       }
+
+      const model = this.getOwnerForm().getModel();
+      const undoManager = model.getEffectiveUndoManager();
+      undoManager.beginCapture();
 
       if (this.localName === 'fx-repeat') {
         // We are sure we'll handle this event!
@@ -217,7 +225,8 @@ export const withDraggability = (superclass, isAlsoDraggable) =>
       }
 
       // Note: full refresh needed since multiple model items may be affected.
-      this.getOwnerForm().getModel().updateModel();
+      model.updateModel();
       this.getOwnerForm().refresh(true);
+      undoManager.commit(dataNode);
     }
   };
