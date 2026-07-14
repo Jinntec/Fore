@@ -40,7 +40,7 @@
        of column tracks -- this is what keeps columns aligned across rows, since
        column count/content differs per codelist and flex can't guarantee that. */
     .row-list {
-      border: 1px solid #d8dce8; border-radius: 0.375rem; max-height: 60vh; overflow-y: auto;
+      border: 1px solid #d8dce8; border-radius: 0.375rem; max-height: 50vh; overflow-y: auto;
     }
     /* Each row is its own grid (rather than one shared grid spanning the whole list) so a
        row with fewer Values than ColumnSet/Column (an omitted optional column, e.g. EAS's
@@ -51,6 +51,10 @@
       display: grid;
       grid-template-columns: 4rem repeat(var(--col-count, 1), minmax(6rem, 1fr));
     }
+    /* Whole row toggles Keep (see the row-scoped fx-setvalue[event=click] in the row
+       template below) -- cursor:pointer signals that affordance; excludes the sticky
+       header row, which isn't clickable. */
+    .row-list .row:not(.row-header) { cursor: pointer; }
     .row-list fx-repeat, .row-list fx-repeatitem { display: contents; }
     /* nonrelevant is set by fx-repeatitem itself from the Row's fx-bind[relevant] facet
        (see the cross-instance relevant fx-bind in fx-model above) */
@@ -307,9 +311,19 @@
                  size="20">
         <template>
           <div class="row">
+            <!-- Row-scoped action: ref/value resolve against this row's own context node
+                 (the fx-repeatitem ancestor created per row), same as the fx-output/fx-control
+                 refs below -- no `iterate` needed, unlike the bulk select-all/none/invert
+                 triggers in the toolbar above, which act across all rows at once. No `target`
+                 attribute means it listens on its own parentNode (this .row div), so any click
+                 landing on the row (bubbled from a col-value/col-header) toggles Keep. -->
+            <fx-setvalue ref="@ui-keep" value="if (@ui-keep = 'true') then 'false' else 'true'" event="click"></fx-setvalue>
             <fx-control class="keep-col" ref="@ui-keep" value-prop="checked" update-event="change">
               <label class="visually-hidden">Keep this code</label>
-              <input type="checkbox">
+              <!-- Stops the click from also bubbling to the row's fx-setvalue above, which
+                   would immediately toggle @ui-keep a second time and cancel out the native
+                   checkbox click. -->
+              <input type="checkbox" onclick="event.stopPropagation()">
             </fx-control>
             <fx-repeat ref="Value">
               <template>
