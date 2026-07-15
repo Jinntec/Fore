@@ -234,6 +234,12 @@ export class FxDebugger extends HTMLElement {
         background: #f1f3f4;
       }
 
+      .fx-debugger__refresh--flash {
+        background: #d7ebff !important;
+        border-color: #7fb2e8 !important;
+        transition: background 0.05s ease-out;
+      }
+
       .fx-debugger__shortcut {
         display: inline-flex;
         align-items: center;
@@ -3121,6 +3127,27 @@ export class FxDebugger extends HTMLElement {
     this.refresh();
     this.render();
     this.applyPageOffset();
+    this.flashRefreshButton();
+  }
+
+  /**
+   * Refreshing is a no-op from the user's POV whenever the snapshot hasn't
+   * changed (the debugger already auto-refreshes on every `refresh-done`),
+   * so give the click its own transient feedback instead of relying on the
+   * panel content changing.
+   */
+  flashRefreshButton() {
+    const button = this.querySelector('[data-action="refresh"]');
+    if (!button) {
+      return;
+    }
+
+    window.clearTimeout(this._refreshFlashTimer);
+    button.classList.add('fx-debugger__refresh--flash');
+    this._refreshFlashTimer = window.setTimeout(() => {
+      button.classList.remove('fx-debugger__refresh--flash');
+      this._refreshFlashTimer = null;
+    }, 300);
   }
 
   _onPanelClick(event) {
