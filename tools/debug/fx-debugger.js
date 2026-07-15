@@ -488,29 +488,15 @@ export class FxDebugger extends HTMLElement {
         background: #fafafa;
       }
 
-      .fx-debugger__graph-row {
+      .fx-debugger__graphs-columns {
         display: flex;
-        flex-wrap: wrap;
-        gap: 1rem;
+        gap: 1.25rem;
         align-items: flex-start;
       }
 
-      .fx-debugger__graph-row + .fx-debugger__graph-row {
-        margin-top: 1rem;
-      }
-
-      .fx-debugger__graph-row .fx-debugger__graph-col {
-        flex: 0 0 16rem;
-      }
-
-      .fx-debugger__graph-row .fx-debugger__graph-table {
-        flex: 1 1 24rem;
+      .fx-debugger__graph-col {
+        flex: 1 1 50%;
         min-width: 0;
-      }
-
-      .fx-debugger__graph-row--updated .fx-debugger__graph-card,
-      .fx-debugger__graph-row--updated .fx-debugger__table-wrap {
-        animation: fx-debugger-graph-flash 1.2s ease-out;
       }
 
       @keyframes fx-debugger-graph-flash {
@@ -526,11 +512,40 @@ export class FxDebugger extends HTMLElement {
         }
       }
 
-      .fx-debugger__graph-card {
+      .fx-debugger__graph-col--updated .fx-debugger__graph-summary,
+      .fx-debugger__graph-col--updated .fx-debugger__table-wrap {
+        animation: fx-debugger-graph-flash 1.2s ease-out;
+      }
+
+      .fx-debugger__graph-summary {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .fx-debugger__graph-stat {
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
         border: 1px solid #e3e5ea;
         border-radius: 0.35rem;
-        padding: 0.75rem;
+        padding: 0.4rem 0.65rem;
         background: #fff;
+        min-width: 5.5rem;
+      }
+
+      .fx-debugger__graph-stat-value {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #202124;
+      }
+
+      .fx-debugger__graph-stat-label {
+        font-size: 0.72rem;
+        color: #5f6368;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
       }
 
       .fx-debugger__event-toolbar {
@@ -1524,23 +1539,17 @@ export class FxDebugger extends HTMLElement {
 
     return `
       <section class="fx-debugger__section">
-        <div class="fx-debugger__graph-row${this._graphHighlights.mainGraph ? ' fx-debugger__graph-row--updated' : ''}">
-          <div class="fx-debugger__graph-col">
+        <div class="fx-debugger__graphs-columns">
+          <div class="fx-debugger__graph-col${this._graphHighlights.mainGraph ? ' fx-debugger__graph-col--updated' : ''}">
             <h3>Main graph</h3>
             ${this.renderGraphSummaryCard(graphs.mainGraph)}
-          </div>
-          <div class="fx-debugger__graph-table">
             <h3>Calculation order</h3>
             ${this.renderCalculationOrderTable(graphs.mainGraph)}
           </div>
-        </div>
 
-        <div class="fx-debugger__graph-row${this._graphHighlights.subGraph ? ' fx-debugger__graph-row--updated' : ''}">
-          <div class="fx-debugger__graph-col">
+          <div class="fx-debugger__graph-col${this._graphHighlights.subGraph ? ' fx-debugger__graph-col--updated' : ''}">
             <h3>Sub graph</h3>
             ${this.renderGraphSummaryCard(graphs.subGraph)}
-          </div>
-          <div class="fx-debugger__graph-table">
             <h3>Calculation order</h3>
             ${this.renderCalculationOrderTable(graphs.subGraph)}
           </div>
@@ -1551,22 +1560,25 @@ export class FxDebugger extends HTMLElement {
 
   renderGraphSummaryCard(graph) {
     if (!graph) {
-      return `
-        <article class="fx-debugger__graph-card">
-          <p class="fx-debugger__muted">No graph available.</p>
-        </article>
-      `;
+      return `<p class="fx-debugger__muted">No graph available.</p>`;
     }
 
     return `
-      <article class="fx-debugger__graph-card">
-        <dl class="fx-debugger__details">
-          ${this.renderDetail('Nodes', graph.nodeCount)}
-          ${this.renderDetail('Edges', graph.edgeCount)}
-          ${this.renderDetail('Compute nodes', graph.computeNodeCount)}
-          ${this.renderDetail('Calculation order', graph.calculationOrderCount)}
-        </dl>
-      </article>
+      <div class="fx-debugger__graph-summary">
+        ${this.renderGraphStat('Nodes', graph.nodeCount)}
+        ${this.renderGraphStat('Edges', graph.edgeCount)}
+        ${this.renderGraphStat('Compute nodes', graph.computeNodeCount)}
+        ${this.renderGraphStat('Calculation order', graph.calculationOrderCount)}
+      </div>
+    `;
+  }
+
+  renderGraphStat(label, value) {
+    return `
+      <div class="fx-debugger__graph-stat">
+        <span class="fx-debugger__graph-stat-value">${this.renderValue(value)}</span>
+        <span class="fx-debugger__graph-stat-label">${label}</span>
+      </div>
     `;
   }
 
