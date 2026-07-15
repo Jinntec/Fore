@@ -597,6 +597,7 @@ export class FxDebugger extends HTMLElement {
       }
 
       .fx-debugger__dom-event-filters,
+      .fx-debugger__action-event-filters,
       .fx-debugger__fore-event-filters {
         display: flex;
         flex-wrap: wrap;
@@ -609,6 +610,7 @@ export class FxDebugger extends HTMLElement {
       }
 
       .fx-debugger__dom-event-filter-label,
+      .fx-debugger__action-event-filter-label,
       .fx-debugger__fore-event-filter-label {
         color: #8a9099;
         font-size: 0.8rem;
@@ -855,6 +857,13 @@ export class FxDebugger extends HTMLElement {
       keydown: false,
     };
 
+    // action-start/action-end fire once per nested action and can flood the
+    // table during bulk operations; outermost-action-start/end (the flow
+    // boundaries) stay visible regardless of this toggle.
+    this.actionEventFilters = {
+      steps: false,
+    };
+
     this.foreEventFilters = FORE_EVENT_TYPES.reduce((filters, { name }) => {
       filters[name] = false;
       return filters;
@@ -904,6 +913,7 @@ export class FxDebugger extends HTMLElement {
     this._onDebugEvent = this._onDebugEvent.bind(this);
     this._onEventFilterChange = this._onEventFilterChange.bind(this);
     this._onDomEventFilterChange = this._onDomEventFilterChange.bind(this);
+    this._onActionEventFilterChange = this._onActionEventFilterChange.bind(this);
     this._onForeEventFilterChange = this._onForeEventFilterChange.bind(this);
     this._onCustomEventsApply = this._onCustomEventsApply.bind(this);
     this._onKeyDown = this._onKeyDown.bind(this);
@@ -1243,6 +1253,10 @@ export class FxDebugger extends HTMLElement {
 
     this.querySelectorAll('[data-dom-event-filter]').forEach(input => {
       input.addEventListener('change', this._onDomEventFilterChange);
+    });
+
+    this.querySelectorAll('[data-action-event-filter]').forEach(input => {
+      input.addEventListener('change', this._onActionEventFilterChange);
     });
 
     this.querySelectorAll('[data-fore-event-filter]').forEach(input => {
@@ -1631,7 +1645,7 @@ export class FxDebugger extends HTMLElement {
   }
 
   renderEventsPanel() {
-    const visibleEvents = this.getVisibleEventLog();
+    const visibleEvents = this.getEventRows(this.getVisibleEventLog());
 
     if (!this.eventLog.length) {
       return this.renderEmptyPanel(
@@ -1817,6 +1831,7 @@ export class FxDebugger extends HTMLElement {
           )
           .join('')}
         ${this.renderDomEventFilters()}
+        ${this.renderActionEventFilters()}
         ${this.renderForeEventFilters()}
         ${this.renderCustomEventInput()}
         </div>
@@ -1855,6 +1870,33 @@ export class FxDebugger extends HTMLElement {
           .join('')}
       </div>
     `;
+  }
+
+  renderActionEventFilters() {
+    const count = this.getActionStepEventCount();
+
+    return `
+      <div class="fx-debugger__action-event-filters">
+        <span class="fx-debugger__action-event-filter-label">Actions</span>
+        <label
+          class="fx-debugger__event-filter"
+          title="By default each action's start/end pair collapses into a single row for the target action, with its duration. Enable to see the raw action-start/action-end events instead.">
+          <input
+            type="checkbox"
+            data-action-event-filter="steps"
+            ${this.actionEventFilters.steps ? 'checked' : ''}
+            ${this.eventFilters.action ? '' : 'disabled'}>
+          <span>Expand action start/end steps</span>
+          <span class="fx-debugger__event-filter-count">${count}</span>
+        </label>
+      </div>
+    `;
+  }
+
+  getActionStepEventCount() {
+    return this.eventLog.filter(
+      entry => entry.type === 'action-start' || entry.type === 'action-end',
+    ).length;
   }
 
   renderForeEventFilters() {
@@ -1945,6 +1987,74 @@ export class FxDebugger extends HTMLElement {
     });
   }
 
+  /**
+   * Collapses each action-start/action-end pair into a single "action" row
+   * (unless expanded via the steps toggle) so the target action is the
+   * visible unit, not the internal start/end bookkeeping.
+   */
+  getEventRows(events) {
+    if (this.actionEventFilters.steps) {
+      return events;
+    }
+
+    const rows = [];
+
+    for (let i = 0; i < events.length; i += 1) {
+      const entry = events[i];
+      const next = events[i + 1];
+
+      if (
+        entry.type === 'action-start' &&
+        next &&
+        next.type === 'action-end' &&
+        next.depth === entry.depth &&
+        next.flowId === entry.flowId
+      ) {
+        rows.push(this.mergeActionEntries(entry, next));
+        i += 1;
+        continue;
+      }
+
+      rows.push(entry);
+    }
+
+    return rows;
+  }
+
+  mergeActionEntries(start, end) {
+    const startDetail = this.parseEventDetailSummary(start.detailSummary) || {};
+    const endDetail = this.parseEventDetailSummary(end.detailSummary) || {};
+
+    const duration =
+      Number.isFinite(end.time) && Number.isFinite(start.time) ? end.time - start.time : null;
+
+    return {
+      index: start.index,
+      time: start.time,
+      timeLabel: start.timeLabel,
+      type: 'action',
+      actionName: startDetail.action || startDetail.actionClass || null,
+      target: start.target,
+      origin: start.origin,
+      flowId: start.flowId,
+      depth: start.depth,
+      duration,
+      detailSummary: this.safeJson({
+        action: startDetail.action,
+        actionClass: startDetail.actionClass,
+        event: startDetail.event,
+        ref: startDetail.ref,
+        target: startDetail.target,
+        origin: startDetail.origin,
+        submission: startDetail.submission,
+        control: startDetail.control,
+        ownerFore: startDetail.ownerFore,
+        needsUpdate: startDetail.needsUpdate,
+        success: endDetail.success,
+      }),
+    };
+  }
+
   getEventCategoryCounts() {
     return this.eventLog.reduce((counts, entry) => {
       const category = this.getEventCategory(entry.type);
@@ -2017,11 +2127,17 @@ export class FxDebugger extends HTMLElement {
     const depth = Math.max(0, entry.depth || 0);
     const nodeClass = this.getEventNodeClass(entry);
     const typeClass = this.getEventTypeClass(entry.type);
+    const label = entry.type === 'action' && entry.actionName ? entry.actionName : entry.type;
+    const duration =
+      entry.type === 'action' && Number.isFinite(entry.duration)
+        ? `<span class="fx-debugger__action-phase">${entry.duration.toFixed(2)}ms</span>`
+        : '';
 
     return `
       <span class="fx-debugger__event-node ${nodeClass}" style="--event-depth: ${depth}">
         <span class="fx-debugger__event-branch">${this.escape(this.getEventBranchGlyph(entry))}</span>
-        <code class="${typeClass}">${this.escape(entry.type)}</code>
+        <code class="${typeClass}">${this.escape(label)}</code>
+        ${duration}
       </span>
     `;
   }
@@ -2076,6 +2192,7 @@ export class FxDebugger extends HTMLElement {
     if (entry.type === 'action-start') return '▶';
     if (entry.type === 'action-end') return '■';
     if (entry.type === 'action-performed') return '◆';
+    if (entry.type === 'action') return '▶■';
     if (this.isUpdateCycleEvent(entry.type)) return '✓';
     if (this.isDomEvent(entry.type)) return '↳';
     if (!entry.flowId) return '·';
@@ -2113,6 +2230,7 @@ export class FxDebugger extends HTMLElement {
       'action-start',
       'action-end',
       'action-performed',
+      'action',
     ].includes(type);
   }
 
@@ -2654,6 +2772,19 @@ export class FxDebugger extends HTMLElement {
     this.applyPageOffset();
   }
 
+  _onActionEventFilterChange(event) {
+    const key = event.currentTarget?.dataset?.actionEventFilter;
+
+    if (!key || !(key in this.actionEventFilters)) {
+      return;
+    }
+
+    this.actionEventFilters[key] = event.currentTarget.checked;
+    this.storeEventSettings();
+    this.render();
+    this.applyPageOffset();
+  }
+
   _onForeEventFilterChange(event) {
     const key = event.currentTarget?.dataset?.foreEventFilter;
 
@@ -3038,6 +3169,7 @@ export class FxDebugger extends HTMLElement {
         JSON.stringify({
           eventFilters: this.eventFilters,
           domEventFilters: this.domEventFilters,
+          actionEventFilters: this.actionEventFilters,
           foreEventFilters: this.foreEventFilters,
           customEventTypes: this.customEventTypes,
         }),
@@ -3068,6 +3200,13 @@ export class FxDebugger extends HTMLElement {
         this.domEventFilters = {
           ...this.domEventFilters,
           ...settings.domEventFilters,
+        };
+      }
+
+      if (settings?.actionEventFilters && typeof settings.actionEventFilters === 'object') {
+        this.actionEventFilters = {
+          ...this.actionEventFilters,
+          ...settings.actionEventFilters,
         };
       }
 
