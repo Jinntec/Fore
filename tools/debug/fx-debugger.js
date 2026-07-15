@@ -442,6 +442,49 @@ export class FxDebugger extends HTMLElement {
         font-size: 0.92em;
       }
 
+      .fx-debugger__truncate {
+        display: inline-block;
+        max-width: 22rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        vertical-align: bottom;
+      }
+
+      .fx-debugger__path-filter {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        margin: 0 0 0.75rem;
+      }
+
+      .fx-debugger__path-filter input[type="text"] {
+        min-width: 14rem;
+        border: 1px solid #c4c7ce;
+        border-radius: 0.35rem;
+        padding: 0.3rem 1.85rem 0.3rem 0.5rem;
+        font: inherit;
+      }
+
+      .fx-debugger__path-filter-clear {
+        position: absolute;
+        right: 0.3rem;
+        appearance: none;
+        border: none;
+        background: transparent;
+        color: #5f6368;
+        font-size: 1.05rem;
+        line-height: 1;
+        padding: 0.15rem 0.35rem;
+        border-radius: 0.25rem;
+        cursor: pointer;
+      }
+
+      .fx-debugger__path-filter-clear:hover {
+        background: #f1f3f4;
+        color: #202124;
+      }
+
       .fx-debugger__json {
         display: block;
         max-height: calc(32vh - 10rem);
@@ -799,6 +842,7 @@ export class FxDebugger extends HTMLElement {
         cursor: pointer;
         text-decoration: underline;
         text-underline-offset: 0.15em;
+        white-space: nowrap;
       }
       
       .fx-debugger__element-link:hover {
@@ -876,6 +920,9 @@ export class FxDebugger extends HTMLElement {
     }, {});
 
     this.customEventTypes = [];
+
+    this.modelItemsPathFilter = '';
+    this.boundElementsFilter = '';
 
     this.eventTypes = [
       'click',
@@ -1292,6 +1339,60 @@ export class FxDebugger extends HTMLElement {
         this._onCustomEventsApply();
       }
     });
+
+    const modelItemsPathFilterInput = this.querySelector('[data-model-items-path-filter]');
+
+    modelItemsPathFilterInput?.addEventListener('input', event => {
+      const { value, selectionStart, selectionEnd } = event.currentTarget;
+
+      this.modelItemsPathFilter = value;
+      this.render();
+      this.applyPageOffset();
+
+      const nextInput = this.querySelector('[data-model-items-path-filter]');
+      nextInput?.focus();
+      nextInput?.setSelectionRange(selectionStart, selectionEnd);
+    });
+
+    modelItemsPathFilterInput?.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && this.modelItemsPathFilter) {
+        event.preventDefault();
+        event.stopPropagation();
+        this._clearModelItemsPathFilter();
+      }
+    });
+
+    this.querySelector('[data-action="clear-model-items-filter"]')?.addEventListener(
+      'click',
+      () => this._clearModelItemsPathFilter(),
+    );
+
+    const boundElementsFilterInput = this.querySelector('[data-bound-elements-filter]');
+
+    boundElementsFilterInput?.addEventListener('input', event => {
+      const { value, selectionStart, selectionEnd } = event.currentTarget;
+
+      this.boundElementsFilter = value;
+      this.render();
+      this.applyPageOffset();
+
+      const nextInput = this.querySelector('[data-bound-elements-filter]');
+      nextInput?.focus();
+      nextInput?.setSelectionRange(selectionStart, selectionEnd);
+    });
+
+    boundElementsFilterInput?.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && this.boundElementsFilter) {
+        event.preventDefault();
+        event.stopPropagation();
+        this._clearBoundElementsFilter();
+      }
+    });
+
+    this.querySelector('[data-action="clear-bound-elements-filter"]')?.addEventListener(
+      'click',
+      () => this._clearBoundElementsFilter(),
+    );
 
     this.querySelector('.fx-debugger__header')?.addEventListener('dblclick', this._onToggleClick);
 
@@ -2604,48 +2705,80 @@ export class FxDebugger extends HTMLElement {
       return this.renderEmptyPanel('No model items found.');
     }
 
+    const filterValue = this.modelItemsPathFilter.trim().toLowerCase();
+    const filteredItems = filterValue
+      ? modelItems.filter(item => (item?.path || '').toLowerCase().includes(filterValue))
+      : modelItems;
+
     return `
       <section class="fx-debugger__section">
-        <h3>Model Items</h3>
-
-        <div class="fx-debugger__table-wrap">
-          <table class="fx-debugger__table">
-            <thead>
-              <tr>
-                <th>Path</th>
-                <th>Ref</th>
-                <th>Instance</th>
-                <th>Value</th>
-                <th>Required</th>
-                <th>Relevant</th>
-                <th>Readonly</th>
-                <th>Constraint</th>
-                <th>Backing</th>
-                <th>Observers</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${modelItems
-                .map(
-                  item => `
-                    <tr>
-                      <td>${this.renderCodeOrDash(item?.path)}</td>
-                      <td>${this.renderCodeOrDash(item?.ref)}</td>
-                      <td>${this.renderCodeOrDash(item?.instanceId)}</td>
-                      <td>${this.renderValue(item?.value)}</td>
-                      <td>${this.formatBoolean(item?.facets?.required)}</td>
-                      <td>${this.formatBoolean(item?.facets?.relevant)}</td>
-                      <td>${this.formatBoolean(item?.facets?.readonly)}</td>
-                      <td>${this.formatBoolean(item?.facets?.constraint)}</td>
-                      <td>${this.escape(item?.backing || '')}</td>
-                      <td>${this.escape(item?.observerCount ?? '')}</td>
-                    </tr>
-                  `,
-                )
-                .join('')}
-            </tbody>
-          </table>
+        <div class="fx-debugger__path-filter">
+          <input
+            type="text"
+            data-model-items-path-filter
+            value="${this.escape(this.modelItemsPathFilter)}"
+            placeholder="Filter by path… (Esc to clear)"
+            aria-label="Filter model items by path">
+          ${
+            this.modelItemsPathFilter
+              ? `
+            <button
+              type="button"
+              class="fx-debugger__path-filter-clear"
+              data-action="clear-model-items-filter"
+              title="Clear filter"
+              aria-label="Clear filter">
+              &times;
+            </button>
+          `
+              : ''
+          }
         </div>
+
+        ${
+          filteredItems.length
+            ? `
+          <div class="fx-debugger__table-wrap">
+            <table class="fx-debugger__table">
+              <thead>
+                <tr>
+                  <th>Path</th>
+                  <th>Ref</th>
+                  <th>Instance</th>
+                  <th>Value</th>
+                  <th>Required</th>
+                  <th>Relevant</th>
+                  <th>Readonly</th>
+                  <th>Constraint</th>
+                  <th>Backing</th>
+                  <th>Observers</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${filteredItems
+                  .map(
+                    item => `
+                      <tr>
+                        <td>${this.renderCodeOrDash(item?.path)}</td>
+                        <td>${this.renderTruncatedCode(item?.ref)}</td>
+                        <td>${this.renderCodeOrDash(item?.instanceId)}</td>
+                        <td>${this.renderValue(item?.value)}</td>
+                        <td>${this.formatBoolean(item?.facets?.required)}</td>
+                        <td>${this.formatBoolean(item?.facets?.relevant)}</td>
+                        <td>${this.formatBoolean(item?.facets?.readonly)}</td>
+                        <td>${this.formatBoolean(item?.facets?.constraint)}</td>
+                        <td>${this.escape(item?.backing || '')}</td>
+                        <td>${this.escape(item?.observerCount ?? '')}</td>
+                      </tr>
+                    `,
+                  )
+                  .join('')}
+              </tbody>
+            </table>
+          </div>
+        `
+            : this.renderEmptyPanel('No model items match filter.')
+        }
       </section>
     `;
   }
@@ -2657,10 +2790,45 @@ export class FxDebugger extends HTMLElement {
       return this.renderEmptyPanel('No bound elements found.');
     }
 
+    const filterValue = this.boundElementsFilter.trim().toLowerCase();
+    const filteredElements = filterValue
+      ? boundElements
+          .map((element, index) => ({ element, index }))
+          .filter(
+            ({ element }) =>
+              (element?.ref || '').toLowerCase().includes(filterValue) ||
+              (element?.modelItemPath || '').toLowerCase().includes(filterValue),
+          )
+      : boundElements.map((element, index) => ({ element, index }));
+
     return `
     <section class="fx-debugger__section">
-      <h3>Bound Elements</h3>
+      <div class="fx-debugger__path-filter">
+        <input
+          type="text"
+          data-bound-elements-filter
+          value="${this.escape(this.boundElementsFilter)}"
+          placeholder="Filter by ref or model item path… (Esc to clear)"
+          aria-label="Filter bound elements by ref or model item path">
+        ${
+          this.boundElementsFilter
+            ? `
+          <button
+            type="button"
+            class="fx-debugger__path-filter-clear"
+            data-action="clear-bound-elements-filter"
+            title="Clear filter"
+            aria-label="Clear filter">
+            &times;
+          </button>
+        `
+            : ''
+        }
+      </div>
 
+      ${
+        filteredElements.length
+          ? `
       <div class="fx-debugger__table-wrap">
         <table class="fx-debugger__table">
           <thead>
@@ -2677,9 +2845,9 @@ export class FxDebugger extends HTMLElement {
             </tr>
           </thead>
           <tbody>
-            ${boundElements
+            ${filteredElements
               .map(
-                (element, index) => `
+                ({ element, index }) => `
                   <tr>
                     <td>
                       <button
@@ -2705,6 +2873,9 @@ export class FxDebugger extends HTMLElement {
           </tbody>
         </table>
       </div>
+      `
+          : this.renderEmptyPanel('No bound elements match filter.')
+      }
     </section>
   `;
   }
@@ -2752,6 +2923,16 @@ export class FxDebugger extends HTMLElement {
     }
 
     return `<code>${this.escape(String(value))}</code>`;
+  }
+
+  renderTruncatedCode(value) {
+    if (value === undefined || value === null || value === '') {
+      return '<span class="fx-debugger__muted">—</span>';
+    }
+
+    const text = String(value);
+
+    return `<code class="fx-debugger__truncate" title="${this.escape(text)}">${this.escape(text)}</code>`;
   }
 
   formatBoolean(value) {
@@ -2919,6 +3100,20 @@ export class FxDebugger extends HTMLElement {
     this.storeEventSettings();
     this.render();
     this.applyPageOffset();
+  }
+
+  _clearModelItemsPathFilter() {
+    this.modelItemsPathFilter = '';
+    this.render();
+    this.applyPageOffset();
+    this.querySelector('[data-model-items-path-filter]')?.focus();
+  }
+
+  _clearBoundElementsFilter() {
+    this.boundElementsFilter = '';
+    this.render();
+    this.applyPageOffset();
+    this.querySelector('[data-bound-elements-filter]')?.focus();
   }
 
   _onRefreshClick(event) {
