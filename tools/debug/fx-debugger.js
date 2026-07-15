@@ -912,6 +912,7 @@ export class FxDebugger extends HTMLElement {
     this._resizeStartY = 0;
     this._resizeStartHeight = 0;
     this._eventFiltersOpen = false;
+    this._eventsRenderScheduled = false;
     this._storageKey = 'fore-devtools.fx-debugger.height';
     this._collapsedStorageKey = 'fore-devtools.fx-debugger.collapsed';
     this._eventSettingsStorageKey = 'fore-devtools.fx-debugger.eventSettings';
@@ -2849,17 +2850,38 @@ export class FxDebugger extends HTMLElement {
 
     if (this.eventLog.length > this.maxEventLogEntries) {
       this.eventLog.splice(0, this.eventLog.length - this.maxEventLogEntries);
+      this.eventLog.forEach((item, index) => {
+        item.index = index + 1;
+      });
     }
-
-    this.eventLog = this.eventLog.map((item, index) => ({
-      ...item,
-      index: index + 1,
-    }));
 
     if (this.activePanel === 'events') {
+      this.scheduleEventsRender();
+    }
+  }
+
+  /**
+   * A bulk operation (e.g. loading a large codelist) can dispatch hundreds of
+   * events in the same tick. Coalesce those into a single render per animation
+   * frame instead of a full innerHTML rebuild + forced reflow per event.
+   */
+  scheduleEventsRender() {
+    if (this._eventsRenderScheduled) {
+      return;
+    }
+
+    this._eventsRenderScheduled = true;
+
+    requestAnimationFrame(() => {
+      this._eventsRenderScheduled = false;
+
+      if (!this.isConnected || this.activePanel !== 'events') {
+        return;
+      }
+
       this.render();
       this.applyPageOffset();
-    }
+    });
   }
 
   createEventLogEntry(event) {
