@@ -828,7 +828,6 @@ export class FxDebugger extends HTMLElement {
     this.activePanel = 'fore';
 
     this.eventLog = [];
-    this.maxEventLogEntries = 200;
     this._eventFlowDepth = 0;
     this._eventFlowId = 0;
 
@@ -1998,25 +1997,30 @@ export class FxDebugger extends HTMLElement {
     }
 
     const rows = [];
+    const openStarts = [];
 
-    for (let i = 0; i < events.length; i += 1) {
-      const entry = events[i];
-      const next = events[i + 1];
+    events.forEach(entry => {
+      if (entry.type === 'action-start') {
+        openStarts.push({ entry, rowIndex: rows.push(entry) - 1 });
+        return;
+      }
 
-      if (
-        entry.type === 'action-start' &&
-        next &&
-        next.type === 'action-end' &&
-        next.depth === entry.depth &&
-        next.flowId === entry.flowId
-      ) {
-        rows.push(this.mergeActionEntries(entry, next));
-        i += 1;
-        continue;
+      if (entry.type === 'action-end') {
+        const open = openStarts.pop();
+
+        // No open action-start to pair with: the event log's fixed-size
+        // buffer trimmed it from the front, leaving this end orphaned.
+        // There's nothing meaningful to show, so drop it.
+        if (!open) {
+          return;
+        }
+
+        rows[open.rowIndex] = this.mergeActionEntries(open.entry, entry);
+        return;
       }
 
       rows.push(entry);
-    }
+    });
 
     return rows;
   }
@@ -2039,17 +2043,12 @@ export class FxDebugger extends HTMLElement {
       flowId: start.flowId,
       depth: start.depth,
       duration,
+      // Keep the full start detail object (all action attributes, not a
+      // curated subset) plus the outcome from the end event, so the detail
+      // column still reflects the actual event payload.
       detailSummary: this.safeJson({
-        action: startDetail.action,
-        actionClass: startDetail.actionClass,
-        event: startDetail.event,
-        ref: startDetail.ref,
-        target: startDetail.target,
-        origin: startDetail.origin,
-        submission: startDetail.submission,
-        control: startDetail.control,
-        ownerFore: startDetail.ownerFore,
-        needsUpdate: startDetail.needsUpdate,
+        ...startDetail,
+        phase: undefined,
         success: endDetail.success,
       }),
     };
@@ -2256,11 +2255,29 @@ export class FxDebugger extends HTMLElement {
       return '<span class="fx-debugger__muted">—</span>';
     }
 
+    // Actions are operations, not events with a payload: the Flow column
+    // already names them, so this column stays to the same name badge used
+    // elsewhere for actions instead of trying to render a detail object.
+    if (entry.type === 'action') {
+      return this.renderMergedActionDetail(entry);
+    }
+
     if (this.isActionEvent(entry.type)) {
       return this.renderActionEventDetail(entry);
     }
 
     return `<code>${this.escape(entry.detailSummary)}</code>`;
+  }
+
+  renderMergedActionDetail(entry) {
+    const detail = this.parseEventDetailSummary(entry.detailSummary);
+    const name = entry.actionName || detail?.action || detail?.actionClass || 'action';
+    const failed = detail?.success === false;
+
+    return `
+      <span class="fx-debugger__action-pill">${this.escape(String(name))}</span>
+      ${failed ? '<span class="fx-debugger__action-phase">success=false</span>' : ''}
+    `;
   }
 
   renderActionEventDetail(entry) {
@@ -2978,13 +2995,6 @@ export class FxDebugger extends HTMLElement {
     this.updateEventFlowDepth(entry);
 
     this.eventLog.push(entry);
-
-    if (this.eventLog.length > this.maxEventLogEntries) {
-      this.eventLog.splice(0, this.eventLog.length - this.maxEventLogEntries);
-      this.eventLog.forEach((item, index) => {
-        item.index = index + 1;
-      });
-    }
 
     if (this.activePanel === 'events') {
       this.scheduleEventsRender();
