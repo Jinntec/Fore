@@ -1,6 +1,30 @@
 import getInScopeContext from './getInScopeContext.js';
 
 /**
+ * Resolves the real data-parent node of a drag/drop participant, for
+ * `drop-scope="parent"` comparisons (see `_sameDropScope` below).
+ *
+ * XML nodes expose `.parentNode`; JSON-lens nodes (`JSONNode`, see
+ * `src/json/JSONNode.js`) expose `.parent` instead and are flagged with
+ * `.__jsonlens__ === true` - both must be handled since repeats bind to
+ * either instance type equally.
+ *
+ * @param {HTMLElement} el
+ * @returns {Node|null}
+ */
+function _resolveScopeParent(el) {
+  if (el.localName === 'fx-repeatitem') {
+    const node = el.getModelItem ? el.getModelItem()?.node : null;
+    if (!node) return null;
+    return node.__jsonlens__ ? node.parent : node.parentNode;
+  }
+  if (el.localName === 'fx-repeat') {
+    return getInScopeContext(el.getAttributeNode('ref') || el, el.ref);
+  }
+  return null;
+}
+
+/**
  * @template {typeof import('./ForeElementMixin.js').default} T
  * @param {T} superclass
  * @returns {T}
@@ -65,17 +89,42 @@ export const withDraggability = (superclass, isAlsoDraggable) =>
         this.classList.add('no-drop');
       }
 
-      const thisClosestRepeat = this.hasAttribute('id') ? this : this.closest('[id]');
-      const draggingClosestRepeat = draggedItem.hasAttribute('id')
-        ? draggedItem
-        : draggedItem.closest('[id]');
-      if (thisClosestRepeat?.id === draggingClosestRepeat?.id) {
+      if (this._sameDropScope(draggedItem)) {
         if (repeatItem !== this.getOwnerForm().draggedItem) {
           this.classList.add('drag-over');
         }
 
         event.preventDefault();
       }
+    }
+
+    /**
+     * Is `other` in the same drag/drop scope as `this`?
+     *
+     * Default (no `drop-scope` attribute on either side): today's behavior -
+     * id-string equality of the nearest ancestor-with-an-`id`. Statically/
+     * recursively nested repeats at the same generation necessarily share one
+     * literal `id`, so this treats every generation-N instance as "the same
+     * repeat" - intentionally relied on by e.g. `demo/kanban.html` to let
+     * cards be dragged between different columns.
+     *
+     * Opt-in (`drop-scope="parent"` on the `<template>`, propagated onto the
+     * repeat and its items - see `fx-repeat.js#_initTemplate`/`_createNewRepeatItem`):
+     * compares real data parentage instead, so structurally identical sibling
+     * containers at the same depth are correctly treated as different scopes.
+     */
+    _sameDropScope(other) {
+      if (
+        this.getAttribute('drop-scope') === 'parent' ||
+        other.getAttribute('drop-scope') === 'parent'
+      ) {
+        const thisParent = _resolveScopeParent(this);
+        const otherParent = _resolveScopeParent(other);
+        return !!thisParent && !!otherParent && thisParent === otherParent;
+      }
+      const thisClosestRepeat = this.hasAttribute('id') ? this : this.closest('[id]');
+      const otherClosestRepeat = other.hasAttribute('id') ? other : other.closest('[id]');
+      return thisClosestRepeat?.id === otherClosestRepeat?.id;
     }
 
     _dragLeave(event) {
@@ -100,11 +149,7 @@ export const withDraggability = (superclass, isAlsoDraggable) =>
       }
 
       const { draggedItem } = this.getOwnerForm();
-      const thisClosestRepeat = this.hasAttribute('id') ? this : this.closest('[id]');
-      const draggingClosestRepeat = draggedItem.hasAttribute('id')
-        ? draggedItem
-        : draggedItem.closest('[id]');
-      if (thisClosestRepeat?.id !== draggingClosestRepeat?.id) {
+      if (!this._sameDropScope(draggedItem)) {
         // Moving between different repeats: this can make the items 'lost': placed into a
         // different set
         return null;

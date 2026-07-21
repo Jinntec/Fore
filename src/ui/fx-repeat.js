@@ -738,7 +738,14 @@ export class FxRepeat extends withDraggability(UIElement, false) {
           (child.tagName &&
             ['INPUT', 'SELECT', 'TEXTAREA', 'OPTION', 'DATALIST'].includes(child.tagName)));
 
-      if (!isWidgetEl && child.hasAttribute('ref')) {
+      // A nested <fx-repeat> (statically authored, or synthesized by
+      // <fx-repeat-ref>) owns creating ModelItems for its own descendants once
+      // it materializes them - this generic walk must not register a
+      // ModelItem for it (it would leak a spurious entry keyed to the first
+      // matching child) nor recurse into markup it doesn't own yet.
+      const ownsOwnModelItems = child?.tagName === 'FX-REPEAT';
+
+      if (!isWidgetEl && !ownsOwnModelItems && child.hasAttribute('ref')) {
         const ref = child.getAttribute('ref').trim();
         if (ref && ref !== '.') {
           let node = evaluateXPath(ref, parentModelItem.node, this);
@@ -762,7 +769,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
         }
       }
 
-      if (!isWidgetEl) this._createModelItemsRecursively(child, nextParentMI);
+      if (!isWidgetEl && !ownsOwnModelItems) this._createModelItemsRecursively(child, nextParentMI);
     });
   }
 
@@ -945,6 +952,9 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     if (this.isDraggable) {
       newItem.setAttribute('draggable', 'true');
       newItem.setAttribute('tabindex', 0);
+    }
+    if (this.dropScope) {
+      newItem.setAttribute('drop-scope', this.dropScope);
     }
     const clone = this._clone();
     newItem.appendChild(clone);
@@ -2017,6 +2027,14 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     this.isDraggable = this.template.hasAttribute('draggable')
       ? this.template.getAttribute('draggable')
       : null;
+    // Opt-in real-parentage drag/drop scoping (see withDraggability.js#_sameDropScope) -
+    // default (unset) keeps today's id-string-equality scoping unchanged. Reflected onto
+    // this element too (not just repeat-items) since <fx-repeat> itself is a valid drop
+    // target (appending) and _sameDropScope reads the attribute directly.
+    this.dropScope = this.template.getAttribute('drop-scope');
+    if (this.dropScope) {
+      this.setAttribute('drop-scope', this.dropScope);
+    }
 
     // Move template to shadow for safe reuse.
     // If it's already in the shadowRoot, don't append again.

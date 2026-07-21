@@ -26,6 +26,7 @@ Fore is optimized for:
 
 ## References
     - [Fore documentation](https://jinntec.github.io/fore-docs/tags/version-1.0.0/) — official element/attribute reference
+    - [Fore demos](https://jinntec.github.io/Fore/doc/demos.html) - curated demos  
 
 ## Commands
 
