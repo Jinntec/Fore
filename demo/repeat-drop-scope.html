@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>Repeat drag/drop parent scoping</title>
+    <link href="../resources/fore.css" rel="stylesheet">
+    <link href="../resources/demo.css" rel="stylesheet">
+
+    <style>
+        .groups {
+            display: flex;
+            gap: 2rem;
+        }
+        .groups > fx-repeat {
+            display: contents;
+        }
+        .group {
+            border: thin solid #dddddd;
+            border-radius: 5px;
+            padding: 1rem;
+            min-width: 12rem;
+        }
+        .item {
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            border-radius: 4px;
+            background: var(--paper-blue-500, #2196f3);
+            color: white;
+            cursor: grabbing;
+        }
+        .item.drag-over {
+            background: #00c853;
+        }
+        .item.no-drop {
+            background: red;
+        }
+    </style>
+</head>
+<body>
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+
+<div class="wrapper">
+    <demo-snippet>
+        <template>
+
+    <fx-fore>
+        <fx-model>
+            <fx-instance>
+                <data>
+                    <group name="Group A">
+                        <item name="A1"></item>
+                        <item name="A2"></item>
+                    </group>
+                    <group name="Group B">
+                        <item name="B1"></item>
+                        <item name="B2"></item>
+                    </group>
+                </data>
+            </fx-instance>
+        </fx-model>
+
+        <h1>Parent-scoped drag/drop</h1>
+        <p>Both groups' item lists are rendered from the <em>same</em> nested
+        <code>&lt;fx-repeat id="items"&gt;</code> template, so every group's
+        item-repeat instance shares the literal id <code>items</code>. The
+        inner template opts into <code>drop-scope="parent"</code>, so items can
+        be reordered within their own group but cannot be dropped into the
+        other, structurally identical, sibling group.</p>
+
+        <div class="groups">
+            <fx-repeat id="groups" ref="group">
+                <template>
+                    <div class="group">
+                        <h3>{@name}</h3>
+                        <fx-repeat id="items" ref="item">
+                            <template draggable="true" drop-target="items" drop-scope="parent">
+                                <div class="item" data-cy="{@name}">{@name}</div>
+                            </template>
+                        </fx-repeat>
+                    </div>
+                </template>
+            </fx-repeat>
+        </div>
+    </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+<script type="module" src="./demo.js"></script>
+
+</body>
+</html>

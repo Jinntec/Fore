@@ -37,26 +37,59 @@ export class FxTrigger extends XfAbstractControl {
         e.target.focus();
       });
 
+      // Opt-in: also run on focus (e.g. Tab-only keyboard navigation), not just
+      // click/Enter/Space. Not the default - every fx-trigger in an app would otherwise
+      // fire its action (e.g. an fx-delete) just from being tabbed past.
+      const activateOnFocus = this.hasAttribute('activate-on-focus');
+      // A mouse click on an already-unfocused element fires 'focus' then 'click' for the
+      // same interaction; without this guard activateOnFocus would perform the action twice.
+      let suppressNextClick = false;
+
       if (this.debounceDelay) {
         this.addEventListener(
           'click',
           leadingDebounce(
             this,
             e => {
+              if (activateOnFocus && suppressNextClick) {
+                suppressNextClick = false;
+                return;
+              }
               this.performActions(e);
             },
             this.debounceDelay,
           ),
         );
       } else {
-        element.addEventListener('click', e => this.performActions(e));
+        element.addEventListener('click', e => {
+          if (activateOnFocus && suppressNextClick) {
+            suppressNextClick = false;
+            return;
+          }
+          this.performActions(e);
+        });
       }
+
+      if (activateOnFocus) {
+        element.addEventListener('focus', e => {
+          suppressNextClick = true;
+          this.performActions(e);
+          queueMicrotask(() => {
+            suppressNextClick = false;
+          });
+        });
+      }
+
       this.widget = element;
       // # terrible hack but browser behaves strange - seems to fire a 'click' for a button when it receives a
       // # 'Space' or 'Enter' key
       if (element.nodeName !== 'BUTTON') {
         element.addEventListener('keypress', e => {
           if (e.code === 'Space' || e.code === 'Enter') {
+            if (activateOnFocus && suppressNextClick) {
+              suppressNextClick = false;
+              return;
+            }
             this.performActions(e);
           }
         });

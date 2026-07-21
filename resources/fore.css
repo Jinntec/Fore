@@ -149,6 +149,19 @@
         display: flex;
     }
 
+    /*
+     * Generic default look for the "selected node" convention: an app marks the
+     * currently selected data node with @ui-selected="true" (via fx-setattribute)
+     * and reflects it onto the rendered element with an attribute value template,
+     * e.g. <li ui-selected="{@ui-selected}">. Not a Fore-processed attribute -
+     * plain app-level convention - so this is just a sensible default; override
+     * with a more specific selector for a different look.
+     */
+    [ui-selected='true'] {
+        background: var(--paper-blue-50, #e3f2fd);
+        border-radius: 4px;
+    }
+
     fx-control, fx-trigger, .fx-checkbox {
         white-space: nowrap;
         /* position: relative; */

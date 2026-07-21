@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>Recursive fx-repeat templates</title>
+    <link href="../resources/fore.css" rel="stylesheet">
+    <link href="../resources/demo.css" rel="stylesheet">
+
+    <style>
+        ul.tree {
+            list-style: none;
+            padding-left: 1.25rem;
+        }
+        ul.tree.root {
+            padding-left: 0;
+        }
+        .node {
+            margin: 0.25rem 0;
+        }
+        .node > .row {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .node .name {
+            font-family: monospace;
+            cursor: pointer;
+            border: none;
+            background: none;
+            padding: 0;
+        }
+        .node fx-trigger button {
+            padding: 0 0.4rem;
+            line-height: 1.4rem;
+        }
+        .node[ui-selected='true'] .name {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+
+<div class="wrapper">
+    <demo-snippet>
+        <template>
+
+    <fx-fore>
+        <fx-model>
+            <fx-instance>
+                <data>
+                    <folder name="src">
+                        <folder name="ui">
+                            <file name="fx-repeat.js"></file>
+                            <file name="fx-repeat-ref.js"></file>
+                        </folder>
+                        <file name="index.js"></file>
+                    </folder>
+                    <folder name="docs">
+                        <file name="README.md"></file>
+                    </folder>
+                    <templates>
+                        <file name="new-file"></file>
+                    </templates>
+                </data>
+            </fx-instance>
+            <fx-instance id="vars">
+                <vars>
+                    <count/>
+                </vars>
+            </fx-instance>
+            <fx-bind ref="instance('vars')/count"
+                calculate="count(instance('default')//folder | instance('default')//file)"></fx-bind>
+        </fx-model>
+
+        <h1>Recursive <code>fx-repeat</code> templates</h1>
+        <p>One template, <code>&lt;fx-repeat id="tree" ref="folder|file" recursive="true"&gt;</code>,
+        renders this arbitrary-depth file tree by recursing into each node's own
+        matching children via <code>&lt;fx-repeat-ref&gt;</code> - no hand-written,
+        depth-capped chain of nested repeats. Click <strong>+</strong> to add a
+        file under any node (including a former leaf), <strong>x</strong> to
+        delete a node and its whole subtree. Every level opts into
+        <code>drop-scope="parent"</code>, so a file can be dragged within its own
+        folder but not into the structurally identical sibling folder.</p>
+
+        <p>Click a node's name to select it, or Tab to it - the trigger opts into
+        <code>activate-on-focus</code>, so plain keyboard focus movement selects too, not
+        just click/Enter/Space. Selection is a plain <code>@ui-selected</code> marker
+        attribute on the data node itself, set via <code>fx-setattribute</code> and read
+        back with <code>//*[@ui-selected='true']</code> - not <code>index()</code>, which
+        can't address a synthesized, id-less nested repeat at all. The output below reads
+        that marker from <em>outside</em> the tree entirely (like a property panel
+        would), proving the marker resolves the same regardless of which repeat or
+        recursion depth the node lives in.</p>
+
+        <p>Nodes rendered: <fx-output ref="instance('vars')/count"></fx-output>
+        &mdash; Selected: <fx-output ref="instance('default')//*[@ui-selected='true']/@name"></fx-output></p>
+
+        <ul class="tree root">
+            <fx-repeat id="tree" ref="folder|file" recursive="true">
+                <template draggable="true" drop-target="tree" drop-scope="parent">
+                    <li class="node" ui-selected="{@ui-selected}" data-cy="{@name}">
+                        <div class="row">
+                            <fx-trigger class="select-trigger" title="select" activate-on-focus>
+                                <button class="name" data-cy-action="select">{@name}</button>
+                                <fx-setattribute ref="." name="ui-selected" value="false"
+                                    iterate="instance('default')//*[@ui-selected='true']"></fx-setattribute>
+                                <fx-setattribute ref="." name="ui-selected" value="true"></fx-setattribute>
+                            </fx-trigger>
+                            <fx-trigger class="iconbtn" title="add file">
+                                <button data-cy-action="add">+</button>
+                                <fx-insertchild parent="." ref="file"
+                                    origin="instance('default')/templates/file"></fx-insertchild>
+                            </fx-trigger>
+                            <fx-trigger class="iconbtn" title="delete">
+                                <button data-cy-action="delete">x</button>
+                                <fx-delete ref="."></fx-delete>
+                            </fx-trigger>
+                        </div>
+                        <ul class="tree">
+                            <fx-repeat-ref></fx-repeat-ref>
+                        </ul>
+                    </li>
+                </template>
+            </fx-repeat>
+        </ul>
+    </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+<script type="module" src="./demo.js"></script>
+
+</body>
+</html>
