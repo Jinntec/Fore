@@ -83,7 +83,11 @@ export const withDraggability = (superclass, isAlsoDraggable) =>
       }
       const { draggedItem } = this.getOwnerForm();
 
-      if (this.accepts(draggedItem)) {
+      // `accept` is an opt-in allowlist (like the native <input accept>): no `accept`
+      // attribute at all means no restriction, not "reject everything" - accepts()
+      // returns undefined (not true) when there's nothing to check, which is not the
+      // same as an actual rejection.
+      if (!this.hasAttribute('accept') || this.accepts(draggedItem)) {
         this.classList.remove('no-drop');
       } else {
         this.classList.add('no-drop');
@@ -92,6 +96,16 @@ export const withDraggability = (superclass, isAlsoDraggable) =>
       if (this._sameDropScope(draggedItem)) {
         if (repeatItem !== this.getOwnerForm().draggedItem) {
           this.classList.add('drag-over');
+          // A drop on an fx-repeatitem always means "insert as a sibling" - which side
+          // depends on which half of the target the pointer is over, matching the
+          // "line between items" convention of most reorderable-list UIs (see
+          // drop-before/drop-after handling in fore.css and _drop() below).
+          if (this.localName === 'fx-repeatitem') {
+            const rect = this.getBoundingClientRect();
+            const isAfter = event.clientY > rect.top + rect.height / 2;
+            this.classList.toggle('drop-after', isAfter);
+            this.classList.toggle('drop-before', !isAfter);
+          }
         }
 
         event.preventDefault();
@@ -128,17 +142,21 @@ export const withDraggability = (superclass, isAlsoDraggable) =>
     }
 
     _dragLeave(event) {
-      this.classList.remove('drag-over');
-      this.classList.remove('no-drop');
+      this.classList.remove('drag-over', 'no-drop', 'drop-before', 'drop-after');
     }
 
     _dragEnd(event) {
+      // 'dragend' always fires on the original drag source (this), regardless of
+      // copy/move mode - unlike getOwnerForm().draggedItem, which points at a detached
+      // clone in copy mode. Always clear the fade, even if a 'drop' already nulled out
+      // draggedItem before 'dragend' fires (the early return below would otherwise skip it).
+      this.classList.remove('dragging');
       const item = this.getOwnerForm().draggedItem;
       if (!item) return;
       if (item.getAttribute('drop-action') === 'copy') {
         item.remove();
       }
-      this.classList.remove('drag-over');
+      this.classList.remove('drag-over', 'drop-before', 'drop-after');
       //		event.stopPropagation();
     }
 
@@ -169,7 +187,10 @@ export const withDraggability = (superclass, isAlsoDraggable) =>
     }
 
     _drop(event) {
-      this.classList.remove('drag-over');
+      // Capture before clearing: which half of the target (see _dragOver) the drop
+      // landed on decides whether the dragged item is inserted before or after it.
+      const dropAfter = this.classList.contains('drop-after');
+      this.classList.remove('drag-over', 'drop-before', 'drop-after');
       event.stopPropagation();
       if (this.localName === 'fx-droptarget') {
         if (this.children.length !== 0) {
@@ -261,8 +282,7 @@ export const withDraggability = (superclass, isAlsoDraggable) =>
       } else if (this.localName === 'fx-repeatitem') {
         const repeatItemNode = this.getModelItem().node;
 
-        if (repeatItemNode.previousSibling === dataNode) {
-          // moving before will make it do nothing, move after
+        if (dropAfter) {
           repeatItemNode.after(dataNode);
         } else {
           repeatItemNode.before(dataNode);

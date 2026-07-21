@@ -8,6 +8,17 @@
     <link href="../resources/demo.css" rel="stylesheet">
 
     <style>
+        fx-repeatitem {
+            display: block;
+        }
+        /* Each folder's own nested fx-repeat is itself a drop target ("append into this
+           folder") - the only way to drop into a folder with no children to drop onto.
+           Needs a real box (not the inline default, and not zero-height when empty) or
+           there is nothing left for the browser to hit-test a drop against. */
+        ul.tree > fx-repeat {
+            display: block;
+            min-height: 0.5rem;
+        }
         ul.tree {
             list-style: none;
             padding-left: 1.25rem;
@@ -80,9 +91,18 @@
         matching children via <code>&lt;fx-repeat-ref&gt;</code> - no hand-written,
         depth-capped chain of nested repeats. Click <strong>+</strong> to add a
         file under any node (including a former leaf), <strong>x</strong> to
-        delete a node and its whole subtree. Every level opts into
-        <code>drop-scope="parent"</code>, so a file can be dragged within its own
-        folder but not into the structurally identical sibling folder.</p>
+        delete a node and its whole subtree.</p>
+
+        <p>Unlike the <a href="repeat-drop-scope.html">parent-scoped drag/drop</a> demo,
+        this template does <em>not</em> set <code>drop-scope="parent"</code> - a real file
+        browser wants the opposite of that restriction: any file dragged onto another item
+        anywhere in the tree should move there, folder or not, near or far. Since every
+        recursion level is synthesized with no <code>id</code> of its own, Fore's default
+        drop scoping (nearest ancestor with a literal <code>id</code>) resolves to the single
+        <code>id="tree"</code> on the outermost repeat for every node in the tree - so the
+        whole tree is one drop scope. Drop a file directly onto another file or folder row to
+        move it right there as a sibling - onto a row inside a folder to land inside that
+        folder.</p>
 
         <p>Click a node's name to select it, or Tab to it - the trigger opts into
         <code>activate-on-focus</code>, so plain keyboard focus movement selects too, not
@@ -99,7 +119,7 @@
 
         <ul class="tree root">
             <fx-repeat id="tree" ref="folder|file" recursive="true">
-                <template draggable="true" drop-target="tree" drop-scope="parent">
+                <template draggable="true" drop-target="tree">
                     <li class="node" ui-selected="{@ui-selected}" data-cy="{@name}">
                         <div class="row">
                             <fx-trigger class="select-trigger" title="select" activate-on-focus>

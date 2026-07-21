@@ -162,6 +162,64 @@
         border-radius: 4px;
     }
 
+    /*
+     * Generic default look for Fore's built-in drag/drop mechanics
+     * (src/withDraggability.js). Requires the target to be display:
+     * block/grid/flex (not the inline default) to render correctly - and,
+     * for fx-repeat, some min-height so an empty one still has a
+     * hit-testable box to drop onto at all.
+     *
+     * fx-repeat itself accepts a drop too: it means "append into this
+     * repeat" (the only way to drop into an empty one), so a full outline
+     * correctly reads as "dropped inside here".
+     */
+    fx-repeat.drag-over {
+        outline: 0.2rem solid var(--paper-blue-500, #2196f3);
+        outline-offset: -0.1rem;
+    }
+
+    fx-repeatitem.no-drop,
+    fx-repeat.no-drop {
+        outline: 0.2rem solid var(--paper-red-500, #f44336);
+        outline-offset: -0.1rem;
+        cursor: no-drop;
+    }
+
+    /*
+     * Dropping onto an fx-repeatitem always means "insert as a sibling",
+     * never "merge into this item" - a full outline around the item would
+     * wrongly suggest the latter. Show a thin insertion line at the edge
+     * the drop will land on instead (the pointer's vertical half of the
+     * target decides before/after - see _dragOver in withDraggability.js),
+     * matching the "line between items" convention of most reorderable-list
+     * UIs. inset box-shadow, not border/outline, so it doesn't shift layout.
+     */
+    fx-repeatitem.drop-before {
+        box-shadow: inset 0 0.25rem 0 0 var(--paper-blue-500, #2196f3);
+    }
+
+    fx-repeatitem.drop-after {
+        box-shadow: inset 0 -0.25rem 0 0 var(--paper-blue-500, #2196f3);
+    }
+
+    /*
+     * The dragged element itself (src/fx-fore.js#_handleDragStart /
+     * withDraggability.js#_dragEnd). The browser's native drag-ghost image
+     * follows the pointer and otherwise visually sits right on top of the
+     * drop-target indicator directly underneath it - fading the source out
+     * to near-transparent, with just a thin dashed outline marking where it
+     * came from, keeps the indicator on the target legible. opacity (not
+     * background: transparent) so it fades whatever the app's own template
+     * renders inside, not just the fx-repeatitem/fx-repeat wrapper itself.
+     */
+    fx-repeatitem.dragging,
+    fx-repeat.dragging,
+    fx-droptarget.dragging {
+        opacity: 0.25;
+        outline: 0.15rem dashed var(--paper-grey-500, #9e9e9e);
+        outline-offset: -0.1rem;
+    }
+
     fx-control, fx-trigger, .fx-checkbox {
         white-space: nowrap;
         /* position: relative; */

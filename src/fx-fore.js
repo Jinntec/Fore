@@ -2194,6 +2194,12 @@ export class FxFore extends HTMLElement {
     const draggedItem = event.target.closest('[draggable="true"]');
     this.originalDraggedItem = draggedItem;
     // console.log('DRAG START', this);
+    // Fade the actual on-page source element for the duration of the drag (cleared in
+    // withDraggability.js#_dragEnd, which always fires on this same element) - the
+    // browser's own drag-ghost image already shows where it's going, following the
+    // pointer, and would otherwise visually compete with/hide the drop-target
+    // indicator directly underneath it.
+    draggedItem.classList.add('dragging');
     if (draggedItem.getAttribute('drop-action') === 'copy') {
       event.dataTransfer.dropEffect = 'copy';
       event.dataTransfer.effectAllowed = 'copy';
