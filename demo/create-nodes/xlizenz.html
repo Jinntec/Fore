@@ -1,0 +1,151 @@
+<!DOCTYPE HTML>
+<html xmlns:func="generator-functions">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport">
+      <title></title>
+      <link href="../../resources/fore.css" rel="stylesheet">
+      <link href="../../resources/vars.css" rel="stylesheet">
+      <link href="../../resources/toastify.css" rel="stylesheet">
+      <link href="./default.css" rel="stylesheet"><script type="module">
+                    import './resources/scripts/fore-dev.js';
+                    /*
+                    Alternative to above import:
+                    to run from local clone of Fore uncomment the next line and run 'npm start' in Fore homedir.
+                    */
+                    // import 'http://localhost:8090/index.js';
+                </script><script type="module" src="../demo.js"></script></head>
+   <body>
+      <fx-fore create-nodes="create-nodes" id="fx-invoice">
+         <fx-var name="invoice" value="instance('default')"></fx-var>
+         <fx-model>
+            <fx-instance src="data/invoice-ubl.xml"></fx-instance>
+            <fx-instance id="vars"><data></data></fx-instance>
+            <fx-submission id="s-save" url="#echo" method="post" replace="download" target="invoice.xml" validate="false">
+               <fx-message event="submit-error">Saving failed</fx-message>
+            </fx-submission>
+            <fx-submission id="s-load" url="data/invoice-ubl-new.xml" method="get" replace="instance"></fx-submission>
+            <fx-bind ref="cac:InvoiceLine/cac:Item/cac:AdditionalItemProperty[cbc:Name='XLizenz']/cbc:Value" required="true()"></fx-bind>
+            <fx-bind ref="cac:InvoiceLine/cac:Item/cac:AdditionalItemProperty[cbc:Name='Type']/cbc:Value" required="true()"></fx-bind>
+            <fx-bind ref="*/cbc:IssueDate" required="true()"></fx-bind>
+            <fx-bind ref="*/cac:AccountingSupplierParty/cac:Party/cac:PartyName/cbc:Name" required="true()"></fx-bind>
+            <fx-bind ref="*/cac:AccountingSupplierParty/cac:Party/cbc:ID" required="true()"></fx-bind>
+            <fx-bind ref="*/cac:AccountingSupplierParty/cac:Party/instance()/*/cac:InvoiceLine/cac:Item/cac:AdditionalItemProperty[cbc:Name='EntityRole']/cbc:Value" required="true()"></fx-bind>
+            <fx-bind ref="*/cac:InvoiceLine/cac:Item/cac:AdditionalItemProperty[cbc:Name='RightType']/cbc:Value" required="true()"></fx-bind>
+            <fx-bind ref="cac:InvoiceLine/cac:DocumentReference/cac:Attachment/cac:ExternalReference/cbc:URI" required="true()"></fx-bind>
+         </fx-model>
+         <header class="app-bar"><button class="nav-toggle" popovertarget="site-nav" aria-label="Open navigation">☰
+               </button><span class="app-title">Invoice Editor</span><div class="app-actions">
+               <fx-trigger class="save-button"><button>New</button><fx-send submission="s-load"></fx-send>
+               </fx-trigger>
+               <fx-trigger class="save-button"><button>Save</button><fx-send submission="s-save"></fx-send>
+               </fx-trigger>
+            </div>
+         </header>
+         <div class="layout">
+            <nav id="site-nav" popover="auto">
+               <ul>
+                  <li><a href="#xlizenz">Softwarelizenz</a></li>
+                  <li><a href="#entitaet">Entität</a></li>
+                  <li><a href="#lizenz-info">Softwarelizenz-Informationen</a></li>
+                  <li><a href="#nutzungsrechte">Nutzungsrechte</a></li>
+                  <li><a href="#vertrag">Vertrag</a></li>
+                  <li><a href="#bestellung">Bestellinformationen</a></li>
+                  <li><a href="#links">Links</a></li>
+               </ul>
+            </nav>
+            <main>
+               <fx-group id="outer" ref="instance()/*" show-icon="true">
+                  <section id="xlizenz" class="BG-1">
+                     <header>Softwarelizenz</header>
+                     <fx-group id="BG-1" ref="cac:InvoiceLine">
+                        <fx-control id="BT-1" ref="cac:InvoiceLine/cac:Item/cac:AdditionalItemProperty[cbc:Name='XLizenz']/cbc:Value"><label for="BT-1-input">Lizenz-ID</label><input id="BT-1-input" type="text"></fx-control>
+                        <fx-control id="BT-2" ref="cac:InvoiceLine/cac:Item/cac:AdditionalItemProperty[cbc:Name='Type']/cbc:Value"><label for="BT-2-input">Lizenztyp</label><select id="BT-2-input" class="widget" selection="open"></select></fx-control>
+                        <fx-control id="BT-4" ref="cbc:IssueDate"><label for="BT-4-input">Erstellungsdatum</label><input id="BT-4-input" type="date"></fx-control>
+                        <fx-control id="BT-5" ref="cac:Delivery/cbc:ActualDeliveryDate" on-demand="true"><label for="BT-5-input">Bereitstellungsdatum</label><input id="BT-5-input" type="date"></fx-control>
+                        <fx-control id="BT-6" ref="cac:InvoiceLine/cac:Item/cac:AdditionalItemProperty[cbc:Name='supplementalEntType']/cbc:Value" on-demand="true"><label for="BT-6-input">Ergänzungstyp</label><select id="BT-6-input" class="widget" selection="open"></select></fx-control>
+                        <fx-control id="BT-7" ref="cac:InvoiceLine/cac:Item/cac:AdditionalItemProperty[cbc:Name='linkedToPrimaryEntId']/cbc:Value" on-demand="true"><label for="BT-7-input">Primär-Lizenz-ID</label><input id="BT-7-input" type="text"></fx-control>
+                        <fx-control id="BT-8" ref="cac:InvoiceLine/cac:Item/cac:AdditionalItemProperty[cbc:Name='consolidatesEntIds']/cbc:Value" on-demand="true"><label for="BT-8-input">Konsolidierte Lizenz-IDs</label><input id="BT-8-input" type="text"></fx-control>
+                     </fx-group>
+                  </section>
+                  <section id="entitaet" class="BG-2">
+                     <header>Entität</header>
+                     <fx-group id="BG-2" ref="cac:AccountingSupplierParty/cac:Party">
+                        <fx-control id="BT-9" ref="cac:AccountingSupplierParty/cac:Party/cac:PartyName/cbc:Name"><label for="BT-9-input">Entitätsname</label><input id="BT-9-input" type="text"></fx-control>
+                        <fx-control id="BT-10" ref="cac:AccountingSupplierParty/cac:Party/cbc:ID"><label for="BT-10-input">Entitäts-ID</label><input id="BT-10-input" type="text"></fx-control>
+                        <fx-control id="BT-11" ref="cac:InvoiceLine/cac:Item/cac:AdditionalItemProperty[cbc:Name='EntityRole']/cbc:Value"><label for="BT-11-input">Entitätsrolle</label><select id="BT-11-input" class="widget" selection="open"></select></fx-control>
+                     </fx-group>
+                  </section>
+                  <section id="lizenz-info" class="BG-3">
+                     <header>Softwarelizenz-Informationen</header>
+                     <fx-group id="BG-3" ref="cac:InvoiceLine/cac:Item">
+                        <fx-control id="BT-12" ref="cac:InvoiceLine/cac:Item/cac:AdditionalItemProperty[cbc:Name='EntitlementType']/cbc:Value" on-demand="true"><label for="BT-12-input">Softwarelizenz-Typ</label><select id="BT-12-input" class="widget" selection="open"></select></fx-control>
+                        <fx-control id="BT-13" ref="cac:InvoiceLine/cac:Item/cac:AdditionalItemProperty[cbc:Name='isBundled']/cbc:Value" on-demand="true"><label for="BT-13-input">Paket-Indikator</label><input id="BT-13-input" type="text"></fx-control>
+                        <fx-control id="BT-14" ref="cac:InvoiceLine/cac:Item/cac:AdditionalItemProperty[cbc:Name='Edition']/cbc:Value" on-demand="true"><label for="BT-14-input">Edition</label><input id="BT-14-input" type="text"></fx-control>
+                        <fx-control id="BT-15" ref="cac:InvoiceLine/cac:Item/cac:AdditionalItemProperty[cbc:Name='LicencePool']/cbc:Value" on-demand="true"><label for="BT-15-input">Lizenzpool</label><input id="BT-15-input" type="text"></fx-control>
+                        <fx-control id="BT-16" ref="cac:InvoiceLine/cac:Item/cac:ManufacturerParty/cac:PartyName/cbc:Name" on-demand="true"><label for="BT-16-input">Hersteller</label><input id="BT-16-input" type="text"></fx-control>
+                        <fx-control id="BT-17" ref="cac:InvoiceLine/cac:Item/cac:SellersItemIdentification/cbc:ID" on-demand="true"><label for="BT-17-input">Produkt-SKU</label><input id="BT-17-input" type="text"></fx-control>
+                        <fx-control id="BT-19" ref="cac:InvoiceLine/cac:Item/cac:CommodityClassification/cbc:ItemClassificationCode" on-demand="true"><label for="BT-19-input">UNSPSC-Code</label><select id="BT-19-input" class="widget" selection="open"></select></fx-control>
+                        <fx-group id="BG-4" ref="cac:InvoiceLine" on-demand="true" aria-label="Mengenangabe">
+                           <fx-control id="BT-21" ref="cac:InvoiceLine/cbc:InvoicedQuantity"><label for="BT-21-input">Anzahl Lizenzen</label><input id="BT-21-input" type="number"></fx-control>
+                           <fx-group id="BG-5" ref="cac:InvoiceLine/cac:Item/cac:AdditionalItemProperty[cbc:Name='Metric']" on-demand="true" aria-label="Metrik">
+                              <fx-control id="BT-24" ref="cac:InvoiceLine/cac:Item/cac:AdditionalItemProperty[cbc:Name='Metric']/cbc:Name"><label for="BT-24-input">Metrikname</label><input id="BT-24-input" type="text"></fx-control>
+                              <fx-control id="BT-25" ref="cac:InvoiceLine/cac:Item/cac:AdditionalItemProperty[cbc:Name='Metric']/cbc:Value"><label for="BT-25-input">Metrikbeschreibung</label><input id="BT-25-input" type="text"></fx-control>
+                           </fx-group>
+                        </fx-group>
+                        <fx-group id="BG-6" ref="cac:InvoiceLine/cac:Item" on-demand="true" aria-label="Gültige Version">
+                           <fx-control id="BT-26" ref="cac:InvoiceLine/cac:Item/cac:AdditionalItemProperty[cbc:Name='Version']/cbc:Value"><label for="BT-26-input">Versionsnummer</label><input id="BT-26-input" type="text"></fx-control>
+                           <fx-control id="BT-51" ref="cac:InvoiceLine/cac:Item/cac:AdditionalItemProperty[cbc:Name='ColloquialVersion']/cbc:Value" on-demand="true"><label for="BT-51-input">Kolloquialversion</label><input id="BT-51-input" type="text"></fx-control>
+                           <fx-control id="BT-52" ref="cac:InvoiceLine/cac:Item/cac:AdditionalItemProperty[cbc:Name='VersionScheme']/cbc:Value" on-demand="true"><label for="BT-52-input">Versionsschema</label><input id="BT-52-input" type="text"></fx-control>
+                        </fx-group>
+                     </fx-group>
+                  </section>
+                  <section id="nutzungsrechte" class="BG-7">
+                     <header>Nutzungsrechte</header>
+                     <fx-group id="BG-7" ref="cac:InvoiceLine/cac:Item/cac:AdditionalItemProperty">
+                        <fx-control id="BT-27" ref="cac:InvoiceLine/cac:Item/cac:AdditionalItemProperty/cbc:ID" on-demand="true"><label for="BT-27-input">Nutzungsrecht-ID</label><input id="BT-27-input" type="text"></fx-control>
+                        <fx-control id="BT-28" ref="cac:InvoiceLine/cac:Item/cac:AdditionalItemProperty/cbc:Name" on-demand="true"><label for="BT-28-input">Nutzungsrechtname</label><input id="BT-28-input" type="text"></fx-control>
+                        <fx-control id="BT-28-newcode" ref="cac:InvoiceLine/cac:Item/cac:AdditionalItemProperty[cbc:Name='RightType']/cbc:Value"><label for="BT-28-newcode-input">Nutzungsrechttyp</label><select id="BT-28-newcode-input" class="widget" selection="open"></select></fx-control>
+                        <fx-control id="BT-30" ref="cac:InvoiceLine/cac:Item/cac:AdditionalItemProperty/cbc:Value" on-demand="true"><label for="BT-30-input">Nutzungsrecht gültig</label><input id="BT-30-input" type="text"></fx-control>
+                        <fx-group id="BG-9" ref="cac:InvoiceLine/cac:Item/cac:AdditionalItemProperty/cac:UsabilityPeriod" on-demand="true" aria-label="Zeitliche Befristung">
+                           <fx-control id="BT-35" ref="cac:InvoiceLine/cac:Item/cac:AdditionalItemProperty/cac:UsabilityPeriod/cbc:StartDate"><label for="BT-35-input">Startdatum</label><input id="BT-35-input" type="date"></fx-control>
+                           <fx-control id="BT-36" ref="cac:InvoiceLine/cac:Item/cac:AdditionalItemProperty/cac:UsabilityPeriod/cbc:EndDate"><label for="BT-36-input">Enddatum</label><input id="BT-36-input" type="date"></fx-control>
+                        </fx-group>
+                     </fx-group>
+                  </section>
+                  <section id="vertrag" class="BG-10">
+                     <header>Vertrag</header>
+                     <fx-group id="BG-10" ref="cac:ContractDocumentReference">
+                        <fx-control id="BT-37" ref="cac:ContractDocumentReference/cbc:ID" on-demand="true"><label for="BT-37-input">Rahmenvertragsnummer</label><input id="BT-37-input" type="text"></fx-control>
+                        <fx-control id="BT-38" ref="cac:ContractDocumentReference/cbc:ContractType" on-demand="true"><label for="BT-38-input">Vertragstyp</label><select id="BT-38-input" class="widget" selection="open"></select></fx-control>
+                        <fx-control id="BT-39" ref="cac:ContractDocumentReference/cbc:DocumentDescription" on-demand="true"><label for="BT-39-input">Vertragsname</label><input id="BT-39-input" type="text"></fx-control>
+                        <fx-control id="BT-40" ref="cac:ContractDocumentReference/cbc:UUID" on-demand="true"><label for="BT-40-input">Vertragsnummer</label><input id="BT-40-input" type="text"></fx-control>
+                        <fx-control id="BT-41" ref="cac:ContractDocumentReference/cac:ValidityPeriod/cbc:StartDate" on-demand="true"><label for="BT-41-input">Vertragsbeginn</label><input id="BT-41-input" type="date"></fx-control>
+                        <fx-control id="BT-42" ref="cac:ContractDocumentReference/cac:ValidityPeriod/cbc:EndDate" on-demand="true"><label for="BT-42-input">Vertragsende</label><input id="BT-42-input" type="date"></fx-control>
+                     </fx-group>
+                  </section>
+                  <section id="bestellung" class="BG-11">
+                     <header>Bestellinformationen</header>
+                     <fx-group id="BG-11" ref=".">
+                        <fx-control id="BT-3" ref="cac:OrderReference/cbc:IssueDate" on-demand="true"><label for="BT-3-input">Bestelldatum</label><input id="BT-3-input" type="date"></fx-control>
+                        <fx-control id="BT-43" ref="cac:LegalMonetaryTotal/cbc:PrepaidAmount" on-demand="true"><label for="BT-43-input">Gesamtkosten</label><input id="BT-43-input" type="number"></fx-control>
+                        <fx-control id="BT-44" ref="cac:InvoiceLine/cac:Price/cbc:PriceAmount" on-demand="true"><label for="BT-44-input">Stückkosten</label><input id="BT-44-input" type="number"></fx-control>
+                        <fx-control id="BT-45" ref="cbc:DocumentCurrencyCode" on-demand="true"><label for="BT-45-input">Währung</label><select id="BT-45-input" class="widget" selection="open"></select></fx-control>
+                     </fx-group>
+                  </section>
+                  <section id="links" class="BG-12">
+                     <header>Links</header>
+                     <fx-group id="BG-12" ref="cac:InvoiceLine/cac:DocumentReference">
+                        <fx-control id="BT-46" ref="cac:InvoiceLine/cac:DocumentReference/cac:Attachment/cac:ExternalReference/cbc:URI"><label for="BT-46-input">URL</label><input id="BT-46-input" type="text"></fx-control>
+                        <fx-control id="BT-47" ref="cac:InvoiceLine/cac:DocumentReference/cbc:ID" on-demand="true"><label for="BT-47-input">Link-Content-ID</label><input id="BT-47-input" type="text"></fx-control>
+                        <fx-control id="BT-48" ref="cac:InvoiceLine/cac:DocumentReference/cbc:DocumentType" on-demand="true"><label for="BT-48-input">Link-Relation</label><input id="BT-48-input" type="text"></fx-control>
+                        <fx-control id="BT-49" ref="cac:InvoiceLine/cac:DocumentReference/cac:Attachment/cbc:EmbeddedDocumentBinaryObject/@mimeCode" on-demand="true"><label for="BT-49-input">Link-Content-Referenz-ID</label><input id="BT-49-input" type="text"></fx-control>
+                        <fx-control id="BT-50" ref="cac:InvoiceLine/cac:DocumentReference/cbc:DocumentDescription" on-demand="true"><label for="BT-50-input">Link-Inhalt</label><input id="BT-50-input" type="text"></fx-control>
+                     </fx-group>
+                  </section>
+               </fx-group>
+            </main>
+         </div>
+      </fx-fore>
+   </body>
+</html>

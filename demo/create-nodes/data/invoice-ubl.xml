@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cec="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+    <!--
+    Fore can auto-create a missing node for a plain path, but not for a path qualified by a
+    predicate (e.g. AdditionalItemProperty[cbc:Name='XLizenz']) - it has no way to know which
+    Name value the new node should carry. So each distinct Name used by a syntax-binding below
+    is pre-seeded here as an empty, optional placeholder; remove any entry you don't need.
+    -->
+    <cac:InvoiceLine>
+        <cac:Item>
+            <cac:AdditionalItemProperty>
+                <cbc:Name>XLizenz</cbc:Name>
+                <cbc:Value/>
+            </cac:AdditionalItemProperty>
+            <cac:AdditionalItemProperty>
+                <cbc:Name>Type</cbc:Name>
+                <cbc:Value/>
+            </cac:AdditionalItemProperty>
+            <cac:AdditionalItemProperty>
+                <cbc:Name>supplementalEntType</cbc:Name>
+                <cbc:Value/>
+            </cac:AdditionalItemProperty>
+            <cac:AdditionalItemProperty>
+                <cbc:Name>linkedToPrimaryEntId</cbc:Name>
+                <cbc:Value/>
+            </cac:AdditionalItemProperty>
+            <cac:AdditionalItemProperty>
+                <cbc:Name>consolidatesEntIds</cbc:Name>
+                <cbc:Value/>
+            </cac:AdditionalItemProperty>
+            <cac:AdditionalItemProperty>
+                <cbc:Name>EntityRole</cbc:Name>
+                <cbc:Value/>
+            </cac:AdditionalItemProperty>
+            <cac:AdditionalItemProperty>
+                <cbc:Name>EntitlementType</cbc:Name>
+                <cbc:Value/>
+            </cac:AdditionalItemProperty>
+            <cac:AdditionalItemProperty>
+                <cbc:Name>isBundled</cbc:Name>
+                <cbc:Value/>
+            </cac:AdditionalItemProperty>
+            <cac:AdditionalItemProperty>
+                <cbc:Name>Edition</cbc:Name>
+                <cbc:Value/>
+            </cac:AdditionalItemProperty>
+            <cac:AdditionalItemProperty>
+                <cbc:Name>LicencePool</cbc:Name>
+                <cbc:Value/>
+            </cac:AdditionalItemProperty>
+            <cac:AdditionalItemProperty>
+                <cbc:Name>Metric</cbc:Name>
+                <cbc:Value/>
+            </cac:AdditionalItemProperty>
+            <cac:AdditionalItemProperty>
+                <cbc:Name>Version</cbc:Name>
+                <cbc:Value/>
+            </cac:AdditionalItemProperty>
+            <cac:AdditionalItemProperty>
+                <cbc:Name>ColloquialVersion</cbc:Name>
+                <cbc:Value/>
+            </cac:AdditionalItemProperty>
+            <cac:AdditionalItemProperty>
+                <cbc:Name>VersionScheme</cbc:Name>
+                <cbc:Value/>
+            </cac:AdditionalItemProperty>
+            <cac:AdditionalItemProperty>
+                <cbc:Name>RightType</cbc:Name>
+                <cbc:Value/>
+            </cac:AdditionalItemProperty>
+        </cac:Item>
+    </cac:InvoiceLine>
+</Invoice>
