@@ -29,6 +29,30 @@
         .node[data-kind='file'] > ul.tree > fx-repeat {
             display: none;
         }
+        /* Collapsing a node is purely visual - it hides the child <ul.tree> (and with
+           it, the drop-into-folder slot from the rule above) but leaves @collapsed as
+           an ordinary data attribute, untouched by XForms relevant. That keeps the
+           collapsed subtree fully part of the model: it still counts toward "Nodes
+           rendered" and //*[@ui-selected='true'] still finds a selected node inside it. */
+        .node[data-collapsed='true'] > ul.tree {
+            display: none;
+        }
+        /* Exactly one of the two twisty triggers is shown per folder - which one is a plain
+           CSS decision keyed off the same data-collapsed AVT that hides the subtree above.
+           This is deliberately not done via each trigger's own ref/relevant: a ref predicate
+           like self::folder[@collapsed='true'] is only resolved once at initial binding and
+           does not reliably re-evaluate to empty as @collapsed later flips, so relevant and
+           nonrelevant can end up set at the same time. CSS re-evaluates on every attribute
+           change, so it doesn't have that problem. */
+        .node .twisty button {
+            font-family: monospace;
+        }
+        .node:not([data-collapsed='true']) > .row > fx-trigger.twisty[title='expand'] {
+            display: none;
+        }
+        .node[data-collapsed='true'] > .row > fx-trigger.twisty[title='collapse'] {
+            display: none;
+        }
         ul.tree {
             list-style: none;
             padding-left: 1.25rem;
@@ -156,21 +180,47 @@
         would), proving the marker resolves the same regardless of which repeat or
         recursion depth the node lives in.</p>
 
+        <p>Each folder also gets a <strong>▾</strong>/<strong>▸</strong> twisty that flips a
+        plain <code>@collapsed</code> attribute, mirrored into <code>data-collapsed="{@collapsed}"</code>
+        for the stylesheet to hide the node's own nested <code>&lt;ul.tree&gt;</code>. It's built as
+        <em>two</em> single-purpose triggers - one <code>&lt;fx-setattribute&gt;</code> setting
+        <code>@collapsed</code> <code>true</code>, the other setting it <code>false</code> - both
+        gated to folders only via <code>ref="self::folder"</code>, same as <strong>+</strong> above.
+        Which one is visible is a plain CSS rule keyed off <code>data-collapsed</code>, not the
+        triggers' own <code>ref</code>/relevant state: <code>self::folder</code> is safe to gate on
+        because a node's kind never changes, but a predicate like
+        <code>self::folder[@collapsed='true']</code> is only resolved once at initial binding and
+        does not reliably go stale as <code>@collapsed</code> keeps flipping afterwards - CSS
+        re-evaluates on every attribute change instead, so it doesn't have that problem. This is
+        deliberately <em>not</em> XForms <code>relevant</code> on the folder/file node itself:
+        collapsing only hides the subtree's DOM, it never removes those nodes from the model, so a
+        collapsed subtree still counts toward "Nodes rendered" below and still shows up in
+        <code>@ui-selected</code> lookups - try selecting a deeply nested node, then collapsing one
+        of its ancestors: the "Selected" output keeps its value.</p>
+
         <p>Nodes rendered: <fx-output ref="instance('vars')/count"></fx-output>
         &mdash; Selected: <fx-output ref="instance('default')//*[@ui-selected='true']/@name"></fx-output></p>
 
         <ul class="tree root">
             <fx-repeat id="tree" ref="folder|file" recursive="true">
                 <template draggable="true" drop-target="tree">
-                    <li class="node" ui-selected="{@ui-selected}" data-cy="{@name}" data-kind="{name()}">
+                    <li class="node" ui-selected="{@ui-selected}" data-collapsed="{@collapsed}" data-cy="{@name}" data-kind="{name()}">
                         <div class="row">
+                            <fx-trigger class="iconbtn twisty" title="collapse" ref="self::folder">
+                                <button data-cy-action="collapse">▾</button>
+                                <fx-setattribute ref="." name="collapsed" value="true"></fx-setattribute>
+                            </fx-trigger>
+                            <fx-trigger class="iconbtn twisty" title="expand" ref="self::folder">
+                                <button data-cy-action="expand">▸</button>
+                                <fx-setattribute ref="." name="collapsed" value="false"></fx-setattribute>
+                            </fx-trigger>
                             <fx-trigger class="select-trigger" title="select" activate-on-focus>
                                 <button class="name" data-cy-action="select">{@name}</button>
                                 <fx-setattribute ref="." name="ui-selected" value="false"
                                     iterate="instance('default')//*[@ui-selected='true']"></fx-setattribute>
                                 <fx-setattribute ref="." name="ui-selected" value="true"></fx-setattribute>
                             </fx-trigger>
-                            <fx-trigger class="iconbtn" title="add file">
+                            <fx-trigger class="iconbtn" title="add file" ref="self::folder">
                                 <button data-cy-action="add">+</button>
                                 <fx-insertchild parent="." ref="file"
                                     origin="instance('default')/templates/file"></fx-insertchild>

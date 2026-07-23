@@ -127,6 +127,48 @@ describe('Relevance Tests', () => {
     expect(control.hasAttribute('nonrelevant')).to.be.true;
   });
 
+  it('clears a stale "relevant" attribute when a predicate ref stops matching', async () => {
+    // Regression test: when a bound ref's predicate goes from matching to matching
+    // nothing, refresh() takes the "not bound" early-return branch (this.nodeset is
+    // null) and used to only ever add 'nonrelevant' there, never clearing a 'relevant'
+    // left over from a previous refresh - only handleRelevant() did that, and this
+    // branch returns before reaching it. The control ended up with both attributes set
+    // at once, and fore.css's [nonrelevant]/[relevant] cascade order silently decided
+    // which one actually applied.
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <item flag="true"></item>
+            </data>
+          </fx-instance>
+        </fx-model>
+
+        <fx-trigger id="gated" ref="item[@flag='true']">
+          <button>only relevant while flag is true</button>
+        </fx-trigger>
+
+        <fx-trigger id="flip">
+          <button>flip</button>
+          <fx-setattribute ref="item" name="flag" value="false"></fx-setattribute>
+        </fx-trigger>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'ready');
+
+    const gated = el.querySelector('#gated');
+    expect(gated.hasAttribute('relevant')).to.be.true;
+    expect(gated.hasAttribute('nonrelevant')).to.be.false;
+
+    el.querySelector('#flip button').click();
+    await oneEvent(el, 'refresh-done');
+
+    expect(gated.hasAttribute('nonrelevant')).to.be.true;
+    expect(gated.hasAttribute('relevant')).to.be.false;
+  });
+
   it('removes empty attributes by default', async () => {
     const el = await fixtureSync(html`
       <fx-fore>

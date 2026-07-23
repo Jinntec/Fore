@@ -73,6 +73,15 @@ export class FxRepeatRef extends HTMLElement {
     newRepeat.setAttribute('ref', ref);
     newRepeat.appendChild(clonedTemplate);
 
+    // Seed variable scope from the ancestor repeat before materializing this level's
+    // items. The enclosing repeat-item's own scope (set by the ancestor's
+    // _initVariables) isn't available yet at this point - it's only assigned after the
+    // insertBefore() that is currently cascading through this connectedCallback - so the
+    // ancestor repeat's own base scope is the most specific one already established.
+    if ('setInScopeVariables' in newRepeat) {
+      newRepeat.setInScopeVariables(ancestorRepeat.inScopeVariables);
+    }
+
     this._synthesized = true;
     this.replaceWith(newRepeat);
     newRepeat.refresh(true);

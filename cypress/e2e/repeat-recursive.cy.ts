@@ -142,6 +142,45 @@ describe('repeat-recursive.html', () => {
     selectedOutput().should('have.text', 'README.md');
   });
 
+  it('collapses a folder to hide its children, then expands it again', () => {
+    cy.get('[data-cy="ui"] > .row > fx-trigger[title="collapse"] button').click({ force: true });
+
+    cy.get('[data-cy="ui"]').should('have.attr', 'data-collapsed', 'true');
+    cy.get('[data-cy="fx-repeat.js"]').should('not.be.visible');
+    cy.get('[data-cy="ui"] > .row > fx-trigger[title="collapse"]').should('not.be.visible');
+    cy.get('[data-cy="ui"] > .row > fx-trigger[title="expand"]').should('be.visible');
+
+    // Collapsing is purely visual - the subtree stays in the model.
+    cy.get('[data-cy]').should('have.length', 16);
+
+    cy.get('[data-cy="ui"] > .row > fx-trigger[title="expand"] button').click({ force: true });
+
+    cy.get('[data-cy="ui"]').should('have.attr', 'data-collapsed', 'false');
+    cy.get('[data-cy="fx-repeat.js"]').should('be.visible');
+    cy.get('[data-cy="ui"] > .row > fx-trigger[title="collapse"]').should('be.visible');
+    cy.get('[data-cy="ui"] > .row > fx-trigger[title="expand"]').should('not.be.visible');
+  });
+
+  it('keeps a selection alive under a collapsed ancestor', () => {
+    const selectedOutput = () => cy.get('fx-output[ref*="ui-selected"]').shadow().find('#value');
+
+    cy.get('[data-cy="fx-repeat.js"]')
+      .find('> .row > fx-trigger button[data-cy-action="select"]')
+      .click({ force: true });
+    selectedOutput().should('have.text', 'fx-repeat.js');
+
+    cy.get('[data-cy="ui"] > .row > fx-trigger[title="collapse"] button').click({ force: true });
+
+    cy.get('[data-cy="fx-repeat.js"]').should('have.attr', 'ui-selected', 'true');
+    selectedOutput().should('have.text', 'fx-repeat.js');
+  });
+
+  it('shows no twisty on a file, since it can never have children', () => {
+    cy.get('[data-cy="index.js"]').should('have.attr', 'data-kind', 'file');
+    cy.get('[data-cy="index.js"] > .row > fx-trigger[title="collapse"]').should('not.be.visible');
+    cy.get('[data-cy="index.js"] > .row > fx-trigger[title="expand"]').should('not.be.visible');
+  });
+
   it('selects a node on plain keyboard focus (activate-on-focus), not just click', () => {
     const selectedOutput = () => cy.get('fx-output[ref*="ui-selected"]').shadow().find('#value');
 

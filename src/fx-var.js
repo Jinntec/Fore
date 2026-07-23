@@ -101,12 +101,24 @@ export class FxVariable extends ForeElementMixin {
    * @param {Map<string, FxVariable>} inScopeVariables
    */
   setInScopeVariables(inScopeVariables) {
-    if (inScopeVariables.has(this.name)) {
+    // A name already present because it was inherited from an ancestor scope (tagged by
+    // fx-repeat's _initVariables before any local element registers into the copy) is
+    // legitimate shadowing - e.g. a recursive template's <fx-var name="own"> re-declaring
+    // itself once per recursion depth, same as a nested function shadowing an outer
+    // variable of the same name. Only a second LOCAL declaration of the same name - not
+    // yet seen when this map's inherited names were snapshotted - is a real duplicate.
+    const isShadowingInherited =
+      inScopeVariables.__inheritedNames?.has(this.name) &&
+      !inScopeVariables.__locallyDeclared?.has(this.name);
+
+    if (inScopeVariables.has(this.name) && !isShadowingInherited) {
       console.error(`The variable ${this.name} is declared more than once`);
       Fore.dispatch(this, 'binding-error', {});
       return;
     }
     inScopeVariables.set(this.name, this);
+    if (!inScopeVariables.__locallyDeclared) inScopeVariables.__locallyDeclared = new Set();
+    inScopeVariables.__locallyDeclared.add(this.name);
     // Clone the preceding variables to make sure we are not going to get access to variables we
     // should not get access to
     this.inScopeVariables = new Map(inScopeVariables);

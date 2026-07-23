@@ -289,4 +289,61 @@ describe('recursive repeat (fx-repeat-ref) Tests', () => {
     );
     expect(labels).to.include.members(['root', 'a', 'b']);
   });
+
+  it('scopes an <fx-var> independently per recursion depth, without cross-level collisions', async () => {
+    // Regression test: <fx-repeat-ref> synthesizes and fully materializes its nested
+    // <fx-repeat> synchronously, inside the connectedCallback cascade triggered by the
+    // ancestor's own insertBefore() - which runs *before* the ancestor's _initVariables()
+    // walk. That walk used to recurse straight through the (already fully rendered)
+    // nested repeat, registering the same variable name from every recursion depth into
+    // one shared scope map and making fx-var dispatch 'binding-error' ("declared more
+    // than once") for every node past the first.
+    const el = fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance>
+            <data>
+              <node label="a">
+                <node label="a1">
+                  <node label="a1i"></node>
+                </node>
+              </node>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <fx-repeat id="tree" ref="node" recursive="true">
+          <template>
+            <li>
+              <fx-var name="own" value="@label"></fx-var>
+              <span class="direct">{@label}</span>
+              <span class="via-var">{$own}</span>
+              <ul>
+                <fx-repeat-ref></fx-repeat-ref>
+              </ul>
+            </li>
+          </template>
+        </fx-repeat>
+      </fx-fore>
+    `);
+
+    // registration happens during async init - listen before refresh-done, same as the
+    // "declared twice" shadowing test in var.test.js.
+    let bindingError = false;
+    el.addEventListener('binding-error', () => {
+      bindingError = true;
+    });
+
+    await oneEvent(el, 'refresh-done');
+
+    expect(bindingError).to.be.false;
+
+    const items = el.querySelectorAll('fx-repeatitem');
+    expect(items.length).to.equal(3);
+    // Every level must resolve $own to *its own* node's label, not a neighboring depth's.
+    items.forEach(item => {
+      const direct = item.querySelector(':scope > li > span.direct')?.textContent;
+      const viaVar = item.querySelector(':scope > li > span.via-var')?.textContent;
+      expect(viaVar).to.equal(direct);
+    });
+  });
 });

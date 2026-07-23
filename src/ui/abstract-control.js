@@ -141,7 +141,13 @@ export default class AbstractControl extends UIElement {
           // ### this actually makes the control nonrelevant
           // todo: we should call a template function here to allow detachment of event-listeners and resetting eventual state
           // this.style.display = 'none';
+          // A previous refresh() may have left 'relevant' set (this branch returns before
+          // reaching handleRelevant(), the only other place that clears it) - without this,
+          // a control whose ref just stopped matching keeps both attributes at once, and
+          // which one wins the CSS cascade becomes stylesheet-order-dependent.
+          this.removeAttribute('relevant');
           this.setAttribute('nonrelevant', '');
+          this._reflectRelevantInert(false);
         }
         return;
       }

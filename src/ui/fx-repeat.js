@@ -2102,12 +2102,26 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
   _initVariables(newRepeatItem) {
     const inScopeVariables = new Map(this.inScopeVariables);
+    // Names already present here came from an ancestor scope (this.inScopeVariables), not
+    // from an element in newRepeatItem's own subtree - fx-var.setInScopeVariables() uses
+    // this to tell "shadowing an inherited name" (allowed, e.g. a recursive template
+    // re-declaring the same <fx-var name="..."> once per depth) apart from "declared twice
+    // at the same level" (a real authoring error, still rejected).
+    inScopeVariables.__inheritedNames = new Set(inScopeVariables.keys());
     newRepeatItem.setInScopeVariables(inScopeVariables);
     (function registerVariables(node) {
       for (const child of node.children) {
         if ('setInScopeVariables' in child) {
           child.setInScopeVariables(inScopeVariables);
         }
+        // A nested <fx-repeat> (statically authored, or synthesized by <fx-repeat-ref>
+        // for recursion) owns registering variable scope for its own items once it
+        // materializes them - by the time this walk runs it may already have done so
+        // (custom-element upgrades, and so <fx-repeat-ref>'s synchronous synthesis, fire
+        // during the insertBefore() that precedes this call). Recursing into it here
+        // would re-register names its own descendants already hold, retargeting them to
+        // this (unrelated) map instead.
+        if (child.tagName === 'FX-REPEAT') continue;
         registerVariables(child);
       }
     })(newRepeatItem);
