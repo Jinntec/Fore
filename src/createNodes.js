@@ -87,7 +87,7 @@ function splitSteps(xpath) {
  */
 function extractValueTest(possibleValueTest) {
   possibleValueTest = possibleValueTest.trim();
-  const predicateRegex = /^\s*(@?[a-zA-Z0-9-_]*)\s*=\s*(['"])(.*)\2/g;
+  const predicateRegex = /^\s*(@?[a-zA-Z0-9-_:]*)\s*=\s*(['"])(.*)\2/g;
   const match = predicateRegex.exec(possibleValueTest);
   if (match) {
     return { name: match[1].trim(), value: match[3] };
