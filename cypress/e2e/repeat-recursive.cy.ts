@@ -14,8 +14,10 @@ describe('repeat-recursive.html', () => {
   }
 
   it('renders the full arbitrary-depth tree from a single template', () => {
-    cy.get('[data-cy]').should('have.length', 7);
+    cy.get('[data-cy]').should('have.length', 16);
     cy.get('[data-cy="ui"] [data-cy="fx-repeat.js"]').should('exist');
+    // Nested four levels deep: src > ui > internal > repeat-base.js.
+    cy.get('[data-cy="ui"] [data-cy="internal"] [data-cy="repeat-base.js"]').should('exist');
     cy.get('[data-cy="docs"] [data-cy="README.md"]').should('exist');
     cy.get('fx-repeat-ref').should('have.length', 0);
   });
@@ -40,6 +42,10 @@ describe('repeat-recursive.html', () => {
     cy.get('[data-cy="ui"]').should('not.exist');
     cy.get('[data-cy="fx-repeat.js"]').should('not.exist');
     cy.get('[data-cy="fx-repeat-ref.js"]').should('not.exist');
+    // "ui" has its own nested subtree (internal/repeat-base.js) two levels further down -
+    // deleting "ui" must take that along too, not just its direct children.
+    cy.get('[data-cy="internal"]').should('not.exist');
+    cy.get('[data-cy="repeat-base.js"]').should('not.exist');
     // Untouched siblings/ancestor survive.
     cy.get('[data-cy="src"]').should('exist');
     cy.get('[data-cy="index.js"]').should('exist');
@@ -77,6 +83,38 @@ describe('repeat-recursive.html', () => {
     dragItem('[data-cy="README.md"]', '[data-cy="docs"] > ul.tree > fx-repeat');
     cy.wait(300);
     cy.get('[data-cy="docs"] [data-cy="README.md"]').should('exist');
+  });
+
+  it('exposes a drop-inside slot for an empty folder, but never for a file', () => {
+    // "assets" starts out with no children at all - still needs a real, hit-testable box
+    // (see the `ul.tree > fx-repeat` rule) so something can be dropped inside it.
+    cy.get('[data-cy="assets"] > ul.tree > fx-repeat').then($repeat => {
+      const rect = $repeat[0].getBoundingClientRect();
+      expect(rect.width).to.be.greaterThan(0);
+      expect(rect.height).to.be.greaterThan(0);
+    });
+
+    // A file's own nested fx-repeat exists in the DOM (same shared template) but is
+    // suppressed via `.node[data-kind='file']` - zero size, so nothing can land inside it.
+    cy.get('[data-cy="index.js"]').should('have.attr', 'data-kind', 'file');
+    cy.get('[data-cy="index.js"] > ul.tree > fx-repeat').then($repeat => {
+      const rect = $repeat[0].getBoundingClientRect();
+      expect(rect.width).to.equal(0);
+      expect(rect.height).to.equal(0);
+    });
+  });
+
+  it('drops a folder next to a file as a sibling, never inside it', () => {
+    // Dragging "docs" (a folder) onto "index.js" (a file) must land beside it - dropping
+    // directly on a row always means "insert as sibling", regardless of either node's kind.
+    dragItem('[data-cy="docs"]', '[data-cy="index.js"]');
+    cy.wait(300);
+
+    cy.get('[data-cy="index.js"] [data-cy="docs"]').should('not.exist');
+    // Dropping directly on a row means "insert as sibling" (see the drop-scope demo text
+    // above) - "docs" becomes a sibling of "index.js", which lives inside "src", so "docs"
+    // (with README.md still inside it) is now nested under "src" too.
+    cy.get('[data-cy="src"] [data-cy="docs"] [data-cy="README.md"]').should('exist');
   });
 
   it('selects a node via the @ui-selected marker, readable from outside the tree', () => {

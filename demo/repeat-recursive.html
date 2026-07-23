@@ -19,6 +19,16 @@
             display: block;
             min-height: 0.5rem;
         }
+        /* A file can never contain children, so it gets no drop-into slot at all - not
+           even a zero-height one. Without this override a file's own (always-empty)
+           nested fx-repeat would still inherit the rule above and become a real,
+           hit-testable drop target, letting anything - folder or file - be dropped
+           "inside" a file. display:none removes it from hit-testing entirely, which
+           disables real drag/drop onto it while leaving ordinary sibling drops on the
+           file's own row (handled by fx-repeatitem, not this nested fx-repeat) untouched. */
+        .node[data-kind='file'] > ul.tree > fx-repeat {
+            display: none;
+        }
         ul.tree {
             list-style: none;
             padding-left: 1.25rem;
@@ -65,12 +75,25 @@
                         <folder name="ui">
                             <file name="fx-repeat.js"></file>
                             <file name="fx-repeat-ref.js"></file>
+                            <folder name="internal">
+                                <file name="repeat-base.js"></file>
+                            </folder>
+                        </folder>
+                        <folder name="actions">
+                            <file name="fx-insert.js"></file>
+                            <file name="fx-delete.js"></file>
                         </folder>
                         <file name="index.js"></file>
+                    </folder>
+                    <folder name="test">
+                        <folder name="spec">
+                            <file name="fx-repeat.test.js"></file>
+                        </folder>
                     </folder>
                     <folder name="docs">
                         <file name="README.md"></file>
                     </folder>
+                    <folder name="assets"></folder>
                     <templates>
                         <file name="new-file"></file>
                     </templates>
@@ -93,6 +116,15 @@
         file under any node (including a former leaf), <strong>x</strong> to
         delete a node and its whole subtree.</p>
 
+        <p>The <code>&lt;fx-repeat-ref&gt;</code> placeholder below takes no <code>ref</code>
+        attribute here - it defaults to the nearest ancestor <code>&lt;fx-repeat&gt;</code>'s
+        own <code>ref</code> (<code>folder|file</code>), so every recursion level matches
+        children the same way its parent did. An explicit <code>ref</code> override is only
+        needed when a node's children should be matched <em>differently</em> from its own
+        siblings - e.g. <code>&lt;fx-repeat-ref ref="folder"&gt;</code> to recurse into
+        sub-folders only, hiding files below some chosen depth while the outer repeat still
+        lists both. This tree has no such need, so the attribute is simply left off.</p>
+
         <p>Unlike the <a href="repeat-drop-scope.html">parent-scoped drag/drop</a> demo,
         this template does <em>not</em> set <code>drop-scope="parent"</code> - a real file
         browser wants the opposite of that restriction: any file dragged onto another item
@@ -103,6 +135,16 @@
         whole tree is one drop scope. Drop a file directly onto another file or folder row to
         move it right there as a sibling - onto a row inside a folder to land inside that
         folder.</p>
+
+        <p>A file, however, is never a valid container: dropping <em>onto</em> a file's own
+        row still just repositions the dragged item as a sibling, but there is no way to drop
+        <em>inside</em> a file the way you can with a folder. Every node's template renders a
+        <code>data-kind="{name()}"</code> marker (<code>"folder"</code> or <code>"file"</code>),
+        and the stylesheet uses it to suppress <code>display</code> on a file's own nested
+        <code>&lt;fx-repeat&gt;</code> - the same element a folder uses as its "drop inside me"
+        slot. With no box left to hit-test against, real drag/drop can no longer land anything,
+        folder or file, inside a file - try dragging <strong>docs</strong> onto
+        <strong>index.js</strong>: it lands next to it, never inside it.</p>
 
         <p>Click a node's name to select it, or Tab to it - the trigger opts into
         <code>activate-on-focus</code>, so plain keyboard focus movement selects too, not
@@ -120,7 +162,7 @@
         <ul class="tree root">
             <fx-repeat id="tree" ref="folder|file" recursive="true">
                 <template draggable="true" drop-target="tree">
-                    <li class="node" ui-selected="{@ui-selected}" data-cy="{@name}">
+                    <li class="node" ui-selected="{@ui-selected}" data-cy="{@name}" data-kind="{name()}">
                         <div class="row">
                             <fx-trigger class="select-trigger" title="select" activate-on-focus>
                                 <button class="name" data-cy-action="select">{@name}</button>
