@@ -1,0 +1,41 @@
+{
+  "_comment": "Hand-curated nesting rules, grounded in Fore's actual runtime behavior (not generated from reference.md, which doesn't reliably document parent/child constraints). See demo/fore-codemirror/README.md for the source-code evidence behind each rule.",
+
+  "requiresAncestor": {
+    "fx-bind": ["fx-model"],
+    "fx-instance": ["fx-model"],
+    "fx-submission": ["fx-model"],
+    "fx-header": ["fx-model"],
+    "fx-connection": ["fx-model"],
+    "fx-functionlib": ["fx-model"],
+    "fx-case": ["fx-switch"],
+    "fx-repeatitem": ["fx-repeat"]
+  },
+
+  "requiresDirectParent": {
+    "fx-construct-done": ["fx-model"]
+  },
+
+  "disallowedAncestor": {
+    "fx-control": ["fx-model"],
+    "fx-abstract-control": ["fx-model"],
+    "fx-group": ["fx-model"],
+    "fx-container": ["fx-model"],
+    "fx-repeat": ["fx-model"],
+    "fx-repeat-attributes": ["fx-model"],
+    "fx-repeatitem": ["fx-model"],
+    "fx-output": ["fx-model"],
+    "fx-trigger": ["fx-model"],
+    "fx-switch": ["fx-model"],
+    "fx-case": ["fx-model"],
+    "fx-items": ["fx-model"],
+    "fx-dialog": ["fx-model"],
+    "fx-alert": ["fx-model"],
+    "fx-hint": ["fx-model"],
+    "fx-upload": ["fx-model"],
+    "fx-control-menu": ["fx-model"],
+    "fx-inspector": ["fx-model"],
+    "fx-speech": ["fx-model"],
+    "fx-droptarget": ["fx-model"]
+  }
+}

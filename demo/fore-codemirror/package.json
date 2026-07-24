@@ -1,0 +1,26 @@
+{
+  "name": "fore-codemirror",
+  "version": "0.1.0",
+  "private": true,
+  "description": "CodeMirror editor mode that knows Fore's fx-* element/attribute vocabulary (tag/attribute completion + linting). Isolated dependency scope - not part of Fore's own package.json or core bundle.",
+  "type": "module",
+  "scripts": {
+    "build-schema": "node scripts/build-schema.mjs",
+    "build": "node scripts/build.mjs",
+    "test": "node --test test/"
+  },
+  "dependencies": {
+    "codemirror": "^6.0.1",
+    "@codemirror/view": "^6.34.1",
+    "@codemirror/state": "^6.4.1",
+    "@codemirror/language": "^6.10.3",
+    "@codemirror/lang-html": "^6.4.9",
+    "@codemirror/lint": "^6.8.4",
+    "@codemirror/autocomplete": "^6.18.3",
+    "@lezer/common": "^1.2.3"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>fore-codemirror: syntax-completing Fore editor</title>
+    <link href="../../resources/demo.css" rel="stylesheet"/>
+
+    <script type="module" src="../../doc/fore-corner.js"></script>
+    <script type="module" src="./dist/fore-codemirror-bundle.js"></script>
+
+    <style>
+        .fcm-panel {
+            margin-bottom: 2rem;
+        }
+        .fcm-panel h2 {
+            margin-bottom: 0.25rem;
+        }
+        fore-codemirror {
+            display: block;
+            height: 320px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+<fore-corner href="../../doc/demos.html" title="Back to Demos"></fore-corner>
+
+<div class="wrapper">
+    <h1><code>fore-codemirror</code></h1>
+    <p>
+        A CodeMirror-based editor mode that knows Fore's <code>fx-*</code> element and attribute
+        vocabulary: it completes tag and attribute names, and flags unknown ones. It is a separate,
+        optional module - not part of <code>fore.js</code>/<code>fore-dev.js</code> - loaded here via
+        its own <code>&lt;script type="module" src="./dist/fore-codemirror-bundle.js"&gt;</code>.
+    </p>
+    <p>
+        The vocabulary itself comes from <code>fore-schema.json</code>, generated from the Fore
+        element reference doc (see <code>scripts/build-schema.mjs</code>) - not from source-code
+        introspection.
+    </p>
+
+    <div class="fcm-panel">
+        <h2>Valid markup</h2>
+        <p>Place the cursor inside a tag and start typing an attribute name (e.g. after
+            <code>&lt;fx-bind </code>) to see completion suggestions.</p>
+        <fore-codemirror id="valid-editor"></fore-codemirror>
+    </div>
+
+    <div class="fcm-panel">
+        <h2>Markup with mistakes</h2>
+        <p>Contains a misspelled element (<code>&lt;fx-cotnrol&gt;</code>) and a misspelled attribute
+            (<code>calcualte</code>) - both should show a lint warning (squiggly underline + gutter
+            marker).</p>
+        <fore-codemirror id="broken-editor"></fore-codemirror>
+    </div>
+
+    <div class="fcm-panel">
+        <h2>Wrong nesting</h2>
+        <p><code>&lt;fx-control&gt;</code> is placed inside <code>&lt;fx-model&gt;</code> (it would
+            render but stay inert there), and <code>&lt;fx-bind&gt;</code> is placed outside
+            <code>&lt;fx-model&gt;</code> (it would silently do nothing there) - both are flagged.</p>
+        <fore-codemirror id="structure-editor"></fore-codemirror>
+    </div>
+</div>
+
+<script type="module">
+  const validSample = `<fx-fore>
+  <fx-model>
+    <fx-instance>
+      <data>
+        <value>Hello Fore</value>
+        <computed></computed>
+      </data>
+    </fx-instance>
+    <fx-bind ref="computed" calculate="string-length(../value)"></fx-bind>
+  </fx-model>
+  <fx-group>
+    <fx-control ref="value">
+      <label>Some text</label>
+    </fx-control>
+    <fx-output ref="computed"></fx-output>
+  </fx-group>
+</fx-fore>`;
+
+  const brokenSample = `<fx-fore>
+  <fx-model>
+    <fx-instance>
+      <data>
+        <value>Hello Fore</value>
+        <computed></computed>
+      </data>
+    </fx-instance>
+    <fx-bind ref="computed" calcualte="string-length(../value)"></fx-bind>
+  </fx-model>
+  <fx-group>
+    <fx-cotnrol ref="value">
+      <label>Some text</label>
+    </fx-cotnrol>
+    <fx-output ref="computed"></fx-output>
+  </fx-group>
+</fx-fore>`;
+
+  const structureSample = `<fx-fore>
+  <fx-model>
+    <fx-instance>
+      <data>
+        <value>Hello Fore</value>
+      </data>
+    </fx-instance>
+    <fx-control ref="value">
+      <label>Some text</label>
+    </fx-control>
+  </fx-model>
+  <fx-bind ref="value" required="true()"></fx-bind>
+</fx-fore>`;
+
+  customElements.whenDefined('fore-codemirror').then(() => {
+    document.getElementById('valid-editor').content = validSample;
+    document.getElementById('broken-editor').content = brokenSample;
+    document.getElementById('structure-editor').content = structureSample;
+  });
+</script>
+</body>
+</html>

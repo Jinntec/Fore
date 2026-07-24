@@ -1,0 +1,519 @@
+{
+  "extraTags": {
+    "fx-fore": {
+      "attrs": {
+        "src": null,
+        "selector": null,
+        "create-nodes": null,
+        "ignore-expressions": null,
+        "merge-partial": null,
+        "refresh-on-view": null,
+        "strict": null,
+        "validate-on": null,
+        "version": null,
+        "init-on": null,
+        "init-on-target": null,
+        "show-confirmation": null,
+        "no-check": null,
+        "wait-for": null
+      }
+    },
+    "fx-model": {
+      "attrs": {
+        "id": null
+      }
+    },
+    "fx-bind": {
+      "attrs": {
+        "ref": null,
+        "calculate": null,
+        "constraint": null,
+        "readonly": null,
+        "required": null,
+        "relevant": null,
+        "type": null,
+        "alert": null,
+        "id": null
+      }
+    },
+    "fx-instance": {
+      "attrs": {
+        "id": [
+          "id",
+          "default"
+        ],
+        "src": null,
+        "credentials": [
+          "same-origin",
+          "include",
+          "omit"
+        ],
+        "type": [
+          "xml",
+          "json",
+          "text",
+          "html"
+        ],
+        "shared": null
+      }
+    },
+    "fx-submission": {
+      "attrs": {
+        "id": null,
+        "url": null,
+        "method": null,
+        "ref": null,
+        "instance": null,
+        "replace": [
+          "all",
+          "instance",
+          "none",
+          "download",
+          "target",
+          "redirect"
+        ],
+        "into": null,
+        "targetref": null,
+        "target": null,
+        "nonrelevant": [
+          "remove",
+          "keep",
+          "empty"
+        ],
+        "serialization": [
+          "xml",
+          "json",
+          "none"
+        ],
+        "mediatype": null,
+        "responsemediatype": null,
+        "validate": [
+          "true",
+          "false"
+        ],
+        "credentials": [
+          "same-origin",
+          "include",
+          "omit"
+        ]
+      }
+    },
+    "fx-var": {
+      "attrs": {
+        "name": null,
+        "value": null
+      }
+    },
+    "fx-header": {
+      "attrs": {
+        "name": null,
+        "value": null
+      }
+    },
+    "fx-connection": {
+      "attrs": {
+        "url": null,
+        "heartbeat": null,
+        "message-format": [
+          "json",
+          "xml",
+          "text"
+        ],
+        "ref": null
+      }
+    },
+    "fx-control": {
+      "attrs": {
+        "ref": null,
+        "update-event": [
+          "blur",
+          "enter"
+        ],
+        "debounce": null,
+        "label": null,
+        "value-prop": [
+          "value",
+          "selectedOptions",
+          "checked"
+        ],
+        "listen-on": null,
+        "on-demand": null,
+        "initial": null,
+        "src": null,
+        "credentials": [
+          "same-origin",
+          "include",
+          "omit"
+        ],
+        "as": [
+          "xml",
+          "node"
+        ],
+        "shadow": null
+      }
+    },
+    "fx-abstract-control": {
+      "attrs": {
+        "as": null
+      }
+    },
+    "fx-output": {
+      "attrs": {
+        "ref": null,
+        "value": null,
+        "mediatype": [
+          "html",
+          "image"
+        ],
+        "html": null
+      }
+    },
+    "fx-trigger": {
+      "attrs": {
+        "ref": null,
+        "debounce": null
+      }
+    },
+    "fx-group": {
+      "attrs": {
+        "ref": null,
+        "collapse": null,
+        "on-demand": null
+      }
+    },
+    "fx-container": {
+      "attrs": {
+        "src": null,
+        "refresh-on-view": null
+      }
+    },
+    "fx-repeat": {
+      "attrs": {
+        "ref": null,
+        "index": null,
+        "focus-on-create": null,
+        "drop-target": null,
+        "draggable": null
+      }
+    },
+    "fx-repeat-attributes": {
+      "attrs": {
+        "ref": null,
+        "index": null,
+        "focus-on-create": null
+      }
+    },
+    "fx-repeatitem": {
+      "attrs": {
+        "repeat-index": null,
+        "relevant": null,
+        "nonrelevant": null
+      }
+    },
+    "fx-switch": {
+      "attrs": {
+        "ref": null
+      }
+    },
+    "fx-case": {
+      "attrs": {
+        "id": null,
+        "name": null,
+        "label": null,
+        "selected": null,
+        "src": null,
+        "selector": null
+      }
+    },
+    "fx-dialog": {
+      "attrs": {
+        "id": null
+      }
+    },
+    "fx-alert": {
+      "attrs": {
+        "ref": null
+      }
+    },
+    "fx-hint": {
+      "attrs": {}
+    },
+    "fx-include": {
+      "attrs": {
+        "event": null,
+        "target": [
+          "self",
+          "document",
+          "window"
+        ],
+        "src": null,
+        "selector": null,
+        "replace": null,
+        "immediate": null,
+        "reload": null
+      }
+    },
+    "fx-upload": {
+      "attrs": {
+        "ref": null,
+        "accept": null,
+        "filename": null,
+        "mimetype": null,
+        "label": null
+      }
+    },
+    "fx-items": {
+      "attrs": {
+        "ref": null,
+        "value": null
+      }
+    },
+    "fx-droptarget": {
+      "attrs": {}
+    },
+    "fx-control-menu": {
+      "attrs": {
+        "select": null,
+        "mode": null
+      }
+    },
+    "fx-inspector": {
+      "attrs": {
+        "open": null
+      }
+    },
+    "fx-speech": {
+      "attrs": {
+        "mode": null
+      }
+    },
+    "fx-setvalue": {
+      "attrs": {
+        "ref": null,
+        "value": null
+      }
+    },
+    "fx-insert": {
+      "attrs": {
+        "ref": null,
+        "context": null,
+        "origin": null,
+        "at": null,
+        "position": [
+          "before",
+          "after",
+          "first",
+          "last"
+        ],
+        "keep-values": null,
+        "template": null
+      }
+    },
+    "fx-delete": {
+      "attrs": {
+        "ref": null
+      }
+    },
+    "fx-send": {
+      "attrs": {
+        "submission": null,
+        "url": null,
+        "target": null,
+        "connection": null
+      }
+    },
+    "fx-dispatch": {
+      "attrs": {
+        "name": null,
+        "targetid": null
+      }
+    },
+    "fx-message": {
+      "attrs": {
+        "event": null,
+        "level": [
+          "ephemeral",
+          "sticky",
+          "modal"
+        ],
+        "value": null
+      }
+    },
+    "fx-toggle": {
+      "attrs": {
+        "case": null
+      }
+    },
+    "fx-show": {
+      "attrs": {
+        "dialog": null
+      }
+    },
+    "fx-hide": {
+      "attrs": {
+        "dialog": null
+      }
+    },
+    "fx-setattribute": {
+      "attrs": {
+        "ref": null,
+        "name": null,
+        "value": null
+      }
+    },
+    "fx-load": {
+      "attrs": {
+        "url": null,
+        "attach-to": [
+          "_self",
+          "_blank"
+        ],
+        "replace": null,
+        "await": null
+      }
+    },
+    "fx-setfocus": {
+      "attrs": {
+        "control": null,
+        "select": null
+      }
+    },
+    "fx-refresh": {
+      "attrs": {
+        "force": null,
+        "self": null,
+        "selector": null,
+        "control": null
+      }
+    },
+    "fx-replace": {
+      "attrs": {
+        "ref": null,
+        "with": null
+      }
+    },
+    "fx-toggleboolean": {
+      "attrs": {
+        "ref": null
+      }
+    },
+    "fx-call": {
+      "attrs": {
+        "action": null,
+        "function": null
+      }
+    },
+    "fx-reload": {
+      "attrs": {}
+    },
+    "fx-reset": {
+      "attrs": {
+        "instance": null
+      }
+    },
+    "fx-update": {
+      "attrs": {}
+    },
+    "fx-append": {
+      "attrs": {
+        "ref": null,
+        "repeat": null
+      }
+    },
+    "fx-construct-done": {
+      "attrs": {}
+    },
+    "fx-unmodified": {
+      "attrs": {}
+    },
+    "fx-action": {
+      "attrs": {
+        "src": null
+      }
+    },
+    "fx-return": {
+      "attrs": {}
+    },
+    "fx-confirm": {
+      "attrs": {
+        "message": null
+      }
+    },
+    "fx-function": {
+      "attrs": {
+        "signature": null,
+        "type": null,
+        "override": null
+      }
+    },
+    "fx-functionlib": {
+      "attrs": {
+        "src": null,
+        "prefix": null,
+        "type": [
+          "module",
+          "html"
+        ]
+      }
+    },
+    "fx-devtools": {
+      "attrs": {
+        "selector": null
+      }
+    },
+    "fx-action-log": {
+      "attrs": {}
+    },
+    "fx-dom-inspector": {
+      "attrs": {
+        "instance": null
+      }
+    },
+    "fx-json-instance": {
+      "attrs": {
+        "fore": null,
+        "instance": null
+      }
+    },
+    "fx-log-item": {
+      "attrs": {
+        "event-name": null,
+        "short-name": null,
+        "short-info": null,
+        "xpath": null
+      }
+    },
+    "fx-log-settings": {
+      "attrs": {}
+    },
+    "fx-minimap": {
+      "attrs": {
+        "options": null,
+        "selector": null
+      }
+    }
+  },
+  "extraGlobalAttributes": {
+    "ref": null,
+    "context": null,
+    "value": null,
+    "event": null,
+    "if": null,
+    "while": null,
+    "iterate": null,
+    "delay": null,
+    "target": null,
+    "phase": [
+      "capture",
+      "default"
+    ],
+    "propagate": [
+      "stop",
+      "continue"
+    ],
+    "default-action": [
+      "cancel",
+      "perform"
+    ]
+  }
+}
