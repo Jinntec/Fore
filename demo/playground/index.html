@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+
+    <title>Fore Playground</title>
+
+    <link href="../../resources/fore.css" rel="stylesheet">
+    <link href="../../resources/vars.css" rel="stylesheet">
+    <link href="../../resources/demo.css" rel="stylesheet">
+    <link href="./playground.css" rel="stylesheet">
+    <style id="pg-demo-style"></style>
+
+    <script type="module" src="../codemirror/jinn-codemirror-bundle.js"></script>
+    <script type="module" src="../fore-codemirror/dist/fore-codemirror-bundle.js"></script>
+    <script type="module" src="../../doc/fore-corner.js"></script>
+    <script type="module" src="../../index.js"></script>
+</head>
+<body>
+<fore-corner href="../../doc/demos.html" title="Back to Demos"></fore-corner>
+
+<!--
+The playground's own chrome (toolbar, xpath console, event log) is a real Fore app -
+it dogfoods fx-control/fx-repeat/fx-trigger/fx-dispatch rather than plain DOM wiring.
+It deliberately does NOT wrap the code editors or #pg-preview: #pg-preview hosts a
+dynamically (re)mounted, independent <fx-fore> for whatever the user is editing, and
+nesting one live fx-fore inside another causes their update cycles to interfere.
+#pg-chrome uses display:contents (see playground.css) so its three regions (toolbar,
+xpath console, log) can sit visually around the plain editor/preview markup via CSS
+order, while staying a single contiguous Fore-bound subtree in the DOM.
+-->
+<div class="pg-shell">
+    <fx-fore id="pg-chrome">
+        <fx-model>
+            <fx-instance id="state">
+                <state>
+                    <selected-demo></selected-demo>
+                    <status></status>
+                    <xpath-expr></xpath-expr>
+                    <instance-type>xml</instance-type>
+                    <selected-instance-id>default</selected-instance-id>
+                </state>
+            </fx-instance>
+            <!-- Populated from the current markup pane's <fx-instance> elements (see
+                 refreshInstanceOptions in playground.js) - parsing free-text markup to find
+                 them isn't expressible in Fore, but the resulting picker is a real binding. -->
+            <fx-instance id="instances-list">
+                <instances></instances>
+            </fx-instance>
+            <fx-bind ref="instance('state')/selected-instance-id"
+                     relevant="count(instance('instances-list')/instance) > 1"></fx-bind>
+            <fx-instance id="demos">
+                <demos>
+                    <demo path="" label="– choose a demo –"></demo>
+                    <demo path="../simple-calc.html" label="Calculate values (bind/calculate)"></demo>
+                    <demo path="../nested-bind.html" label="Nested bind"></demo>
+                    <demo path="../instances-json.html" label="Instances with JSON"></demo>
+                    <demo path="../repeat-atomic.html" label="Repeating atomic values"></demo>
+                    <demo path="../context-in-repeat.html" label="Context in repeat"></demo>
+                    <demo path="../dispatch-conditional.html" label="Dispatch (conditional)"></demo>
+                    <demo path="../setvalue-test.html" label="Setvalue action"></demo>
+                    <demo path="../output.html" label="Output"></demo>
+                    <demo path="../recalculate.html" label="Recalculate"></demo>
+                    <demo path="../revalidate.html" label="Validation and alerts"></demo>
+                    <demo path="../native-validation.html" label="Native browser validation"></demo>
+                    <demo path="../binding.html" label="Binding"></demo>
+                    <demo path="../on-event.html" label="init-on"></demo>
+                    <demo path="../undo-redo.html" label="undo/redo"></demo>
+                    <demo path="../fx-control.html" label="fx-control"></demo>
+                    <demo path="../selects2.html" label="Selects"></demo>
+                    <demo path="../todo2.html" label="Todo app"></demo>
+                    <demo path="../readonly-inheritance.html" label="readonly inherits"></demo>
+                    <demo path="../submission2.html" label="submissions"></demo>
+                </demos>
+            </fx-instance>
+            <fx-instance id="log">
+                <log></log>
+            </fx-instance>
+        </fx-model>
+
+        <header class="pg-toolbar pg-order-1">
+            <div class="pg-toolbar-left">
+                <h1>Fore Playground</h1>
+
+                <fx-control ref="instance('state')/selected-demo" id="pg-demo-control" update-event="change">
+                    <label>Load demo</label>
+                    <select ref="instance('demos')/demo" class="widget">
+                        <template>
+                            <option value="{@path}">{@label}</option>
+                        </template>
+                    </select>
+                </fx-control>
+            </div>
+
+            <div class="pg-toolbar-right">
+                <fx-trigger>
+                    <button type="button">New</button>
+                    <fx-dispatch name="pg-new"></fx-dispatch>
+                </fx-trigger>
+                <fx-trigger>
+                    <button type="button">Generate form from data</button>
+                    <fx-dispatch name="pg-generate"></fx-dispatch>
+                </fx-trigger>
+                <fx-trigger>
+                    <button type="button">Copy link</button>
+                    <fx-dispatch name="pg-share"></fx-dispatch>
+                </fx-trigger>
+
+                <fx-output ref="instance('state')/status" class="pg-status"></fx-output>
+            </div>
+        </header>
+
+        <section class="pg-xpath-row pg-order-3">
+            <h2>XPath Console</h2>
+            <div class="pg-xpath">
+                <fx-control ref="instance('state')/xpath-expr" id="pg-xpath-control" update-event="input">
+                    <textarea class="widget" rows="1"
+                              placeholder="e.g. count(instance('default')//*) or generate-form(instance('default'))"></textarea>
+                </fx-control>
+                <fx-trigger>
+                    <button type="button">Evaluate</button>
+                    <fx-dispatch name="pg-evaluate"></fx-dispatch>
+                </fx-trigger>
+            </div>
+            <pre id="pg-xpath-result" class="pg-console-output"></pre>
+        </section>
+
+        <footer class="pg-log-row pg-order-5">
+            <h2>Update Cycle Log</h2>
+            <div class="pg-eventlog">
+                <fx-repeat ref="instance('log')/entry">
+                    <template>
+                        <div class="pg-log-entry">{text}</div>
+                    </template>
+                </fx-repeat>
+            </div>
+        </footer>
+
+        <section class="pg-instance-row pg-order-4">
+            <div class="pg-instance-header">
+                <h2>Instance Data</h2>
+                <!-- No update-event: playground.js's switchSelectedInstance() commits the
+                     outgoing instance's pane content before writing the new selection into
+                     the model itself, so this stays a pure display binding. -->
+                <fx-control ref="instance('state')/selected-instance-id" id="pg-instance-select-control">
+                    <select ref="instance('instances-list')/instance" class="widget pg-instance-select">
+                        <template>
+                            <option value="{@id}">{@id}</option>
+                        </template>
+                    </select>
+                </fx-control>
+                <div class="pg-instance-toolbar">
+                    <fx-control ref="instance('state')/instance-type" update-event="change">
+                        <fx-items>
+                            <label><input type="radio" name="pg-instance-type" value="xml"/> XML</label>
+                            <label><input type="radio" name="pg-instance-type" value="json"/> JSON</label>
+                        </fx-items>
+                    </fx-control>
+                </div>
+            </div>
+            <jinn-codemirror id="pg-instance-editor" mode="xml" class="pg-editor pg-editor-instance"></jinn-codemirror>
+        </section>
+    </fx-fore>
+
+    <main class="pg-grid pg-order-2">
+        <section class="pg-col pg-col-markup">
+            <div class="pg-col-headerbar">
+                <h2>Fore Markup</h2>
+            </div>
+            <fore-codemirror id="pg-markup-editor" class="pg-editor"></fore-codemirror>
+        </section>
+
+        <section class="pg-col pg-col-preview">
+            <div class="pg-col-headerbar pg-preview-header">
+                <h2>Live Preview</h2>
+                <div class="pg-preview-actions">
+                    <button type="button" id="pg-refresh-btn" class="pg-expand-btn">↻ Refresh</button>
+                    <button type="button" id="pg-expand-toggle" class="pg-expand-btn">⤢ Expand</button>
+                </div>
+            </div>
+            <div id="pg-preview" class="pg-preview"></div>
+        </section>
+    </main>
+</div>
+
+<script type="module" src="./playground.js"></script>
+</body>
+</html>

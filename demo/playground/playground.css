@@ -1,0 +1,296 @@
+:root {
+  --pg-card-bg: #ffffff;
+  --pg-card-border: #d8dee7;
+  --pg-card-radius: 8px;
+  --pg-card-shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 1px 1px rgba(15, 23, 42, 0.04);
+}
+
+body {
+  margin: 0;
+  font-family: "Montserrat", "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif;
+  background: linear-gradient(180deg, #eef2f7 0%, #e6ebf2 100%);
+}
+
+.pg-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  box-sizing: border-box;
+  padding: 0.75rem 1rem 1rem;
+}
+
+/* #pg-chrome wraps toolbar/xpath-console/log (see index.html comment); display:contents
+   drops its own box so those three regions become direct flex items of .pg-shell and can
+   be interleaved with the plain editor/preview markup via order, without nesting the
+   dynamically mounted preview <fx-fore> inside this one. */
+#pg-chrome {
+  display: contents;
+}
+
+.pg-order-1 { order: 1; }
+.pg-order-2 { order: 2; }
+.pg-order-3 { order: 3; }
+.pg-order-4 { order: 4; }
+.pg-order-5 { order: 5; }
+
+.pg-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  padding: 0.6rem 0.9rem;
+  margin-bottom: 0.5rem;
+  background: var(--pg-card-bg);
+  border: 1px solid var(--pg-card-border);
+  border-radius: var(--pg-card-radius);
+  box-shadow: var(--pg-card-shadow);
+}
+
+.pg-toolbar-left,
+.pg-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.pg-toolbar h1 {
+  font-size: 1.25rem;
+  margin: 0 1rem 0 0;
+}
+
+.pg-toolbar button,
+.pg-toolbar select {
+  font-size: 0.9rem;
+  padding: 0.3rem 0.6rem;
+}
+
+.pg-status {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.pg-status[data-level="error"] {
+  color: #c62828;
+  font-weight: 600;
+}
+
+.pg-status[data-level="ok"] {
+  color: #2e7d32;
+}
+
+h2 {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+  color: #555;
+  margin: 0.6rem 0 0.25rem;
+}
+
+.pg-xpath-row {
+  padding: 0.5rem 1rem 0;
+  margin: 0 -1rem;
+  flex-shrink: 0;
+  width: 100vw;
+  box-sizing: border-box;
+}
+
+.pg-xpath-row h2:first-child {
+  margin-top: 0.5rem;
+}
+
+.pg-xpath {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.pg-xpath #pg-xpath-control {
+  flex: 1;
+  display: flex;
+}
+
+.pg-xpath textarea {
+  flex: 1;
+  width: 100%;
+  font-family: monospace;
+  padding: 0.3rem;
+  resize: vertical;
+  min-height: 1.8rem;
+  height: 1.8rem;
+  line-height: 1.2;
+}
+
+.pg-console-output {
+  background: #f6f7f9;
+  border: 1px solid var(--pg-card-border);
+  border-radius: var(--pg-card-radius);
+  padding: 0.4rem 0.5rem;
+  margin: 0.25rem 0 0;
+  max-height: 4rem;
+  overflow: auto;
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+}
+
+.pg-grid {
+  flex: 3;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  min-height: 0;
+  padding-top: 0.5rem;
+}
+
+.pg-grid.pg-expanded {
+  grid-template-columns: 0 1fr;
+}
+
+.pg-grid.pg-expanded .pg-col-markup {
+  visibility: hidden;
+}
+
+.pg-col {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+}
+
+.pg-col h2:first-child {
+  margin-top: 0;
+}
+
+/* Shared header row for both columns (h2 + optional trailing controls) so the markup
+   and preview editors below them start at exactly the same vertical position, regardless
+   of whether the row also contains a button (preview's Expand toggle). */
+.pg-col-headerbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-height: 1.75rem;
+}
+
+.pg-col-headerbar h2 {
+  margin: 0;
+}
+
+.pg-instance-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 0.75rem;
+}
+
+.pg-instance-header h2 {
+  margin: 0;
+  white-space: nowrap;
+}
+
+.pg-instance-select {
+  font-size: 0.8rem;
+  padding: 0.1rem 0.3rem;
+}
+
+.pg-instance-toolbar {
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.pg-instance-toolbar fx-items {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: nowrap;
+}
+
+.pg-instance-toolbar label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
+.pg-editor {
+  flex: 1;
+  min-height: 140px;
+  border: 1px solid var(--pg-card-border);
+  border-radius: var(--pg-card-radius);
+  overflow: auto;
+  background: var(--pg-card-bg);
+  box-shadow: var(--pg-card-shadow);
+}
+
+.pg-preview-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.pg-expand-btn {
+  font-size: 0.75rem;
+  padding: 0.15rem 0.5rem;
+}
+
+.pg-preview {
+  flex: 1;
+  min-height: 120px;
+  border: 1px solid var(--pg-card-border);
+  border-radius: var(--pg-card-radius);
+  padding: 0.75rem;
+  overflow: auto;
+  background: var(--pg-card-bg);
+  box-shadow: var(--pg-card-shadow);
+}
+
+.pg-preview .pg-error {
+  color: #c62828;
+  font-family: monospace;
+  white-space: pre-wrap;
+}
+
+.pg-instance-row {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  padding-top: 0.4rem;
+}
+
+.pg-instance-row h2:first-child {
+  margin-top: 0;
+}
+
+.pg-editor-instance {
+  flex: none;
+  height: 7rem;
+  min-height: 7rem;
+}
+
+.pg-log-row {
+  flex-shrink: 0;
+  padding-top: 0.4rem;
+}
+
+.pg-log-row h2 {
+  margin: 0.4rem 0 0.15rem;
+}
+
+.pg-eventlog {
+  border: 1px solid var(--pg-card-border);
+  border-radius: var(--pg-card-radius);
+  background: #f6f7f9;
+  height: 4.5rem;
+  overflow: auto;
+  font-family: monospace;
+  font-size: 0.75rem;
+  padding: 0.3rem 0.4rem;
+}
+
+.pg-eventlog .pg-log-entry {
+  border-bottom: 1px dotted #ccc;
+  padding: 0.1rem 0;
+}

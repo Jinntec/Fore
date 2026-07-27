@@ -14345,8 +14345,8 @@ NodeProp.contextHash = new NodeProp({ perNode: true });
 NodeProp.lookAhead = new NodeProp({ perNode: true });
 NodeProp.mounted = new NodeProp({ perNode: true });
 var MountedTree = class {
-  constructor(tree, overlay, parser4, bracketed = false) {
-    this.tree = tree;
+  constructor(tree2, overlay, parser4, bracketed = false) {
+    this.tree = tree2;
     this.overlay = overlay;
     this.parser = parser4;
     this.bracketed = bracketed;
@@ -14354,8 +14354,8 @@ var MountedTree = class {
   /**
   @internal
   */
-  static get(tree) {
-    return tree && tree.props && tree.props[NodeProp.mounted.id];
+  static get(tree2) {
+    return tree2 && tree2.props && tree2.props[NodeProp.mounted.id];
   }
 };
 var noProps = /* @__PURE__ */ Object.create(null);
@@ -15174,8 +15174,8 @@ var StackIterator = class {
     return iterStack(this.heads);
   }
 };
-function stackIterator(tree, pos, side) {
-  let inner = tree.resolveInner(pos, side), layers = null;
+function stackIterator(tree2, pos, side) {
+  let inner = tree2.resolveInner(pos, side), layers = null;
   for (let scan = inner instanceof TreeNode ? inner : inner.context.parent; scan; scan = scan.parent) {
     if (scan.index < 0) {
       let parent = scan.parent;
@@ -15531,8 +15531,8 @@ var TreeCursor = class {
     return true;
   }
 };
-function hasChild(tree) {
-  return tree.children.some((ch) => ch instanceof TreeBuffer || !ch.type.isAnonymous || hasChild(ch));
+function hasChild(tree2) {
+  return tree2.children.some((ch) => ch instanceof TreeBuffer || !ch.type.isAnonymous || hasChild(ch));
 }
 function buildTree(data) {
   var _a2;
@@ -15842,10 +15842,10 @@ var TreeFragment = class _TreeFragment {
   [`applyChanges`](#common.TreeFragment^applyChanges) instead of
   calling this directly.
   */
-  constructor(from, to, tree, offset, openStart = false, openEnd = false) {
+  constructor(from, to, tree2, offset, openStart = false, openEnd = false) {
     this.from = from;
     this.to = to;
-    this.tree = tree;
+    this.tree = tree2;
     this.offset = offset;
     this.open = (openStart ? 1 : 0) | (openEnd ? 2 : 0);
   }
@@ -15873,10 +15873,10 @@ var TreeFragment = class _TreeFragment {
   fragment has [`openEnd`](#common.TreeFragment.openEnd) set to
   true.
   */
-  static addTree(tree, fragments = [], partial = false) {
-    let result = [new _TreeFragment(0, tree.length, tree, 0, false, partial)];
+  static addTree(tree2, fragments = [], partial = false) {
+    let result = [new _TreeFragment(0, tree2.length, tree2, 0, false, partial)];
     for (let f of fragments)
-      if (f.to > tree.length)
+      if (f.to > tree2.length)
         result.push(f);
     return result;
   }
@@ -16169,8 +16169,8 @@ function materialize(cursor) {
   }
   base2.children[i] = split(0, b.length, NodeType.none, 0, buf.length, stack.length - 1);
   for (let index of newStack) {
-    let tree = cursor.tree.children[index], pos = cursor.tree.positions[index];
-    cursor.yield(new TreeNode(tree, pos + cursor.from, index, cursor._tree));
+    let tree2 = cursor.tree.children[index], pos = cursor.tree.positions[index];
+    cursor.yield(new TreeNode(tree2, pos + cursor.from, index, cursor._tree));
   }
 }
 var StructureCursor = class {
@@ -16195,11 +16195,11 @@ var StructureCursor = class {
   hasNode(cursor) {
     this.moveTo(cursor.from);
     if (!this.done && this.cursor.from + this.offset == cursor.from && this.cursor.tree) {
-      for (let tree = this.cursor.tree; ; ) {
-        if (tree == cursor.tree)
+      for (let tree2 = this.cursor.tree; ; ) {
+        if (tree2 == cursor.tree)
           return true;
-        if (tree.children.length && tree.positions[0] == 0 && tree.children[0] instanceof Tree)
-          tree = tree.children[0];
+        if (tree2.children.length && tree2.positions[0] == 0 && tree2.children[0] instanceof Tree)
+          tree2 = tree2.children[0];
         else
           break;
       }
@@ -16557,9 +16557,9 @@ function highlightTags(highlighters, tags3) {
   }
   return result;
 }
-function highlightTree(tree, highlighter, putStyle, from = 0, to = tree.length) {
+function highlightTree(tree2, highlighter, putStyle, from = 0, to = tree2.length) {
   let builder = new HighlightBuilder(from, Array.isArray(highlighter) ? highlighter : [highlighter], putStyle);
-  builder.highlightRange(tree.cursor(), from, to, "", builder.highlighters);
+  builder.highlightRange(tree2.cursor(), from, to, "", builder.highlighters);
   builder.flush(to);
 }
 var HighlightBuilder = class {
@@ -17129,19 +17129,19 @@ var Language = class {
     if (!lang || !lang.allowsNesting)
       return [];
     let result = [];
-    let explore = (tree, from) => {
-      if (tree.prop(languageDataProp) == this.data) {
-        result.push({ from, to: from + tree.length });
+    let explore = (tree2, from) => {
+      if (tree2.prop(languageDataProp) == this.data) {
+        result.push({ from, to: from + tree2.length });
         return;
       }
-      let mount = tree.prop(NodeProp.mounted);
+      let mount = tree2.prop(NodeProp.mounted);
       if (mount) {
         if (mount.tree.prop(languageDataProp) == this.data) {
           if (mount.overlay)
             for (let r of mount.overlay)
               result.push({ from: r.from + from, to: r.to + from });
           else
-            result.push({ from, to: from + tree.length });
+            result.push({ from, to: from + tree2.length });
           return;
         } else if (mount.overlay) {
           let size = result.length;
@@ -17150,10 +17150,10 @@ var Language = class {
             return;
         }
       }
-      for (let i = 0; i < tree.children.length; i++) {
-        let ch = tree.children[i];
+      for (let i = 0; i < tree2.children.length; i++) {
+        let ch = tree2.children[i];
         if (ch instanceof Tree)
-          explore(ch, tree.positions[i] + from);
+          explore(ch, tree2.positions[i] + from);
       }
     };
     explore(syntaxTree(state), 0);
@@ -17169,13 +17169,13 @@ var Language = class {
 };
 Language.setState = /* @__PURE__ */ StateEffect.define();
 function topNodeAt(state, pos, side) {
-  let topLang = state.facet(language), tree = syntaxTree(state).topNode;
+  let topLang = state.facet(language), tree2 = syntaxTree(state).topNode;
   if (!topLang || topLang.allowsNesting) {
-    for (let node = tree; node; node = node.enter(pos, side, IterMode.ExcludeBuffers | IterMode.EnterBracketed))
+    for (let node = tree2; node; node = node.enter(pos, side, IterMode.ExcludeBuffers | IterMode.EnterBracketed))
       if (node.type.isTop)
-        tree = node;
+        tree2 = node;
   }
-  return tree;
+  return tree2;
 }
 var LRLanguage = class _LRLanguage extends Language {
   constructor(data, parser4, name2) {
@@ -17241,11 +17241,11 @@ var DocInput = class {
 };
 var currentContext = null;
 var ParseContext = class _ParseContext {
-  constructor(parser4, state, fragments = [], tree, treeLen, viewport, skipped, scheduleOn) {
+  constructor(parser4, state, fragments = [], tree2, treeLen, viewport, skipped, scheduleOn) {
     this.parser = parser4;
     this.state = state;
     this.fragments = fragments;
-    this.tree = tree;
+    this.tree = tree2;
     this.treeLen = treeLen;
     this.viewport = viewport;
     this.skipped = skipped;
@@ -17303,16 +17303,16 @@ var ParseContext = class _ParseContext {
   @internal
   */
   takeTree() {
-    let pos, tree;
+    let pos, tree2;
     if (this.parse && (pos = this.parse.parsedPos) >= this.treeLen) {
       if (this.parse.stoppedAt == null || this.parse.stoppedAt > pos)
         this.parse.stopAt(pos);
       this.withContext(() => {
-        while (!(tree = this.parse.advance())) {
+        while (!(tree2 = this.parse.advance())) {
         }
       });
       this.treeLen = pos;
-      this.tree = tree;
+      this.tree = tree2;
       this.fragments = this.withoutTempSkipped(TreeFragment.addTree(this.tree, this.fragments, true));
       this.parse = null;
     }
@@ -17335,13 +17335,13 @@ var ParseContext = class _ParseContext {
   @internal
   */
   changes(changes, newState) {
-    let { fragments, tree, treeLen, viewport, skipped } = this;
+    let { fragments, tree: tree2, treeLen, viewport, skipped } = this;
     this.takeTree();
     if (!changes.empty) {
       let ranges = [];
       changes.iterChangedRanges((fromA, toA, fromB, toB) => ranges.push({ fromA, toA, fromB, toB }));
       fragments = TreeFragment.applyChanges(fragments, ranges);
-      tree = Tree.empty;
+      tree2 = Tree.empty;
       treeLen = 0;
       viewport = { from: changes.mapPos(viewport.from, -1), to: changes.mapPos(viewport.to, 1) };
       if (this.skipped.length) {
@@ -17353,7 +17353,7 @@ var ParseContext = class _ParseContext {
         }
       }
     }
-    return new _ParseContext(this.parser, newState, fragments, tree, treeLen, viewport, skipped, this.scheduleOn);
+    return new _ParseContext(this.parser, newState, fragments, tree2, treeLen, viewport, skipped, this.scheduleOn);
   }
   /**
   @internal
@@ -17636,8 +17636,8 @@ function getIndentation(context, pos) {
     if (result !== void 0)
       return result;
   }
-  let tree = syntaxTree(context.state);
-  return tree.length >= pos ? syntaxIndentation(context, tree, pos) : null;
+  let tree2 = syntaxTree(context.state);
+  return tree2.length >= pos ? syntaxIndentation(context, tree2, pos) : null;
 }
 var IndentContext = class {
   /**
@@ -17743,16 +17743,16 @@ function indentFor(stack, cx, pos) {
 function ignoreClosed(cx) {
   return cx.pos == cx.options.simulateBreak && cx.options.simulateDoubleBreak;
 }
-function indentStrategy(tree) {
-  let strategy = tree.type.prop(indentNodeProp);
+function indentStrategy(tree2) {
+  let strategy = tree2.type.prop(indentNodeProp);
   if (strategy)
     return strategy;
-  let first = tree.firstChild, close;
+  let first = tree2.firstChild, close;
   if (first && (close = first.type.prop(NodeProp.closedBy))) {
-    let last = tree.lastChild, closed = last && close.indexOf(last.name) > -1;
+    let last = tree2.lastChild, closed = last && close.indexOf(last.name) > -1;
     return (cx) => delimitedStrategy(cx, true, 1, void 0, closed && !ignoreClosed(cx) ? last.from : void 0);
   }
-  return tree.parent == null ? topIndent : null;
+  return tree2.parent == null ? topIndent : null;
 }
 function topIndent() {
   return 0;
@@ -17825,15 +17825,15 @@ function isParent(parent, of) {
   return false;
 }
 function bracketedAligned(context) {
-  let tree = context.node;
-  let openToken = tree.childAfter(tree.from), last = tree.lastChild;
+  let tree2 = context.node;
+  let openToken = tree2.childAfter(tree2.from), last = tree2.lastChild;
   if (!openToken)
     return null;
   let sim = context.options.simulateBreak;
   let openLine = context.state.doc.lineAt(openToken.from);
   let lineEnd = sim == null || sim <= openLine.from ? openLine.to : Math.min(openLine.to, sim);
   for (let pos = openToken.to; ; ) {
-    let next = tree.childAfter(pos);
+    let next = tree2.childAfter(pos);
     if (!next || next == last)
       return null;
     if (!next.type.isSkipped) {
@@ -17901,10 +17901,10 @@ function foldInside(node) {
   return first && first.to < last.from ? { from: first.to, to: last.type.isError ? node.to : last.from } : null;
 }
 function syntaxFolding(state, start, end) {
-  let tree = syntaxTree(state);
-  if (tree.length < end)
+  let tree2 = syntaxTree(state);
+  if (tree2.length < end)
     return null;
-  let stack = tree.resolveStack(end, 1);
+  let stack = tree2.resolveStack(end, 1);
   let found = null;
   for (let iter = stack; iter; iter = iter.next) {
     let cur2 = iter.node;
@@ -17913,7 +17913,7 @@ function syntaxFolding(state, start, end) {
     if (found && cur2.from < start)
       break;
     let prop = cur2.type.prop(foldNodeProp);
-    if (prop && (cur2.to < tree.length - 50 || tree.length == state.doc.length || !isUnfinished(cur2))) {
+    if (prop && (cur2.to < tree2.length - 50 || tree2.length == state.doc.length || !isUnfinished(cur2))) {
       let value = prop(cur2, state);
       if (value && value.from <= end && value.from >= start && value.to > end)
         found = value;
@@ -18312,14 +18312,14 @@ var TreeHighlighter = class {
     this.decoratedTo = view.viewport.to;
   }
   update(update) {
-    let tree = syntaxTree(update.state), highlighters = getHighlighters(update.state);
+    let tree2 = syntaxTree(update.state), highlighters = getHighlighters(update.state);
     let styleChange = highlighters != getHighlighters(update.startState);
     let { viewport } = update.view, decoratedToMapped = update.changes.mapPos(this.decoratedTo, 1);
-    if (tree.length < viewport.to && !styleChange && tree.type == this.tree.type && decoratedToMapped >= viewport.to) {
+    if (tree2.length < viewport.to && !styleChange && tree2.type == this.tree.type && decoratedToMapped >= viewport.to) {
       this.decorations = this.decorations.map(update.changes);
       this.decoratedTo = decoratedToMapped;
-    } else if (tree != this.tree || update.viewportChanged || styleChange) {
-      this.tree = tree;
+    } else if (tree2 != this.tree || update.viewportChanged || styleChange) {
+      this.tree = tree2;
       this.decorations = this.buildDeco(update.view, highlighters);
       this.decoratedTo = viewport.to;
     }
@@ -18500,7 +18500,7 @@ function findHandle(node) {
 }
 function matchBrackets(state, pos, dir, config2 = {}) {
   let maxScanDistance = config2.maxScanDistance || DefaultScanDist, brackets = config2.brackets || DefaultBrackets;
-  let tree = syntaxTree(state), node = tree.resolveInner(pos, dir);
+  let tree2 = syntaxTree(state), node = tree2.resolveInner(pos, dir);
   for (let cur2 = node; cur2; cur2 = cur2.parent) {
     let matches = matchingNodes(cur2.type, dir, brackets);
     if (matches && cur2.from < cur2.to) {
@@ -18509,7 +18509,7 @@ function matchBrackets(state, pos, dir, config2 = {}) {
         return matchMarkedBrackets(state, pos, dir, cur2, handle, matches, brackets);
     }
   }
-  return matchPlainBrackets(state, pos, dir, tree, node.type, maxScanDistance, brackets);
+  return matchPlainBrackets(state, pos, dir, tree2, node.type, maxScanDistance, brackets);
 }
 function matchMarkedBrackets(_state, _pos, dir, token, handle, matching, brackets) {
   let parent = token.parent, firstToken = { from: handle.from, to: handle.to };
@@ -18537,7 +18537,7 @@ function matchMarkedBrackets(_state, _pos, dir, token, handle, matching, bracket
     } while (dir < 0 ? cursor.prevSibling() : cursor.nextSibling());
   return { start: firstToken, matched: false };
 }
-function matchPlainBrackets(state, pos, dir, tree, tokenType, maxScanDistance, brackets) {
+function matchPlainBrackets(state, pos, dir, tree2, tokenType, maxScanDistance, brackets) {
   if (dir < 0 ? !pos : pos == state.doc.length)
     return null;
   let startCh = dir < 0 ? state.sliceDoc(pos - 1, pos) : state.sliceDoc(pos, pos + 1);
@@ -18553,7 +18553,7 @@ function matchPlainBrackets(state, pos, dir, tree, tokenType, maxScanDistance, b
     let basePos = pos + distance * dir;
     for (let pos2 = dir > 0 ? 0 : text.length - 1, end = dir > 0 ? text.length : -1; pos2 != end; pos2 += dir) {
       let found = brackets.indexOf(text[pos2]);
-      if (found < 0 || tree.resolveInner(basePos + pos2, 1).type != tokenType)
+      if (found < 0 || tree2.resolveInner(basePos + pos2, 1).type != tokenType)
         continue;
       if (found % 2 == 0 == dir > 0) {
         depth++;
@@ -19281,9 +19281,9 @@ var selectLine = ({ state, dispatch }) => {
 };
 var selectParentSyntax = ({ state, dispatch }) => {
   let selection = updateSel(state.selection, (range) => {
-    let tree = syntaxTree(state), stack = tree.resolveStack(range.from, 1);
+    let tree2 = syntaxTree(state), stack = tree2.resolveStack(range.from, 1);
     if (range.empty) {
-      let stackBefore = tree.resolveStack(range.from, -1);
+      let stackBefore = tree2.resolveStack(range.from, -1);
       if (stackBefore.node.from >= stack.node.from && stackBefore.node.to <= stack.node.to)
         stack = stackBefore;
     }
@@ -22571,8 +22571,8 @@ function handleSame(state, token, allowTriple, config2) {
   });
 }
 function nodeStart(state, pos) {
-  let tree = syntaxTree(state).resolveInner(pos + 1);
-  return tree.parent && tree.from == pos;
+  let tree2 = syntaxTree(state).resolveInner(pos + 1);
+  return tree2.parent && tree2.from == pos;
 }
 function probablyInString(state, pos, quoteToken, prefixes) {
   let node = syntaxTree(state).resolveInner(pos, -1);
@@ -24397,8 +24397,8 @@ function overrides(token, prev, tableData, tableOffset) {
 }
 var verbose = typeof process != "undefined" && process.env && /\bparse\b/.test(process.env.LOG);
 var stackIDs = null;
-function cutAt(tree, pos, side) {
-  let cursor = tree.cursor(IterMode.IncludeAnonymous);
+function cutAt(tree2, pos, side) {
+  let cursor = tree2.cursor(IterMode.IncludeAnonymous);
   cursor.moveTo(pos);
   for (; ; ) {
     if (!(side < 0 ? cursor.childBefore(pos) : cursor.childAfter(pos)))
@@ -24408,7 +24408,7 @@ function cutAt(tree, pos, side) {
             cursor.to - 1,
             pos - 25
             /* Lookahead.Margin */
-          )) : Math.min(tree.length, Math.max(
+          )) : Math.min(tree2.length, Math.max(
             cursor.from + 1,
             pos + 25
             /* Lookahead.Margin */
@@ -24416,7 +24416,7 @@ function cutAt(tree, pos, side) {
         if (side < 0 ? cursor.prevSibling() : cursor.nextSibling())
           break;
         if (!cursor.parent())
-          return side < 0 ? 0 : tree.length;
+          return side < 0 ? 0 : tree2.length;
       }
   }
 }
@@ -27050,22 +27050,22 @@ var javascriptLanguage = /* @__PURE__ */ LRLanguage.define({
       }),
       /* @__PURE__ */ foldNodeProp.add({
         "Block ClassBody SwitchBody EnumBody ObjectExpression ArrayExpression ObjectType": foldInside,
-        BlockComment(tree) {
-          return { from: tree.from + 2, to: tree.to - 2 };
+        BlockComment(tree2) {
+          return { from: tree2.from + 2, to: tree2.to - 2 };
         },
-        JSXElement(tree) {
-          let open = tree.firstChild;
+        JSXElement(tree2) {
+          let open = tree2.firstChild;
           if (!open || open.name == "JSXSelfClosingTag")
             return null;
-          let close = tree.lastChild;
-          return { from: open.to, to: close.type.isError ? tree.to : close.from };
+          let close = tree2.lastChild;
+          return { from: open.to, to: close.type.isError ? tree2.to : close.from };
         },
-        "JSXSelfClosingTag JSXOpenTag"(tree) {
+        "JSXSelfClosingTag JSXOpenTag"(tree2) {
           var _a2;
-          let name2 = (_a2 = tree.firstChild) === null || _a2 === void 0 ? void 0 : _a2.nextSibling, close = tree.lastChild;
+          let name2 = (_a2 = tree2.firstChild) === null || _a2 === void 0 ? void 0 : _a2.nextSibling, close = tree2.lastChild;
           if (!name2 || name2.type.isError)
             return null;
-          return { from: name2.to, to: close.type.isError ? tree.to : close.from };
+          return { from: name2.to, to: close.type.isError ? tree2.to : close.from };
         }
       })
     ]
@@ -27115,8 +27115,8 @@ function findOpenTag(node) {
     node = node.parent;
   }
 }
-function elementName(doc2, tree, max = doc2.length) {
-  for (let ch = tree === null || tree === void 0 ? void 0 : tree.firstChild; ch; ch = ch.nextSibling) {
+function elementName(doc2, tree2, max = doc2.length) {
+  for (let ch = tree2 === null || tree2 === void 0 ? void 0 : tree2.firstChild; ch; ch = ch.nextSibling) {
     if (ch.name == "JSXIdentifier" || ch.name == "JSXBuiltin" || ch.name == "JSXNamespacedName" || ch.name == "JSXMemberExpression")
       return doc2.sliceString(ch.from, Math.min(ch.to, max));
   }
@@ -27596,46 +27596,46 @@ var Schema = class {
   }
 };
 Schema.default = /* @__PURE__ */ new Schema();
-function elementName2(doc2, tree, max = doc2.length) {
-  if (!tree)
+function elementName2(doc2, tree2, max = doc2.length) {
+  if (!tree2)
     return "";
-  let tag = tree.firstChild;
+  let tag = tree2.firstChild;
   let name2 = tag && tag.getChild("TagName");
   return name2 ? doc2.sliceString(name2.from, Math.min(name2.to, max)) : "";
 }
-function findParentElement(tree, skip = false) {
-  for (; tree; tree = tree.parent)
-    if (tree.name == "Element") {
+function findParentElement(tree2, skip = false) {
+  for (; tree2; tree2 = tree2.parent)
+    if (tree2.name == "Element") {
       if (skip)
         skip = false;
       else
-        return tree;
+        return tree2;
     }
   return null;
 }
-function allowedChildren(doc2, tree, schema) {
-  let parentInfo = schema.tags[elementName2(doc2, findParentElement(tree))];
+function allowedChildren(doc2, tree2, schema) {
+  let parentInfo = schema.tags[elementName2(doc2, findParentElement(tree2))];
   return (parentInfo === null || parentInfo === void 0 ? void 0 : parentInfo.children) || schema.allTags;
 }
-function openTags(doc2, tree) {
+function openTags(doc2, tree2) {
   let open = [];
-  for (let parent = findParentElement(tree); parent && !parent.type.isTop; parent = findParentElement(parent.parent)) {
+  for (let parent = findParentElement(tree2); parent && !parent.type.isTop; parent = findParentElement(parent.parent)) {
     let tagName = elementName2(doc2, parent);
     if (tagName && parent.lastChild.name == "CloseTag")
       break;
-    if (tagName && open.indexOf(tagName) < 0 && (tree.name == "EndTag" || tree.from >= parent.firstChild.to))
+    if (tagName && open.indexOf(tagName) < 0 && (tree2.name == "EndTag" || tree2.from >= parent.firstChild.to))
       open.push(tagName);
   }
   return open;
 }
 var identifier3 = /^[:\-\.\w\u00b7-\uffff]*$/;
-function completeTag(state, schema, tree, from, to) {
+function completeTag(state, schema, tree2, from, to) {
   let end = /\s*>/.test(state.sliceDoc(to, to + 5)) ? "" : ">";
-  let parent = findParentElement(tree, tree.name == "StartTag" || tree.name == "TagName");
+  let parent = findParentElement(tree2, tree2.name == "StartTag" || tree2.name == "TagName");
   return {
     from,
     to,
-    options: allowedChildren(state.doc, parent, schema).map((tagName) => ({ label: tagName, type: "type" })).concat(openTags(state.doc, tree).map((tag, i) => ({
+    options: allowedChildren(state.doc, parent, schema).map((tagName) => ({ label: tagName, type: "type" })).concat(openTags(state.doc, tree2).map((tag, i) => ({
       label: "/" + tag,
       apply: "/" + tag + end,
       type: "type",
@@ -27644,25 +27644,25 @@ function completeTag(state, schema, tree, from, to) {
     validFor: /^\/?[:\-\.\w\u00b7-\uffff]*$/
   };
 }
-function completeCloseTag(state, tree, from, to) {
+function completeCloseTag(state, tree2, from, to) {
   let end = /\s*>/.test(state.sliceDoc(to, to + 5)) ? "" : ">";
   return {
     from,
     to,
-    options: openTags(state.doc, tree).map((tag, i) => ({ label: tag, apply: tag + end, type: "type", boost: 99 - i })),
+    options: openTags(state.doc, tree2).map((tag, i) => ({ label: tag, apply: tag + end, type: "type", boost: 99 - i })),
     validFor: identifier3
   };
 }
-function completeStartTag(state, schema, tree, pos) {
+function completeStartTag(state, schema, tree2, pos) {
   let options = [], level = 0;
-  for (let tagName of allowedChildren(state.doc, tree, schema))
+  for (let tagName of allowedChildren(state.doc, tree2, schema))
     options.push({ label: "<" + tagName, type: "type" });
-  for (let open of openTags(state.doc, tree))
+  for (let open of openTags(state.doc, tree2))
     options.push({ label: "</" + open + ">", type: "type", boost: 99 - level++ });
   return { from: pos, to: pos, options, validFor: /^<\/?[:\-\.\w\u00b7-\uffff]*$/ };
 }
-function completeAttrName(state, schema, tree, from, to) {
-  let elt = findParentElement(tree), info = elt ? schema.tags[elementName2(state.doc, elt)] : null;
+function completeAttrName(state, schema, tree2, from, to) {
+  let elt = findParentElement(tree2), info = elt ? schema.tags[elementName2(state.doc, elt)] : null;
   let localAttrs = info && info.attrs ? Object.keys(info.attrs) : [];
   let names = info && info.globalAttrs === false ? localAttrs : localAttrs.length ? localAttrs.concat(schema.globalAttrNames) : schema.globalAttrNames;
   return {
@@ -27672,15 +27672,15 @@ function completeAttrName(state, schema, tree, from, to) {
     validFor: identifier3
   };
 }
-function completeAttrValue(state, schema, tree, from, to) {
+function completeAttrValue(state, schema, tree2, from, to) {
   var _a2;
-  let nameNode = (_a2 = tree.parent) === null || _a2 === void 0 ? void 0 : _a2.getChild("AttributeName");
+  let nameNode = (_a2 = tree2.parent) === null || _a2 === void 0 ? void 0 : _a2.getChild("AttributeName");
   let options = [], token = void 0;
   if (nameNode) {
     let attrName = state.sliceDoc(nameNode.from, nameNode.to);
     let attrs = schema.globalAttrs[attrName];
     if (!attrs) {
-      let elt = findParentElement(tree), info = elt ? schema.tags[elementName2(state.doc, elt)] : null;
+      let elt = findParentElement(tree2), info = elt ? schema.tags[elementName2(state.doc, elt)] : null;
       attrs = (info === null || info === void 0 ? void 0 : info.attrs) && info.attrs[attrName];
     }
     if (attrs) {
@@ -27701,26 +27701,26 @@ function completeAttrValue(state, schema, tree, from, to) {
   return { from, to, options, validFor: token };
 }
 function htmlCompletionFor(schema, context) {
-  let { state, pos } = context, tree = syntaxTree(state).resolveInner(pos, -1), around = tree.resolve(pos);
-  for (let scan = pos, before; around == tree && (before = tree.childBefore(scan)); ) {
+  let { state, pos } = context, tree2 = syntaxTree(state).resolveInner(pos, -1), around = tree2.resolve(pos);
+  for (let scan = pos, before; around == tree2 && (before = tree2.childBefore(scan)); ) {
     let last = before.lastChild;
     if (!last || !last.type.isError || last.from < last.to)
       break;
-    around = tree = before;
+    around = tree2 = before;
     scan = last.from;
   }
-  if (tree.name == "TagName") {
-    return tree.parent && /CloseTag$/.test(tree.parent.name) ? completeCloseTag(state, tree, tree.from, pos) : completeTag(state, schema, tree, tree.from, pos);
-  } else if (tree.name == "StartTag" || tree.name == "IncompleteTag") {
-    return completeTag(state, schema, tree, pos, pos);
-  } else if (tree.name == "StartCloseTag" || tree.name == "IncompleteCloseTag") {
-    return completeCloseTag(state, tree, pos, pos);
-  } else if (tree.name == "OpenTag" || tree.name == "SelfClosingTag" || tree.name == "AttributeName") {
-    return completeAttrName(state, schema, tree, tree.name == "AttributeName" ? tree.from : pos, pos);
-  } else if (tree.name == "Is" || tree.name == "AttributeValue" || tree.name == "UnquotedAttributeValue") {
-    return completeAttrValue(state, schema, tree, tree.name == "Is" ? pos : tree.from, pos);
+  if (tree2.name == "TagName") {
+    return tree2.parent && /CloseTag$/.test(tree2.parent.name) ? completeCloseTag(state, tree2, tree2.from, pos) : completeTag(state, schema, tree2, tree2.from, pos);
+  } else if (tree2.name == "StartTag" || tree2.name == "IncompleteTag") {
+    return completeTag(state, schema, tree2, pos, pos);
+  } else if (tree2.name == "StartCloseTag" || tree2.name == "IncompleteCloseTag") {
+    return completeCloseTag(state, tree2, pos, pos);
+  } else if (tree2.name == "OpenTag" || tree2.name == "SelfClosingTag" || tree2.name == "AttributeName") {
+    return completeAttrName(state, schema, tree2, tree2.name == "AttributeName" ? tree2.from : pos, pos);
+  } else if (tree2.name == "Is" || tree2.name == "AttributeValue" || tree2.name == "UnquotedAttributeValue") {
+    return completeAttrValue(state, schema, tree2, tree2.name == "Is" ? pos : tree2.from, pos);
   } else if (context.explicit && (around.name == "Element" || around.name == "Text" || around.name == "Document")) {
-    return completeStartTag(state, schema, tree, pos);
+    return completeStartTag(state, schema, tree2, pos);
   } else {
     return null;
   }
@@ -27883,31 +27883,109 @@ var autoCloseTags2 = /* @__PURE__ */ EditorView.inputHandler.of((view, from, to,
   return true;
 });
 
-// src/fore-schema.json
-var fore_schema_default = {
-  extraTags: {
+// src/fore-tree.json
+var fore_tree_default = {
+  _comment: "Consumed by fore-html-mode.js. Replaces fore-schema.json + fore-structure.json + fore-categories.json (all retired). Containment is expressed positionally: a tag is legal wherever it's listed as a child (literally or via a macro) of its nearest tracked ancestor. Nothing needs a denylist - if it's not reachable from a node's children, it's invalid there, full stop. The only place position isn't enough is fx-repeat-ref, which needs a literal ancestor *path* (template > fx-repeat) because <template> is a plain HTML tag reused outside Fore too - that's the one entry in 'exceptions'. Per-tag flags beyond attrs/children: 'authorable: false' (fx-repeatitem, fx-repeat-attributes, fx-abstract-control - real tags/classes the linter should still recognize by name, but flag as an error if a user writes them literally, since they're runtime-generated from data-ref attributes or base-class-only); 'requiredChildren' (fx-repeat needs a <template> - absence should warn, not just silently permit-if-present); and 'requiredAttrs' ({all: [...], anyOf: [...], severity: 'error'|'warning'} - grounded in source: 'error' where the element's own code throws/console.errors/dispatches an error event when the attr is missing, 'warning' where it silently no-ops or falls back to a default and is merely pointless without it). Containment between the two runtime-generated repeat classes is one-directional: an fx-repeat-attributes section (data-ref) may contain an fx-repeat, but fx-repeat may never contain fx-repeat-attributes. Attribute lists were cross-checked against each class's observedAttributes/getAttribute reads, not just fore-docs (which itself was missing some of these) - fx-model.undo/undo-depth, fx-fore.keyboard-shortcuts, fx-repeat.size/virtual/focus-on-create, fx-trigger.activate-on-focus/debounce, fx-container.readonly/refresh-on-view, fx-include.selector, fx-control.as/credentials/debounce/initial/listen-on/on-demand/shadow/src/value-prop, and others were found this way. Validated against all 188 files in demo/ (see demo/fore-codemirror/_lint-demos-check.mjs, run once during integration then removed) - containment rules were widened from evidence found there: fx-fore also allows top-level actions/fx-var/nested fx-fore (action-block.html, nested-fore-instance.html), fx-connection/fx-output allow ACTION-ELEMENTS (connection.html, actions.html), fx-bind allows fx-alert (revalidate.html + fore-docs), fx-control allows fx-trigger (markdown-editor.html), fx-switch allows UI-ELEMENTS/ACTION-ELEMENTS alongside fx-case (accordion.html), action elements allow fx-var (duration.html), and fx-items/fx-alert allow static HTML-ELEMENTS content instead of always being ref-bound (radiobuttons.html). requiredAttrs was correspondingly removed from fx-group/fx-switch/fx-alert/fx-items once real demos showed them legitimately used unbound - the 'isBound() soft pattern' evidence only reliably predicts pointlessness for elements whose whole purpose IS the binding (fx-bind, fx-repeat, fx-delete), not general-purpose containers.",
+  macros: {
+    "HTML-ELEMENTS": {
+      wildcard: true,
+      note: "any plain (non fx-*) HTML tag. The linter already ignores non fx-* tags, so this macro is documentation only - it doesn't need enumerating or expanding at lint time."
+    },
+    "ACTION-ELEMENTS": [
+      "fx-setvalue",
+      "fx-insert",
+      "fx-delete",
+      "fx-send",
+      "fx-dispatch",
+      "fx-message",
+      "fx-toggle",
+      "fx-show",
+      "fx-hide",
+      "fx-setattribute",
+      "fx-load",
+      "fx-setfocus",
+      "fx-refresh",
+      "fx-replace",
+      "fx-toggleboolean",
+      "fx-call",
+      "fx-reload",
+      "fx-reset",
+      "fx-update",
+      "fx-append",
+      "fx-unmodified",
+      "fx-action",
+      "fx-return",
+      "fx-confirm",
+      "fx-copy",
+      "fx-undo",
+      "fx-redo",
+      "fx-commit-history",
+      "fx-insertchild"
+    ],
+    "UI-ELEMENTS": [
+      "fx-group",
+      "fx-container",
+      "fx-switch",
+      "fx-case",
+      "fx-dialog",
+      "fx-repeat",
+      "fx-include",
+      "fx-control",
+      "fx-output",
+      "fx-trigger",
+      "fx-upload",
+      "fx-control-menu"
+    ]
+  },
+  tree: {
     "fx-fore": {
       attrs: {
         src: null,
         selector: null,
         "create-nodes": null,
+        strict: null,
+        version: null,
+        "init-on": null,
+        "keyboard-shortcuts": null,
         "ignore-expressions": null,
         "merge-partial": null,
         "refresh-on-view": null,
-        strict: null,
         "validate-on": null,
-        version: null,
-        "init-on": null,
         "init-on-target": null,
         "show-confirmation": null,
         "no-check": null,
         "wait-for": null
-      }
+      },
+      children: [
+        "fx-model",
+        "UI-ELEMENTS",
+        "HTML-ELEMENTS",
+        "fx-inspector",
+        "fx-devtools",
+        "fx-minimap",
+        "ACTION-ELEMENTS",
+        "fx-var",
+        "fx-fore"
+      ]
     },
     "fx-model": {
       attrs: {
-        id: null
-      }
+        id: null,
+        undo: null,
+        "undo-depth": null
+      },
+      children: [
+        "fx-bind",
+        "fx-instance",
+        "fx-submission",
+        "fx-connection",
+        "fx-functionlib",
+        "fx-function",
+        "fx-var",
+        "fx-construct-done",
+        "ACTION-ELEMENTS"
+      ],
+      note: "undo (boolean opt-in, enables the UndoManager) and undo-depth (max history size) - src/fx-model.js:334-336. Companion fx-undo/fx-redo/fx-commit-history actions read getEffectiveUndoManager() but define no attrs of their own."
     },
     "fx-bind": {
       attrs: {
@@ -27920,44 +27998,50 @@ var fore_schema_default = {
         type: null,
         alert: null,
         id: null
-      }
+      },
+      children: [
+        "fx-bind",
+        "fx-alert"
+      ],
+      requiredAttrs: {
+        all: [
+          "ref"
+        ],
+        severity: "warning"
+      },
+      note: "ref defaults to '.' with no warning if absent (src/fx-bind.js:80) - valid but usually not what's intended."
     },
     "fx-instance": {
       attrs: {
-        id: [
-          "id",
-          "default"
-        ],
+        id: null,
         src: null,
-        credentials: [
-          "same-origin",
-          "include",
-          "omit"
-        ],
         type: [
           "xml",
           "json",
           "text",
           "html"
         ],
+        credentials: [
+          "same-origin",
+          "include",
+          "omit"
+        ],
         shared: null
-      }
+      },
+      children: []
     },
     "fx-submission": {
       attrs: {
         id: null,
         url: null,
         method: null,
-        ref: null,
-        instance: null,
         replace: [
           "all",
           "instance",
-          "none",
-          "download",
-          "target",
-          "redirect"
+          "none"
         ],
+        ref: null,
+        instance: null,
         into: null,
         targetref: null,
         target: null,
@@ -27982,41 +28066,271 @@ var fore_schema_default = {
           "include",
           "omit"
         ]
-      }
-    },
-    "fx-var": {
-      attrs: {
-        name: null,
-        value: null
-      }
+      },
+      children: [
+        "fx-header",
+        "ACTION-ELEMENTS"
+      ],
+      requiredAttrs: {
+        all: [
+          "id"
+        ],
+        severity: "error"
+      },
+      note: 'logs "id is required" if absent - src/fx-submission.js:25.'
     },
     "fx-header": {
       attrs: {
         name: null,
         value: null
-      }
+      },
+      children: [],
+      requiredAttrs: {
+        all: [
+          "name"
+        ],
+        severity: "error"
+      },
+      note: "throws in constructor if absent - src/fx-header.js:11."
     },
     "fx-connection": {
       attrs: {
         url: null,
-        heartbeat: null,
         "message-format": [
           "json",
           "xml",
           "text"
         ],
+        heartbeat: null,
         ref: null
-      }
+      },
+      children: [
+        "ACTION-ELEMENTS"
+      ],
+      requiredAttrs: {
+        all: [
+          "url"
+        ],
+        severity: "warning"
+      },
+      note: "_connect() silently skips creating the WebSocket if empty, no warning - src/fx-connection.js:130-137."
+    },
+    "fx-functionlib": {
+      attrs: {
+        src: null,
+        prefix: null,
+        type: [
+          "module",
+          "html"
+        ]
+      },
+      children: [],
+      requiredAttrs: {
+        all: [
+          "src"
+        ],
+        severity: "error"
+      },
+      note: 'logs "Missing required @src." and no-ops - src/functions/fx-functionlib.js:80.'
+    },
+    "fx-function": {
+      attrs: {
+        signature: null,
+        type: null,
+        override: null
+      },
+      children: [],
+      requiredAttrs: {
+        all: [
+          "signature"
+        ],
+        severity: "error"
+      },
+      note: 'logs "signature is a required attribute" then throws calling .match() on the null signature - src/functions/registerFunction.js:30.'
+    },
+    "fx-var": {
+      attrs: {
+        name: null,
+        value: null
+      },
+      children: [],
+      requiredAttrs: {
+        all: [
+          "name"
+        ],
+        severity: "warning"
+      },
+      note: "unused/unreferenceable without a name, no warning."
+    },
+    "fx-construct-done": {
+      attrs: {},
+      children: [
+        "ACTION-ELEMENTS"
+      ]
+    },
+    "fx-group": {
+      attrs: {
+        ref: null,
+        collapse: null,
+        "on-demand": null
+      },
+      children: [
+        "HTML-ELEMENTS",
+        "UI-ELEMENTS",
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      note: "generic isBound() = hasAttribute('ref') soft pattern - unbound just renders/does nothing useful, no warning."
+    },
+    "fx-container": {
+      attrs: {
+        src: null,
+        readonly: null,
+        "refresh-on-view": null
+      },
+      children: [
+        "HTML-ELEMENTS",
+        "UI-ELEMENTS",
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      note: "readonly - isReadonly() checks hasAttribute('readonly') - src/ui/fx-container.js:138."
+    },
+    "fx-dialog": {
+      attrs: {
+        id: null
+      },
+      children: [
+        "HTML-ELEMENTS",
+        "UI-ELEMENTS",
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ]
+    },
+    "fx-switch": {
+      attrs: {
+        ref: null
+      },
+      children: [
+        "fx-case",
+        "UI-ELEMENTS",
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      note: "generic isBound() soft pattern, same as fx-group."
+    },
+    "fx-case": {
+      attrs: {
+        id: null,
+        name: null,
+        label: null,
+        selected: null,
+        src: null,
+        selector: null
+      },
+      children: [
+        "HTML-ELEMENTS",
+        "UI-ELEMENTS",
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ]
+    },
+    "fx-repeat": {
+      attrs: {
+        ref: null,
+        index: null,
+        "drop-target": null,
+        draggable: null,
+        size: null,
+        virtual: null,
+        "focus-on-create": null
+      },
+      children: [
+        "template",
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      requiredChildren: [
+        "template"
+      ],
+      requiredAttrs: {
+        all: [
+          "ref"
+        ],
+        severity: "warning"
+      },
+      note: "fx-repeat is meaningless without a <template> child - the linter should warn, not just permit-if-present. Does NOT accept fx-repeat-attributes as a child - that relationship runs the other way (see fx-repeat-attributes). ref has no fallback at all (not even '.') and no throw - nodeset evaluation is silently broken downstream (src/ui/fx-repeat.js:206). size (progressive-rendering row cap) and virtual (windowed virtualization) - src/ui/fx-repeat.js:176,188."
+    },
+    template: {
+      note: "only carries this child list when it's an immediate child of fx-repeat - see 'exceptions' for how fx-repeat-ref enforces that.",
+      children: [
+        "HTML-ELEMENTS",
+        "UI-ELEMENTS",
+        "ACTION-ELEMENTS",
+        "fx-repeat-ref",
+        "fx-var"
+      ]
+    },
+    "fx-repeat-attributes": {
+      attrs: {
+        ref: null,
+        index: null,
+        "focus-on-create": null
+      },
+      children: [
+        "HTML-ELEMENTS",
+        "UI-ELEMENTS",
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      authorable: false,
+      note: "not written as a literal tag - synthesized at runtime for a plain HTML element carrying a data-ref attribute ('non-visible', like fx-repeatitem). That data-ref section CAN contain an fx-repeat (reachable here via UI-ELEMENTS), but the reverse is disallowed: fx-repeat itself must not contain one."
+    },
+    "fx-repeatitem": {
+      attrs: {
+        "repeat-index": null,
+        relevant: null,
+        nonrelevant: null
+      },
+      children: [
+        "HTML-ELEMENTS",
+        "UI-ELEMENTS",
+        "ACTION-ELEMENTS"
+      ],
+      authorable: false,
+      note: "generated by fx-repeat at runtime, one per iteration - never write this by hand, it'll conflict with what fx-repeat itself creates. Its content shape (html/ui/action) is still meaningful for documentation, since that's what ends up inside it."
+    },
+    "fx-repeat-ref": {
+      attrs: {
+        ref: null
+      },
+      children: []
+    },
+    "fx-include": {
+      attrs: {
+        src: null,
+        target: [
+          "self",
+          "document",
+          "window"
+        ],
+        event: null,
+        replace: null,
+        immediate: null,
+        reload: null,
+        selector: null
+      },
+      children: []
     },
     "fx-control": {
       attrs: {
         ref: null,
+        label: null,
         "update-event": [
           "blur",
           "enter"
         ],
         debounce: null,
-        label: null,
         "value-prop": [
           "value",
           "selectedOptions",
@@ -28036,12 +28350,23 @@ var fore_schema_default = {
           "node"
         ],
         shadow: null
-      }
+      },
+      children: [
+        "fx-hint",
+        "fx-alert",
+        "fx-items",
+        "ACTION-ELEMENTS",
+        "fx-var",
+        "fx-trigger"
+      ]
     },
     "fx-abstract-control": {
       attrs: {
         as: null
-      }
+      },
+      children: [],
+      authorable: false,
+      note: "base class inherited by concrete controls (fx-control, fx-output, ...) - not a tag the user ever writes directly."
     },
     "fx-output": {
       attrs: {
@@ -28052,92 +28377,30 @@ var fore_schema_default = {
           "image"
         ],
         html: null
-      }
+      },
+      children: [
+        "ACTION-ELEMENTS"
+      ],
+      requiredAttrs: {
+        anyOf: [
+          "ref",
+          "value"
+        ],
+        severity: "warning"
+      },
+      note: "refresh() does nothing if neither is set - src/ui/fx-output.js."
     },
     "fx-trigger": {
       attrs: {
         ref: null,
+        "activate-on-focus": null,
         debounce: null
-      }
-    },
-    "fx-group": {
-      attrs: {
-        ref: null,
-        collapse: null,
-        "on-demand": null
-      }
-    },
-    "fx-container": {
-      attrs: {
-        src: null,
-        "refresh-on-view": null
-      }
-    },
-    "fx-repeat": {
-      attrs: {
-        ref: null,
-        index: null,
-        "focus-on-create": null,
-        "drop-target": null,
-        draggable: null
-      }
-    },
-    "fx-repeat-attributes": {
-      attrs: {
-        ref: null,
-        index: null,
-        "focus-on-create": null
-      }
-    },
-    "fx-repeatitem": {
-      attrs: {
-        "repeat-index": null,
-        relevant: null,
-        nonrelevant: null
-      }
-    },
-    "fx-switch": {
-      attrs: {
-        ref: null
-      }
-    },
-    "fx-case": {
-      attrs: {
-        id: null,
-        name: null,
-        label: null,
-        selected: null,
-        src: null,
-        selector: null
-      }
-    },
-    "fx-dialog": {
-      attrs: {
-        id: null
-      }
-    },
-    "fx-alert": {
-      attrs: {
-        ref: null
-      }
-    },
-    "fx-hint": {
-      attrs: {}
-    },
-    "fx-include": {
-      attrs: {
-        event: null,
-        target: [
-          "self",
-          "document",
-          "window"
-        ],
-        src: null,
-        selector: null,
-        replace: null,
-        immediate: null,
-        reload: null
-      }
+      },
+      children: [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      note: "ref confirmed genuinely optional (only affects readonly-disable behavior) - not marked required. activate-on-focus fires the action on focus, not just click/Enter/Space - src/ui/fx-trigger.js:43."
     },
     "fx-upload": {
       attrs: {
@@ -28146,38 +28409,59 @@ var fore_schema_default = {
         filename: null,
         mimetype: null,
         label: null
-      }
-    },
-    "fx-items": {
-      attrs: {
-        ref: null,
-        value: null
-      }
-    },
-    "fx-droptarget": {
-      attrs: {}
+      },
+      children: [
+        "fx-hint",
+        "fx-alert",
+        "ACTION-ELEMENTS"
+      ]
     },
     "fx-control-menu": {
       attrs: {
         select: null,
         mode: null
-      }
+      },
+      children: []
     },
-    "fx-inspector": {
-      attrs: {
-        open: null
-      }
+    "fx-hint": {
+      attrs: {},
+      children: []
     },
-    "fx-speech": {
+    "fx-alert": {
       attrs: {
-        mode: null
-      }
+        ref: null
+      },
+      children: [
+        "HTML-ELEMENTS"
+      ],
+      note: "generic isBound() soft pattern."
+    },
+    "fx-items": {
+      attrs: {
+        ref: null,
+        value: null
+      },
+      children: [
+        "HTML-ELEMENTS"
+      ],
+      note: "generic isBound() soft pattern."
     },
     "fx-setvalue": {
       attrs: {
         ref: null,
         value: null
-      }
+      },
+      children: [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      requiredAttrs: {
+        all: [
+          "ref"
+        ],
+        severity: "error"
+      },
+      note: `throws "fx-setvalue must specify a 'ref' attribute" - src/actions/fx-setvalue.js:40.`
     },
     "fx-insert": {
       attrs: {
@@ -28193,12 +28477,28 @@ var fore_schema_default = {
         ],
         "keep-values": null,
         template: null
-      }
+      },
+      children: [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      note: "not given a blanket requiredAttrs - ref is only required in JSON-lens mode (throws if not a lens path starting with '?', src/actions/fx-insert.js:559-562), template throws on invalid JSON when used (src/actions/fx-insert.js:128), origin just warns+falls back if it doesn't resolve (src/actions/fx-insert.js:453,459). Too mode-dependent to state as one rule."
     },
     "fx-delete": {
       attrs: {
         ref: null
-      }
+      },
+      children: [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      requiredAttrs: {
+        all: [
+          "ref"
+        ],
+        severity: "warning"
+      },
+      note: "defaults to '.' with no warning - src/actions/fx-delete.js."
     },
     "fx-send": {
       attrs: {
@@ -28206,13 +28506,36 @@ var fore_schema_default = {
         url: null,
         target: null,
         connection: null
-      }
+      },
+      children: [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      requiredAttrs: {
+        anyOf: [
+          "submission",
+          "connection"
+        ],
+        severity: "error"
+      },
+      note: 'dispatches error "<fx-submission> not found" unless connection is given instead - src/actions/fx-send.js:58-77.'
     },
     "fx-dispatch": {
       attrs: {
         name: null,
         targetid: null
-      }
+      },
+      children: [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      requiredAttrs: {
+        all: [
+          "name"
+        ],
+        severity: "error"
+      },
+      note: 'throws "no event specified for dispatch" - src/actions/fx-dispatch.js:45.'
     },
     "fx-message": {
       attrs: {
@@ -28223,29 +28546,81 @@ var fore_schema_default = {
           "modal"
         ],
         value: null
-      }
+      },
+      children: [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ]
     },
     "fx-toggle": {
       attrs: {
         case: null
-      }
+      },
+      children: [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      requiredAttrs: {
+        all: [
+          "case"
+        ],
+        severity: "error"
+      },
+      note: `dispatches error "fx-case id not found" if the id doesn't resolve - src/actions/fx-toggle.js perform().`
     },
     "fx-show": {
       attrs: {
         dialog: null
-      }
+      },
+      children: [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      requiredAttrs: {
+        all: [
+          "dialog"
+        ],
+        severity: "error"
+      },
+      note: "dispatches error event if absent, plus console.error if the id doesn't resolve - src/actions/fx-show.js:20,37."
     },
     "fx-hide": {
       attrs: {
         dialog: null
-      }
+      },
+      children: [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      requiredAttrs: {
+        all: [
+          "dialog"
+        ],
+        severity: "error"
+      },
+      note: "dispatches error event if absent - src/actions/fx-hide.js:26."
     },
     "fx-setattribute": {
       attrs: {
         ref: null,
         name: null,
         value: null
-      }
+      },
+      children: [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      requiredAttrs: {
+        all: [
+          "ref"
+        ],
+        anyOf: [
+          "name",
+          "value"
+        ],
+        severity: "error"
+      },
+      note: 'throws if ref absent - src/actions/fx-setattribute.js:45; dispatches error "name or value not specified" if neither given - line 47.'
     },
     "fx-load": {
       attrs: {
@@ -28256,13 +28631,35 @@ var fore_schema_default = {
         ],
         replace: null,
         await: null
-      }
+      },
+      children: [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      requiredAttrs: {
+        all: [
+          "url"
+        ],
+        severity: "error"
+      },
+      note: '_evaluateUrlExpression() throws "url not specified" if absent - src/actions/fx-load.js:200.'
     },
     "fx-setfocus": {
       attrs: {
         control: null,
         select: null
-      }
+      },
+      children: [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      requiredAttrs: {
+        all: [
+          "control"
+        ],
+        severity: "error"
+      },
+      note: `dispatches error "Instance '...' not found" if the target can't be resolved - src/actions/fx-setfocus.js:33-39.`
     },
     "fx-refresh": {
       attrs: {
@@ -28270,96 +28667,268 @@ var fore_schema_default = {
         self: null,
         selector: null,
         control: null
-      }
+      },
+      children: [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ]
     },
     "fx-replace": {
       attrs: {
         ref: null,
         with: null
-      }
+      },
+      children: [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      requiredAttrs: {
+        all: [
+          "with"
+        ],
+        severity: "warning"
+      },
+      note: "evaluateXPathToFirstNode(null, ...) resolves to no target and perform() silently bails - src/actions/fx-replace.js:41-42."
     },
     "fx-toggleboolean": {
       attrs: {
         ref: null
-      }
+      },
+      children: [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      requiredAttrs: {
+        all: [
+          "ref"
+        ],
+        severity: "error"
+      },
+      note: "throws if absent - src/actions/fx-toggleboolean.js:43."
     },
     "fx-call": {
       attrs: {
         action: null,
         function: null
-      }
+      },
+      children: [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      requiredAttrs: {
+        anyOf: [
+          "action",
+          "function"
+        ],
+        severity: "error"
+      },
+      note: "throws if neither present - src/actions/fx-call.js:41."
     },
     "fx-reload": {
-      attrs: {}
+      attrs: {},
+      children: [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ]
     },
     "fx-reset": {
       attrs: {
         instance: null
-      }
+      },
+      children: [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      requiredAttrs: {
+        all: [
+          "instance"
+        ],
+        severity: "error"
+      },
+      note: 'dispatches error "instance does not exist" if absent - src/actions/fx-reset.js:25.'
     },
     "fx-update": {
-      attrs: {}
+      attrs: {},
+      children: [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ]
     },
     "fx-append": {
       attrs: {
         ref: null,
         repeat: null
-      }
-    },
-    "fx-construct-done": {
-      attrs: {}
+      },
+      children: [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      requiredAttrs: {
+        all: [
+          "repeat"
+        ],
+        severity: "warning"
+      },
+      note: "unresolved id causes a raw TypeError accessing repeat.shadowRoot rather than a Fore-level diagnostic - src/actions/fx-append.js _dataFromTemplate."
     },
     "fx-unmodified": {
-      attrs: {}
+      attrs: {},
+      children: [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ]
     },
     "fx-action": {
       attrs: {
         src: null
-      }
+      },
+      children: [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ]
     },
     "fx-return": {
-      attrs: {}
+      attrs: {},
+      children: [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ]
     },
     "fx-confirm": {
       attrs: {
         message: null
-      }
+      },
+      children: [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      requiredAttrs: {
+        all: [
+          "message"
+        ],
+        severity: "warning"
+      },
+      note: 'defaults to null; window.confirm(null) shows the literal text "null" - src/actions/fx-confirm.js.'
     },
-    "fx-function": {
+    "fx-copy": {
       attrs: {
-        signature: null,
-        type: null,
-        override: null
-      }
+        ref: null,
+        to: null
+      },
+      children: [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      requiredAttrs: {
+        all: [
+          "ref"
+        ],
+        severity: "error"
+      },
+      note: "throws if absent - src/actions/fx-copy.js:36."
     },
-    "fx-functionlib": {
+    "fx-undo": {
+      attrs: {},
+      children: [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ]
+    },
+    "fx-redo": {
+      attrs: {},
+      children: [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ]
+    },
+    "fx-commit-history": {
+      attrs: {},
+      children: [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ]
+    },
+    "fx-insertchild": {
       attrs: {
-        src: null,
-        prefix: null,
-        type: [
-          "module",
-          "html"
+        at: null,
+        child: null,
+        parent: null,
+        origin: null,
+        "keep-values": null,
+        position: [
+          "before",
+          "after",
+          "first",
+          "last"
         ]
-      }
+      },
+      children: [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      requiredAttrs: {
+        all: [
+          "parent"
+        ],
+        severity: "warning"
+      },
+      note: 'if absent, parent is interpolated directly into a generated <fx-insert context="${this.parent}">, becoming the literal string context="null" - silently breaks the insert with no diagnostic - src/actions/fx-insertchild.js:69-73.'
+    },
+    "fx-droptarget": {
+      attrs: {},
+      children: []
+    },
+    "fx-inspector": {
+      attrs: {
+        open: null
+      },
+      children: [
+        "fx-dom-inspector",
+        "fx-json-instance"
+      ]
     },
     "fx-devtools": {
       attrs: {
         selector: null
-      }
+      },
+      children: [
+        "fx-action-log",
+        "fx-log-item",
+        "fx-log-settings"
+      ]
+    },
+    "fx-speech": {
+      attrs: {
+        mode: null
+      },
+      children: []
+    },
+    "fx-minimap": {
+      attrs: {
+        options: null,
+        selector: null
+      },
+      children: []
     },
     "fx-action-log": {
-      attrs: {}
+      attrs: {},
+      children: [],
+      note: "devtools panel internals - see fx-devtools."
     },
     "fx-dom-inspector": {
       attrs: {
         instance: null
-      }
+      },
+      children: [],
+      note: "devtools panel internals - see fx-devtools."
     },
     "fx-json-instance": {
       attrs: {
         fore: null,
         instance: null
-      }
+      },
+      children: [],
+      note: "devtools panel internals - see fx-inspector."
     },
     "fx-log-item": {
       attrs: {
@@ -28367,94 +28936,62 @@ var fore_schema_default = {
         "short-name": null,
         "short-info": null,
         xpath: null
-      }
+      },
+      children: [],
+      note: "devtools panel internals - see fx-devtools."
     },
     "fx-log-settings": {
-      attrs: {}
-    },
-    "fx-minimap": {
-      attrs: {
-        options: null,
-        selector: null
-      }
+      attrs: {},
+      children: [],
+      note: "devtools panel internals - see fx-devtools."
     }
   },
-  extraGlobalAttributes: {
-    ref: null,
-    context: null,
-    value: null,
-    event: null,
-    if: null,
-    while: null,
-    iterate: null,
-    delay: null,
-    target: null,
-    phase: [
-      "capture",
-      "default"
-    ],
-    propagate: [
-      "stop",
-      "continue"
-    ],
-    "default-action": [
-      "cancel",
-      "perform"
-    ]
-  }
-};
-
-// src/fore-structure.json
-var fore_structure_default = {
-  _comment: "Hand-curated nesting rules, grounded in Fore's actual runtime behavior (not generated from reference.md, which doesn't reliably document parent/child constraints). See demo/fore-codemirror/README.md for the source-code evidence behind each rule.",
-  requiresAncestor: {
-    "fx-bind": ["fx-model"],
-    "fx-instance": ["fx-model"],
-    "fx-submission": ["fx-model"],
-    "fx-header": ["fx-model"],
-    "fx-connection": ["fx-model"],
-    "fx-functionlib": ["fx-model"],
-    "fx-case": ["fx-switch"],
-    "fx-repeatitem": ["fx-repeat"]
-  },
-  requiresDirectParent: {
-    "fx-construct-done": ["fx-model"]
-  },
-  disallowedAncestor: {
-    "fx-control": ["fx-model"],
-    "fx-abstract-control": ["fx-model"],
-    "fx-group": ["fx-model"],
-    "fx-container": ["fx-model"],
-    "fx-repeat": ["fx-model"],
-    "fx-repeat-attributes": ["fx-model"],
-    "fx-repeatitem": ["fx-model"],
-    "fx-output": ["fx-model"],
-    "fx-trigger": ["fx-model"],
-    "fx-switch": ["fx-model"],
-    "fx-case": ["fx-model"],
-    "fx-items": ["fx-model"],
-    "fx-dialog": ["fx-model"],
-    "fx-alert": ["fx-model"],
-    "fx-hint": ["fx-model"],
-    "fx-upload": ["fx-model"],
-    "fx-control-menu": ["fx-model"],
-    "fx-inspector": ["fx-model"],
-    "fx-speech": ["fx-model"],
-    "fx-droptarget": ["fx-model"]
+  exceptions: {
+    "fx-repeat-ref": {
+      requiresAncestorPath: [
+        "template",
+        "fx-repeat"
+      ],
+      reason: "template is a generic HTML tag also used outside Fore, so its tree node's child list alone can't guarantee this specific <template> belongs to an <fx-repeat>. This is the only rule of its kind - everything else is captured by position."
+    }
   }
 };
 
 // src/fore-html-mode.js
+var { macros, tree, exceptions } = fore_tree_default;
+var GLOBAL_ATTRS = {
+  ref: null,
+  context: null,
+  value: null,
+  event: null,
+  if: null,
+  while: null,
+  iterate: null,
+  delay: null,
+  target: null,
+  phase: ["capture", "default"],
+  propagate: ["stop", "continue"],
+  "default-action": ["cancel", "perform"]
+};
 var HTML_GLOBAL_ATTRS = /* @__PURE__ */ new Set(["id", "class", "style", "title", "slot", "part", "lang", "dir", "hidden"]);
+function extraTagsFromTree() {
+  const extraTags = {};
+  for (const [tagName, def] of Object.entries(tree)) {
+    if (!tagName.startsWith("fx-")) continue;
+    extraTags[tagName] = { attrs: def.attrs || {} };
+  }
+  return extraTags;
+}
+var EXTRA_TAGS = extraTagsFromTree();
 function isKnownAttribute(tagName, attrName) {
   if (HTML_GLOBAL_ATTRS.has(attrName) || attrName.startsWith("data-") || attrName.startsWith("aria-")) return true;
-  if (fore_schema_default.extraGlobalAttributes && attrName in fore_schema_default.extraGlobalAttributes) return true;
-  const tag = fore_schema_default.extraTags[tagName];
-  return !!(tag && tag.attrs && attrName in tag.attrs);
+  if (attrName in GLOBAL_ATTRS) return true;
+  const def = tree[tagName];
+  return !!(def && def.attrs && attrName in def.attrs);
 }
 function ancestorTagNames(openOrSelfClosingNode, state) {
   const names = [];
-  let cur2 = openOrSelfClosingNode.parent;
+  let cur2 = openOrSelfClosingNode.parent ? openOrSelfClosingNode.parent.parent : null;
   while (cur2) {
     if (cur2.type.name === "Element") {
       const tag = cur2.getChild("OpenTag") || cur2.getChild("SelfClosingTag");
@@ -28465,51 +29002,135 @@ function ancestorTagNames(openOrSelfClosingNode, state) {
   }
   return names;
 }
+function nearestTrackedAncestor(ancestors) {
+  for (let i = 0; i < ancestors.length; i++) {
+    const tag = ancestors[i];
+    if (!(tag in tree)) continue;
+    if (tag === "template") {
+      const next = ancestors.slice(i + 1).find((a) => a in tree);
+      if (next !== "fx-repeat") continue;
+    }
+    return tag;
+  }
+  return null;
+}
+function expandChildren(childRefs) {
+  const tags3 = /* @__PURE__ */ new Set();
+  (childRefs || []).forEach((ref) => {
+    if (ref === "HTML-ELEMENTS") return;
+    const macro = macros[ref];
+    if (Array.isArray(macro)) macro.forEach((t2) => tags3.add(t2));
+    else tags3.add(ref);
+  });
+  return tags3;
+}
+function hasDescendantTag(elementNode, targetTags, state) {
+  const cursor = elementNode.cursor();
+  let first = true;
+  do {
+    if (!first && cursor.type.name === "Element") {
+      const tag = cursor.node.getChild("OpenTag") || cursor.node.getChild("SelfClosingTag");
+      const nameNode = tag && tag.getChild("TagName");
+      if (nameNode && targetTags.includes(state.sliceDoc(nameNode.from, nameNode.to))) return true;
+    }
+    first = false;
+  } while (cursor.next());
+  return false;
+}
 function structuralDiagnostics(tagName, tagNode, ancestors) {
+  const def = tree[tagName];
   const diagnostics = [];
-  const requiredAncestors = fore_structure_default.requiresAncestor[tagName];
-  if (requiredAncestors && !requiredAncestors.some((a) => ancestors.includes(a))) {
+  if (def.authorable === false) {
     diagnostics.push({
       from: tagNode.from,
       to: tagNode.to,
       severity: "error",
-      message: `<${tagName}> only works inside ${requiredAncestors.map((a) => `<${a}>`).join(" or ")}`
+      message: `<${tagName}> should not be written directly${def.note ? ` - ${def.note}` : ""}`
     });
+    return diagnostics;
   }
-  const requiredParent = fore_structure_default.requiresDirectParent[tagName];
-  if (requiredParent && !requiredParent.includes(ancestors[0])) {
-    diagnostics.push({
-      from: tagNode.from,
-      to: tagNode.to,
-      severity: "error",
-      message: `<${tagName}> must be a direct child of ${requiredParent.map((a) => `<${a}>`).join(" or ")}`
-    });
-  }
-  const disallowed = fore_structure_default.disallowedAncestor[tagName];
-  if (disallowed) {
-    const hit = disallowed.find((a) => ancestors.includes(a));
-    if (hit) {
+  const parentName = nearestTrackedAncestor(ancestors);
+  if (parentName) {
+    const allowed = expandChildren(tree[parentName].children);
+    if (!allowed.has(tagName)) {
       diagnostics.push({
         from: tagNode.from,
         to: tagNode.to,
         severity: "error",
-        message: `<${tagName}> is not allowed inside <${hit}> (would render but stay inert/non-functional)`
+        message: `<${tagName}> is not a valid child of <${parentName}>`
+      });
+    }
+  } else if (tagName !== "fx-fore") {
+    diagnostics.push({
+      from: tagNode.from,
+      to: tagNode.to,
+      severity: "error",
+      message: `<${tagName}> is not valid at the top level`
+    });
+  }
+  const exception = exceptions[tagName];
+  if (exception?.requiresAncestorPath) {
+    const missing = exception.requiresAncestorPath.filter((a) => !ancestors.includes(a));
+    if (missing.length) {
+      diagnostics.push({
+        from: tagNode.from,
+        to: tagNode.to,
+        severity: "error",
+        message: `<${tagName}> only works inside ${exception.requiresAncestorPath.map((a) => `<${a}>`).join(" inside ")} (missing ${missing.map((a) => `<${a}>`).join(", ")})`
       });
     }
   }
   return diagnostics;
 }
+function requiredChildrenDiagnostics(tagName, tagNode, elementNode, state) {
+  const required = tree[tagName]?.requiredChildren;
+  if (!required || !elementNode || hasDescendantTag(elementNode, required, state)) return [];
+  return [
+    {
+      from: tagNode.from,
+      to: tagNode.to,
+      severity: "warning",
+      message: `<${tagName}> should contain a ${required.map((r) => `<${r}>`).join(" or ")} - otherwise it has nothing to repeat`
+    }
+  ];
+}
+function requiredAttrsDiagnostics(tagName, tagNode, attrNames) {
+  const rule = tree[tagName]?.requiredAttrs;
+  if (!rule) return [];
+  const diagnostics = [];
+  const severity = rule.severity === "warning" ? "warning" : "error";
+  if (rule.all) {
+    const missing = rule.all.filter((a) => !attrNames.has(a));
+    if (missing.length) {
+      diagnostics.push({
+        from: tagNode.from,
+        to: tagNode.to,
+        severity,
+        message: `<${tagName}> is missing required attribute${missing.length > 1 ? "s" : ""} ${missing.map((a) => `"${a}"`).join(", ")}`
+      });
+    }
+  }
+  if (rule.anyOf && !rule.anyOf.some((a) => attrNames.has(a))) {
+    diagnostics.push({
+      from: tagNode.from,
+      to: tagNode.to,
+      severity,
+      message: `<${tagName}> needs at least one of: ${rule.anyOf.map((a) => `"${a}"`).join(", ")}`
+    });
+  }
+  return diagnostics;
+}
 var foreLinter = (view) => {
   const diagnostics = [];
-  const tree = syntaxTree(view.state);
-  tree.iterate({
+  const tree$ = syntaxTree(view.state);
+  tree$.iterate({
     enter: (node) => {
       if (node.type.name !== "OpenTag" && node.type.name !== "SelfClosingTag") return;
       const tagNode = node.node.getChild("TagName");
       if (!tagNode) return;
       const tagName = view.state.sliceDoc(tagNode.from, tagNode.to);
       if (!tagName.startsWith("fx-")) return;
-      if (!(tagName in fore_schema_default.extraTags)) {
+      if (!(tagName in tree)) {
         diagnostics.push({
           from: tagNode.from,
           to: tagNode.to,
@@ -28520,7 +29141,15 @@ var foreLinter = (view) => {
       }
       const ancestors = ancestorTagNames(node.node, view.state);
       diagnostics.push(...structuralDiagnostics(tagName, tagNode, ancestors));
-      node.node.getChildren("Attribute").forEach((attr) => {
+      diagnostics.push(...requiredChildrenDiagnostics(tagName, tagNode, node.node.parent, view.state));
+      const attrNodes = node.node.getChildren("Attribute");
+      const attrNames = /* @__PURE__ */ new Set();
+      attrNodes.forEach((attr) => {
+        const nameNode = attr.getChild("AttributeName");
+        if (nameNode) attrNames.add(view.state.sliceDoc(nameNode.from, nameNode.to));
+      });
+      diagnostics.push(...requiredAttrsDiagnostics(tagName, tagNode, attrNames));
+      attrNodes.forEach((attr) => {
         const nameNode = attr.getChild("AttributeName");
         if (!nameNode) return;
         const attrName = view.state.sliceDoc(nameNode.from, nameNode.to);
@@ -28541,8 +29170,8 @@ function foreHtml() {
   return [
     html({
       selfClosingTags: false,
-      extraTags: fore_schema_default.extraTags,
-      extraGlobalAttributes: fore_schema_default.extraGlobalAttributes
+      extraTags: EXTRA_TAGS,
+      extraGlobalAttributes: GLOBAL_ATTRS
     }),
     linter(foreLinter, { delay: 300 }),
     lintGutter()

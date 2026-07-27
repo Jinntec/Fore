@@ -1,10 +1,10 @@
 # fore-codemirror
 
 A CodeMirror 6 editor mode that knows Fore's `fx-*` element/attribute vocabulary:
-tag and attribute completion, a linter that flags unknown `fx-*` tags or
-attributes, and structural nesting checks (e.g. `<fx-bind>` outside `<fx-model>`,
-or a UI element like `<fx-control>` inside `<fx-model>`). Validating the XPath
-*content* of attributes like `ref`/`calculate`/`constraint` is out of scope for now.
+tag and attribute completion, a linter that flags unknown `fx-*` tags/attributes,
+wrong nesting, elements missing a required child, and elements missing a required
+attribute. Validating the XPath *content* of attributes like
+`ref`/`calculate`/`constraint` is out of scope for now.
 
 This is an isolated sub-package: its dependencies (CodeMirror + language/lint
 packages) live only in this folder's own `package.json`/`node_modules`, not in
@@ -20,76 +20,90 @@ Fore's root `package.json`, and it is never part of `dist/fore.js` /
 
 ```bash
 npm install
-npm run build-schema   # regenerate src/fore-schema.json (see below)
-npm run build          # bundle -> dist/fore-codemirror-bundle.js
+npm run build   # bundle -> dist/fore-codemirror-bundle.js
 ```
 
-## Schema source
+## Vocabulary source: `src/fore-tree.json`
 
-The tag/attribute vocabulary comes from the Fore element reference maintained in
-the sibling `fore-skills` repo (`../../../fore-skills/reference.md` relative to a
-typical checkout), **not** from `doc/fore-elements.json` in the main Fore repo
-(that file is stale/experimental).
+`src/fore-tree.json` is the single, hand-curated source of truth for Fore's
+`fx-*` vocabulary - it replaces what used to be three separate files
+(`fore-schema.json`, `fore-structure.json`, `fore-categories.json`). It is not
+generated - reference docs don't reliably encode parent/child constraints or
+which attributes actually matter at runtime, so every rule here is grounded in
+Fore's actual source (`/Users/joern/dev/Fore/src`) and cross-checked against
+all demos under `demo/`.
 
-`src/fore-schema.json` is generated and checked in, so most contributors never
-need to run `build-schema` themselves. Regenerate it after `reference.md` changes:
+Shape, per tag in `"tree"`:
 
-```bash
-npm run build-schema
-# or, if fore-skills isn't checked out as a sibling of the Fore repo:
-FORE_REFERENCE_MD=/path/to/fore-skills/reference.md npm run build-schema
+```json
+"fx-bind": {
+  "attrs": { "ref": null, "type": ["xml", "json"] },
+  "children": ["fx-bind", "fx-alert"],
+  "requiredAttrs": { "all": ["ref"], "severity": "warning" }
+}
 ```
 
-Known simplification: attributes from the reference doc's "Shared attributes"
-(ForeElementMixin: `ref`/`context`/`value`) and "Shared action attributes"
-(AbstractAction: `event`/`if`/`while`/...) sections are folded into
-`extraGlobalAttributes` rather than modeled per-tag - so e.g. `<fx-output>` will
-also complete `if`/`while` even though only action elements use them. Harmless
-(an unused suggestion, not a lint error) and much simpler than modeling Fore's
-attribute-inheritance chains here.
+- **`attrs`** - `{ name: null | [enumValues] }`, fed straight into
+  `@codemirror/lang-html`'s `extraTags` for completion. Attributes shared by
+  almost every element (`ref`/`context`/`value` from `ForeElementMixin`,
+  `event`/`if`/`while`/`iterate`/`delay`/`target`/`phase`/`propagate`/
+  `default-action` from `AbstractAction`) are **not** repeated per tag - they
+  live once in `fore-html-mode.js`'s `GLOBAL_ATTRS` instead.
+- **`children`** - literal tag names and/or macro references (`"macros"`:
+  `HTML-ELEMENTS`, `ACTION-ELEMENTS`, `UI-ELEMENTS`). Containment is
+  positional: a tag is legal wherever it's reachable from its nearest tracked
+  ancestor's `children` - no separate allow/deny list needed for most cases,
+  since something simply not being listed already makes it invalid there.
+  `fore-html-mode.js`'s `nearestTrackedAncestor()` skips over plain HTML
+  wrappers (`<div>`, `<section>`, ...) to find that ancestor, and treats a
+  `<template>` as a tracked anchor only when it's genuinely an `<fx-repeat>`'s
+  own template (see "Ambiguous `<template>`" below).
+- **`requiredChildren`** - e.g. `fx-repeat` needs a `<template>` somewhere in
+  its subtree (found via the same `querySelector('template')` semantics
+  `repeat-base.js` itself uses, not just as an immediate child) or it has
+  nothing to repeat.
+- **`requiredAttrs`** - `{ all: [...], anyOf: [...], severity }`. `all` means
+  every listed attribute must be present; `anyOf` means at least one must be.
+  `severity: "error"` is used where the element's own code throws,
+  `console.error`s, or dispatches an `error` event when the attribute is
+  missing; `"warning"` where it silently no-ops or falls back to a default and
+  is merely pointless without it. Deliberately **not** applied to elements
+  that are legitimately useful unbound (`fx-group`, `fx-switch`, `fx-alert`,
+  `fx-items` can all appear without `ref`, e.g. as pure layout, an imperative
+  `fx-toggle`-driven switch, a static validation-summary alert, or a
+  statically-authored radio-button list) - only where real evidence shows the
+  element is actually broken without it.
+- **`authorable: false`** - a real tag/class (`fx-repeatitem`,
+  `fx-repeat-attributes`, `fx-abstract-control`) the linter should recognize
+  by name but flag as an error if a user writes it literally, since it's
+  runtime-generated (from `<fx-repeat>` iteration, or a `data-ref` attribute)
+  or base-class-only.
 
-## Structural nesting rules
+`"exceptions"` holds the one rule position alone can't express:
+`fx-repeat-ref` needs a literal ancestor *path* (`template` inside
+`fx-repeat`), not just "somewhere under `fx-repeat`" - because `<template>` is
+a plain HTML tag also used for unrelated purposes (see below).
 
-`src/fore-structure.json` is **hand-curated**, not generated - reference.md
-documents attributes/events per element but doesn't reliably encode parent/child
-constraints. Each rule is grounded in Fore's actual source (`/Users/joern/dev/Fore/src`):
+### Ambiguous `<template>`
 
-- `fx-bind`, `fx-instance`, `fx-functionlib` - only processed when found under
-  `<fx-model>`: `fx-model.js` collects `fx-model > fx-bind` (direct children) via
-  `querySelectorAll` in `rebuild()`, then `fx-bind.js`'s `_processChildren()`
-  recurses into `:scope > fx-bind` - so `<fx-bind>` may nest inside `<fx-bind>`
-  arbitrarily deep, as long as the chain is ultimately rooted in `<fx-model>`.
-  `fx-model.js` also does `querySelectorAll('fx-functionlib')`, scoped to itself.
-  `fx-submission`/`fx-header`/`fx-connection` are documented as model children
-  but have no matching `querySelector` in `fx-model.js` - included here by
-  convention, not runtime enforcement.
-- `fx-var` is **intentionally excluded** from these rules - it's genuinely
-  dual-scope (valid both inside `<fx-model>` and at UI level); `fx-fore.js`
-  explicitly does `if (variable.closest('fx-model')) return;` to avoid
-  double-processing model-scope vars.
-- UI elements (`fx-control`, `fx-group`, `fx-repeat`, ...) are **not** rejected
-  by any runtime check inside `<fx-model>` - but `fx-model` sets `inert` on
-  itself in `connectedCallback`, which cascades to descendants, so a control
-  placed there renders but is permanently non-interactive. Flagged here as an
-  error since it's a real, silent correctness bug even though nothing in Fore
-  itself complains.
-- `fx-construct-done` requires a **direct** `<fx-model>` parent - the one
-  explicit runtime check in the codebase: it dispatches an `error` event itself
-  if `this.parentNode.nodeName !== 'FX-MODEL'` (`src/actions/fx-construct-done.js`).
-- `fx-case`/`fx-switch` and `fx-repeatitem`/`fx-repeat` - convention only
-  (`fx-switch.js`/`fx-repeat.js` reach down for `:scope > fx-case`/`:scope >
-  fx-repeatitem`; the reverse isn't checked), but these tags are meaningless
-  anywhere else, so flagging them is safe.
-- Action elements (`fx-setvalue`, `fx-dispatch`, ...) are deliberately **not**
-  covered - `abstract-action.js` defaults an action's listener target to
-  `this.parentNode` when no `target` attribute is given, with no requirement on
-  what that parent is, so "wrong parent" isn't a meaningful check for actions in
-  general (only `fx-construct-done`, above, is a real exception).
+`<template>` is overloaded: Fore's `fx-repeat` uses it for the per-iteration
+body, but demo pages also use a plain HTML `<template>` for unrelated things
+(e.g. wrapping a whole `<fx-fore>` for deferred/lazy rendering - see
+`demo/uri.html`, `demo/while.html`, and many others). `fore-html-mode.js`
+disambiguates by checking what the *next* tracked ancestor beyond the
+`<template>` is: if it's `fx-repeat`, the template's own (repeat-item-shaped)
+`children` list applies; otherwise the `<template>` is skipped over entirely,
+same as any other untracked wrapper.
 
-If Fore's structure changes, update `fore-structure.json` directly - there's no
-regeneration script for it.
+### Updating
+
+If Fore's structure or attributes change, edit `src/fore-tree.json` directly -
+there's no regeneration script. After editing, re-run `npm run build` to
+refresh `dist/fore-codemirror-bundle.js`.
 
 ## Demo
 
 Open `index.html` directly as a static file, or via Fore's dev server
-(`npm start` at the repo root) at `/demo/fore-codemirror/index.html`.
+(`npm start` at the repo root) at `/demo/fore-codemirror/index.html`. The
+playground at `/demo/playground/index.html` uses the same bundle for its
+markup/instance editors.

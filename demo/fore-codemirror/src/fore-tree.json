@@ -1,0 +1,1072 @@
+{
+  "_comment": "Consumed by fore-html-mode.js. Replaces fore-schema.json + fore-structure.json + fore-categories.json (all retired). Containment is expressed positionally: a tag is legal wherever it's listed as a child (literally or via a macro) of its nearest tracked ancestor. Nothing needs a denylist - if it's not reachable from a node's children, it's invalid there, full stop. The only place position isn't enough is fx-repeat-ref, which needs a literal ancestor *path* (template > fx-repeat) because <template> is a plain HTML tag reused outside Fore too - that's the one entry in 'exceptions'. Per-tag flags beyond attrs/children: 'authorable: false' (fx-repeatitem, fx-repeat-attributes, fx-abstract-control - real tags/classes the linter should still recognize by name, but flag as an error if a user writes them literally, since they're runtime-generated from data-ref attributes or base-class-only); 'requiredChildren' (fx-repeat needs a <template> - absence should warn, not just silently permit-if-present); and 'requiredAttrs' ({all: [...], anyOf: [...], severity: 'error'|'warning'} - grounded in source: 'error' where the element's own code throws/console.errors/dispatches an error event when the attr is missing, 'warning' where it silently no-ops or falls back to a default and is merely pointless without it). Containment between the two runtime-generated repeat classes is one-directional: an fx-repeat-attributes section (data-ref) may contain an fx-repeat, but fx-repeat may never contain fx-repeat-attributes. Attribute lists were cross-checked against each class's observedAttributes/getAttribute reads, not just fore-docs (which itself was missing some of these) - fx-model.undo/undo-depth, fx-fore.keyboard-shortcuts, fx-repeat.size/virtual/focus-on-create, fx-trigger.activate-on-focus/debounce, fx-container.readonly/refresh-on-view, fx-include.selector, fx-control.as/credentials/debounce/initial/listen-on/on-demand/shadow/src/value-prop, and others were found this way. Validated against all 188 files in demo/ (see demo/fore-codemirror/_lint-demos-check.mjs, run once during integration then removed) - containment rules were widened from evidence found there: fx-fore also allows top-level actions/fx-var/nested fx-fore (action-block.html, nested-fore-instance.html), fx-connection/fx-output allow ACTION-ELEMENTS (connection.html, actions.html), fx-bind allows fx-alert (revalidate.html + fore-docs), fx-control allows fx-trigger (markdown-editor.html), fx-switch allows UI-ELEMENTS/ACTION-ELEMENTS alongside fx-case (accordion.html), action elements allow fx-var (duration.html), and fx-items/fx-alert allow static HTML-ELEMENTS content instead of always being ref-bound (radiobuttons.html). requiredAttrs was correspondingly removed from fx-group/fx-switch/fx-alert/fx-items once real demos showed them legitimately used unbound - the 'isBound() soft pattern' evidence only reliably predicts pointlessness for elements whose whole purpose IS the binding (fx-bind, fx-repeat, fx-delete), not general-purpose containers.",
+  "macros": {
+    "HTML-ELEMENTS": {
+      "wildcard": true,
+      "note": "any plain (non fx-*) HTML tag. The linter already ignores non fx-* tags, so this macro is documentation only - it doesn't need enumerating or expanding at lint time."
+    },
+    "ACTION-ELEMENTS": [
+      "fx-setvalue",
+      "fx-insert",
+      "fx-delete",
+      "fx-send",
+      "fx-dispatch",
+      "fx-message",
+      "fx-toggle",
+      "fx-show",
+      "fx-hide",
+      "fx-setattribute",
+      "fx-load",
+      "fx-setfocus",
+      "fx-refresh",
+      "fx-replace",
+      "fx-toggleboolean",
+      "fx-call",
+      "fx-reload",
+      "fx-reset",
+      "fx-update",
+      "fx-append",
+      "fx-unmodified",
+      "fx-action",
+      "fx-return",
+      "fx-confirm",
+      "fx-copy",
+      "fx-undo",
+      "fx-redo",
+      "fx-commit-history",
+      "fx-insertchild"
+    ],
+    "UI-ELEMENTS": [
+      "fx-group",
+      "fx-container",
+      "fx-switch",
+      "fx-case",
+      "fx-dialog",
+      "fx-repeat",
+      "fx-include",
+      "fx-control",
+      "fx-output",
+      "fx-trigger",
+      "fx-upload",
+      "fx-control-menu"
+    ]
+  },
+  "tree": {
+    "fx-fore": {
+      "attrs": {
+        "src": null,
+        "selector": null,
+        "create-nodes": null,
+        "strict": null,
+        "version": null,
+        "init-on": null,
+        "keyboard-shortcuts": null,
+        "ignore-expressions": null,
+        "merge-partial": null,
+        "refresh-on-view": null,
+        "validate-on": null,
+        "init-on-target": null,
+        "show-confirmation": null,
+        "no-check": null,
+        "wait-for": null
+      },
+      "children": [
+        "fx-model",
+        "UI-ELEMENTS",
+        "HTML-ELEMENTS",
+        "fx-inspector",
+        "fx-devtools",
+        "fx-minimap",
+        "ACTION-ELEMENTS",
+        "fx-var",
+        "fx-fore"
+      ]
+    },
+    "fx-model": {
+      "attrs": {
+        "id": null,
+        "undo": null,
+        "undo-depth": null
+      },
+      "children": [
+        "fx-bind",
+        "fx-instance",
+        "fx-submission",
+        "fx-connection",
+        "fx-functionlib",
+        "fx-function",
+        "fx-var",
+        "fx-construct-done",
+        "ACTION-ELEMENTS"
+      ],
+      "note": "undo (boolean opt-in, enables the UndoManager) and undo-depth (max history size) - src/fx-model.js:334-336. Companion fx-undo/fx-redo/fx-commit-history actions read getEffectiveUndoManager() but define no attrs of their own."
+    },
+    "fx-bind": {
+      "attrs": {
+        "ref": null,
+        "calculate": null,
+        "constraint": null,
+        "readonly": null,
+        "required": null,
+        "relevant": null,
+        "type": null,
+        "alert": null,
+        "id": null
+      },
+      "children": [
+        "fx-bind",
+        "fx-alert"
+      ],
+      "requiredAttrs": {
+        "all": [
+          "ref"
+        ],
+        "severity": "warning"
+      },
+      "note": "ref defaults to '.' with no warning if absent (src/fx-bind.js:80) - valid but usually not what's intended."
+    },
+    "fx-instance": {
+      "attrs": {
+        "id": null,
+        "src": null,
+        "type": [
+          "xml",
+          "json",
+          "text",
+          "html"
+        ],
+        "credentials": [
+          "same-origin",
+          "include",
+          "omit"
+        ],
+        "shared": null
+      },
+      "children": []
+    },
+    "fx-submission": {
+      "attrs": {
+        "id": null,
+        "url": null,
+        "method": null,
+        "replace": [
+          "all",
+          "instance",
+          "none"
+        ],
+        "ref": null,
+        "instance": null,
+        "into": null,
+        "targetref": null,
+        "target": null,
+        "nonrelevant": [
+          "remove",
+          "keep",
+          "empty"
+        ],
+        "serialization": [
+          "xml",
+          "json",
+          "none"
+        ],
+        "mediatype": null,
+        "responsemediatype": null,
+        "validate": [
+          "true",
+          "false"
+        ],
+        "credentials": [
+          "same-origin",
+          "include",
+          "omit"
+        ]
+      },
+      "children": [
+        "fx-header",
+        "ACTION-ELEMENTS"
+      ],
+      "requiredAttrs": {
+        "all": [
+          "id"
+        ],
+        "severity": "error"
+      },
+      "note": "logs \"id is required\" if absent - src/fx-submission.js:25."
+    },
+    "fx-header": {
+      "attrs": {
+        "name": null,
+        "value": null
+      },
+      "children": [],
+      "requiredAttrs": {
+        "all": [
+          "name"
+        ],
+        "severity": "error"
+      },
+      "note": "throws in constructor if absent - src/fx-header.js:11."
+    },
+    "fx-connection": {
+      "attrs": {
+        "url": null,
+        "message-format": [
+          "json",
+          "xml",
+          "text"
+        ],
+        "heartbeat": null,
+        "ref": null
+      },
+      "children": [
+        "ACTION-ELEMENTS"
+      ],
+      "requiredAttrs": {
+        "all": [
+          "url"
+        ],
+        "severity": "warning"
+      },
+      "note": "_connect() silently skips creating the WebSocket if empty, no warning - src/fx-connection.js:130-137."
+    },
+    "fx-functionlib": {
+      "attrs": {
+        "src": null,
+        "prefix": null,
+        "type": [
+          "module",
+          "html"
+        ]
+      },
+      "children": [],
+      "requiredAttrs": {
+        "all": [
+          "src"
+        ],
+        "severity": "error"
+      },
+      "note": "logs \"Missing required @src.\" and no-ops - src/functions/fx-functionlib.js:80."
+    },
+    "fx-function": {
+      "attrs": {
+        "signature": null,
+        "type": null,
+        "override": null
+      },
+      "children": [],
+      "requiredAttrs": {
+        "all": [
+          "signature"
+        ],
+        "severity": "error"
+      },
+      "note": "logs \"signature is a required attribute\" then throws calling .match() on the null signature - src/functions/registerFunction.js:30."
+    },
+    "fx-var": {
+      "attrs": {
+        "name": null,
+        "value": null
+      },
+      "children": [],
+      "requiredAttrs": {
+        "all": [
+          "name"
+        ],
+        "severity": "warning"
+      },
+      "note": "unused/unreferenceable without a name, no warning."
+    },
+    "fx-construct-done": {
+      "attrs": {},
+      "children": [
+        "ACTION-ELEMENTS"
+      ]
+    },
+    "fx-group": {
+      "attrs": {
+        "ref": null,
+        "collapse": null,
+        "on-demand": null
+      },
+      "children": [
+        "HTML-ELEMENTS",
+        "UI-ELEMENTS",
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      "note": "generic isBound() = hasAttribute('ref') soft pattern - unbound just renders/does nothing useful, no warning."
+    },
+    "fx-container": {
+      "attrs": {
+        "src": null,
+        "readonly": null,
+        "refresh-on-view": null
+      },
+      "children": [
+        "HTML-ELEMENTS",
+        "UI-ELEMENTS",
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      "note": "readonly - isReadonly() checks hasAttribute('readonly') - src/ui/fx-container.js:138."
+    },
+    "fx-dialog": {
+      "attrs": {
+        "id": null
+      },
+      "children": [
+        "HTML-ELEMENTS",
+        "UI-ELEMENTS",
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ]
+    },
+    "fx-switch": {
+      "attrs": {
+        "ref": null
+      },
+      "children": [
+        "fx-case",
+        "UI-ELEMENTS",
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      "note": "generic isBound() soft pattern, same as fx-group."
+    },
+    "fx-case": {
+      "attrs": {
+        "id": null,
+        "name": null,
+        "label": null,
+        "selected": null,
+        "src": null,
+        "selector": null
+      },
+      "children": [
+        "HTML-ELEMENTS",
+        "UI-ELEMENTS",
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ]
+    },
+    "fx-repeat": {
+      "attrs": {
+        "ref": null,
+        "index": null,
+        "drop-target": null,
+        "draggable": null,
+        "size": null,
+        "virtual": null,
+        "focus-on-create": null
+      },
+      "children": [
+        "template",
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      "requiredChildren": [
+        "template"
+      ],
+      "requiredAttrs": {
+        "all": [
+          "ref"
+        ],
+        "severity": "warning"
+      },
+      "note": "fx-repeat is meaningless without a <template> child - the linter should warn, not just permit-if-present. Does NOT accept fx-repeat-attributes as a child - that relationship runs the other way (see fx-repeat-attributes). ref has no fallback at all (not even '.') and no throw - nodeset evaluation is silently broken downstream (src/ui/fx-repeat.js:206). size (progressive-rendering row cap) and virtual (windowed virtualization) - src/ui/fx-repeat.js:176,188."
+    },
+    "template": {
+      "note": "only carries this child list when it's an immediate child of fx-repeat - see 'exceptions' for how fx-repeat-ref enforces that.",
+      "children": [
+        "HTML-ELEMENTS",
+        "UI-ELEMENTS",
+        "ACTION-ELEMENTS",
+        "fx-repeat-ref",
+        "fx-var"
+      ]
+    },
+    "fx-repeat-attributes": {
+      "attrs": {
+        "ref": null,
+        "index": null,
+        "focus-on-create": null
+      },
+      "children": [
+        "HTML-ELEMENTS",
+        "UI-ELEMENTS",
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      "authorable": false,
+      "note": "not written as a literal tag - synthesized at runtime for a plain HTML element carrying a data-ref attribute ('non-visible', like fx-repeatitem). That data-ref section CAN contain an fx-repeat (reachable here via UI-ELEMENTS), but the reverse is disallowed: fx-repeat itself must not contain one."
+    },
+    "fx-repeatitem": {
+      "attrs": {
+        "repeat-index": null,
+        "relevant": null,
+        "nonrelevant": null
+      },
+      "children": [
+        "HTML-ELEMENTS",
+        "UI-ELEMENTS",
+        "ACTION-ELEMENTS"
+      ],
+      "authorable": false,
+      "note": "generated by fx-repeat at runtime, one per iteration - never write this by hand, it'll conflict with what fx-repeat itself creates. Its content shape (html/ui/action) is still meaningful for documentation, since that's what ends up inside it."
+    },
+    "fx-repeat-ref": {
+      "attrs": {
+        "ref": null
+      },
+      "children": []
+    },
+    "fx-include": {
+      "attrs": {
+        "src": null,
+        "target": [
+          "self",
+          "document",
+          "window"
+        ],
+        "event": null,
+        "replace": null,
+        "immediate": null,
+        "reload": null,
+        "selector": null
+      },
+      "children": []
+    },
+    "fx-control": {
+      "attrs": {
+        "ref": null,
+        "label": null,
+        "update-event": [
+          "blur",
+          "enter"
+        ],
+        "debounce": null,
+        "value-prop": [
+          "value",
+          "selectedOptions",
+          "checked"
+        ],
+        "listen-on": null,
+        "on-demand": null,
+        "initial": null,
+        "src": null,
+        "credentials": [
+          "same-origin",
+          "include",
+          "omit"
+        ],
+        "as": [
+          "xml",
+          "node"
+        ],
+        "shadow": null
+      },
+      "children": [
+        "fx-hint",
+        "fx-alert",
+        "fx-items",
+        "ACTION-ELEMENTS",
+        "fx-var",
+        "fx-trigger"
+      ]
+    },
+    "fx-abstract-control": {
+      "attrs": {
+        "as": null
+      },
+      "children": [],
+      "authorable": false,
+      "note": "base class inherited by concrete controls (fx-control, fx-output, ...) - not a tag the user ever writes directly."
+    },
+    "fx-output": {
+      "attrs": {
+        "ref": null,
+        "value": null,
+        "mediatype": [
+          "html",
+          "image"
+        ],
+        "html": null
+      },
+      "children": [
+        "ACTION-ELEMENTS"
+      ],
+      "requiredAttrs": {
+        "anyOf": [
+          "ref",
+          "value"
+        ],
+        "severity": "warning"
+      },
+      "note": "refresh() does nothing if neither is set - src/ui/fx-output.js."
+    },
+    "fx-trigger": {
+      "attrs": {
+        "ref": null,
+        "activate-on-focus": null,
+        "debounce": null
+      },
+      "children": [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      "note": "ref confirmed genuinely optional (only affects readonly-disable behavior) - not marked required. activate-on-focus fires the action on focus, not just click/Enter/Space - src/ui/fx-trigger.js:43."
+    },
+    "fx-upload": {
+      "attrs": {
+        "ref": null,
+        "accept": null,
+        "filename": null,
+        "mimetype": null,
+        "label": null
+      },
+      "children": [
+        "fx-hint",
+        "fx-alert",
+        "ACTION-ELEMENTS"
+      ]
+    },
+    "fx-control-menu": {
+      "attrs": {
+        "select": null,
+        "mode": null
+      },
+      "children": []
+    },
+    "fx-hint": {
+      "attrs": {},
+      "children": []
+    },
+    "fx-alert": {
+      "attrs": {
+        "ref": null
+      },
+      "children": [
+        "HTML-ELEMENTS"
+      ],
+      "note": "generic isBound() soft pattern."
+    },
+    "fx-items": {
+      "attrs": {
+        "ref": null,
+        "value": null
+      },
+      "children": [
+        "HTML-ELEMENTS"
+      ],
+      "note": "generic isBound() soft pattern."
+    },
+    "fx-setvalue": {
+      "attrs": {
+        "ref": null,
+        "value": null
+      },
+      "children": [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      "requiredAttrs": {
+        "all": [
+          "ref"
+        ],
+        "severity": "error"
+      },
+      "note": "throws \"fx-setvalue must specify a 'ref' attribute\" - src/actions/fx-setvalue.js:40."
+    },
+    "fx-insert": {
+      "attrs": {
+        "ref": null,
+        "context": null,
+        "origin": null,
+        "at": null,
+        "position": [
+          "before",
+          "after",
+          "first",
+          "last"
+        ],
+        "keep-values": null,
+        "template": null
+      },
+      "children": [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      "note": "not given a blanket requiredAttrs - ref is only required in JSON-lens mode (throws if not a lens path starting with '?', src/actions/fx-insert.js:559-562), template throws on invalid JSON when used (src/actions/fx-insert.js:128), origin just warns+falls back if it doesn't resolve (src/actions/fx-insert.js:453,459). Too mode-dependent to state as one rule."
+    },
+    "fx-delete": {
+      "attrs": {
+        "ref": null
+      },
+      "children": [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      "requiredAttrs": {
+        "all": [
+          "ref"
+        ],
+        "severity": "warning"
+      },
+      "note": "defaults to '.' with no warning - src/actions/fx-delete.js."
+    },
+    "fx-send": {
+      "attrs": {
+        "submission": null,
+        "url": null,
+        "target": null,
+        "connection": null
+      },
+      "children": [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      "requiredAttrs": {
+        "anyOf": [
+          "submission",
+          "connection"
+        ],
+        "severity": "error"
+      },
+      "note": "dispatches error \"<fx-submission> not found\" unless connection is given instead - src/actions/fx-send.js:58-77."
+    },
+    "fx-dispatch": {
+      "attrs": {
+        "name": null,
+        "targetid": null
+      },
+      "children": [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      "requiredAttrs": {
+        "all": [
+          "name"
+        ],
+        "severity": "error"
+      },
+      "note": "throws \"no event specified for dispatch\" - src/actions/fx-dispatch.js:45."
+    },
+    "fx-message": {
+      "attrs": {
+        "event": null,
+        "level": [
+          "ephemeral",
+          "sticky",
+          "modal"
+        ],
+        "value": null
+      },
+      "children": [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ]
+    },
+    "fx-toggle": {
+      "attrs": {
+        "case": null
+      },
+      "children": [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      "requiredAttrs": {
+        "all": [
+          "case"
+        ],
+        "severity": "error"
+      },
+      "note": "dispatches error \"fx-case id not found\" if the id doesn't resolve - src/actions/fx-toggle.js perform()."
+    },
+    "fx-show": {
+      "attrs": {
+        "dialog": null
+      },
+      "children": [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      "requiredAttrs": {
+        "all": [
+          "dialog"
+        ],
+        "severity": "error"
+      },
+      "note": "dispatches error event if absent, plus console.error if the id doesn't resolve - src/actions/fx-show.js:20,37."
+    },
+    "fx-hide": {
+      "attrs": {
+        "dialog": null
+      },
+      "children": [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      "requiredAttrs": {
+        "all": [
+          "dialog"
+        ],
+        "severity": "error"
+      },
+      "note": "dispatches error event if absent - src/actions/fx-hide.js:26."
+    },
+    "fx-setattribute": {
+      "attrs": {
+        "ref": null,
+        "name": null,
+        "value": null
+      },
+      "children": [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      "requiredAttrs": {
+        "all": [
+          "ref"
+        ],
+        "anyOf": [
+          "name",
+          "value"
+        ],
+        "severity": "error"
+      },
+      "note": "throws if ref absent - src/actions/fx-setattribute.js:45; dispatches error \"name or value not specified\" if neither given - line 47."
+    },
+    "fx-load": {
+      "attrs": {
+        "url": null,
+        "attach-to": [
+          "_self",
+          "_blank"
+        ],
+        "replace": null,
+        "await": null
+      },
+      "children": [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      "requiredAttrs": {
+        "all": [
+          "url"
+        ],
+        "severity": "error"
+      },
+      "note": "_evaluateUrlExpression() throws \"url not specified\" if absent - src/actions/fx-load.js:200."
+    },
+    "fx-setfocus": {
+      "attrs": {
+        "control": null,
+        "select": null
+      },
+      "children": [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      "requiredAttrs": {
+        "all": [
+          "control"
+        ],
+        "severity": "error"
+      },
+      "note": "dispatches error \"Instance '...' not found\" if the target can't be resolved - src/actions/fx-setfocus.js:33-39."
+    },
+    "fx-refresh": {
+      "attrs": {
+        "force": null,
+        "self": null,
+        "selector": null,
+        "control": null
+      },
+      "children": [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ]
+    },
+    "fx-replace": {
+      "attrs": {
+        "ref": null,
+        "with": null
+      },
+      "children": [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      "requiredAttrs": {
+        "all": [
+          "with"
+        ],
+        "severity": "warning"
+      },
+      "note": "evaluateXPathToFirstNode(null, ...) resolves to no target and perform() silently bails - src/actions/fx-replace.js:41-42."
+    },
+    "fx-toggleboolean": {
+      "attrs": {
+        "ref": null
+      },
+      "children": [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      "requiredAttrs": {
+        "all": [
+          "ref"
+        ],
+        "severity": "error"
+      },
+      "note": "throws if absent - src/actions/fx-toggleboolean.js:43."
+    },
+    "fx-call": {
+      "attrs": {
+        "action": null,
+        "function": null
+      },
+      "children": [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      "requiredAttrs": {
+        "anyOf": [
+          "action",
+          "function"
+        ],
+        "severity": "error"
+      },
+      "note": "throws if neither present - src/actions/fx-call.js:41."
+    },
+    "fx-reload": {
+      "attrs": {},
+      "children": [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ]
+    },
+    "fx-reset": {
+      "attrs": {
+        "instance": null
+      },
+      "children": [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      "requiredAttrs": {
+        "all": [
+          "instance"
+        ],
+        "severity": "error"
+      },
+      "note": "dispatches error \"instance does not exist\" if absent - src/actions/fx-reset.js:25."
+    },
+    "fx-update": {
+      "attrs": {},
+      "children": [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ]
+    },
+    "fx-append": {
+      "attrs": {
+        "ref": null,
+        "repeat": null
+      },
+      "children": [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      "requiredAttrs": {
+        "all": [
+          "repeat"
+        ],
+        "severity": "warning"
+      },
+      "note": "unresolved id causes a raw TypeError accessing repeat.shadowRoot rather than a Fore-level diagnostic - src/actions/fx-append.js _dataFromTemplate."
+    },
+    "fx-unmodified": {
+      "attrs": {},
+      "children": [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ]
+    },
+    "fx-action": {
+      "attrs": {
+        "src": null
+      },
+      "children": [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ]
+    },
+    "fx-return": {
+      "attrs": {},
+      "children": [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ]
+    },
+    "fx-confirm": {
+      "attrs": {
+        "message": null
+      },
+      "children": [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      "requiredAttrs": {
+        "all": [
+          "message"
+        ],
+        "severity": "warning"
+      },
+      "note": "defaults to null; window.confirm(null) shows the literal text \"null\" - src/actions/fx-confirm.js."
+    },
+    "fx-copy": {
+      "attrs": {
+        "ref": null,
+        "to": null
+      },
+      "children": [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      "requiredAttrs": {
+        "all": [
+          "ref"
+        ],
+        "severity": "error"
+      },
+      "note": "throws if absent - src/actions/fx-copy.js:36."
+    },
+    "fx-undo": {
+      "attrs": {},
+      "children": [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ]
+    },
+    "fx-redo": {
+      "attrs": {},
+      "children": [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ]
+    },
+    "fx-commit-history": {
+      "attrs": {},
+      "children": [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ]
+    },
+    "fx-insertchild": {
+      "attrs": {
+        "at": null,
+        "child": null,
+        "parent": null,
+        "origin": null,
+        "keep-values": null,
+        "position": [
+          "before",
+          "after",
+          "first",
+          "last"
+        ]
+      },
+      "children": [
+        "ACTION-ELEMENTS",
+        "fx-var"
+      ],
+      "requiredAttrs": {
+        "all": [
+          "parent"
+        ],
+        "severity": "warning"
+      },
+      "note": "if absent, parent is interpolated directly into a generated <fx-insert context=\"${this.parent}\">, becoming the literal string context=\"null\" - silently breaks the insert with no diagnostic - src/actions/fx-insertchild.js:69-73."
+    },
+    "fx-droptarget": {
+      "attrs": {},
+      "children": []
+    },
+    "fx-inspector": {
+      "attrs": {
+        "open": null
+      },
+      "children": [
+        "fx-dom-inspector",
+        "fx-json-instance"
+      ]
+    },
+    "fx-devtools": {
+      "attrs": {
+        "selector": null
+      },
+      "children": [
+        "fx-action-log",
+        "fx-log-item",
+        "fx-log-settings"
+      ]
+    },
+    "fx-speech": {
+      "attrs": {
+        "mode": null
+      },
+      "children": []
+    },
+    "fx-minimap": {
+      "attrs": {
+        "options": null,
+        "selector": null
+      },
+      "children": []
+    },
+    "fx-action-log": {
+      "attrs": {},
+      "children": [],
+      "note": "devtools panel internals - see fx-devtools."
+    },
+    "fx-dom-inspector": {
+      "attrs": {
+        "instance": null
+      },
+      "children": [],
+      "note": "devtools panel internals - see fx-devtools."
+    },
+    "fx-json-instance": {
+      "attrs": {
+        "fore": null,
+        "instance": null
+      },
+      "children": [],
+      "note": "devtools panel internals - see fx-inspector."
+    },
+    "fx-log-item": {
+      "attrs": {
+        "event-name": null,
+        "short-name": null,
+        "short-info": null,
+        "xpath": null
+      },
+      "children": [],
+      "note": "devtools panel internals - see fx-devtools."
+    },
+    "fx-log-settings": {
+      "attrs": {},
+      "children": [],
+      "note": "devtools panel internals - see fx-devtools."
+    }
+  },
+  "exceptions": {
+    "fx-repeat-ref": {
+      "requiresAncestorPath": [
+        "template",
+        "fx-repeat"
+      ],
+      "reason": "template is a generic HTML tag also used outside Fore, so its tree node's child list alone can't guarantee this specific <template> belongs to an <fx-repeat>. This is the only rule of its kind - everything else is captured by position."
+    }
+  }
+}
