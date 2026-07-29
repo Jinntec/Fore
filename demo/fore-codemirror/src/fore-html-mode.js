@@ -1,7 +1,7 @@
 import { html } from '@codemirror/lang-html';
 import { syntaxTree } from '@codemirror/language';
 import { linter, lintGutter } from '@codemirror/lint';
-import foreTreeData from './fore-tree.json' with { type: 'json' };
+import foreTreeData from '../../../src/fore-tree.json' with { type: 'json' };
 
 const { macros, tree, exceptions } = foreTreeData;
 
