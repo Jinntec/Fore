@@ -1,6 +1,6 @@
 // Extension functions for the Fore Playground, loaded via <fx-functionlib type="module">.
-// Demonstrates Fore's custom-function mechanism (see demo/function-lib/) while also backing
-// the playground's "Generate form from data" button.
+// Demonstrates Fore's custom-function mechanism (see demo/function-lib/); generateForm()
+// is callable as generate-form() from the XPath console or from markup in the live preview.
 
 function labelFor(name) {
   return String(name)

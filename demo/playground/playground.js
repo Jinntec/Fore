@@ -1,6 +1,6 @@
 import { evaluateXPath } from '../../src/xpath-evaluation.js';
 import { FxFore } from '../../src/fx-fore.js';
-import { generateForm, formatXmlIndented } from './playground-functions.js';
+import { formatXmlIndented } from './playground-functions.js';
 
 const DEFAULT_MARKUP = `<fx-fore>
 <fx-model>
@@ -627,38 +627,6 @@ function resetToDefault() {
   mount();
 }
 
-function runGenerateForm() {
-  const text = getInstanceText().trim();
-  if (!text) {
-    setStatus('Enter some instance data first.', 'error');
-    return;
-  }
-  let root;
-  try {
-    if (getInstanceType() === 'json') {
-      root = JSON.parse(text);
-    } else {
-      const doc = new DOMParser().parseFromString(text, 'application/xml');
-      const errorNode = doc.querySelector('parsererror');
-      if (errorNode) throw new Error(errorNode.textContent.trim());
-      root = doc.documentElement;
-    }
-  } catch (e) {
-    setStatus(`Could not parse instance data: ${e.message}`, 'error');
-    return;
-  }
-
-  const controls = generateForm(root);
-  const typeAttr = getInstanceType() === 'json' ? ' type="json"' : '';
-  suppressNextUpdates(1);
-  setMarkupText(
-    `<fx-fore>\n<fx-model>\n  <fx-instance id="default"${typeAttr}></fx-instance>\n</fx-model>\n<fx-group>\n${controls}\n</fx-group>\n</fx-fore>`,
-  );
-  refreshInstanceOptions();
-  mount();
-  setStatus('Form generated from data.', 'ok');
-}
-
 function runXPathEval() {
   const expr = xpathInput.value.trim();
   if (!expr || !currentFore) return;
@@ -783,7 +751,6 @@ async function init() {
   });
 
   document.addEventListener('pg-new', resetToDefault);
-  document.addEventListener('pg-generate', runGenerateForm);
   document.addEventListener('pg-share', copyShareLink);
   document.addEventListener('pg-evaluate', runXPathEval);
   xpathInput.addEventListener('keydown', e => {
