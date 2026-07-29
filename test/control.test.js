@@ -289,6 +289,36 @@ describe('control tests', () => {
     expect(input.widget.hasAttribute('aria-required')).to.be.false;
   });
 
+  it('keeps a native required attribute with no backing fx-bind', async () => {
+    // Regression test for docs/native-required-attribute-bug.md: a plain
+    // `required` written directly on the widget markup, with no `fx-bind
+    // required="..."` driving it, must survive Fore's update cycle so the
+    // native validity check (valueMissing) still works.
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="model1">
+          <fx-instance>
+            <data>
+              <a></a>
+            </data>
+          </fx-instance>
+          <fx-bind ref="a"></fx-bind>
+        </fx-model>
+
+        <fx-control id="input1" ref="a">
+          <input class="widget" required />
+        </fx-control>
+      </fx-fore>
+    `);
+
+    await elementUpdated(el);
+    const input = document.getElementById('input1');
+    const mi = input.getModelItem();
+    expect(mi.required).to.be.false;
+    expect(input.widget.hasAttribute('required')).to.be.true;
+    expect(input.widget.validity.valueMissing).to.be.true;
+  });
+
   it('sets aria-required/aria-readonly for non-native widgets', async () => {
     const el = await fixtureSync(html`
       <fx-fore>

@@ -156,6 +156,38 @@ describe('native-validation demo', () => {
     });
   });
 
+  // ── Nickname — native required only, no fx-bind required ────────────────
+  // Regression coverage for docs/native-required-attribute-bug.md: this field has
+  // no fx-bind required="..." at all, only a plain `required` on the widget markup.
+  describe('nickname field (native required only, no fx-bind required)', () => {
+    it('keeps the native required attribute after Fore initializes the control', () => {
+      cy.get('#ctrl-nickname input.widget').should('have.attr', 'required');
+      cy.get('#ctrl-nickname input.widget').should($input => {
+        expect($input[0].validity.valueMissing).to.be.true;
+      });
+    });
+
+    it('marks invalid and shows alert when typed into and cleared again', () => {
+      // A plain focus+blur with no value change never fires `input`, so no
+      // fx-control update cycle runs and the CSS alert-visibility gate
+      // (.visited[invalid]) never engages — by design, Fore doesn't flash
+      // "invalid" before the user has actually touched the field. Typing then
+      // deleting is a real interaction that leaves the value empty again.
+      cy.get('#ctrl-nickname input.widget').type('x{backspace}').blur();
+      cy.get('#ctrl-nickname').should('have.attr', 'invalid');
+      cy.get('#ctrl-nickname fx-alert').should('be.visible');
+    });
+
+    it('marks valid and hides alert once a value is entered', () => {
+      cy.get('#ctrl-nickname input.widget').type('x{backspace}').blur();
+      cy.get('#ctrl-nickname').should('have.attr', 'invalid');
+
+      cy.get('#ctrl-nickname input.widget').type('joern').blur();
+      cy.get('#ctrl-nickname').should('not.have.attr', 'invalid');
+      cy.get('#ctrl-nickname fx-alert').should('not.be.visible');
+    });
+  });
+
   // ── aria-invalid ──────────────────────────────────────────────────────────
   describe('aria-invalid on widget', () => {
     it('sets aria-invalid=true on the inner input when native validation fails', () => {

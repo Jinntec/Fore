@@ -261,15 +261,23 @@ export default class AbstractControl extends UIElement {
     // console.log('mip required', this.modelItem.required);
     this.widget = this.getWidget();
     const wasRequired = this.isRequired();
+    const { bind } = this.modelItem;
+    const bindDeclaresRequired =
+      typeof bind?.hasAttribute === 'function' && bind.hasAttribute('required');
 
     if (!this.modelItem.required) {
-      this.widget.removeAttribute('required');
-      this.removeAttribute('required');
-      if (!this._isNativeFormWidget(this.widget)) {
-        this.widget.removeAttribute('aria-required');
-      }
-      if (wasRequired !== this.modelItem.required) {
-        this._dispatchEvent('optional');
+      // Only force-clear `required` when a bind is actually driving this facet.
+      // A native `required` written directly on the widget with no backing
+      // fx-bind is left alone so it can still validate on its own.
+      if (bindDeclaresRequired) {
+        this.widget.removeAttribute('required');
+        this.removeAttribute('required');
+        if (!this._isNativeFormWidget(this.widget)) {
+          this.widget.removeAttribute('aria-required');
+        }
+        if (wasRequired !== this.modelItem.required) {
+          this._dispatchEvent('optional');
+        }
       }
       return;
     }

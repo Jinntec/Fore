@@ -67,20 +67,26 @@
     }
 
     /*
-     * Native-constraint alert visibility: show fx-alert only after the user has
-     * interacted with the field (:user-invalid fires after first dirty interaction).
-     * Complements .visited[invalid] above, which covers Fore-driven (XPath) invalidity.
+     * Native-constraint alert visibility: reuses the same `.visited` class fx-control
+     * sets on blur for Fore-driven invalidity above, rather than :user-invalid. Fore
+     * marks a control visited on ANY blur regardless of whether the value changed (see
+     * fx-control.js's onBlur handler), whereas :user-invalid only matches after the
+     * user actually edits the value at least once -- a plain tab-through of an empty
+     * required-only-natively field left :user-invalid unmatched and its alert hidden
+     * while the bound-required sibling field's alert already showed. `.visited` +
+     * plain `:invalid` makes native-only validation behave identically to bind-driven
+     * validation on tab-through, and needs no @supports fallback since it doesn't
+     * depend on :user-invalid support at all.
      */
-    fx-control:has(input.widget:user-invalid) fx-alert {
+    fx-control.visited:has(input.widget:invalid) fx-alert {
         display: block;
     }
 
     /*
-     * Fallback for browsers without :user-invalid support.
-     * :placeholder-shown is false when a value is present, approximating "user typed".
+     * Fallback for browsers without :has() support.
      */
-    @supports not selector(input:user-invalid) {
-        fx-control[invalid]:has(input.widget:not(:placeholder-shown)) fx-alert {
+    @supports not selector(fx-control:has(*)) {
+        fx-control.visited[invalid] fx-alert {
             display: block;
         }
     }
