@@ -193,10 +193,6 @@ export const withDraggability = (superclass, isAlsoDraggable) =>
       this.classList.remove('drag-over', 'drop-before', 'drop-after');
       event.stopPropagation();
       if (this.localName === 'fx-droptarget') {
-        if (this.children.length !== 0) {
-          console.log('we have to do something');
-        }
-
         let { draggedItem } = this.getOwnerForm();
 
         if (draggedItem.getAttribute('drop-action') === 'copy') {
@@ -232,17 +228,6 @@ export const withDraggability = (superclass, isAlsoDraggable) =>
           this.appendChild(draggedItem);
         }
 
-        /*
-			if(this.hasAttribute('drop-position')){
-				if(this.getAttribute('drop-position') === 'before'){
-					this.parentNode.insertBefore(draggedItem,this);
-				} else {
-					this.parentNode.append(draggedItem);
-				}
-			}else{
-				this.replaceChildren(draggedItem);
-			}
-*/
         // NOTE: this branch (fx-droptarget) reorders live DOM/UI elements directly, not
         // instance data - there is nothing here for UndoManager's instance-data snapshots
         // to capture, so it is intentionally not wrapped with undo capture (see the
