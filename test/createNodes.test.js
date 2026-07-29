@@ -103,6 +103,29 @@ describe('createNodes', () => {
     expect(result).to.equal(null, 'The result should be null');
   });
 
+  it('reuses an existing intermediate element instead of creating a duplicate sibling (#321)', () => {
+    baseElement = new window.DOMParser().parseFromString(
+      '<xml><cac:InvoicePeriod xmlns:cac="urn:cac"><cbc:StartDate xmlns:cbc="urn:cbc">2019-02-01</cbc:StartDate><cbc:EndDate xmlns:cbc="urn:cbc">2019-05-07</cbc:EndDate></cac:InvoicePeriod></xml>',
+      'application/xml',
+    ).documentElement;
+    foreElement.setAttribute('xmlns:cac', 'urn:cac');
+    foreElement.setAttribute('xmlns:cbc', 'urn:cbc');
+
+    const result = createNodes('cac:InvoicePeriod/cbc:DescriptionCode', baseElement, foreElement);
+
+    // The new DescriptionCode leaf is returned...
+    expect(result).to.not.equal(null, 'The result should not be null');
+    expect(result.localName).to.equal('DescriptionCode');
+    // ...already spliced into the *existing* InvoicePeriod, not a fresh duplicate.
+    expect(result.parentNode).to.equal(baseElement.querySelector('InvoicePeriod'));
+    expect(baseElement.querySelectorAll('InvoicePeriod')).to.have.lengthOf(
+      1,
+      'no duplicate InvoicePeriod should have been created',
+    );
+    expect(baseElement.querySelector('StartDate').textContent).to.equal('2019-02-01');
+    expect(baseElement.querySelector('EndDate').textContent).to.equal('2019-05-07');
+  });
+
   describe('recursive processing', () => {
     it('can make a path with new expressions in the predicate', () => {
       const xpath = 'a[b/c]';

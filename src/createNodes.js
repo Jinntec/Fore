@@ -185,6 +185,59 @@ export default function createNodes(xpath, baseElement, foreElement) {
   if (!steps.length) return null;
 
   /**
+   * If the first step of this path already exists as a real child of baseElement, reuse it
+   * instead of creating a duplicate sibling. Without this, a multi-step ref whose last step is
+   * missing (e.g. `cac:InvoicePeriod/cbc:DescriptionCode` when `cac:InvoicePeriod` already holds
+   * real data) would create a brand new, empty `cac:InvoicePeriod` alongside the existing one,
+   * orphaning the real data behind a duplicate element with the same name.
+   */
+  const firstStep = steps[0];
+  const isSimpleElementStep =
+    firstStep.nameTest &&
+    firstStep.nameTest !== '.' &&
+    !firstStep.nameTest.trim().startsWith('@') &&
+    firstStep.predicates.length === 0;
+
+  if (isSimpleElementStep && baseElement.children) {
+    const parsedFirst = parseName(firstStep.nameTest);
+    if (!parsedFirst.isValue) {
+      const wantedNs = parsedFirst.namespaceURI || null;
+      const existingChild = Array.from(baseElement.children).find(
+        child =>
+          child.localName === parsedFirst.localName && (child.namespaceURI || null) === wantedNs,
+      );
+
+      if (existingChild) {
+        const remainingSteps = steps.slice(1);
+        if (!remainingSteps.length) {
+          // The requested step already exists in full - nothing to create.
+          return null;
+        }
+
+        const remainingXPath = remainingSteps
+          .map(step => `${step.nameTest}${step.predicates.map(p => `[${p}]`).join('')}`)
+          .join('/');
+
+        const tailResult = createNodes(remainingXPath, existingChild, foreElement);
+        if (tailResult) {
+          const alreadyAttached =
+            tailResult.nodeType === Node.ATTRIBUTE_NODE
+              ? !!tailResult.ownerElement
+              : !!tailResult.parentNode;
+          if (!alreadyAttached) {
+            if (tailResult.nodeType === Node.ATTRIBUTE_NODE) {
+              existingChild.setAttributeNode(tailResult);
+            } else {
+              existingChild.appendChild(tailResult);
+            }
+          }
+        }
+        return tailResult;
+      }
+    }
+  }
+
+  /**
    * Process a single step
    *
    * @param {RawStep} rawStep

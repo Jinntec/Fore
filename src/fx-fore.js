@@ -2079,14 +2079,16 @@ export class FxFore extends HTMLElement {
         if (!newNode || !parentNodeset) {
           continue;
         }
-        if (newNode.nodeType === Node.ATTRIBUTE_NODE) {
-          parentNodeset.setAttributeNode(newNode);
-        } else {
-          const referenceNode = this._findReferenceNodeForNewElement(newNode, parentNodeset, null);
-          if (referenceNode) {
-            referenceNode.after(newNode);
+        if (!this._isNodeAlreadyAttached(newNode)) {
+          if (newNode.nodeType === Node.ATTRIBUTE_NODE) {
+            parentNodeset.setAttributeNode(newNode);
           } else {
-            parentNodeset.prepend(newNode);
+            const referenceNode = this._findReferenceNodeForNewElement(newNode, parentNodeset, null);
+            if (referenceNode) {
+              referenceNode.after(newNode);
+            } else {
+              parentNodeset.prepend(newNode);
+            }
           }
         }
         bound.evalInContext();
@@ -2130,23 +2132,25 @@ export class FxFore extends HTMLElement {
         continue;
       }
 
-      if (newNode.nodeType === Node.ATTRIBUTE_NODE) {
-        parentNodeset.setAttributeNode(newNode);
-      } else {
-        let referenceNode = this._findReferenceNodeForNewElement(
-          newNode,
-          parentNodeset,
-          siblingControl,
-        );
-
-        if (referenceNode) {
-          if (referenceNode.nodeType === Node.DOCUMENT_NODE) {
-            referenceNode.firstElementChild.append(newNode);
-          } else {
-            referenceNode.after(newNode);
-          }
+      if (!this._isNodeAlreadyAttached(newNode)) {
+        if (newNode.nodeType === Node.ATTRIBUTE_NODE) {
+          parentNodeset.setAttributeNode(newNode);
         } else {
-          parentNodeset.prepend(newNode);
+          let referenceNode = this._findReferenceNodeForNewElement(
+            newNode,
+            parentNodeset,
+            siblingControl,
+          );
+
+          if (referenceNode) {
+            if (referenceNode.nodeType === Node.DOCUMENT_NODE) {
+              referenceNode.firstElementChild.append(newNode);
+            } else {
+              referenceNode.after(newNode);
+            }
+          } else {
+            parentNodeset.prepend(newNode);
+          }
         }
       }
 
@@ -2159,6 +2163,17 @@ export class FxFore extends HTMLElement {
       }
     }
   }
+  /**
+   * `createNodes()` sometimes splices a created node directly into an existing real parent
+   * (when it reused an already-existing intermediate step) instead of returning a detached
+   * node for the caller to position. Callers use this to skip their own insertion logic in
+   * that case.
+   * @param {Node} node
+   */
+  _isNodeAlreadyAttached(node) {
+    return node.nodeType === Node.ATTRIBUTE_NODE ? !!node.ownerElement : !!node.parentNode;
+  }
+
   /**
    * Create Nodes from an XPath
    * @param {string} ref
