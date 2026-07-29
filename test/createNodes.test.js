@@ -14,7 +14,7 @@ let foreElement = null;
 let baseElement = null;
 describe('createNodes', () => {
   beforeEach(async () => {
-    foreElement = await fixture(html`<fx-fore />`);
+    foreElement = await fixture(html`<fx-fore xmlns:foo="bar" />`);
 
     baseElement = new window.DOMParser().parseFromString(
       '<xml />',
@@ -94,6 +94,15 @@ describe('createNodes', () => {
     expect(result).to.equal(null, 'The result should be null');
   });
 
+  it('Does not set the values of elements outside of predicates', () => {
+    const result = createNodes(
+      `InvoiceLine/Item/AdditionalItemProperty/Name='RightType'`,
+      baseElement,
+      foreElement,
+    );
+    expect(result).to.equal(null, 'The result should be null');
+  });
+
   describe('recursive processing', () => {
     it('can make a path with new expressions in the predicate', () => {
       const xpath = 'a[b/c]';
@@ -117,6 +126,32 @@ describe('createNodes', () => {
       expect(result).to.not.equal(null, 'The result should not be null');
 
       expect(result.outerHTML).to.equal('<name><name attr="value"/></name>');
+    });
+
+    it('Can set values of elements in predicates', () => {
+      const result = createNodes(
+        `InvoiceLine/Item/AdditionalItemProperty[Name='RightType']/Value`,
+        baseElement,
+        foreElement,
+      );
+      expect(result).to.not.equal(null, 'The result should not be null');
+
+      expect(result.outerHTML).to.equal(
+        '<InvoiceLine><Item><AdditionalItemProperty><Name>RightType</Name><Value/></AdditionalItemProperty></Item></InvoiceLine>',
+      );
+    });
+
+    it('Can set values of namespaced elements in predicates', () => {
+      const result = createNodes(
+        `foo:InvoiceLine/foo:Item/foo:AdditionalItemProperty[foo:Name='RightType']/foo:Value`,
+        baseElement,
+        foreElement,
+      );
+      expect(result).to.not.equal(null, 'The result should not be null');
+
+      expect(result.outerHTML).to.equal(
+        '<InvoiceLine xmlns="bar"><Item><AdditionalItemProperty><Name>RightType</Name><Value/></AdditionalItemProperty></Item></InvoiceLine>',
+      );
     });
   });
 });
