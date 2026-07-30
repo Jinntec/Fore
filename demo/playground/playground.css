@@ -58,6 +58,11 @@ body {
 .pg-toolbar h1 {
   font-size: 1.25rem;
   margin: 0 1rem 0 0;
+
+  span{
+    color:var(--paper-grey-500);
+    font-size: 1rem;
+  }
 }
 
 .pg-toolbar button,
