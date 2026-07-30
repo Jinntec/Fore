@@ -198,8 +198,7 @@ export class ModelItem {
       this.node.replaceWith(newVal.firstElementChild);
       // this.node.appendChild(newVal.firstElementChild);
     } else if (newVal?.nodeType && newVal.nodeType === Node.ELEMENT_NODE) {
-      this.node.replaceWith(newVal);
-      // this.node.appendChild(newVal);
+      this.node.textContent = newVal.textContent;
     } else if (newVal?.nodeType && this.node.nodeType === Node.ATTRIBUTE_NODE) {
       this.node.nodeValue = newVal;
     } else {
