@@ -67,18 +67,9 @@ export class FxRepeatitem extends withDraggability(UIElement, true) {
   }
 
   init() {
-    // console.log('repeatitem init model ', this.nodeset);
     // this._initializeChildren(this);
     this.inited = true;
   }
-
-  /*
-      getModelItem() {
-      super.getModelItem();
-      // console.log('modelItem in repeatitem ', this.getModelItem()[this.index]);
-      return this.getModelItem()[this.index];
-      }
-    */
 
   async _dispatchIndexChange() {
     /**
@@ -117,7 +108,6 @@ export class FxRepeatitem extends withDraggability(UIElement, true) {
   async refresh(force = false) {
     // this.modelItem = this.getModelItem();
     this.attachObserver();
-    // console.log('🔄 repeatitem modelitem', this.getModelItem());
 
     if (this.modelItem && !this.modelItem.relevant) {
       this.removeAttribute('relevant');

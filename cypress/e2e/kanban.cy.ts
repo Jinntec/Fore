@@ -7,11 +7,15 @@ describe('kanban.html', () => {
     const target = Cypress.$(toSelector)[0];
     const bcr = target.getBoundingClientRect();
     const dataTransfer = new DataTransfer();
-    const offsetY = 10000;
+    // Which half of the target the pointer is over decides before/after (see _dragOver in
+    // withDraggability.js) - a real drag always fires 'dragover' repeatedly before 'drop',
+    // so that's what sets the drop-before/drop-after state '_drop' reads.
+    const clientY = beforeOrAfter === 'after' ? bcr.bottom - 1 : bcr.top + 1;
     cy.get(fromSelector).trigger('dragstart', { dataTransfer, force: true });
     // Pass 'force': true to prevent Cypress from finding a closer drop target. We explicitly
     // want to drop in the selected element
-    cy.get(toSelector).trigger('drop', 'center', { dataTransfer, offsetY, force: true });
+    cy.get(toSelector).trigger('dragover', { dataTransfer, clientY, force: true });
+    cy.get(toSelector).trigger('drop', 'center', { dataTransfer, clientY, force: true });
   }
 
   it('can drag an item to before the first one', () => {

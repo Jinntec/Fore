@@ -293,11 +293,9 @@ describe('undo/redo', () => {
 
   describe('drag-and-drop reordering', () => {
     it('records an undo step for a repeat-item reorder and restores the original order', async () => {
-      // NOTE: items deliberately on one line - withDraggability._drop()'s reorder logic
-      // compares `repeatItemNode.previousSibling` directly against the dragged data node;
-      // indentation whitespace between <item> elements becomes a text-node sibling that
-      // breaks that comparison and silently no-ops the reorder (pre-existing, unrelated
-      // to undo/redo - found while writing this test).
+      // NOTE: items deliberately on one line - purely cosmetic here (unlike the reorder
+      // logic itself, which is now driven by the explicit drop-after class below, not by
+      // any whitespace-sensitive sibling comparison).
       const el = await fixtureSync(html`
         <fx-fore>
           <fx-model undo>
@@ -320,8 +318,12 @@ describe('undo/redo', () => {
       const noop = { stopPropagation() {}, preventDefault() {} };
 
       // simulate dragging the first item and dropping it onto the second (reorder to
-      // 'two', 'one') - withDraggability reads the dragged element off the owner form
+      // 'two', 'one') - withDraggability reads the dragged element off the owner form.
+      // 'drop-after' is normally toggled by _dragOver() based on which half of the
+      // target the pointer is over; set directly here to simulate having hovered the
+      // bottom half (see withDraggability.js).
       el.draggedItem = firstItem;
+      secondItem.classList.add('drop-after');
       secondItem._drop(noop);
       await new Promise(resolve => setTimeout(resolve, 50));
 

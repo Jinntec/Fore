@@ -610,4 +610,115 @@ describe('bind Tests', () => {
       expect(when.readonly).to.equal(true);
     });
   });
+
+  describe('ref predicate dependencies (issue #125)', () => {
+    it('fx-control ref predicate reacts to a change in the referenced node', async () => {
+      const el = await fixtureSync(html`
+        <fx-fore>
+          <fx-model id="model1">
+            <fx-instance>
+              <data>
+                <greeting>Hello World!</greeting>
+                <b></b>
+              </data>
+            </fx-instance>
+          </fx-model>
+          <fx-control id="ctrl" ref="greeting[../b != '']">
+            <label slot="label">Greeting</label>
+          </fx-control>
+          <fx-trigger id="trig">
+            <label>Set B</label>
+            <fx-setvalue ref="instance()/b" value="'x'" event="DOMActivate"></fx-setvalue>
+          </fx-trigger>
+        </fx-fore>
+      `);
+
+      await oneEvent(el, 'refresh-done');
+      const ctrl = el.querySelector('#ctrl');
+
+      // initially b is empty, predicate false -> no modelItem/no value shown
+      expect(ctrl.modelItem, 'no modelItem before b is set').to.not.exist;
+
+      const trigger = el.querySelector('#trig');
+      trigger.dispatchEvent(new CustomEvent('DOMActivate', { bubbles: true, composed: true }));
+
+      await oneEvent(el, 'refresh-done');
+
+      expect(ctrl.modelItem, 'modelItem should appear once b is set').to.exist;
+      expect(ctrl.modelItem.value).to.equal('Hello World!');
+    });
+
+    it('fx-bind ref predicate (issue #125 original example) resolves via depends()', async () => {
+      const el = await fixtureSync(html`
+        <fx-fore>
+          <fx-model id="model1">
+            <fx-instance>
+              <data>
+                <greeting>Hello World!</greeting>
+                <b></b>
+              </data>
+            </fx-instance>
+            <fx-bind ref="greeting[../b != '']"></fx-bind>
+          </fx-model>
+          <fx-trigger id="trig">
+            <label>Set B</label>
+            <fx-setvalue ref="instance()/b" value="'x'" event="DOMActivate"></fx-setvalue>
+          </fx-trigger>
+        </fx-fore>
+      `);
+
+      await oneEvent(el, 'refresh-done');
+      const model = el.querySelector('fx-model');
+      const bind = el.querySelector('fx-bind');
+
+      expect(bind.nodeset.length, 'nodeset should be empty since b is empty').to.equal(0);
+      expect(model.modelItems.length).to.equal(0);
+
+      const trigger = el.querySelector('#trig');
+      trigger.dispatchEvent(new CustomEvent('DOMActivate', { bubbles: true, composed: true }));
+
+      await oneEvent(el, 'refresh-done');
+
+      expect(bind.nodeset.length, 'nodeset should include greeting once b is set').to.equal(1);
+      const greetingItem = model.getModelItem(bind.nodeset[0]);
+      expect(greetingItem, 'a modelItem for greeting should now exist').to.exist;
+      expect(greetingItem.value).to.equal('Hello World!');
+    });
+
+    it("a rebuild triggered by a ref predicate still computes the newly-matched item's own facets", async () => {
+      const el = await fixtureSync(html`
+        <fx-fore>
+          <fx-model id="model1">
+            <fx-instance>
+              <data>
+                <greeting>Hello World!</greeting>
+                <b></b>
+              </data>
+            </fx-instance>
+            <fx-bind ref="greeting[../b != '']" readonly="true()"></fx-bind>
+          </fx-model>
+          <fx-trigger id="trig">
+            <label>Set B</label>
+            <fx-setvalue ref="instance()/b" value="'x'" event="DOMActivate"></fx-setvalue>
+          </fx-trigger>
+        </fx-fore>
+      `);
+
+      await oneEvent(el, 'refresh-done');
+      const model = el.querySelector('fx-model');
+      const bind = el.querySelector('fx-bind');
+
+      const trigger = el.querySelector('#trig');
+      trigger.dispatchEvent(new CustomEvent('DOMActivate', { bubbles: true, composed: true }));
+
+      await oneEvent(el, 'refresh-done');
+
+      const greetingItem = model.getModelItem(bind.nodeset[0]);
+      expect(greetingItem, 'a modelItem for greeting should now exist').to.exist;
+      expect(
+        greetingItem.readonly,
+        'readonly="true()" should have been computed, not left at default',
+      ).to.be.true;
+    });
+  });
 });

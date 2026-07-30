@@ -141,11 +141,6 @@
     <code>fx-model.revalidate()</code> and propagated via <code>ModelItem.nativeValid</code>
     into <code>AbstractControl.handleValid()</code>.
 </p>
-<p>
-    <strong>No <code>&lt;form&gt;</code> wrapper is needed.</strong>
-    <code>widget.validity.valid</code> works on individual inputs independent of a form element.
-    Fore's <code>fx-submission</code> handles submission — a native form would only conflict.
-</p>
 
 <div class="pitfall">
     <strong>Implementation Note — <code>checkValidity()</code> fires events:</strong>
@@ -177,6 +172,7 @@
                         <zipcode></zipcode>
                         <price></price>
                         <username></username>
+                        <nickname></nickname>
                     </data>
                 </fx-instance>
 
@@ -186,6 +182,15 @@
                     the native input's validity.valueMissing feeds into nativeValid.
                 -->
                 <fx-bind ref="name" required="true()"></fx-bind>
+
+                <!--
+                    No required="..." here at all — nickname is required ONLY via the
+                    native `required` attribute on the widget below, with no fx-bind
+                    facet backing it. See docs/native-required-attribute-bug.md: Fore
+                    used to strip a native-only `required` on the first update cycle;
+                    it now leaves it alone since there is no bind-driven required to sync from.
+                -->
+                <fx-bind ref="nickname"></fx-bind>
 
                 <!--
                     No fx-bind constraint needed for age — native min/max on the widget
@@ -209,7 +214,7 @@
             <div class="field-group">
                 <h3>Name — <code>required</code></h3>
                 <p>
-                    Both <code>fx-bind required="true()"</code> (XForms) and native
+                    Both <code>fx-bind required="true()"</code> and native
                     <code>required</code> on the input are set. Either alone would mark
                     the field invalid.
                 </p>
@@ -223,6 +228,20 @@
                     <label>Full Name</label>
                     <input class="widget" type="text" required placeholder="Enter your name">
                     <fx-alert>Name is required</fx-alert>
+                </fx-control>
+            </div>
+
+            <div class="field-group">
+                <h3>Nickname — native <code>required</code> only, no <code>fx-bind required</code></h3>
+                <p>
+                    No <code>required</code> facet is declared for this field at all —
+                    only the native <code>required</code> attribute written directly on the
+                    input.
+                </p>
+                <fx-control id="ctrl-nickname" ref="nickname" update-event="input">
+                    <label>Nickname</label>
+                    <input class="widget" type="text" required placeholder="Enter a nickname">
+                    <fx-alert>Nickname is required</fx-alert>
                 </fx-control>
             </div>
 
@@ -325,51 +344,6 @@
 
     </template>
 </demo-snippet>
-
-<h2>Architecture Notes</h2>
-<ul>
-    <li>
-        <strong>Where the hook lives:</strong> <code>src/fx-model.js revalidate()</code> — after
-        the XPath constraint/required loop, before <code>return valid</code>.
-    </li>
-    <li>
-        <strong>How it propagates:</strong> <code>ModelItem.nativeValid</code> (new boolean MIP,
-        default <code>true</code>) is read by <code>AbstractControl.handleValid()</code> and
-        ANDed into the overall validity check.
-    </li>
-    <li>
-        <strong>Side-effect-free:</strong> Uses <code>widget.validity.valid</code> (live
-        <code>ValidityState</code> property) — no <code>checkValidity()</code> calls, no
-        <code>invalid</code> events fired by the validation pass.
-    </li>
-    <li>
-        <strong>Shadow DOM:</strong> Fore's native inputs live in <em>light DOM</em> as children
-        of <code>fx-control</code> (slotted into its shadow). <code>ValidityState</code> is
-        always accessible directly on the input element regardless of slot projection.
-    </li>
-    <li>
-        <strong>Attribute propagation gap:</strong> <code>fx-bind type="xs:integer"</code> does
-        <em>not</em> set <code>type="number"</code> on the widget. Native attributes must be
-        written directly on <code>&lt;input class="widget"&gt;</code>.
-        See <code>// todo: handleType()</code> in <code>abstract-control.js</code>.
-    </li>
-    <li>
-        <strong><code>minlength</code> / <code>maxlength</code>:</strong>
-        <code>validity.tooShort</code> fires only when the field is non-empty <em>and</em> shorter
-        than <code>minlength</code>. An empty non-required field is always valid.
-        <code>validity.tooLong</code> is rarely reached through typing (browsers block input at
-        <code>maxlength</code>) but is caught correctly if the value is set programmatically.
-    </li>
-    <li>
-        <strong><code>:in-range</code> / <code>:out-of-range</code>:</strong>
-        CSS pseudo-classes that apply to number/date inputs with <code>min</code>/<code>max</code>
-        constraints. Unlike <code>:user-invalid</code>, they have no <code>:user-</code> prefix —
-        an empty optional number field is considered <code>:in-range</code> on page load. Combine
-        with <code>:user-invalid</code> to avoid premature styling. These are purely visual
-        enhancements; Fore's <code>[invalid]</code> attribute and <code>fx-alert</code> visibility
-        are already handled by the <code>nativeValid</code> integration.
-    </li>
-</ul>
 
 </div>
 <script type="module" src="./demo.js"></script>

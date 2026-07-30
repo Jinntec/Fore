@@ -1,6 +1,30 @@
 import getInScopeContext from './getInScopeContext.js';
 
 /**
+ * Resolves the real data-parent node of a drag/drop participant, for
+ * `drop-scope="parent"` comparisons (see `_sameDropScope` below).
+ *
+ * XML nodes expose `.parentNode`; JSON-lens nodes (`JSONNode`, see
+ * `src/json/JSONNode.js`) expose `.parent` instead and are flagged with
+ * `.__jsonlens__ === true` - both must be handled since repeats bind to
+ * either instance type equally.
+ *
+ * @param {HTMLElement} el
+ * @returns {Node|null}
+ */
+function _resolveScopeParent(el) {
+  if (el.localName === 'fx-repeatitem') {
+    const node = el.getModelItem ? el.getModelItem()?.node : null;
+    if (!node) return null;
+    return node.__jsonlens__ ? node.parent : node.parentNode;
+  }
+  if (el.localName === 'fx-repeat') {
+    return getInScopeContext(el.getAttributeNode('ref') || el, el.ref);
+  }
+  return null;
+}
+
+/**
  * @template {typeof import('./ForeElementMixin.js').default} T
  * @param {T} superclass
  * @returns {T}
@@ -59,37 +83,80 @@ export const withDraggability = (superclass, isAlsoDraggable) =>
       }
       const { draggedItem } = this.getOwnerForm();
 
-      if (this.accepts(draggedItem)) {
+      // `accept` is an opt-in allowlist (like the native <input accept>): no `accept`
+      // attribute at all means no restriction, not "reject everything" - accepts()
+      // returns undefined (not true) when there's nothing to check, which is not the
+      // same as an actual rejection.
+      if (!this.hasAttribute('accept') || this.accepts(draggedItem)) {
         this.classList.remove('no-drop');
       } else {
         this.classList.add('no-drop');
       }
 
-      const thisClosestRepeat = this.hasAttribute('id') ? this : this.closest('[id]');
-      const draggingClosestRepeat = draggedItem.hasAttribute('id')
-        ? draggedItem
-        : draggedItem.closest('[id]');
-      if (thisClosestRepeat?.id === draggingClosestRepeat?.id) {
+      if (this._sameDropScope(draggedItem)) {
         if (repeatItem !== this.getOwnerForm().draggedItem) {
           this.classList.add('drag-over');
+          // A drop on an fx-repeatitem always means "insert as a sibling" - which side
+          // depends on which half of the target the pointer is over, matching the
+          // "line between items" convention of most reorderable-list UIs (see
+          // drop-before/drop-after handling in fore.css and _drop() below).
+          if (this.localName === 'fx-repeatitem') {
+            const rect = this.getBoundingClientRect();
+            const isAfter = event.clientY > rect.top + rect.height / 2;
+            this.classList.toggle('drop-after', isAfter);
+            this.classList.toggle('drop-before', !isAfter);
+          }
         }
 
         event.preventDefault();
       }
     }
 
+    /**
+     * Is `other` in the same drag/drop scope as `this`?
+     *
+     * Default (no `drop-scope` attribute on either side): today's behavior -
+     * id-string equality of the nearest ancestor-with-an-`id`. Statically/
+     * recursively nested repeats at the same generation necessarily share one
+     * literal `id`, so this treats every generation-N instance as "the same
+     * repeat" - intentionally relied on by e.g. `demo/kanban.html` to let
+     * cards be dragged between different columns.
+     *
+     * Opt-in (`drop-scope="parent"` on the `<template>`, propagated onto the
+     * repeat and its items - see `fx-repeat.js#_initTemplate`/`_createNewRepeatItem`):
+     * compares real data parentage instead, so structurally identical sibling
+     * containers at the same depth are correctly treated as different scopes.
+     */
+    _sameDropScope(other) {
+      if (
+        this.getAttribute('drop-scope') === 'parent' ||
+        other.getAttribute('drop-scope') === 'parent'
+      ) {
+        const thisParent = _resolveScopeParent(this);
+        const otherParent = _resolveScopeParent(other);
+        return !!thisParent && !!otherParent && thisParent === otherParent;
+      }
+      const thisClosestRepeat = this.hasAttribute('id') ? this : this.closest('[id]');
+      const otherClosestRepeat = other.hasAttribute('id') ? other : other.closest('[id]');
+      return thisClosestRepeat?.id === otherClosestRepeat?.id;
+    }
+
     _dragLeave(event) {
-      this.classList.remove('drag-over');
-      this.classList.remove('no-drop');
+      this.classList.remove('drag-over', 'no-drop', 'drop-before', 'drop-after');
     }
 
     _dragEnd(event) {
+      // 'dragend' always fires on the original drag source (this), regardless of
+      // copy/move mode - unlike getOwnerForm().draggedItem, which points at a detached
+      // clone in copy mode. Always clear the fade, even if a 'drop' already nulled out
+      // draggedItem before 'dragend' fires (the early return below would otherwise skip it).
+      this.classList.remove('dragging');
       const item = this.getOwnerForm().draggedItem;
       if (!item) return;
       if (item.getAttribute('drop-action') === 'copy') {
         item.remove();
       }
-      this.classList.remove('drag-over');
+      this.classList.remove('drag-over', 'drop-before', 'drop-after');
       //		event.stopPropagation();
     }
 
@@ -100,11 +167,7 @@ export const withDraggability = (superclass, isAlsoDraggable) =>
       }
 
       const { draggedItem } = this.getOwnerForm();
-      const thisClosestRepeat = this.hasAttribute('id') ? this : this.closest('[id]');
-      const draggingClosestRepeat = draggedItem.hasAttribute('id')
-        ? draggedItem
-        : draggedItem.closest('[id]');
-      if (thisClosestRepeat?.id !== draggingClosestRepeat?.id) {
+      if (!this._sameDropScope(draggedItem)) {
         // Moving between different repeats: this can make the items 'lost': placed into a
         // different set
         return null;
@@ -124,13 +187,12 @@ export const withDraggability = (superclass, isAlsoDraggable) =>
     }
 
     _drop(event) {
-      this.classList.remove('drag-over');
+      // Capture before clearing: which half of the target (see _dragOver) the drop
+      // landed on decides whether the dragged item is inserted before or after it.
+      const dropAfter = this.classList.contains('drop-after');
+      this.classList.remove('drag-over', 'drop-before', 'drop-after');
       event.stopPropagation();
       if (this.localName === 'fx-droptarget') {
-        if (this.children.length !== 0) {
-          console.log('we have to do something');
-        }
-
         let { draggedItem } = this.getOwnerForm();
 
         if (draggedItem.getAttribute('drop-action') === 'copy') {
@@ -166,17 +228,6 @@ export const withDraggability = (superclass, isAlsoDraggable) =>
           this.appendChild(draggedItem);
         }
 
-        /*
-			if(this.hasAttribute('drop-position')){
-				if(this.getAttribute('drop-position') === 'before'){
-					this.parentNode.insertBefore(draggedItem,this);
-				} else {
-					this.parentNode.append(draggedItem);
-				}
-			}else{
-				this.replaceChildren(draggedItem);
-			}
-*/
         // NOTE: this branch (fx-droptarget) reorders live DOM/UI elements directly, not
         // instance data - there is nothing here for UndoManager's instance-data snapshots
         // to capture, so it is intentionally not wrapped with undo capture (see the
@@ -216,8 +267,7 @@ export const withDraggability = (superclass, isAlsoDraggable) =>
       } else if (this.localName === 'fx-repeatitem') {
         const repeatItemNode = this.getModelItem().node;
 
-        if (repeatItemNode.previousSibling === dataNode) {
-          // moving before will make it do nothing, move after
+        if (dropAfter) {
           repeatItemNode.after(dataNode);
         } else {
           repeatItemNode.before(dataNode);

@@ -266,8 +266,8 @@ export default class FxControl extends XfAbstractControl {
   /**
    * updates the model with a new value by executing it's `<fx-setvalue>` action.
    *
-   * In case the `as='node'` is given the bound node is replaced with the widgets' value with is
-   * expected to be a node again.
+   * In case `as='node'` or `as='xml'` is given the bound node is structurally replaced with
+   * the widget's value, which is expected to be a node.
    *
    * @param val the new value to be set
    */
@@ -325,7 +325,7 @@ export default class FxControl extends XfAbstractControl {
       }
     };
 
-    if (this.getAttribute('as') === 'node') {
+    if (['node', 'xml'].includes(this.getAttribute('as'))) {
       const replace = this.shadowRoot.getElementById('replace');
       replace.replace(this.nodeset, val);
       if (modelitem && val && val !== modelitem.value) {
@@ -378,7 +378,7 @@ export default class FxControl extends XfAbstractControl {
             ${this.label ? `${this.label}` : ''}
               <slot></slot>
             ${
-              this.hasAttribute('as') && this.getAttribute('as') === 'node'
+              ['node', 'xml'].includes(this.getAttribute('as'))
                 ? '<fx-replace id="replace" ref=".">'
                 : `<fx-setvalue id="setvalue" ref="${ref}"></fx-setvalue>`
             }

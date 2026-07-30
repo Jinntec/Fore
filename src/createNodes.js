@@ -82,26 +82,22 @@ function splitSteps(xpath) {
 }
 
 /**
- * @param {string} possibleAttributeTest
+ * Extract the operands for a value test. So `@type="xx"` -> (@type, 'xx') or `Value = "yy"` -> (Value, yy)
+ * @param {string} possibleValueTest
  */
-function extractAttributeTest(possibleAttributeTest) {
-  possibleAttributeTest = possibleAttributeTest.trim();
-  if (!possibleAttributeTest.startsWith('@')) {
-    return null;
-  }
-  const predicateRegex = /@(.*)\s*=\s*(['"])(.*)\2/g;
-  const match = predicateRegex.exec(possibleAttributeTest);
+function extractValueTest(possibleValueTest) {
+  possibleValueTest = possibleValueTest.trim();
+  const predicateRegex = /^\s*(@?[a-zA-Z0-9-_:]*)\s*=\s*(['"])(.*)\2/g;
+  const match = predicateRegex.exec(possibleValueTest);
   if (match) {
-    // Yep, this has the form `@type="my-type"`
     return { name: match[1].trim(), value: match[3] };
   }
 
-  // This is of the form `@attr`
-  return { name: possibleAttributeTest.substring(1), value: null };
+  return null;
 }
 
 /**
- * @typedef {{form: 'attributes', found: {name: string, value: string}} | {form: 'nested-path', found: RawStep[]}} ParsedPredicate
+ * @typedef {{form: 'valueTest', found: {name: string, value: string|null}} | {form: 'nested-path', found: RawStep[]}} ParsedPredicate
  */
 
 /**
@@ -110,12 +106,12 @@ function extractAttributeTest(possibleAttributeTest) {
  * @returns {ParsedPredicate}
  */
 function parsePredicate(predicate) {
-  const attributeTest = extractAttributeTest(predicate);
-  if (attributeTest) {
-    // Yep, this has the form `@type="my-type"`
+  const valueTest = extractValueTest(predicate);
+  if (valueTest) {
+    // Yep, this has the form `@type="my-type"` or `type="my-type"
     return {
-      form: 'attributes',
-      found: attributeTest,
+      form: 'valueTest',
+      found: valueTest,
     };
   }
 
@@ -151,40 +147,95 @@ export default function createNodes(xpath, baseElement, foreElement) {
     const raw = token.trim();
 
     if (raw.startsWith('@')) {
-      const { name, value } = extractAttributeTest(raw);
+      const { name: rawName, value } = extractValueTest(raw) ?? { name: raw, value: null };
+      // Remove the abbreviated axis step
+      const name = rawName.substring(1);
 
       if (name.startsWith('*:')) {
-        return { isAttribute: true, namespaceURI: null, localName: name.substring(2) };
+        return { isValue: true, namespaceURI: null, localName: name.substring(2) };
       }
       if (name.includes(':')) {
         const [prefix, localName] = name.split(':');
         return {
-          isAttribute: true,
+          isValue: true,
           namespaceURI: prefix === '*' ? null : namespaceResolver(prefix) || null,
           localName,
           value,
         };
       }
-      return { isAttribute: true, namespaceURI: null, localName: name, value };
+      return { isValue: true, namespaceURI: null, localName: name, value };
     }
 
     if (raw.startsWith('*:')) {
-      return { isAttribute: false, namespaceURI: baseNamespace, localName: raw.substring(2) };
+      return { isValue: false, namespaceURI: baseNamespace, localName: raw.substring(2) };
     }
     if (raw.includes(':')) {
       const [prefix, localName] = raw.split(':');
       return {
-        isAttribute: false,
+        isValue: false,
         namespaceURI: prefix === '*' ? baseNamespace : namespaceResolver(prefix) || baseNamespace,
         localName,
       };
     }
-    return { isAttribute: false, namespaceURI: baseNamespace, localName: raw };
+    return { isValue: false, namespaceURI: baseNamespace, localName: raw };
   };
 
   const steps = splitSteps(xpath).filter(step => step.nameTest !== '.');
 
   if (!steps.length) return null;
+
+  /**
+   * If the first step of this path already exists as a real child of baseElement, reuse it
+   * instead of creating a duplicate sibling. Without this, a multi-step ref whose last step is
+   * missing (e.g. `cac:InvoicePeriod/cbc:DescriptionCode` when `cac:InvoicePeriod` already holds
+   * real data) would create a brand new, empty `cac:InvoicePeriod` alongside the existing one,
+   * orphaning the real data behind a duplicate element with the same name.
+   */
+  const firstStep = steps[0];
+  const isSimpleElementStep =
+    firstStep.nameTest &&
+    firstStep.nameTest !== '.' &&
+    !firstStep.nameTest.trim().startsWith('@') &&
+    firstStep.predicates.length === 0;
+
+  if (isSimpleElementStep && baseElement.children) {
+    const parsedFirst = parseName(firstStep.nameTest);
+    if (!parsedFirst.isValue) {
+      const wantedNs = parsedFirst.namespaceURI || null;
+      const existingChild = Array.from(baseElement.children).find(
+        child =>
+          child.localName === parsedFirst.localName && (child.namespaceURI || null) === wantedNs,
+      );
+
+      if (existingChild) {
+        const remainingSteps = steps.slice(1);
+        if (!remainingSteps.length) {
+          // The requested step already exists in full - nothing to create.
+          return null;
+        }
+
+        const remainingXPath = remainingSteps
+          .map(step => `${step.nameTest}${step.predicates.map(p => `[${p}]`).join('')}`)
+          .join('/');
+
+        const tailResult = createNodes(remainingXPath, existingChild, foreElement);
+        if (tailResult) {
+          const alreadyAttached =
+            tailResult.nodeType === Node.ATTRIBUTE_NODE
+              ? !!tailResult.ownerElement
+              : !!tailResult.parentNode;
+          if (!alreadyAttached) {
+            if (tailResult.nodeType === Node.ATTRIBUTE_NODE) {
+              existingChild.setAttributeNode(tailResult);
+            } else {
+              existingChild.appendChild(tailResult);
+            }
+          }
+        }
+        return tailResult;
+      }
+    }
+  }
 
   /**
    * Process a single step
@@ -216,7 +267,7 @@ export default function createNodes(xpath, baseElement, foreElement) {
       };
     }
 
-    if (parsed.isAttribute) {
+    if (parsed.isValue) {
       if (!current) {
         const attr = ownerDoc.createAttribute(parsed.localName);
         attr.value = parsed.value;
@@ -250,17 +301,34 @@ export default function createNodes(xpath, baseElement, foreElement) {
       if (!parsedPredicate) {
         // This did not result in a valid name. Stop.
         console.warn(
-          `Creating node for the XPath ${xpath} failed because the part ${predicates} could not be processed.`,
+          `Creating node for the XPath ${xpath} failed because the part ${predicate} could not be processed.`,
         );
         return {
           action: 'abort',
         };
       }
-      if (parsedPredicate.form === 'attributes') {
-        const attrName = parsedPredicate.found.name.includes(':')
-          ? parsedPredicate.found.name.split(':')[1]
-          : parsedPredicate.found.name;
-        element.setAttribute(attrName, parsedPredicate.found.value);
+      if (parsedPredicate.form === 'valueTest') {
+        const isAttribute = parsedPredicate.found.name.startsWith('@');
+        if (isAttribute) {
+          const attrNameWithoutAxis = parsedPredicate.found.name.substring(1);
+          const attrName = attrNameWithoutAxis.includes(':')
+            ? attrNameWithoutAxis.split(':')[1]
+            : attrNameWithoutAxis;
+          element.setAttribute(attrName, parsedPredicate.found.value);
+        } else {
+          // direct value
+          const elementName = parseName(parsedPredicate.found.name);
+          if (!isValidName(elementName.localName)) {
+            console.warn(
+              `Creating node for the XPath ${xpath} failed because the part ${predicate} could not be processed.`,
+            );
+            return { action: 'abort' };
+          }
+          const valueElement = element.appendChild(
+            ownerDoc.createElementNS(elementName.namespaceURI, parsedPredicate.found.name),
+          );
+          valueElement.append(parsedPredicate.found.value);
+        }
       } else {
         const nestedPath = parsedPredicate.found;
         let subtree = element;

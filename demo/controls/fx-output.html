@@ -166,10 +166,10 @@ this is a paragraph
         </fx-function>
     </fx-model>
     <div class="side-by-side">
-        <fx-control id="textarea" ref="instance()/md-page" debounce="300" update-event="input" label="Markdown source">
+        <fx-control id="textarea" ref="instance()/md-page" debounce="300" update-event="input" aria-label="Markdown source">
             <textarea class="widget"></textarea>
         </fx-control>
-        <fx-output value="markdown(md-page/text())" mediatype="markdown">
+        <fx-output value="markdown(md-page/text())" mediatype="markdown" aria-label="Markdown output">
             <fx-refresh event="value-changed" target="textarea" self></fx-refresh>
         </fx-output>
     </div>

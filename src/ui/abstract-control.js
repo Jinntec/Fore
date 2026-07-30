@@ -141,7 +141,13 @@ export default class AbstractControl extends UIElement {
           // ### this actually makes the control nonrelevant
           // todo: we should call a template function here to allow detachment of event-listeners and resetting eventual state
           // this.style.display = 'none';
+          // A previous refresh() may have left 'relevant' set (this branch returns before
+          // reaching handleRelevant(), the only other place that clears it) - without this,
+          // a control whose ref just stopped matching keeps both attributes at once, and
+          // which one wins the CSS cascade becomes stylesheet-order-dependent.
+          this.removeAttribute('relevant');
           this.setAttribute('nonrelevant', '');
+          this._reflectRelevantInert(false);
         }
         return;
       }
@@ -255,15 +261,23 @@ export default class AbstractControl extends UIElement {
     // console.log('mip required', this.modelItem.required);
     this.widget = this.getWidget();
     const wasRequired = this.isRequired();
+    const { bind } = this.modelItem;
+    const bindDeclaresRequired =
+      typeof bind?.hasAttribute === 'function' && bind.hasAttribute('required');
 
     if (!this.modelItem.required) {
-      this.widget.removeAttribute('required');
-      this.removeAttribute('required');
-      if (!this._isNativeFormWidget(this.widget)) {
-        this.widget.removeAttribute('aria-required');
-      }
-      if (wasRequired !== this.modelItem.required) {
-        this._dispatchEvent('optional');
+      // Only force-clear `required` when a bind is actually driving this facet.
+      // A native `required` written directly on the widget with no backing
+      // fx-bind is left alone so it can still validate on its own.
+      if (bindDeclaresRequired) {
+        this.widget.removeAttribute('required');
+        this.removeAttribute('required');
+        if (!this._isNativeFormWidget(this.widget)) {
+          this.widget.removeAttribute('aria-required');
+        }
+        if (wasRequired !== this.modelItem.required) {
+          this._dispatchEvent('optional');
+        }
       }
       return;
     }

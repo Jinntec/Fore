@@ -179,7 +179,7 @@ export class FxSubmission extends ForeElementMixin {
         await this._handleResponse(data, resolvedUrl, 'application/xml');
       }
       console.log('### <<<<< submit-done >>>>>');
-      Fore.dispatch(this, 'submit-done', {});
+      await Fore.dispatch(this, 'submit-done', {});
       this.parameters.clear();
       return;
     }
@@ -203,7 +203,7 @@ export class FxSubmission extends ForeElementMixin {
           localStorage.removeItem(key);
         }
         console.log('### <<<<< submit-done >>>>>');
-        Fore.dispatch(this, 'submit-done', {});
+        await Fore.dispatch(this, 'submit-done', {});
       }
 
       if (this.method === 'post') {
@@ -211,7 +211,7 @@ export class FxSubmission extends ForeElementMixin {
         localStorage.setItem(key, serialized);
         await this._handleResponse(instance.instanceData);
         console.log('### <<<<< submit-done >>>>>');
-        Fore.dispatch(this, 'submit-done', {});
+        await Fore.dispatch(this, 'submit-done', {});
       }
 
       if (this.method === 'delete') {
@@ -221,7 +221,7 @@ export class FxSubmission extends ForeElementMixin {
         this.replace = 'instance';
         await this._handleResponse(newInst);
         console.log('### <<<<< submit-done >>>>>');
-        Fore.dispatch(this, 'submit-done', {});
+        await Fore.dispatch(this, 'submit-done', {});
       }
 
       return;
@@ -274,7 +274,7 @@ export class FxSubmission extends ForeElementMixin {
         await this._handleResponse(blob, resolvedUrl, contentType);
       }
 
-      Fore.dispatch(this, 'submit-done', {});
+      await Fore.dispatch(this, 'submit-done', {});
     } catch (error) {
       Fore.dispatch(this, 'submit-error', { status: 500, error: error.message });
     } finally {

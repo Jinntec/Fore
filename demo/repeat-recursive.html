@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>Recursive fx-repeat templates</title>
+    <link href="../resources/fore.css" rel="stylesheet">
+    <link href="../resources/demo.css" rel="stylesheet">
+
+    <style>
+        fx-repeatitem {
+            display: block;
+        }
+        /* The sibling-drop insertion line (fx-repeatitem.drop-before/-after, set as an
+           inset box-shadow in fore.css) thickens here instead of staying pencil-thin.
+           Two flicker sources to keep in mind if this ever changes:
+           1) This must stay a box-shadow change, never a margin/height one - box-shadow
+              is purely visual and doesn't touch the element's layout box, whereas a
+              margin push would, and _dragOver() in withDraggability.js recomputes
+              drop-before vs drop-after on every 'dragover' event from the cursor's
+              position against that same box's own midpoint. Change the box's height and
+              the next event can see the cursor on the other side of the (now shifted)
+              midpoint, flip the class, undo the height change, and flip back - a
+              feedback loop, worst on top-level rows since their taller subtrees shift
+              the most.
+           2) Even with layout untouched, _dragOver() still re-decides before-vs-after
+              on every event purely from cursor-Y vs the exact midpoint, with no
+              hysteresis - real pointer jitter while crossing near that midpoint flips
+              the class many times a second. The transition-delay below turns that into
+              a debounce: a flip that reverses before the delay elapses never starts
+              rendering at all, so only a cursor that actually settles on one side
+              commits to a visible line. */
+        fx-repeatitem.drop-before,
+        fx-repeatitem.drop-after {
+            transition: box-shadow 0.15s ease 0.08s;
+        }
+        fx-repeatitem.drop-before {
+            box-shadow: inset 0 0.45rem 0 0 var(--paper-blue-500, #2196f3);
+        }
+        fx-repeatitem.drop-after {
+            box-shadow: inset 0 -0.45rem 0 0 var(--paper-blue-500, #2196f3);
+        }
+
+        /* Each folder's own nested fx-repeat is itself a drop target ("append into this
+           folder") - the only way to drop into a folder with no children to drop onto.
+           Needs a real box (not the inline default, and not zero-height when empty) or
+           there is nothing left for the browser to hit-test a drop against. It also
+           grows noticeably while something is dragged over it, so an otherwise-thin
+           slot reads unmistakably as a valid drop point.
+           Deliberately no margin change between the two states, and the grow is a plain
+           min-height increase with the box's own top edge never moving: a mouse resting
+           anywhere inside the thin (min-height: 0.5rem) box stays inside the taller one
+           too, since growth only ever extends the bottom edge downward. A margin-top (or
+           any change that shifts the top edge under a stationary cursor) would risk
+           pushing the box out from under the mouse mid-hover, firing 'dragleave', which
+           un-grows it, which brings the top edge back under the mouse, re-firing
+           'dragenter' - the same kind of feedback-loop flicker the sibling drop-line hit
+           when it used to nudge its own box with margin (see fx-repeatitem above). */
+        ul.tree > fx-repeat {
+            display: block;
+            min-height: 0.5rem;
+            border-radius: 0.4rem;
+            transition: min-height 0.15s ease, background 0.15s ease;
+        }
+        ul.tree > fx-repeat.drag-over {
+            min-height: 2.5rem;
+            background: var(--paper-blue-50, #e3f2fd);
+        }
+        /* A file can never contain children, so it gets no drop-into slot at all - not
+           even a zero-height one. Without this override a file's own (always-empty)
+           nested fx-repeat would still inherit the rule above and become a real,
+           hit-testable drop target, letting anything - folder or file - be dropped
+           "inside" a file. display:none removes it from hit-testing entirely, which
+           disables real drag/drop onto it while leaving ordinary sibling drops on the
+           file's own row (handled by fx-repeatitem, not this nested fx-repeat) untouched. */
+        .node[data-kind='file'] > ul.tree > fx-repeat {
+            display: none;
+        }
+        /* Collapsing a node is purely visual - it hides the child <ul.tree> (and with
+           it, the drop-into-folder slot from the rule above) but leaves @collapsed as
+           an ordinary data attribute, untouched by XForms relevant. That keeps the
+           collapsed subtree fully part of the model: it still counts toward "Nodes
+           rendered" and //*[@ui-selected='true'] still finds a selected node inside it. */
+        .node[data-collapsed='true'] > ul.tree {
+            display: none;
+        }
+        /* Exactly one of the two twisty triggers is shown per folder - which one is a plain
+           CSS decision keyed off the same data-collapsed AVT that hides the subtree above.
+           This is deliberately not done via each trigger's own ref/relevant: a ref predicate
+           like self::folder[@collapsed='true'] is only resolved once at initial binding and
+           does not reliably re-evaluate to empty as @collapsed later flips, so relevant and
+           nonrelevant can end up set at the same time. CSS re-evaluates on every attribute
+           change, so it doesn't have that problem. */
+        .node:not([data-collapsed='true']) > .row > fx-trigger.twisty[title='expand'] {
+            display: none;
+        }
+        .node[data-collapsed='true'] > .row > fx-trigger.twisty[title='collapse'] {
+            display: none;
+        }
+        /* Same one-of-two-shown trick as the twisty, keyed off data-kind instead of
+           data-collapsed: a node's kind never changes after creation, so this is safe
+           to gate on directly rather than needing a CSS attribute mirror. */
+        .node[data-kind='file'] > .row > .icon-folder {
+            display: none;
+        }
+        .node[data-kind='folder'] > .row > .icon-file {
+            display: none;
+        }
+
+        ul.tree {
+            list-style: none;
+            margin: 0;
+            padding-left: 1.15rem;
+            border-left: 1px solid var(--paper-grey-200, #eee);
+        }
+        ul.tree.root {
+            padding-left: 0;
+            border-left: none;
+        }
+        .node {
+            margin: 0.1rem 0;
+        }
+        .node > .row {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.3rem 0.5rem;
+            border-radius: 0.4rem;
+        }
+        .node > .row:hover {
+            background: var(--paper-grey-100, #f5f5f5);
+        }
+        .node[ui-selected='true'] > .row {
+            background: var(--paper-blue-50, #e3f2fd);
+        }
+        .node[ui-selected='true'] > .row .name {
+            font-weight: 600;
+            color: var(--paper-blue-900, #0d47a1);
+        }
+
+        .type-icon {
+            display: inline-flex;
+            flex: none;
+            color: var(--paper-grey-500, #9e9e9e);
+        }
+        .icon-folder {
+            color: var(--paper-blue-300, #64b5f6);
+        }
+
+        .node .name {
+            font-family: monospace;
+            font-size: 0.95rem;
+            cursor: pointer;
+            border: none;
+            background: none;
+            padding: 0.1rem 0.2rem;
+            color: inherit;
+            border-radius: 0.25rem;
+        }
+        .node .name:focus-visible {
+            outline: 2px solid var(--paper-blue-300, #64b5f6);
+            outline-offset: 1px;
+        }
+
+        /* Icon buttons: a plain circular hit target, invisible until you actually
+           need it. The twisty stays visible always (it's primary navigation); the
+           add/delete actions fade in only on hover/focus of their own row so a big
+           tree doesn't read as a wall of controls. */
+        .node fx-trigger.iconbtn button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.6rem;
+            height: 1.6rem;
+            padding: 0;
+            border: none;
+            border-radius: 50%;
+            background: none;
+            color: var(--paper-grey-600, #757575);
+            cursor: pointer;
+        }
+        .node fx-trigger.iconbtn button:hover {
+            background: var(--paper-grey-200, #eee);
+            color: var(--paper-grey-900, #212121);
+        }
+        .node fx-trigger.twisty {
+            flex: none;
+        }
+        .node fx-trigger.twisty button {
+            color: var(--paper-grey-500, #9e9e9e);
+        }
+        /* A file has no twisty at all (see the display:none rule above) - this keeps
+           its name aligned under its siblings' names instead of creeping left. */
+        .node[data-kind='file'] > .row > .twisty-spacer {
+            display: inline-block;
+            width: 1.6rem;
+            flex: none;
+        }
+        .node[data-kind='folder'] > .row > .twisty-spacer {
+            display: none;
+        }
+
+        .node fx-trigger.iconbtn.action {
+            opacity: 0;
+            transition: opacity 0.12s ease;
+        }
+        .node > .row:hover fx-trigger.iconbtn.action,
+        .node > .row:focus-within fx-trigger.iconbtn.action {
+            opacity: 1;
+        }
+        .node fx-trigger.iconbtn.action.delete button:hover {
+            background: var(--paper-red-50, #ffebee);
+            color: var(--paper-red-700, #d32f2f);
+        }
+        .node fx-trigger.iconbtn.action.add {
+            margin-left: auto;
+        }
+
+        .tree-toolbar {
+            display: flex;
+            gap: 1.5rem;
+            align-items: baseline;
+            font-size: 0.85rem;
+            color: var(--paper-grey-600, #757575);
+            margin-bottom: 0.75rem;
+        }
+        .tree-toolbar strong {
+            color: var(--paper-grey-900, #212121);
+            font-weight: 600;
+        }
+
+        details.blueprint {
+            margin: 1.5rem 0;
+            border: 1px solid var(--paper-grey-200, #eee);
+            border-radius: 0.5rem;
+            padding: 0.25rem 1rem;
+            background: var(--paper-grey-50, #fafafa);
+        }
+        details.blueprint summary {
+            cursor: pointer;
+            font-weight: 600;
+            padding: 0.6rem 0;
+        }
+        details.blueprint li {
+            margin: 0.6rem 0;
+        }
+        details.blueprint code {
+            font-size: 0.85em;
+        }
+    </style>
+</head>
+<body>
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+
+<div class="wrapper">
+    <demo-snippet>
+        <template>
+
+    <fx-fore>
+        <fx-model>
+            <fx-instance>
+                <data>
+                    <folder name="src">
+                        <folder name="ui">
+                            <file name="fx-repeat.js"></file>
+                            <file name="fx-repeat-ref.js"></file>
+                            <folder name="internal">
+                                <file name="repeat-base.js"></file>
+                            </folder>
+                        </folder>
+                        <folder name="actions">
+                            <file name="fx-insert.js"></file>
+                            <file name="fx-delete.js"></file>
+                        </folder>
+                        <file name="index.js"></file>
+                    </folder>
+                    <folder name="test">
+                        <folder name="spec">
+                            <file name="fx-repeat.test.js"></file>
+                        </folder>
+                    </folder>
+                    <folder name="docs">
+                        <file name="README.md"></file>
+                    </folder>
+                    <folder name="assets"></folder>
+                    <templates>
+                        <file name="new-file"></file>
+                    </templates>
+                </data>
+            </fx-instance>
+            <fx-instance id="vars">
+                <vars>
+                    <count/>
+                </vars>
+            </fx-instance>
+            <fx-bind ref="instance('vars')/count"
+                calculate="count(instance('default')//folder | instance('default')//file)"></fx-bind>
+        </fx-model>
+
+        <h1>File tree</h1>
+        <p>A single recursive template renders this tree, however deep it goes. Click a
+        name to select it. Drag any row onto another to move it there - drop it directly
+        on a folder to file it inside. Use the icons to expand a folder, add a file, or
+        delete a node.</p>
+
+        <details class="blueprint">
+            <summary>How this tree is built - a blueprint for reuse</summary>
+            <ul>
+                <li>One <code>&lt;fx-repeat id="tree" ref="folder|file" recursive="true"&gt;</code>
+                renders the whole arbitrary-depth tree. Each level recurses into its own
+                matching children via a plain <code>&lt;fx-repeat-ref&gt;</code> placeholder -
+                no hand-written, depth-capped chain of nested repeats. Left without a
+                <code>ref</code> of its own, it defaults to the nearest ancestor
+                <code>&lt;fx-repeat&gt;</code>'s <code>ref</code>, so every recursion level
+                matches children the same way its parent did.</li>
+                <li>There is no <code>drop-scope="parent"</code> anywhere: every recursion
+                level is synthesized with no <code>id</code> of its own, so Fore's default
+                drop scoping (nearest ancestor with a literal <code>id</code>) resolves to
+                the single outer <code>id="tree"</code> for every node - the whole tree is
+                one drop scope, so any row can be dragged onto any other, near or far.</li>
+                <li>A folder's own nested <code>&lt;fx-repeat&gt;</code> is the only way to
+                drop <em>inside</em> a folder that has no children to drop onto - it needs a
+                real, non-zero box (<code>display: block</code> plus a <code>min-height</code>)
+                or there is nothing left to hit-test. A file's copy of that same element is
+                suppressed with <code>display: none</code>, keyed on a
+                <code>data-kind="{name()}"</code> marker, since a file can never be a
+                container.</li>
+                <li>Selection is a plain <code>@ui-selected</code> marker set with
+                <code>fx-setattribute</code> and read back with
+                <code>//*[@ui-selected='true']</code> - not <code>index()</code>, which can't
+                address a synthesized, id-less nested repeat. That lets a marker set at any
+                depth be read from entirely outside the tree, e.g. by a property panel.</li>
+                <li>Collapsing a folder (<code>@collapsed</code>) is purely a CSS/DOM
+                concern, never XForms <code>relevant</code> - the subtree stays fully in the
+                model while its <code>&lt;ul&gt;</code> is hidden, so it still counts and is
+                still selectable. Which of the two twisty triggers is visible is likewise
+                decided by CSS keyed on <code>data-collapsed</code>, not by each trigger's own
+                <code>ref</code>/relevant: a predicate like
+                <code>self::folder[@collapsed='true']</code> only resolves once at initial
+                binding and won't reliably go stale as the attribute keeps flipping, where CSS
+                re-evaluates on every change.</li>
+            </ul>
+        </details>
+
+        <p class="tree-toolbar">
+            <span>Nodes rendered: <strong><fx-output ref="instance('vars')/count"></fx-output></strong></span>
+            <span>Selected: <strong><fx-output ref="instance('default')//*[@ui-selected='true']/@name"></fx-output></strong></span>
+        </p>
+
+        <ul class="tree root">
+            <fx-repeat id="tree" ref="folder|file" recursive="true">
+                <template draggable="true" drop-target="tree">
+                    <li class="node" ui-selected="{@ui-selected}" data-collapsed="{@collapsed}" data-cy="{@name}" data-kind="{name()}">
+                        <div class="row">
+                            <fx-trigger class="iconbtn twisty" title="collapse" ref="self::folder">
+                                <button data-cy-action="collapse" aria-label="collapse">
+                                    <svg viewBox="0 0 16 16" width="14" height="14"><path d="M3 6l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </button>
+                                <fx-setattribute ref="." name="collapsed" value="true"></fx-setattribute>
+                            </fx-trigger>
+                            <fx-trigger class="iconbtn twisty" title="expand" ref="self::folder">
+                                <button data-cy-action="expand" aria-label="expand">
+                                    <svg viewBox="0 0 16 16" width="14" height="14"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </button>
+                                <fx-setattribute ref="." name="collapsed" value="false"></fx-setattribute>
+                            </fx-trigger>
+                            <span class="twisty-spacer"></span>
+                            <span class="type-icon icon-folder">
+                                <svg viewBox="0 0 16 16" width="15" height="15"><path d="M1.5 3.75c0-.55.45-1 1-1h3.1l1.2 1.4h6.7c.55 0 1 .45 1 1v6.6c0 .55-.45 1-1 1h-11c-.55 0-1-.45-1-1v-8z" fill="currentColor"/></svg>
+                            </span>
+                            <span class="type-icon icon-file">
+                                <svg viewBox="0 0 16 16" width="15" height="15"><path d="M3.5 1.5h5l3 3v9a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1v-11a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M8.5 1.5v3h3" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+                            </span>
+                            <fx-trigger class="select-trigger" title="select" activate-on-focus>
+                                <button class="name" data-cy-action="select">{@name}</button>
+                                <fx-setattribute ref="." name="ui-selected" value="false"
+                                    iterate="instance('default')//*[@ui-selected='true']"></fx-setattribute>
+                                <fx-setattribute ref="." name="ui-selected" value="true"></fx-setattribute>
+                            </fx-trigger>
+                            <fx-trigger class="iconbtn action add" title="add file" ref="self::folder">
+                                <button data-cy-action="add" aria-label="add file">
+                                    <svg viewBox="0 0 16 16" width="14" height="14"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                                </button>
+                                <fx-insertchild parent="." ref="file"
+                                    origin="instance('default')/templates/file"></fx-insertchild>
+                            </fx-trigger>
+                            <fx-trigger class="iconbtn action delete" title="delete">
+                                <button data-cy-action="delete" aria-label="delete">
+                                    <svg viewBox="0 0 16 16" width="14" height="14"><path d="M3 4.5h10M6 4.5v-1a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v1M4.5 4.5l.5 8.5a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1l.5-8.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </button>
+                                <fx-delete ref="."></fx-delete>
+                            </fx-trigger>
+                        </div>
+                        <ul class="tree">
+                            <fx-repeat-ref></fx-repeat-ref>
+                        </ul>
+                    </li>
+                </template>
+            </fx-repeat>
+        </ul>
+    </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+<script type="module" src="./demo.js"></script>
+
+</body>
+</html>

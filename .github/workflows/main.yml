@@ -36,3 +36,25 @@ jobs:
                 install-command: |
                   npm run install-demos
                 start: npm run start-cypress
+    fore-codemirror:
+        name: fore-codemirror build is up to date
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - name: Use Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+            # fore-codemirror is an isolated sub-project (own package.json/lockfile,
+            # esbuild-bundled, not part of Fore's own dependency tree or dist/fore*.js) - see
+            # demo/fore-codemirror/package.json and scripts/build.mjs. Its dist/ is checked in
+            # so demo pages can load it directly; this rebuilds it and fails if that commit
+            # drifted from src/, since nothing else in CI would ever notice.
+            - name: Install fore-codemirror dependencies
+              working-directory: demo/fore-codemirror
+              run: npm ci
+            - name: Build fore-codemirror
+              working-directory: demo/fore-codemirror
+              run: npm run build
+            - name: Fail if the committed dist/ is out of date
+              run: git diff --exit-code -- demo/fore-codemirror/dist

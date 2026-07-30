@@ -64,7 +64,7 @@ describe('multi-step refs', () => {
 
     expect(el.getModel().getModelItem('$default/AllowanceCharge[1]')).to.exist;
     expect(el.getModel().getModelItem('$default/AllowanceCharge[1]/TaxCategory[1]/ID[1]')).to.exist;
-    expect(el.getModel().getModelItem('$default/AllowanceCharge[1]/TaxCategory[2]/Percent[1]')).to
+    expect(el.getModel().getModelItem('$default/AllowanceCharge[1]/TaxCategory[1]/Percent[1]')).to
       .exist;
   });
 
@@ -130,7 +130,7 @@ describe('multi-step refs', () => {
     expect(el.getModel().getModelItem('$default/AllowanceCharge[2]_1')).to.exist;
     expect(el.getModel().getModelItem('$default/AllowanceCharge[2]_1/TaxCategory[1]/ID[1]')).to
       .exist;
-    expect(el.getModel().getModelItem('$default/AllowanceCharge[2]_1/TaxCategory[2]/Percent[1]')).to
+    expect(el.getModel().getModelItem('$default/AllowanceCharge[2]_1/TaxCategory[1]/Percent[1]')).to
       .exist;
   });
 
@@ -279,6 +279,6 @@ describe('multi-step refs', () => {
     control = repeatitems[1].querySelector('#BT-96');
     expect(control).to.exist;
     expect(mi6.observers.has(control)).to.be.true;
-    expect(mi6.path).to.equal('$default/AllowanceCharge[2]_1/TaxCategory[2]/Percent[1]');
+    expect(mi6.path).to.equal('$default/AllowanceCharge[2]_1/TaxCategory[1]/Percent[1]');
   });
 });
