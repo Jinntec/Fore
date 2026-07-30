@@ -81,7 +81,32 @@ function debounceMount() {
 
 function onMarkupUpdate() {
   refreshInstanceOptions();
+  syncInstanceEditorFromMarkup();
   debounceMount();
+}
+
+/**
+ * Keeps the Instance Data pane in sync with markup edits: mount()/assembleForeContent()
+ * always prefers the pane's text over the markup's own <fx-instance> content (that's what
+ * lets the pane be edited independently of markup), so pasting a whole new example directly
+ * into the Markup pane would otherwise have its embedded instance data silently overwritten
+ * by whatever stale text the pane still held from before.
+ */
+function syncInstanceEditorFromMarkup() {
+  const frag = parseFragment(getMarkupText());
+  const el = findInstanceElement(frag, getSelectedInstanceId());
+  if (!el) return;
+
+  const src = el.getAttribute('src');
+  if (src && !src.startsWith('#')) return;
+
+  const type = el.getAttribute('type') === 'json' ? 'json' : 'xml';
+  const text = type === 'json' ? el.textContent.trim() : el.innerHTML.trim();
+  if (text === getInstanceText().trim()) return;
+
+  setInstanceType(type);
+  suppressNextUpdates(1);
+  setInstanceText(text);
 }
 
 function onInstanceUpdate() {
