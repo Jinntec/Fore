@@ -1824,7 +1824,22 @@ export class FxFore extends HTMLElement {
            * @type ChildNode[]}
            */
           const nodeset = previousBind.nodeset;
-          const lastMatchingSibling = nodeset.reverse().find(node => parentElement.contains(node));
+          // A match from the previous bind's nodeset might be a descendant nested several levels
+          // below parentElement rather than a direct child of it. Walk up to the ancestor that IS
+          // a direct child of parentElement before using it as a `.after()` anchor - otherwise the
+          // new element would be spliced in deep inside that descendant's subtree instead of
+          // placed as a proper sibling under parentElement.
+          const lastMatchingSibling = nodeset
+            .slice()
+            .reverse()
+            .map(node => {
+              let candidate = node;
+              while (candidate?.parentNode && candidate.parentNode !== parentElement) {
+                candidate = candidate.parentNode;
+              }
+              return candidate;
+            })
+            .find(candidate => candidate?.parentNode === parentElement);
           if (lastMatchingSibling) {
             return lastMatchingSibling;
           }
@@ -2055,7 +2070,6 @@ export class FxFore extends HTMLElement {
       if (!isCreateNodesCandidate(bound.ref)) {
         continue;
       }
-
       // Ignore bound elements in a different form. They will be taken care of in the other form.
       if (bound.closest('fx-fore') !== this) {
         continue;
