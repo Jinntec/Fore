@@ -690,6 +690,11 @@ export class FxModel extends HTMLElement {
     this.modelItems = [];
     this._modelItemsByPath = new Map();
     this._modelItemsByKey = new Map();
+    this.binds = [];
+    // issue #125: subset of `binds` whose ref predicate reads another node - see
+    // refPredicateNeedsRebuild(), which is scanned on every action-driven update and
+    // should stay proportional to this (presumably rare) subset, not every bind.
+    this.predicateBinds = [];
 
     const binds = this.querySelectorAll('fx-model > fx-bind');
     if (binds.length === 0) {
@@ -721,6 +726,27 @@ export class FxModel extends HTMLElement {
 
     Fore.dispatch(this, 'rebuild-done', { maingraph: this.mainGraph });
   }
+
+  /**
+   * issue #125: true if any live fx-bind's `ref` predicate (eg. `greeting[../b]`) reads a
+   * node among `this.changed`. Such a bind's nodeset membership may now be stale - only
+   * rebuild() re-evaluates it, which AbstractAction.actionPerformed()'s fast path
+   * otherwise skips (it only runs recalculate/revalidate/refresh).
+   *
+   * A bind whose predicate currently matches nothing never gets a mainGraph entry, so
+   * this can't be answered from the graph - check `predicateBinds` directly instead (see
+   * FxBind._evalInContext/_refPredicateDeps).
+   *
+   * @returns {boolean}
+   */
+  refPredicateNeedsRebuild() {
+    if (this.changed.length === 0 || !Array.isArray(this.predicateBinds)) return false;
+    const changedNodes = this.changed.map(mi => mi.node);
+    return this.predicateBinds.some(bind =>
+      bind._refPredicateDeps.some(n => changedNodes.includes(n)),
+    );
+  }
+
   /**
    * recalculation of all modelItems. Uses dependency graph to determine order of computation.
    *
