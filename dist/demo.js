@@ -18067,7 +18067,7 @@ const dirtyStates = { CLEAN: "clean", DIRTY: "dirty" }, jt = class jt2 extends H
       }
       this._createRepeatsFromAttributes(), this.inited = true;
     });
-    this.version = "Version: 4.1.0 - built on 2026-07-30", this.model = null, this.inited = false, this._initGatesPromise = null, this._warnedWaitForDeprecation = false, this._srcLoadPromise = null, this.addEventListener("message", this._displayMessage), this.addEventListener("error", this._logError), this.addEventListener("warn", this._displayWarning), window.addEventListener("compute-exception", (se) => {
+    this.version = "Version: 4.1.1 - built on 2026-07-30", this.model = null, this.inited = false, this._initGatesPromise = null, this._warnedWaitForDeprecation = false, this._srcLoadPromise = null, this.addEventListener("message", this._displayMessage), this.addEventListener("error", this._logError), this.addEventListener("warn", this._displayWarning), window.addEventListener("compute-exception", (se) => {
       console.error("circular dependency: ", se);
     }), this.ready = false, this.storedTemplateExpressionByNode = /* @__PURE__ */ new Map(), this.outermostHandler = null, this.copiedElements = /* @__PURE__ */ new WeakSet(), this.dirtyState = dirtyStates.CLEAN, this.showConfirmation = false, this.isRefreshPhase = false, this.batchedNotifications = /* @__PURE__ */ new Set();
     const ne = `
@@ -18635,7 +18635,11 @@ const dirtyStates = { CLEAN: "clean", DIRTY: "dirty" }, jt = class jt2 extends H
       if (pe) {
         const fe = pe.previousElementSibling;
         if (fe) {
-          const we = fe.nodeset.reverse().find((xe) => ie.contains(xe));
+          const we = fe.nodeset.slice().reverse().map((xe) => {
+            let Ce = xe;
+            for (; Ce?.parentNode && Ce.parentNode !== ie; ) Ce = Ce.parentNode;
+            return Ce;
+          }).find((xe) => xe?.parentNode === ie);
           return we || ie.lastElementChild;
         }
       }
