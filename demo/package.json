@@ -9,8 +9,7 @@
     "@polymer/iron-demo-helpers": "^3.1.0",
     "@polymer/paper-button": "^3.0.1",
     "@polymer/paper-checkbox": "^3.1.0",
-    "@polymer/paper-input": "^3.2.1",
-    "@jinntec/jinntap": "^1.27.2"
+    "@polymer/paper-input": "^3.2.1"
   },
   "devDependencies": {
     "@polymer/marked-element": "^3.0.1",
