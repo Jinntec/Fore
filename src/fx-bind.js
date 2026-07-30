@@ -2,6 +2,7 @@ import { DependencyNotifyingDomFacade } from './DependencyNotifyingDomFacade.js'
 import ForeElementMixin from './ForeElementMixin.js';
 import { ModelItem } from './modelitem.js';
 import {
+  evaluateXPath,
   evaluateXPathToBoolean,
   evaluateXPathToNodes,
   evaluateXPathToString,
@@ -187,8 +188,19 @@ export class FxBind extends ForeElementMixin {
     this._getInstanceId();
     this.bindType = this.getModel().getInstance(this.instanceId).type;
 
+    model.binds.push(this);
+
     // ✅ Always evaluate nodeset first (XML + JSON)
     this._evalInContext();
+
+    // issue #125: refPredicateNeedsRebuild() needs to reach every bind with a ref
+    // predicate to check its dependencies, even one whose predicate currently matches no
+    // nodes at all - such a bind never gets a mainGraph entry to hang that on. Filtered
+    // here (rather than scanning model.binds) so that check stays proportional to the
+    // number of predicate binds, not every bind in the model.
+    if (this._refPredicateDeps.length !== 0) {
+      model.predicateBinds.push(this);
+    }
 
     // ✅ Build dependency graph for both types
     this._buildBindGraph();
@@ -357,6 +369,15 @@ export class FxBind extends ForeElementMixin {
     // reset nodeset
     this.nodeset = [];
 
+    // A predicate in `ref` (eg. `greeting[../b]`) reads nodes this bind never resolves
+    // to. Record them so recalculate() can tell this bind's nodeset membership depends
+    // on them too (issue #125) - not just its own facets.
+    const needsTracking = typeof this.ref === 'string' && this.ref.includes('[');
+    const touchedNodes = needsTracking ? new Set() : null;
+    const domFacade = touchedNodes
+      ? new DependencyNotifyingDomFacade(node => touchedNodes.add(node))
+      : null;
+
     if (this.ref === '' || this.ref === null) {
       this.nodeset = inscopeContext;
     } else if (Array.isArray(inscopeContext)) {
@@ -366,7 +387,9 @@ export class FxBind extends ForeElementMixin {
         } else {
           // eslint-disable-next-line no-lonely-if
           if (this.ref) {
-            const localResult = evaluateXPathToNodes(this.ref, n, this);
+            const localResult = domFacade
+              ? evaluateXPath(this.ref, n, this, {}, {}, domFacade)
+              : evaluateXPathToNodes(this.ref, n, this);
             localResult.forEach(item => {
               this.nodeset.push(item);
             });
@@ -382,7 +405,9 @@ export class FxBind extends ForeElementMixin {
     } else {
       const inst = this.getModel().getInstance(this.instanceId);
       if (inst.type === 'xml') {
-        this.nodeset = evaluateXPathToNodes(this.ref, inscopeContext, this);
+        this.nodeset = domFacade
+          ? evaluateXPath(this.ref, inscopeContext, this, {}, {}, domFacade)
+          : evaluateXPathToNodes(this.ref, inscopeContext, this);
       } else if (inst.type === 'json') {
         // ✅ JSON must also resolve the nodeset via XPath evaluation
         this.nodeset = evaluateXPathToNodes(this.ref, inscopeContext, this);
@@ -390,6 +415,12 @@ export class FxBind extends ForeElementMixin {
         this.nodeset = [];
       }
     }
+
+    // Nodes read by the predicate but not part of the result (self-matches don't count -
+    // a bind's own value changing is already handled through its normal path/facets).
+    this._refPredicateDeps = touchedNodes
+      ? Array.from(touchedNodes).filter(n => !this.nodeset.includes(n))
+      : [];
   }
 
   _createModelItems() {

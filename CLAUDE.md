@@ -26,6 +26,7 @@ Fore is optimized for:
 
 ## References
     - [Fore documentation](https://jinntec.github.io/fore-docs/tags/version-1.0.0/) — official element/attribute reference
+    - [Fore demos](https://jinntec.github.io/Fore/doc/demos.html) - curated demos  
 
 ## Commands
 
@@ -52,27 +53,6 @@ npx cypress run              # Run Cypress e2e tests - requires npm start first
 
 ### Update Cycle (XForms pattern)
 Every data change triggers: **Rebuild → Recalculate → Revalidate → Refresh**. This is the central mechanism in `fx-fore.js` and `fx-model.js`.
-
-### Core Components
-
-| File                                  | Role                                                                                                          |
-|---------------------------------------|---------------------------------------------------------------------------------------------------------------|
-| `src/fx-fore.js`                      | Root `<fx-fore>` element — form lifecycle, update cycle, event dispatch                                       |
-| `src/fx-model.js`                     | `<fx-model>` — holds instances and ModelItems, drives recalculate/revalidate                                  |
-| `src/fx-bind.js`                      | `<fx-bind>` — declarative constraints (`calculate`, `constraint`, `required`, `readonly`, `relevant`, `type`) |
-| `src/fx-instance.js`                  | Data container (XML or JSON)                                                                                  |
-| `src/fx-submission.js`                | `<fx-submission>` — wraps fetch API for submitting/loading data                                               |
-| `src/modelitem.js`                    | `ModelItem` — per-node state wrapper (valid, relevant, readonly, required); notifies UI observers             |
-| `src/ForeElementMixin.js`             | Base mixin mixed into every Fore element                                                                      |
-| `src/dep_graph.js`                    | Dependency graph used to optimize partial updates                                                             |
-| `src/DependencyNotifyingDomFacade.js` | XPath facade that records which nodes an expression reads                                                     |
-| `src/fore.js`                         | Static utility class                                                                                          |
-| `src/xpath-path.js`                   | XPath path resolution                                                                                         |
-| `src/xpath-evaluation.js`             | XPath evaluation with fontoXPath                                                                              |
-
-**Actions** (`src/actions/`) — `fx-setvalue`, `fx-insert`, `fx-delete`, `fx-send`, `fx-dispatch`, `fx-refresh`, `fx-show/fx-hide`, and ~15 more. Each action class responds to DOM events.
-
-**UI Components** (`src/ui/`) — `fx-control`, `fx-repeat`, `fx-group`, `fx-output`, `fx-switch/fx-case`, `fx-trigger`. Controls bind to ModelItems via `ref` XPath expressions.
 
 ### Data Model
 - **Primary**: XML with XPath 3.1 / XQuery 3.1 (via `fontoxpath`)

@@ -35,11 +35,13 @@
             <template>
                 <fx-trigger>
                     <button>use context value of {.}</button>
-                    <fx-setvalue ref="context" value="context()"></fx-setvalue>
+                    <fx-setvalue ref="../context" value="context()"></fx-setvalue>
                 </fx-trigger>
             </template>
         </fx-repeat>
-        <fx-inspector></fx-inspector>
+        <fx-output ref="context">
+            <label slot="label">Context value:</label>
+        </fx-output>
     </fx-fore>
 </div>
 <script type="module" src="../index.js"></script>

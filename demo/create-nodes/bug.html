@@ -47,6 +47,15 @@
                             <fx-control id="BT-73" ref="cbc:StartDate"><label for="BT-73-input">Invoicing period start date</label><input id="BT-73-input" type="date"></fx-control>
                             <fx-control id="BT-74" ref="cbc:EndDate"><label for="BT-74-input">Invoicing period end date</label><input id="BT-74-input" type="date"></fx-control>
                         </fx-group>
+                        <!-- Repro for the namespace-prefix-in-predicate create-nodes fix: the ref below
+                             needs a namespaced element name inside a value-test predicate
+                             (cbc:Name='RightType') to create the AdditionalItemProperty/Name/Value
+                             structure - see test/createNodes.test.js "Can set values of namespaced
+                             elements in predicates". -->
+                        <fx-control id="BT-ns-test" ref="cac:AdditionalItemProperty[cbc:Name='RightType']/cbc:Value">
+                            <label for="BT-ns-test-input">Right type value (namespaced predicate test)</label>
+                            <input id="BT-ns-test-input" type="text">
+                        </fx-control>
                     </div>
             </section>
         </fx-group>

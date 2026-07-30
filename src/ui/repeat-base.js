@@ -22,10 +22,11 @@ import { withDraggability } from '../withDraggability.js';
 import { UIElement } from './UIElement.js';
 import { FxBind } from '../fx-bind.js';
 
-const BaseEl = typeof UIElement !== 'undefined' ? UIElement : HTMLElement;
-const DraggableBase =
-  typeof withDraggability === 'function' ? withDraggability(BaseEl, false) : BaseEl;
-
+// Only fx-repeat-attributes.js extends this today - fx-repeat.js was intentionally left
+// untouched (see above) and extends UIElement directly, not RepeatBase. Most of RepeatBase's
+// own methods are in turn overridden by FxRepeatAttributes rather than reused; treat this as
+// fx-repeat-attributes's base class specifically, not a shared foundation the two repeat
+// variants both build on.
 export class RepeatBase extends withDraggability(UIElement, false) {
   get repeatSize() {
     return this.querySelectorAll(':scope > fx-repeatitem').length;
@@ -39,11 +40,9 @@ export class RepeatBase extends withDraggability(UIElement, false) {
     // ### there must be a single 'template' child
 
     const inited = new Promise(resolve => {
-      // console.log('##### repeat-attributes init ', this.id);
       // if(!this.inited) this.init();
       // does not use this.evalInContext as it is expecting a nodeset instead of single node
       this._evalNodeset();
-      // console.log('##### ',this.id, this.nodeset);
 
       this._initTemplate();
       // this._initRepeatItems();
@@ -57,14 +56,9 @@ export class RepeatBase extends withDraggability(UIElement, false) {
   }
 
   async refresh(force) {
-    console.log('🔄 fx-repeat.refresh on', this.id);
-
     if (!this.inited) this.init();
     // console.time('repeat-refresh', this);
     this._evalNodeset();
-
-    // console.log('repeat refresh nodeset ', this.nodeset);
-    // console.log('repeatCount', this.repeatCount);
 
     const repeatItems = this.querySelectorAll(':scope > fx-repeatitem');
     const repeatItemCount = repeatItems.length;
@@ -138,7 +132,6 @@ export class RepeatBase extends withDraggability(UIElement, false) {
     // this.replaceWith(clone);
 
     // this.repeatCount = contextSize;
-    // console.log('repeatCount', this.repeatCount);
   }
 
   connectedCallback() {
@@ -147,7 +140,6 @@ export class RepeatBase extends withDraggability(UIElement, false) {
     // Listen for insertion events
     this.handleInsert = event => {
       const { detail } = event;
-      console.log('insert catched', detail);
 
       // Step 1: Refresh/re-evaluate the nodeset
       const oldNodesetLength = this.nodeset.length;
@@ -163,7 +155,6 @@ export class RepeatBase extends withDraggability(UIElement, false) {
     this.getOwnerForm().addEventListener('insert', this.handleInsert);
 
     this.handleDelete = event => {
-      console.log('delete catched', event);
       const { detail } = event;
       if (!detail || !detail.deletedNodes) {
         return;
@@ -245,8 +236,6 @@ export class RepeatBase extends withDraggability(UIElement, false) {
   _evalNodeset() {
     // const inscope = this.getInScopeContext();
     const inscope = getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
-    // console.log('##### inscope ', inscope);
-    // console.log('##### ref ', this.ref);
     // now we got a nodeset and attach MutationObserver to it
 
     if (this.mutationObserver && inscope.nodeName) {
@@ -279,7 +268,6 @@ export class RepeatBase extends withDraggability(UIElement, false) {
 
   _initTemplate() {
     this.template = this.querySelector('template');
-    // console.log('### init template for repeat ', this.id, this.template);
     // todo: this.dropTarget not needed?
     this.dropTarget = this.template.getAttribute('drop-target');
     this.isDraggable = this.template.hasAttribute('draggable')
@@ -315,13 +303,11 @@ export class RepeatBase extends withDraggability(UIElement, false) {
 
         // this.createdNodeset = repeatItem.nodeset.cloneNode(true);
         this.createdNodeset = repeatItemClone;
-        // console.log('createdNodeset', this.createdNodeset)
       }
 
       if (repeatItem.index === 1) {
         this.applyIndex(repeatItem);
       }
-      // console.log('*********repeat item created', repeatItem.nodeset);
       Fore.dispatch(this, 'item-created', { nodeset: repeatItem.nodeset, pos: index + 1 });
       this._initVariables(repeatItem);
     });
@@ -332,7 +318,6 @@ export class RepeatBase extends withDraggability(UIElement, false) {
   }
 
   _deleteHandler(deleted) {
-    console.log('handleDelete', deleted);
     // grab the current repeat items (tweak selector if yours differs)
     /**
      * @type {import('./fx-repeatitem.js').FxRepeatitem[]}

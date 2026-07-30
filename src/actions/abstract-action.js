@@ -582,6 +582,19 @@ export class AbstractAction extends ForeElementMixin {
     // console.log('actionPerformed action parentNode ', this.parentNode);
     if (this.needsUpdate && (FxFore.outermostHandler === this || !FxFore.outermostHandler)) {
       // console.log('running update cycle for outermostHandler', this);
+      if (model.refPredicateNeedsRebuild()) {
+        // An fx-bind's `ref` predicate depends on a node this action just changed
+        // (issue #125) — its nodeset can only be re-evaluated by rebuild(), which this
+        // fast action path otherwise skips.
+        model.rebuild();
+        // rebuild() can materialize new ModelItems (eg. `greeting` newly matching
+        // `greeting[../b]`) whose own facets (calculate/readonly/...) have never been
+        // computed. recalculate()'s narrow "changed" subgraph only walks dependents of
+        // the node(s) in `model.changed` (`b` here), which wouldn't reach them unless
+        // their facet expressions happen to reference `b` too. Force the full-graph
+        // pass instead — same coarse-invalidation idiom _refreshModelVariables() uses.
+        model.changed = [];
+      }
       model.recalculate();
       model.revalidate();
       const ownerForm = this.getOwnerFormSafe();
