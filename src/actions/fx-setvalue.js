@@ -84,7 +84,6 @@ export default class FxSetvalue extends AbstractAction {
 
   // Adjustment in setValue logic to ensure we work with JSONNode, not just raw values
   setValue(modelItem, newVal) {
-    console.log('setValue', modelItem, newVal);
     const item = modelItem;
     if (!item) return;
 
@@ -110,10 +109,12 @@ export default class FxSetvalue extends AbstractAction {
         }),
       );
 
-      // Use ModelItem's value setter which handles both DOM nodes and JSON lenses
+      // Use ModelItem's value setter which handles both DOM nodes and JSON lenses.
+      // fx-setvalue only ever assigns a string value, preserving the target node's own
+      // identity - structural node replacement belongs to fx-replace.
       if (newVal?.nodeType) {
         if (newVal.nodeType === Node.ELEMENT_NODE) {
-          item.value = newVal;
+          item.value = newVal.textContent;
         } else if (newVal.nodeType === Node.ATTRIBUTE_NODE) {
           item.value = newVal.nodeValue;
         } else if (newVal.nodeType === Node.TEXT_NODE) {

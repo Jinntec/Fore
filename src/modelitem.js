@@ -198,7 +198,8 @@ export class ModelItem {
       this.node.replaceWith(newVal.firstElementChild);
       // this.node.appendChild(newVal.firstElementChild);
     } else if (newVal?.nodeType && newVal.nodeType === Node.ELEMENT_NODE) {
-      this.node.textContent = newVal.textContent;
+      // clone while replacing so instances from a foreign document (e.g. parsed XML) don't leak through
+      this.node.replaceWith(newVal.cloneNode(true));
     } else if (newVal?.nodeType && this.node.nodeType === Node.ATTRIBUTE_NODE) {
       this.node.nodeValue = newVal;
     } else {
