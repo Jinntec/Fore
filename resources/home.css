@@ -275,7 +275,7 @@ nav.local-nav{
     /*background: linear-gradient(to left, rgba(255, 255, 255, 1), rgba(240, 240, 240, 0.99));*/
 
     border: none;
-    top:4rem;
+    top:3.5rem;
     border-bottom:1px solid rgba(0,0,0,0.2);
     white-space: nowrap;
     overflow: auto;
