@@ -25,7 +25,9 @@
             font-size: 0.9rem;
             padding-top: 4px;
         }
-
+        fx-output[relevant]{
+            display:inline-block;
+        }
     </style>
 </head>
 <body unresolved="unresolved">
@@ -45,24 +47,21 @@
     </p>
     <demo-snippet>
         <template>
-
-            <fx-fore>
-                <fx-model id="model1">
-                    <fx-instance>
-                        <data>
-                            <greeting type="message">Hello World!</greeting>
-                        </data>
-                    </fx-instance>
-                    <fx-bind id="b-greeting" ref="greeting" required="1 = 1">
-                        <fx-bind id="b-type" ref="@type"></fx-bind>
-                    </fx-bind>
-                </fx-model>
-                <fx-group ref="greeting">
-                    <fx-output ref="./@type"></fx-output>
-                    :
-                    <fx-output ref="."></fx-output>
-                </fx-group>
-            </fx-fore>
+<fx-fore>
+    <fx-model id="model1">
+        <fx-instance>
+            <data>
+                <greeting type="message">Hello World!</greeting>
+            </data>
+        </fx-instance>
+        <fx-bind id="b-greeting" ref="greeting" required="1 = 1">
+            <fx-bind id="b-type" ref="@type"></fx-bind>
+        </fx-bind>
+    </fx-model>
+    <fx-group ref="greeting">
+        <fx-output ref="@type"></fx-output>:<fx-output ref="."></fx-output>
+    </fx-group>
+</fx-fore>
         </template>
     </demo-snippet>
     <div class="nav-buttons">
