@@ -2,32 +2,37 @@
   "name": "@jinntec/fore",
   "version": "4.1.1",
   "description": "Fore - declarative user interfaces in plain HTML",
-  "module": "./index.js",
+  "main": "./dist/fore.js",
+  "module": "./dist/fore.js",
+  "unpkg": "./dist/fore.js",
+  "jsdelivr": "./dist/fore.js",
+  "sideEffects": true,
   "publishConfig": {
     "access": "public"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Jinntec/Fore"
+    "url": "git+https://github.com/Jinntec/Fore.git"
   },
   "directories": {
     "doc": "doc",
     "test": "test"
   },
   "exports": {
-    "import": "./index.js"
+    ".": {
+      "import": "./dist/fore.js"
+    },
+    "./dev": "./dist/fore-dev.js",
+    "./dist/*": "./dist/*",
+    "./resources/*": "./resources/*",
+    "./package.json": "./package.json"
   },
   "files": [
-    "index.js",
+    "dist/fore.js",
+    "dist/fore-dev.js",
     "resources/fore.css",
     "resources/vars.css",
-    "resources/toastify.css",
-    "src/**/*",
-    "dist/fore.js",
-    "dist/fore.js.map",
-    "dist/fore-dev.js",
-    "dist/fore-dev.js.map",
-    "!.DS_Store"
+    "resources/toastify.css"
   ],
   "dependencies": {
     "@jinntec/jinn-toast": "^1.0.5",
@@ -84,8 +89,9 @@
     "format:eslint": "eslint . --fix",
     "lint:prettier": "prettier \"**/*.js\" --check --ignore-path .eslintignore",
     "format:prettier": "prettier \"**/*.js\" --write --ignore-path .eslintignore",
+    "lint:pkg": "npx --yes publint@0.3",
     "docs": "wca src -f json --outFile fore-elements.json",
-    "lint": "npm run lint:eslint && npm run lint:prettier",
+    "lint": "npm run lint:eslint && npm run lint:prettier && npm run lint:pkg",
     "lint:types": "tsc",
     "format": "npm run format:eslint && npm run format:prettier",
     "test:watch": "karma start --auto-watch=true --single-run=false",
@@ -94,6 +100,7 @@
     "test:bs": "karma start karma.bs.config.js --coverage",
     "start:build": "cd dist && es-dev-server --open",
     "build": "rimraf dist && vite build --config vite.build.config.js && vite build --config vite.build-dev.config.js",
+    "verify:package": "bash scripts/verify-package.sh",
     "start": "vite --open --port 8090 --host",
     "preversion": "npm run test",
     "prepare": "npm run build",
@@ -120,6 +127,5 @@
   "engines": {
     "node": ">= 16.19.1"
   },
-  "prettier": "@open-wc/prettier-config",
-  "main": "index.js"
+  "prettier": "@open-wc/prettier-config"
 }

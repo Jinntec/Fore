@@ -18,15 +18,15 @@
 # Declarative applications in plain HTML
 
 Fore lets you write data-driven front-end applications in a declarative way
-just using HTML5 Web Components. 
+just using HTML5 Web Components.
 
 ![todo](resources/images/todo-screen.png)
 
 [Source code](https://github.com/Jinntec/Fore/blob/960e093fadfbc96eb8514721fb7b53462567f1ec/demo/todo2.html) for above example just uses 53 lines of HTML.
 
 The use cases range from simple to complex forms to full single page
-applications. It can be used standalone or in conjunction with other web 
-components or frameworks. 
+applications. It can be used standalone or in conjunction with other web
+components or frameworks.
 
 By using the bare metal of the browser
 platform, Fore integrates well with any other library you might want to use in
@@ -109,8 +109,8 @@ To use whatever component in Fore you wrap it up in the generic
 </fx-control>
 ```
 
-The additional attributes `update-event` and `value-prop` allow to 
-customize the wiring of the widget you use. 
+The additional attributes `update-event` and `value-prop` allow to
+customize the wiring of the widget you use.
 
 ```
 <fx-control ref="checked" update-event="change" value-prop="checked">
@@ -150,8 +150,14 @@ Run `npm install @jinntec/fore` in your project to install it.
 If you're using a bundler (Vite, webpack, Rollup, ...), import it normally:
 
 ```js
-import '@jinntec/fore';
+import '@jinntec/fore';                     // production bundle, registers all elements
+import '@jinntec/fore/dev';                 // same, plus the Fore devtools panel
+import '@jinntec/fore/resources/fore.css';  // optional default styling
 ```
+
+Both entry points are the prebuilt, self-contained bundles from `dist/` — the same artefacts served
+from the CDN. `@jinntec/fore/dist/fore.js` and `@jinntec/fore/dist/fore-dev.js` are importable as
+explicit paths.
 
 If you're serving plain HTML without a bundler, reference the built bundle directly by its
 path inside `node_modules` (or copy `dist/fore.js` alongside your page):
@@ -181,7 +187,7 @@ entry point. This lists out running examples to learn and copy from.
 ## Running test suite
 
 `npm run test:watch`
- 
+
 Open your browser and goto to the URL mentioned in console output to start Karma and hit the button in the upper right to run the full test-suite. Will
 continously rerun the test suite while you're changing code.
 
@@ -238,12 +244,10 @@ The giants that made Fore possible:
 
 * past and current [XForms editors](https://www.w3.org/community/xformsusers/wiki/XForms_2.0) - not all brilliant ideas get traction and fame. Nevertheless a brilliantly worked out state engine.
 * [fontoXPath](https://github.com/FontoXML/fontoxpath) - without this wonderful XPath 3.1 implementation in the browser Fore has never been possible - period.
-* [depGraph](https://github.com/jriecken/dependency-graph) - finding this gem saved a big bunch of work. 
+* [depGraph](https://github.com/jriecken/dependency-graph) - finding this gem saved a big bunch of work.
 
 Thanks to all giants!
 
 ## License
 
 MIT — see [LICENSE](./LICENSE).
-
-
