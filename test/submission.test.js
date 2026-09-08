@@ -1,8 +1,6 @@
 /* eslint-disable no-unused-expressions */
 // eslint-disable-next-line no-unused-vars
-import {
-  html, fixtureSync, expect, oneEvent,
-} from '@open-wc/testing';
+import { html, fixtureSync, expect, oneEvent } from '@open-wc/testing';
 import * as fx from 'fontoxpath';
 import { Relevance } from '../src/relevance.js';
 
@@ -307,9 +305,7 @@ describe('submission tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance type="json">
-            { "foo":"bar" }
-          </fx-instance>
+          <fx-instance type="json"> { "foo":"bar" } </fx-instance>
           <fx-instance id="response" type="json">{}</fx-instance>
 
           <fx-submission
@@ -369,11 +365,7 @@ describe('submission tests', () => {
             <data></data>
           </fx-instance>
 
-          <fx-submission id="sub1"
-                         url="#echo"
-                         method="post"
-                         replace="instance"
-                         instance="target">
+          <fx-submission id="sub1" url="#echo" method="post" replace="instance" instance="target">
           </fx-submission>
         </fx-model>
         <fx-trigger>
@@ -416,10 +408,7 @@ describe('submission tests', () => {
           </fx-instance>
           <fx-bind ref="item" constraint="false()"></fx-bind>
 
-          <fx-submission id="sub1"
-                         url="#echo"
-                         method="post"
-                        replace="none">
+          <fx-submission id="sub1" url="#echo" method="post" replace="none">
             <fx-setvalue ref="fail" event="submit-error">true</fx-setvalue>
           </fx-submission>
         </fx-model>
@@ -454,10 +443,7 @@ describe('submission tests', () => {
           </fx-instance>
           <fx-bind ref="item" required="true()"></fx-bind>
 
-          <fx-submission id="sub1"
-                         url="#echo"
-                         method="post"
-                        replace="none">
+          <fx-submission id="sub1" url="#echo" method="post" replace="none">
             <fx-setvalue ref="fail" event="submit-error">true</fx-setvalue>
           </fx-submission>
         </fx-model>
@@ -478,5 +464,133 @@ describe('submission tests', () => {
     await oneEvent(sm, 'submit-error');
     const out = el.querySelector('fx-output');
     expect(out.value).to.equal('true');
+  });
+
+  describe('Fetch responses', () => {
+    let originalFetch = null;
+    let newFetchState = {
+      status: 200,
+      statusText: '',
+    };
+
+    beforeEach(() => {
+      originalFetch = window.fetch;
+      window.fetch = async () => ({
+        ok: newFetchState.status >= 200 && newFetchState.status < 300,
+        status: newFetchState.status,
+        statusText: newFetchState.statusText,
+        headers: { get: () => null },
+        text: async () => '',
+        json: async () => {
+          throw new Error('no body');
+        },
+        blob: async () => new Blob([]),
+      });
+    });
+
+    afterEach(() => {
+      window.fetch = originalFetch;
+    });
+    const noBodyResponses = [
+      { label: '204 No Content, no Content-Type', status: 204, statusText: 'No Content' },
+      { label: '205 Reset Content, no Content-Type', status: 205, statusText: 'Reset Content' },
+      { label: '200 OK with empty body and no Content-Type', status: 200, statusText: 'OK' },
+    ];
+
+    noBodyResponses.forEach(({ label, status, statusText }) => {
+      it(`dispatches submit-done for a ${label}`, async () => {
+        newFetchState = {
+          status,
+          statusText,
+        };
+
+        const el = await fixtureSync(html`
+          <fx-fore>
+            <fx-model>
+              <fx-instance>
+                <data>
+                  <id>1</id>
+                </data>
+              </fx-instance>
+              <fx-submission
+                id="s-delete"
+                method="delete"
+                replace="none"
+                url="https://example.com/recipes/1"
+              >
+              </fx-submission>
+            </fx-model>
+          </fx-fore>
+        `);
+
+        await oneEvent(el, 'refresh-done');
+
+        const sm = el.querySelector('#s-delete');
+        expect(sm).to.exist;
+
+        // Race the two possible outcomes so a regression fails with a useful
+        // message instead of a mocha timeout.
+        const outcome = Promise.race([
+          oneEvent(sm, 'submit-done').then(() => ({ type: 'submit-done' })),
+          oneEvent(sm, 'submit-error').then(ev => ({ type: 'submit-error', detail: ev.detail })),
+        ]);
+
+        sm.submit();
+
+        const result = await outcome;
+        expect(
+          result.type,
+          `expected submit-done but got submit-error: ${JSON.stringify(result.detail)}`,
+        ).to.equal('submit-done');
+      });
+    });
+
+    it('Throws the correct error when the server responds with a 500', async () => {
+        newFetchState = {
+          status: 500,
+          statusText:'Internal Server Error'
+        };
+
+        const el = await fixtureSync(html`
+          <fx-fore>
+            <fx-model>
+              <fx-instance>
+                <data>
+                  <id>1</id>
+                </data>
+              </fx-instance>
+              <fx-submission
+                id="s-delete"
+                method="delete"
+                replace="none"
+                url="https://example.com/recipes/1"
+              >
+              </fx-submission>
+            </fx-model>
+          </fx-fore>
+        `);
+
+        await oneEvent(el, 'refresh-done');
+
+        const sm = el.querySelector('#s-delete');
+        expect(sm).to.exist;
+
+        // Race the two possible outcomes so a regression fails with a useful
+        // message instead of a mocha timeout.
+        const outcome = Promise.race([
+          oneEvent(sm, 'submit-done').then(() => ({ type: 'submit-done' })),
+          oneEvent(sm, 'submit-error').then(ev => ({ type: 'submit-error', detail: ev.detail })),
+        ]);
+
+        sm.submit();
+
+        const result = await outcome;
+        expect(
+          result.type,
+          `expected submit-error but got submit-done: ${JSON.stringify(result.detail)}`,
+        ).to.equal('submit-error');
+      });
+
+    });
   });
 });

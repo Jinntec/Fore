@@ -4,7 +4,9 @@ import { evaluateXPath } from './xpath-evaluation.js';
 import ForeElementMixin from './ForeElementMixin.js';
 
 /**
- * todo: validate='false'
+ * `<fx-submission>` — serializes the relevant instance data, sends it to `url`
+ * via `method`, and applies the response per `replace` (`all` | `instance` |
+ * `none` | ...). Dispatches `submit-done` on success, `submit-error` on failure.
  */
 export class FxSubmission extends ForeElementMixin {
   constructor() {
@@ -257,7 +259,10 @@ export class FxSubmission extends ForeElementMixin {
         return;
       }
 
-      const contentType = response.headers.get('content-type').split(';')[0].trim().toLowerCase();
+      const contentType = (response.headers.get('content-type') || '')
+        .split(';')[0]
+        .trim()
+        .toLowerCase();
 
       if (contentType.endsWith('/xml') || contentType.endsWith('+xml')) {
         const text = await response.text();
@@ -269,7 +274,7 @@ export class FxSubmission extends ForeElementMixin {
       } else if (contentType.endsWith('/json') || contentType.endsWith('+json')) {
         const json = await response.json();
         await this._handleResponse(json, resolvedUrl, contentType);
-      } else {
+      } else if (contentType) {
         const blob = await response.blob();
         await this._handleResponse(blob, resolvedUrl, contentType);
       }
