@@ -186,7 +186,9 @@ export class FxBind extends ForeElementMixin {
   init(model) {
     this.model = model;
     this._getInstanceId();
-    this.bindType = this.getModel().getInstance(this.instanceId).type;
+    const modelBindType = this.getModel().getInstance(this.instanceId).type;
+    // Default `html` instances to `xml` bindings. They are the same.
+    this.bindType = modelBindType === 'html' ? 'xml' : modelBindType;
 
     model.binds.push(this);
 
@@ -404,7 +406,7 @@ export class FxBind extends ForeElementMixin {
       });
     } else {
       const inst = this.getModel().getInstance(this.instanceId);
-      if (inst.type === 'xml') {
+      if (inst.type === 'xml' || inst.type === 'html') {
         this.nodeset = domFacade
           ? evaluateXPath(this.ref, inscopeContext, this, {}, {}, domFacade)
           : evaluateXPathToNodes(this.ref, inscopeContext, this);

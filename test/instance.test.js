@@ -426,9 +426,7 @@ describe('instance Tests', () => {
               </data>
             </fx-instance>
           </fx-model>
-          <div id="two">
-            {text} {instance()/text} {instance('default')/text}
-          </div>
+          <div id="two">{text} {instance()/text} {instance('default')/text}</div>
         </fx-fore>
       </fx-fore>
     `);
@@ -446,13 +444,9 @@ describe('instance Tests', () => {
       <fx-fore>
         <fx-model id="model1">
           <fx-instance type="json">
-            {
-              "q": "Never whine, never complain.",
-              "a": "Robert Greene",
-              "h": "
-                <blockquote>Never whine.</blockquote>
-              "
-            }
+            { "q": "Never whine, never complain.", "a": "Robert Greene", "h": "
+            <blockquote>Never whine.</blockquote>
+            " }
           </fx-instance>
         </fx-model>
       </fx-fore>
@@ -472,7 +466,9 @@ describe('instance Tests', () => {
       <fx-fore>
         <fx-model>
           <fx-instance type="json">
-            { "h": "<blockquote>Never whine.</blockquote>" }
+            { "h": "
+            <blockquote>Never whine.</blockquote>
+            " }
           </fx-instance>
         </fx-model>
         <fx-output id="out" ref="?h" mediatype="html"></fx-output>
@@ -528,4 +524,137 @@ describe('instance Tests', () => {
               expect(root.textContent).to.equal('middle');
           });
       */
+});
+
+describe('inline xml instance — hazard detection & <script> wrapper', () => {
+  it('does not flag plain, lower-case, namespace-free inline xml', async () => {
+    const el = await fixtureSync(html`
+      <fx-instance>
+        <data><greeting tone="warm">hi</greeting></data>
+      </fx-instance>
+    `);
+
+    expect(el._detectInlineXmlHazards()).to.be.empty;
+
+    el.init();
+    const root = el.getInstanceData().documentElement;
+    expect(root.nodeName).to.equal('data');
+    expect(root.firstElementChild.nodeName).to.equal('greeting');
+    expect(root.firstElementChild.getAttribute('tone')).to.equal('warm');
+  });
+
+  it('flags namespace declarations and namespace-prefixed names', async () => {
+    const el = await fixtureSync(html`
+      <fx-instance>
+        <data xmlns:x="urn:x"><x:item xlink:href="#a">v</x:item></data>
+      </fx-instance>
+    `);
+
+    const hazards = el._detectInlineXmlHazards().join(' | ');
+    expect(hazards).to.match(/namespace declaration @xmlns:x/);
+    expect(hazards).to.match(/namespace-prefixed element <x:item>/);
+    expect(hazards).to.match(/namespace-prefixed attribute @xlink:href/);
+  });
+
+  it('flags void HTML elements that cannot hold children', async () => {
+    const el = await fixtureSync(html`
+      <fx-instance>
+        <data><img><caption>x</caption></img></data>
+      </fx-instance>
+    `);
+
+    expect(el._detectInlineXmlHazards().join(' ')).to.match(/<img> is a void element/);
+  });
+
+  it('treats a <script type="application/xml"> wrapper as hazard-free', async () => {
+    const el = await fixtureSync(html`
+      <fx-instance>
+        <script type="application/xml">
+          <Data xmlns:p="urn:p"><p:Item id="A"/><p:Item id="B"/></Data>
+        </script>
+      </fx-instance>
+    `);
+
+    expect(el._detectInlineXmlHazards()).to.be.empty;
+  });
+
+  it('preserves casing, namespaces and self-closing elements from a <script> wrapper', async () => {
+    const el = await fixtureSync(html`
+      <fx-instance>
+        <script type="application/xml">
+          <Order xmlns:p="urn:p"><p:Line sku="A"/><p:Line sku="B"/></Order>
+        </script>
+      </fx-instance>
+    `);
+
+    el.init();
+    const root = el.getInstanceData().documentElement;
+    // casing kept
+    expect(root.nodeName).to.equal('Order');
+    // <p:Line/> parsed as siblings, not nested as the HTML parser would
+    expect(root.children).to.have.lengthOf(2);
+    expect(root.firstElementChild.localName).to.equal('Line');
+    expect(root.firstElementChild.namespaceURI).to.equal('urn:p');
+    expect(root.firstElementChild.getAttribute('sku')).to.equal('A');
+  });
+});
+
+describe('inline html instance', () => {
+  it('builds instance data from the HTML-parsed subtree', async () => {
+    const el = await fixtureSync(html`
+      <fx-instance type="html">
+        <data>
+          <greeting tone="warm">hello</greeting>
+        </data>
+      </fx-instance>
+    `);
+
+    el.init();
+
+    const data = el.getInstanceData();
+    expect(data.nodeType).to.equal(Node.DOCUMENT_NODE);
+
+    const context = el.getDefaultContext();
+    expect(context.nodeName).to.equal('data');
+    expect(context.firstElementChild.nodeName).to.equal('greeting');
+    expect(context.firstElementChild.getAttribute('tone')).to.equal('warm');
+    expect(el.evalXPath('//greeting').textContent.trim()).to.equal('hello');
+  });
+
+  it('takes the HTML parser result as-is for markup type="xml" would flag', async () => {
+    const el = await fixtureSync(html`
+      <fx-instance type="html">
+        <data>
+          <Item sku="A" />
+          <Item sku="B" />
+        </data>
+      </fx-instance>
+    `);
+
+    el.init();
+
+    // type="html" takes the HTML parser's result as-is: <Item> is lower-cased to <item>
+    // and the two "self-closing" siblings end up nested. No hazard warning (that check is
+    // xml-only). type="xml" would have flagged this markup instead.
+    const items = el.getDefaultContext().querySelectorAll('item');
+    expect(items.length).to.equal(2);
+    expect(items[0].getAttribute('sku')).to.equal('A');
+    expect(items[1].getAttribute('sku')).to.equal('B');
+    expect(items[0].contains(items[1])).to.equal(true);
+  });
+
+  it('reset() restores the original inline html data', async () => {
+    const el = await fixtureSync(html`
+      <fx-instance type="html">
+        <data><value>start</value></data>
+      </fx-instance>
+    `);
+
+    el.init();
+    el.getDefaultContext().firstElementChild.textContent = 'changed';
+    expect(el.getDefaultContext().firstElementChild.textContent).to.equal('changed');
+
+    el.reset();
+    expect(el.getDefaultContext().firstElementChild.textContent).to.equal('start');
+  });
 });

@@ -15,7 +15,6 @@ import {
   Language,
 } from 'fontoxpath';
 
-import * as fx from 'fontoxpath';
 import { XPathUtil } from './xpath-util.js';
 import { prettifyXml } from './functions/common-function.js';
 import { JSONDomFacade } from './json/JSONDomFacade.js';
@@ -854,6 +853,10 @@ export function createNamespaceResolver(xpathQuery, formElement) {
       setCachedNamespaceResolver(xpathQuery, formElement, resolveNamespacePrefix);
       return resolveNamespacePrefix;
     }
+    if (instance && instance.type === 'html') {
+      // Working with HTML instances: make the XPaths work with HTML as the default namespace uri
+      return xhtmlNamespaceResolver;
+    }
   }
 
   const xpathDefaultNamespace =
@@ -876,7 +879,10 @@ export function createNamespaceResolver(xpathQuery, formElement) {
 }
 
 function createNamespaceResolverForNode(query, contextNode, formElement) {
-  if (((contextNode && contextNode.ownerDocument) || contextNode) === window.document) {
+  if (
+    ((contextNode && contextNode.ownerDocument) || contextNode) === window.document ||
+    contextNode instanceof HTMLElement
+  ) {
     return xhtmlNamespaceResolver;
   }
   return createNamespaceResolver(query, formElement);

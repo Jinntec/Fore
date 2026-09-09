@@ -34,6 +34,22 @@ async function handleResponse(fxInstance, response) {
 
 /**
  * Container for data instances.
+ *
+ * @element fx-instance
+
+ * @attr {string} [id] - The ID of the instance.
+ * @attr {"xml"|"json"|"html"|"text"} [type=xml] - Serialisation format of the instance. Defaults to
+ * `xml` since that's most common. Inline `xml` works when the markup is plain (lower-case names, no
+ * namespaces, no self-closing elements): the browser's HTML parser lower-cases names, drops
+ * namespace handling and expands self-closing elements (`<foo/>`) before Fore ever sees the
+ * content. For inline XML that relies on any of those, wrap the data in
+ * `<script type="application/xml">…</script>` (raw text to the HTML parser, nothing is altered) or
+ * load it with @src. `json`, `html` and `text` inline without caveats.
+ * @attr {string | "#querystring" | `localStore:${string}`} [src] - The external source to fetch
+ * when loading this instance. Can be from the query-string as well, or indicating a localstorage
+ * store
+ * @attr {boolean} [shared=false] - Whether this instance will be shared with any sub fx-fore elements.
+ * @attr {"same-origin"|"include"|"omit"} [credentials="same-origin"] - The credentials to use when fetching an external resource
  */
 export class FxInstance extends HTMLElement {
   constructor() {
@@ -206,7 +222,7 @@ export class FxInstance extends HTMLElement {
     // this.debugInfo.mutationCount += 1;
     // this.debugInfo.lastMutationAt = performance.now();
     // use the setter so nodeset is rebuilt for JSON too
-    if (this.originalInstance && this.type === 'xml') {
+    if (this.originalInstance && (this.type === 'xml' || this.type === 'html')) {
       this.instanceData = this.originalInstance.cloneNode(true);
     } else if (this.originalInstance && this.type === 'json') {
       this.instanceData = structuredClone(this.originalInstance);
@@ -275,24 +291,28 @@ export class FxInstance extends HTMLElement {
 
   createInstanceData() {
     this._invalidateInstanceVarBindings();
-    if (this.type === 'xml') {
-      const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
-      this._instanceData = doc;
-      this.originalInstance = doc.cloneNode(true);
-      this.nodeset = doc;
-      return;
-    }
-    if (this.type === 'json') {
-      this._instanceData = {};
-      this.originalInstance = { ...this._instanceData };
-      this.nodeset = wrapJson(this._instanceData, null, null, this.foreId);
-      this.domFacade = new JSONDomFacade();
-      return;
-    }
-    if (this.type === 'text') {
-      this._instanceData = this.innerText;
-      this.originalInstance = this.innerText;
-      this.nodeset = null;
+    switch (this.type) {
+      case 'xml':
+      case 'html': {
+        const doc = new DOMParser().parseFromString('<data></data>', `text/${this.type}`);
+        this._instanceData = doc;
+        this.originalInstance = doc.cloneNode(true);
+        this.nodeset = doc;
+
+        break;
+      }
+
+      case 'json':
+        this._instanceData = {};
+        this.originalInstance = { ...this._instanceData };
+        this.nodeset = wrapJson(this._instanceData, null, null, this.foreId);
+        this.domFacade = new JSONDomFacade();
+        break;
+
+      case 'text':
+        this._instanceData = this.innerText;
+        this.originalInstance = this.innerText;
+        this.nodeset = null;
     }
   }
 
@@ -379,8 +399,102 @@ export class FxInstance extends HTMLElement {
     this.nodeset = null;
   }
 
+  /**
+   * A single `<script type="application/xml">` (or `text/xml`, or `*+xml`) child is raw text to the
+   * HTML parser: capitalisation, namespaces and self-closing elements all survive verbatim. Return
+   * that script so its `.textContent` can be handed straight to an XML parser, or `null`.
+   *
+   * @returns {HTMLScriptElement | null}
+   * @private
+   */
+  _getInlineXmlScript() {
+    const children = Array.from(this.children);
+    if (children.length !== 1 || children[0].localName !== 'script') {
+      return null;
+    }
+    const scriptType = (children[0].getAttribute('type') || '').trim().toLowerCase();
+    const isXmlType = /^(application|text)\/xml$/.test(scriptType) || /\+xml$/.test(scriptType);
+    return isXmlType ? children[0] : null;
+  }
+
+  /**
+   * Inspect inline content of an `xml` instance for constructs the browser's HTML parser alters
+   * before Fore can read them. Best-effort: namespace prefixes/declarations and non-nesting HTML
+   * elements are detectable here, but capitalisation and self-closing elements (`<foo/>`) are
+   * already lost by the time this runs and cannot be flagged.
+   *
+   * @returns {string[]} human-readable descriptions of detected hazards
+   * @private
+   */
+  _detectInlineXmlHazards() {
+    // A `<script type="application/xml">` wrapper is lossless — nothing to warn about.
+    if (this._getInlineXmlScript()) {
+      return [];
+    }
+
+    const VOID_ELEMENTS = new Set([
+      'area',
+      'base',
+      'br',
+      'col',
+      'embed',
+      'hr',
+      'img',
+      'input',
+      'link',
+      'meta',
+      'param',
+      'source',
+      'track',
+      'wbr',
+    ]);
+    const HTML_STRUCTURE = new Set(['html', 'head', 'body', 'tbody']);
+
+    const hazards = new Set();
+    for (const el of this.querySelectorAll('*')) {
+      const name = el.localName;
+      if (name.includes(':')) {
+        hazards.add(`namespace-prefixed element <${name}>`);
+      }
+      if (VOID_ELEMENTS.has(name)) {
+        hazards.add(`<${name}> is a void element in HTML and cannot hold children`);
+      }
+      if (HTML_STRUCTURE.has(name)) {
+        hazards.add(`<${name}> triggers HTML document-structure parsing`);
+      }
+      for (const attr of el.getAttributeNames()) {
+        if (attr === 'xmlns' || attr.startsWith('xmlns:')) {
+          hazards.add(`namespace declaration @${attr}`);
+        } else if (attr.includes(':')) {
+          hazards.add(`namespace-prefixed attribute @${attr}`);
+        }
+      }
+    }
+    return [...hazards];
+  }
+
   _useInlineData() {
     if (this.type === 'xml') {
+      const xmlScript = this._getInlineXmlScript();
+      if (xmlScript) {
+        const parsed = new DOMParser().parseFromString(xmlScript.textContent, 'application/xml');
+        const parseError = parsed.querySelector('parsererror');
+        if (parseError) {
+          const message = `The inline instance "${this.id}" contains malformed XML: ${parseError.textContent.trim()}`;
+          console.error(message);
+          Fore.dispatch(this, 'message', { level: 'error', message });
+        }
+        this._setInitialData(parsed);
+        return;
+      }
+
+      const hazards = this._detectInlineXmlHazards();
+      if (hazards.length) {
+        const message = `The inline instance "${this.id}" is type "xml" but its markup contains constructs the HTML parser alters before Fore can read them: ${hazards.join('; ')}. Wrap the data in <script type="application/xml">…</script> (raw text, nothing is altered), load it via @src, or use type="json"/"html" if that is the real format. Capitalisation and self-closing elements (<foo/>) are corrupted the same way but cannot be detected here.`;
+        console.error(message);
+        Fore.dispatch(this, 'message', { level: 'error', message });
+      }
+
       const instanceData = new DOMParser().parseFromString(this.innerHTML, 'application/xml');
       this._setInitialData(instanceData);
     } else if (this.type === 'json') {
@@ -392,7 +506,9 @@ export class FxInstance extends HTMLElement {
       );
       this._setInitialData(JSON.parse(sanitized));
     } else if (this.type === 'html') {
-      this._setInitialData(this.firstElementChild.children);
+      const newDocumentFragment = new Document();
+      newDocumentFragment.appendChild(this.firstElementChild.cloneNode(true));
+      this._setInitialData(newDocumentFragment);
     } else if (this.type === 'text') {
       this._setInitialData(this.textContent);
     } else {
