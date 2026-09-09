@@ -1,0 +1,16 @@
+<section xmlns:func="generator-functions" id="attachments" fragment="true">
+   <div class="details-content">
+      <section class="BG-24">
+         <header>ADDITIONAL SUPPORTING DOCUMENTS</header>
+         <fx-repeat id="r-BG-24" aria-label="ADDITIONAL SUPPORTING DOCUMENTS" ref="cac:AdditionalDocumentReference"><template>
+               <fx-control id="BT-122" ref="cbc:ID"><label for="BT-122-input">Supporting document reference</label><input id="BT-122-input" type="text"></fx-control>
+               <fx-control id="BT-123" ref="cbc:DocumentDescription"><label for="BT-123-input">Supporting document description</label><input id="BT-123-input" type="text"></fx-control>
+               <fx-control id="BT-124" ref="cac:Attachment/cac:ExternalReference/cbc:URI"><label for="BT-124-input">External document location</label><input id="BT-124-input" type="text"></fx-control>
+               <fx-upload id="BT-125" mimetype="@mimecode" filename="@filename" ref="cac:Attachment/cbc:EmbeddedDocumentBinaryObject/@mimeCode"></fx-upload>
+               <fx-trigger class="delete-btn"><button>delete</button><fx-delete ref="."></fx-delete>
+               </fx-trigger></template></fx-repeat>
+         <fx-trigger class="add-button"><button>add</button><fx-insert ref="cac:AdditionalDocumentReference" origin="#r-BG-24"></fx-insert>
+         </fx-trigger>
+      </section>
+   </div>
+</section>

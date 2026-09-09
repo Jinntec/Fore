@@ -1,0 +1,279 @@
+<section xmlns:func="generator-functions" id="delivery" fragment="true">
+   <div class="details-content">
+      <section class="BG-13">
+         <header>Delivery Information</header>
+         <fx-group id="BG-13" ref=".">
+            <fx-control id="BT-70" ref="cac:Delivery/cac:DeliveryParty/cac:PartyName/cbc:Name"><label for="BT-70-input">Deliver to party name</label><input id="BT-70-input" type="text"></fx-control>
+            <fx-control id="BT-71" ref="cac:Delivery/cac:DeliveryLocation/cbc:ID/@schemeID"><label for="BT-71-input">Deliver to location identifier</label><input id="BT-71-input" type="text"></fx-control>
+            <fx-control id="BT-72" ref="cac:Delivery/cbc:ActualDeliveryDate"><label for="BT-72-input">Actual delivery date</label><input id="BT-72-input" type="date"></fx-control>
+            <section class="BG-15">
+               <header>DELIVER TO ADDRESS</header>
+               <address>
+                  <fx-group id="BG-15" ref=".">
+                     <fx-control id="BT-75" class="adress-line" ref="cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:StreetName"><label for="BT-75-input">Deliver to address line 1</label><input id="BT-75-input" type="text"></fx-control>
+                     <fx-control id="BT-76" class="adress-line" ref="cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:AdditionalStreetName"><label for="BT-76-input">Deliver to address line 2</label><input id="BT-76-input" type="text"></fx-control>
+                     <fx-control id="BT-165" class="adress-line" ref="cac:Delivery/cac:DeliveryLocation/cac:Address/cac:AddressLine/cbc:Line"><label for="BT-165-input">Deliver to address line 3</label><input id="BT-165-input" type="text"></fx-control>
+                     <fx-control id="BT-78" class="zip" ref="cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:PostalZone"><label for="BT-78-input">Deliver to post code</label><input id="BT-78-input" type="text"></fx-control>
+                     <fx-control id="BT-77" class="city" ref="cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:CityName"><label for="BT-77-input">Deliver to city</label><input id="BT-77-input" type="text"></fx-control>
+                     <fx-control id="BT-79" ref="cac:Delivery/cac:DeliveryLocation/cac:Address/cbc:CountrySubentity" on-demand="true"><label for="BT-79-input">Deliver to country subdivision</label><input id="BT-79-input" type="text"></fx-control>
+                     <fx-control id="BT-80" ref="cac:Delivery/cac:DeliveryLocation/cac:Address/cac:Country/cbc:IdentificationCode" on-demand="true"><label for="BT-80-input">Deliver to country code</label><select id="BT-80-input" class="widget" selection="open">
+                           <option value="AD" title="Andorra">123</option>
+                           <option value="AE" title="Vereinigte Arabische Emirate">469</option>
+                           <option value="AF" title="Afghanistan">423</option>
+                           <option value="AG" title="Antigua und Barbuda">320</option>
+                           <option value="AI" title="Anguilla"></option>
+                           <option value="AL" title="Albanien">121</option>
+                           <option value="AM" title="Armenien">422</option>
+                           <option value="AO" title="Angola">223</option>
+                           <option value="AQ" title="Antarktis"></option>
+                           <option value="AR" title="Argentinien">323</option>
+                           <option value="AS" title="Amerikanisch-Samoa"></option>
+                           <option value="AT" title="Österreich">151</option>
+                           <option value="AU" title="Australien">523</option>
+                           <option value="AW" title="Aruba"></option>
+                           <option value="AX" title="Ålandinseln"></option>
+                           <option value="AZ" title="Aserbaidschan">425</option>
+                           <option value="BA" title="Bosnien und Herzegowina">122</option>
+                           <option value="BB" title="Barbados">322</option>
+                           <option value="BD" title="Bangladesch">460</option>
+                           <option value="BE" title="Belgien">124</option>
+                           <option value="BF" title="Burkina Faso">258</option>
+                           <option value="BG" title="Bulgarien">125</option>
+                           <option value="BH" title="Bahrain">424</option>
+                           <option value="BI" title="Burundi">291</option>
+                           <option value="BJ" title="Benin">229</option>
+                           <option value="BL" title="St. Barthélemy"></option>
+                           <option value="BM" title="Bermuda"></option>
+                           <option value="BN" title="Brunei Darussalam">429</option>
+                           <option value="BO" title="Plurinationaler Staat Bolivien">326</option>
+                           <option value="BQ" title="Bonaire, St. Eustatius und Saba"></option>
+                           <option value="BR" title="Brasilien">327</option>
+                           <option value="BS" title="Bahamas">324</option>
+                           <option value="BT" title="Bhutan">426</option>
+                           <option value="BV" title="Bouvetinsel"></option>
+                           <option value="BW" title="Botsuana">227</option>
+                           <option value="BY" title="Belarus">169</option>
+                           <option value="BZ" title="Belize">330</option>
+                           <option value="CA" title="Kanada">348</option>
+                           <option value="CC" title="Kokosinseln (Keeling)"></option>
+                           <option value="CD" title="Demokratische Republik Kongo">246</option>
+                           <option value="CF" title="Zentralafrikanische Republik">289</option>
+                           <option value="CG" title="Kongo">245</option>
+                           <option value="CH" title="Schweiz">158</option>
+                           <option value="CI" title="Côte d’Ivoire">231</option>
+                           <option value="CK" title="Cookinseln"></option>
+                           <option value="CL" title="Chile">332</option>
+                           <option value="CM" title="Kamerun">262</option>
+                           <option value="CN" title="China">479</option>
+                           <option value="CO" title="Kolumbien">349</option>
+                           <option value="CR" title="Costa Rica">334</option>
+                           <option value="CU" title="Kuba">351</option>
+                           <option value="CV" title="Cabo Verde">242</option>
+                           <option value="CW" title="Curaçao"></option>
+                           <option value="CX" title="Weihnachtsinsel"></option>
+                           <option value="CY" title="Zypern">181</option>
+                           <option value="CZ" title="Tschechien">164</option>
+                           <option value="DE" title="Deutschland">000</option>
+                           <option value="DJ" title="Dschibuti">230</option>
+                           <option value="DK" title="Dänemark">126</option>
+                           <option value="DM" title="Dominica">333</option>
+                           <option value="DO" title="Dominikanische Republik">335</option>
+                           <option value="DZ" title="Algerien">221</option>
+                           <option value="EC" title="Ecuador">336</option>
+                           <option value="EE" title="Estland">127</option>
+                           <option value="EG" title="Ägypten">287</option>
+                           <option value="EH" title="Westsahara"></option>
+                           <option value="ER" title="Eritrea">224</option>
+                           <option value="ES" title="Spanien">161</option>
+                           <option value="ET" title="Äthiopien">225</option>
+                           <option value="FI" title="Finnland">128</option>
+                           <option value="FJ" title="Fidschi">526</option>
+                           <option value="FK" title="Falklandinseln (Malwinen)"></option>
+                           <option value="FM" title="Föderierte Staaten von Mikronesien">545</option>
+                           <option value="FO" title="Färöer"></option>
+                           <option value="FR" title="Frankreich">129</option>
+                           <option value="GA" title="Gabun">236</option>
+                           <option value="GB" title="Vereinigtes Königreich">168</option>
+                           <option value="GD" title="Grenada">340</option>
+                           <option value="GE" title="Georgien">430</option>
+                           <option value="GF" title="Französisch-Guayana"></option>
+                           <option value="GG" title="Guernsey"></option>
+                           <option value="GH" title="Ghana">238</option>
+                           <option value="GI" title="Gibraltar"></option>
+                           <option value="GL" title="Grönland"></option>
+                           <option value="GM" title="Gambia">237</option>
+                           <option value="GN" title="Guinea">261</option>
+                           <option value="GP" title="Guadeloupe"></option>
+                           <option value="GQ" title="Äquatorialguinea">274</option>
+                           <option value="GR" title="Griechenland">134</option>
+                           <option value="GS" title="Südgeorgien und die Südlichen Sandwichinseln"></option>
+                           <option value="GT" title="Guatemala">345</option>
+                           <option value="GU" title="Guam"></option>
+                           <option value="GW" title="Guinea-Bissau">259</option>
+                           <option value="GY" title="Guyana">328</option>
+                           <option value="HK" title="Hongkong">411</option>
+                           <option value="HM" title="Heard und die McDonaldinseln"></option>
+                           <option value="HN" title="Honduras">347</option>
+                           <option value="HR" title="Kroatien">130</option>
+                           <option value="HT" title="Haiti">346</option>
+                           <option value="HU" title="Ungarn">165</option>
+                           <option value="ID" title="Indonesien">437</option>
+                           <option value="IE" title="Irland">135</option>
+                           <option value="IL" title="Israel">441</option>
+                           <option value="IM" title="Insel Man"></option>
+                           <option value="IN" title="Indien">436</option>
+                           <option value="IO" title="Britisches Territorium im Indischen Ozean"></option>
+                           <option value="IQ" title="Irak">438</option>
+                           <option value="IR" title="Islamische Republik Iran">439</option>
+                           <option value="IS" title="Island">136</option>
+                           <option value="IT" title="Italien">137</option>
+                           <option value="JE" title="Jersey"></option>
+                           <option value="JM" title="Jamaika">355</option>
+                           <option value="JO" title="Jordanien">445</option>
+                           <option value="JP" title="Japan">442</option>
+                           <option value="KE" title="Kenia">243</option>
+                           <option value="KG" title="Kirgisistan">450</option>
+                           <option value="KH" title="Kambodscha">446</option>
+                           <option value="KI" title="Kiribati">530</option>
+                           <option value="KM" title="Komoren">244</option>
+                           <option value="KN" title="St. Kitts und Nevis">370</option>
+                           <option value="KP" title="Demokratische Volksrepublik Korea">434</option>
+                           <option value="KR" title="Republik Korea">467</option>
+                           <option value="KW" title="Kuwait">448</option>
+                           <option value="KY" title="Kaimaninseln"></option>
+                           <option value="KZ" title="Kasachstan">444</option>
+                           <option value="LA" title="Demokratische Volksrepublik Laos">449</option>
+                           <option value="LB" title="Libanon">451</option>
+                           <option value="LC" title="St. Lucia">366</option>
+                           <option value="LI" title="Liechtenstein">141</option>
+                           <option value="LK" title="Sri Lanka">431</option>
+                           <option value="LR" title="Liberia">247</option>
+                           <option value="LS" title="Lesotho">226</option>
+                           <option value="LT" title="Litauen">142</option>
+                           <option value="LU" title="Luxemburg">143</option>
+                           <option value="LV" title="Lettland">139</option>
+                           <option value="LY" title="Libyen">248</option>
+                           <option value="MA" title="Marokko">252</option>
+                           <option value="MC" title="Monaco">147</option>
+                           <option value="MD" title="Republik Moldau">146</option>
+                           <option value="ME" title="Montenegro">140</option>
+                           <option value="MF" title="St. Martin (französischer Teil)"></option>
+                           <option value="MG" title="Madagaskar">249</option>
+                           <option value="MH" title="Marshallinseln">544</option>
+                           <option value="MK" title="Nordmazedonien">144</option>
+                           <option value="ML" title="Mali">251</option>
+                           <option value="MM" title="Myanmar">427</option>
+                           <option value="MN" title="Mongolei">457</option>
+                           <option value="MO" title="Macau">412</option>
+                           <option value="MP" title="Marianen, Nördliche"></option>
+                           <option value="MQ" title="Martinique"></option>
+                           <option value="MR" title="Mauretanien">239</option>
+                           <option value="MS" title="Montserrat"></option>
+                           <option value="MT" title="Malta">145</option>
+                           <option value="MU" title="Mauritius">253</option>
+                           <option value="MV" title="Malediven">454</option>
+                           <option value="MW" title="Malawi">256</option>
+                           <option value="MX" title="Mexiko">353</option>
+                           <option value="MY" title="Malaysia">482</option>
+                           <option value="MZ" title="Mosambik">254</option>
+                           <option value="NA" title="Namibia">267</option>
+                           <option value="NC" title="Neukaledonien"></option>
+                           <option value="NE" title="Niger">255</option>
+                           <option value="NF" title="Norfolkinsel"></option>
+                           <option value="NG" title="Nigeria">232</option>
+                           <option value="NI" title="Nicaragua">354</option>
+                           <option value="NL" title="Niederlande">148</option>
+                           <option value="NO" title="Norwegen">149</option>
+                           <option value="NP" title="Nepal">458</option>
+                           <option value="NR" title="Nauru">531</option>
+                           <option value="NU" title="Niue"></option>
+                           <option value="NZ" title="Neuseeland">536</option>
+                           <option value="OM" title="Oman">456</option>
+                           <option value="PA" title="Panama">357</option>
+                           <option value="PE" title="Peru">361</option>
+                           <option value="PF" title="Französisch-Polynesien"></option>
+                           <option value="PG" title="Papua-Neuguinea">538</option>
+                           <option value="PH" title="Philippinen">462</option>
+                           <option value="PK" title="Pakistan">461</option>
+                           <option value="PL" title="Polen">152</option>
+                           <option value="PM" title="St. Pierre und Miquelon"></option>
+                           <option value="PN" title="Pitcairninseln"></option>
+                           <option value="PR" title="Puerto Rico"></option>
+                           <option value="PS" title="Palestine, State of"></option>
+                           <option value="PT" title="Portugal">153</option>
+                           <option value="PW" title="Palau">537</option>
+                           <option value="PY" title="Paraguay">359</option>
+                           <option value="QA" title="Katar">447</option>
+                           <option value="RE" title="Réunion"></option>
+                           <option value="RO" title="Rumänien">154</option>
+                           <option value="RS" title="Serbien">170</option>
+                           <option value="RU" title="Russische Föderation">160</option>
+                           <option value="RW" title="Ruanda">265</option>
+                           <option value="SA" title="Saudi-Arabien">472</option>
+                           <option value="SB" title="Salomonen">524</option>
+                           <option value="SC" title="Seychellen">271</option>
+                           <option value="SD" title="Sudan">277</option>
+                           <option value="SE" title="Schweden">157</option>
+                           <option value="SG" title="Singapur">474</option>
+                           <option value="SH" title="St. Helena, Ascension und Tristan da Cunha"></option>
+                           <option value="SI" title="Slowenien">131</option>
+                           <option value="SJ" title="Svalbard und Jan Mayen"></option>
+                           <option value="SK" title="Slowakei">155</option>
+                           <option value="SL" title="Sierra Leone">272</option>
+                           <option value="SM" title="San Marino">156</option>
+                           <option value="SN" title="Senegal">269</option>
+                           <option value="SO" title="Somalia">273</option>
+                           <option value="SR" title="Suriname">364</option>
+                           <option value="SS" title="Südsudan">278</option>
+                           <option value="ST" title="São Tomé und Príncipe">268</option>
+                           <option value="SV" title="El Salvador">337</option>
+                           <option value="SX" title="St. Martin (Niederländischer Teil)"></option>
+                           <option value="SY" title="Arabische Republik Syrien">475</option>
+                           <option value="SZ" title="Eswatini">281</option>
+                           <option value="TC" title="Turks- und Caicosinseln"></option>
+                           <option value="TD" title="Tschad">284</option>
+                           <option value="TF" title="Französische Süd- und Antarktisgebiete"></option>
+                           <option value="TG" title="Togo">283</option>
+                           <option value="TH" title="Thailand">476</option>
+                           <option value="TJ" title="Tadschikistan">470</option>
+                           <option value="TK" title="Tokelau"></option>
+                           <option value="TL" title="Timor-Leste">483</option>
+                           <option value="TM" title="Turkmenistan">471</option>
+                           <option value="TN" title="Tunesien">285</option>
+                           <option value="TO" title="Tonga">541</option>
+                           <option value="TR" title="Türkei">163</option>
+                           <option value="TT" title="Trinidad und Tobago">371</option>
+                           <option value="TV" title="Tuvalu">540</option>
+                           <option value="TW" title="Taiwan">465</option>
+                           <option value="TZ" title="Vereinigte Republik Tansania">282</option>
+                           <option value="UA" title="Ukraine">166</option>
+                           <option value="UG" title="Uganda">286</option>
+                           <option value="UM" title="Amerikanische Überseeinseln, Kleinere"></option>
+                           <option value="US" title="Vereinigte Staaten">368</option>
+                           <option value="UY" title="Uruguay">365</option>
+                           <option value="UZ" title="Usbekistan">477</option>
+                           <option value="VA" title="Vatikanstadt">167</option>
+                           <option value="VC" title="St. Vincent und die Grenadinen">369</option>
+                           <option value="VE" title="Bolivarische Republik Venezuela">367</option>
+                           <option value="VG" title="Britische Jungferninseln"></option>
+                           <option value="VI" title="Amerikanische Jungferninseln"></option>
+                           <option value="VN" title="Vietnam">432</option>
+                           <option value="VU" title="Vanuatu">532</option>
+                           <option value="WF" title="Wallis und Futuna"></option>
+                           <option value="WS" title="Samoa">543</option>
+                           <option value="XK" title="Kosovo">150</option>
+                           <option value="YE" title="Jemen">421</option>
+                           <option value="YT" title="Mayotte"></option>
+                           <option value="ZA" title="Südafrika">263</option>
+                           <option value="ZM" title="Sambia">257</option>
+                           <option value="ZW" title="Simbabwe">233</option></select></fx-control>
+                  </fx-group>
+               </address>
+            </section>
+         </fx-group>
+         <fx-control-menu select="#delivery">
+            <button>...</button>
+            </fx-control-menu>
+      </section>
+   </div>
+</section>

@@ -1,0 +1,540 @@
+body{
+    font-family: Arial, sans-serif;
+}
+
+body, fx-fore {
+    width: 100%;
+}
+fx-fore {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+main{
+    padding: 1rem;
+    overflow-y: auto;
+    margin: 0;
+    flex: 1;
+    width: auto;
+    box-sizing: border-box;
+}
+#mainview{
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-areas: "header header" "left right";
+    grid-template-rows: 1fr auto;
+
+    header {
+        grid-area: header;
+    }
+    section {
+        padding: 0;
+    }
+    .right fx-control{
+        width: 50%;
+    }
+
+}
+.app-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0 1.25rem;
+    height: 3.25rem;
+    background: #1a2a4a;
+    color: #fff;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.18);
+}
+.app-title {
+    flex: 1;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #c8d4e8;
+}
+.nav-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.25rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0.25rem 0.4rem;
+    border-radius: 0.25rem;
+}
+.nav-toggle:hover { background: rgba(255,255,255,0.1); }
+.app-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+.layout {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+#site-nav {
+    flex-shrink: 0;
+    width: 14rem;
+    background: #e8e8e8;
+    border-right: 1px solid #ccc;
+    padding: 1.25rem 0.75rem 1.25rem 0.75rem;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+@media (min-width: 768px) {
+    #site-nav {
+        display: block !important;
+        position: static !important;
+        inset: unset !important;
+        height: 100%;
+        margin: 0;
+        border: none;
+        border-right: 1px solid #ccc;
+    }
+}
+@media (max-width: 767px) {
+    .nav-toggle { display: flex; }
+    #site-nav:popover-open {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: auto;
+        width: min(80vw, 18rem);
+        height: 100dvh;
+        margin: 0;
+        padding: 1.25rem 0.75rem;
+        background: #e8e8e8;
+        border: none;
+        border-right: 1px solid #ccc;
+        box-shadow: 4px 0 20px rgba(0,0,0,0.22);
+        overflow-y: auto;
+        animation: nav-slide-in 0.22s ease;
+    }
+    @keyframes nav-slide-in {
+        from { transform: translateX(-100%); }
+        to   { transform: translateX(0); }
+    }
+}
+nav a{
+    text-decoration: none;
+    font-size: 0.9rem;
+    color: #333;
+    display: block;
+    padding: 0.4rem 0.5rem;
+    border-radius: 0.25rem;
+    transition: background 0.15s;
+}
+nav a:hover {
+    background: #d0d0d0;
+}
+:root:has(#mainview:target) nav a[href="#mainview"],
+:root:has(#buyer:target) nav a[href="#buyer"],
+:root:has(#seller:target) nav a[href="#seller"],
+:root:has(#positions:target) nav a[href="#positions"],
+:root:has(#totals:target) nav a[href="#totals"],
+:root:has(#payment:target) nav a[href="#payment"],
+:root:has(#delivery:target) nav a[href="#delivery"],
+:root:has(#precesing-invoices:target) nav a[href="#precesing-invoices"],
+:root:has(#attachments:target) nav a[href="#attachments"],
+:root:has(#process-control:target) nav a[href="#process-control"],
+:root:has(#invoice-note:target) nav a[href="#invoice-note"] {
+    font-weight: 600;
+    background: #c0c8d8;
+    color: #1a2a4a;
+}
+
+*[aria-label]:not(button)::before{
+    content: attr(aria-label);
+    display: block;
+    font-size: 1.2rem;
+    color: grey;
+    width: 100%;
+    margin-top: 1rem;
+}
+h1{
+    margin-left:2rem;
+}
+#outer{
+    position: relative;
+    max-width: 72rem;
+}
+
+#outer > section{
+    margin: 0 0 1.5rem 0;
+    border: 1px solid #dde3ee;
+    border-radius: 0.5rem;
+    padding: 1rem 1.25rem;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+
+section > header{
+    font-size: 1.3rem;
+    font-weight: 700;
+    padding: 0.5rem 0;
+    color: #1a2a4a;
+    border-bottom: 2px solid #c0c8d8;
+    margin-bottom: 0.75rem;
+}
+input, select, textarea {
+    padding: 0.375rem 0.5rem 0.375rem 0.75rem;
+    width: calc(100% - 2.5rem);
+    border:1px solid rgba(6,3,20,.7098039216);
+    border-radius: 0.375rem;
+}
+input[type=number]{
+    width: 8rem;
+}
+select{
+    width: 100%;
+    background: white;
+}
+details{
+    margin:0.5rem 0;
+    padding:0.5rem;
+    width: calc(100% - 3rem);
+    background: ghostwhite;
+
+}
+summary{
+    background: ghostwhite;
+    padding:0.5rem;
+}
+/*
+#outer > *{
+    grid-area: wide;
+}
+*/
+
+label{
+    display: block;
+    font-size: 0.9rem;
+    padding:0.375rem 0;
+    min-height: 1rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 80%;
+}
+
+fx-control,
+fx-output{
+    display: block;
+    /*width: calc(100% - 3rem);*/
+    margin:0;
+    /*
+    padding: 0.5rem;
+    margin:0.5rem;
+    */
+}
+fx-control{
+    /*width: 20rem;*/
+    min-height: 2rem;
+}
+fx-control:has(input[type=number]){
+    display: inline-block;
+}
+
+fx-trigger{
+    /*padding: 0.5rem;*/
+}
+
+fx-group[relevant]{
+    padding: 0;
+    margin:0;
+    width: 100%;
+    /*border:thin solid lightgrey;*/
+}
+
+fx-fore > fx-group[relevant]{
+    display: flex;
+    flex-wrap:wrap;
+}
+fx-group[relevant],
+fx-repeatitem[relevant]{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    /*width: calc(100% - 1.5rem);*/
+    position: relative;
+}
+
+fx-repeatitem[relevant] fx-repeatitem[relevant]{
+    background: white;
+}
+
+
+fx-group fx-group > fx-contro{
+    width: 30%;
+}
+.repeat-container{
+    margin:1rem 0;
+    display: block;
+    width: 100%;
+}
+
+fx-repeat{
+}
+fx-repeatitem{
+    margin:0.25rem 0;
+    border:thin solid lightgrey;
+}
+[repeat-index]{
+    background: ghostwhite;
+}
+fx-repeatitem{
+    padding:0.5rem;
+}
+fx-repeatitem > fx-trigger {
+    align-self: end;
+}
+fx-trigger.add-button{
+    display: block;
+    width: 100%;
+}
+fx-trigger.delete-btn {
+    padding: 0.5rem 0;
+}
+.save-button button{
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.4rem 1rem;
+    border-radius: 0.25rem;
+    background: transparent;
+    border: 1.5px solid rgba(255,255,255,0.5);
+    color: #fff;
+    cursor: pointer;
+    letter-spacing: 0.03em;
+    transition: background 0.15s, border-color 0.15s;
+}
+.save-button button:hover {
+    background: rgba(255,255,255,0.12);
+    border-color: rgba(255,255,255,0.85);
+}
+dialog{
+    border:thin solid;
+}
+.two-col{
+    display: grid;
+    grid-template-columns: 50% auto;
+    align-items: start;
+}
+.info{
+    /*
+    display: flex;
+    flex-wrap:wrap;
+    */
+}
+section{
+    width: 100%;
+    padding: 1rem 0;
+}
+
+.small{
+    width: 5rem;
+}
+.row{
+    display: flex;
+}
+/*Customizations*/
+#general {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+#general fx-control{
+    width: 33%;
+}
+
+
+fx-control{
+    width: 15rem;
+    padding: 0;
+}
+
+/* invoice line items */
+#BT-126{
+
+}
+
+
+
+body{
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    background: #f0f2f7;
+}
+
+#outer > section {
+    /*margin-bottom: 5rem;*/
+    /*height: calc(100vh - 5rem);*/
+}
+nav ul{
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    width: 100%;
+}
+nav ul li{
+    display: block;
+    padding: 0.3rem 0.5rem;
+}
+.view-content{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+#general #BT-20{
+    width: 100%;
+}
+
+
+fx-control.ident {
+    width: 6rem;
+}
+/* address */
+address .address-line {
+    width: 24rem
+}
+address fx-control.zip{
+    width: 8rem;
+    display: inline-block;
+}
+address fx-control.city {
+    width: 16rem;
+    display: inline-block;
+}
+
+#BG-8{
+    display: block;
+}
+#BT-50,#BT-51,#BT-163
+    width: 25rem;
+
+}
+/* line items */
+/*#positions*/
+#BT-126{
+    width: 10rem;
+}
+#BT-127{
+    width: 30rem;
+}
+#BT-129{
+    width: 10rem;
+}
+/* totals */
+#totals input,
+#totals label{
+    font-size: 1.1rem;
+}
+
+#BG-22 fx-control,
+#BG-22 fx-output{
+    display:flex;
+    justify-content: space-between;
+    width: 100%;
+}
+#BG-22 fx-control .widget{
+    width: auto;
+    text-align: right;
+    border: none;
+    border-bottom: thin solid;
+    border-radius: 0;
+}
+
+fx-include {
+    display: block;
+}
+
+fx-control-menu{
+    align-self: end;
+    padding: 0.5rem 0;
+}
+fx-control::part(trash){
+    right:1.2rem;
+    top:1rem;
+}
+.trash{
+    top:1rem;
+    right:1.2rem;
+    position: absolute;
+    right:1.25rem;
+    top:0.5rem;
+}
+.trash svg{
+    width: 1rem;
+    height: 1rem;
+}
+/*
+nav ul li a{
+    text-decoration: none;
+}
+*/
+
+/* View mode: hide editing/action affordances. Gated on #outer.view-mode (a
+   live Fore template-expression class, see generate.xsl fx-group#outer) rather
+   than fx-group's own [readonly] reflection, which fx-group never sets -
+   fx-control-menu has no ref/modelItem so it never receives the MIP cascade
+   at all regardless. :has() lets the header buttons (outside #outer's subtree
+   entirely) react too. */
+body:has(#outer.view-mode) .save-button,
+body:has(#outer.view-mode) .delete-btn,
+body:has(#outer.view-mode) .add-button,
+body:has(#outer.view-mode) .dialog-trigger,
+body:has(#outer.view-mode) fx-control-menu {
+    display: none;
+}
+
+/* View mode: strip form-field chrome so fields read as plain text, without
+   changing layout/spacing (label + value stack stays put). Combines the
+   .view-mode class with the real [readonly] attribute, which - unlike
+   fx-group - Fore does genuinely reflect on fx-control/fx-output/fx-trigger. */
+body:has(#outer.view-mode) fx-control[readonly] .widget,
+body:has(#outer.view-mode) fx-control[readonly] input,
+body:has(#outer.view-mode) fx-control[readonly] textarea,
+body:has(#outer.view-mode) fx-control[readonly] select {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    padding-left: 0;
+    color: inherit;
+    cursor: default;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+/* fore.css already sets pointer-events:none for checkboxes/radios under the
+   bare [readonly] selector (mode-independent, keep as is) - only undo the
+   greyed-out visual here, not the interaction blocking. */
+body:has(#outer.view-mode) fx-control[readonly] input[type="checkbox"],
+body:has(#outer.view-mode) fx-control[readonly] input[type="radio"] {
+    opacity: 1;
+    filter: none;
+}
+
+.view-mode-toggle-label-view { display: none; }
+body:has(#outer.view-mode) .view-mode-toggle-label-edit { display: none; }
+body:has(#outer.view-mode) .view-mode-toggle-label-view { display: inline; }
+
+
+

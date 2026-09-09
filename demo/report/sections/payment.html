@@ -1,0 +1,122 @@
+<section xmlns:func="generator-functions" id="payment" fragment="true">
+   <div class="details-content">
+      <section class="BG-16">
+         <header>PAYMENT INSTRUCTIONS</header>
+         <fx-group id="BG-16" ref=".">
+            <fx-control id="BT-81" ref="cac:PaymentMeans/cbc:PaymentMeansCode"><label for="BT-81-input">Payment means type code</label><select id="BT-81-input" class="widget" selection="open">
+                  <option value="1" title="Not defined legally enforceable agreement between two or more parties (expressing a contractual right or a right to the payment of money).">Instrument not defined</option>
+                  <option value="2" title="A credit transaction made through the automated clearing house system.">Automated clearing house credit</option>
+                  <option value="3" title="A debit transaction made through the automated clearing house system.">Automated clearing house debit</option>
+                  <option value="4" title="A request to reverse an ACH debit transaction to a demand deposit account.">ACH demand debit reversal</option>
+                  <option value="5" title="A request to reverse a credit transaction to a demand deposit account.">ACH demand credit reversal</option>
+                  <option value="6" title="A credit transaction made through the ACH system to a demand deposit account.">ACH demand credit</option>
+                  <option value="7" title="A debit transaction made through the ACH system to a demand deposit account.">ACH demand debit</option>
+                  <option value="8" title="Indicates that the bank should hold the payment for collection by the beneficiary or other instructions.">Hold</option>
+                  <option value="9" title="Indicates that the payment should be made using the national or regional clearing.">National or regional clearing</option>
+                  <option value="10" title="Payment by currency (including bills and coins) in circulation, including checking account deposits.">In cash</option>
+                  <option value="11" title="A request to reverse an ACH credit transaction to a savings account.">ACH savings credit reversal</option>
+                  <option value="12" title="A request to reverse an ACH debit transaction to a savings account.">ACH savings debit reversal</option>
+                  <option value="13" title="A credit transaction made through the ACH system to a savings account.">ACH savings credit</option>
+                  <option value="14" title="A debit transaction made through the ACH system to a savings account.">ACH savings debit</option>
+                  <option value="15" title="A credit entry between two accounts at the same bank branch. Synonym: house credit.">Bookentry credit</option>
+                  <option value="16" title="A debit entry between two accounts at the same bank branch. Synonym: house debit.">Bookentry debit</option>
+                  <option value="17" title="A credit transaction made through the ACH system to a demand deposit account using the CCD payment format.">ACH demand cash concentration/disbursement (CCD) credit</option>
+                  <option value="18" title="A debit transaction made through the ACH system to a demand deposit account using the CCD payment format.">ACH demand cash concentration/disbursement (CCD) debit</option>
+                  <option value="19" title="A credit transaction made through the ACH system to a demand deposit account using the CTP payment format.">ACH demand corporate trade payment (CTP) credit</option>
+                  <option value="20" title="Payment by a pre-printed form on which instructions are given to an account holder (a bank or building society) to pay a stated sum to a named recipient.">Cheque</option>
+                  <option value="21" title="Issue of a banker's draft in payment of the funds.">Banker's draft</option>
+                  <option value="22" title="Cheque drawn by a bank on itself or its agent. A person who owes money to another buys the draft from a bank for cash and hands it to the creditor who need have no fear that it might be dishonoured.">Certified banker's draft</option>
+                  <option value="23" title="Payment by a pre-printed form, which has been completed by a financial institution, on which instructions are given to an account holder (a bank or building society) to pay a stated sum to a named recipient.">Bank cheque (issued by a banking or similar establishment)</option>
+                  <option value="24" title="Bill drawn by the creditor on the debtor but not yet accepted by the debtor.">Bill of exchange awaiting acceptance</option>
+                  <option value="25" title="Payment by a pre-printed form stamped with the paying bank's certification on which instructions are given to an account holder (a bank or building society) to pay a stated sum to a named recipient .">Certified cheque</option>
+                  <option value="26" title="Indicates that the cheque is given local to the recipient.">Local cheque</option>
+                  <option value="27" title="A debit transaction made through the ACH system to a demand deposit account using the CTP payment format.">ACH demand corporate trade payment (CTP) debit</option>
+                  <option value="28" title="A credit transaction made through the ACH system to a demand deposit account using the CTX payment format.">ACH demand corporate trade exchange (CTX) credit</option>
+                  <option value="29" title="A debit transaction made through the ACH system to a demand account using the CTX payment format.">ACH demand corporate trade exchange (CTX) debit</option>
+                  <option value="30" title="Payment by credit movement of funds from one account to another.">Credit transfer</option>
+                  <option value="31" title="Payment by debit movement of funds from one account to another.">Debit transfer</option>
+                  <option value="32" title="A credit transaction made through the ACH system to a demand deposit account using the CCD+ payment format.">ACH demand cash concentration/disbursement plus (CCD+) credit</option>
+                  <option value="33" title="A debit transaction made through the ACH system to a demand deposit account using the CCD+ payment format.">ACH demand cash concentration/disbursement plus (CCD+) debit</option>
+                  <option value="34" title="A consumer credit transaction made through the ACH system to a demand deposit or savings account.">ACH prearranged payment and deposit (PPD)</option>
+                  <option value="35" title="A credit transaction made through the ACH system to a demand deposit or savings account.">ACH savings cash concentration/disbursement (CCD) credit</option>
+                  <option value="36" title="A debit transaction made through the ACH system to a savings account using the CCD payment format.">ACH savings cash concentration/disbursement (CCD) debit</option>
+                  <option value="37" title="A credit transaction made through the ACH system to a savings account using the CTP payment format.">ACH savings corporate trade payment (CTP) credit</option>
+                  <option value="38" title="A debit transaction made through the ACH system to a savings account using the CTP payment format.">ACH savings corporate trade payment (CTP) debit</option>
+                  <option value="39" title="A credit transaction made through the ACH system to a savings account using the CTX payment format.">ACH savings corporate trade exchange (CTX) credit</option>
+                  <option value="40" title="A debit transaction made through the ACH system to a savings account using the CTX payment format.">ACH savings corporate trade exchange (CTX) debit</option>
+                  <option value="41" title="A credit transaction made through the ACH system to a savings account using the CCD+ payment format.">ACH savings cash concentration/disbursement plus (CCD+) credit</option>
+                  <option value="42" title="Payment by an arrangement for settling debts that is operated by the Post Office.">Payment to bank account</option>
+                  <option value="43" title="A debit transaction made through the ACH system to a savings account using the CCD+ payment format.">ACH savings cash concentration/disbursement plus (CCD+) debit</option>
+                  <option value="44" title="Bill drawn by the creditor on the debtor and accepted by the debtor.">Accepted bill of exchange</option>
+                  <option value="45" title="A referenced credit transfer initiated through home-banking.">Referenced home-banking credit transfer</option>
+                  <option value="46" title="A debit transfer via interbank means.">Interbank debit transfer</option>
+                  <option value="47" title="A debit transfer initiated through home-banking.">Home-banking debit transfer</option>
+                  <option value="48" title="Payment by means of a card issued by a bank or other financial institution.">Bank card</option>
+                  <option value="49" title="The amount is to be, or has been, directly debited to the customer's bank account.">Direct debit</option>
+                  <option value="50" title="A method for the transmission of funds through the postal system rather than through the banking system.">Payment by postgiro</option>
+                  <option value="51" title="A French standard procedure that allows a debtor to pay an amount due to a creditor. The creditor will forward it to its bank, which will collect the money on the bank account of the debtor.">FR, norme 6 97-Telereglement CFONB (French Organisation for Banking Standards) - Option
+                     A</option>
+                  <option value="52" title="Payment order which requires guaranteed processing by the most appropriate means to ensure it occurs on the requested execution date, provided that it is issued to the ordered bank before the agreed cut-off time.">Urgent commercial payment</option>
+                  <option value="53" title="Payment order or transfer which must be executed, by the most appropriate means, as urgently as possible and before urgent commercial payments.">Urgent Treasury Payment</option>
+                  <option value="54" title="Payment made by means of credit card.">Credit card</option>
+                  <option value="55" title="Payment made by means of debit card.">Debit card</option>
+                  <option value="56" title="Payment will be, or has been, made by bankgiro.">Bankgiro</option>
+                  <option value="57" title="The payment means have been previously agreed between seller and buyer and thus are not stated again.">Standing agreement</option>
+                  <option value="58" title="Credit transfer inside the Single Euro Payment Area (SEPA) system.">SEPA credit transfer</option>
+                  <option value="59" title="Direct debit inside the Single Euro Payment Area (SEPA) system.">SEPA direct debit</option>
+                  <option value="60" title="Payment by an unconditional promise in writing made by one person to another, signed by the maker, engaging to pay on demand or at a fixed or determinable future time a sum certain in money, to order or to bearer.">Promissory note</option>
+                  <option value="61" title="Payment by an unconditional promise in writing made by the debtor to another person, signed by the debtor, engaging to pay on demand or at a fixed or determinable future time a sum certain in money, to order or to bearer.">Promissory note signed by the debtor</option>
+                  <option value="62" title="Payment by an unconditional promise in writing made by the debtor to another person, signed by the debtor and endorsed by a bank, engaging to pay on demand or at a fixed or determinable future time a sum certain in money, to order or to bearer.">Promissory note signed by the debtor and endorsed by a bank</option>
+                  <option value="63" title="Payment by an unconditional promise in writing made by the debtor to another person, signed by the debtor and endorsed by a third party, engaging to pay on demand or at a fixed or determinable future time a sum certain in money, to order or to bearer.">Promissory note signed by the debtor and endorsed by a third party</option>
+                  <option value="64" title="Payment by an unconditional promise in writing made by the bank to another person, signed by the bank, engaging to pay on demand or at a fixed or determinable future time a sum certain in money, to order or to bearer.">Promissory note signed by a bank</option>
+                  <option value="65" title="Payment by an unconditional promise in writing made by the bank to another person, signed by the bank and endorsed by another bank, engaging to pay on demand or at a fixed or determinable future time a sum certain in money, to order or to bearer.">Promissory note signed by a bank and endorsed by another bank</option>
+                  <option value="66" title="Payment by an unconditional promise in writing made by a third party to another person, signed by the third party, engaging to pay on demand or at a fixed or determinable future time a sum certain in money, to order or to bearer.">Promissory note signed by a third party</option>
+                  <option value="67" title="Payment by an unconditional promise in writing made by a third party to another person, signed by the third party and endorsed by a bank, engaging to pay on demand or at a fixed or determinable future time a sum certain in money, to order or to bearer.">Promissory note signed by a third party and endorsed by a bank</option>
+                  <option value="68" title="Payment will be made or has been made by an online payment service.">Online payment service</option>
+                  <option value="69" title="Transfer of an amount of money in the books of the account servicer. An advice should be sent back to the account owner.">Transfer Advice</option>
+                  <option value="70" title="Bill drawn by the creditor on the debtor.">Bill drawn by the creditor on the debtor</option>
+                  <option value="74" title="Bill drawn by the creditor on a bank.">Bill drawn by the creditor on a bank</option>
+                  <option value="75" title="Bill drawn by the creditor, endorsed by another bank.">Bill drawn by the creditor, endorsed by another bank</option>
+                  <option value="76" title="Bill drawn by the creditor on a bank and endorsed by a third party.">Bill drawn by the creditor on a bank and endorsed by a third party</option>
+                  <option value="77" title="Bill drawn by the creditor on a third party.">Bill drawn by the creditor on a third party</option>
+                  <option value="78" title="Bill drawn by creditor on third party, accepted and endorsed by bank.">Bill drawn by creditor on third party, accepted and endorsed by bank</option>
+                  <option value="91" title="Issue a bankers draft not endorsable.">Not transferable banker's draft</option>
+                  <option value="92" title="Issue a cheque not endorsable in payment of the funds.">Not transferable local cheque</option>
+                  <option value="93" title="Ordering customer tells the bank to use the payment system 'Reference giro'. Used in the Finnish national banking system.">Reference giro</option>
+                  <option value="94" title="Ordering customer tells the bank to use the bank service 'Urgent Giro' when transferring the payment. Used in Finnish national banking system.">Urgent giro</option>
+                  <option value="95" title="Ordering customer tells the ordering bank to use the bank service 'Free Format Giro' when transferring the payment. Used in Finnish national banking system.">Free format giro</option>
+                  <option value="96" title="If the requested method for payment was or could not be used, this code indicates that.">Requested method for payment was not used</option>
+                  <option value="97" title="Amounts which two partners owe to each other to be compensated in order to avoid useless payments.">Clearing between partners</option>
+                  <option value="ZZZ" title="A code assigned within a code list to be used on an interim basis and as defined among trading partners until a precise code can be assigned to the code list.">Mutually defined</option></select></fx-control>
+            <fx-control id="BT-82" ref="cac:PaymentMeans/cbc:PaymentMeansCode/@Name"><label for="BT-82-input">Payment means text</label><input id="BT-82-input" type="text"></fx-control>
+            <fx-control id="BT-83" ref="cac:PaymentMeans/cbc:PaymentID"><label for="BT-83-input">Remittance information</label><input id="BT-83-input" type="text"></fx-control>
+            <section class="BG-17">
+               <header>CREDIT TRANSFER</header>
+               <fx-repeat id="r-BG-17" aria-label="CREDIT TRANSFER" ref="cac:PayeeFinancialAccount"><template>
+                     <fx-control id="BT-84" ref="cbc:ID"><label for="BT-84-input">Payment account identifier</label><input id="BT-84-input" type="text"></fx-control>
+                     <fx-control id="BT-85" ref="cbc:Name"><label for="BT-85-input">Payment account name</label><input id="BT-85-input" type="text"></fx-control>
+                     <fx-control id="BT-86" ref="cac:FinancialInstitutionBranch/cbc:ID"><label for="BT-86-input">Payment service provider identifier</label><input id="BT-86-input" type="text"></fx-control>
+                     <fx-trigger class="delete-btn"><button>delete</button><fx-delete ref="."></fx-delete>
+                     </fx-trigger></template></fx-repeat>
+               <fx-trigger class="add-button"><button>add</button><fx-insert ref="cac:PaymentMeans/cac:PayeeFinancialAccount" origin="#r-BG-17"></fx-insert>
+               </fx-trigger>
+            </section>
+            <section class="BG-18">
+               <header>PAYMENT CARD INFORMATION</header>
+               <fx-group id="BG-18" ref=".">
+                  <fx-control id="BT-87" ref="cac:PaymentMeans/cac:CardAccount/cbc:PrimaryAccountNumberID"><label for="BT-87-input">Payment card primary account number</label><input id="BT-87-input" type="text"></fx-control>
+                  <fx-control id="BT-88" ref="cac:PaymentMeans/cac:CardAccount/cbc:HolderName"><label for="BT-88-input">Payment card holder name</label><input id="BT-88-input" type="text"></fx-control>
+               </fx-group>
+            </section>
+            <section class="BG-19">
+               <header>DIRECT DEBIT</header>
+               <fx-group id="BG-19" ref=".">
+                  <fx-control id="BT-89" ref="cac:PaymentMeans/cac:PaymentMandate/cbc:ID"><label for="BT-89-input">Mandate reference identifier</label><input id="BT-89-input" type="text"></fx-control>
+                  <fx-control id="BT-90" ref="cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID"><label for="BT-90-input">Bank assigned creditor identifier</label><input id="BT-90-input" type="text"></fx-control>
+                  <fx-control id="BT-91" ref="cac:PaymentMeans/cac:PaymentMandate/cac:PayerFinancialAccount/cbc:ID"><label for="BT-91-input">Debited account identifier</label><input id="BT-91-input" type="text"></fx-control>
+               </fx-group>
+            </section>
+         </fx-group>
+      </section>
+   </div>
+</section>

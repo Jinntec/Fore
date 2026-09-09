@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>Report</title>
+    <link href="../../resources/fore.css" rel="stylesheet">
+    <link href="view-mode.css" rel="stylesheet">
+    <script type="module" src="../../index.js"></script>
+    <script type="module" src="../../tools/fx-lens.js"></script>
+    <script type="module" src="view-mode.js"></script>
+    <style>
+        .wrapper {
+            margin: 1rem;
+        }
+        #dropzone {
+            border: 2px dashed #999;
+            border-radius: 8px;
+            padding: 3rem 1rem;
+            text-align: center;
+            color: #666;
+            margin-bottom: 1rem;
+            transition: background-color .15s, border-color .15s;
+        }
+        #dropzone.dragover {
+            background-color: #eef6ff;
+            border-color: #3a86ff;
+            color: #333;
+        }
+        #error {
+            color: #b00020;
+        }
+        #preview {
+            background: #f5f5f5;
+            padding: 1rem;
+            overflow: auto;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <h1>Prüfbericht</h1>
+
+    <!-- xpath-default-namespace/xmlns:cvr must sit on an actual ancestor of every ref/{} binding
+         (fx-model is a sibling of the table below, not an ancestor, so it wouldn't be seen) -->
+    <fx-fore xpath-default-namespace="http://www.xproc.org/ns/xvrl"
+             xmlns:cvr="urn:conformatron:cvr:draft"
+             xmlns:ubl="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+             xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+             xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+        <fx-model>
+
+            <fx-instance id="default"></fx-instance>
+
+            <fx-instance id="target">
+                <data></data>
+            </fx-instance>
+
+            <!-- staging instance: holds the freshly dropped document until fx-replace swaps it in -->
+            <fx-instance id="dropped">
+                <data></data>
+            </fx-instance>
+
+            <fx-instance id="doc"></fx-instance>
+
+            <fx-action event="xml-dropped" target="#window">
+                <fx-replace ref="instance('target')" with="instance('dropped')"></fx-replace>
+                <fx-replace ref="instance('default')" with="instance('dropped')//*:message[@xml:id='parse-document-content']/*[1]"></fx-replace>
+                <fx-dispatch name="load-document" target="#include"></fx-dispatch>
+            </fx-action>
+        </fx-model>
+
+        <div id="dropzone">Drag &amp; drop an .xml file here</div>
+        <p id="drop-error"></p>
+
+        <h2>Angaben zum geprüften Dokument</h2>
+        <table>
+            <tr>
+                <td>Referenz</td>
+                <td>{metadata/document/@href}</td>
+            </tr>
+            <tr>
+                <td>Zeitpunkt der Prüfung</td>
+                <td>{metadata/timestamp}</td>
+            </tr>
+            <tr>
+                <td>Erkannter Dokumenttyp</td>
+                <td>{report/detection/@cvr:scenario-id}</td>
+            </tr>
+        </table>
+        <fx-include id="include" src="page.html" selector="div.layout" event="load-document" target="window"></fx-include>
+        <pre id="preview"></pre>
+    </fx-fore>
+</div>
+
+<script type="module">
+    const dropzone = document.getElementById('dropzone');
+    const errorEl = document.getElementById('drop-error');
+    const preview = document.getElementById('preview');
+    const fore = document.querySelector('fx-fore');
+
+    function renderPreview() {
+        const doc = fore.getModel().getDefaultInstance().instanceData;
+        preview.textContent = new XMLSerializer().serializeToString(doc.documentElement);
+    }
+
+    fore.addEventListener('refresh-done', renderPreview);
+    fore.addEventListener('instance-loaded', renderPreview);
+    renderPreview(); // model is already constructed by the time this deferred script runs
+
+    ['dragenter', 'dragover'].forEach(evt =>
+        dropzone.addEventListener(evt, e => {
+            e.preventDefault();
+            dropzone.classList.add('dragover');
+        }),
+    );
+    ['dragleave', 'drop'].forEach(evt =>
+        dropzone.addEventListener(evt, () => dropzone.classList.remove('dragover')),
+    );
+
+    dropzone.addEventListener('drop', async e => {
+        e.preventDefault();
+        errorEl.textContent = '';
+
+        const file = e.dataTransfer.files[0];
+        if (!file) return;
+        if (!/\.xml$/i.test(file.name) && file.type && !file.type.endsWith('xml')) {
+            errorEl.textContent = `"${file.name}" does not look like an XML file.`;
+            return;
+        }
+
+        const text = await file.text();
+        const parsed = new DOMParser().parseFromString(text, 'application/xml');
+        if (parsed.querySelector('parsererror')) {
+            errorEl.textContent = `Could not parse "${file.name}" as XML.`;
+            return;
+        }
+
+        // stage the parsed document in the 'dropped' instance, then let the declarative
+        // fx-replace action (bound to the 'xml-dropped' event) swap it into the default instance
+        fore.getModel().getInstance('dropped').instanceData = parsed;
+        window.dispatchEvent(new CustomEvent('xml-dropped'));
+    });
+</script>
+</body>
+</html>
