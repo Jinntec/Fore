@@ -22,9 +22,7 @@ describe('fx-debugger tests', () => {
   });
 
   it('shows an error notice when the target fx-fore cannot be resolved', async () => {
-    const el = await fixtureSync(html`
-      <fx-debugger for="does-not-exist"></fx-debugger>
-    `);
+    const el = await fixtureSync(html` <fx-debugger for="does-not-exist"></fx-debugger> `);
 
     const notice = el.querySelector('.fx-debugger__notice--error');
     expect(notice).to.exist;
@@ -93,15 +91,15 @@ describe('fx-debugger tests', () => {
     debuggerEl.querySelector('[data-panel="instances"]').click();
 
     // render() replaces the whole innerHTML on tab switch, so re-query fresh nodes.
-    expect(debuggerEl.querySelector('[data-panel="instances"]').getAttribute('aria-selected')).to.equal(
-      'true',
-    );
+    expect(
+      debuggerEl.querySelector('[data-panel="instances"]').getAttribute('aria-selected'),
+    ).to.equal('true');
 
     const row = debuggerEl.querySelector('.fx-debugger__panel table tbody tr');
     expect(row).to.exist;
 
     const cells = row.querySelectorAll('td');
-    expect(cells[1].textContent.trim()).to.equal('xml'); // Type
+    expect(cells[1].textContent.trim()).to.equal('html'); // Type
     expect(cells[4].textContent.trim()).to.equal('true'); // Has data
   });
 

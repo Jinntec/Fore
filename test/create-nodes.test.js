@@ -149,7 +149,7 @@ describe('create-nodes', () => {
               </root>
             </data>
           </fx-instance>
-
+          s
           <fx-bind ref="root">
             <fx-bind ref="foo"></fx-bind>
             <fx-bind ref="baz"></fx-bind>
@@ -341,9 +341,7 @@ describe('create-nodes', () => {
         xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
       >
         <fx-model>
-          <fx-instance type="html">
-            <data></data>
-          </fx-instance>
+          <fx-instance type="xml"></fx-instance>
         </fx-model>
 
         <fx-group ref=".">

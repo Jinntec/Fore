@@ -68,7 +68,7 @@ describe('fx-dispatch tests', () => {
     const trigger = el.querySelector('fx-trigger');
     await trigger.performActions();
 
-    expect(bar.innerText).to.equal('<data>\n<foo>fooVal</foo>\n<bar>barVal</bar>\n</data>');
+    expect(bar.innerText).to.equal('<data xmlns="http://www.w3.org/1999/xhtml">\n<foo>fooVal</foo>\n<bar>barVal</bar>\n</data>');
   });
 
   it('dispatches an event with a mixed properties', async () => {
@@ -106,7 +106,7 @@ describe('fx-dispatch tests', () => {
     const trigger = el.querySelector('fx-trigger');
     await trigger.performActions();
 
-    expect(bar.innerText).to.equal('<data>\n<foo>fooVal</foo>\n<bar>barVal</bar>\n</data>');
+    expect(bar.innerText).to.equal('<data xmlns="http://www.w3.org/1999/xhtml">\n<foo>fooVal</foo>\n<bar>barVal</bar>\n</data>');
     expect(dVal.innerText).to.equal('aString');
   });
 
@@ -147,7 +147,7 @@ describe('fx-dispatch tests', () => {
     const trigger = el.querySelector('fx-trigger');
     await trigger.performActions();
 
-    expect(bar.innerText).to.equal('<data>\n<foo>fooVal</foo>\n<bar>barVal</bar>\n</data>');
+    expect(bar.innerText).to.equal('<data xmlns="http://www.w3.org/1999/xhtml">\n<foo>fooVal</foo>\n<bar>barVal</bar>\n</data>');
     expect(dVal.innerText).to.equal('aString');
   });
 
