@@ -20,7 +20,7 @@ describe('fx-control data-src lookup variable', () => {
     const el = await fixture(html`
       <fx-fore>
         <fx-model>
-          <fx-instance xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+          <fx-instance xpath-default-namespace="http://www.tei-c.org/ns/1.0" type="html">
             <data><item>x</item></data>
           </fx-instance>
         </fx-model>
@@ -52,7 +52,7 @@ describe('fx-control data-src lookup variable', () => {
     const el = await fixture(html`
       <fx-fore>
         <fx-model>
-          <fx-instance xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+          <fx-instance xpath-default-namespace="http://www.tei-c.org/ns/1.0" type="html">
             <data><item>x</item></data>
           </fx-instance>
         </fx-model>
@@ -83,7 +83,7 @@ describe('fx-control data-src lookup variable', () => {
     const el = await fixture(html`
       <fx-fore>
         <fx-model>
-          <fx-instance xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+          <fx-instance xpath-default-namespace="http://www.tei-c.org/ns/1.0" type="html">
             <data><item>x</item></data>
           </fx-instance>
         </fx-model>
@@ -109,7 +109,7 @@ describe('fx-control data-src lookup variable', () => {
     const el = await fixture(html`
       <fx-fore>
         <fx-model>
-          <fx-instance xpath-default-namespace="http://www.tei-c.org/ns/1.0">
+          <fx-instance xpath-default-namespace="http://www.tei-c.org/ns/1.0" type="html">
             <data><item>x</item></data>
           </fx-instance>
         </fx-model>

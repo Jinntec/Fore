@@ -59,7 +59,7 @@ describe('lazy initialize', () => {
         <fx-message event="refresh-done">refresh has been done</fx-message>
 
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <greeting type="message:">Hello World!</greeting>
             </data>

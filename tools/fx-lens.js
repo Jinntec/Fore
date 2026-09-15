@@ -582,7 +582,7 @@ export class FxLens extends HTMLElement {
   }
 
   /**
-   * Derives a stable, unique key + display label for an `<fx-instance>`.
+   * Derives a stable, unique key + display label for an `<fx-instance type="html">`.
    *
    * Anonymous `data-src` lookup instances (created by fx-control for
    * `data-src` lookup lists) have no `id`, so they would otherwise all

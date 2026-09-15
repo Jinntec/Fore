@@ -12,7 +12,7 @@ describe('var Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <counter>0</counter>
             </data>
@@ -33,7 +33,7 @@ describe('var Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <items>
                 <item>1</item>
@@ -74,7 +74,7 @@ describe('var Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <counter>1</counter>
             </data>
@@ -106,7 +106,7 @@ describe('var Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <counter>1</counter>
             </data>
@@ -137,7 +137,7 @@ describe('var Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <counter>1</counter>
             </data>
@@ -163,7 +163,7 @@ describe('var Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <greeting>original</greeting>
               <captured></captured>
@@ -196,7 +196,7 @@ describe('var Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <item>a</item>
               <item>b</item>
@@ -228,7 +228,7 @@ describe('var Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <item>1</item>
               <item>2</item>
@@ -263,7 +263,7 @@ describe('var Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <price>10</price>
               <factor>2</factor>
@@ -299,7 +299,7 @@ describe('var Tests', () => {
     const el = fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <counter>1</counter>
             </data>
@@ -324,12 +324,12 @@ describe('var Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <value>default-data</value>
             </data>
           </fx-instance>
-          <fx-instance id="other">
+          <fx-instance id="other" type="html">
             <data>
               <value>other-data</value>
             </data>
@@ -367,7 +367,7 @@ describe('var Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <value>old</value>
             </data>
@@ -401,7 +401,7 @@ describe('var Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <counter>0</counter>
               <oof></oof>

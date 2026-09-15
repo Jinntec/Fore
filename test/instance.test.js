@@ -8,7 +8,7 @@ import { getPath } from '../src/xpath-path.js';
 describe('instance Tests', () => {
   it('has "default" as id', async () => {
     const el = await fixtureSync(html`
-      <fx-instance>
+      <fx-instance type="html">
         <data>
           <foobar></foobar>
         </data>
@@ -21,7 +21,7 @@ describe('instance Tests', () => {
 
   it('init creates instanceData', async () => {
     const el = await fixtureSync(html`
-      <fx-instance>
+      <fx-instance type="html">
         <data>
           <foobar></foobar>
         </data>
@@ -36,7 +36,7 @@ describe('instance Tests', () => {
 
   it('evaluates xpath in its default context', async () => {
     const el = await fixtureSync(html`
-      <fx-instance>
+      <fx-instance type="html">
         <data>
           <foobar></foobar>
         </data>
@@ -53,7 +53,7 @@ describe('instance Tests', () => {
 
   it('provides default evaluation context', async () => {
     const el = await fixtureSync(html`
-      <fx-instance>
+      <fx-instance type="html">
         <data>
           <foobar></foobar>
         </data>
@@ -70,7 +70,7 @@ describe('instance Tests', () => {
 
   it('does NOT copy a "body" element from inline data', async () => {
     const el = await fixtureSync(html`
-      <fx-instance>
+      <fx-instance type="html">
         <data>
           <body>
             <arm side="left">
@@ -111,12 +111,12 @@ describe('instance Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <foobar></foobar>
             </data>
           </fx-instance>
-          <fx-instance id="second">
+          <fx-instance id="second" type="html">
             <data>
               <item>second</item>
             </data>
@@ -150,12 +150,12 @@ describe('instance Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <foobar></foobar>
             </data>
           </fx-instance>
-          <fx-instance id="second">
+          <fx-instance id="second" type="html">
             <data>
               <item>Maybe</item>
             </data>
@@ -188,12 +188,12 @@ describe('instance Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <foobar></foobar>
             </data>
           </fx-instance>
-          <fx-instance id="second">
+          <fx-instance id="second" type="html">
             <data>
               <item>Maybe</item>
             </data>
@@ -339,7 +339,7 @@ describe('instance Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance></fx-instance>
+          <fx-instance type="html"></fx-instance>
         </fx-model>
       </fx-fore>
     `);
@@ -356,12 +356,12 @@ describe('instance Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <value>outer value</value>
             </data>
           </fx-instance>
-          <fx-instance id="another">
+          <fx-instance id="another" type="html">
             <data>
               <value>another outer value</value>
             </data>
@@ -373,12 +373,12 @@ describe('instance Tests', () => {
 
         <fx-fore>
           <fx-model>
-            <fx-instance>
+            <fx-instance type="html">
               <data>
                 <value>inner value</value>
               </data>
             </fx-instance>
-            <fx-instance id="another">
+            <fx-instance id="another" type="html">
               <data>
                 <value>another inner value</value>
               </data>
@@ -408,7 +408,7 @@ describe('instance Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance id="def">
+          <fx-instance id="def" type="html">
             <data>
               <text>foo</text>
             </data>
@@ -420,7 +420,7 @@ describe('instance Tests', () => {
         </div>
         <fx-fore>
           <fx-model>
-            <fx-instance>
+            <fx-instance type="html">
               <data>
                 <text>bar</text>
               </data>
@@ -486,7 +486,7 @@ describe('instance Tests', () => {
           it('does NOT copy a "body" element from inline data', async () => {
               const el =  (
                   await fixtureSync(html`
-                      <fx-instance>
+                      <fx-instance type="html">
                           <data>
                               <body>
                                   <arm side="left">
@@ -529,7 +529,7 @@ describe('instance Tests', () => {
 describe('inline xml instance — hazard detection & <script> wrapper', () => {
   it('does not flag plain, lower-case, namespace-free inline xml', async () => {
     const el = await fixtureSync(html`
-      <fx-instance>
+      <fx-instance type="html">
         <data><greeting tone="warm">hi</greeting></data>
       </fx-instance>
     `);
@@ -545,7 +545,7 @@ describe('inline xml instance — hazard detection & <script> wrapper', () => {
 
   it('flags namespace declarations and namespace-prefixed names', async () => {
     const el = await fixtureSync(html`
-      <fx-instance>
+      <fx-instance type="html">
         <data xmlns:x="urn:x"><x:item xlink:href="#a">v</x:item></data>
       </fx-instance>
     `);
@@ -558,7 +558,7 @@ describe('inline xml instance — hazard detection & <script> wrapper', () => {
 
   it('flags void HTML elements that cannot hold children', async () => {
     const el = await fixtureSync(html`
-      <fx-instance>
+      <fx-instance type="html">
         <data><img><caption>x</caption></img></data>
       </fx-instance>
     `);
@@ -568,7 +568,7 @@ describe('inline xml instance — hazard detection & <script> wrapper', () => {
 
   it('treats a <script type="application/xml"> wrapper as hazard-free', async () => {
     const el = await fixtureSync(html`
-      <fx-instance>
+      <fx-instance type="html">
         <script type="application/xml">
           <Data xmlns:p="urn:p"><p:Item id="A"/><p:Item id="B"/></Data>
         </script>
@@ -580,7 +580,7 @@ describe('inline xml instance — hazard detection & <script> wrapper', () => {
 
   it('preserves casing, namespaces and self-closing elements from a <script> wrapper', async () => {
     const el = await fixtureSync(html`
-      <fx-instance>
+      <fx-instance type="html">
         <script type="application/xml">
           <Order xmlns:p="urn:p"><p:Line sku="A"/><p:Line sku="B"/></Order>
         </script>

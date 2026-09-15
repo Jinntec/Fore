@@ -8,12 +8,12 @@ describe('replace Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <value>A</value>
             </data>
           </fx-instance>
-          <fx-instance id="template">
+          <fx-instance id="template" type="html">
             <data>
               <list>
                 <value>A</value>
@@ -63,7 +63,7 @@ describe('replace Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <value attr="">A</value>
               <with replaced="foo"></with>
@@ -102,12 +102,12 @@ describe('replace Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance id="default">
+          <fx-instance id="default" type="html">
             <data>
               <value>A</value>
             </data>
           </fx-instance>
-          <fx-instance id="template">
+          <fx-instance id="template" type="html">
             <data>
               <list>
                 <value>A</value>

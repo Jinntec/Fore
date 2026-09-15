@@ -37,7 +37,7 @@ describe('fx-debugger tests', () => {
         <fx-debugger for="f1"></fx-debugger>
         <fx-fore id="f1">
           <fx-model>
-            <fx-instance>
+            <fx-instance type="html">
               <data>
                 <name>Alice</name>
               </data>
@@ -72,7 +72,7 @@ describe('fx-debugger tests', () => {
         <fx-debugger for="f1"></fx-debugger>
         <fx-fore id="f1">
           <fx-model>
-            <fx-instance>
+            <fx-instance type="html">
               <data>
                 <name>Alice</name>
               </data>
@@ -111,7 +111,7 @@ describe('fx-debugger tests', () => {
         <fx-debugger for="f1"></fx-debugger>
         <fx-fore id="f1">
           <fx-model>
-            <fx-instance>
+            <fx-instance type="html">
               <data>
                 <name>Alice</name>
               </data>
@@ -145,7 +145,7 @@ describe('fx-debugger tests', () => {
         <fx-debugger for="f1"></fx-debugger>
         <fx-fore id="f1">
           <fx-model>
-            <fx-instance>
+            <fx-instance type="html">
               <data>
                 <name>Alice</name>
               </data>
@@ -188,7 +188,7 @@ describe('fx-debugger tests', () => {
         <fx-debugger for="f1"></fx-debugger>
         <fx-fore id="f1">
           <fx-model>
-            <fx-instance>
+            <fx-instance type="html">
               <data>
                 <name>Alice</name>
               </data>
@@ -221,7 +221,7 @@ describe('fx-debugger tests', () => {
         <fx-debugger for="f1"></fx-debugger>
         <fx-fore id="f1">
           <fx-model>
-            <fx-instance>
+            <fx-instance type="html">
               <data>
                 <name>Alice</name>
               </data>
@@ -266,7 +266,7 @@ describe('fx-debugger tests', () => {
         <fx-debugger for="f1"></fx-debugger>
         <fx-fore id="f1">
           <fx-model>
-            <fx-instance>
+            <fx-instance type="html">
               <data>
                 <name>Alice</name>
               </data>
@@ -306,7 +306,7 @@ describe('fx-debugger tests', () => {
         <fx-debugger for="f1"></fx-debugger>
         <fx-fore id="f1">
           <fx-model>
-            <fx-instance>
+            <fx-instance type="html">
               <data>
                 <name>Alice</name>
               </data>
@@ -353,7 +353,7 @@ describe('fx-debugger tests', () => {
         <fx-debugger for="f1"></fx-debugger>
         <fx-fore id="f1">
           <fx-model>
-            <fx-instance>
+            <fx-instance type="html">
               <data>
                 <name>Alice</name>
               </data>
@@ -389,7 +389,7 @@ describe('fx-debugger tests', () => {
         <fx-debugger for="f1"></fx-debugger>
         <fx-fore id="f1">
           <fx-model>
-            <fx-instance>
+            <fx-instance type="html">
               <data>
                 <name>Alice</name>
               </data>
@@ -399,7 +399,7 @@ describe('fx-debugger tests', () => {
         </fx-fore>
         <fx-fore id="f2">
           <fx-model>
-            <fx-instance>
+            <fx-instance type="html">
               <data>
                 <name>Carol</name>
               </data>

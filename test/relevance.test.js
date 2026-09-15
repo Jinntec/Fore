@@ -11,7 +11,7 @@ describe('Relevance Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance id="default">
+          <fx-instance id="default" type="html">
             <data></data>
           </fx-instance>
         </fx-model>
@@ -32,7 +32,7 @@ describe('Relevance Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance id="default">
+          <fx-instance id="default" type="html">
             <data></data>
           </fx-instance>
         </fx-model>
@@ -53,7 +53,7 @@ describe('Relevance Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance id="default">
+          <fx-instance id="default" type="html">
             <data></data>
           </fx-instance>
         </fx-model>
@@ -138,7 +138,7 @@ describe('Relevance Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <item flag="true"></item>
             </data>
@@ -173,7 +173,7 @@ describe('Relevance Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <vehicle attr1="a1" attr2="a2" attr3="" attr4="" attr5="">suv</vehicle>
               <car attr3="a3" xml:id="">
@@ -231,7 +231,7 @@ describe('Relevance Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <vehicle attr1="a1" attr2="a2" attr3="" attr4="" attr5="">suv</vehicle>
               <car attr3="a3" xml:id="">
@@ -297,7 +297,7 @@ describe('Relevance Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <vehicle attr1="a1" attr2="a2" attr3="" attr4="" attr5="">suv</vehicle>
               <car attr3="a3" xml:id="">

@@ -216,7 +216,7 @@
 
             <fx-instance id="elements" src="elements.xml"></fx-instance>
 
-            <fx-instance id="vars">
+            <fx-instance id="vars" type="html">
                 <data>
                     <current></current>
                     <filename></filename>
@@ -283,7 +283,7 @@
 
         <fx-fore id="edited">
             <fx-model id="targetModel" class="droppable">
-                <fx-instance id="default" draggable="true"></fx-instance>
+                <fx-instance id="default" draggable="true" type="html"></fx-instance>
             </fx-model>
             <fx-group id="ui" class="droppable"></fx-group>
         </fx-fore>
@@ -299,9 +299,9 @@
 <!--                <fx-insert ref="instance('attributes')" origin="event('current')"></fx-insert>-->
             </fx-action>
             <fx-model id="targetModel">
-                <fx-instance id="attributes">
+                <fx-instance id="attributes" type="html">
                     <data>
-                        <fx-instance id="foo"></fx-instance>
+                        <fx-instance id="foo" type="html"></fx-instance>
 <!--
                         <attribute name="id"></attribute>
                         <attribute name="src"></attribute>
@@ -309,7 +309,7 @@
 -->
                     </data>
                 </fx-instance>
-                <fx-instance id="propvars">
+                <fx-instance id="propvars" type="html">
                     <data>
                         <currentElement>
 

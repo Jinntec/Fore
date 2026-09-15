@@ -95,7 +95,7 @@ describe('fx-switch Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <page1></page1>
             </data>
@@ -135,7 +135,7 @@ describe('fx-switch Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <page  select="">page3</page>
             </data>
@@ -182,7 +182,7 @@ describe('fx-switch Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <page>page3</page>
               <foo></foo>
@@ -275,7 +275,7 @@ describe('fx-switch Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <item1>a bound item</item1>
               <item2>second bound item</item2>
@@ -357,7 +357,7 @@ describe('fx-switch Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data><item>hello</item></data>
           </fx-instance>
         </fx-model>
@@ -486,7 +486,7 @@ describe('fx-switch Tests', () => {
       <fx-fore>
         <fx-model>
           <fx-toggle event="model-construct-done" case="two"></fx-toggle>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <item1>a bound item</item1>
               <item2>second bound item</item2>

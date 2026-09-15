@@ -10,7 +10,7 @@ describe('template expressions', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <greeting>Hello Universe</greeting>
             </data>
@@ -42,7 +42,7 @@ describe('template expressions', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <greeting>Hello Universe</greeting>
             </data>
@@ -80,7 +80,7 @@ lines
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <greeting>Hello {unreplaced} Universe</greeting>
             </data>
@@ -101,7 +101,7 @@ lines
     const el = await fixtureSync(html`
       <fx-fore xpath-default-namespace="CCC">
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <greeting xmlns="AAA">Hello AAA</greeting>
               <greeting xmlns="BBB">Hello BBB</greeting>
@@ -147,7 +147,7 @@ lines
         </fx-action>
 
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <color1>#000</color1>
               <color2>#fff</color2>
@@ -181,7 +181,7 @@ lines
         </fx-action>
 
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <color1>#000</color1>
               <color2>#fff</color2>
@@ -206,7 +206,7 @@ lines
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <braces>I contain {braces}</braces>
             </data>
@@ -229,7 +229,7 @@ lines
     const el = await fixtureSync(html`
           <fx-fore ignore-expressions=".myElement">
             <fx-model>
-              <fx-instance>
+              <fx-instance type="html">
                 <data>
                   <greeting>Hello</greeting>
                   <ignored>if you read this it does not work</ignored>
@@ -273,7 +273,7 @@ lines
     const el = await fixtureSync(html`
           <fx-fore ignore-expressions="pb-authority">
             <fx-model>
-              <fx-instance>
+              <fx-instance type="html">
                 <data>
                 </data>
               </fx-instance>
@@ -344,7 +344,7 @@ lines
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <zip></zip>
             </data>

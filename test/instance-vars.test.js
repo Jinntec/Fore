@@ -75,13 +75,13 @@ describe('instance vars (JSON) Tests', () => {
         const el = await fixtureSync(html`
             <fx-fore id="outer">
                 <fx-model>
-                    <fx-instance shared>
+                    <fx-instance shared type="html">
                         <data>
                             <name>John</name>
                         </data>
                     </fx-instance>
 
-                    <fx-instance id="notshared">
+                    <fx-instance id="notshared" type="html">
                         <data>
                             <foo/>
                         </data>
@@ -108,7 +108,7 @@ describe('instance vars (JSON) Tests', () => {
         const el = await fixtureSync(html`
             <fx-fore id="todo">
                 <fx-model>
-                    <fx-instance id="todos" shared>
+                    <fx-instance id="todos" shared type="html">
                         <data>
                             <todos>
                                 <todo>Fix this!</todo>
@@ -120,7 +120,7 @@ describe('instance vars (JSON) Tests', () => {
 
                 <fx-fore id="child-a">
                     <fx-model>
-                        <fx-instance>
+                        <fx-instance type="html">
                             <data>
                                 <message>You can do it!</message>
                             </data>
@@ -144,14 +144,14 @@ describe('instance vars (JSON) Tests', () => {
         const el = await fixtureSync(html`
             <fx-fore id="outer">
                 <fx-model>
-                    <fx-instance shared>
+                    <fx-instance shared type="html">
                         <data><name>OUTER</name></data>
                     </fx-instance>
                 </fx-model>
 
                 <fx-fore id="middle">
                     <fx-model>
-                        <fx-instance shared>
+                        <fx-instance shared type="html">
                             <data><name>MIDDLE</name></data>
                         </fx-instance>
                     </fx-model>
@@ -228,7 +228,7 @@ describe('instance vars (JSON) Tests', () => {
                     </fx-instance>
 
                     <!-- XML shared instance remains accessible by id -->
-                    <fx-instance id="todos" shared>
+                    <fx-instance id="todos" shared type="html">
                         <data>
                             <todos>
                                 <todo>Fix this!</todo>

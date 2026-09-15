@@ -4,7 +4,7 @@ import { formatXmlIndented } from './playground-functions.js';
 
 const DEFAULT_MARKUP = `<fx-fore>
 <fx-model>
-  <fx-instance id="default"></fx-instance>
+  <fx-instance id="default" type="html"></fx-instance>
   <fx-bind ref="computed" calculate="string-length(../value)"></fx-bind>
 </fx-model>
 <fx-group>
@@ -87,7 +87,7 @@ function onMarkupUpdate() {
 
 /**
  * Keeps the Instance Data pane in sync with markup edits: mount()/assembleForeContent()
- * always prefers the pane's text over the markup's own <fx-instance> content (that's what
+ * always prefers the pane's text over the markup's own <fx-instance type="html"> content (that's what
  * lets the pane be edited independently of markup), so pasting a whole new example directly
  * into the Markup pane would otherwise have its embedded instance data silently overwritten
  * by whatever stale text the pane still held from before.
@@ -148,14 +148,14 @@ function fragmentToText(frag) {
 }
 
 /**
- * A demo's first <fx-instance> is implicitly "default" per Fore convention even without an
+ * A demo's first <fx-instance type="html"> is implicitly "default" per Fore convention even without an
  * explicit @id; later unlabeled ones get a synthetic id so every instance is addressable.
  */
 function instanceIdFor(el, index) {
   return el.getAttribute('id') || (index === 0 ? 'default' : `instance-${index + 1}`);
 }
 
-/** Lists every <fx-instance> found in markup text (bare content or full <fx-fore>...</fx-fore>). */
+/** Lists every <fx-instance type="html"> found in markup text (bare content or full <fx-fore>...</fx-fore>). */
 function listInstancesFromMarkup(markupText) {
   const frag = parseFragment(markupText);
   const model = frag.querySelector('fx-model');
@@ -166,7 +166,7 @@ function listInstancesFromMarkup(markupText) {
   }));
 }
 
-/** Finds the <fx-instance> element matching a given id within an already-parsed fragment. */
+/** Finds the <fx-instance type="html"> element matching a given id within an already-parsed fragment. */
 function findInstanceElement(frag, targetId) {
   const model = frag.querySelector('fx-model');
   if (!model) return null;
@@ -240,7 +240,7 @@ function switchSelectedInstance(newId) {
 /**
  * Builds the attributes + child DOM to drop into a fresh <fx-fore>: parses the markup
  * pane (a full <fx-fore>...</fx-fore>, or bare inner content for backward compatibility),
- * injects the instance-pane text into the first src-less <fx-instance> found (creating one
+ * injects the instance-pane text into the first src-less <fx-instance type="html"> found (creating one
  * + a wrapping <fx-model> if the markup doesn't have one), and registers the playground's
  * generate-form() extension function via <fx-functionlib>. Carries over any attributes on
  * the markup's own <fx-fore> tag (e.g. create-nodes, xmlns:* namespace declarations).

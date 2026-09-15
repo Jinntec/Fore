@@ -306,7 +306,7 @@
       short relative refs like ref="manufacturer" and the JS bridge can match
       them with formdata.querySelector("manufacturer").
     -->
-    <fx-instance id="formdata" shared>
+    <fx-instance id="formdata" shared type="html">
       <data>
         <manufacturer></manufacturer>
         <model></model>
@@ -317,13 +317,13 @@
     </fx-instance>
 
     <!-- template node cloned for each new transcript message -->
-    <fx-instance id="helper">
+    <fx-instance id="helper" type="html">
       <data>
         <message role=""></message>
       </data>
     </fx-instance>
 
-    <fx-instance id="transcript">
+    <fx-instance id="transcript" type="html">
       <data>
         <messages></messages>
       </data>
@@ -341,7 +341,7 @@
       {}
     </fx-instance>
 
-    <fx-instance id="settings">
+    <fx-instance id="settings" type="html">
       <data>
         <apikey></apikey>
         <endpoint>https://api.anthropic.com/v1/messages</endpoint>
@@ -349,7 +349,7 @@
       </data>
     </fx-instance>
 
-    <fx-instance id="ui">
+    <fx-instance id="ui" type="html">
       <data>
         <inputmessage></inputmessage>
         <status></status>

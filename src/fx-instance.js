@@ -108,7 +108,7 @@ export class FxInstance extends HTMLElement {
     }
 
     // Default instance selection is positional:
-    // The first <fx-instance> child (doc order) of the owning <fx-model> is the default instance.
+    // The first <fx-instance type="html"> child (doc order) of the owning <fx-model> is the default instance.
     // If the author did not provide an id on that first instance, we set id="default".
     // If the author provided an id on that first instance, we use that id instead.
     const parentModel =
@@ -127,7 +127,7 @@ export class FxInstance extends HTMLElement {
       );
       isFirstInModel = instances.length > 0 && instances[0] === this;
     } else {
-      // Standalone <fx-instance> in tests/fixtures: treat as default.
+      // Standalone <fx-instance type="html"> in tests/fixtures: treat as default.
       isFirstInModel = true;
     }
 
@@ -399,120 +399,44 @@ export class FxInstance extends HTMLElement {
     this.nodeset = null;
   }
 
-  /**
-   * A single `<script type="application/xml">` (or `text/xml`, or `*+xml`) child is raw text to the
-   * HTML parser: capitalisation, namespaces and self-closing elements all survive verbatim. Return
-   * that script so its `.textContent` can be handed straight to an XML parser, or `null`.
-   *
-   * @returns {HTMLScriptElement | null}
-   * @private
-   */
-  _getInlineXmlScript() {
-    const children = Array.from(this.children);
-    if (children.length !== 1 || children[0].localName !== 'script') {
-      return null;
-    }
-    const scriptType = (children[0].getAttribute('type') || '').trim().toLowerCase();
-    const isXmlType = /^(application|text)\/xml$/.test(scriptType) || /\+xml$/.test(scriptType);
-    return isXmlType ? children[0] : null;
-  }
-
-  /**
-   * Inspect inline content of an `xml` instance for constructs the browser's HTML parser alters
-   * before Fore can read them. Best-effort: namespace prefixes/declarations and non-nesting HTML
-   * elements are detectable here, but capitalisation and self-closing elements (`<foo/>`) are
-   * already lost by the time this runs and cannot be flagged.
-   *
-   * @returns {string[]} human-readable descriptions of detected hazards
-   * @private
-   */
-  _detectInlineXmlHazards() {
-    // A `<script type="application/xml">` wrapper is lossless — nothing to warn about.
-    if (this._getInlineXmlScript()) {
-      return [];
-    }
-
-    const VOID_ELEMENTS = new Set([
-      'area',
-      'base',
-      'br',
-      'col',
-      'embed',
-      'hr',
-      'img',
-      'input',
-      'link',
-      'meta',
-      'param',
-      'source',
-      'track',
-      'wbr',
-    ]);
-    const HTML_STRUCTURE = new Set(['html', 'head', 'body', 'tbody']);
-
-    const hazards = new Set();
-    for (const el of this.querySelectorAll('*')) {
-      const name = el.localName;
-      if (name.includes(':')) {
-        hazards.add(`namespace-prefixed element <${name}>`);
-      }
-      if (VOID_ELEMENTS.has(name)) {
-        hazards.add(`<${name}> is a void element in HTML and cannot hold children`);
-      }
-      if (HTML_STRUCTURE.has(name)) {
-        hazards.add(`<${name}> triggers HTML document-structure parsing`);
-      }
-      for (const attr of el.getAttributeNames()) {
-        if (attr === 'xmlns' || attr.startsWith('xmlns:')) {
-          hazards.add(`namespace declaration @${attr}`);
-        } else if (attr.includes(':')) {
-          hazards.add(`namespace-prefixed attribute @${attr}`);
-        }
-      }
-    }
-    return [...hazards];
-  }
-
   _useInlineData() {
-    if (this.type === 'xml') {
-      const xmlScript = this._getInlineXmlScript();
-      if (xmlScript) {
-        const parsed = new DOMParser().parseFromString(xmlScript.textContent, 'application/xml');
-        const parseError = parsed.querySelector('parsererror');
-        if (parseError) {
-          const message = `The inline instance "${this.id}" contains malformed XML: ${parseError.textContent.trim()}`;
+    switch (this.type) {
+      case 'xml': {
+        if (this.innerHTML.length) {
+          const message = `
+The inline instance "${this.id}" is type "xml" but it has an inline instance. This causes issues:
+because it is parsed by the browser as HTML, capitalisation differs, namespaces do not work, and
+self-closing elements are parsed differently. Either set the type to "html", and use the HTML
+representation, or use the "src" attribute to define an external location for the content.
+`.trim();
           console.error(message);
           Fore.dispatch(this, 'message', { level: 'error', message });
         }
-        this._setInitialData(parsed);
-        return;
+        break;
       }
-
-      const hazards = this._detectInlineXmlHazards();
-      if (hazards.length) {
-        const message = `The inline instance "${this.id}" is type "xml" but its markup contains constructs the HTML parser alters before Fore can read them: ${hazards.join('; ')}. Wrap the data in <script type="application/xml">…</script> (raw text, nothing is altered), load it via @src, or use type="json"/"html" if that is the real format. Capitalisation and self-closing elements (<foo/>) are corrupted the same way but cannot be detected here.`;
-        console.error(message);
-        Fore.dispatch(this, 'message', { level: 'error', message });
+      case 'json': {
+        // Use innerHTML (not textContent) so HTML tags the browser parser consumed as
+        // child elements (e.g. <blockquote> in a string value) are serialized back to text.
+        // Then escape literal control characters that JSON.parse rejects inside strings.
+        const sanitized = this.innerHTML.replace(/("(?:[^"\\]|\\.)*")/gs, match =>
+          match.replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t'),
+        );
+        this._setInitialData(JSON.parse(sanitized));
+        break;
       }
-
-      const instanceData = new DOMParser().parseFromString(this.innerHTML, 'application/xml');
-      this._setInitialData(instanceData);
-    } else if (this.type === 'json') {
-      // Use innerHTML (not textContent) so HTML tags the browser parser consumed as
-      // child elements (e.g. <blockquote> in a string value) are serialized back to text.
-      // Then escape literal control characters that JSON.parse rejects inside strings.
-      const sanitized = this.innerHTML.replace(/("(?:[^"\\]|\\.)*")/gs, match =>
-        match.replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t'),
-      );
-      this._setInitialData(JSON.parse(sanitized));
-    } else if (this.type === 'html') {
-      const newDocumentFragment = new Document();
-      newDocumentFragment.appendChild(this.firstElementChild.cloneNode(true));
-      this._setInitialData(newDocumentFragment);
-    } else if (this.type === 'text') {
-      this._setInitialData(this.textContent);
-    } else {
-      console.warn('unknown type for data ', this.type);
+      case 'html': {
+        const newDocumentFragment = new Document();
+        newDocumentFragment.appendChild(this.firstElementChild.cloneNode(true));
+        this._setInitialData(newDocumentFragment);
+        break;
+      }
+      case 'text': {
+        this._setInitialData(this.textContent);
+        break;
+      }
+      default: {
+        console.warn('unknown type for data ', this.type);
+      }
     }
   }
 }

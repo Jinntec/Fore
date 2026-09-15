@@ -9,7 +9,7 @@ describe('insert Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data> </data>
           </fx-instance>
           <fx-bind ref="task">
@@ -43,7 +43,7 @@ describe('insert Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task complete="false" due="2019-02-04">Pick up Milk</task>
               <task complete="true" due="2019-01-04">Make tutorial part 1</task>
@@ -94,7 +94,7 @@ describe('insert Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task complete="false" due="2019-02-04">Pick up Milk</task>
               <task complete="true" due="2019-01-04">Make tutorial part 1</task>
@@ -158,7 +158,7 @@ describe('insert Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task complete="false" due="2019-02-04">Pick up Milk</task>
               <task complete="true" due="2019-01-04">Make tutorial part 1</task>
@@ -205,7 +205,7 @@ describe('insert Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task complete="false" due="2019-02-04">Pick up Milk</task>
               <task complete="true" due="2019-01-04">Make tutorial part 1</task>
@@ -252,12 +252,12 @@ describe('insert Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task></task>
             </data>
           </fx-instance>
-          <fx-instance id="templ">
+          <fx-instance id="templ" type="html">
             <data>
               <task> </task>
               <foo> </foo>
@@ -294,7 +294,7 @@ describe('insert Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task></task>
             </data>
@@ -330,7 +330,7 @@ describe('insert Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task>one</task>
               <task>two</task>
@@ -365,7 +365,7 @@ describe('insert Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task>one</task>
               <task>two</task>
@@ -402,7 +402,7 @@ describe('insert Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <list><a>1</a><a>2</a><a>3</a></list>
               <blank><a>0</a></blank>
@@ -433,7 +433,7 @@ describe('insert Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <a>a1</a>
               <a>a2</a>
@@ -489,7 +489,7 @@ describe('insert Tests', () => {
             src="/base/test/template.xml"
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"
           ></fx-instance>
-          <fx-instance id="temp">
+          <fx-instance id="temp" type="html">
             <data>
               <hypotheses>1</hypotheses>
             </data>
@@ -582,7 +582,7 @@ describe('insert Tests', () => {
             src="/base/test/template.xml"
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"
           ></fx-instance>
-          <fx-instance id="temp">
+          <fx-instance id="temp" type="html">
             <data>
               <hypotheses>1</hypotheses>
             </data>
@@ -679,7 +679,7 @@ describe('insert Tests', () => {
             src="/base/test/template.xml"
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"
           ></fx-instance>
-          <fx-instance id="temp">
+          <fx-instance id="temp" type="html">
             <data>
               <hypotheses>1</hypotheses>
             </data>
@@ -755,7 +755,7 @@ describe('insert Tests', () => {
             src="/base/test/template.xml"
             xpath-default-namespace="http://www.tei-c.org/ns/1.0"
           ></fx-instance>
-          <fx-instance id="temp">
+          <fx-instance id="temp" type="html">
             <data>
               <hypotheses>1</hypotheses>
             </data>

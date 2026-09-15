@@ -38,7 +38,7 @@
 <main>
 <fx-fore>
     <fx-model>
-        <fx-instance>
+        <fx-instance type="html">
             <data>
                 <medicationcode></medicationcode>
                 <dosage></dosage>
@@ -49,7 +49,7 @@
 
         <fx-bind ref="substitutionreason" relevant="boolean-from-string($default/substitutionallowed)"></fx-bind>
 
-        <fx-instance id="medication-codes">
+        <fx-instance id="medication-codes" type="html">
             <codes>
                 <code label="Amoxicillin 500 mg" value="12345"></code>
                 <code label="Ibuprofen 400 mg" value="67890"></code>

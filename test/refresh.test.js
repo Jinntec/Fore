@@ -9,7 +9,7 @@ describe('refresh Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <a>A</a>
               <b>B</b>
@@ -72,7 +72,7 @@ describe('refresh Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <a>A</a>
               <b>B</b>
@@ -154,7 +154,7 @@ describe('refresh Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <page>page2</page>
             </data>
@@ -221,7 +221,7 @@ describe('refresh Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore id="todo">
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task complete="false" due="2021-11-04">Pick up Milk</task>
               <task complete="false" due="2021-11-15">Make tutorial part 1</task>

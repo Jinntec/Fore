@@ -81,7 +81,7 @@ describe('authoring-check Tests', () => {
     const fore = fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance><data></data></fx-instance>
+          <fx-instance type="html"><data></data></fx-instance>
           <fx-bind ref="x" relevant="instance('prefs')/debug = 'true'"></fx-bind>
         </fx-model>
       </fx-fore>
@@ -95,8 +95,8 @@ describe('authoring-check Tests', () => {
     const fore = fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance><data></data></fx-instance>
-          <fx-instance id="prefs"><prefs></prefs></fx-instance>
+          <fx-instance type="html"><data></data></fx-instance>
+          <fx-instance id="prefs" type="html"><prefs></prefs></fx-instance>
           <fx-bind ref="x" relevant="instance('prefs')/debug = 'true'"></fx-bind>
         </fx-model>
       </fx-fore>
@@ -108,7 +108,7 @@ describe('authoring-check Tests', () => {
     const fore = fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance><data><pos>0</pos></data></fx-instance>
+          <fx-instance type="html"><data><pos>0</pos></data></fx-instance>
           <fx-bind ref="pos" calculate="index('my-list')"></fx-bind>
         </fx-model>
       </fx-fore>
@@ -122,7 +122,7 @@ describe('authoring-check Tests', () => {
     const fore = fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance><data><pos>0</pos><item>a</item></data></fx-instance>
+          <fx-instance type="html"><data><pos>0</pos><item>a</item></data></fx-instance>
           <fx-bind ref="pos" calculate="index('my-list')"></fx-bind>
         </fx-model>
         <fx-repeat id="my-list" ref="item"><template><span ref="."></span></template></fx-repeat>
@@ -245,7 +245,7 @@ describe('authoring-check Tests', () => {
     const fore = fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance><data></data></fx-instance>
+          <fx-instance type="html"><data></data></fx-instance>
         </fx-model>
         <fx-trigger><fx-reset instance="scratch"></fx-reset></fx-trigger>
       </fx-fore>
@@ -259,7 +259,7 @@ describe('authoring-check Tests', () => {
     const fore = fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance id="scratch"><data></data></fx-instance>
+          <fx-instance id="scratch" type="html"><data></data></fx-instance>
         </fx-model>
         <fx-trigger><fx-reset instance="scratch"></fx-reset></fx-trigger>
       </fx-fore>
