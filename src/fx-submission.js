@@ -295,18 +295,28 @@ export class FxSubmission extends ForeElementMixin {
     }
   }
 
+  /**
+   * @param {string} serialized
+   * @param {import('./fx-instance.js').FxInstance} instance
+   *
+   * @returns {(Document|Object|string)}
+   */
   _parse(serialized, instance) {
-    let data = null;
-    if (serialized && instance.getAttribute('type') === 'xml') {
-      data = new DOMParser().parseFromString(serialized, 'application/xml');
+    if (!serialized) {
+      return null;
     }
-    if (serialized && instance.getAttribute('type') === 'json') {
-      data = JSON.parse(serialized);
+    switch (instance.type) {
+      case 'xml':
+        return new DOMParser().parseFromString(serialized, 'application/xml');
+      case 'html':
+        return new DOMParser().parseFromString(serialized, 'text/html');
+      case 'json':
+        return JSON.parse(serialized);
+      case 'text':
+        return serialized;
+      default:
+        return null;
     }
-    if (serialized && instance.getAttribute('type') === 'text') {
-      data = serialized;
-    }
-    return data;
   }
 
   /**
