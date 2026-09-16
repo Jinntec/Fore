@@ -585,3 +585,41 @@ describe('inline html instance', () => {
     expect(el.getDefaultContext().firstElementChild.textContent).to.equal('start');
   });
 });
+
+describe('inline xml instance', () => {
+  it('warns when type="xml" has inline content', async () => {
+    const el = await fixtureSync(html`
+      <fx-instance type="xml">
+        <data>
+          <greeting>hello</greeting>
+        </data>
+      </fx-instance>
+    `);
+
+    const messageEvent = oneEvent(el, 'message');
+    el.init();
+    const { detail } = await messageEvent;
+
+    expect(detail.level).to.equal('error');
+    expect(detail.message).to.include('is type "xml" but it has an inline instance');
+  });
+
+  it('warns when type is absent (defaults to "xml") with inline content', async () => {
+    const el = await fixtureSync(html`
+      <fx-instance>
+        <data>
+          <greeting>hello</greeting>
+        </data>
+      </fx-instance>
+    `);
+
+    expect(el.type).to.equal('xml');
+
+    const messageEvent = oneEvent(el, 'message');
+    el.init();
+    const { detail } = await messageEvent;
+
+    expect(detail.level).to.equal('error');
+    expect(detail.message).to.include('is type "xml" but it has an inline instance');
+  });
+});
