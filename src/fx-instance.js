@@ -292,9 +292,21 @@ export class FxInstance extends HTMLElement {
   createInstanceData() {
     this._invalidateInstanceVarBindings();
     switch (this.type) {
-      case 'xml':
+      case 'xml': {
+        const doc = new DOMParser().parseFromString('<data></data>', 'text/xml');
+        this._instanceData = doc;
+        this.originalInstance = doc.cloneNode(true);
+        this.nodeset = doc;
+
+        break;
+      }
+
       case 'html': {
-        const doc = new DOMParser().parseFromString('<data></data>', `text/${this.type}`);
+        // A 'text/html' parse always synthesizes a full <html><head><body> document (mandatory
+        // HTML tree construction), regardless of the input - build the minimal single-root
+        // shape directly instead, without going through the parser at all.
+        const doc = new Document();
+        doc.appendChild(doc.createElementNS('http://www.w3.org/1999/xhtml', 'data'));
         this._instanceData = doc;
         this.originalInstance = doc.cloneNode(true);
         this.nodeset = doc;
