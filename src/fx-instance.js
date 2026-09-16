@@ -39,12 +39,10 @@ async function handleResponse(fxInstance, response) {
 
  * @attr {string} [id] - The ID of the instance.
  * @attr {"xml"|"json"|"html"|"text"} [type=xml] - Serialisation format of the instance. Defaults to
- * `xml` since that's most common. Inline `xml` works when the markup is plain (lower-case names, no
- * namespaces, no self-closing elements): the browser's HTML parser lower-cases names, drops
- * namespace handling and expands self-closing elements (`<foo/>`) before Fore ever sees the
- * content. For inline XML that relies on any of those, wrap the data in
- * `<script type="application/xml">…</script>` (raw text to the HTML parser, nothing is altered) or
- * load it with @src. `json`, `html` and `text` inline without caveats.
+ * `xml` since that's most common. Inline XML does not work: the browser's HTML parser lower-cases
+ * names, drops namespace handling and expands self-closing elements (`<foo/>`) before Fore ever
+ * sees the content. Load it with @src. Inline instances with type `json`, `html` and `text` work
+ * without caveats.
  * @attr {string | "#querystring" | `localStore:${string}`} [src] - The external source to fetch
  * when loading this instance. Can be from the query-string as well, or indicating a localstorage
  * store
