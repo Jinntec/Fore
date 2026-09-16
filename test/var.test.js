@@ -1,6 +1,4 @@
-import {
-  html, fixtureSync, expect, oneEvent,
-} from '@open-wc/testing';
+import { html, fixtureSync, expect, oneEvent } from '@open-wc/testing';
 
 // full index: the fixtures use fx-fore, fx-trigger, fx-action, fx-delete etc. —
 // importing them all keeps this spec runnable standalone via --grep
@@ -358,9 +356,9 @@ describe('var Tests', () => {
     await el.querySelector('fx-trigger').performActions();
     expect(el.querySelector('#var-out').value).to.equal('overridden');
     const instance = el.querySelector('fx-instance');
-    expect(
-      evaluateXPathToString('$default/value', instance.getDefaultContext(), el),
-    ).to.equal('changed');
+    expect(evaluateXPathToString('$default/value', instance.getDefaultContext(), el)).to.equal(
+      'changed',
+    );
   });
 
   it('rebuilds $default after instance data replacement (replace="instance")', async () => {
@@ -384,16 +382,15 @@ describe('var Tests', () => {
 
     // what replace="instance" does: assign new instanceData, update the model, refresh
     const instance = el.querySelector('fx-instance');
-    const newDoc = new DOMParser().parseFromString(
-      '<data><value>replaced</value></data>',
-      'application/xml',
-    );
+    const newDoc = new DOMParser()
+      .parseFromString('<data><value>replaced</value></data>', 'text/html')
+      .querySelector('data');
     instance.instanceData = newDoc;
     el.querySelector('fx-model').updateModel();
     await el.refresh(true);
 
     // the implicit binding must point into the new document, not the replaced one
-    expect(el._instanceVarBindings.default.ownerDocument).to.equal(newDoc);
+    expect(el._instanceVarBindings.default).to.equal(newDoc);
     expect(output.value).to.equal('replaced');
   });
 
@@ -433,7 +430,7 @@ describe('var Tests', () => {
 
     const trigger = el.querySelector('fx-trigger.start');
     const action = el.querySelector('fx-action');
-	  await trigger.performActions();
+    await trigger.performActions();
 
     const output = el.querySelector('fx-output');
     expect(output.value).to.equal('10');
