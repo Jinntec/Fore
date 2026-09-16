@@ -168,7 +168,9 @@ export class UndoManager {
     if (!touchedNode || !touchedNode.ownerDocument) return;
     const owningDoc = touchedNode.ownerDocument;
     const known = this.model.instances.some(
-      instance => instance.type === 'xml' && instance.instanceData === owningDoc,
+      instance =>
+        (instance.type === 'xml' || instance.type === 'html') &&
+        instance.instanceData === owningDoc,
     );
     if (!known) {
       this._warnedOutsideScope = true;
@@ -243,12 +245,12 @@ export class UndoManager {
     this.model.instances.forEach(instance => {
       const data = instance.instanceData;
       if (!data) return;
-      if (instance.type === 'xml') {
+      if (instance.type === 'xml' || instance.type === 'html') {
         entries.push({ instance, data: data.cloneNode(true) });
       } else if (instance.type === 'json') {
         entries.push({ instance, data: structuredClone(data) });
       }
-      // other types ('html', 'text') are not snapshotable
+      // other types ('text') are not snapshotable
     });
     return entries;
   }
