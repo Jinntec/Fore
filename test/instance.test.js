@@ -623,3 +623,80 @@ describe('inline xml instance', () => {
     expect(detail.message).to.include('is type "xml" but it has an inline instance');
   });
 });
+
+describe('xml instance (real documents, no inline markup)', () => {
+  it('creates an empty <data/> document by default, with no xhtml namespace', async () => {
+    const el = await fixtureSync(html` <fx-instance type="xml"></fx-instance> `);
+
+    el.init();
+    const doc = el.getInstanceData();
+    expect(doc.nodeType).to.equal(Node.DOCUMENT_NODE);
+    expect(doc.documentElement.nodeName).to.equal('data');
+    expect(doc.documentElement.namespaceURI).to.equal(null);
+  });
+
+  it('loads xml stored via localStore into a real xml document', async () => {
+    localStorage.setItem('fore-test-instance', '<data><greeting>from store</greeting></data>');
+
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance src="localStore:fore-test-instance"></fx-instance>
+        </fx-model>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const inst = el.querySelector('fx-instance');
+    expect(inst.type).to.equal('xml');
+    expect(inst.evalXPath('//greeting').textContent).to.equal('from store');
+
+    localStorage.removeItem('fore-test-instance');
+  });
+
+  it('reset() restores the original xml data loaded via src', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance src="base/test/instance1.xml"></fx-instance>
+        </fx-model>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const inst = el.querySelector('fx-instance');
+    inst.getDefaultContext().firstElementChild.textContent = 'changed';
+    expect(inst.evalXPath('//greeting').textContent).to.equal('changed');
+
+    inst.reset();
+    expect(inst.evalXPath('//greeting').textContent).to.equal('hello from file');
+    expect(inst.instanceData.documentElement.namespaceURI).to.equal(null);
+  });
+
+  it('preserves case, namespaces and sibling structure via src (unlike inline xml)', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance src="base/test/instance-xml-fidelity.xml"></fx-instance>
+        </fx-model>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const inst = el.querySelector('fx-instance');
+    const root = inst.getDefaultContext();
+
+    // casing survives - inline xml would have been lower-cased by the HTML parser
+    expect(root.nodeName).to.equal('Data');
+
+    // self-closing siblings stay siblings - inline xml would nest them instead
+    const items = root.getElementsByTagNameNS('http://example.org/ns', 'Item');
+    expect(items.length).to.equal(2);
+    expect(items[0].getAttribute('sku')).to.equal('A');
+    expect(items[1].getAttribute('sku')).to.equal('B');
+    expect(items[0].contains(items[1])).to.equal(false);
+  });
+});

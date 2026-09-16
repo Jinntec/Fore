@@ -970,6 +970,39 @@ describe('repeat progressive rendering (size)', () => {
     expect(rItems[3].hasAttribute('repeat-index')).to.equal(true);
   });
 
+  it('fx-append creates the new node in the instance namespace for a real xml document', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="record">
+          <fx-instance
+            xpath-default-namespace="http://example.org/tasks"
+            src="base/test/append-namespace.xml"
+          ></fx-instance>
+        </fx-model>
+        <fx-repeat id="todos" ref="task">
+          <template>
+            <fx-output ref="."></fx-output>
+          </template>
+        </fx-repeat>
+        <fx-trigger>
+          <button>append</button>
+          <fx-append repeat="todos" ref="task"></fx-append>
+        </fx-trigger>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const repeat = el.querySelector('#todos');
+    expect(repeat.nodeset.length).to.equal(1);
+
+    const trigger = el.querySelector('fx-trigger');
+    await trigger.performActions();
+
+    expect(repeat.nodeset.length).to.equal(2);
+    expect(repeat.nodeset[1].namespaceURI).to.equal('http://example.org/tasks');
+  });
+
   it('delete within the rendered window shrinks it and does not re-render the tail', async () => {
     const el = await fixtureSync(html`
       <fx-fore>

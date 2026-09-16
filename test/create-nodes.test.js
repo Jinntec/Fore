@@ -237,6 +237,41 @@ describe('create-nodes', () => {
     );
   });
 
+  it('creates new nodes in the default namespace of a real xml document', async () => {
+    const el = fixtureSync(html`
+      <fx-fore create-nodes>
+        <fx-model>
+          <fx-instance
+            xpath-default-namespace="http://example.org/categories"
+            src="/base/test/data-src-categories.xml"
+          ></fx-instance>
+        </fx-model>
+
+        <fx-group ref=".">
+          <fx-control ref="category[1]"></fx-control>
+          <fx-control ref="description"></fx-control>
+        </fx-group>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'ready');
+
+    const inst = document.querySelector('fx-instance');
+    const root = inst.instanceData.documentElement;
+
+    expect(root.namespaceURI).to.equal('http://example.org/categories');
+    expect(
+      root.getElementsByTagNameNS('http://example.org/categories', 'category').length,
+    ).to.equal(2);
+
+    const description = root.getElementsByTagNameNS(
+      'http://example.org/categories',
+      'description',
+    )[0];
+    expect(description).to.exist;
+    expect(description.namespaceURI).to.equal('http://example.org/categories');
+  });
+
   it('Does not panic when a repeat over strings is near the controls', async () => {
     const el = fixtureSync(html`
       <fx-fore create-nodes>
