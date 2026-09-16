@@ -33,7 +33,7 @@ describe('XPathUtil Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <counter>0</counter>
             </data>

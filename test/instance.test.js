@@ -8,7 +8,7 @@ import { getPath } from '../src/xpath-path.js';
 describe('instance Tests', () => {
   it('has "default" as id', async () => {
     const el = await fixtureSync(html`
-      <fx-instance>
+      <fx-instance type="html">
         <data>
           <foobar></foobar>
         </data>
@@ -21,7 +21,7 @@ describe('instance Tests', () => {
 
   it('init creates instanceData', async () => {
     const el = await fixtureSync(html`
-      <fx-instance>
+      <fx-instance type="html">
         <data>
           <foobar></foobar>
         </data>
@@ -36,7 +36,7 @@ describe('instance Tests', () => {
 
   it('evaluates xpath in its default context', async () => {
     const el = await fixtureSync(html`
-      <fx-instance>
+      <fx-instance type="html">
         <data>
           <foobar></foobar>
         </data>
@@ -53,7 +53,7 @@ describe('instance Tests', () => {
 
   it('provides default evaluation context', async () => {
     const el = await fixtureSync(html`
-      <fx-instance>
+      <fx-instance type="html">
         <data>
           <foobar></foobar>
         </data>
@@ -70,7 +70,7 @@ describe('instance Tests', () => {
 
   it('does NOT copy a "body" element from inline data', async () => {
     const el = await fixtureSync(html`
-      <fx-instance>
+      <fx-instance type="html">
         <data>
           <body>
             <arm side="left">
@@ -111,12 +111,12 @@ describe('instance Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <foobar></foobar>
             </data>
           </fx-instance>
-          <fx-instance id="second">
+          <fx-instance id="second" type="html">
             <data>
               <item>second</item>
             </data>
@@ -150,12 +150,12 @@ describe('instance Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <foobar></foobar>
             </data>
           </fx-instance>
-          <fx-instance id="second">
+          <fx-instance id="second" type="html">
             <data>
               <item>Maybe</item>
             </data>
@@ -188,12 +188,12 @@ describe('instance Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <foobar></foobar>
             </data>
           </fx-instance>
-          <fx-instance id="second">
+          <fx-instance id="second" type="html">
             <data>
               <item>Maybe</item>
             </data>
@@ -339,7 +339,7 @@ describe('instance Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance></fx-instance>
+          <fx-instance type="html"></fx-instance>
         </fx-model>
       </fx-fore>
     `);
@@ -356,12 +356,12 @@ describe('instance Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <value>outer value</value>
             </data>
           </fx-instance>
-          <fx-instance id="another">
+          <fx-instance id="another" type="html">
             <data>
               <value>another outer value</value>
             </data>
@@ -373,12 +373,12 @@ describe('instance Tests', () => {
 
         <fx-fore>
           <fx-model>
-            <fx-instance>
+            <fx-instance type="html">
               <data>
                 <value>inner value</value>
               </data>
             </fx-instance>
-            <fx-instance id="another">
+            <fx-instance id="another" type="html">
               <data>
                 <value>another inner value</value>
               </data>
@@ -408,7 +408,7 @@ describe('instance Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance id="def">
+          <fx-instance id="def" type="html">
             <data>
               <text>foo</text>
             </data>
@@ -420,15 +420,13 @@ describe('instance Tests', () => {
         </div>
         <fx-fore>
           <fx-model>
-            <fx-instance>
+            <fx-instance type="html">
               <data>
                 <text>bar</text>
               </data>
             </fx-instance>
           </fx-model>
-          <div id="two">
-            {text} {instance()/text} {instance('default')/text}
-          </div>
+          <div id="two">{text} {instance()/text} {instance('default')/text}</div>
         </fx-fore>
       </fx-fore>
     `);
@@ -446,13 +444,9 @@ describe('instance Tests', () => {
       <fx-fore>
         <fx-model id="model1">
           <fx-instance type="json">
-            {
-              "q": "Never whine, never complain.",
-              "a": "Robert Greene",
-              "h": "
-                <blockquote>Never whine.</blockquote>
-              "
-            }
+            { "q": "Never whine, never complain.", "a": "Robert Greene", "h": "
+            <blockquote>Never whine.</blockquote>
+            " }
           </fx-instance>
         </fx-model>
       </fx-fore>
@@ -472,7 +466,9 @@ describe('instance Tests', () => {
       <fx-fore>
         <fx-model>
           <fx-instance type="json">
-            { "h": "<blockquote>Never whine.</blockquote>" }
+            { "h": "
+            <blockquote>Never whine.</blockquote>
+            " }
           </fx-instance>
         </fx-model>
         <fx-output id="out" ref="?h" mediatype="html"></fx-output>
@@ -490,7 +486,7 @@ describe('instance Tests', () => {
           it('does NOT copy a "body" element from inline data', async () => {
               const el =  (
                   await fixtureSync(html`
-                      <fx-instance>
+                      <fx-instance type="html">
                           <data>
                               <body>
                                   <arm side="left">
@@ -528,4 +524,179 @@ describe('instance Tests', () => {
               expect(root.textContent).to.equal('middle');
           });
       */
+});
+
+describe('inline html instance', () => {
+  it('builds instance data from the HTML-parsed subtree', async () => {
+    const el = await fixtureSync(html`
+      <fx-instance type="html">
+        <data>
+          <greeting tone="warm">hello</greeting>
+        </data>
+      </fx-instance>
+    `);
+
+    el.init();
+
+    const data = el.getInstanceData();
+    expect(data.nodeType).to.equal(Node.DOCUMENT_NODE);
+
+    const context = el.getDefaultContext();
+    expect(context.nodeName).to.equal('data');
+    expect(context.firstElementChild.nodeName).to.equal('greeting');
+    expect(context.firstElementChild.getAttribute('tone')).to.equal('warm');
+    expect(el.evalXPath('//greeting').textContent.trim()).to.equal('hello');
+  });
+
+  it('takes the HTML parser result as-is for markup type="xml" would flag', async () => {
+    const el = await fixtureSync(html`
+      <fx-instance type="html">
+        <data>
+          <Item sku="A" />
+          <Item sku="B" />
+        </data>
+      </fx-instance>
+    `);
+
+    el.init();
+
+    // type="html" takes the HTML parser's result as-is: <Item> is lower-cased to <item>
+    // and the two "self-closing" siblings end up nested. No hazard warning (that check is
+    // xml-only). type="xml" would have flagged this markup instead.
+    const items = el.getDefaultContext().querySelectorAll('item');
+    expect(items.length).to.equal(2);
+    expect(items[0].getAttribute('sku')).to.equal('A');
+    expect(items[1].getAttribute('sku')).to.equal('B');
+    expect(items[0].contains(items[1])).to.equal(true);
+  });
+
+  it('reset() restores the original inline html data', async () => {
+    const el = await fixtureSync(html`
+      <fx-instance type="html">
+        <data><value>start</value></data>
+      </fx-instance>
+    `);
+
+    el.init();
+    el.getDefaultContext().firstElementChild.textContent = 'changed';
+    expect(el.getDefaultContext().firstElementChild.textContent).to.equal('changed');
+
+    el.reset();
+    expect(el.getDefaultContext().firstElementChild.textContent).to.equal('start');
+  });
+});
+
+describe('inline xml instance', () => {
+  it('warns when type="xml" has inline content', async () => {
+    const el = await fixtureSync(html`
+      <fx-instance type="xml">
+        <data>
+          <greeting>hello</greeting>
+        </data>
+      </fx-instance>
+    `);
+
+    const messageEvent = oneEvent(el, 'message');
+    el.init();
+    const { detail } = await messageEvent;
+
+    expect(detail.level).to.equal('error');
+    expect(detail.message).to.include('is type "xml" but it has an inline instance');
+  });
+
+  it('warns when type is absent (defaults to "xml") with inline content', async () => {
+    const el = await fixtureSync(html`
+      <fx-instance>
+        <data>
+          <greeting>hello</greeting>
+        </data>
+      </fx-instance>
+    `);
+
+    expect(el.type).to.equal('xml');
+
+    const messageEvent = oneEvent(el, 'message');
+    el.init();
+    const { detail } = await messageEvent;
+
+    expect(detail.level).to.equal('error');
+    expect(detail.message).to.include('is type "xml" but it has an inline instance');
+  });
+});
+
+describe('xml instance (real documents, no inline markup)', () => {
+  it('creates an empty <data/> document by default, with no xhtml namespace', async () => {
+    const el = await fixtureSync(html` <fx-instance type="xml"></fx-instance> `);
+
+    el.init();
+    const doc = el.getInstanceData();
+    expect(doc.nodeType).to.equal(Node.DOCUMENT_NODE);
+    expect(doc.documentElement.nodeName).to.equal('data');
+    expect(doc.documentElement.namespaceURI).to.equal(null);
+  });
+
+  it('loads xml stored via localStore into a real xml document', async () => {
+    localStorage.setItem('fore-test-instance', '<data><greeting>from store</greeting></data>');
+
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance src="localStore:fore-test-instance"></fx-instance>
+        </fx-model>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const inst = el.querySelector('fx-instance');
+    expect(inst.type).to.equal('xml');
+    expect(inst.evalXPath('//greeting').textContent).to.equal('from store');
+
+    localStorage.removeItem('fore-test-instance');
+  });
+
+  it('reset() restores the original xml data loaded via src', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance src="base/test/instance1.xml"></fx-instance>
+        </fx-model>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const inst = el.querySelector('fx-instance');
+    inst.getDefaultContext().firstElementChild.textContent = 'changed';
+    expect(inst.evalXPath('//greeting').textContent).to.equal('changed');
+
+    inst.reset();
+    expect(inst.evalXPath('//greeting').textContent).to.equal('hello from file');
+    expect(inst.instanceData.documentElement.namespaceURI).to.equal(null);
+  });
+
+  it('preserves case, namespaces and sibling structure via src (unlike inline xml)', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance src="base/test/instance-xml-fidelity.xml"></fx-instance>
+        </fx-model>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const inst = el.querySelector('fx-instance');
+    const root = inst.getDefaultContext();
+
+    // casing survives - inline xml would have been lower-cased by the HTML parser
+    expect(root.nodeName).to.equal('Data');
+
+    // self-closing siblings stay siblings - inline xml would nest them instead
+    const items = root.getElementsByTagNameNS('http://example.org/ns', 'Item');
+    expect(items.length).to.equal(2);
+    expect(items[0].getAttribute('sku')).to.equal('A');
+    expect(items[1].getAttribute('sku')).to.equal('B');
+    expect(items[0].contains(items[1])).to.equal(false);
+  });
 });

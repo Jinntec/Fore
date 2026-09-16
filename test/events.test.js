@@ -17,7 +17,7 @@ describe('Event Tests', () => {
         </fx-action>
 
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <param1></param1>
               <param2></param2>
@@ -53,7 +53,7 @@ describe('Event Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <param1></param1>
               <param2></param2>
@@ -97,7 +97,7 @@ describe('Event Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <param1></param1>
               <param2></param2>
@@ -144,7 +144,7 @@ describe('Event Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <param1></param1>
               <param2></param2>
@@ -189,7 +189,7 @@ describe('Event Tests', () => {
       <fx-fore>
         <fx-dispatch targetid="t" name="click" event="model-construct-done"></fx-dispatch>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <value></value>
             </data>
@@ -220,7 +220,7 @@ describe('Event Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <value></value>
             </data>
@@ -256,7 +256,7 @@ describe('Event Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <value></value>
             </data>
@@ -292,7 +292,7 @@ describe('Event Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <value></value>
             </data>

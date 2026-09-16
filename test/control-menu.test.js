@@ -8,7 +8,7 @@ describe('fx-control-menu Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <greetings>hello</greetings>
               <ondemand></ondemand>

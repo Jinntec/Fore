@@ -8,7 +8,7 @@ describe('group tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
                   <foo>bar</foo>
             </data>
@@ -39,7 +39,7 @@ describe('group tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data></data>
           </fx-instance>
         </fx-model>
@@ -68,10 +68,10 @@ describe('group tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data></data>
           </fx-instance>
-          <fx-instance id="data">
+          <fx-instance id="data" type="html">
             <data>
               <foo>bar</foo>
               <item type="color">blue</item>
@@ -138,7 +138,7 @@ describe('group tests', () => {
     const el = await fixtureSync(html`
       <fx-fore create-nodes>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <foo type="baz">bar</foo>
             </data>
@@ -165,7 +165,7 @@ describe('group tests', () => {
     const el = await fixtureSync(html`
       <fx-fore create-nodes>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <foo></foo>
             </data>

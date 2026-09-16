@@ -12,7 +12,7 @@ describe('submission tests', () => {
       <fx-fore>
         <fx-send submission="submission" event="ready"></fx-send>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <greeting>Hello World!</greeting>
               <prop></prop>
@@ -57,7 +57,7 @@ describe('submission tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <vehicle>suv</vehicle>
               <car>
@@ -104,7 +104,7 @@ describe('submission tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <vehicle attr1="a1" attr2="a2">suv</vehicle>
               <car>
@@ -145,7 +145,7 @@ describe('submission tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <vehicle attr1="a1" attr2="a2">suv</vehicle>
               <car>
@@ -179,7 +179,7 @@ describe('submission tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <vehicle attr1="a1" attr2="a2">suv</vehicle>
               <car>
@@ -216,7 +216,7 @@ describe('submission tests', () => {
         <fx-send event="model-construct-done" submission="submission"></fx-send>
 
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <vehicle attr1="a1" attr2="a2">suv</vehicle>
               <car>
@@ -260,7 +260,7 @@ describe('submission tests', () => {
         <!--        <fx-send event="ready" submission="submission" delay="3000"></fx-send>-->
 
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <vehicle attr1="a1" attr2="a2">suv</vehicle>
               <car>
@@ -268,7 +268,7 @@ describe('submission tests', () => {
               </car>
             </data>
           </fx-instance>
-          <fx-instance id="result">
+          <fx-instance id="result" type="html">
             <data>
               <result></result>
             </data>
@@ -361,7 +361,7 @@ describe('submission tests', () => {
             <data></data>
           </fx-instance>
 
-          <fx-instance id="target">
+          <fx-instance id="target" type="html">
             <data></data>
           </fx-instance>
 
@@ -400,7 +400,7 @@ describe('submission tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <item></item>
               <fail></fail>
@@ -435,7 +435,7 @@ describe('submission tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <item></item>
               <fail></fail>

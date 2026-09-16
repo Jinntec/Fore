@@ -91,7 +91,7 @@ function _checkXPathInstanceRefs(fore, errors) {
         if (!localInstance && !sharedInstance) {
           errors.push({
             element: el,
-            message: `[${attr}="${val}"]: instance('${id}') — no <fx-instance id="${id}"> found`,
+            message: `[${attr}="${val}"]: instance('${id}') — no <fx-instance id="${id}" type="html"> found`,
           });
         }
       }
@@ -176,7 +176,7 @@ function _checkResetInstance(fore, errors) {
     if (!target && !sharedTarget) {
       errors.push({
         element: el,
-        message: `<fx-reset instance="${id}">: no <fx-instance id="${id}"> found`,
+        message: `<fx-reset instance="${id}">: no <fx-instance id="${id}" type="html"> found`,
       });
     }
   });

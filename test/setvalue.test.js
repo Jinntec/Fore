@@ -11,7 +11,7 @@ describe('setvalue tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <greeting>Hello World!</greeting>
             </data>
@@ -48,7 +48,7 @@ describe('setvalue tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <greeting>Hello World!</greeting>
             </data>
@@ -85,7 +85,7 @@ describe('setvalue tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <greeting>Hello World!</greeting>
             </data>
@@ -122,7 +122,7 @@ describe('setvalue tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <greeting>Hello World!</greeting>
             </data>

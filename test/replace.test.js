@@ -8,12 +8,12 @@ describe('replace Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <value>A</value>
             </data>
           </fx-instance>
-          <fx-instance id="template">
+          <fx-instance id="template" type="html">
             <data>
               <list>
                 <value>A</value>
@@ -53,9 +53,9 @@ describe('replace Tests', () => {
     expect(replaced).to.exist;
     const values = fx.evaluateXPathToNodes('list/value', inst, null, {});
     expect(values.length).to.equal(3);
-    expect(values[0].outerHTML).to.equal('<value>A</value>');
-    expect(values[1].outerHTML).to.equal('<value>B</value>');
-    expect(values[2].outerHTML).to.equal('<value>C</value>');
+    expect(values[0].outerHTML).to.equal('<value xmlns="http://www.w3.org/1999/xhtml">A</value>');
+    expect(values[1].outerHTML).to.equal('<value xmlns="http://www.w3.org/1999/xhtml">B</value>');
+    expect(values[2].outerHTML).to.equal('<value xmlns="http://www.w3.org/1999/xhtml">C</value>');
     console.log('values', values);
   });
 
@@ -63,7 +63,7 @@ describe('replace Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <value attr="">A</value>
               <with replaced="foo"></with>
@@ -102,12 +102,12 @@ describe('replace Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance id="default">
+          <fx-instance id="default" type="html">
             <data>
               <value>A</value>
             </data>
           </fx-instance>
-          <fx-instance id="template">
+          <fx-instance id="template" type="html">
             <data>
               <list>
                 <value>A</value>

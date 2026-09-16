@@ -33,7 +33,7 @@ order, while staying a single contiguous Fore-bound subtree in the DOM.
 <div class="pg-shell">
     <fx-fore id="pg-chrome">
         <fx-model>
-            <fx-instance id="state">
+            <fx-instance id="state" type="html">
                 <state>
                     <selected-demo></selected-demo>
                     <status></status>
@@ -42,15 +42,15 @@ order, while staying a single contiguous Fore-bound subtree in the DOM.
                     <selected-instance-id>default</selected-instance-id>
                 </state>
             </fx-instance>
-            <!-- Populated from the current markup pane's <fx-instance> elements (see
+            <!-- Populated from the current markup pane's <fx-instance type="html"> elements (see
                  refreshInstanceOptions in playground.js) - parsing free-text markup to find
                  them isn't expressible in Fore, but the resulting picker is a real binding. -->
-            <fx-instance id="instances-list">
+            <fx-instance id="instances-list" type="html">
                 <instances></instances>
             </fx-instance>
             <fx-bind ref="instance('state')/selected-instance-id"
                      relevant="count(instance('instances-list')/instance) > 1"></fx-bind>
-            <fx-instance id="demos">
+            <fx-instance id="demos" type="html">
                 <demos>
                     <demo path="" label="– choose a demo –"></demo>
                     <demo path="../simple-calc.html" label="Calculate values (bind/calculate)"></demo>
@@ -78,7 +78,7 @@ order, while staying a single contiguous Fore-bound subtree in the DOM.
                     <demo path="../group-relevance.html" label="Group relevance"></demo>
                 </demos>
             </fx-instance>
-            <fx-instance id="log">
+            <fx-instance id="log" type="html">
                 <log></log>
             </fx-instance>
         </fx-model>

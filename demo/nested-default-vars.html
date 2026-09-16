@@ -42,17 +42,17 @@
         <template>
             <fx-fore>
                 <fx-model id="model1">
-                    <fx-instance>
+                    <fx-instance type="html">
                         <data>
                             <value>outer value</value>
                         </data>
                     </fx-instance>
-                    <fx-instance id="another">
+                    <fx-instance id="another" type="html">
                         <data>
                             <value>another outer value</value>
                         </data>
                     </fx-instance>
-					<fx-instance id="outer" shared="shared">
+					<fx-instance id="outer" shared="shared" type="html">
                         <data>
                             <value>A value that only exists in the outer</value>
                         </data>
@@ -74,17 +74,17 @@
 
                 <fx-fore>
                     <fx-model>
-                        <fx-instance>
+                        <fx-instance type="html">
                             <data>
                                 <value>inner value</value>
                             </data>
                         </fx-instance>
-                        <fx-instance id="another">
+                        <fx-instance id="another" type="html">
                             <data>
                                 <value>another inner value</value>
                             </data>
                         </fx-instance>
-						<fx-instance id="inner">
+						<fx-instance id="inner" type="html">
                         <data>
                             <value>A value that only exists in the inner</value>
                         </data>

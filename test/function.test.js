@@ -145,7 +145,7 @@ describe('functions', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <theanswer></theanswer>
             </data>
@@ -177,7 +177,7 @@ describe('functions', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <theanswer></theanswer>
               <theanswer></theanswer>
@@ -204,7 +204,7 @@ describe('functions', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <theanswer>a</theanswer>
               <theanswer>b</theanswer>
@@ -238,7 +238,7 @@ describe('functions', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <item>1</item>
               <item>2</item>
@@ -281,7 +281,7 @@ describe('functions', () => {
       html`
         <fx-fore>
           <fx-model>
-            <fx-instance id="mapping">
+            <fx-instance id="mapping" type="html">
               <data>
                 <df tag="245" scope="bf:Instance" scope-rel="bf:title" domain="bf:Title">
                   <sf code="a">bf:mainTitle</sf>
@@ -290,7 +290,7 @@ describe('functions', () => {
                 </df>
               </data>
             </fx-instance>
-            <fx-instance id="desc">
+            <fx-instance id="desc" type="html">
               <data>
                 <df>
                   <tag>245</tag>
@@ -535,7 +535,7 @@ describe('functions', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <group>
                 <item attr="foo">bar</item>

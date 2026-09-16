@@ -10,7 +10,7 @@ describe('bind Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <greeting>Hello World!</greeting>
             </data>
@@ -52,7 +52,7 @@ describe('bind Tests', () => {
             await fixtureSync(html`
                 <fx-fore>
                     <fx-model id="model1">
-                        <fx-instance>
+                        <fx-instance type="html">
                             <data>
                                 <greeting type="message">Hello World!</greeting>
                             </data>
@@ -86,7 +86,7 @@ describe('bind Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <greeting>
                 <message>Hello World!</message>
@@ -118,7 +118,7 @@ describe('bind Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <greeting>Hello World!</greeting>
             </data>
@@ -142,7 +142,7 @@ describe('bind Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task complete="false" due="2019-02-04">Pick up Milk</task>
               <task complete="true" due="2019-01-04">Make tutorial part 1</task>
@@ -196,7 +196,7 @@ describe('bind Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <greeting>Hello World!</greeting>
             </data>
@@ -221,7 +221,7 @@ describe('bind Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <greeting>Hello World!</greeting>
             </data>
@@ -249,7 +249,7 @@ describe('bind Tests', () => {
             await fixtureSync(html`
                 <fx-fore>
                     <fx-model id="model1">
-                        <fx-instance>
+                        <fx-instance type="html">
                             <data>
                                 <greeting>Hello World!</greeting>
                             </data>
@@ -284,7 +284,7 @@ describe('bind Tests', () => {
     const el = await fixture(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <greeting type="message">Hello World!</greeting>
             </data>
@@ -344,7 +344,7 @@ describe('bind Tests', () => {
     const el = await fixture(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <m1>3</m1>
               <m2>0</m2>
@@ -371,7 +371,7 @@ describe('bind Tests', () => {
     const el = await fixture(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <a><b>b in a</b></a>
               <b>b in root</b>
@@ -394,7 +394,7 @@ describe('bind Tests', () => {
     const el = await fixture(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <m1 val="3"></m1>
               <m2 val="0"></m2>
@@ -447,7 +447,7 @@ describe('bind Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <theanswer></theanswer>
             </data>
@@ -483,13 +483,13 @@ describe('bind Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <item>foobar</item>
               <result>foobar</result>
             </data>
           </fx-instance>
-          <fx-instance id="second">
+          <fx-instance id="second" type="html">
             <data>
               <items>
                 <item>Part1</item>
@@ -525,7 +525,7 @@ describe('bind Tests', () => {
       const el = await fixtureSync(html`
         <fx-fore>
           <fx-model id="inheritmodel">
-            <fx-instance>
+            <fx-instance type="html">
               <data>
                 <locked>
                   <mid>
@@ -586,7 +586,7 @@ describe('bind Tests', () => {
       const el = await fixtureSync(html`
         <fx-fore>
           <fx-model id="attrinheritmodel">
-            <fx-instance>
+            <fx-instance type="html">
               <data>
                 <locked when=""></locked>
               </data>
@@ -616,7 +616,7 @@ describe('bind Tests', () => {
       const el = await fixtureSync(html`
         <fx-fore>
           <fx-model id="model1">
-            <fx-instance>
+            <fx-instance type="html">
               <data>
                 <greeting>Hello World!</greeting>
                 <b></b>
@@ -652,7 +652,7 @@ describe('bind Tests', () => {
       const el = await fixtureSync(html`
         <fx-fore>
           <fx-model id="model1">
-            <fx-instance>
+            <fx-instance type="html">
               <data>
                 <greeting>Hello World!</greeting>
                 <b></b>
@@ -689,7 +689,7 @@ describe('bind Tests', () => {
       const el = await fixtureSync(html`
         <fx-fore>
           <fx-model id="model1">
-            <fx-instance>
+            <fx-instance type="html">
               <data>
                 <greeting>Hello World!</greeting>
                 <b></b>

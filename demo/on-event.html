@@ -52,7 +52,7 @@
     <button type="button">Click to initialize Fore</button>
 
     <fx-model>
-        <fx-instance>
+        <fx-instance type="html">
             <data>
                 <planet>
                     <greeting>Hello Earth</greeting>
@@ -79,7 +79,7 @@
 
             <fx-fore init-on="boot" init-on-target="document">
                 <fx-model>
-                    <fx-instance>
+                    <fx-instance type="html">
                         <data>
                             <status>Booted by document event...</status>
                         </data>
@@ -100,7 +100,7 @@
         <template>
             <fx-fore id="master-fore">
                 <fx-model>
-                    <fx-instance>
+                    <fx-instance type="html">
                         <data>
                             <msg>Master is ready.</msg>
                         </data>
@@ -113,7 +113,7 @@
 
             <fx-fore init-on="ready" init-on-target="#master-fore">
                 <fx-model>
-                    <fx-instance>
+                    <fx-instance type="html">
                         <data>
                             <msg>Dependent initialized after master ready.</msg>
                         </data>
@@ -133,7 +133,7 @@
         <template>
             <fx-fore id="dep-a">
                 <fx-model>
-                    <fx-instance>
+                    <fx-instance type="html">
                         <data>
                             <msg>A ready.</msg>
                         </data>
@@ -144,7 +144,7 @@
 
             <fx-fore id="dep-b">
                 <fx-model>
-                    <fx-instance>
+                    <fx-instance type="html">
                         <data>
                             <msg>B ready.</msg>
                         </data>
@@ -155,7 +155,7 @@
 
             <fx-fore init-on="ready" init-on-target="#dep-a #dep-b">
                 <fx-model>
-                    <fx-instance>
+                    <fx-instance type="html">
                         <data>
                             <msg>Initialized after A and B were ready.</msg>
                         </data>
@@ -177,7 +177,7 @@
         <template>
             <fx-fore id="legacy-master">
                 <fx-model>
-                    <fx-instance>
+                    <fx-instance type="html">
                         <data>
                             <msg>Legacy master is ready.</msg>
                         </data>
@@ -188,7 +188,7 @@
 
             <fx-fore wait-for="#legacy-master">
                 <fx-model>
-                    <fx-instance>
+                    <fx-instance type="html">
                         <data>
                             <msg>Legacy dependent initialized after master ready.</msg>
                         </data>

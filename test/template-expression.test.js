@@ -10,7 +10,7 @@ describe('template expressions', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <greeting>Hello Universe</greeting>
             </data>
@@ -42,7 +42,7 @@ describe('template expressions', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <greeting>Hello Universe</greeting>
             </data>
@@ -80,7 +80,7 @@ lines
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <greeting>Hello {unreplaced} Universe</greeting>
             </data>
@@ -97,11 +97,19 @@ lines
     expect(greeting.textContent).to.equal('Hello {unreplaced} Universe');
   });
 
-  it('Correctly resolves namespaces based on the context of the template', async () => {
+  it('inline xmlns overrides on an HTML instance are inert - documents current behaviour', async () => {
+    // HTML instances are parsed by the browser's HTML parser, which always creates elements
+    // in the HTML namespace - a nested `xmlns="..."` (as used below to distinguish AAA/BBB/CCC)
+    // is kept only as a plain, inert attribute string, never actually changing the element's
+    // namespaceURI. So every <greeting> here is really in the HTML namespace, and neither a
+    // prefixed lookup (ns:greeting) nor an unprefixed one under xpath-default-namespace
+    // (greeting) ever matches any of them - all three interpolations resolve to empty. Real,
+    // distinct namespaces still work when the data comes from an actual XML parse (@src, or a
+    // non-HTML instance type).
     const el = await fixtureSync(html`
       <fx-fore xpath-default-namespace="CCC">
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <greeting xmlns="AAA">Hello AAA</greeting>
               <greeting xmlns="BBB">Hello BBB</greeting>
@@ -125,17 +133,16 @@ lines
     await oneEvent(el, 'refresh-done');
 
     const theDivA = el.querySelector('.greetingA');
-
-    expect(theDivA.getAttribute('class')).to.equal('greetingA Hello AAA');
-    expect(theDivA.innerText).to.equal('Greeting: Hello AAA another Hello AAA');
+    expect(theDivA.getAttribute('class')).to.equal('greetingA ');
+    expect(theDivA.innerText).to.equal('Greeting: another');
 
     const theDivB = el.querySelector('.greetingB');
-    expect(theDivB.getAttribute('class')).to.equal('greetingB Hello BBB');
-    expect(theDivB.innerText).to.equal('Greeting: Hello BBB another Hello BBB');
+    expect(theDivB.getAttribute('class')).to.equal('greetingB ');
+    expect(theDivB.innerText).to.equal('Greeting: another');
 
     const theDivC = el.querySelector('.greetingC');
-    expect(theDivC.getAttribute('class')).to.equal('greetingC Hello CCC');
-    expect(theDivC.innerText).to.equal('Greeting: Hello CCC another Hello CCC');
+    expect(theDivC.getAttribute('class')).to.equal('greetingC ');
+    expect(theDivC.innerText).to.equal('Greeting: another');
   });
 
   it('evaluates multiple templates with an attribute', async () => {
@@ -147,7 +154,7 @@ lines
         </fx-action>
 
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <color1>#000</color1>
               <color2>#fff</color2>
@@ -181,7 +188,7 @@ lines
         </fx-action>
 
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <color1>#000</color1>
               <color2>#fff</color2>
@@ -206,7 +213,7 @@ lines
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <braces>I contain {braces}</braces>
             </data>
@@ -229,7 +236,7 @@ lines
     const el = await fixtureSync(html`
           <fx-fore ignore-expressions=".myElement">
             <fx-model>
-              <fx-instance>
+              <fx-instance type="html">
                 <data>
                   <greeting>Hello</greeting>
                   <ignored>if you read this it does not work</ignored>
@@ -273,7 +280,7 @@ lines
     const el = await fixtureSync(html`
           <fx-fore ignore-expressions="pb-authority">
             <fx-model>
-              <fx-instance>
+              <fx-instance type="html">
                 <data>
                 </data>
               </fx-instance>
@@ -344,7 +351,7 @@ lines
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <zip></zip>
             </data>

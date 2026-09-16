@@ -1,0 +1,6 @@
+<Data xmlns="http://example.org/ns">
+  <ItemGroup>
+    <Item sku="A"/>
+    <Item sku="B"/>
+  </ItemGroup>
+</Data>

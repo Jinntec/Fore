@@ -60,9 +60,9 @@ describe('getDocPath (native fast path)', () => {
   });
 
   it('getPath prefixes the doc path with the instance id', async () => {
-    // getPath() requires a matching <fx-instance id="..."> in the real document for any
+    // getPath() requires a matching <fx-instance id="..." type="html"> in the real document for any
     // non-'default' instanceId - a plain tag is enough, it's only ever queried by selector.
-    await fixtureSync(html`<fx-instance id="codelist"></fx-instance>`);
+    await fixtureSync(html`<fx-instance id="codelist" type="html"></fx-instance>`);
     const doc = parseXml('<root><item id="0"/><item id="1"/></root>');
     const items = doc.documentElement.querySelectorAll('item');
     expect(getPath(items[1], 'codelist')).to.equal('$codelist/item[2]');

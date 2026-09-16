@@ -8,7 +8,7 @@ describe('model tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <a>A</a>
               <b>B</b>
@@ -86,7 +86,7 @@ describe('model tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <a>A</a>
               <b>B</b>
@@ -122,7 +122,7 @@ describe('model tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <a>A</a>
               <b>B</b>
@@ -198,7 +198,7 @@ describe('model tests', () => {
         </fx-action>
 
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <a>10</a>
               <b>10</b>
@@ -286,7 +286,7 @@ describe('model tests', () => {
     const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model>
-                    <fx-instance>
+                    <fx-instance type="html">
                         <data>
                             <a>10</a>
                             <b>10</b>
@@ -363,7 +363,7 @@ describe('model tests', () => {
     const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model>
-                  <fx-instance>
+                  <fx-instance type="html">
                     <data>
                       <a>10</a>
                       <b>10</b>
@@ -435,7 +435,7 @@ describe('model tests', () => {
     const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model>
-                  <fx-instance>
+                  <fx-instance type="html">
                     <data>
                       <a>10</a>
                       <b>10</b>
@@ -511,7 +511,7 @@ describe('model tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <css></css>
               <rotate>0</rotate>
@@ -569,7 +569,7 @@ describe('model tests', () => {
     const el = fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <element></element>
             </data>

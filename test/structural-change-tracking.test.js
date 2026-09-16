@@ -18,7 +18,7 @@ describe('structural change tracking', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance id="data">
+          <fx-instance id="data" type="html">
             <data>
               <item keep="true">a</item>
               <item keep="true">b</item>
@@ -54,7 +54,7 @@ describe('structural change tracking', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance id="data">
+          <fx-instance id="data" type="html">
             <data>
               <item>a</item>
               <item>b</item>
@@ -94,7 +94,7 @@ describe('structural change tracking', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance id="data">
+          <fx-instance id="data" type="html">
             <data>
               <item>a</item>
               <item>b</item>
@@ -124,7 +124,7 @@ describe('structural change tracking', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance id="data">
+          <fx-instance id="data" type="html">
             <data>
               <item keep="true">a</item>
             </data>

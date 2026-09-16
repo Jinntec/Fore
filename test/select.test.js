@@ -8,12 +8,12 @@ describe('fx-control with select tests', () => {
     const el = await fixture(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <selected>1 3</selected>
             </data>
           </fx-instance>
-          <fx-instance id="vars">
+          <fx-instance id="vars" type="html">
             <data>
               <item id="1">value1</item>
               <item id="2">value2</item>
@@ -60,12 +60,12 @@ describe('fx-control with select tests', () => {
     const el = await fixture(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <item>foobar</item>
             </data>
           </fx-instance>
-          <fx-instance id="second">
+          <fx-instance id="second" type="html">
             <data>
               <option>option1</option>
             </data>
@@ -95,12 +95,12 @@ describe('fx-control with select tests', () => {
     const el = await fixture(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <item>foobar</item>
             </data>
           </fx-instance>
-          <fx-instance id="second">
+          <fx-instance id="second" type="html">
             <data>
               <option>option1</option>
               <option>option2</option>
@@ -138,12 +138,12 @@ describe('fx-control with select tests', () => {
     const el = await fixture(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <item>foobar</item>
             </data>
           </fx-instance>
-          <fx-instance id="second">
+          <fx-instance id="second" type="html">
             <data>
               <option>option1</option>
               <option>option2</option>
@@ -173,12 +173,12 @@ describe('fx-control with select tests', () => {
     const el = await fixture(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <item>foobar</item>
             </data>
           </fx-instance>
-          <fx-instance id="second">
+          <fx-instance id="second" type="html">
             <data>
               <option>option1</option>
               <option>option2</option>
@@ -214,12 +214,12 @@ describe('fx-control with select tests', () => {
     const el = await fixture(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <item>foobar</item>
             </data>
           </fx-instance>
-          <fx-instance id="second">
+          <fx-instance id="second" type="html">
             <data>
               <option>option1</option>
               <option>option2</option>
@@ -266,7 +266,7 @@ describe('fx-control with select tests', () => {
     const el = fixtureSync(html`
       <fx-fore xmlns:example="http://www.example.com/">
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data><selected></selected></data>
           </fx-instance>
           <fx-instance id="data" src="base/test/instance-namespace.xml">

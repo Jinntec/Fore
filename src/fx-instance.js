@@ -34,6 +34,20 @@ async function handleResponse(fxInstance, response) {
 
 /**
  * Container for data instances.
+ *
+ * @element fx-instance
+
+ * @attr {string} [id] - The ID of the instance.
+ * @attr {"xml"|"json"|"html"|"text"} [type=xml] - Serialisation format of the instance. Defaults to
+ * `xml` since that's most common. Inline XML does not work: the browser's HTML parser lower-cases
+ * names, drops namespace handling and expands self-closing elements (`<foo/>`) before Fore ever
+ * sees the content. Load it with @src. Inline instances with type `json`, `html` and `text` work
+ * without caveats.
+ * @attr {string | "#querystring" | `localStore:${string}`} [src] - The external source to fetch
+ * when loading this instance. Can be from the query-string as well, or indicating a localstorage
+ * store
+ * @attr {boolean} [shared=false] - Whether this instance will be shared with any sub fx-fore elements.
+ * @attr {"same-origin"|"include"|"omit"} [credentials="same-origin"] - The credentials to use when fetching an external resource
  */
 export class FxInstance extends HTMLElement {
   constructor() {
@@ -92,7 +106,7 @@ export class FxInstance extends HTMLElement {
     }
 
     // Default instance selection is positional:
-    // The first <fx-instance> child (doc order) of the owning <fx-model> is the default instance.
+    // The first <fx-instance type="html"> child (doc order) of the owning <fx-model> is the default instance.
     // If the author did not provide an id on that first instance, we set id="default".
     // If the author provided an id on that first instance, we use that id instead.
     const parentModel =
@@ -111,7 +125,7 @@ export class FxInstance extends HTMLElement {
       );
       isFirstInModel = instances.length > 0 && instances[0] === this;
     } else {
-      // Standalone <fx-instance> in tests/fixtures: treat as default.
+      // Standalone <fx-instance type="html"> in tests/fixtures: treat as default.
       isFirstInModel = true;
     }
 
@@ -206,7 +220,7 @@ export class FxInstance extends HTMLElement {
     // this.debugInfo.mutationCount += 1;
     // this.debugInfo.lastMutationAt = performance.now();
     // use the setter so nodeset is rebuilt for JSON too
-    if (this.originalInstance && this.type === 'xml') {
+    if (this.originalInstance && (this.type === 'xml' || this.type === 'html')) {
       this.instanceData = this.originalInstance.cloneNode(true);
     } else if (this.originalInstance && this.type === 'json') {
       this.instanceData = structuredClone(this.originalInstance);
@@ -275,24 +289,40 @@ export class FxInstance extends HTMLElement {
 
   createInstanceData() {
     this._invalidateInstanceVarBindings();
-    if (this.type === 'xml') {
-      const doc = new DOMParser().parseFromString('<data></data>', 'application/xml');
-      this._instanceData = doc;
-      this.originalInstance = doc.cloneNode(true);
-      this.nodeset = doc;
-      return;
-    }
-    if (this.type === 'json') {
-      this._instanceData = {};
-      this.originalInstance = { ...this._instanceData };
-      this.nodeset = wrapJson(this._instanceData, null, null, this.foreId);
-      this.domFacade = new JSONDomFacade();
-      return;
-    }
-    if (this.type === 'text') {
-      this._instanceData = this.innerText;
-      this.originalInstance = this.innerText;
-      this.nodeset = null;
+    switch (this.type) {
+      case 'xml': {
+        const doc = new DOMParser().parseFromString('<data></data>', 'text/xml');
+        this._instanceData = doc;
+        this.originalInstance = doc.cloneNode(true);
+        this.nodeset = doc;
+
+        break;
+      }
+
+      case 'html': {
+        // A 'text/html' parse always synthesizes a full <html><head><body> document (mandatory
+        // HTML tree construction), regardless of the input - build the minimal single-root
+        // shape directly instead, without going through the parser at all.
+        const doc = new Document();
+        doc.appendChild(doc.createElementNS('http://www.w3.org/1999/xhtml', 'data'));
+        this._instanceData = doc;
+        this.originalInstance = doc.cloneNode(true);
+        this.nodeset = doc;
+
+        break;
+      }
+
+      case 'json':
+        this._instanceData = {};
+        this.originalInstance = { ...this._instanceData };
+        this.nodeset = wrapJson(this._instanceData, null, null, this.foreId);
+        this.domFacade = new JSONDomFacade();
+        break;
+
+      case 'text':
+        this._instanceData = this.innerText;
+        this.originalInstance = this.innerText;
+        this.nodeset = null;
     }
   }
 
@@ -380,23 +410,43 @@ export class FxInstance extends HTMLElement {
   }
 
   _useInlineData() {
-    if (this.type === 'xml') {
-      const instanceData = new DOMParser().parseFromString(this.innerHTML, 'application/xml');
-      this._setInitialData(instanceData);
-    } else if (this.type === 'json') {
-      // Use innerHTML (not textContent) so HTML tags the browser parser consumed as
-      // child elements (e.g. <blockquote> in a string value) are serialized back to text.
-      // Then escape literal control characters that JSON.parse rejects inside strings.
-      const sanitized = this.innerHTML.replace(/("(?:[^"\\]|\\.)*")/gs, match =>
-        match.replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t'),
-      );
-      this._setInitialData(JSON.parse(sanitized));
-    } else if (this.type === 'html') {
-      this._setInitialData(this.firstElementChild.children);
-    } else if (this.type === 'text') {
-      this._setInitialData(this.textContent);
-    } else {
-      console.warn('unknown type for data ', this.type);
+    switch (this.type) {
+      case 'xml': {
+        if (this.innerHTML.length) {
+          const message = `
+The inline instance "${this.id}" is type "xml" but it has an inline instance. This causes issues:
+because it is parsed by the browser as HTML, capitalisation differs, namespaces do not work, and
+self-closing elements are parsed differently. Either set the type to "html", and use the HTML
+representation, or use the "src" attribute to define an external location for the content.
+`.trim();
+          console.error(message);
+          Fore.dispatch(this, 'message', { level: 'error', message });
+        }
+        break;
+      }
+      case 'json': {
+        // Use innerHTML (not textContent) so HTML tags the browser parser consumed as
+        // child elements (e.g. <blockquote> in a string value) are serialized back to text.
+        // Then escape literal control characters that JSON.parse rejects inside strings.
+        const sanitized = this.innerHTML.replace(/("(?:[^"\\]|\\.)*")/gs, match =>
+          match.replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t'),
+        );
+        this._setInitialData(JSON.parse(sanitized));
+        break;
+      }
+      case 'html': {
+        const newDocumentFragment = new Document();
+        newDocumentFragment.appendChild(this.firstElementChild.cloneNode(true));
+        this._setInitialData(newDocumentFragment);
+        break;
+      }
+      case 'text': {
+        this._setInitialData(this.textContent);
+        break;
+      }
+      default: {
+        console.warn('unknown type for data ', this.type);
+      }
     }
   }
 }

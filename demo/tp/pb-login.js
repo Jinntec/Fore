@@ -28,14 +28,14 @@ export class PbLogin extends HTMLElement {
         const html = `
             <fx-fore>
                 <fx-model>
-                    <fx-instance>
+                    <fx-instance type="html">
                         <data>
                             <user></user>
                             <pass></pass>
                         </data>
                     </fx-instance>
                     <fx-bind ref="user" required="true()"></fx-bind>
-                    <fx-instance id="vars">
+                    <fx-instance id="vars" type="html">
                         <data>
                             <lang>en</lang>
                             <loggedin>false</loggedin>

@@ -8,7 +8,7 @@ describe('fx-control tests', () => {
     const el = await fixture(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <item>foobar</item>
               <checked>true</checked>
@@ -45,7 +45,7 @@ describe('fx-control tests', () => {
     const el = await fixture(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <item>foobar</item>
               <checked>true</checked>
@@ -77,7 +77,7 @@ describe('fx-control tests', () => {
     const el = await fixture(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <item>foobar</item>
               <checked>true</checked>
@@ -104,7 +104,7 @@ describe('fx-control tests', () => {
     const el = await fixture(html`
                 <fx-fore>
                     <fx-model id="model1">
-                        <fx-instance>
+                        <fx-instance type="html">
                             <data>
                                 <item>foobar</item>
                                 <checked>true</checked>
@@ -139,7 +139,7 @@ describe('fx-control tests', () => {
     const el = await fixture(html`
                 <fx-fore>
                     <fx-model>
-                        <fx-instance>
+                        <fx-instance type="html">
                             <data>
                                 <listitem>foo</listitem>
                             </data>
@@ -175,7 +175,7 @@ describe('fx-control tests', () => {
     const el = await fixture(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <listitem>foo</listitem>
             </data>
@@ -198,7 +198,7 @@ describe('fx-control tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <item>foobar</item>
               <result></result>
@@ -237,7 +237,7 @@ describe('fx-control tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <item>foobar</item>
               <result>foobar</result>

@@ -682,7 +682,7 @@ export default class FxControl extends XfAbstractControl {
   }
 
   /**
-   * Finds (or lazily creates) the anonymous `<fx-instance>` backing a
+   * Finds (or lazily creates) the anonymous `<fx-instance type="html">` backing a
    * `data-src` lookup document for the given URL, deduped per-model by URL.
    *
    * The created instance has no `id`, so it stays invisible to the global
@@ -717,7 +717,7 @@ export default class FxControl extends XfAbstractControl {
   /**
    * Implements the `data-src` lookup-list shortcut: if the bound widget
    * declares `data-src="<url>"`, lazily loads that document via an anonymous
-   * `<fx-instance>` and binds its root element as a control-local XPath
+   * `<fx-instance type="html">` and binds its root element as a control-local XPath
    * variable (`$src` by default, or `$<data-id>`), available to this
    * control's own `ref` and template expressions.
    *

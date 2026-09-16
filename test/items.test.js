@@ -8,7 +8,7 @@ describe('fx-items tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <listitem>strawberry orange</listitem>
               <fruit value="apple">Apple</fruit>
@@ -54,7 +54,7 @@ describe('fx-items tests', () => {
     const el = await fixture(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <listitem>strawberry orange</listitem>
               <fruit value="apple">Apple</fruit>
@@ -275,7 +275,7 @@ describe('fx-items tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model-1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <selected></selected>
             </data>
@@ -320,7 +320,7 @@ describe('fx-items tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model-1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <selected></selected>
             </data>
@@ -359,7 +359,7 @@ describe('fx-items tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model-1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <selected
                 >https://www.eagle-network.eu/voc/typeins/lod/73
@@ -417,7 +417,7 @@ describe('fx-items tests', () => {
           <fx-instance id="default" src="/base/test/data/typeins-de.json" type="json">
             <div>Hello</div>
           </fx-instance>
-          <fx-instance id="vars">
+          <fx-instance id="vars" type="html">
             <data>
               <selected></selected>
             </data>
@@ -477,7 +477,7 @@ describe('fx-items tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <listitem></listitem>
               <fruit value="apple">Apple</fruit>
@@ -513,14 +513,14 @@ describe('fx-items tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <answers>
                 <answer qno="1"></answer>
               </answers>
             </data>
           </fx-instance>
-          <fx-instance id="opts">
+          <fx-instance id="opts" type="html">
             <options>
               <item id="A">Option A</item>
               <item id="B">Option B</item>

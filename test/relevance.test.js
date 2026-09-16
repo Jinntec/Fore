@@ -1,6 +1,4 @@
-import {
-  html, fixtureSync, expect, oneEvent,
-} from '@open-wc/testing';
+import { html, fixtureSync, expect, oneEvent } from '@open-wc/testing';
 
 import '../index.js';
 import * as fx from 'fontoxpath';
@@ -11,7 +9,7 @@ describe('Relevance Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance id="default">
+          <fx-instance id="default" type="html">
             <data></data>
           </fx-instance>
         </fx-model>
@@ -32,7 +30,7 @@ describe('Relevance Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance id="default">
+          <fx-instance id="default" type="html">
             <data></data>
           </fx-instance>
         </fx-model>
@@ -53,7 +51,7 @@ describe('Relevance Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance id="default">
+          <fx-instance id="default" type="html">
             <data></data>
           </fx-instance>
         </fx-model>
@@ -138,7 +136,7 @@ describe('Relevance Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <item flag="true"></item>
             </data>
@@ -173,7 +171,7 @@ describe('Relevance Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <vehicle attr1="a1" attr2="a2" attr3="" attr4="" attr5="">suv</vehicle>
               <car attr3="a3" xml:id="">
@@ -189,10 +187,7 @@ describe('Relevance Tests', () => {
             <fx-bind ref="motor/text()" relevant="false()"></fx-bind>
           </fx-bind>
           <fx-bind ref="something" relevant="false()"></fx-bind>
-          <fx-submission id="submission"
-                         method="post"
-                         url="#echo"
-                         replace="instance">
+          <fx-submission id="submission" method="post" url="#echo" replace="instance">
             <fx-action event="submit-done">
               <fx-message>Submitted with non-relevant nodes being removed (default)</fx-message>
               <fx-refresh force></fx-refresh>
@@ -212,11 +207,14 @@ describe('Relevance Tests', () => {
 
     const data = el.querySelector('fx-instance');
     // const vehicle = fx.evaluateXPath('vehicle', result, null, {});
+    /**
+     * @type {HTMLElement}
+     */
     const vehicle = fx.evaluateXPath('//vehicle', data.instanceData, null, {});
     expect(vehicle).to.exist;
 
     // ### attr1 has a value but is non-relevant by binding
-    expect(vehicle.hasAttribute('attr1')).to.be.false;
+    expect(vehicle.hasAttribute('attr1'), 'attr1 was empty: should be removed').to.be.false;
     // ### attr2 has a value but no binding (relevant by default)
     expect(vehicle.hasAttribute('attr2')).to.be.true;
     // ### attr3 is empty and will be removed
@@ -231,7 +229,7 @@ describe('Relevance Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <vehicle attr1="a1" attr2="a2" attr3="" attr4="" attr5="">suv</vehicle>
               <car attr3="a3" xml:id="">
@@ -247,11 +245,13 @@ describe('Relevance Tests', () => {
             <fx-bind ref="motor/text()" relevant="false()"></fx-bind>
           </fx-bind>
           <fx-bind ref="something" relevant="false()"></fx-bind>
-          <fx-submission id="submission"
-                         method="post"
-                         url="#echo"
-                         replace="instance"
-                         nonrelevant="empty">
+          <fx-submission
+            id="submission"
+            method="post"
+            url="#echo"
+            replace="instance"
+            nonrelevant="empty"
+          >
             <fx-action event="submit-done">
               <fx-message>Submitted with non-relevant nodes being removed (default)</fx-message>
               <fx-refresh force></fx-refresh>
@@ -297,7 +297,7 @@ describe('Relevance Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <vehicle attr1="a1" attr2="a2" attr3="" attr4="" attr5="">suv</vehicle>
               <car attr3="a3" xml:id="">
@@ -313,11 +313,13 @@ describe('Relevance Tests', () => {
             <fx-bind ref="motor/text()" relevant="false()"></fx-bind>
           </fx-bind>
           <fx-bind ref="something" relevant="false()"></fx-bind>
-          <fx-submission id="submission"
-                         method="post"
-                         url="#echo"
-                         replace="instance"
-                         nonrelevant="keep">
+          <fx-submission
+            id="submission"
+            method="post"
+            url="#echo"
+            replace="instance"
+            nonrelevant="keep"
+          >
             <fx-action event="submit-done">
               <fx-message>Submitted with non-relevant nodes being removed (default)</fx-message>
               <fx-refresh force></fx-refresh>

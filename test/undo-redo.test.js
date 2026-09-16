@@ -18,7 +18,7 @@ describe('undo/redo', () => {
       el = await fixtureSync(html`
         <fx-fore>
           <fx-model undo>
-            <fx-instance>
+            <fx-instance type="html">
               <data>
                 <value>A</value>
                 <other>x</other>
@@ -221,7 +221,7 @@ describe('undo/redo', () => {
       const el = await fixtureSync(html`
         <fx-fore>
           <fx-model undo>
-            <fx-instance>
+            <fx-instance type="html">
               <data>
                 <task>one</task>
                 <task>two</task>
@@ -264,7 +264,7 @@ describe('undo/redo', () => {
       const el = await fixtureSync(html`
         <fx-fore>
           <fx-model undo>
-            <fx-instance>
+            <fx-instance type="html">
               <data><value>A</value></data>
             </fx-instance>
             <fx-submission id="submission" url="/unused" replace="instance"></fx-submission>
@@ -299,7 +299,7 @@ describe('undo/redo', () => {
       const el = await fixtureSync(html`
         <fx-fore>
           <fx-model undo>
-            <fx-instance><data><item>one</item><item>two</item></data></fx-instance>
+            <fx-instance type="html"><data><item>one</item><item>two</item></data></fx-instance>
           </fx-model>
           <fx-repeat ref="item" dnd>
             <template><fx-control ref="."></fx-control></template>
@@ -340,10 +340,10 @@ describe('undo/redo', () => {
       const el = await fixtureSync(html`
         <fx-fore>
           <fx-model undo>
-            <fx-instance>
+            <fx-instance type="html">
               <data><value>A</value></data>
             </fx-instance>
-            <fx-instance id="second">
+            <fx-instance id="second" type="html">
               <data><item>one</item></data>
             </fx-instance>
           </fx-model>
@@ -369,12 +369,12 @@ describe('undo/redo', () => {
 
   describe('nested fx-fore with a shared instance', () => {
     // mirrors demo/shared-instances.html: a nested fx-fore whose own <fx-model> declares
-    // no <fx-instance> of its own and operates entirely on data shared by the ancestor
+    // no <fx-instance type="html"> of its own and operates entirely on data shared by the ancestor
     const buildSharedFixture = async () =>
       fixtureSync(html`
         <fx-fore id="outer">
           <fx-model undo>
-            <fx-instance id="todos" shared>
+            <fx-instance id="todos" shared type="html">
               <data>
                 <todo>one</todo>
                 <todo>two</todo>
@@ -433,7 +433,7 @@ describe('undo/redo', () => {
       const el = await fixtureSync(html`
         <fx-fore id="shared-outer">
           <fx-model undo>
-            <fx-instance id="counters" shared>
+            <fx-instance id="counters" shared type="html">
               <data><count>0</count></data>
             </fx-instance>
           </fx-model>
@@ -461,7 +461,7 @@ describe('undo/redo', () => {
         outerModel.getInstance('counters').instanceData.querySelector('count').textContent;
 
       // NOTE: this only asserts the underlying instance data, not el.querySelector('#inner-count')
-      // .textContent - a nested fore with no <fx-instance> of its own never runs its own
+      // .textContent - a nested fore with no <fx-instance type="html"> of its own never runs its own
       // rebuild(), so its UI does not reliably refresh after actions targeting the shared
       // instance (independent of undo/redo). See doc/shared-instance-refresh-investigation.md.
       // this is the original "+1 button" scenario: action-driven edits never coalesce, so
@@ -485,12 +485,12 @@ describe('undo/redo', () => {
         <div>
           <fx-fore id="owner">
             <fx-model undo>
-              <fx-instance id="shared-data" shared><data><count>0</count></data></fx-instance>
+              <fx-instance id="shared-data" shared type="html"><data><count>0</count></data></fx-instance>
             </fx-model>
           </fx-fore>
           <fx-fore id="mixed">
             <fx-model undo>
-              <fx-instance><data><local>x</local></data></fx-instance>
+              <fx-instance type="html"><data><local>x</local></data></fx-instance>
             </fx-model>
             <fx-trigger id="touch-shared"
               ><button></button><fx-setvalue ref="instance('shared-data')/count">1</fx-setvalue></fx-trigger
@@ -530,7 +530,7 @@ describe('undo/redo', () => {
       const el = await fixtureSync(html`
         <fx-fore>
           <fx-model undo>
-            <fx-instance>
+            <fx-instance type="html">
               <data><value>A</value></data>
             </fx-instance>
           </fx-model>
@@ -554,7 +554,7 @@ describe('undo/redo', () => {
       const el = await fixtureSync(html`
         <fx-fore>
           <fx-model undo>
-            <fx-instance>
+            <fx-instance type="html">
               <data><value>A</value></data>
             </fx-instance>
           </fx-model>
@@ -572,7 +572,7 @@ describe('undo/redo', () => {
       const el = await fixtureSync(html`
         <fx-fore>
           <fx-model undo>
-            <fx-instance><data><value>A</value></data></fx-instance>
+            <fx-instance type="html"><data><value>A</value></data></fx-instance>
           </fx-model>
           <fx-control ref="value"></fx-control>
         </fx-fore>
@@ -606,7 +606,7 @@ describe('undo/redo', () => {
       const el = await fixtureSync(html`
         <fx-fore>
           <fx-model undo>
-            <fx-instance><data><value>A</value></data></fx-instance>
+            <fx-instance type="html"><data><value>A</value></data></fx-instance>
           </fx-model>
           <fx-control ref="value"></fx-control>
         </fx-fore>
@@ -629,7 +629,7 @@ describe('undo/redo', () => {
       const el = await fixtureSync(html`
         <fx-fore>
           <fx-model undo>
-            <fx-instance><data><value>A</value></data></fx-instance>
+            <fx-instance type="html"><data><value>A</value></data></fx-instance>
           </fx-model>
           <fx-control ref="value"></fx-control>
           <fx-trigger id="checkpoint"
@@ -670,7 +670,7 @@ describe('undo/redo', () => {
       const el = await fixtureSync(html`
         <fx-fore>
           <fx-model undo>
-            <fx-instance>
+            <fx-instance type="html">
               <data><value>A</value><other>x</other></data>
             </fx-instance>
           </fx-model>
@@ -714,7 +714,7 @@ describe('undo/redo', () => {
       const el = await fixtureSync(html`
         <fx-fore keyboard-shortcuts>
           <fx-model undo>
-            <fx-instance>
+            <fx-instance type="html">
               <data><value>A</value></data>
             </fx-instance>
           </fx-model>
@@ -745,7 +745,7 @@ describe('undo/redo', () => {
       const el = await fixtureSync(html`
         <fx-fore keyboard-shortcuts>
           <fx-model undo>
-            <fx-instance>
+            <fx-instance type="html">
               <data><value>A</value></data>
             </fx-instance>
           </fx-model>
@@ -786,7 +786,7 @@ describe('undo/redo', () => {
       const el = await fixtureSync(html`
         <fx-fore>
           <fx-model undo undo-depth="7">
-            <fx-instance>
+            <fx-instance type="html">
               <data><value>A</value></data>
             </fx-instance>
           </fx-model>
@@ -802,7 +802,7 @@ describe('undo/redo', () => {
       const el = await fixtureSync(html`
         <fx-fore>
           <fx-model undo undo-depth="50">
-            <fx-instance><data><value>0</value></data></fx-instance>
+            <fx-instance type="html"><data><value>0</value></data></fx-instance>
           </fx-model>
           <fx-control ref="value"></fx-control>
         </fx-fore>
@@ -855,7 +855,7 @@ describe('undo/redo', () => {
       const el = await fixtureSync(html`
         <fx-fore>
           <fx-model undo>
-            <fx-instance><data><value>0</value></data></fx-instance>
+            <fx-instance type="html"><data><value>0</value></data></fx-instance>
           </fx-model>
           <fx-control ref="value"></fx-control>
           <fx-trigger id="undo"><button></button><fx-undo></fx-undo></fx-trigger>
@@ -897,7 +897,7 @@ describe('undo/redo', () => {
       const el = await fixtureSync(html`
         <fx-fore>
           <fx-model undo>
-            <fx-instance>
+            <fx-instance type="html">
               <data><a>A</a></data>
             </fx-instance>
             <fx-bind ref="a" constraint="string-length(.) = 1"></fx-bind>
@@ -943,7 +943,7 @@ describe('undo/redo', () => {
       const el = await fixtureSync(html`
         <fx-fore>
           <fx-model>
-            <fx-instance>
+            <fx-instance type="html">
               <data><value>A</value></data>
             </fx-instance>
           </fx-model>
@@ -968,7 +968,7 @@ describe('undo/redo', () => {
       const el = await fixtureSync(html`
         <fx-fore>
           <fx-model undo-depth="5">
-            <fx-instance>
+            <fx-instance type="html">
               <data><value>A</value></data>
             </fx-instance>
           </fx-model>
@@ -988,7 +988,7 @@ describe('undo/redo', () => {
       const el = await fixtureSync(html`
         <fx-fore keyboard-shortcuts>
           <fx-model>
-            <fx-instance>
+            <fx-instance type="html">
               <data><value>A</value></data>
             </fx-instance>
           </fx-model>
@@ -1061,7 +1061,7 @@ describe('undo/redo', () => {
       const el = await fixtureSync(html`
         <fx-fore>
           <fx-model undo>
-            <fx-instance>
+            <fx-instance type="html">
               <data><value>A</value></data>
             </fx-instance>
             <fx-instance id="json" type="json">{"value":"A"}</fx-instance>
