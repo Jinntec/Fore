@@ -709,6 +709,32 @@ const xhtmlNamespaceResolver = prefix => {
   return undefined;
 };
 
+/**
+ * Namespace resolver for XPaths evaluated against an HTML instance (or the page itself):
+ * defaults the *unprefixed* namespace to HTML, unless an ancestor declares an explicit
+ * `xpath-default-namespace`, and still honours explicit xmlns:prefix declarations in scope for
+ * prefixed names, instead of leaving every prefixed name unresolved.
+ *
+ * @param {Element} formElement
+ */
+function createHtmlAwareNamespaceResolver(formElement) {
+  return prefix => {
+    if (!prefix) {
+      const xpathDefaultNamespace = fxEvaluateXPathToString(
+        'ancestor-or-self::*/@xpath-default-namespace[last()]',
+        formElement,
+      );
+      return xpathDefaultNamespace || 'http://www.w3.org/1999/xhtml';
+    }
+    return fxEvaluateXPathToString(
+      'ancestor-or-self::*/@*[name() = "xmlns:" || $prefix][last()]',
+      formElement,
+      null,
+      { prefix },
+    );
+  };
+}
+
 export function isInShadow(node) {
   return node.getRootNode() instanceof ShadowRoot;
 }
@@ -854,8 +880,9 @@ export function createNamespaceResolver(xpathQuery, formElement) {
       return resolveNamespacePrefix;
     }
     if (instance && instance.type === 'html') {
-      // Working with HTML instances: make the XPaths work with HTML as the default namespace uri
-      return xhtmlNamespaceResolver;
+      const resolveNamespacePrefix = createHtmlAwareNamespaceResolver(formElement);
+      setCachedNamespaceResolver(xpathQuery, formElement, resolveNamespacePrefix);
+      return resolveNamespacePrefix;
     }
   }
 
@@ -883,7 +910,8 @@ function createNamespaceResolverForNode(query, contextNode, formElement) {
     ((contextNode && contextNode.ownerDocument) || contextNode) === window.document ||
     contextNode instanceof HTMLElement
   ) {
-    return xhtmlNamespaceResolver;
+    // Context node lives in an HTML document (the page itself, or a parsed HTML instance).
+    return createHtmlAwareNamespaceResolver(formElement);
   }
   return createNamespaceResolver(query, formElement);
 }
