@@ -217,7 +217,7 @@ function switchSelectedInstance(newId) {
       oldEl.setAttribute('type', 'json');
       oldEl.textContent = getInstanceText();
     } else {
-      oldEl.removeAttribute('type');
+      oldEl.setAttribute('type', 'html');
       oldEl.innerHTML = getInstanceText();
     }
     markupText = fragmentToText(oldFrag);
@@ -297,7 +297,7 @@ function assembleForeContent(markupText, instanceText, instanceType, targetInsta
         instanceEl.setAttribute('type', 'json');
         instanceEl.textContent = instanceText;
       } else {
-        instanceEl.removeAttribute('type');
+        instanceEl.setAttribute('type', 'html');
         instanceEl.innerHTML = instanceText;
       }
     }
