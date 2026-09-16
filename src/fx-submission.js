@@ -165,10 +165,11 @@ export class FxSubmission extends ForeElementMixin {
     const instType = instance.getAttribute('type');
 
     let serialized;
+    let relevant;
     if (this.serialization === 'none') {
       serialized = undefined;
     } else {
-      const relevant = Relevance.selectRelevant(this, instType);
+      relevant = Relevance.selectRelevant(this, instType);
       serialized = this._serialize(instance, relevant);
     }
 
@@ -181,7 +182,13 @@ export class FxSubmission extends ForeElementMixin {
       if (this.replace === 'download') {
         await this._handleResponse(serialized, resolvedUrl, 'application/xml');
       } else {
-        const data = this._parse(serialized, instance);
+        // For HTML instances skip the serialize round trip: a 'text/html' parse always synthesizes
+        // a full <html><head><body> document regardless of the input, which loses the real
+        // root. The data is already a DOM node here.  just clone it
+        const data =
+          instType === 'html' && relevant?.nodeType
+            ? this._cloneHtmlPayload(relevant)
+            : this._parse(serialized, instance);
         await this._handleResponse(data, resolvedUrl, 'application/xml');
       }
       console.log('### <<<<< submit-done >>>>>');
@@ -296,11 +303,29 @@ export class FxSubmission extends ForeElementMixin {
   }
 
   /**
+   * Wraps a cloned relevant-data node in the minimal single-root document shape HTML instances
+   * use (see `fx-instance.js`'s `_useInlineData()`/`createInstanceData()`) - used only by the
+   * `#echo` shortcut, which never actually serializes to a string, so it can clone the live
+   * node directly instead of round-tripping through `_serialize()`/`_parse()`'s 'text/html'
+   * parsing (which always synthesizes a full <html><head><body> document, losing the real root).
+   *
+   * @param {Node} node
+   * @returns {Document}
+   */
+  // eslint-disable-next-line class-methods-use-this
+  _cloneHtmlPayload(node) {
+    const doc = new Document();
+    doc.appendChild(node.cloneNode(true));
+    return doc;
+  }
+
+  /**
    * @param {string} serialized
    * @param {import('./fx-instance.js').FxInstance} instance
    *
    * @returns {(Document|Object|string)}
    */
+  // eslint-disable-next-line class-methods-use-this
   _parse(serialized, instance) {
     if (!serialized) {
       return null;
