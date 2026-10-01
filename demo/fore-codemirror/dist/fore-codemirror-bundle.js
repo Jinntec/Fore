@@ -28429,7 +28429,11 @@ var fore_tree_default = {
     },
     "fx-alert": {
       attrs: {
-        ref: null
+        ref: null,
+        politeness: [
+          "polite",
+          "assertive"
+        ]
       },
       children: [
         "HTML-ELEMENTS"
@@ -28539,6 +28543,10 @@ var fore_tree_default = {
     },
     "fx-message": {
       attrs: {
+        appearance: [
+          "toast",
+          "banner"
+        ],
         event: null,
         level: [
           "ephemeral",
