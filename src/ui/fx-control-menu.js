@@ -234,16 +234,14 @@ export class FxControlMenu extends XfAbstractControl {
     }
 
     targets.forEach((el, index) => {
-      let label = el.getAttribute('aria-label');
-      if (!label) {
-        label = el.querySelector('label')?.textContent.trim() || `Item ${index + 1}`;
-      }
+      let label = typeof el.getOnDemandLabel === 'function' ? el.getOnDemandLabel() : '';
       if (!label) {
         console.warn(
-          'no label found - cannot create menu entry for ',
+          'no label found - cannot create a proper menu entry for ',
           el,
           ' - please add aria-label or label element to control',
         );
+        label = `Item ${index + 1}`;
       }
       const item = document.createElement('a');
       item.href = '#';

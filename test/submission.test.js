@@ -592,5 +592,4 @@ describe('submission tests', () => {
       });
 
     });
-  });
 });

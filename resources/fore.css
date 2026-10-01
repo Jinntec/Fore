@@ -492,3 +492,9 @@
 	[on-demand] {
 		display: none !important;
 	}
+
+/* the hide button of on-demand controls is keyboard focusable */
+.trash:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
