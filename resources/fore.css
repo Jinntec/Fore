@@ -38,6 +38,18 @@
         color: red;
     }
 
+    /*
+        The visible "*" gets a text alternative so assistive technology announces "required"
+        instead of "star" (WCAG 3.3.2). Both parts can be set per project/language, e.g.
+            :root { --fore-required-marker: "(!)"; --fore-required-text: "obligatoire"; }
+        Guarded by @supports: where alt text for `content` is unsupported the plain "*" above stays.
+    */
+    @supports (content: "a" / "b") {
+        fx-control[required] label:after {
+            content: var(--fore-required-marker, "*") / " " var(--fore-required-text, "required");
+        }
+    }
+
     .fore-error {
         height: 2rem;
         background: darkred;
