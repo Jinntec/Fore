@@ -1,10 +1,13 @@
 import { Fore } from './fore.js';
+import { FxFore } from './fx-fore.js';
 import { Relevance } from './relevance.js';
 import { evaluateXPath } from './xpath-evaluation.js';
 import ForeElementMixin from './ForeElementMixin.js';
 
 /**
- * todo: validate='false'
+ * `<fx-submission>` — serializes the relevant instance data, sends it to `url`
+ * via `method`, and applies the response per `replace` (`all` | `instance` |
+ * `none` | ...). Dispatches `submit-done` on success, `submit-error` on failure.
  */
 export class FxSubmission extends ForeElementMixin {
   constructor() {
@@ -107,6 +110,9 @@ export class FxSubmission extends ForeElementMixin {
   }
 
   async submit() {
+    // Set by _handleResponse() when it hands the model update cycle to the surrounding
+    // action chain (see there); read + cleared by fx-send right after submit() resolves.
+    this._updateCycleDeferredToChain = false;
     await Fore.dispatch(this, 'submit', { submission: this });
     await this._submit();
   }
@@ -257,7 +263,10 @@ export class FxSubmission extends ForeElementMixin {
         return;
       }
 
-      const contentType = response.headers.get('content-type').split(';')[0].trim().toLowerCase();
+      const contentType = (response.headers.get('content-type') || '')
+        .split(';')[0]
+        .trim()
+        .toLowerCase();
 
       if (contentType.endsWith('/xml') || contentType.endsWith('+xml')) {
         const text = await response.text();
@@ -269,7 +278,7 @@ export class FxSubmission extends ForeElementMixin {
       } else if (contentType.endsWith('/json') || contentType.endsWith('+json')) {
         const json = await response.json();
         await this._handleResponse(json, resolvedUrl, contentType);
-      } else {
+      } else if (contentType) {
         const blob = await response.blob();
         await this._handleResponse(blob, resolvedUrl, contentType);
       }
@@ -567,20 +576,20 @@ export class FxSubmission extends ForeElementMixin {
 
       // Skip any refreshes if the model is not yet inited
       if (this.model.inited) {
-        // Rebuild model items / binds against the new instance root
-        this.model.updateModel();
-
         // ✅ treat instance replacement as a structural change
-        const fore =
-          (typeof this.getOwnerForm === 'function' && this.getOwnerForm()) ||
-          this.closest('fx-fore') ||
-          this.getModel()?.parentNode;
+        const fore = this.getOwnerForm();
+        fore.someInstanceDataStructureChanged = true;
 
-        if (fore) {
-          fore.someInstanceDataStructureChanged = true;
-          if (typeof fore.scanForNewTemplateExpressionsNextRefresh === 'function') {
-            fore.scanForNewTemplateExpressionsNextRefresh();
-          }
+        // Inside an action chain the triggering fx-send owns the rebuild/recalculate/refresh
+        // cycle and runs it from its actionPerformed() - which fires AFTER the
+        // submit-done / submit-error child actions, so any model changes they make land in
+        // the same cycle (issue #373). This mirrors how fx-reset / fx-replace own theirs.
+        // A standalone submit() (direct call, or event="ready" before an action chain
+        // exists) has no such owner, so run the cycle here.
+        if (FxFore.outermostHandler) {
+          this._updateCycleDeferredToChain = true;
+        } else {
+          this.model.updateModel();
           // ✅ IMPORTANT: await, otherwise tests/action-pipeline can out-run the refresh
           await fore.refresh(true);
         }
