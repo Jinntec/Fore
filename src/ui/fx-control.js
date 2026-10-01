@@ -398,7 +398,17 @@ export default class FxControl extends XfAbstractControl {
   _associateLabel() {
     const label = this.querySelector(':scope > label');
     if (label) {
-      const id = label.getAttribute('for') || this.widget.id || `fx-${Fore.createUUID()}`;
+      let id = label.getAttribute('for') || this.widget.id || `fx-${Fore.createUUID()}`;
+      const labelsOwnWidget = !this.widget.id || this.widget.id === label.getAttribute('for');
+      if (label.hasAttribute('for') && labelsOwnWidget && this.closest('fx-repeatitem')) {
+        // The template is cloned per row, so an authored `for`/`id` pair would exist once per row
+        // and every label would point at the first row's widget. Fore's own id lookups
+        // (`resolveId`) deliberately rely on the authored ids of the Fore elements, so only the
+        // native widget and its label get a row-unique id.
+        id = `${id}-${Fore.createUUID()}`;
+        label.setAttribute('for', id);
+        this.widget.id = id;
+      }
       if (!label.hasAttribute('for')) label.setAttribute('for', id);
       if (!this.widget.id) this.widget.id = id;
       return;
