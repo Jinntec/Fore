@@ -7,8 +7,11 @@ export class FxAlert extends AbstractControl {
   }
 
   connectedCallback() {
-    this.setAttribute('role', 'alert');
-    this.setAttribute('aria-live', 'assertive');
+    // Inline field errors are announced politely by default so tabbing through several invalid
+    // fields does not interrupt the screen reader. Use `politeness="assertive"` for urgent alerts.
+    const assertive = this.getAttribute('politeness') === 'assertive';
+    this.setAttribute('role', assertive ? 'alert' : 'status');
+    this.setAttribute('aria-live', assertive ? 'assertive' : 'polite');
     this.setAttribute('aria-atomic', 'true');
 
     const style = `

@@ -405,6 +405,9 @@ export default class FxControl extends XfAbstractControl {
     }
     if (this.label) {
       this.widget.setAttribute('aria-label', this.label);
+    } else if (this.hasAttribute('aria-label') && !this.widget.hasAttribute('aria-label')) {
+      // an aria-label authored on the host does not name the inner widget - pass it on
+      this.widget.setAttribute('aria-label', this.getAttribute('aria-label'));
     }
   }
 
