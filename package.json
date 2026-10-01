@@ -30,7 +30,7 @@
     "!.DS_Store"
   ],
   "dependencies": {
-    "@jinntec/jinn-toast": "^1.0.5",
+    "@jinntec/jinn-toast": "^1.1.0",
     "@picocss/pico": "^2.0.6",
     "fontoxpath": "^3.34.0"
   },

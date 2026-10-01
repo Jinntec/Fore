@@ -465,6 +465,27 @@
         background: var(--paper-orange-500);
     }
 
+    /* fx-message appearance="banner": full-width bar */
+    .toastify.appearance-banner{
+        display: block; /* beats the generic `.error { display: flex }` */
+        left: 0;
+        right: 0;
+        width: 100%;
+        max-width: none;
+        box-sizing: border-box;
+        border-radius: 0;
+        text-align: center;
+        padding-left: 48px;
+        padding-right: 48px;
+    }
+    .toastify.appearance-banner .toast-close{
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        margin: 0;
+    }
+
 	/*
 	 * For on-demand stuff, if it has no value initially,hide it
 	 */
