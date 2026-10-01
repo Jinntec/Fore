@@ -1,7 +1,9 @@
 body{
     font-family: Arial, sans-serif;
 }
-
+[nonrelevant] {
+    display: none !important;
+}
 body, fx-fore {
     width: 100%;
 }
@@ -244,7 +246,9 @@ fx-control{
 fx-control:has(input[type=number]){
     display: inline-block;
 }
-
+fx-control:has(input[type=number]) {
+    display: none;
+}
 fx-trigger{
     /*padding: 0.5rem;*/
 }
@@ -418,6 +422,7 @@ address fx-control.zip{
     width: 8rem;
     display: inline-block;
 }
+address fx-control.zip
 address fx-control.city {
     width: 16rem;
     display: inline-block;
@@ -535,6 +540,6 @@ body:has(#outer.view-mode) fx-control[readonly] input[type="radio"] {
 .view-mode-toggle-label-view { display: none; }
 body:has(#outer.view-mode) .view-mode-toggle-label-edit { display: none; }
 body:has(#outer.view-mode) .view-mode-toggle-label-view { display: inline; }
-
+body:has(#outer.view-mode) .trash{display: none;}
 
 
