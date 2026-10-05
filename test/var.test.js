@@ -1,6 +1,4 @@
-import {
-  html, fixtureSync, expect, oneEvent,
-} from '@open-wc/testing';
+import { html, fixtureSync, expect, oneEvent } from '@open-wc/testing';
 
 // full index: the fixtures use fx-fore, fx-trigger, fx-action, fx-delete etc. —
 // importing them all keeps this spec runnable standalone via --grep
@@ -12,7 +10,7 @@ describe('var Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <counter>0</counter>
             </data>
@@ -33,7 +31,7 @@ describe('var Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <items>
                 <item>1</item>
@@ -74,7 +72,7 @@ describe('var Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <counter>1</counter>
             </data>
@@ -106,7 +104,7 @@ describe('var Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <counter>1</counter>
             </data>
@@ -137,7 +135,7 @@ describe('var Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <counter>1</counter>
             </data>
@@ -163,7 +161,7 @@ describe('var Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <greeting>original</greeting>
               <captured></captured>
@@ -196,7 +194,7 @@ describe('var Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <item>a</item>
               <item>b</item>
@@ -228,7 +226,7 @@ describe('var Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <item>1</item>
               <item>2</item>
@@ -263,7 +261,7 @@ describe('var Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <price>10</price>
               <factor>2</factor>
@@ -299,7 +297,7 @@ describe('var Tests', () => {
     const el = fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <counter>1</counter>
             </data>
@@ -324,12 +322,12 @@ describe('var Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <value>default-data</value>
             </data>
           </fx-instance>
-          <fx-instance id="other">
+          <fx-instance id="other" type="html">
             <data>
               <value>other-data</value>
             </data>
@@ -358,16 +356,16 @@ describe('var Tests', () => {
     await el.querySelector('fx-trigger').performActions();
     expect(el.querySelector('#var-out').value).to.equal('overridden');
     const instance = el.querySelector('fx-instance');
-    expect(
-      evaluateXPathToString('$default/value', instance.getDefaultContext(), el),
-    ).to.equal('changed');
+    expect(evaluateXPathToString('$default/value', instance.getDefaultContext(), el)).to.equal(
+      'changed',
+    );
   });
 
   it('rebuilds $default after instance data replacement (replace="instance")', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <value>old</value>
             </data>
@@ -384,16 +382,15 @@ describe('var Tests', () => {
 
     // what replace="instance" does: assign new instanceData, update the model, refresh
     const instance = el.querySelector('fx-instance');
-    const newDoc = new DOMParser().parseFromString(
-      '<data><value>replaced</value></data>',
-      'application/xml',
-    );
+    const newDoc = new DOMParser()
+      .parseFromString('<data><value>replaced</value></data>', 'text/html')
+      .querySelector('data');
     instance.instanceData = newDoc;
     el.querySelector('fx-model').updateModel();
     await el.refresh(true);
 
     // the implicit binding must point into the new document, not the replaced one
-    expect(el._instanceVarBindings.default.ownerDocument).to.equal(newDoc);
+    expect(el._instanceVarBindings.default).to.equal(newDoc);
     expect(output.value).to.equal('replaced');
   });
 
@@ -401,7 +398,7 @@ describe('var Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <counter>0</counter>
               <oof></oof>
@@ -433,7 +430,7 @@ describe('var Tests', () => {
 
     const trigger = el.querySelector('fx-trigger.start');
     const action = el.querySelector('fx-action');
-	  await trigger.performActions();
+    await trigger.performActions();
 
     const output = el.querySelector('fx-output');
     expect(output.value).to.equal('10');

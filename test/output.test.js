@@ -9,7 +9,7 @@ describe('fx-output Tests', () => {
     const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model>
-                    <fx-instance>
+                    <fx-instance type="html">
                         <data>
                             <div style="color:white;background:#333;padding:1rem;">hey there</div>
                         </data>
@@ -39,7 +39,7 @@ describe('fx-output Tests', () => {
     const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model>
-                    <fx-instance>
+                    <fx-instance type="html">
                         <data>
                             <div style="color:white;background:#333;padding:1rem;">hey there</div>
                         </data>
@@ -68,7 +68,7 @@ describe('fx-output Tests', () => {
     const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model>
-                    <fx-instance>
+                    <fx-instance type="html">
                         <data>
                             <div class="test" style="color:white;background:#333;padding:1rem;">hey there</div>
                         </data>
@@ -104,7 +104,7 @@ describe('fx-output Tests', () => {
     const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model>
-                    <fx-instance>
+                    <fx-instance type="html">
                         <data>
                             <div style="color:white;background:#333;padding:1rem;">hey there</div>
                         </data>
@@ -135,7 +135,7 @@ describe('fx-output Tests', () => {
     const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model>
-                    <fx-instance>
+                    <fx-instance type="html">
                         <data>
                             <a><b>1</b></a>
                             <b>2</b>
@@ -162,7 +162,7 @@ describe('fx-output Tests', () => {
     const el = await fixtureSync(html`
             <fx-fore>
                 <fx-model>
-                    <fx-instance>
+                    <fx-instance type="html">
                         <data>
                             <pic>base/resources/images/light7.png</pic>
                         </data>

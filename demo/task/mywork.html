@@ -14,7 +14,7 @@
         <fx-send submission="load" event="model-construct-done"></fx-send>
 
         <fx-functionlib src="realtime-functions.html"></fx-functionlib>
-        <fx-instance id="default" shared>
+        <fx-instance id="default" shared type="html">
             <data>
                 <period name="thisweek" start="" end="">
                 </period>
@@ -33,7 +33,7 @@
         <fx-bind ref="instance()/period/category/task">
             <fx-bind ref="@due" relevant="true()"></fx-bind>
         </fx-bind>
-        <fx-instance id="vars">
+        <fx-instance id="vars" type="html">
             <data>
                 <search></search>
                 <owner>me</owner>

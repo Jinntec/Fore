@@ -8,7 +8,7 @@ describe('repeat accessibility', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data><i n="a"></i><i n="b"></i><i n="c"></i><i n="d"></i></data>
           </fx-instance>
         </fx-model>
@@ -76,7 +76,7 @@ describe('repeat accessibility', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data><i n="a"></i><i n="b"></i><i n="c"></i></data>
           </fx-instance>
         </fx-model>

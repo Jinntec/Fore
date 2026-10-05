@@ -19,7 +19,7 @@ describe('issue #373 - facet recompute after submit-done setvalue', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance id="ui"
+          <fx-instance id="ui" type="html"
             ><data><busy>false</busy></data></fx-instance
           >
           <fx-bind ref="instance('ui')/busy" relevant=". = 'true'"></fx-bind>
@@ -39,7 +39,7 @@ describe('issue #373 - facet recompute after submit-done setvalue', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance id="ui"
+          <fx-instance id="ui" type="html"
             ><data><busy>false</busy></data></fx-instance
           >
           <fx-bind ref="instance('ui')/busy" relevant=". = 'true'"></fx-bind>
@@ -70,11 +70,11 @@ describe('issue #373 - facet recompute after submit-done setvalue', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance id="ui"
+          <fx-instance id="ui" type="html"
             ><data><busy>false</busy></data></fx-instance
           >
-          <fx-instance id="recipes"
-            ><data><placeholder /></data
+          <fx-instance id="recipes" type="html"
+            ><data><placeholder></placeholder></data
           ></fx-instance>
           <fx-bind ref="instance('ui')/busy" relevant=". = 'true'"></fx-bind>
 
@@ -123,11 +123,11 @@ describe('issue #373 - facet recompute after submit-done setvalue', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance id="ui"
+          <fx-instance id="ui" type="html"
             ><data><busy>false</busy><name>x</name></data></fx-instance
           >
-          <fx-instance id="recipes"
-            ><data><placeholder /></data
+          <fx-instance id="recipes" type="html"
+            ><data><placeholder></placeholder></data
           ></fx-instance>
           <fx-bind ref="instance('ui')/name" readonly="instance('ui')/busy = 'true'"></fx-bind>
 

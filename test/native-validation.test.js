@@ -21,7 +21,7 @@ describe('native browser validation', () => {
       const el = fixtureSync(html`
         <fx-fore>
           <fx-model id="m">
-            <fx-instance><data><age>30</age></data></fx-instance>
+            <fx-instance type="html"><data><age>30</age></data></fx-instance>
             <fx-bind ref="age"></fx-bind>
           </fx-model>
           <fx-control ref="age">
@@ -43,7 +43,7 @@ describe('native browser validation', () => {
       const el = fixtureSync(html`
         <fx-fore>
           <fx-model id="m">
-            <fx-instance><data><age></age></data></fx-instance>
+            <fx-instance type="html"><data><age></age></data></fx-instance>
             <fx-bind ref="age"></fx-bind>
           </fx-model>
           <fx-control id="ctrl" ref="age">
@@ -65,7 +65,7 @@ describe('native browser validation', () => {
       const el = fixtureSync(html`
         <fx-fore>
           <fx-model id="m">
-            <fx-instance><data><age></age></data></fx-instance>
+            <fx-instance type="html"><data><age></age></data></fx-instance>
             <fx-bind ref="age"></fx-bind>
           </fx-model>
           <fx-control id="ctrl" ref="age">
@@ -87,7 +87,7 @@ describe('native browser validation', () => {
       const el = fixtureSync(html`
         <fx-fore>
           <fx-model id="m">
-            <fx-instance><data><age></age></data></fx-instance>
+            <fx-instance type="html"><data><age></age></data></fx-instance>
             <fx-bind ref="age"></fx-bind>
           </fx-model>
           <fx-control id="ctrl" ref="age">
@@ -112,7 +112,7 @@ describe('native browser validation', () => {
       const el = fixtureSync(html`
         <fx-fore>
           <fx-model id="m">
-            <fx-instance><data><email></email></data></fx-instance>
+            <fx-instance type="html"><data><email></email></data></fx-instance>
             <fx-bind ref="email"></fx-bind>
           </fx-model>
           <fx-control id="ctrl" ref="email">
@@ -136,7 +136,7 @@ describe('native browser validation', () => {
       const el = fixtureSync(html`
         <fx-fore>
           <fx-model id="m">
-            <fx-instance><data><zip></zip></data></fx-instance>
+            <fx-instance type="html"><data><zip></zip></data></fx-instance>
             <fx-bind ref="zip"></fx-bind>
           </fx-model>
           <fx-control id="ctrl" ref="zip">
@@ -162,7 +162,7 @@ describe('native browser validation', () => {
       const el = fixtureSync(html`
         <fx-fore>
           <fx-model id="m">
-            <fx-instance><data><username></username></data></fx-instance>
+            <fx-instance type="html"><data><username></username></data></fx-instance>
             <fx-bind ref="username"></fx-bind>
           </fx-model>
           <fx-control id="ctrl" ref="username">
@@ -189,7 +189,7 @@ describe('native browser validation', () => {
       const el = fixtureSync(html`
         <fx-fore>
           <fx-model id="m">
-            <fx-instance><data><username></username></data></fx-instance>
+            <fx-instance type="html"><data><username></username></data></fx-instance>
             <fx-bind ref="username"></fx-bind>
           </fx-model>
           <fx-control id="ctrl" ref="username">
@@ -209,7 +209,7 @@ describe('native browser validation', () => {
       const el = fixtureSync(html`
         <fx-fore>
           <fx-model id="m">
-            <fx-instance><data><username></username></data></fx-instance>
+            <fx-instance type="html"><data><username></username></data></fx-instance>
             <fx-bind ref="username"></fx-bind>
           </fx-model>
           <fx-control id="ctrl" ref="username">
@@ -230,7 +230,7 @@ describe('native browser validation', () => {
       const el = fixtureSync(html`
         <fx-fore>
           <fx-model id="m">
-            <fx-instance><data><note>hello</note></data></fx-instance>
+            <fx-instance type="html"><data><note>hello</note></data></fx-instance>
             <fx-bind ref="note"></fx-bind>
           </fx-model>
           <fx-control id="ctrl" ref="note">
@@ -252,7 +252,7 @@ describe('native browser validation', () => {
       const el = fixtureSync(html`
         <fx-fore>
           <fx-model id="m">
-            <fx-instance><data><age></age></data></fx-instance>
+            <fx-instance type="html"><data><age></age></data></fx-instance>
             <fx-bind ref="age"></fx-bind>
           </fx-model>
           <fx-control id="ctrl" ref="age">
@@ -278,7 +278,7 @@ describe('native browser validation', () => {
       const el = fixtureSync(html`
         <fx-fore>
           <fx-model id="m">
-            <fx-instance><data><age></age></data></fx-instance>
+            <fx-instance type="html"><data><age></age></data></fx-instance>
             <fx-bind ref="age"></fx-bind>
           </fx-model>
           <fx-control id="ctrl" ref="age">
@@ -312,7 +312,7 @@ describe('native browser validation', () => {
       const el = fixtureSync(html`
         <fx-fore>
           <fx-model id="m">
-            <fx-instance><data><age></age></data></fx-instance>
+            <fx-instance type="html"><data><age></age></data></fx-instance>
             <fx-bind ref="age" constraint="string-length(.) &gt; 0"></fx-bind>
           </fx-model>
           <fx-control id="ctrl" ref="age">

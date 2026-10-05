@@ -59,7 +59,7 @@
     <fx-fore id="fx-test">
         <fx-model>
             <!-- SAME-instance panel: query and items both live in instance('items') -->
-            <fx-instance id="items">
+            <fx-instance id="items" type="html">
                 <data>
                     <query></query>
                     <item><name>Alpha</name></item>
@@ -69,7 +69,7 @@
             </fx-instance>
 
             <!-- CROSS-instance panel: items live in instance('itemsCross')... -->
-            <fx-instance id="itemsCross">
+            <fx-instance id="itemsCross" type="html">
                 <data>
                     <item><name>Alpha</name></item>
                     <item><name>Beta</name></item>
@@ -78,7 +78,7 @@
             </fx-instance>
 
             <!-- ...but the query that filters them lives in a separate instance('ui') -->
-            <fx-instance id="ui">
+            <fx-instance id="ui" type="html">
                 <data>
                     <query></query>
                 </data>

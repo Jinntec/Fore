@@ -21,7 +21,7 @@ describe('data-ref Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <bound>a</bound>
               <item>

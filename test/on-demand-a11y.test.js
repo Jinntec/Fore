@@ -8,7 +8,7 @@ describe('on-demand accessibility', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <name>Ada</name>
               <phone>123</phone>
@@ -65,7 +65,7 @@ describe('on-demand accessibility', () => {
   it('names menu entries from the control label, also for the label attribute', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
-        <fx-model><fx-instance><data><a></a><b></b></data></fx-instance></fx-model>
+        <fx-model><fx-instance type="html"><data><a></a><b></b></data></fx-instance></fx-model>
         <fx-group id="g">
           <fx-control ref="a" on-demand="true" label="Alpha"></fx-control>
           <fx-control ref="b" on-demand="true" aria-label="Beta"></fx-control>

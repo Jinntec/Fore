@@ -16,7 +16,7 @@ describe('required marker', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance><data><name></name></data></fx-instance>
+          <fx-instance type="html"><data><name></name></data></fx-instance>
           <fx-bind ref="name" required="true()"></fx-bind>
         </fx-model>
         <fx-control ref="name"><label>Name</label><input /></fx-control>
