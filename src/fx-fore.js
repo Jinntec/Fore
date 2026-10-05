@@ -820,8 +820,6 @@ export class FxFore extends HTMLElement {
       return;
     }
 
-    this._injectDevtools();
-
     // const slot = this.shadowRoot.querySelector('slot#default');
 
     const slot = this.shadowRoot?.querySelector('slot') || this.querySelector('slot');
@@ -968,21 +966,6 @@ export class FxFore extends HTMLElement {
 
       this.insertBefore(fxVar, model);
       existingVars.add(name);
-    }
-  }
-
-  _injectDevtools() {
-    if (this.ownerDocument.querySelector('fx-lens')) {
-      // There's already a lens, so we can ignore this one.
-      // One lens can focus multiple fore elements
-      return;
-    }
-    const { search } = window.location;
-    const urlParams = new URLSearchParams(search);
-    if (urlParams.has('lens')) {
-      const lens = document.createElement('fx-lens');
-      document.body.appendChild(lens);
-      lens.setAttribute('open', 'open');
     }
   }
 
