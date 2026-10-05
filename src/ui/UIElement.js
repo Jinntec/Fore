@@ -3,6 +3,12 @@ import { Fore } from '../fore.js';
 import { resolveId } from '../xpath-evaluation.js';
 
 export class UIElement extends ForeElementMixin {
+  /** Accessible name of the button hiding an on-demand element. `{label}` is the element's name. */
+  static hideLabel = 'Hide {label}';
+
+  /** Status announced after an on-demand element was hidden. `{label}` is the element's name. */
+  static hiddenMessage = '{label} hidden';
+
   constructor() {
     super();
 
@@ -190,30 +196,97 @@ export class UIElement extends ForeElementMixin {
     return ['on-demand'];
   }
 
+  /**
+   * Name of this element for the on-demand menu and the hide button: the `aria-label`, else the
+   * label of the control (`<label>` child or `label` attribute), else a descendant label.
+   *
+   * @returns {string} the name or an empty string
+   */
+  getOnDemandLabel() {
+    return (
+      this.getAttribute('aria-label') ||
+      this.querySelector(':scope > label')?.textContent.trim() ||
+      this.getAttribute('label') ||
+      this.querySelector('label')?.textContent.trim() ||
+      ''
+    );
+  }
+
+  /**
+   * Hides an on-demand element again: the reverse of `activate()`. A keyboard user would lose
+   * focus when the focused element disappears, so focus is moved to the `fx-control-menu` trigger
+   * (or else the nearest focusable element) and the removal is announced.
+   */
+  async hide() {
+    const hadFocus = this.contains(document.activeElement);
+    const label = this.getOnDemandLabel();
+    this.setAttribute('on-demand', 'true');
+    this.style.display = 'none';
+    document.dispatchEvent(new CustomEvent('update-control-menu'));
+    await Fore.dispatch(this, 'hide-control', {});
+    if (hadFocus) this._focusAfterHide();
+    Fore.announce(UIElement.hiddenMessage.replace('{label}', label).trim());
+  }
+
+  _focusAfterHide() {
+    const menu = Array.from(document.querySelectorAll('fx-control-menu')).find(m => {
+      const container = m._getScopedContainer?.();
+      return container && (container === this || container.contains(this));
+    });
+    if (menu?.triggerButton && !menu.triggerButton.disabled) {
+      menu.triggerButton.focus();
+      return;
+    }
+    const focusables = Array.from(
+      document.querySelectorAll(
+        'a[href], button:not([disabled]), input:not([disabled]):not([type=hidden]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      ),
+    ).filter(el => !this.contains(el) && el.getClientRects().length > 0);
+    const following = focusables.find(
+      el => this.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING,
+    );
+    const preceding = focusables.filter(
+      el => this.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_PRECEDING,
+    );
+    (following || preceding[preceding.length - 1])?.focus();
+  }
+
   addTrashIcon() {
     if (!this.closest('[show-icon]')) return;
-    const trash = this.querySelector('.trash');
-    if (trash) return;
+    const name = UIElement.hideLabel.replace('{label}', this.getOnDemandLabel()).trim();
+    const existing = this.querySelector('.trash');
+    if (existing) {
+      existing.setAttribute('aria-label', name);
+      return;
+    }
 
     const icon = document.createElement('span');
     icon.innerHTML = `
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"
        stroke="currentColor" stroke-width="2" stroke-linecap="round"
        stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
     <path d="M17.94 17.94C16.13 19.12 14.13 20 12 20C7 20 2.73 15.88 1 12C1.6 10.66 2.43 9.47 3.46 8.48M10.58 10.58C10.21 11.01 10 11.5 10 12C10 13.11 10.89 14 12 14C12.5 14 12.99 13.79 13.42 13.42M6.53 6.53C7.87 5.54 9.39 5 12 5C17 5 21.27 9.12 23 12C22.4 13.34 21.57 14.53 20.54 15.52M1 1L23 23"/>
   </svg>
 `;
     icon.classList.add('trash');
-    icon.setAttribute('title', 'Hide');
+    // a named, keyboard operable button (the bare span was neither)
+    icon.setAttribute('role', 'button');
+    icon.setAttribute('tabindex', '0');
+    icon.setAttribute('aria-label', name);
+    icon.setAttribute('title', name);
     icon.style.cursor = 'pointer';
     icon.style.marginLeft = '0.5em';
 
-    icon.addEventListener('click', async e => {
+    icon.addEventListener('click', e => {
       e.stopPropagation();
-      this.setAttribute('on-demand', 'true');
-      this.style.display = 'none';
-      document.dispatchEvent(new CustomEvent('update-control-menu'));
-      await Fore.dispatch(this, 'hide-control', {});
+      this.hide();
+    });
+    icon.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        e.stopPropagation();
+        this.hide();
+      }
     });
 
     this.appendChild(icon);

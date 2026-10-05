@@ -3,6 +3,66 @@
 All notable changes to this project are documented here, one section per published release.
 Entries are sourced from the project's GitHub release notes. For full commit-level diffs between any two versions, see https://github.com/Jinntec/Fore/releases or compare tags directly, e.g. `https://github.com/Jinntec/Fore/compare/vX.Y.Z...vA.B.C`.
 
+## [5.0.0] - 2026-10-05
+
+### breaking
+
+* inline instances are now parsed as HTML (`type="html"`): the first `<fx-instance type="html">` of a model is the 
+  default instance. Inline data in an `<fx-instance>` of `type="xml"` is no longer supported and logs an error - 
+  switch such instances to `type="html"` or load any XML via `src`. Inline instances do not support XML namespaces, and 
+  `<script>` instances are gone
+* migration hints for HTML instances: element names are case-insensitive, self-closing elements follow HTML parsing rules, and no namespaces
+
+### new
+
+* `fx-lens` loads automatically based on a URL parameter (#378)
+* `fx-alert` and message banners: new `appearance` support for banners, styleable by CSS
+* accessibility: improved required markers, repeated controls and on-demand controls
+
+### fixes
+
+* `fx-insert` without `origin` clones the last item selected by `ref` and the repeat shows it (#236). If `ref` selects nothing, the action is skipped with a console warning
+* `<template>` elements inside HTML instances are visible to XPath again, so `origin="instance('helper')/template/task"` works
+* HTML instances now work with `fx-submission` (echo), undo/redo, relevance and `fx-append` (namespaces)
+* `fx-send` recomputes facets after `submit-done` when replacing an instance (#373)
+* `fx-submission` no longer crashes when the endpoint responds without a body
+* `fx-alert` no longer uses `aria-live="assertive"` for inline field errors
+* `package.json` can be consumed by bundlers (#375)
+
+### chores
+
+* demos adapted to HTML instances, new `binds.html` demo
+* many new and adapted tests
+
+## [4.1.1] - 2026-07-30
+
+### fixes
+
+* fixed incorrect node placement in the sibling determination logic of `fx-fore`, with new tests for on-demand controls
+
+## [4.1.0] - 2026-07-30
+
+### new
+
+* Fore Playground demo with a version indicator; its Instance Data pane syncs with markup edits
+* recursive `fx-repeat` with parent-scoped drag and drop, plus demos (incl. a UBL invoice)
+* `fx-debugger`: action and data event filters, filtering of model items and bound elements, refresh button feedback, faster event rendering
+* native `required` attribute is preserved for controls without `fx-bind`
+* documentation comparing Fore to popular JavaScript form frameworks
+
+### fixes
+
+* node replacements and `fx-setvalue` logic (#125 predicate handling in `fx-bind` `ref`, #321 sometimes failing bindings)
+* `create-nodes`: namespace prefixes are allowed and values of elements can be set
+* scoped variables and recursion in nested repeats
+* `Fore.dispatch` calls in `fx-submission` are awaited
+* `modelitem` DOM updates
+
+### chores
+
+* removed outdated schema build scripts, unused drag-and-drop code and logs
+* dependency updates
+
 ## [4.0.0] - 2026-07-14
 
 ### breaking

@@ -28,7 +28,7 @@
                 <fx-fore>
                     <fx-model>
                         <fx-instance id="full" src="epidoc-template.xml" xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
-                        <fx-instance id="partial" xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
+                        <fx-instance id="partial" xpath-default-namespace="http://www.tei-c.org/ns/1.0" type="html"></fx-instance>
 
 
                         <!-- ### merge the response of this submission (partial) into target instance 'full'. That instance
@@ -60,7 +60,7 @@
                             <fx-message event="submit-done">doSave done</fx-message>
                         </fx-submission>
 
-                        <fx-instance id="result" xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
+                        <fx-instance id="result" xpath-default-namespace="http://www.tei-c.org/ns/1.0" type="html"></fx-instance>
                         <fx-bind ref="instance('result')//listBibl" relevant="exists(bibl)"></fx-bind>
 
                     </fx-model>

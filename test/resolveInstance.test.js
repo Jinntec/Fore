@@ -6,7 +6,7 @@ describe('XPathUtil.resolveInstance', () => {
     const el = await fixture(html`
       <fx-fore>
         <fx-model>
-          <fx-instance id="foo">
+          <fx-instance id="foo" type="html">
             <data><item>42</item></data>
           </fx-instance>
         </fx-model>
@@ -42,7 +42,7 @@ describe('XPathUtil.resolveInstance', () => {
     const el = await fixture(html`
       <fx-fore>
         <fx-model>
-          <fx-instance id="default">
+          <fx-instance id="default" type="html">
             <data><x>y</x></data>
           </fx-instance>
         </fx-model>

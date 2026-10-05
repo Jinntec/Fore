@@ -9,7 +9,7 @@ describe('action Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <value>A</value>
             </data>
@@ -38,7 +38,7 @@ describe('action Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <value>A</value>
             </data>
@@ -70,7 +70,7 @@ describe('action Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <value>A</value>
             </data>
@@ -103,7 +103,7 @@ describe('action Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <value>A</value>
               <confirmation>false</confirmation>
@@ -136,7 +136,7 @@ describe('action Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <value>A</value>
               <confirmation>true</confirmation>
@@ -179,7 +179,7 @@ describe('action Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <value>A</value>
               <confirmation>true</confirmation>
@@ -216,7 +216,7 @@ describe('action Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <value n="1">A</value>
               <value n="2">B</value>
@@ -274,7 +274,7 @@ describe('action Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <value>A</value>
               <confirmation>false</confirmation>
@@ -318,7 +318,7 @@ describe('action Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <value>A</value>
               <previous-value>NIL</previous-value>
@@ -363,7 +363,7 @@ describe('action Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <counter>0</counter>
             </data>
@@ -389,7 +389,7 @@ describe('action Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <counter>0</counter>
             </data>
@@ -423,7 +423,7 @@ describe('action Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <counter max="10">0</counter>
               <counter max="15">5</counter>
@@ -472,7 +472,7 @@ describe('action Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <counter max="10">0</counter>
               <counter max="15">5</counter>
@@ -511,7 +511,7 @@ describe('action Tests', () => {
       <fx-fore>
         <fx-model>
           <!-- inline xml instance -->
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <value></value>
             </data>

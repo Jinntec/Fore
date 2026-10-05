@@ -9,7 +9,7 @@ describe('repeat Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task complete="false" due="2019-02-04">Pick up Milk</task>
               <task complete="true" due="2019-01-04">Make tutorial part 1</task>
@@ -73,7 +73,7 @@ describe('repeat Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task complete="false" due="2019-02-04">Pick up Milk</task>
               <task complete="true" due="2019-01-04">Make tutorial part 1</task>
@@ -139,7 +139,7 @@ describe('repeat Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task complete="false" due="2019-02-04">Pick up Milk</task>
               <task complete="true" due="2019-01-04">Make tutorial part 1</task>
@@ -198,7 +198,7 @@ describe('repeat Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task complete="false" due="2019-02-04">Pick up Milk</task>
               <task complete="true" due="2019-01-04">Make tutorial part 1</task>
@@ -248,7 +248,7 @@ describe('repeat Tests', () => {
                 <fx-fore>
                     <fx-model id="record">
 
-                        <fx-instance>
+                        <fx-instance type="html">
                             <data>
                                 <task complete="false" due="2019-02-04">Pick up Milk</task>
                                 <task complete="true" due="2019-01-04">Make tutorial part 1</task>
@@ -293,7 +293,7 @@ describe('repeat Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task complete="false" due="2019-02-04">Pick up Milk</task>
               <task complete="true" due="2019-01-04">Make tutorial part 1</task>
@@ -341,7 +341,7 @@ describe('repeat Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task complete="false" due="2019-02-04">Pick up Milk</task>
             </data>
@@ -410,7 +410,7 @@ describe('repeat Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task complete="false" due="2019-02-04">Pick up Milk</task>
               <task complete="true" due="2019-01-04">Make tutorial part 1</task>
@@ -458,7 +458,7 @@ describe('repeat Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task complete="false" due="2019-02-04">Pick up Milk</task>
               <task complete="true" due="2019-01-04">Make tutorial part 1</task>
@@ -501,7 +501,7 @@ describe('repeat Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task complete="false" due="2019-02-04">Pick up Milk</task>
               <task complete="true" due="2019-01-04">Make tutorial part 1</task>
@@ -553,7 +553,7 @@ describe('repeat Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task text="Pick up Milk">
                 <task text="go to store"></task>
@@ -616,7 +616,7 @@ describe('repeat Tests', () => {
     const el = await fixture(
       html`<fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data> </data>
           </fx-instance>
         </fx-model>
@@ -631,7 +631,7 @@ describe('repeat Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data> </data>
           </fx-instance>
         </fx-model>
@@ -651,7 +651,7 @@ describe('repeat Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <item>
                 <field name="a">a</field>
@@ -716,7 +716,7 @@ describe('repeat Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task>Pick up Milk</task>
               <task>Make tutorial part 1</task>
@@ -769,7 +769,7 @@ describe('repeat progressive rendering (size)', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data></data>
           </fx-instance>
         </fx-model>
@@ -790,7 +790,7 @@ describe('repeat progressive rendering (size)', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data></data>
           </fx-instance>
         </fx-model>
@@ -811,7 +811,7 @@ describe('repeat progressive rendering (size)', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data></data>
           </fx-instance>
         </fx-model>
@@ -832,7 +832,7 @@ describe('repeat progressive rendering (size)', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data></data>
           </fx-instance>
         </fx-model>
@@ -869,7 +869,7 @@ describe('repeat progressive rendering (size)', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data></data>
           </fx-instance>
         </fx-model>
@@ -895,7 +895,7 @@ describe('repeat progressive rendering (size)', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task>one</task>
               <task>two</task>
@@ -935,7 +935,7 @@ describe('repeat progressive rendering (size)', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task>one</task>
               <task>two</task>
@@ -970,11 +970,44 @@ describe('repeat progressive rendering (size)', () => {
     expect(rItems[3].hasAttribute('repeat-index')).to.equal(true);
   });
 
+  it('fx-append creates the new node in the instance namespace for a real xml document', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="record">
+          <fx-instance
+            xpath-default-namespace="http://example.org/tasks"
+            src="base/test/append-namespace.xml"
+          ></fx-instance>
+        </fx-model>
+        <fx-repeat id="todos" ref="task">
+          <template>
+            <fx-output ref="."></fx-output>
+          </template>
+        </fx-repeat>
+        <fx-trigger>
+          <button>append</button>
+          <fx-append repeat="todos" ref="task"></fx-append>
+        </fx-trigger>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+
+    const repeat = el.querySelector('#todos');
+    expect(repeat.nodeset.length).to.equal(1);
+
+    const trigger = el.querySelector('fx-trigger');
+    await trigger.performActions();
+
+    expect(repeat.nodeset.length).to.equal(2);
+    expect(repeat.nodeset[1].namespaceURI).to.equal('http://example.org/tasks');
+  });
+
   it('delete within the rendered window shrinks it and does not re-render the tail', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task>one</task>
               <task>two</task>
@@ -1015,7 +1048,7 @@ describe('repeat progressive rendering (size)', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task>one</task>
               <task>two</task>
@@ -1059,7 +1092,7 @@ describe('repeat progressive rendering (size)', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <row><val>1</val><val>2</val><val>3</val></row>
               <row><val>1</val><val>2</val><val>3</val></row>
@@ -1132,7 +1165,7 @@ describe('repeat true windowed virtualization (size + virtual)', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data></data>
           </fx-instance>
         </fx-model>
@@ -1161,7 +1194,7 @@ describe('repeat true windowed virtualization (size + virtual)', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data></data>
           </fx-instance>
         </fx-model>
@@ -1192,7 +1225,7 @@ describe('repeat true windowed virtualization (size + virtual)', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data></data>
           </fx-instance>
         </fx-model>
@@ -1226,7 +1259,7 @@ describe('repeat true windowed virtualization (size + virtual)', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data></data>
           </fx-instance>
         </fx-model>
@@ -1264,7 +1297,7 @@ describe('repeat true windowed virtualization (size + virtual)', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data></data>
           </fx-instance>
         </fx-model>
@@ -1295,7 +1328,7 @@ describe('repeat true windowed virtualization (size + virtual)', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data></data>
           </fx-instance>
         </fx-model>
@@ -1324,7 +1357,7 @@ describe('repeat true windowed virtualization (size + virtual)', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data></data>
           </fx-instance>
         </fx-model>
@@ -1346,7 +1379,7 @@ describe('repeat true windowed virtualization (size + virtual)', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data></data>
           </fx-instance>
         </fx-model>
@@ -1368,7 +1401,7 @@ describe('repeat true windowed virtualization (size + virtual)', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task>1</task><task>2</task><task>3</task><task>4</task><task>5</task> <task>6</task
               ><task>7</task><task>8</task><task>9</task><task>10</task> <task>11</task
@@ -1425,7 +1458,7 @@ describe('repeat true windowed virtualization (size + virtual)', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task>one</task><task>two</task><task>three</task><task>four</task>
               <task>five</task>
@@ -1462,7 +1495,7 @@ describe('repeat true windowed virtualization (size + virtual)', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task>one</task><task>two</task><task>three</task><task>four</task>
               <task>five</task>
@@ -1499,7 +1532,7 @@ describe('repeat true windowed virtualization (size + virtual)', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task>1</task><task>2</task><task>3</task><task>4</task><task>5</task> <task>6</task
               ><task>7</task><task>8</task><task>9</task><task>10</task> <task>11</task

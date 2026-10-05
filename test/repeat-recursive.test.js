@@ -7,7 +7,7 @@ describe('recursive repeat (fx-repeat-ref) Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <node label="a">
                 <node label="a1">
@@ -47,7 +47,7 @@ describe('recursive repeat (fx-repeat-ref) Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <node label="a">
                 <node label="a1"></node>
@@ -88,7 +88,7 @@ describe('recursive repeat (fx-repeat-ref) Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <node label="a">
                 <node label="a1">
@@ -140,12 +140,12 @@ describe('recursive repeat (fx-repeat-ref) Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <node label="a"></node>
             </data>
           </fx-instance>
-          <fx-instance id="templates">
+          <fx-instance id="templates" type="html">
             <templates>
               <node label="new"></node>
             </templates>
@@ -186,14 +186,14 @@ describe('recursive repeat (fx-repeat-ref) Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <node label="a">
                 <node label="a1"></node>
               </node>
             </data>
           </fx-instance>
-          <fx-instance id="templates">
+          <fx-instance id="templates" type="html">
             <templates>
               <node label="new">
                 <node label="new-child"></node>
@@ -256,7 +256,7 @@ describe('recursive repeat (fx-repeat-ref) Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <folder name="root">
                 <file name="a"></file>
@@ -301,7 +301,7 @@ describe('recursive repeat (fx-repeat-ref) Tests', () => {
     const el = fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <node label="a">
                 <node label="a1">

@@ -167,7 +167,7 @@ describe('fx-include', () => {
         const el = fixtureSync(html`
             <fx-fore create-nodes>
                 <fx-model>
-                    <fx-instance>
+                    <fx-instance type="html">
                         <data>
                             <provenance type="found" notAfter="1885"></provenance>
                         </data>

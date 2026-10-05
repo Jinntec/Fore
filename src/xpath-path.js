@@ -159,11 +159,11 @@ export function getDocPath(node) {
  *
  * NOTE:
  * During bind graph build we often deal with XML nodes that live in a separate XML Document
- * (instance document). Those nodes are not in the HTML DOM and therefore cannot "see" <fx-instance>
+ * (instance document). Those nodes are not in the HTML DOM and therefore cannot "see" <fx-instance type="html">
  * via ancestor traversal, shadow root, or document.querySelector.
  *
  * For that reason, getPath MUST be able to compute $default/... without requiring that an
- * <fx-instance id="default"> element exists in the HTML DOM.
+ * <fx-instance id="default" type="html"> element exists in the HTML DOM.
  *
  * @param {Node|any} node
  * @param {string} instanceId
@@ -172,7 +172,7 @@ export function getDocPath(node) {
 export function getPath(node, instanceId = 'default') {
   const wantedId = (instanceId ?? 'default').trim() || 'default';
 
-  // JSON lens nodes carry their own path – no need to resolve <fx-instance>
+  // JSON lens nodes carry their own path – no need to resolve <fx-instance type="html">
   if (node && node.__jsonlens__ === true) {
     return getJsonPath(node);
   }

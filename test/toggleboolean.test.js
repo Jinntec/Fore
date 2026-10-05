@@ -12,7 +12,7 @@ describe('toggleboolean Tests', () => {
       <fx-fore>
         <fx-toggleboolean ref="toggle" event="model-construct-done"></fx-toggleboolean>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <toggle>false</toggle>
             </data>
@@ -31,7 +31,7 @@ describe('toggleboolean Tests', () => {
       <fx-fore>
         <fx-toggleboolean ref="toggle" event="model-construct-done"></fx-toggleboolean>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <toggle>true</toggle>
             </data>

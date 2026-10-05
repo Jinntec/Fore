@@ -14,6 +14,9 @@ class FxSend extends AbstractAction {
     this.value = '';
     this.url = null;
     this.target = null;
+    // set in perform() when a replace="instance" response landed while inside an action
+    // chain; consumed in actionPerformed() - see there.
+    this._deferInstanceReplaceUpdate = false;
   }
 
   connectedCallback() {
@@ -86,37 +89,50 @@ class FxSend extends AbstractAction {
       submission.parameters.set('target', resolved);
     }
 
-    // Capture before submit.submit() runs: fx-submission#_handleResponse() itself already
-    // runs the full updateModel()+refresh(true) cycle for a replace="instance" response,
-    // unless the model wasn't inited yet (see the `model.inited` guard there) - in that one
-    // case it skips its own cycle and we still need to do it below. Reading `inited` now (not
-    // after submit()) avoids mistaking "became inited during this very submit()" for "was
-    // already inited", which would wrongly skip the only cycle that ran.
-    const modelWasInited = this.getModel().inited;
     await submission.submit();
     if (submission.replace === 'instance') {
-      if (!modelWasInited) {
-        this.getModel().updateModel();
-        // todo: this bypasses observers...
-        this.getOwnerForm().refresh(true); // whole instance changes - full refresh necessary
-        // this.getOwnerForm().addToBatchedNotifications(this.getOwnerForm());
-      }
-      // needsUpdate is set (below, via actionPerformed override) so the undo hook records
-      // this replace as an undo step - it is NOT read by the default actionPerformed cycle
-      // here, since that would run a second, redundant recalculate/revalidate/refresh(false)
-      // on top of the full refresh(true) already done (either just above, or inside
-      // fx-submission#_handleResponse)
+      // Mark the replace as an undo step (the hook in _finalizePerform() reads needsUpdate).
       this.needsUpdate = true;
+
+      if (submission._updateCycleDeferredToChain) {
+        // _handleResponse() replaced an instance while running inside this action chain and
+        // handed the update cycle to us: own it from actionPerformed(), which fires AFTER
+        // the submit-done / submit-error child actions so their model changes are folded
+        // into the same rebuild/recalculate (issue #373).
+        submission._updateCycleDeferredToChain = false;
+        this._deferInstanceReplaceUpdate = true;
+      } else if (!this.getModel().inited) {
+        // Model never came up during submit(), so _handleResponse() skipped its
+        // inited-guarded cycle and nothing else will run one - do it here.
+        this.getModel().updateModel();
+        this.getOwnerForm().refresh(true); // whole instance changed - full refresh
+      }
+      // else (submit-error / validation failure / stub): nothing was swapped, so no
+      // rebuild is owed; super.actionPerformed() still runs the normal light cycle.
     }
     // if not of type fx-submission signal error
   }
 
   actionPerformed() {
-    // the instance-replace branch above already ran the full update+refresh cycle itself;
-    // skip the default gated cycle (see the comment at the needsUpdate assignment) while
-    // still calling dispatchActionPerformed() - the generic undo commit/discard hook in
-    // _finalizePerform() runs independently of this override and needs nothing extra here
-    this.dispatchActionPerformed();
+    // A replace="instance" response swaps a whole instance root; like fx-reset / fx-replace,
+    // fx-send owns the model update cycle for it. Running it HERE (not inside
+    // fx-submission#_handleResponse()) means the submit-done / submit-error child actions
+    // have already executed and recorded their model changes, so a full recalculate folds
+    // them in - previously those changes were stranded and dependent facets
+    // (relevant/readonly/calculate) never recomputed (issue #373).
+    if (this._deferInstanceReplaceUpdate) {
+      this._deferInstanceReplaceUpdate = false;
+      const model = this.getModel();
+      model.changed = []; // whole instance replaced - recompute the full graph
+      model.updateModel();
+      this.getOwnerForm().refresh(true);
+      this.dispatchActionPerformed();
+      return;
+    }
+    // submit-error / validation failure / non-instance replace: nothing was swapped, so no
+    // rebuild is owed here. A submit-done / submit-error child action's own model change
+    // (if any) still gets flushed through the normal deferred-update path.
+    super.actionPerformed();
   }
 
   _emitToChannel() {

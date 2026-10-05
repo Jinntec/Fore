@@ -44,6 +44,25 @@ export class FxFore extends HTMLElement {
 
   static draggedItem = null;
 
+  /**
+   * Named presentation presets for `fx-message appearance="..."`. Each preset holds options for
+   * `jinn-toast`'s `showToast` (gravity, position, className, duration, close). The class
+   * `appearance-<name>` is always added so the look can be styled in CSS.
+   */
+  static messageAppearances = {
+    toast: {},
+    banner: { gravity: 'top', position: 'center', close: true },
+  };
+
+  /**
+   * Registers (or replaces) a message appearance.
+   * @param {string} name the value to use in `appearance`
+   * @param {{gravity?: string, position?: string, duration?: number, close?: boolean}} options
+   */
+  static registerMessageAppearance(name, options = {}) {
+    FxFore.messageAppearances[name] = options;
+  }
+
   // Records init gate events that have already happened for a given target (document/window/element).
   // This prevents “missed gate” situations when an fx-fore is replaced (e.g. via src loading)
   // after the init event already fired.
@@ -295,7 +314,7 @@ export class FxFore extends HTMLElement {
 <!--           <slot name="errors"></slot> -->
            <jinn-toast id="message" gravity="bottom" position="left"></jinn-toast>
            <jinn-toast id="sticky" gravity="bottom" position="left" duration="-1" close="true" data-class="sticky-message"></jinn-toast>
-           <jinn-toast id="error" text="error" duration="-1" data-class="error" close="true" position="right" gravity="top" escape-markup="false"></jinn-toast>
+           <jinn-toast id="error" text="error" duration="-1" data-class="error" close="true" politeness="assertive" position="right" gravity="top" escape-markup="false"></jinn-toast>
            <jinn-toast id="warn" text="warning" duration="5000" data-class="warning" position="left" gravity="top"></jinn-toast>
            <slot id="default"></slot>
            <slot name="messages"></slot>
@@ -801,8 +820,6 @@ export class FxFore extends HTMLElement {
       return;
     }
 
-    this._injectDevtools();
-
     // const slot = this.shadowRoot.querySelector('slot#default');
 
     const slot = this.shadowRoot?.querySelector('slot') || this.querySelector('slot');
@@ -949,21 +966,6 @@ export class FxFore extends HTMLElement {
 
       this.insertBefore(fxVar, model);
       existingVars.add(name);
-    }
-  }
-
-  _injectDevtools() {
-    if (this.ownerDocument.querySelector('fx-lens')) {
-      // There's already a lens, so we can ignore this one.
-      // One lens can focus multiple fore elements
-      return;
-    }
-    const { search } = window.location;
-    const urlParams = new URLSearchParams(search);
-    if (urlParams.has('lens')) {
-      const lens = document.createElement('fx-lens');
-      document.body.appendChild(lens);
-      lens.setAttribute('open', 'open');
     }
   }
 
@@ -2281,9 +2283,9 @@ export class FxFore extends HTMLElement {
 
   _displayMessage(e) {
     // console.log('_displayMessage',e);
-    const { level } = e.detail;
+    const { level, appearance } = e.detail;
     const msg = e.detail.message;
-    this._showMessage(level, msg);
+    this._showMessage(level, msg, appearance);
     e.stopPropagation();
   }
 
@@ -2329,7 +2331,21 @@ export class FxFore extends HTMLElement {
     navigator.clipboard.writeText(target.value);
   }
 
-  _showMessage(level, msg) {
+  /**
+   * @param {string|null} appearance name of a registered message appearance
+   * @returns {object} options for `jinn-toast.showToast`, empty for none/unknown appearances
+   */
+  _appearanceOptions(appearance) {
+    if (!appearance) return {};
+    const preset = FxFore.messageAppearances[appearance];
+    if (!preset) {
+      console.warn(`fx-message: unknown appearance '${appearance}'`);
+      return {};
+    }
+    return { ...preset, className: `appearance-${appearance}` };
+  }
+
+  _showMessage(level, msg, appearance) {
     if (level === 'modal') {
       // this.$.messageContent.innerText = msg;
       // this.$.modalMessage.open();
@@ -2339,10 +2355,10 @@ export class FxFore extends HTMLElement {
       this.shadowRoot.getElementById('modalMessage').classList.add('show');
     } else if (level === 'sticky' || level === 'error' || level === 'warn') {
       // const notification = this.$.modeless;
-      this.shadowRoot.querySelector(`#${level}`).showToast(msg);
+      this.shadowRoot.querySelector(`#${level}`).showToast(msg, this._appearanceOptions(appearance));
     } else {
       const toast = this.shadowRoot.querySelector('#message');
-      toast.showToast(msg);
+      toast.showToast(msg, this._appearanceOptions(appearance));
     }
   }
 

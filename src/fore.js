@@ -254,6 +254,32 @@ export class Fore {
     ];
   }
 
+  /**
+   * Announces a status message to assistive technology through a persistent, visually hidden
+   * polite live region on the document body. The region is created on first use and reused, as
+   * a live region must exist before its content changes to be announced.
+   *
+   * @param {string} text the message to announce
+   */
+  static announce(text) {
+    let region = document.body.querySelector(':scope > [data-fore-announcer]');
+    if (!region) {
+      region = document.createElement('div');
+      region.setAttribute('data-fore-announcer', '');
+      region.setAttribute('role', 'status');
+      region.setAttribute('aria-live', 'polite');
+      region.setAttribute('aria-atomic', 'true');
+      region.style.cssText =
+        'position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;';
+      document.body.appendChild(region);
+    }
+    // clear first so that an identical message is announced again
+    region.textContent = '';
+    window.setTimeout(() => {
+      region.textContent = text;
+    }, 50);
+  }
+
   static createUUID() {
     // http://www.ietf.org/rfc/rfc4122.txt
     const s = [];

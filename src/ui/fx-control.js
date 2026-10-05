@@ -398,13 +398,26 @@ export default class FxControl extends XfAbstractControl {
   _associateLabel() {
     const label = this.querySelector(':scope > label');
     if (label) {
-      const id = label.getAttribute('for') || this.widget.id || `fx-${Fore.createUUID()}`;
+      let id = label.getAttribute('for') || this.widget.id || `fx-${Fore.createUUID()}`;
+      const labelsOwnWidget = !this.widget.id || this.widget.id === label.getAttribute('for');
+      if (label.hasAttribute('for') && labelsOwnWidget && this.closest('fx-repeatitem')) {
+        // The template is cloned per row, so an authored `for`/`id` pair would exist once per row
+        // and every label would point at the first row's widget. Fore's own id lookups
+        // (`resolveId`) deliberately rely on the authored ids of the Fore elements, so only the
+        // native widget and its label get a row-unique id.
+        id = `${id}-${Fore.createUUID()}`;
+        label.setAttribute('for', id);
+        this.widget.id = id;
+      }
       if (!label.hasAttribute('for')) label.setAttribute('for', id);
       if (!this.widget.id) this.widget.id = id;
       return;
     }
     if (this.label) {
       this.widget.setAttribute('aria-label', this.label);
+    } else if (this.hasAttribute('aria-label') && !this.widget.hasAttribute('aria-label')) {
+      // an aria-label authored on the host does not name the inner widget - pass it on
+      this.widget.setAttribute('aria-label', this.getAttribute('aria-label'));
     }
   }
 
@@ -682,7 +695,7 @@ export default class FxControl extends XfAbstractControl {
   }
 
   /**
-   * Finds (or lazily creates) the anonymous `<fx-instance>` backing a
+   * Finds (or lazily creates) the anonymous `<fx-instance type="html">` backing a
    * `data-src` lookup document for the given URL, deduped per-model by URL.
    *
    * The created instance has no `id`, so it stays invisible to the global
@@ -717,7 +730,7 @@ export default class FxControl extends XfAbstractControl {
   /**
    * Implements the `data-src` lookup-list shortcut: if the bound widget
    * declares `data-src="<url>"`, lazily loads that document via an anonymous
-   * `<fx-instance>` and binds its root element as a control-local XPath
+   * `<fx-instance type="html">` and binds its root element as a control-local XPath
    * variable (`$src` by default, or `$<data-id>`), available to this
    * control's own `ref` and template expressions.
    *

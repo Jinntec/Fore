@@ -16,7 +16,7 @@ describe('ref dependency tracking', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance id="data">
+          <fx-instance id="data" type="html">
             <data>
               <item keep="true">a</item>
               <item keep="true">b</item>
@@ -48,7 +48,7 @@ describe('ref dependency tracking', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance id="data">
+          <fx-instance id="data" type="html">
             <data>
               <item keep="true">a</item>
               <item keep="true">b</item>
@@ -86,12 +86,12 @@ describe('ref dependency tracking', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <selected></selected>
             </data>
           </fx-instance>
-          <fx-instance id="opts">
+          <fx-instance id="opts" type="html">
             <data>
               <opt active="true">one</opt>
               <opt active="false">two</opt>
@@ -136,12 +136,12 @@ describe('ref dependency tracking', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <selected></selected>
             </data>
           </fx-instance>
-          <fx-instance id="opts">
+          <fx-instance id="opts" type="html">
             <data>
               <opt active="true">one</opt>
               <opt active="false">two</opt>
@@ -175,7 +175,7 @@ describe('ref dependency tracking', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <value>A</value>
             </data>
@@ -195,12 +195,12 @@ describe('ref dependency tracking', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance id="a">
+          <fx-instance id="a" type="html">
             <data>
               <item>1</item>
             </data>
           </fx-instance>
-          <fx-instance id="b">
+          <fx-instance id="b" type="html">
             <data>
               <item>1</item>
               <item>2</item>
@@ -234,7 +234,7 @@ describe('ref dependency tracking', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance id="data">
+          <fx-instance id="data" type="html">
             <data>
               <item keep="true">a</item>
               <item keep="true">b</item>
@@ -267,7 +267,7 @@ describe('ref dependency tracking', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance id="data">
+          <fx-instance id="data" type="html">
             <data>
               <item keep="true">a</item>
               <item keep="false">b</item>
@@ -317,7 +317,7 @@ describe('ref dependency tracking', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance id="data">
+          <fx-instance id="data" type="html">
             <data>
               <item keep="true">a</item>
               <item keep="true">b</item>

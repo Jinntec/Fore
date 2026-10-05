@@ -22,7 +22,7 @@
     <fx-var name="invoice" value="instance('default')"></fx-var>
     <fx-model>
         <fx-instance src="test/04.03a-INVOICE_ubl.xml"></fx-instance>
-        <fx-instance id="vars"><data></data></fx-instance>
+        <fx-instance id="vars" type="html"><data></data></fx-instance>
         <fx-submission id="s-save" url="#echo" method="post" replace="download" target="invoice.xml" validate="false">
             <fx-message event="submit-error">Saving failed</fx-message>
         </fx-submission>

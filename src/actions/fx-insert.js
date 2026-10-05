@@ -461,6 +461,12 @@ export class FxInsert extends AbstractAction {
     } else if (targetSequence) {
       // ### use last item of targetSequence
       originSequenceClone = this._cloneTargetSequence(targetSequence);
+      if (!originSequenceClone) {
+        console.warn(
+          `fx-insert: no origin given and ref '${this.ref}' selects no node to clone - ignoring...`,
+          this,
+        );
+      }
       if (originSequenceClone && !this.keepValues) {
         this._clear(originSequenceClone);
       }

@@ -10,7 +10,7 @@ describe('setattribute tests', () => {
       <fx-fore>
         <fx-model>
           <!-- inline xml instance -->
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <value></value>
             </data>
@@ -41,7 +41,7 @@ describe('setattribute tests', () => {
       <fx-fore>
         <fx-model>
           <!-- inline xml instance -->
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <value></value>
             </data>

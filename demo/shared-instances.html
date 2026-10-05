@@ -69,12 +69,12 @@
 
     <fx-fore id="outer">
         <fx-model>
-            <fx-instance shared>
+            <fx-instance shared type="html">
                 <data>
                     <name>John</name>
                 </data>
             </fx-instance>
-            <fx-instance id="notshared">
+            <fx-instance id="notshared" type="html">
                 <data>
                     <foo></foo>
                 </data>
@@ -91,7 +91,7 @@
         <template>
             <fx-fore id="todo">
                 <fx-model>
-                    <fx-instance id="todos" shared>
+                    <fx-instance id="todos" shared type="html">
                         <data>
                             <todos>
                                 <todo>Fix this!</todo>
@@ -118,7 +118,7 @@
                     <div class="repeat">
                         <fx-fore id="child-a">
                             <fx-model>
-                                <fx-instance id="default">
+                                <fx-instance id="default" type="html">
                                     <data>
                                         <message>You can do it!</message>
                                     </data>

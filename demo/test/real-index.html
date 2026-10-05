@@ -16,13 +16,13 @@
                 <fx-setvalue ref="project" value="instance('projects')/project[./@id=instance('query-params')/project]/string()"></fx-setvalue>
             </fx-action>
 
-            <fx-instance>
+            <fx-instance type="html">
                 <record id="">
                     <project></project>
                 </record>
             </fx-instance>
 
-            <fx-instance id="projects">
+            <fx-instance id="projects" type="html">
                 <projects>
                     <project id="3b9f4db8-9353-4003-96e3-b69ca727bd50" client-id="a6ebb16c-e659-468a-ae78-3d18678f2e7b" active="true" budget="4080" currency="EUR" earned="4080" exceeded="exceeded" percent-used="575">ACDH Support</project>
                     <project id="f524cc5b-6b46-4ebf-b7a1-0a70b9f8814a" client-id="7b05a308-0ede-4395-b9cc-7638eccb7bf9" active="true" budget="12000" currency="EUR" earned="12000" exceeded="exceeded" percent-used="110">Andersen</project>
