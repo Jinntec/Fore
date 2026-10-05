@@ -13,6 +13,11 @@
             background: red;
             color:white;
         }
+        /* a custom look for appearance="banner": every message gets the class appearance-<name> */
+        .toastify.appearance-banner.error{
+            background: #b3261e;
+            color: white;
+        }
         a, a:visited, a:link{
             color:inherit;
         }
@@ -29,6 +34,37 @@
          <li>With <code><a href="https://jinntec.github.io/fore-docs/elements/actions/message/#attributes" target="_blank">level="sticky"</a></code> the toast will become sticky (not closing) while displaying a close icon.</li>
          <li><code><a href="https://jinntec.github.io/fore-docs/elements/actions/message/" target="_blank">level="modal"</a></code> displays a modal message.</li>
      </ul>
+
+    <h2>Appearance</h2>
+    <p><code>level</code> says how important a message is, <code>appearance</code> how it is presented.
+    Both can be combined. Every message gets the CSS class <code>appearance-&lt;name&gt;</code>
+    (<code>appearance-toast</code>, <code>appearance-banner</code>) which you can style from your own CSS.</p>
+    <ul>
+        <li><code>appearance="toast"</code> - the default look: a small box in the corner.</li>
+        <li><code>appearance="banner"</code> - a full-width bar at the top of the page with a close button.</li>
+    </ul>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-trigger>
+                    <button>toast</button>
+                    <fx-message appearance="toast">A toast message</fx-message>
+                </fx-trigger>
+                <fx-trigger>
+                    <button>banner</button>
+                    <fx-message appearance="banner">A banner message</fx-message>
+                </fx-trigger>
+                <fx-trigger>
+                    <button>sticky banner</button>
+                    <fx-message level="sticky" appearance="banner">A banner that stays until closed</fx-message>
+                </fx-trigger>
+                <fx-trigger>
+                    <button>error banner</button>
+                    <fx-message level="error" appearance="banner">Something went wrong</fx-message>
+                </fx-trigger>
+            </fx-fore>
+        </template>
+    </demo-snippet>
 
     <p>Also refer to the native <a href="dialog.html">&lt;dialog&gt;</a> element (used with the
     <code>fx-show</code>/<code>fx-hide</code> actions) if more complex messages are wanted, styled

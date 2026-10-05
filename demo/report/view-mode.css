@@ -1,0 +1,48 @@
+/* View mode: hide editing/action affordances. Gated on #outer.view-mode (a
+   live Fore template-expression class set on the invoice UI's outer fx-group,
+   e.g. class="{if (instance('vars')/view-mode = 'true') then 'view-mode' else ''}")
+   rather than fx-group's own [readonly] reflection, which fx-group never sets -
+   fx-control-menu has no ref/modelItem so it never receives the MIP cascade
+   at all regardless. :has() lets buttons outside #outer's subtree react too. */
+body:has(#outer.view-mode) .save-button,
+body:has(#outer.view-mode) .delete-btn,
+body:has(#outer.view-mode) .add-button,
+body:has(#outer.view-mode) .dialog-trigger,
+body:has(#outer.view-mode) fx-control-menu {
+    display: none;
+}
+
+/* View mode: strip form-field chrome so fields read as plain text, without
+   changing layout/spacing (label + value stack stays put). Combines the
+   .view-mode class with the real [readonly] attribute, which - unlike
+   fx-group - Fore does genuinely reflect on fx-control/fx-output/fx-trigger. */
+body:has(#outer.view-mode) fx-control[readonly] .widget,
+body:has(#outer.view-mode) fx-control[readonly] input,
+body:has(#outer.view-mode) fx-control[readonly] textarea,
+body:has(#outer.view-mode) fx-control[readonly] select {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    padding-left: 0;
+    color: inherit;
+    cursor: default;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+/* fore.css already sets pointer-events:none for checkboxes/radios under the
+   bare [readonly] selector (mode-independent, keep as is) - only undo the
+   greyed-out visual here, not the interaction blocking. */
+body:has(#outer.view-mode) fx-control[readonly] input[type="checkbox"],
+body:has(#outer.view-mode) fx-control[readonly] input[type="radio"] {
+    opacity: 1;
+    filter: none;
+}
+
+/* Only relevant if the included UI still carries its own view/edit toggle
+   button (two-span label markup: .view-mode-toggle-label-edit/-view) - a
+   no-op otherwise. */
+.view-mode-toggle-label-view { display: none; }
+body:has(#outer.view-mode) .view-mode-toggle-label-edit { display: none; }
+body:has(#outer.view-mode) .view-mode-toggle-label-view { display: inline; }

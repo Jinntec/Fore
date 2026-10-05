@@ -1,0 +1,962 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<m:model xmlns:cvr="urn:conformatron:cvr:draft"
+  xmlns:m="http://semo-xml.org/2025/model"
+  xmlns:s="http://www.xoev.de/de/validator/framework/2/scenarios"
+  xmlns:xvrl="http://www.xproc.org/ns/xvrl" version="1.0.1" xml:lang="en">
+  <m:meta>
+    <m:short-name>KoSIT Validator Specification</m:short-name>
+    <m:name>KoSIT Validator Specification</m:name>
+    <m:id>kosit-validator-specification</m:id>
+    <m:version>0.8.0</m:version>
+    <m:status>development</m:status>
+    <m:date>2026-09-03</m:date>
+    <m:abstract>Semantic model of the KoSIT Validator Specification: the conformance validation report (CVR structure <m:q>cvr</m:q>) and the scenario configuration (structure <m:q>scenario</m:q>, placeholder)</m:abstract>
+  </m:meta>
+
+  <m:description>
+    <m:p>One model, two structures. <m:q>CVR</m:q> is the conformance validation report the validator emits; <m:q>scenario</m:q> is the configuration it is driven by. Both share the datatypes and the definitions below. The scenario structure is a placeholder until the working session of week 37/2026; its terms (BG-14, BT-44, BT-45) are the starting point, not a decision.</m:p>
+    <m:p>This model describes the conformance validation report (CVR) semantically: which information a report carries, how it is composed into a message, which constraints hold, and how it maps to the concrete syntax. That syntax is CVR — a profile of XVRL (<m:q>http://www.xproc.org/ns/xvrl</m:q>) with its own namespace (<m:q>urn:conformatron:cvr:draft</m:q>).</m:p>
+    <m:p>The CV Report is organized by validation actions: every executed action of the canonical pipeline produces exactly one <m:q>report</m:q>. Action names are not free text — they are the action types of the validator's API module (<m:q>CTActionType</m:q>).</m:p>
+    <m:p>Term names deliberately follow the vocabulary of the serialized report (<m:q>reports</m:q>, <m:q>creator</m:q>, <m:q>detection</m:q>, <m:q>context</m:q>, <m:q>digest</m:q>, …), so a reader of a CVR instance can find the corresponding business term without a translation table.</m:p>
+    <m:p>Identifier scheme: <m:q>BT-n</m:q> for terms, <m:q>BG-n</m:q> for groups of terms, <m:q>BR-CVR-n</m:q> for rules. Rules that the CVR Schematron (<m:q>validator/cvr/src/main/resources/sch/cvr-1.0.sch</m:q>) checks carry their <m:q>assert-ids</m:q>; the rules without one are the open decisions and the constraints no Schematron can see (engine behaviour, verbosity modes).</m:p>
+    <m:p>Sources of this model: the report specification (<m:q>content/en/docs/specifications/conformance-validation-report-spec.md</m:q>), the annotated reference instance (<m:q>validator/e2e/prime-example.xml</m:q>), the <m:q>CvrWriter</m:q> serializer of the reference implementation, and the enumerations of the validator's API module (<m:q>CTActionType</m:q>, <m:q>CTStandardValidationType</m:q>, <m:q>CTConformanceResult</m:q>, <m:q>CTDecision</m:q>).</m:p>
+  </m:description>
+
+  <m:requirements>
+    <m:requirement-group id="validation">
+      <m:name>Validation Requirements</m:name>
+      <m:description>Requirementspertainingtheactualvalidationprocess.</m:description>
+    </m:requirement-group>
+
+    <m:requirement-group id="report">
+      <m:name>Report </m:name>
+      <m:description>Requirements pertaining to the validation/conformance report.</m:description>
+    </m:requirement-group>
+
+    <m:requirement-group id="configuration">
+      <m:name>Configuration Requirements</m:name>
+      <m:description>Requirements pertaining to configuration of a validation.</m:description>
+    </m:requirement-group>
+
+    <m:requirement id="validation/configuration" groups="configuration">
+      <m:description>scenario config is as close as possible to old one (or we have determistic upgrader)</m:description>
+    </m:requirement>
+    <m:requirement id="validation/parse/xml-declaration" groups="validation">
+      <m:description>capapble of checking xml declaration and declared encoding</m:description>
+    </m:requirement>
+    <m:requirement id="validation-character-set" groups="validation">
+      <m:description>Allow for checking allowed character sets</m:description>
+    </m:requirement>
+    <m:requirement id="report/auditability" groups="report">
+      <m:description>A report has to hold up in audit scenarios: the document under examination is contained unchanged or at least referenced resolvably, and every artifact validated against is provable by a hash.</m:description>
+    </m:requirement>
+    <m:requirement id="report/verbosity" groups="report">
+      <m:description>Verbosity of the report has to be customizable (audit/full as the default, compact, digest, acceptable). A mode is only allowed to omit information from the full report, never to change the structure.</m:description>
+    </m:requirement>
+    <m:requirement id="report/progressive-validation" groups="report">
+      <m:description>The report has to represent cancelled runs: a partial report covering the actions executed so far is always serializable.</m:description>
+    </m:requirement>
+    <m:requirement id="report/downstream" groups="report">
+      <m:description>Additional reports have to be addable for downstream processes.</m:description>
+    </m:requirement>
+  </m:requirements>
+
+  <m:semantic-datatypes>
+    <!-- listed in alphabetical order -->
+    <m:datatype id="any">
+      <m:name>Any</m:name>
+      <m:description>Ur-type. Base of all other datatypes.</m:description>
+    </m:datatype>
+    <m:datatype id="binary">
+      <m:name>Binary</m:name>
+      <m:description>A finite sequence of binary digits.</m:description>
+    </m:datatype>
+    <m:datatype id="boolean" restricts="any" min-occurs="1" max-occurs="1">
+      <m:name>Boolean</m:name>
+      <m:description>A truth value.</m:description>
+      <m:example>true</m:example>
+    </m:datatype>
+    <m:datatype id="code" restricts="string" min-occurs="1" max-occurs="1">
+      <m:name>Code</m:name>
+      <m:description>A value from a fixed enumerated value space. The actual allowed value space is declared in term definitions using <m:q>codelist</m:q> element.</m:description>
+      <m:example>CONFORMANT</m:example>
+    </m:datatype>
+    <m:datatype id="date-time" restricts="any" min-occurs="1" max-occurs="1">
+      <m:name>Date Time</m:name>
+      <m:description>A point in time with date, time of day and time zone.</m:description>
+      <m:example>2026-08-31T16:13:29+02:00</m:example>
+      <m:notes>
+        <m:usage-note>Serialized as <m:q>xs:dateTime</m:q>. The time zone is mandatory and the seconds component must be written out — a serialization that drops the seconds when they are zero is not a valid <m:q>xs:dateTime</m:q>.</m:usage-note>
+      </m:notes>
+    </m:datatype>
+    <m:datatype id="embedded-content" restricts="any" min-occurs="1"
+      max-occurs="1">
+      <m:name>Embedded Content</m:name>
+      <m:description>A complete document embedded into the report — either as an element tree (readable) or base64-encoded (byte-faithful) string. The kind of embedding is always stated explicitly.</m:description>
+    </m:datatype>
+    <m:datatype id="hash-value" restricts="binary" min-occurs="1" max-occurs="1">
+      <m:name>Hash Value</m:name>
+      <m:description>The value of a cryptographic digest, in hexadecimal notation.</m:description>
+      <m:example>7f59f9d544f46a38e4feb3c6f9afe72f28233a12</m:example>
+    </m:datatype>
+    <m:datatype id="identifier" restricts="string" min-occurs="1" max-occurs="1">
+      <m:name>Identifier</m:name>
+      <m:description>An identifier that names a subject unambiguously within a known context.</m:description>
+      <m:example>UBL-CR-646</m:example>
+    </m:datatype>
+    <m:datatype id="group">
+      <m:name>Group</m:name>
+      <m:description>Container for related terms. Carries no value of its own.</m:description>
+    </m:datatype>
+    <m:datatype id="integer" restricts="any" min-occurs="1" max-occurs="1">
+      <m:name>Integer</m:name>
+      <m:description>A whole number.</m:description>
+      <m:example>3</m:example>
+    </m:datatype>
+    <m:datatype id="string" restricts="any" min-occurs="1" max-occurs="1">
+      <m:name>String</m:name>
+      <m:description>A character string.</m:description>
+    </m:datatype>
+    <m:datatype id="text" restricts="string" min-occurs="1" max-occurs="1">
+      <m:name>Text</m:name>
+      <m:description>Free-form text intended for human readers.</m:description>
+    </m:datatype>
+    <m:datatype id="uri" restricts="string" min-occurs="1" max-occurs="1">
+      <m:name>URI</m:name>
+      <m:description>A Uniform Resource Identifier pointing at a document or a validation artifact.</m:description>
+      <m:example>resources/ubl/2.1/xsd/maindoc/UBL-Invoice-2.1.xsd</m:example>
+    </m:datatype>
+    <m:datatype id="xpath-expression" restricts="string" min-occurs="1"
+      max-occurs="1">
+      <m:name>XPath Expression</m:name>
+      <m:description>An XPath expression denoting a location in an XML document.</m:description>
+      <m:example>/Q{urn:oasis:names:specification:ubl:schema:xsd:Invoice-2}Invoice[1]</m:example>
+    </m:datatype>
+  </m:semantic-datatypes>
+
+  <m:codelists>
+    <m:codelist id="cvr-run-status">
+      <m:name>Run Status</m:name>
+      <m:description>Whether the pipeline ran to completion or was cancelled. Allowed values: <m:q>COMPLETED</m:q>, <m:q>CANCELLED</m:q>.</m:description>
+      <m:version>draft</m:version>
+    </m:codelist>
+    <m:codelist id="cvr-action-name">
+      <m:name>Action Name</m:name>
+      <m:description>The canonical validation actions. Values: <m:q>detect-syntax</m:q>, <m:q>parse-document</m:q>, <m:q>detect-scenarios</m:q>, <m:q>select-scenario</m:q>, <m:q>retrieve-artifacts</m:q>, <m:q>prepare-rules</m:q>, <m:q>apply-rules</m:q>, <m:q>compute-conformance</m:q>, <m:q>decision-recommendation</m:q>. The value space is the <m:q>CTActionType</m:q> enumeration of the validator's API module.</m:description>
+      <m:version>draft</m:version>
+    </m:codelist>
+    <m:codelist id="xvrl-severity">
+      <m:name>Severity</m:name>
+      <m:description>The severity of a detection as defined by XVRL. Values: <m:q>info</m:q>, <m:q>warning</m:q>, <m:q>error</m:q>, <m:q>fatal-error</m:q>, <m:q>unspecified</m:q>.</m:description>
+  <m:link>https://github.com/xproc/xvrl/blob/master/src/main/schema/xvrl.rnc</m:link>
+      <m:version>1.0</m:version>
+    </m:codelist>
+    <m:codelist id="cvr-conformance">
+      <m:name>Conformance Result</m:name>
+      <m:description>The outcome of the conformance computation for one conformance target. Values: <m:q>CONFORMANT</m:q>, <m:q>NON_CONFORMANT</m:q>, <m:q>INCONCLUSIVE</m:q> (<m:q>CTConformanceResult</m:q>).</m:description>
+      <m:version>draft</m:version>
+    </m:codelist>
+    <m:codelist id="cvr-decision">
+      <m:name>Decision</m:name>
+      <m:description>The recommendation to the calling process. Values: <m:q>ACCEPT</m:q>,<m:q>REJECT</m:q>, <m:q>EVALUATE_FURTHER</m:q> (<m:q>CTDecision</m:q>).</m:description>
+      <m:version>draft</m:version>
+    </m:codelist>
+    <m:codelist id="cvr-encoding">
+      <m:name>Encoding</m:name>
+      <m:description>How an embedded document is encoded in the report. Values: <m:q>dom</m:q> (element tree, readable), <m:q>base64</m:q> (byte-faithful). The value space is deliberately open for extension, e.g. <m:q>gzip+base64</m:q> for large source documents.</m:description>
+      <m:version>draft</m:version>
+    </m:codelist>
+    <m:codelist id="cvr-schematypens">
+      <m:name>Schema Type Namespace</m:name>
+      <m:description>The namespace of the language a rule set is written in. Values: <m:q>http://www.w3.org/2001/XMLSchema</m:q>, <m:q>http://purl.oclc.org/dsdl/schematron</m:q>. XVRL states the schema language via <m:q>schematypens</m:q>; there is no <m:q>language</m:q> attribute.</m:description>
+      <m:version>draft</m:version>
+    </m:codelist>
+    <m:codelist id="cvr-artifact-type">
+      <m:name>Artifact Type</m:name>
+      <m:description>The kind of a validation artifact, e.g. <m:q>xsd</m:q>, <m:q>partial-xsd</m:q>, <m:q>schematron-xslt2</m:q>, <m:q>schematron-schxslt2-xslt3</m:q>. The value space is the <m:q>CTStandardValidationType</m:q> enumeration of the validator's API module; it distinguishes compiler and target XSLT version because the validation outcome depends on them.</m:description>
+      <m:version>draft</m:version>
+    </m:codelist>
+    <m:codelist id="cvr-hash-algorithm">
+      <m:name>Hash Algorithm</m:name>
+      <m:description>The algorithm a digest was computed with, currently <m:q>SHA-512</m:q>. The algorithm is exchangeable and is therefore always carried alongside the value instead of being encoded in a property name.</m:description>
+      <m:version>draft</m:version>
+    </m:codelist>
+    <m:codelist id="cvr-supplemental-role">
+      <m:name>Supplemental Role</m:name>
+      <m:description>What a supplemental serves for, currently <m:q>java-trace</m:q> for the technical call path of an engine error.</m:description>
+      <m:version>draft</m:version>
+    </m:codelist>
+    <m:codelist id="iana-media-type">
+      <m:name>Media Type</m:name>
+      <m:description>The media type of an embedded document.</m:description>
+      <m:link>https://www.iana.org/assignments/media-types/media-types.xhtml</m:link>
+    </m:codelist>
+    <m:codelist id="iana-character-set">
+      <m:name>Character Set</m:name>
+      <m:description>The character encoding of a source document.</m:description>
+      <m:link>https://www.iana.org/assignments/character-sets/character-sets.xhtml</m:link>
+    </m:codelist>
+  </m:codelists>
+
+  <m:definitions>
+
+    <!-- ============ validation run level ============ -->
+    <m:term id="BG-1" datatype="group">
+      <m:name>Conformance Validation Report</m:name>
+      <m:description>The complete report on one validation run: the conformance statement about the document under examination, the metadata of the run, and detailed (sub)reports per executed action.</m:description>
+    </m:term>
+    <m:term id="BT-1" datatype="boolean">
+      <m:name>Conformant</m:name>
+      <m:description>Whether the document under examination is conformant overall. This is distinct from common validation outcomes: configured severity overrides can make a document conformant even though a rule set reports findings (e.g. errors).</m:description>
+    </m:term>
+    <m:term id="BT-2" datatype="code">
+      <m:name>Run Status</m:name>
+      <m:description>Whether the pipeline ran to completion or was cancelled. A cancelled run yields a partial report containing exactly the actions that were executed before cancellation.</m:description>
+      <m:codelist ref="cvr-run-status" />
+    </m:term>
+    <m:term id="BG-2" datatype="group">
+      <m:name>Run Metadata</m:name>
+      <m:description>Information items to describe the whole validation run: when it was serialized, which validator produced it and which document was examined.</m:description>
+    </m:term>
+    <m:term id="BT-3" datatype="date-time">
+      <m:name>Report Timestamp</m:name>
+      <m:description>The point in time the report was produced.</m:description>
+    </m:term>
+    <m:term id="BT-4" datatype="string">
+      <m:name>Validator Name</m:name>
+      <m:description>The software that performed the validation run.</m:description>
+    </m:term>
+    <m:term id="BT-5" datatype="string">
+      <m:name>Validator Version</m:name>
+      <m:description>The version of that software. Together with the name it supports reproducible validation runs.</m:description>
+    </m:term>
+    <m:term id="BT-6" datatype="uri">
+      <m:name>Document Reference</m:name>
+      <m:description>Reference to the document under examination. It has to be resolvable within the scope of further processing and storing the report.</m:description>
+    </m:term>
+    <m:term id="BT-7" datatype="identifier">
+      <m:name>Run Identifier</m:name>
+      <m:description>An identifier unique across runs, by which a report can be addressed in downstream processes.</m:description>
+      <m:notes>
+        <m:note>Foreseen, not yet emitted.</m:note>
+      </m:notes>
+    </m:term>
+
+    <!-- ============ action level ============ -->
+    <m:term id="BG-3" datatype="group">
+      <m:name>Action Report</m:name>
+      <m:description>The report on exactly one executed action of the pipeline. An action that applies several rule sets produces one action report per rule set.</m:description>
+    </m:term>
+    <m:term id="BG-4" datatype="group">
+      <m:name>Action Metadata</m:name>
+      <m:description>Identity of the action: which action, when, with which engine and against which rule set.</m:description>
+    </m:term>
+    <m:term id="BT-8" datatype="code">
+      <m:name>Creator Name</m:name>
+      <m:description>The name of the executed action. It is the identity of the action report.</m:description>
+      <m:codelist ref="cvr-action-name" />
+    </m:term>
+    <m:term id="BT-9" datatype="date-time">
+      <m:name>Action Timestamp</m:name>
+      <m:description>The point in time associated with the action.</m:description>
+      <m:notes>
+        <m:note>Currently the serialization time. Real per-action execution times (start and duration) require an execution record in the API.</m:note>
+      </m:notes>
+    </m:term>
+    <m:term id="BT-10" datatype="string">
+      <m:name>Engine Name</m:name>
+      <m:description>The technical component the action employed, e.g. the XSLT processor or the Schematron transpiler.</m:description>
+    </m:term>
+    <m:term id="BT-11" datatype="string">
+      <m:name>Engine Version</m:name>
+      <m:description>The version of that component. For Schematron it co-determines the validation outcome and is therefore part of the evidence.</m:description>
+    </m:term>
+    <m:term id="BG-5" datatype="group">
+      <m:name>Applied Schema</m:name>
+      <m:description>The rule set the action validated against, with its language and the parameters it was applied under.</m:description>
+    </m:term>
+    <m:term id="BT-12" datatype="uri">
+      <m:name>Schema Reference</m:name>
+      <m:description>Reference to the applied rule set.</m:description>
+    </m:term>
+    <m:term id="BT-13" datatype="code">
+      <m:name>Schema Type Namespace</m:name>
+      <m:description>The language of the rule set, given as a namespace.</m:description>
+      <m:codelist ref="cvr-schematypens" />
+    </m:term>
+    <m:term id="BT-14" datatype="string">
+      <m:name>Schematron Phase</m:name>
+      <m:description>The phase of a Schematron rule set that was executed. Running only a selected phase changes the validation outcome, so the phase is part of the record.</m:description>
+    </m:term>
+
+    <!-- ============ detection level ============ -->
+    <m:term id="BG-6" datatype="group">
+      <m:name>Detection</m:name>
+      <m:description>A single observation made by the action — a rule finding, an intermediate observation, or evidence such as the embedded document under examination. Every failure path emits a detection, which is what keeps a cancelled run reportable.</m:description>
+    </m:term>
+    <m:term id="BT-15" datatype="code">
+      <m:name>Severity</m:name>
+      <m:description>The severity of the detection.</m:description>
+      <m:codelist ref="xvrl-severity" />
+    </m:term>
+    <m:term id="BT-16" datatype="code">
+      <m:name>Original Severity</m:name>
+      <m:description>The severity the rule set itself assigned, where the configuration overrides it. It makes the override auditable instead of silently replacing the original.</m:description>
+      <m:codelist ref="xvrl-severity" />
+    </m:term>
+    <m:term id="BT-17" datatype="identifier">
+      <m:name>Detection Code</m:name>
+      <m:description>The identifier of the rule that produced the detection.</m:description>
+    </m:term>
+    <m:term id="BT-18" datatype="identifier">
+      <m:name>Scenario Identifier</m:name>
+      <m:description>The identifier of the validation scenario the detection is about.</m:description>
+      <m:notes>
+        <m:note>The target is a coordinate of the conformance target. As long as the scenario configuration carries no identifier, the scenario name is used.</m:note>
+      </m:notes>
+    </m:term>
+    <m:term id="BT-19" datatype="identifier">
+      <m:name>Artifact Identifier</m:name>
+      <m:description>The identifier of the validation artifact the detection is about. On failures this is the decisive information — which artifact is missing or unreadable.</m:description>
+    </m:term>
+    <m:term id="BT-20" datatype="identifier">
+      <m:name>Target Identifier</m:name>
+      <m:description>The identifier of the conformance target whose conformance is being stated.</m:description>
+    </m:term>
+    <m:term id="BT-21" datatype="code">
+      <m:name>Conformance Result</m:name>
+      <m:description>The outcome of the conformance computation for one conformance target. A rule set that was never executed counts as non-conformant — not executed must not look like conformant.</m:description>
+      <m:codelist ref="cvr-conformance" />
+    </m:term>
+
+    <m:term id="BG-7" datatype="group">
+      <m:name>Detection Context</m:name>
+      <m:description>The subject a detection is about: where it is located and which digest identifies it.</m:description>
+    </m:term>
+    <m:term id="BG-8" datatype="group">
+      <m:name>Location</m:name>
+      <m:description>The place the detection was made at — in a document or in a configuration file.</m:description>
+    </m:term>
+    <m:term id="BT-22" datatype="xpath-expression">
+      <m:name>Location XPath</m:name>
+      <m:description>The location as an XPath expression. XPath is stable across serializations and line numbers are not, which makes XPath the primary location information.</m:description>
+    </m:term>
+    <m:term id="BT-23" datatype="integer">
+      <m:name>Location Line</m:name>
+      <m:description>The line of the location, where the engine supplies it.</m:description>
+    </m:term>
+    <m:term id="BT-24" datatype="integer">
+      <m:name>Location Column</m:name>
+      <m:description>The column of the location, where the engine supplies it.</m:description>
+    </m:term>
+    <m:term id="BT-25" datatype="uri">
+      <m:name>Location Reference</m:name>
+      <m:description>Reference to the file the location is in.</m:description>
+    </m:term>
+    <m:term id="BT-26" datatype="code">
+      <m:name>Artifact Type</m:name>
+      <m:description>The kind of artifact at the location.</m:description>
+      <m:codelist ref="cvr-artifact-type" />
+    </m:term>
+    <m:term id="BG-9" datatype="group">
+      <m:name>Hash</m:name>
+      <m:description>The cryptographic digest of the subject the detection is about. It is what makes the report provable: without it nothing shows which version of a rule set the validation ran against.</m:description>
+    </m:term>
+    <m:term id="BT-27" datatype="code">
+      <m:name>Hash Algorithm</m:name>
+      <m:description>The algorithm the digest was computed with.</m:description>
+      <m:codelist ref="cvr-hash-algorithm" />
+    </m:term>
+    <m:term id="BT-28" datatype="hash-value">
+      <m:name>Hash Value</m:name>
+      <m:description>The value of the digest.</m:description>
+    </m:term>
+
+    <m:term id="BG-10" datatype="group">
+      <m:name>Message</m:name>
+      <m:description>A statement made by the detection — as text for human readers, or as an embedded document serving as evidence.</m:description>
+    </m:term>
+    <m:term id="BT-29" datatype="identifier">
+      <m:name>Message Identifier</m:name>
+      <m:description>A stable identifier of the message. It allows addressing one particular message without relying on document order.</m:description>
+    </m:term>
+    <m:term id="BT-30" datatype="code">
+      <m:name>Media Type</m:name>
+      <m:description>The media type of the embedded document.</m:description>
+      <m:codelist ref="iana-media-type" />
+    </m:term>
+    <m:term id="BT-31" datatype="code">
+      <m:name>Encoding</m:name>
+      <m:description>The encoding of the embedded document.</m:description>
+      <m:codelist ref="cvr-encoding" />
+    </m:term>
+    <m:term id="BT-32" datatype="code">
+      <m:name>Source Encoding</m:name>
+      <m:description>The character encoding the source document declared. With base64 embedding it is needed to write the original back out; with tree embedding it is the evidence that tree embedding was permissible.</m:description>
+      <m:codelist ref="iana-character-set" />
+    </m:term>
+    <m:term id="BT-33" datatype="text">
+      <m:name>Message Text</m:name>
+      <m:description>The statement of the detection in human-readable form.</m:description>
+    </m:term>
+    <m:term id="BT-34" datatype="embedded-content">
+      <m:name>Embedded Document</m:name>
+      <m:description>The document backing the detection — the document under examination itself, or the selected validation scenario.</m:description>
+    </m:term>
+
+    <m:term id="BG-11" datatype="group">
+      <m:name>Supplement</m:name>
+      <m:description>Technical additions to a detection that are needed for diagnosis but are not part of its substantive statement.</m:description>
+    </m:term>
+    <m:term id="BT-35" datatype="code">
+      <m:name>Supplement Role</m:name>
+      <m:description>Purpose of supplemental.</m:description>
+      <m:codelist ref="cvr-supplemental-role" />
+    </m:term>
+    <m:term id="BT-36" datatype="text">
+      <m:name>Supplement Content</m:name>
+      <m:description>The content, e.g. the technical call path of an engine error.</m:description>
+    </m:term>
+
+    <!-- ============ digest level ============ -->
+    <m:term id="BG-12" datatype="group">
+      <m:name>Digest</m:name>
+      <m:description>The condensation of an action report. It holds only information derivable from the detections and is meant for readers who do not evaluate every detection.</m:description>
+    </m:term>
+    <m:term id="BT-37" datatype="boolean">
+      <m:name>Digest Valid</m:name>
+      <m:description>Whether the action was successful.</m:description>
+    </m:term>
+    <m:term id="BT-38" datatype="code">
+      <m:name>Worst Severity</m:name>
+      <m:description>The highest severity that occurred in this action.</m:description>
+      <m:codelist ref="xvrl-severity" />
+    </m:term>
+    <m:term id="BT-39" datatype="integer">
+      <m:name>Error Count</m:name>
+      <m:description>The number of detections with severity error.</m:description>
+    </m:term>
+    <m:term id="BT-40" datatype="integer">
+      <m:name>Warning Count</m:name>
+      <m:description>The number of detections with severity warning.</m:description>
+    </m:term>
+    <m:term id="BT-41" datatype="identifier">
+      <m:name>Error Code</m:name>
+      <m:description>The identifier of a rule that produced an error in this action. The set of these identifiers allows an assessment without reading the detections.</m:description>
+    </m:term>
+
+    <!-- ============ decision level ============ -->
+    <m:term id="BG-13" datatype="group">
+      <m:name>Decision Recommendation</m:name>
+      <m:description>The recommendation to the calling process on what to do with the document under examination, together with its rationale.</m:description>
+      <m:notes>
+        <m:note>The terminal action. It always runs — also for a cancelled run, which it rejects naming the cancelling action — so every report ends in an explicit verdict.</m:note>
+      </m:notes>
+    </m:term>
+    <m:term id="BT-42" datatype="code">
+      <m:name>Decision</m:name>
+      <m:description>The recommended decision about the document under examination.</m:description>
+      <m:codelist ref="cvr-decision" />
+    </m:term>
+    <m:term id="BT-43" datatype="text">
+      <m:name>Decision Summary</m:name>
+      <m:description>Why the decision comes out the way it does.</m:description>
+    </m:term>
+
+    <!-- ============ scenario configuration (PLACEHOLDER, to be modelled in week 37/2026) ============ -->
+    <m:term id="BG-14" datatype="group">
+      <m:name>Scenario</m:name>
+      <m:description>Placeholder. One scenario description: the rule that says when the scenario is responsible for a document, plus the validation artifacts a recognized document is validated with.</m:description>
+      <m:notes>
+        <m:note>Placeholder. Today's configuration (<m:q>framework/2/scenarios</m:q>) knows
+               <m:q>scenario</m:q>, <m:q>name</m:q>, <m:q>description</m:q>, <m:q>namespace</m:q>, <m:q>match</m:q>, <m:q>validateWithXmlSchema</m:q>, <m:q>validateWithSchematron</m:q>, <m:q>createReport</m:q> with <m:q>customLevel</m:q>, <m:q>acceptMatch</m:q> and <m:q>noScenarioReport</m:q> on collection level. Version 2 has to add at least a scenario identifier as a coordinate, the separation of syntax and rule sets, conformance targets per rule set and the move of the assessment out of the report XSLT into the pipeline. None of this is modelled yet.</m:note>
+      </m:notes>
+    </m:term>
+    <m:term id="BT-44" datatype="string">
+      <m:name>Scenario Name</m:name>
+      <m:description>Placeholder. The name of the scenario; today at the same time its identifier, because the configuration carries no id of its own.</m:description>
+    </m:term>
+    <m:term id="BT-45" datatype="xpath-expression">
+      <m:name>Match Expression</m:name>
+      <m:description>Placeholder. The XPath expression evaluated against the document under examination; true means the scenario is responsible.</m:description>
+    </m:term>
+
+  </m:definitions>
+
+  <m:rules>
+    <m:rule-group id="profile-rules">
+      <m:name>Profile Rules</m:name>
+      <m:description>Constraints on XVRL usage.</m:description>
+    </m:rule-group>
+    <m:rule-group id="structure-rules">
+      <m:name>Structure Rules</m:name>
+      <m:description>Constraints on the organization and completeness of the report.</m:description>
+    </m:rule-group>
+    <m:rule-group id="identity-rules">
+      <m:name>Identity Rules</m:name>
+      <m:description>Constraints on the provability of the document and the validation artifacts.</m:description>
+    </m:rule-group>
+    <m:rule-group id="severity-rules">
+      <m:name>Severity Rules</m:name>
+      <m:description>Constraints on severities and their configured override.</m:description>
+    </m:rule-group>
+    <m:rule-group id="embedding-rules">
+      <m:name>Embedding Rules</m:name>
+      <m:description>Constraints on embedding documents into the report.</m:description>
+    </m:rule-group>
+    <m:rule-group id="verbosity-rules">
+      <m:name>Verbosity Rules</m:name>
+      <m:description>Constraints on condensing the report.</m:description>
+    </m:rule-group>
+    <m:rule-group id="open-decisions">
+      <m:name>Open Decisions</m:name>
+      <m:description>Constraints still to be decided. They are recorded here so they are not lost, and they do not bind yet.</m:description>
+    </m:rule-group>
+
+    <m:rule id="BR-CVR-1" groups="profile-rules">
+      <m:name>A CVR is a profile of XVRL</m:name>
+      <m:description>A conformance validation report shall validate against XVRL.</m:description>
+      <m:implementations>
+        <m:schematron assert-ids="root-is-xvrl-reports" />
+      </m:implementations>
+    </m:rule>
+    <m:rule id="BR-CVR-2" groups="profile-rules">
+      <m:name>Extensions live in the CVR namespace</m:name>
+      <m:description>Every piece of information XVRL does not define shall be expressed in the CVR extension namespace.</m:description>
+      <m:implementations>
+        <m:schematron assert-ids="known-cvr-element" />
+      </m:implementations>
+      <m:implementations>
+        <m:schematron assert-ids="known-cvr-attribute" />
+      </m:implementations>
+    </m:rule>
+    <m:rule id="BR-CVR-3" groups="structure-rules" on-terms="BG-3 BT-8">
+      <m:name>One action report per executed action</m:name>
+      <m:description>The report shall be organized by action: exactly one action report per executed action, in execution order. An action that applies several rule sets shall produce one action report per rule set.</m:description>
+      <m:implementations>
+        <m:schematron assert-ids="step-single-creator" />
+      </m:implementations>
+      <m:implementations>
+        <m:schematron assert-ids="first-step-is-parse-document" />
+      </m:implementations>
+      <m:implementations>
+        <m:schematron assert-ids="steps-in-pipeline-order" />
+      </m:implementations>
+    </m:rule>
+    <m:rule id="BR-CVR-4" groups="structure-rules" on-terms="BT-8">
+      <m:name>Creator name from the value space</m:name>
+      <m:description>Every action report shall name exactly one creator, and that name shall come from the value space of canonical action names.</m:description>
+      <m:implementations>
+        <m:schematron assert-ids="step-canonical-creator" />
+      </m:implementations>
+    </m:rule>
+    <m:rule id="BR-CVR-5" groups="structure-rules" on-terms="BG-12">
+      <m:name>Digest always present and last</m:name>
+      <m:description>Every action report shall contain exactly one digest, and it shall be the last child of the action report.</m:description>
+      <m:implementations>
+        <m:schematron assert-ids="step-single-digest" />
+      </m:implementations>
+    </m:rule>
+    <m:rule id="BR-CVR-6" groups="structure-rules" on-terms="BT-1 BT-2">
+      <m:name>Partial report on cancellation</m:name>
+      <m:description>The report shall always carry the conformance statement and the run status. A cancelled run shall yield a partial report containing exactly the executed actions and shall remain serializable.</m:description>
+      <m:implementations>
+        <m:schematron assert-ids="root-conformant" />
+      </m:implementations>
+      <m:implementations>
+        <m:schematron assert-ids="root-status" />
+      </m:implementations>
+      <m:implementations>
+        <m:schematron assert-ids="cancelled-is-not-conformant" />
+      </m:implementations>
+      <m:implementations>
+        <m:schematron assert-ids="cancelled-has-no-conformance" />
+      </m:implementations>
+      <m:implementations>
+        <m:schematron assert-ids="completed-has-conformance" />
+      </m:implementations>
+    </m:rule>
+    <m:rule id="BR-CVR-7" groups="structure-rules" on-terms="BG-6">
+      <m:name>Every failure path emits a detection</m:name>
+      <m:description>A failed action shall still yield report content. No information may exist only in logs or in local state.</m:description>
+    </m:rule>
+    <m:rule id="BR-CVR-8" groups="structure-rules" on-terms="BT-17">
+      <m:name>No detection code without own identity</m:name>
+      <m:description>A detection shall carry a detection code only where it has an identity of its own — a rule finding or an error. Otherwise the creator name of the action report already says what the detection is about, and a second code would be redundant.</m:description>
+      <m:implementations>
+        <m:schematron assert-ids="detection-code-with-severity" />
+      </m:implementations>
+    </m:rule>
+    <m:rule id="BR-CVR-9" groups="severity-rules" on-terms="BT-15">
+      <m:name>Severity only where it carries meaning</m:name>
+      <m:description>A detection shall carry a severity where the severity says something. A detection in the error band shall always carry it — otherwise a detection without severity would stand next to a non-zero error count in the digest.</m:description>
+      <m:implementations>
+        <m:schematron assert-ids="detection-severity-value" />
+      </m:implementations>
+    </m:rule>
+    <m:rule id="BR-CVR-10" groups="severity-rules" on-terms="BT-16">
+      <m:name>An overridden severity is auditable</m:name>
+      <m:description>Where the configuration assigns a rule a severity other than the one the rule set assigns, the detection shall carry the effective severity and additionally the original severity. The override works in both directions — raising and lowering.</m:description>
+      <m:implementations>
+        <m:schematron assert-ids="detection-original-severity-value" />
+      </m:implementations>
+    </m:rule>
+    <m:rule id="BR-CVR-11" groups="severity-rules" on-terms="BT-15 BT-16">
+      <m:name>Engine errors are not overridable</m:name>
+      <m:description>The severity of a detection originating in an error of the validation engine itself shall not be configurable. A run that failed technically must not be made to look harmless by configuration.</m:description>
+    </m:rule>
+    <m:rule id="BR-CVR-12" groups="identity-rules" on-terms="BT-6">
+      <m:name>Document reference in every verbosity mode</m:name>
+      <m:description>In every verbosity mode the report shall contain at least a reference to the document under examination that is resolvable within the scope of further processing and storing the report.</m:description>
+      <m:implementations>
+        <m:schematron assert-ids="run-document" />
+      </m:implementations>
+    </m:rule>
+    <m:rule id="BR-CVR-13" groups="identity-rules" on-terms="BG-9 BT-27 BT-28">
+      <m:name>Document identity on parse</m:name>
+      <m:description>The action that reads the document shall state its digest together with the algorithm name — including where the document is not well-formed. The report can then always identify the document.</m:description>
+      <m:implementations>
+        <m:schematron assert-ids="hash-in-context" />
+      </m:implementations>
+      <m:implementations>
+        <m:schematron assert-ids="hash-algorithm" />
+      </m:implementations>
+      <m:implementations>
+        <m:schematron assert-ids="hash-is-hex" />
+      </m:implementations>
+    </m:rule>
+    <m:rule id="BR-CVR-14" groups="identity-rules" on-terms="BT-19 BT-25 BG-9">
+      <m:name>Artifact identity</m:name>
+      <m:description>Every retrieved validation artifact shall be named, located and — where its bytes were read — fingerprinted with a digest.</m:description>
+      <m:implementations>
+        <m:schematron assert-ids="detection-one-subject" />
+      </m:implementations>
+    </m:rule>
+    <m:rule id="BR-CVR-15" groups="identity-rules" on-terms="BT-12 BT-13">
+      <m:name>Applied schema states its language</m:name>
+      <m:description>An applied rule set shall always be stated together with its schema type namespace.</m:description>
+      <m:implementations>
+        <m:schematron assert-ids="schema-href" />
+      </m:implementations>
+      <m:implementations>
+        <m:schematron assert-ids="schema-typens" />
+      </m:implementations>
+      <m:implementations>
+        <m:schematron assert-ids="apply-rules-has-schema" />
+      </m:implementations>
+      <m:implementations>
+        <m:schematron assert-ids="schema-only-on-apply-rules" />
+      </m:implementations>
+    </m:rule>
+    <m:rule id="BR-CVR-16" groups="embedding-rules" on-terms="BT-34">
+      <m:name>Embed only well-formed XML</m:name>
+      <m:description>The document under examination shall be embedded only where it is well-formed XML. Otherwise the report shall contain the reference alone.</m:description>
+    </m:rule>
+    <m:rule id="BR-CVR-17" groups="embedding-rules" on-terms="BT-31 BT-32">
+      <m:name>Originality over readability</m:name>
+      <m:description>An XML document in UTF-8 shall be embedded as an element tree; any other character encoding and any non-XML syntax shall be embedded base64-encoded, stating the source encoding. Rationale: with tree embedding the fragment is converted into the encoding of the surrounding document and is no longer byte-faithfully reproducible. The kind of embedding shall not be configurable.</m:description>
+      <m:implementations>
+        <m:schematron assert-ids="payload-encoding-value" />
+      </m:implementations>
+      <m:implementations>
+        <m:schematron assert-ids="payload-mime-type" />
+      </m:implementations>
+      <m:implementations>
+        <m:schematron assert-ids="payload-source-encoding" />
+      </m:implementations>
+    </m:rule>
+    <m:rule id="BR-CVR-18" groups="embedding-rules" on-terms="BT-29">
+      <m:name>An embedded document is addressable</m:name>
+      <m:description>Every message that embeds a document shall carry a stable message identifier. Access must not rely on the order of messages.</m:description>
+      <m:implementations>
+        <m:schematron assert-ids="payload-known-id" />
+      </m:implementations>
+      <m:implementations>
+        <m:schematron assert-ids="payload-id-implies-payload" />
+      </m:implementations>
+    </m:rule>
+    <m:rule id="BR-CVR-19" groups="embedding-rules" on-terms="BT-34 BT-18">
+      <m:name>Only the selected scenario</m:name>
+      <m:description>The action that selects a validation scenario shall embed that single scenario as-is — not the collection and not the whole configuration.</m:description>
+    </m:rule>
+    <m:rule id="BR-CVR-20" groups="verbosity-rules">
+      <m:name>Condensation only removes</m:name>
+      <m:description>A lower verbosity mode shall only omit information. The structure of the report shall stay the same in every mode.</m:description>
+    </m:rule>
+    <m:rule id="BR-CVR-21" groups="verbosity-rules" on-terms="BG-12">
+      <m:name>The digest is derivable</m:name>
+      <m:description>The digest shall contain only statements derivable from the detections of the action. It is condensation, not additional information.</m:description>
+      <m:implementations>
+        <m:schematron assert-ids="digest-valid-matches-detections" />
+      </m:implementations>
+      <m:implementations>
+        <m:schematron assert-ids="digest-error-count-matches" />
+      </m:implementations>
+      <m:implementations>
+        <m:schematron assert-ids="digest-warning-count-matches" />
+      </m:implementations>
+      <m:implementations>
+        <m:schematron assert-ids="digest-error-codes-are-detection-codes" />
+      </m:implementations>
+    </m:rule>
+    <m:rule id="BR-CVR-22" groups="open-decisions" on-terms="BT-34">
+      <m:name>No XInclude in the embedded scenario</m:name>
+      <m:description>A validation scenario shall not contain XInclude, so that the embedded scenario is the one actually applied. The check would have to happen in the code.</m:description>
+      <m:description>Open: proposed as a decision, not yet taken.</m:description>
+    </m:rule>
+    <m:rule id="BR-CVR-23" groups="open-decisions" on-terms="BT-28">
+      <m:name>Normalization before digest computation</m:name>
+      <m:description>How an artifact is normalized before its digest is computed has to be settled so that digests are comparable across platforms — in particular the treatment of line endings and trailing white-space.</m:description>
+      <m:description>Open: the need is recognized, the decision is outstanding.</m:description>
+    </m:rule>
+    <m:rule id="BR-CVR-24" groups="open-decisions" on-terms="BT-10 BT-11">
+      <m:name>Several engines per action</m:name>
+      <m:description>An action can employ several technical components — a transpiler and an XSLT processor, for instance. Where those are stated when there is more than one has to be settled.</m:description>
+      <m:description>Open: XVRL permits only one validator at this position.</m:description>
+    </m:rule>
+    <m:rule id="BR-CVR-25" groups="open-decisions" on-terms="BT-37">
+      <m:name>Executed versus finding-free</m:name>
+      <m:description>An action report without detections is indistinguishable from an action that never ran. Whether the digest needs an explicit <m:q>executed</m:q> property has to be settled.</m:description>
+      <m:description>Open: arose from dropping the code for a finding-free rule set application.</m:description>
+      <m:implementations>
+        <m:schematron assert-ids="digest-omits-zero-error-count" />
+      </m:implementations>
+      <m:implementations>
+        <m:schematron assert-ids="digest-omits-zero-warning-count" />
+      </m:implementations>
+      <m:implementations>
+        <m:schematron assert-ids="digest-worst-when-it-informs" />
+      </m:implementations>
+    </m:rule>
+  </m:rules>
+
+  <m:structures>
+    <m:structure id="cvr">
+      <m:name>Conformance Validation Report</m:name>
+      <m:type>semantic</m:type>
+      <m:description>The composition of the report: one validation run with metadata, any number of action reports and an optional decision recommendation.</m:description>
+      <m:message>
+        <m:group ref="BG-1" min-occurs="1" max-occurs="1">
+          <m:term ref="BT-1" min-occurs="1" max-occurs="1" />
+          <m:term ref="BT-2" min-occurs="1" max-occurs="1" />
+          <m:group ref="BG-2" min-occurs="1" max-occurs="1">
+            <m:term ref="BT-3" min-occurs="1" max-occurs="1" />
+            <m:term ref="BT-4" min-occurs="1" max-occurs="1" />
+            <m:term ref="BT-5" min-occurs="1" max-occurs="1" />
+            <m:term ref="BT-6" min-occurs="1" max-occurs="1" />
+            <m:term ref="BT-7" min-occurs="0" max-occurs="1" />
+          </m:group>
+          <m:group ref="BG-3" min-occurs="1" max-occurs="unbounded">
+            <m:group ref="BG-4" min-occurs="1" max-occurs="1">
+              <m:term ref="BT-8" min-occurs="1" max-occurs="1" />
+              <m:term ref="BT-9" min-occurs="1" max-occurs="1" />
+              <m:term ref="BT-10" min-occurs="0" max-occurs="1" />
+              <m:term ref="BT-11" min-occurs="0" max-occurs="1" />
+              <m:group ref="BG-5" min-occurs="0" max-occurs="1">
+                <m:term ref="BT-12" min-occurs="1" max-occurs="1" />
+                <m:term ref="BT-13" min-occurs="1" max-occurs="1" />
+                <m:term ref="BT-14" min-occurs="0" max-occurs="1" />
+              </m:group>
+            </m:group>
+            <m:group ref="BG-6" min-occurs="0" max-occurs="unbounded">
+              <m:term ref="BT-15" min-occurs="0" max-occurs="1" />
+              <m:term ref="BT-16" min-occurs="0" max-occurs="1" />
+              <m:term ref="BT-17" min-occurs="0" max-occurs="1" />
+              <m:term ref="BT-18" min-occurs="0" max-occurs="1" />
+              <m:term ref="BT-19" min-occurs="0" max-occurs="1" />
+              <m:term ref="BT-20" min-occurs="0" max-occurs="1" />
+              <m:term ref="BT-21" min-occurs="0" max-occurs="1" />
+              <m:group ref="BG-7" min-occurs="0" max-occurs="1">
+                <m:group ref="BG-8" min-occurs="0" max-occurs="unbounded">
+                  <m:term ref="BT-22" min-occurs="0" max-occurs="1" />
+                  <m:term ref="BT-23" min-occurs="0" max-occurs="1" />
+                  <m:term ref="BT-24" min-occurs="0" max-occurs="1" />
+                  <m:term ref="BT-25" min-occurs="0" max-occurs="1" />
+                  <m:term ref="BT-26" min-occurs="0" max-occurs="1" />
+                </m:group>
+                <m:group ref="BG-9" min-occurs="0" max-occurs="1">
+                  <m:term ref="BT-27" min-occurs="1" max-occurs="1" />
+                  <m:term ref="BT-28" min-occurs="1" max-occurs="1" />
+                </m:group>
+              </m:group>
+              <m:group ref="BG-10" min-occurs="0" max-occurs="unbounded">
+                <m:term ref="BT-29" min-occurs="0" max-occurs="1" />
+                <m:term ref="BT-30" min-occurs="0" max-occurs="1" />
+                <m:term ref="BT-31" min-occurs="0" max-occurs="1" />
+                <m:term ref="BT-32" min-occurs="0" max-occurs="1" />
+                <m:term ref="BT-33" min-occurs="0" max-occurs="1" />
+                <m:term ref="BT-34" min-occurs="0" max-occurs="1" />
+              </m:group>
+              <m:group ref="BG-11" min-occurs="0" max-occurs="unbounded">
+                <m:term ref="BT-35" min-occurs="1" max-occurs="1" />
+                <m:term ref="BT-36" min-occurs="1" max-occurs="1" />
+              </m:group>
+            </m:group>
+            <m:group ref="BG-12" min-occurs="1" max-occurs="1">
+              <m:term ref="BT-37" min-occurs="1" max-occurs="1" />
+              <m:term ref="BT-38" min-occurs="0" max-occurs="1" />
+              <m:term ref="BT-39" min-occurs="0" max-occurs="1" />
+              <m:term ref="BT-40" min-occurs="0" max-occurs="1" />
+              <m:term ref="BT-41" min-occurs="0" max-occurs="unbounded" />
+            </m:group>
+          </m:group>
+          <m:group ref="BG-13" min-occurs="0" max-occurs="1">
+            <m:term ref="BT-42" min-occurs="1" max-occurs="1" />
+            <m:term ref="BT-43" min-occurs="0" max-occurs="1" />
+          </m:group>
+        </m:group>
+      </m:message>
+    </m:structure>
+    <m:structure id="scenario">
+      <m:name>Scenario Configuration</m:name>
+      <m:type>semantic</m:type>
+      <m:description>Placeholder for the composition of the scenario configuration (version 2, to be modelled in week 37/2026).</m:description>
+      <m:message>
+        <m:group ref="BG-14" min-occurs="1" max-occurs="unbounded">
+          <m:term ref="BT-44" min-occurs="1" max-occurs="1" />
+          <m:term ref="BT-45" min-occurs="1" max-occurs="1" />
+        </m:group>
+      </m:message>
+    </m:structure>
+  </m:structures>
+
+  <m:syntax-bindings>
+    <m:binding id="cvr-binding">
+      <m:structure>cvr</m:structure>
+      <m:syntax>
+        <m:name>CVR (XVRL profile)</m:name>
+        <m:type>xml</m:type>
+        <m:query-language>xpath</m:query-language>
+      </m:syntax>
+
+      <m:term ref="BG-1" xpath="/xvrl:reports" />
+      <m:term ref="BT-1" xpath="/xvrl:reports/@cvr:conformant" />
+      <m:term ref="BT-2" xpath="/xvrl:reports/@cvr:status" />
+      <m:term ref="BG-2" xpath="/xvrl:reports/xvrl:metadata" />
+      <m:term ref="BT-3" xpath="/xvrl:reports/xvrl:metadata/xvrl:timestamp" />
+      <m:term ref="BT-4"
+        xpath="/xvrl:reports/xvrl:metadata/xvrl:validator/@name" />
+      <m:term ref="BT-5"
+        xpath="/xvrl:reports/xvrl:metadata/xvrl:validator/@version" />
+      <m:term ref="BT-6" xpath="/xvrl:reports/xvrl:metadata/xvrl:document/@href" />
+      <m:term ref="BT-7" xpath="/xvrl:reports/@cvr:run-id">
+        <m:notes>
+          <m:note>Foreseen, not yet emitted.</m:note>
+        </m:notes>
+      </m:term>
+
+      <m:term ref="BG-3" xpath="/xvrl:reports/xvrl:report" />
+      <m:term ref="BG-4" xpath="/xvrl:reports/xvrl:report/xvrl:metadata" />
+      <m:term ref="BT-8"
+        xpath="/xvrl:reports/xvrl:report/xvrl:metadata/xvrl:creator/@name" />
+      <m:term ref="BT-9"
+        xpath="/xvrl:reports/xvrl:report/xvrl:metadata/xvrl:timestamp" />
+      <m:term ref="BT-10"
+        xpath="/xvrl:reports/xvrl:report/xvrl:metadata/xvrl:validator/@name" />
+      <m:term ref="BT-11"
+        xpath="/xvrl:reports/xvrl:report/xvrl:metadata/xvrl:validator/@version" />
+      <m:term ref="BG-5"
+        xpath="/xvrl:reports/xvrl:report/xvrl:metadata/xvrl:schema" />
+      <m:term ref="BT-12"
+        xpath="/xvrl:reports/xvrl:report/xvrl:metadata/xvrl:schema/@href" />
+      <m:term ref="BT-13"
+        xpath="/xvrl:reports/xvrl:report/xvrl:metadata/xvrl:schema/@schematypens" />
+      <m:term ref="BT-14"
+        xpath="/xvrl:reports/xvrl:report/xvrl:metadata/xvrl:schema/@cvr:phase" />
+
+      <m:term ref="BG-6" xpath="/xvrl:reports/xvrl:report/xvrl:detection" />
+      <m:term ref="BT-15"
+        xpath="/xvrl:reports/xvrl:report/xvrl:detection/@severity" />
+      <m:term ref="BT-16"
+        xpath="/xvrl:reports/xvrl:report/xvrl:detection/@cvr:original-severity" />
+      <m:term ref="BT-17" xpath="/xvrl:reports/xvrl:report/xvrl:detection/@code" />
+      <m:term ref="BT-18"
+        xpath="/xvrl:reports/xvrl:report/xvrl:detection/@cvr:scenario-id" />
+      <m:term ref="BT-19"
+        xpath="/xvrl:reports/xvrl:report/xvrl:detection/@cvr:artifact-id" />
+      <m:term ref="BT-20"
+        xpath="/xvrl:reports/xvrl:report/xvrl:detection/@cvr:target-id" />
+      <m:term ref="BT-21"
+        xpath="/xvrl:reports/xvrl:report/xvrl:detection/@cvr:conformance" />
+
+      <m:term ref="BG-7"
+        xpath="/xvrl:reports/xvrl:report/xvrl:detection/xvrl:context" />
+      <m:term ref="BG-8"
+        xpath="/xvrl:reports/xvrl:report/xvrl:detection/xvrl:context/xvrl:location" />
+      <m:term ref="BT-22"
+        xpath="/xvrl:reports/xvrl:report/xvrl:detection/xvrl:context/xvrl:location/@xpath" />
+      <m:term ref="BT-23"
+        xpath="/xvrl:reports/xvrl:report/xvrl:detection/xvrl:context/xvrl:location/@line" />
+      <m:term ref="BT-24"
+        xpath="/xvrl:reports/xvrl:report/xvrl:detection/xvrl:context/xvrl:location/@column" />
+      <m:term ref="BT-25"
+        xpath="/xvrl:reports/xvrl:report/xvrl:detection/xvrl:context/xvrl:location/@href" />
+      <m:term ref="BT-26"
+        xpath="/xvrl:reports/xvrl:report/xvrl:detection/xvrl:context/xvrl:location/@cvr:artifact-type" />
+      <m:term ref="BG-9"
+        xpath="/xvrl:reports/xvrl:report/xvrl:detection/xvrl:context/cvr:hash" />
+      <m:term ref="BT-27"
+        xpath="/xvrl:reports/xvrl:report/xvrl:detection/xvrl:context/cvr:hash/@cvr:algorithm" />
+      <m:term ref="BT-28"
+        xpath="/xvrl:reports/xvrl:report/xvrl:detection/xvrl:context/cvr:hash" />
+
+      <m:term ref="BG-10"
+        xpath="/xvrl:reports/xvrl:report/xvrl:detection/xvrl:message" />
+      <m:term ref="BT-29"
+        xpath="/xvrl:reports/xvrl:report/xvrl:detection/xvrl:message/@xml:id" />
+      <m:term ref="BT-30"
+        xpath="/xvrl:reports/xvrl:report/xvrl:detection/xvrl:message/@cvr:mime-type" />
+      <m:term ref="BT-31"
+        xpath="/xvrl:reports/xvrl:report/xvrl:detection/xvrl:message/@cvr:encoding" />
+      <m:term ref="BT-32"
+        xpath="/xvrl:reports/xvrl:report/xvrl:detection/xvrl:message/@cvr:source-encoding" />
+      <m:term ref="BT-33"
+        xpath="/xvrl:reports/xvrl:report/xvrl:detection/xvrl:message/text()" />
+      <m:term ref="BT-34"
+        xpath="/xvrl:reports/xvrl:report/xvrl:detection/xvrl:message/*" />
+
+      <m:term ref="BG-11"
+        xpath="/xvrl:reports/xvrl:report/xvrl:detection/xvrl:supplemental" />
+      <m:term ref="BT-35"
+        xpath="/xvrl:reports/xvrl:report/xvrl:detection/xvrl:supplemental/@role" />
+      <m:term ref="BT-36"
+        xpath="/xvrl:reports/xvrl:report/xvrl:detection/xvrl:supplemental" />
+
+      <m:term ref="BG-12" xpath="/xvrl:reports/xvrl:report/xvrl:digest" />
+      <m:term ref="BT-37" xpath="/xvrl:reports/xvrl:report/xvrl:digest/@valid" />
+      <m:term ref="BT-38" xpath="/xvrl:reports/xvrl:report/xvrl:digest/@worst" />
+      <m:term ref="BT-39"
+        xpath="/xvrl:reports/xvrl:report/xvrl:digest/@error-count" />
+      <m:term ref="BT-40"
+        xpath="/xvrl:reports/xvrl:report/xvrl:digest/@warning-count" />
+      <m:term ref="BT-41"
+        xpath="/xvrl:reports/xvrl:report/xvrl:digest/@error-codes">
+        <m:notes>
+          <m:note>Serialized as a whitespace-separated list of identifiers in one attribute.</m:note>
+        </m:notes>
+      </m:term>
+
+      <m:term ref="BG-13"
+        xpath="/xvrl:reports/xvrl:report[xvrl:metadata/xvrl:creator/@name = 'decision-recommendation']" />
+      <m:term ref="BT-42"
+        xpath="/xvrl:reports/xvrl:report/xvrl:detection/@cvr:decision" />
+      <m:term ref="BT-43"
+        xpath="/xvrl:reports/xvrl:report/xvrl:detection[@cvr:decision]/xvrl:message"
+       />
+    </m:binding>
+
+    <!-- placeholder binding of the scenario structure to today's configuration (framework/2) -->
+    <m:binding id="scenarios-framework-2">
+      <m:structure>scenario</m:structure>
+      <m:syntax>
+        <m:name>Scenario configuration (framework/2)</m:name>
+        <m:type>xml</m:type>
+        <m:query-language>xpath</m:query-language>
+      </m:syntax>
+      <m:term ref="BG-14" xpath="/s:scenarios/s:scenario" />
+      <m:term ref="BT-44" xpath="/s:scenarios/s:scenario/s:name" />
+      <m:term ref="BT-45" xpath="/s:scenarios/s:scenario/s:match" />
+    </m:binding>
+  </m:syntax-bindings>
+
+</m:model>

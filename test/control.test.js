@@ -5,6 +5,21 @@ import '../index.js';
 import * as fx from 'fontoxpath';
 
 describe('control tests', () => {
+  it('fx-alert is polite by default and assertive on request', async () => {
+    const el = await fixtureSync(html`
+      <div>
+        <fx-alert id="a1">x</fx-alert>
+        <fx-alert id="a2" politeness="assertive">y</fx-alert>
+      </div>
+    `);
+    const a1 = el.querySelector('#a1');
+    const a2 = el.querySelector('#a2');
+    expect(a1.getAttribute('role')).to.equal('status');
+    expect(a1.getAttribute('aria-live')).to.equal('polite');
+    expect(a2.getAttribute('role')).to.equal('alert');
+    expect(a2.getAttribute('aria-live')).to.equal('assertive');
+  });
+
   it('shows control alert defined on control', async () => {
     const el = await fixtureSync(html`
       <fx-fore>
@@ -53,8 +68,8 @@ describe('control tests', () => {
     const alert1 = document.getElementById('alert1');
     expect(alert1).to.exist;
     expect(alert1.firstElementChild).to.be.null; // should not contain further elements
-    expect(alert1.getAttribute('role')).to.equal('alert');
-    expect(alert1.getAttribute('aria-live')).to.equal('assertive');
+    expect(alert1.getAttribute('role')).to.equal('status');
+    expect(alert1.getAttribute('aria-live')).to.equal('polite');
 
     const input1 = document.getElementById('input1');
     const hint1 = input1.querySelector('fx-hint');
@@ -449,6 +464,26 @@ describe('control tests', () => {
         </fx-model>
 
         <fx-control id="input1" label="Name" ref="a"></fx-control>
+      </fx-fore>
+    `);
+
+    await elementUpdated(el);
+    const input = document.getElementById('input1');
+    expect(input.widget.getAttribute('aria-label')).to.equal('Name');
+  });
+
+  it('passes a host aria-label on to the widget', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="model1">
+          <fx-instance>
+            <data>
+              <a>A</a>
+            </data>
+          </fx-instance>
+        </fx-model>
+
+        <fx-control id="input1" aria-label="Name" ref="a"></fx-control>
       </fx-fore>
     `);
 
