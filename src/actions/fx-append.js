@@ -88,8 +88,14 @@ class FxAppend extends AbstractAction {
    * @private
    */
   async _dataFromTemplate() {
+    /**
+     * @type {Element}
+     */
     const inscope = this.getInScopeContext();
     const parentForm = this.getOwnerForm();
+    /**
+     * @type {import('../ui/fx-repeat.js').FxRepeat}
+     */
     const repeat = parentForm.querySelector(`#${this.repeat}`);
     // console.log('_dataFromTemplate repeat', repeat);
     // console.log('_dataFromTemplate repeat ref', repeat.ref);
@@ -105,9 +111,11 @@ class FxAppend extends AbstractAction {
     // const rootNode = document.createElement(repeat.ref);
     // const rootNode = inscope.ownerDocument.createElement(repeat.ref);
     /**
+     * Create the root node in the same namespace as the parent.
+     * @todo: Use the create-nodes algorithm here. It's a lot more powerful
      * @type {Element}
      */
-    const rootNode = inscope.ownerDocument.createElement(repeat.ref);
+    const rootNode = inscope.ownerDocument.createElementNS(inscope.namespaceURI, repeat.ref);
 
     // const data = this._dataFromRefs(rootNode, templ.content)
     const data = this._generateInstance(templ.content, rootNode);
@@ -169,6 +177,12 @@ class FxAppend extends AbstractAction {
     }
   }
 
+  /**
+   * @todo: consider reusing the create-nodes algorithm here!
+   *
+   * @param {ParentNode} start - The form node where this element will be created from
+   * @param {Element} parent - The parent of the new element. Or attribute
+   */
   _generateInstance(start, parent) {
     if (start.nodeType === 1 && start.hasAttribute('ref')) {
       const ref = start.getAttribute('ref');
@@ -179,7 +193,7 @@ class FxAppend extends AbstractAction {
       } else if (ref.startsWith('@')) {
         parent.setAttribute(ref.substring(1), '');
       } else {
-        generated = document.createElement(ref);
+        generated = document.createElementNS(parent.namespaceURI, ref);
         parent.appendChild(generated);
         if (start.children.length === 0) {
           generated.textContent = start.textContent;

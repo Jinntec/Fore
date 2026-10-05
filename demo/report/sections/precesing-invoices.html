@@ -1,0 +1,11 @@
+<section xmlns:func="generator-functions" id="precesing-invoices" fragment="true">
+   <div class="details-content">
+      <fx-repeat id="r-BG-3" aria-label="PRECEDING INVOICE REFERENCE" ref="cac:BillingReference/cac:InvoiceDocumentReference"><template>
+            <fx-control id="BT-25" ref="cbc:ID"><label for="BT-25-input">Preceding Invoice reference</label><input id="BT-25-input" type="text"></fx-control>
+            <fx-control id="BT-26" ref="cbc:IssueDate"><label for="BT-26-input">Preceding Invoice issue date</label><input id="BT-26-input" type="date"></fx-control>
+            <fx-trigger class="delete-btn"><button>delete</button><fx-delete ref="."></fx-delete>
+            </fx-trigger></template></fx-repeat>
+      <fx-trigger class="add-button"><button>add</button><fx-insert ref="cac:BillingReference/cac:InvoiceDocumentReference" origin="#r-BG-3"></fx-insert>
+      </fx-trigger>
+   </div>
+</section>

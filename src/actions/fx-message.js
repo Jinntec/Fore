@@ -8,6 +8,8 @@ import getInScopeContext from '../getInScopeContext.js';
  *
  * Action to display messages to the user.
  *
+ * `level` says how important the message is (and picks the toast it is shown in), `appearance`
+ * selects how it looks, e.g. `toast` (default) or `banner`. See `FxFore.registerMessageAppearance`.
  *
  */
 class FxMessage extends AbstractAction {
@@ -33,6 +35,7 @@ class FxMessage extends AbstractAction {
     super.connectedCallback();
     this.event = this.hasAttribute('event') ? this.getAttribute('event') : '';
     this.level = this.hasAttribute('level') ? this.getAttribute('level') : 'ephemeral';
+    this.appearance = this.getAttribute('appearance');
     this.message = '';
 
     this.messageTextContent = this.textContent;
@@ -76,7 +79,7 @@ class FxMessage extends AbstractAction {
       new CustomEvent('message', {
         composed: false,
         bubbles: true,
-        detail: { level: this.level, message: this.message },
+        detail: { level: this.level, message: this.message, appearance: this.appearance },
       }),
     );
   }

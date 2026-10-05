@@ -26,7 +26,7 @@
         <fx-message event="refresh-done">refresh has been done </fx-message>
 
         <fx-model id="model1">
-            <fx-instance>
+            <fx-instance type="html">
                 <data>
                     <greeting>Hello World!</greeting>
                 </data>
@@ -34,7 +34,7 @@
 
             <fx-bind id="b-greeting" ref="greeting" required="1 = 1"></fx-bind>
 
-            <fx-instance id="second">
+            <fx-instance id="second" type="html">
                 <data>
                     <outro>GoodBye</outro>
                     <foo></foo>

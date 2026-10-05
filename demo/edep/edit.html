@@ -105,7 +105,7 @@
             </fx-bind>
 
 
-            <fx-instance id="i-fragment" xpath-default-namespace="http://www.tei-c.org/ns/1.0"></fx-instance>
+            <fx-instance id="i-fragment" xpath-default-namespace="http://www.tei-c.org/ns/1.0" type="html"></fx-instance>
             <!--
                                             <fx-submission id="s-load-template"
                                                            method="get"
@@ -215,7 +215,7 @@
                 <data></data>
             </fx-instance>
 
-            <fx-instance id="vars" shared="true">
+            <fx-instance id="vars" shared="true" type="html">
                 <data>
                     <appdir>${app}</appdir>
                     <display-leiden>hidden</display-leiden>
@@ -248,13 +248,13 @@
                     constraint=".='true'"
                     ref="instance('vars')/xml-valid"></fx-bind>
 
-            <fx-instance id="tmp">
+            <fx-instance id="tmp" type="html">
                 <data>
                     <dummy>xpath?</dummy>
                 </data>
             </fx-instance>
 
-            <fx-instance id="params">
+            <fx-instance id="params" type="html">
                 <data>
                     <id>${id}</id>
                     <collection>${collection}</collection>

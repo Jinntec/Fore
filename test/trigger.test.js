@@ -10,7 +10,7 @@ describe('trigger tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <disabled>true</disabled>
             </data>
@@ -39,7 +39,7 @@ describe('trigger tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <disabled>true</disabled>
             </data>
@@ -73,7 +73,7 @@ describe('trigger tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <disabled>false</disabled>
             </data>

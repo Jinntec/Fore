@@ -2,6 +2,8 @@ import { prettifyXml } from '../functions/common-function.js';
 
 /**
  * lists out all live instances in html 'details' and 'summary' elements.
+ *
+ * @deprecated - use fx-debugger and fx-lens instead
  */
 export class FxInspector extends HTMLElement {
   constructor() {

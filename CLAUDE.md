@@ -14,16 +14,6 @@ Fore is optimized for:
 * long-term preservation
 * fast development cycle
 
-## Tech Stack
-
-* npm
-* ES6 JavaScript
-* fontoXPath as XPath 3.1 implementation 
-* Web Components
-* cypress for e2e tests
-* karma for unit tests
-* vite as test server
-
 ## References
     - [Fore documentation](https://jinntec.github.io/fore-docs/tags/version-1.0.0/) — official element/attribute reference
     - [Fore demos](https://jinntec.github.io/Fore/doc/demos.html) - curated demos  

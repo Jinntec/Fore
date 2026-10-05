@@ -580,7 +580,7 @@ export class FxModel extends HTMLElement {
    * Resolves the model whose undo history should record mutations reachable through
    * this model.
    *
-   * A model that declares no `<fx-instance>` of its own (e.g. a nested `fx-fore` that
+   * A model that declares no `<fx-instance type="html">` of its own (e.g. a nested `fx-fore` that
    * only consumes a `shared` instance from an ancestor) operates entirely on data it
    * doesn't own. Its own `undoManager` would only ever see empty snapshots - not
    * merely non-undoable, but silently WRONG: `canUndo()`/`undo()` would still report

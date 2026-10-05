@@ -65,6 +65,7 @@ import './src/ui/fx-control-menu.js';
 
 import './src/functions/fx-function.js';
 import './src/functions/fx-functionlib.js';
-import './src/fx-speech.js';
+import './tools/debug/auto-lens.js';
+// import './src/fx-speech.js';
 
 export default {};

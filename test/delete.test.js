@@ -9,7 +9,7 @@ describe('delete Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task complete="false" due="2019-02-04">Pick up Milk</task>
               <task complete="true" due="2019-01-04">Make tutorial part 1</task>
@@ -67,7 +67,7 @@ describe('delete Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task complete="false" due="2019-02-04">Pick up Milk</task>
               <task complete="true" due="2019-01-04">Make tutorial part 1</task>
@@ -126,7 +126,7 @@ describe('delete Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task complete="false" due="2019-02-04">Pick up Milk</task>
               <task complete="true" due="2019-01-04">Make tutorial part 1</task>
@@ -179,7 +179,7 @@ describe('delete Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task complete="false" due="2019-02-04">Pick up Milk</task>
               <task complete="true" due="2019-01-04">Make tutorial part 1</task>
@@ -225,7 +225,7 @@ describe('delete Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task complete="false" due="2019-02-04">Pick up Milk</task>
               <task complete="true" due="2019-01-04">Make tutorial part 1</task>
@@ -271,7 +271,7 @@ describe('delete Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task complete="false" due="2019-02-04">Pick up Milk</task>
               <task complete="true" due="2019-01-04">Make tutorial part 1</task>
@@ -317,7 +317,7 @@ describe('delete Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task complete="false" due="2019-02-04">Pick up Milk</task>
               <task complete="true" due="2019-01-04">Make tutorial part 1</task>
@@ -369,7 +369,7 @@ describe('delete Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task complete="false" due="2019-02-04">Pick up Milk</task>
               <task complete="true" due="2019-01-04">Make tutorial part 1</task>
@@ -417,13 +417,13 @@ describe('delete Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <task complete="false" due="2019-02-04">Pick up Milk</task>
               <task complete="true" due="2019-01-04">Make tutorial part 1</task>
             </data>
           </fx-instance>
-          <fx-instance id="items">
+          <fx-instance id="items" type="html">
             <data>
               <item>item1</item>
               <item>item2</item>
@@ -456,7 +456,7 @@ describe('delete Tests', () => {
       <fx-fore>
         <fx-delete event="ready" ref="//item[2]"></fx-delete>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <item>item1</item>
               <item>item2</item>
@@ -487,10 +487,10 @@ describe('delete Tests', () => {
       <fx-fore>
         <fx-delete event="ready" ref="instance('items')//item[2]"></fx-delete>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data></data>
           </fx-instance>
-          <fx-instance id="items">
+          <fx-instance id="items" type="html">
             <data>
               <item>item1</item>
               <item>item2</item>

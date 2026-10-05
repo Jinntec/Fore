@@ -8,7 +8,7 @@ describe('scoped resolution tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <arm side="left">
                 <hand>
@@ -38,7 +38,7 @@ describe('scoped resolution tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <arm side="left">
                 <hand>
@@ -124,7 +124,7 @@ describe('scoped resolution tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <arm side="left">
                 <hand>
@@ -154,7 +154,7 @@ describe('scoped resolution tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <arm side="left">
                 <hand>
@@ -188,7 +188,7 @@ describe('scoped resolution tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <arm side="left">
                 <hand>
@@ -222,7 +222,7 @@ describe('scoped resolution tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <arm side="left">
                 <hand>
@@ -260,7 +260,7 @@ describe('scoped resolution tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="record">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <arm side="left">
                 <hand>
@@ -312,7 +312,7 @@ describe('scoped resolution tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <from></from>
               <to></to>
@@ -326,7 +326,7 @@ describe('scoped resolution tests', () => {
             <label>From</label>
             <fx-fore class="widget">
               <fx-model>
-                <fx-instance>
+                <fx-instance type="html">
                   <data>
                     <email>default</email>
                   </data>
@@ -364,7 +364,7 @@ describe('scoped resolution tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data
               ><ol>
                 <li><p>66</p></li>
@@ -437,7 +437,7 @@ describe('scoped resolution tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <ptr target="target"></ptr>
               <check></check>
@@ -478,13 +478,13 @@ describe('scoped resolution tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <ptr target="target"></ptr>
               <check></check>
             </data>
           </fx-instance>
-          <fx-instance id="var">
+          <fx-instance id="var" type="html">
             <data>
               <var1>aValue</var1>
             </data>

@@ -39,7 +39,7 @@
                 <data></data>
             </fx-instance>
             <fx-instance id="json-input" src="profile.json" type="json"></fx-instance>
-            <fx-instance id="json-output"></fx-instance>
+            <fx-instance id="json-output" type="html"></fx-instance>
 
             <fx-action event="model-construct-done">
                 <fx-replace ref="instance()" with="json2xml(instance('json-input'))"></fx-replace>

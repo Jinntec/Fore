@@ -24,7 +24,6 @@ const main = async () => {
   await import('@polymer/paper-checkbox/paper-checkbox.js');
   await import('@polymer/paper-button/paper-button.js');
   await import('../src/lab/instance-inspector.js');
-  await import('../tools/fx-lens.js');
   await import('../doc/fore-corner.js');
 };
 main();

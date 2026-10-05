@@ -13,7 +13,7 @@ describe('DependencyNotifyingDomFacade', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <item keep="true">a</item>
               <item keep="false">b</item>

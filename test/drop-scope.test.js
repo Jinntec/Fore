@@ -7,7 +7,7 @@ describe('drop-scope Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <group name="A">
                 <item name="A1"></item>
@@ -51,7 +51,7 @@ describe('drop-scope Tests', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <group name="A">
                 <item name="A1"></item>

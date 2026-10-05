@@ -24,7 +24,7 @@ describe('initialize form', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <greeting type="message:">Hello World!</greeting>
             </data>
@@ -41,12 +41,12 @@ describe('initialize form', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <greeting>Hello World!</greeting>
             </data>
           </fx-instance>
-          <fx-instance id="second">
+          <fx-instance id="second" type="html">
             <data>
               <outro>GoodBye</outro>
             </data>
@@ -67,12 +67,12 @@ describe('initialize form', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model id="model1">
-          <fx-instance>
+          <fx-instance type="html">
             <data>
               <greeting>Hello World!</greeting>
             </data>
           </fx-instance>
-          <fx-instance id="second">
+          <fx-instance id="second" type="html">
             <data>
               <greeting>GoodBye</greeting>
             </data>
@@ -106,7 +106,7 @@ describe('initialize form', () => {
     const el = await fixtureSync(html`
       <fx-fore>
         <fx-model>
-          <fx-instance>
+          <fx-instance type="html">
             <data></data>
           </fx-instance>
         </fx-model>

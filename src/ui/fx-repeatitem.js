@@ -105,9 +105,23 @@ export class FxRepeatitem extends withDraggability(UIElement, true) {
     }
   }
 
+  /**
+   * Exposes the row's place in the list (`aria-posinset` of `aria-setsize`). With a size-capped or
+   * virtual repeat only part of the rows are in the DOM, so a screen reader cannot count them.
+   */
+  _updateSetPosition() {
+    const repeat = this.parentNode;
+    const total = Array.isArray(repeat?.nodeset) ? repeat.nodeset.length : 0;
+    if (this.index > 0 && total > 0) {
+      this.setAttribute('aria-posinset', String(this.index));
+      this.setAttribute('aria-setsize', String(total));
+    }
+  }
+
   async refresh(force = false) {
     // this.modelItem = this.getModelItem();
     this.attachObserver();
+    this._updateSetPosition();
 
     if (this.modelItem && !this.modelItem.relevant) {
       this.removeAttribute('relevant');

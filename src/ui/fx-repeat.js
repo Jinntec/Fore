@@ -994,6 +994,20 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     }
     this._renderTarget = newTarget;
     this._syncSentinels();
+    this._reobserveSentinel();
+  }
+
+  /**
+   * Re-observes the bottom sentinel so the browser delivers a fresh reading of its *current*
+   * intersection state. After a chunk was revealed the sentinel keeps its previous observation
+   * state ("intersecting") while it has been pushed down by the new rows. If the user scrolls to
+   * the new end before a frame re-evaluated it, the observer sees no transition and the next
+   * chunk is never revealed. Progressive mode only - virtual mode paces itself via eviction.
+   */
+  _reobserveSentinel() {
+    if (this._virtual || !this._sentinel || !this._sentinelObserver) return;
+    this._sentinelObserver.unobserve(this._sentinel);
+    this._sentinelObserver.observe(this._sentinel);
   }
 
   /**

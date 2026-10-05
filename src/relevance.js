@@ -18,6 +18,7 @@ export class Relevance {
   static selectRelevant(element, type) {
     // console.log('selectRelevant', type);
     switch (type) {
+      case 'html':
       case 'xml':
         return Relevance._relevantXmlNodes(element);
       default:
