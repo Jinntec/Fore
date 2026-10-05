@@ -409,6 +409,20 @@ export class FxInstance extends HTMLElement {
     this.nodeset = null;
   }
 
+  /**
+   * The HTML parser stores the children of a `<template>` in its `.content` fragment, where XPath
+   * cannot see them. Move them to be regular children so that paths like `template/task` work.
+   * @param {Element} root
+   */
+  static _inlineTemplateContent(root) {
+    const queue = root.localName === 'template' ? [root] : [...root.querySelectorAll('template')];
+    while (queue.length) {
+      const tmpl = queue.shift();
+      while (tmpl.content.firstChild) tmpl.appendChild(tmpl.content.firstChild);
+      queue.push(...tmpl.querySelectorAll('template'));
+    }
+  }
+
   _useInlineData() {
     switch (this.type) {
       case 'xml': {
@@ -437,6 +451,7 @@ representation, or use the "src" attribute to define an external location for th
       case 'html': {
         const newDocumentFragment = new Document();
         newDocumentFragment.appendChild(this.firstElementChild.cloneNode(true));
+        FxInstance._inlineTemplateContent(newDocumentFragment.documentElement);
         this._setInitialData(newDocumentFragment);
         break;
       }

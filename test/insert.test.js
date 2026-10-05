@@ -2,7 +2,7 @@
 import { html, oneEvent, fixtureSync, expect } from '@open-wc/testing';
 import * as fx from 'fontoxpath';
 
-import '../src/fx-instance.js';
+import '../index.js';
 
 describe('insert Tests', () => {
   it('does nothing when nodeset is empty', async () => {
@@ -37,6 +37,32 @@ describe('insert Tests', () => {
     const tasks = fx.evaluateXPath('//task', inst, null, {});
 
     expect(tasks.length).to.equal(0);
+  });
+
+  it('warns when there is no origin and ref selects nothing', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance type="html">
+            <data> </data>
+          </fx-instance>
+        </fx-model>
+        <fx-trigger>
+          <button>add</button>
+          <fx-insert ref="task"></fx-insert>
+        </fx-trigger>
+      </fx-fore>
+    `);
+    await oneEvent(el, 'refresh-done');
+    const warnings = [];
+    const origWarn = console.warn;
+    console.warn = (...args) => warnings.push(args.join(' '));
+    try {
+      await el.querySelector('fx-trigger').performActions();
+    } finally {
+      console.warn = origWarn;
+    }
+    expect(warnings.some(w => w.includes('selects no node to clone'))).to.be.true;
   });
 
   it('inserts at end by default', async () => {
@@ -246,6 +272,66 @@ describe('insert Tests', () => {
     expect(tasks[1].textContent).to.equal(tasks[3].textContent);
     expect(tasks[1].getAttribute('complete')).to.equal(tasks[3].getAttribute('complete'));
     expect(tasks[1].getAttribute('due')).to.equal(tasks[3].getAttribute('due'));
+  });
+
+  it('without origin clones last item and repeat renders the new entry', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model id="record">
+          <fx-instance type="html">
+            <data>
+              <task complete="false" due="">a</task>
+              <task complete="false" due="">b</task>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <fx-repeat id="r-task" ref="task">
+          <template>
+            <fx-control ref="."></fx-control>
+          </template>
+        </fx-repeat>
+        <fx-trigger>
+          <button>add</button>
+          <fx-insert ref="task" at="1" position="before"></fx-insert>
+        </fx-trigger>
+      </fx-fore>
+    `);
+    await oneEvent(el, 'refresh-done');
+    await el.querySelector('fx-trigger').performActions();
+    await new Promise(r => setTimeout(r, 50));
+
+    const inst = el.getModel().getDefaultContext();
+    expect(fx.evaluateXPath('count(//task)', inst, null, {})).to.equal(3);
+    expect(el.querySelectorAll('fx-repeatitem').length).to.equal(3);
+  });
+
+  it('inserts from an origin inside a <template> of an html instance', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance type="html">
+            <data>
+              <task>a</task>
+            </data>
+          </fx-instance>
+          <fx-instance id="helper" type="html">
+            <data>
+              <template>
+                <task complete="false"></task>
+              </template>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <fx-trigger>
+          <button>add</button>
+          <fx-insert ref="task" origin="instance('helper')/template/task"></fx-insert>
+        </fx-trigger>
+      </fx-fore>
+    `);
+    await oneEvent(el, 'refresh-done');
+    await el.querySelector('fx-trigger').performActions();
+    const inst = el.getModel().getDefaultContext();
+    expect(fx.evaluateXPath('count(//task)', inst, null, {})).to.equal(2);
   });
 
   it('inserts from origin', async () => {
