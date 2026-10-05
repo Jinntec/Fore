@@ -350,13 +350,13 @@ Out of scope, unchanged from the foundation layer:
 
 ## Verification
 
-- [x] `npm test` — karma/mocha unit suite: 858 passing (incl. new assertions for
+- [x] `npm test` — karma/mocha unit suite: 1232 passing (incl. new assertions for
       `aria-required`, `aria-readonly`, `aria-invalid`, label association, `aria-describedby`,
       `inert`, the `fx-alert` live-region attributes, `fx-switch`'s `appearance="tabs"`
       role/`aria-selected`/roving-tabindex wiring and arrow-key navigation in
       `test/switch.test.js`, and — new — `fx-repeat`/`fx-repeatitem`'s `role="list"`/`"listitem"`
       and the fixed `tabindex` in `test/repeat.test.js`).
-- [x] `npx cypress run` — full e2e suite: 38 specs / 94 tests passing, including the pre-existing
+- [x] `npx cypress run` — full e2e suite: 54 specs / 154 tests (153 passing, 1 skipped), including the pre-existing
       `native-validation.cy.js` and `binding.valid-relevant.cy.js` (both assert `aria-invalid`).
 - [x] Audit follow-ups F1–F5 are covered by unit tests: `test/on-demand-a11y.test.js`,
       `test/repeat-a11y.test.js`, `test/required-marker.test.js`.
