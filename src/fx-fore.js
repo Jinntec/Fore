@@ -1443,15 +1443,42 @@ export class FxFore extends HTMLElement {
   }
 
   /**
+   * True for the `aria-label`/`label` attribute and the text of a direct `<label>` child of an element that is
+   * itself nonrelevant (and not inside another nonrelevant element): the name fx-control-menu shows for it.
+   *
+   * @param {Node} node attribute or text node holding a template expression
+   * @returns {boolean}
+   */
+  static _isNameOfNonrelevantElement(node) {
+    let owner;
+    if (node.nodeType === Node.ATTRIBUTE_NODE) {
+      if (node.name !== 'aria-label' && node.name !== 'label') return false;
+      owner = node.ownerElement;
+    } else if (node.nodeType === Node.TEXT_NODE && node.parentNode?.localName === 'label') {
+      owner = node.parentNode.parentElement;
+    }
+    return (
+      !!owner &&
+      owner.hasAttribute('nonrelevant') &&
+      !owner.parentElement?.closest('[nonrelevant]')
+    );
+  }
+
+  /**
    * evaluate a template expression on a node either text- or attribute node.
    * @param {string} expr The string to parse for expressions
    * @param {Node} node the node which will get updated with evaluation result
    */
   evaluateTemplateExpression(expr, node) {
-    // ### do not evaluate template expressions within nonrelevant sections
-    if (node.nodeType === Node.ATTRIBUTE_NODE && node.ownerElement.closest('[nonrelevant]')) return;
-    if (node.nodeType === Node.TEXT_NODE && node.parentNode.closest('[nonrelevant]')) return;
-    if (node.nodeType === Node.ELEMENT_NODE && node.closest('[nonrelevant]')) return;
+    // ### do not evaluate template expressions within nonrelevant sections - except the name of the
+    // nonrelevant element itself: an `on-demand` element is nonrelevant until the user picks it from
+    // fx-control-menu, which lists it by that name
+    if (!FxFore._isNameOfNonrelevantElement(node)) {
+      if (node.nodeType === Node.ATTRIBUTE_NODE && node.ownerElement.closest('[nonrelevant]'))
+        return;
+      if (node.nodeType === Node.TEXT_NODE && node.parentNode.closest('[nonrelevant]')) return;
+      if (node.nodeType === Node.ELEMENT_NODE && node.closest('[nonrelevant]')) return;
+    }
 
     // ---- IMPORTANT GUARD ----
     // Prevent JSON object/array literals in fx-insert@origin from being treated as
@@ -1487,7 +1514,12 @@ export class FxFore extends HTMLElement {
       if (match === '{}') return match;
 
       const naked = match.substring(1, match.length - 1);
-      const inscope = getInScopeContext(node, naked);
+      let inscope = getInScopeContext(node, naked);
+      if (!inscope && FxFore._isNameOfNonrelevantElement(node)) {
+        // the element is bound to a node that does not exist (that is why it is nonrelevant), so it has no context:
+        // evaluate its name against the default context
+        inscope = this.getModel().getDefaultContext();
+      }
 
       if (!inscope) {
         return match;
