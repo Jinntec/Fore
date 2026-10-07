@@ -40,6 +40,25 @@ export default class FxUpload extends XfAbstractControl {
     };
   }
 
+  static get observedAttributes() {
+    return [...super.observedAttributes, 'label'];
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    super.attributeChangedCallback(name, oldValue, newValue);
+    if (name === 'label') {
+      // the label is shown from the attribute, which may be a `{...}` template Fore evaluates (and re-evaluates,
+      // eg. on a language switch) after this element has rendered
+      this.label = newValue;
+      this._renderLabel();
+    }
+  }
+
+  _renderLabel() {
+    const target = this.shadowRoot?.querySelector('.upload-label');
+    if (target) target.textContent = this.label ?? '';
+  }
+
   connectedCallback() {
     this.updateEvent = 'change';
     this.accept = this.hasAttribute('accept') ? this.getAttribute('accept') : '';
@@ -58,6 +77,7 @@ export default class FxUpload extends XfAbstractControl {
         `;
 
     this.widget = this.getWidget();
+    this._renderLabel();
 
     this.addEventListener('mousedown', e => {
       // ### prevent mousedown events on all control content that is not the widget or within the widget
@@ -222,7 +242,7 @@ export default class FxUpload extends XfAbstractControl {
 
   renderHTML(ref) {
     return `
-            ${this.label ? `${this.label}` : ''}
+            <span class="upload-label" part="label"></span>
             <slot></slot>
             <input type="file" ${this.accept !== '' ? `accept="${this.accept}"` : ''}>
             <fx-setvalue id="setvalue" ref="${ref}"></fx-setvalue>
