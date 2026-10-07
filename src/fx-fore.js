@@ -1357,16 +1357,23 @@ export class FxFore extends HTMLElement {
    *
    * @private
    */
-  _updateTemplateExpressions() {
+  /**
+   * Finds, stores and evaluates the template expressions (`{...}` in text and attribute values).
+   *
+   * @param {Element} [scope] only look into this element (e.g. content inserted by `fx-include`) and only
+   * evaluate the expressions found there. Defaults to the whole form.
+   */
+  _updateTemplateExpressions(scope = this) {
     const search =
       "(descendant-or-self::*!(text(), @*))[contains(., '{')][substring-after(., '{') => contains('}')][not(ancestor-or-self::*[self::fx-model or self::fx-function])]";
 
-    const tmplExpressions = evaluateXPathToNodes(search, this, this);
+    const tmplExpressions = evaluateXPathToNodes(search, scope, this);
     // console.log('template expressions found ', tmplExpressions);
 
     if (!this.storedTemplateExpressions) {
       this.storedTemplateExpressions = [];
     }
+    const newNodes = [];
 
     // console.log('######### storedTemplateExpressions', this.storedTemplateExpressions.length);
 
@@ -1389,12 +1396,19 @@ export class FxFore extends HTMLElement {
       // console.log('storedTemplateExpressionByNode', this.storedTemplateExpressionByNode);
       if (expr) {
         this.storedTemplateExpressionByNode.set(node, expr);
+        newNodes.push(node);
       }
     });
     // console.log('stored template expressions ', this.storedTemplateExpressionByNode);
 
     // TODO: Should we clean up nodes that existed but are now gone?
-    this._processTemplateExpressions();
+    if (scope === this) {
+      this._processTemplateExpressions();
+    } else {
+      newNodes.forEach(node => {
+        this._processTemplateExpression({ node, expr: this.storedTemplateExpressionByNode.get(node) });
+      });
+    }
   }
 
   _processTemplateExpressions() {

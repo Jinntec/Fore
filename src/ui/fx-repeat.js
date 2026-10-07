@@ -2096,6 +2096,27 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     this._syncSentinels();
   }
 
+  /**
+   * The data template for rows inserted by fx-insert (`origin="#<repeat id>"`): a copy of a row's nodes without
+   * their text values. Normally snapshotted when the repeat creates its initial rows (_initRepeatItems). A repeat
+   * that had no rows then (e.g. inside an fx-include, where the first row is created later) takes it
+   * from an existing row when it is needed.
+   *
+   * @returns {Node|undefined}
+   */
+  getCreatedNodeset() {
+    if (!this.createdNodeset) {
+      const items = this.querySelectorAll(':scope > fx-repeatitem');
+      const last = items[items.length - 1];
+      if (last?.nodeset?.nodeType) {
+        const clone = last.nodeset.cloneNode(true);
+        this.clearTextValues(clone);
+        this.createdNodeset = clone;
+      }
+    }
+    return this.createdNodeset;
+  }
+
   clearTextValues(node) {
     if (!node) return;
 

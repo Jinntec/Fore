@@ -728,6 +728,48 @@ export default class FxControl extends XfAbstractControl {
   }
 
   /**
+   * The URL given by the widget's `data-src`, with `{...}` template expressions resolved, e.g.
+   * `data-src="codes.{instance('i18n')?lang}.json"`.
+   *
+   * Fore evaluates attribute templates in its own pass, which runs AFTER the controls were refreshed, and
+   * then overwrites the attribute's value with the result. Reading the attribute here would therefore
+   * return the raw template on the first refresh and the previous result on later ones. So the template
+   * is taken from the form's store of template expressions (the original value) and resolved here,
+   * the same way fx-submission resolves its `url`.
+   *
+   * The URL is resolved on every refresh of the control (not tracked as a dependency of the data it uses),
+   * so a change shows up with the next refresh of the control, e.g. the forced refresh after an instance
+   * was replaced by a submission.
+   *
+   * @param {HTMLElement} widget
+   * @returns {string|null} the URL, or null if there is none or it can't be resolved (yet) - nothing is requested then
+   * @private
+   */
+  _resolveDataSrcUrl(widget) {
+    const attr = widget?.getAttributeNode?.('data-src');
+    if (!attr) return null;
+
+    const stored = this.getOwnerForm()?.storedTemplateExpressionByNode?.get(attr);
+    const template = typeof stored === 'string' ? stored : attr.value;
+    if (!template) return null;
+    if (!template.includes('{')) return template;
+
+    let url = template;
+    try {
+      for (const match of template.match(/{[^}]*}/g) || []) {
+        const part = this.evaluateAttributeTemplateExpression(match, this);
+        // ### an empty result (e.g. an instance that is not there yet) must not end in a request for a made-up URL
+        if (part === '') return null;
+        url = url.replaceAll(match, part);
+      }
+    } catch (error) {
+      // ### try again on the next refresh
+      return null;
+    }
+    return url;
+  }
+
+  /**
    * Implements the `data-src` lookup-list shortcut: if the bound widget
    * declares `data-src="<url>"`, lazily loads that document via an anonymous
    * `<fx-instance type="html">` and binds its root element as a control-local XPath
@@ -738,18 +780,27 @@ export default class FxControl extends XfAbstractControl {
    * @private
    */
   async _loadDataSrc(widget) {
-    const url = widget.getAttribute && widget.getAttribute('data-src');
+    const url = this._resolveDataSrcUrl(widget);
     if (!url) return;
 
     const varName = widget.getAttribute('data-id') || 'src';
 
+    // ### unchanged since the last refresh: nothing to do. A changed URL (e.g. a language switch in
+    // `data-src="codes.{instance('i18n')?lang}.json"`) loads that document - or reuses the instance
+    // already created for it - and refreshes the control.
     if (this._dataSrcUrl === url) return;
     this._dataSrcUrl = url;
 
     // ### bind to an empty sequence until loaded so `ref` evaluation doesn't
     // throw on the not-yet-bound variable; `_handleBoundWidget` bails out
-    // gracefully on an empty nodeset.
-    this.inScopeVariables.set(varName, typedValueFactory([], fontoDomFacade));
+    // gracefully on an empty nodeset. If the URL changes later the previous binding stays until the
+    // new document is there, so the widget keeps its entries meanwhile.
+    if (!this.inScopeVariables.has(varName)) {
+      this.inScopeVariables.set(
+        varName,
+        widget.getAttribute('data-type') === 'json' ? [] : typedValueFactory([], fontoDomFacade),
+      );
+    }
 
     const instEl = this._ensureDataSrcInstance(url, widget.getAttribute('data-type'));
 
@@ -768,10 +819,14 @@ export default class FxControl extends XfAbstractControl {
         }
       }
 
+      // ### a JSON document is bound as the JSON node itself (lookups like `$src?*`), XML as typed node
+      const context = instEl.getDefaultContext();
       this.inScopeVariables.set(
         varName,
-        typedValueFactory([instEl.getDefaultContext()], fontoDomFacade),
+        instEl.type === 'json' ? context : typedValueFactory([context], fontoDomFacade),
       );
+      // ### new data: a `static` widget (built once) has to be built again
+      this.boundInitialized = false;
       this.refresh(true);
     } catch (error) {
       Fore.dispatch(this, 'error', {

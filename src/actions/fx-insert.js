@@ -443,7 +443,7 @@ export class FxInsert extends AbstractAction {
       try {
         if (this.origin.startsWith('#') && this.getOwnerForm().createNodes) {
           const repeat = this.getOwnerForm().querySelector(this.origin);
-          originSequenceClone = repeat.createdNodeset.cloneNode(true);
+          originSequenceClone = (repeat.getCreatedNodeset?.() ?? repeat.createdNodeset).cloneNode(true);
           if (!originSequenceClone) {
             console.error(`createdNodeset for repeat ${this.origin} does not exist`);
           }

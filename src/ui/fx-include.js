@@ -267,6 +267,10 @@ export class FxInclude extends HTMLElement {
     }
 
     await Fore.refreshChildren(startElement, true);
+
+    // ### `{...}` in the inserted content (text and attributes) is only evaluated in the form's next full refresh,
+    // which may be a long way off: evaluate it now
+    fore?._updateTemplateExpressions?.(startElement);
   }
 
   _initForeUiDescendants(startElement) {
