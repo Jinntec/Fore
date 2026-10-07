@@ -48,6 +48,11 @@ async function handleResponse(fxInstance, response) {
  * store
  * @attr {boolean} [shared=false] - Whether this instance will be shared with any sub fx-fore elements.
  * @attr {"same-origin"|"include"|"omit"} [credentials="same-origin"] - The credentials to use when fetching an external resource
+ * @attr {boolean} [static=false] - Asserts that no fx-bind, fx-var or model dependency reads this
+ * instance (eg. a language file only read by controls and templates). Replacing its data, eg. by
+ * a submission with replace="instance", then only refreshes the UI and skips the model's
+ * rebuild/recalculate/revalidate. Never set it on the default instance or on an instance that
+ * binds depend on - they would not be recomputed.
  */
 export class FxInstance extends HTMLElement {
   constructor() {

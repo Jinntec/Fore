@@ -543,6 +543,20 @@ export class FxModel extends HTMLElement {
     return existing;
   }
   /**
+   * True unless the author asserted with `static` on the fx-instance that nothing in the model
+   * depends on instance `id` (eg. a language file only read by controls and templates). Replacing
+   * a static instance needs a refresh but no rebuild/recalculate/revalidate. The default instance
+   * is never treated as static.
+   * @param {string} id
+   * @returns {boolean}
+   */
+  isInstanceUsedByBinds(id) {
+    const first = this.instances?.[0];
+    if (!id || !first || first.id === id) return true;
+    return !this.instances.some(i => i.id === id && i.hasAttribute('static'));
+  }
+
+  /**
    * update action triggering the update cycle
    */
   updateModel() {

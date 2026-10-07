@@ -621,10 +621,16 @@ export class FxSubmission extends ForeElementMixin {
         // the same cycle (issue #373). This mirrors how fx-reset / fx-replace own theirs.
         // A standalone submit() (direct call, or event="ready" before an action chain
         // exists) has no such owner, so run the cycle here.
+        this._replacedInstanceUnbound =
+          !this.targetref && !this.into && !this.model.isInstanceUsedByBinds(targetInstance.id);
         if (FxFore.outermostHandler) {
           this._updateCycleDeferredToChain = true;
         } else {
-          this.model.updateModel();
+          if (this._replacedInstanceUnbound) {
+            // no bind reads this instance (eg. a language file): a refresh is enough
+          } else {
+            this.model.updateModel();
+          }
           // ✅ IMPORTANT: await, otherwise tests/action-pipeline can out-run the refresh
           await fore.refresh(true);
         }
