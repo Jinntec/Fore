@@ -2080,9 +2080,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
         // last logical nodeset entry, but it's the best representative shape available
         // (the true last entry may never be materialized).
         if (position === this._renderTarget && repeatItem.nodeset.nodeType) {
-          const repeatItemClone = repeatItem.nodeset.cloneNode(true);
-          this.clearTextValues(repeatItemClone);
-          this.createdNodeset = repeatItemClone;
+          this.createdNodeset = this._snapshotRowTemplate(repeatItem.nodeset);
         }
       }
 
@@ -2109,12 +2107,36 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       const items = this.querySelectorAll(':scope > fx-repeatitem');
       const last = items[items.length - 1];
       if (last?.nodeset?.nodeType) {
-        const clone = last.nodeset.cloneNode(true);
-        this.clearTextValues(clone);
-        this.createdNodeset = clone;
+        this.createdNodeset = this._snapshotRowTemplate(last.nodeset);
       }
     }
     return this.createdNodeset;
+  }
+
+  /**
+   * A copy of a row's nodes without their text values, to insert new rows from. The values the repeat's `ref`
+   * itself depends on stay: for `ref="cac:AllowanceCharge[cbc:ChargeIndicator = 'true']"` a new row must have
+   * ChargeIndicator 'true', else the repeat would not select it and the insert would seem to do nothing.
+   * Only `name = 'literal'` predicates (child element or @attribute) are restored.
+   *
+   * @param {Node} nodeset the row's node
+   * @returns {Node}
+   */
+  _snapshotRowTemplate(nodeset) {
+    const clone = nodeset.cloneNode(true);
+    this.clearTextValues(clone);
+    if (clone.nodeType !== Node.ELEMENT_NODE) return clone;
+
+    const predicate = /\[\s*(@?[\w.:-]+)\s*=\s*(['"])(.*?)\2\s*\]/g;
+    for (const [, name, , value] of String(this.ref || '').matchAll(predicate)) {
+      if (name.startsWith('@')) {
+        clone.setAttribute(name.slice(1), value);
+      } else {
+        const child = Array.from(clone.children).find(c => c.nodeName === name);
+        if (child) child.textContent = value;
+      }
+    }
+    return clone;
   }
 
   clearTextValues(node) {
