@@ -7,8 +7,7 @@ Entries are sourced from the project's GitHub release notes. For full commit-lev
 
 ### breaking
 
-* inline instances are now parsed as HTML (`type="html"`): the first `<fx-instance type="html">` of a model is the 
-  default instance. Inline data in an `<fx-instance>` of `type="xml"` is no longer supported and logs an error - 
+* inline instances are parsed as HTML (`type="html"`). Inline data in an `<fx-instance>` of `type="xml"` is not supported and logs an error - 
   switch such instances to `type="html"` or load any XML via `src`. Inline instances do not support XML namespaces, and 
   `<script>` instances are gone
 * migration hints for HTML instances: element names are case-insensitive, self-closing elements follow HTML parsing rules, and no namespaces
