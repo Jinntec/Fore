@@ -2174,17 +2174,6 @@ export class FxFore extends HTMLElement {
       const ourParent = XPathUtil.getParentBindingElement(bound);
       let siblingControl = null;
 
-      for (let j = i - 1; j > 0; --j) {
-        const siblingOrDescendant = boundControls[j];
-        if (siblingOrDescendant.nodeset && !('nodeType' in siblingOrDescendant.nodeset)) {
-          continue;
-        }
-        if (XPathUtil.getParentBindingElement(siblingOrDescendant) === ourParent) {
-          siblingControl = siblingOrDescendant;
-          break;
-        }
-      }
-
       let parentNodeset;
       if (!ourParent || !ourParent.nodeset) {
         /*
@@ -2194,6 +2183,25 @@ export class FxFore extends HTMLElement {
         parentNodeset = root.getModel().getDefaultContext();
       } else {
         parentNodeset = firstNode(ourParent.nodeset) || root.getModel().getDefaultContext();
+      }
+
+      for (let j = i - 1; j > 0; --j) {
+        const siblingOrDescendant = boundControls[j];
+        if (siblingOrDescendant.nodeset && !('nodeType' in siblingOrDescendant.nodeset)) {
+          continue;
+        }
+        if (XPathUtil.getParentBindingElement(siblingOrDescendant) === ourParent) {
+          // A control bound outside of our parent node (e.g. a `$default/...` ref) is no anchor for
+          // the order of the new node: keep looking for one that is.
+          const siblingNode = siblingOrDescendant.getModelItem?.()?.node;
+          const siblingElement =
+            siblingNode?.nodeType === Node.ATTRIBUTE_NODE ? siblingNode.ownerElement : siblingNode;
+          if (siblingElement && parentNodeset?.contains && !parentNodeset.contains(siblingElement)) {
+            continue;
+          }
+          siblingControl = siblingOrDescendant;
+          break;
+        }
       }
       const ref = bound.ref;
       const creationContext = getCreationContext(bound, parentNodeset);
@@ -2273,6 +2281,22 @@ export class FxFore extends HTMLElement {
       referenceNode.nodeType === Node.DOCUMENT_NODE ? referenceNode : referenceNode.ownerDocument;
 
     if (!ownerDoc) return null;
+
+    // A ref rooted at the default instance (`$default/a/b`, or `/*/a/b`) lives outside the context
+    // the caller would attach the new node to: create and attach it below the document element.
+    const rooted = /^(?:\$default|\/\*)\//.exec(xpath);
+    if (rooted) {
+      const documentElement = ownerDoc.documentElement;
+      const created = createNodes(xpath.slice(rooted[0].length), documentElement, this);
+      if (created && !this._isNodeAlreadyAttached(created)) {
+        if (created.nodeType === Node.ATTRIBUTE_NODE) {
+          documentElement.setAttributeNode(created);
+        } else {
+          documentElement.appendChild(created);
+        }
+      }
+      return created;
+    }
 
     const baseElement =
       referenceNode.nodeType === Node.DOCUMENT_NODE
