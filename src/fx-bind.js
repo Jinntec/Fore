@@ -305,6 +305,12 @@ export class FxBind extends ForeElementMixin {
       }
 
       refs.forEach(ref => {
+        // The XPath engine touches all siblings when it has to sort several matches in document
+        // order (eg. `../item/amount`), which includes the context node itself. A calculated node
+        // can never depend on itself - that would be reported as a cycle and break every full
+        // recalculation. (Other facets may legitimately read the node's own value.)
+        if (property === 'calculate' && ref === node) return;
+
         // `ref` may live in a different fx-instance than this bind's own `ref` (e.g. a
         // `relevant` expression that reads `instance('other')/...`). Canonicalize its path
         // using ITS OWN instance id, not the bind's -- reusing the bind's id here mislabels

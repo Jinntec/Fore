@@ -1,0 +1,10 @@
+<inv xmlns:c="urn:test:c">
+  <c:line>
+    <c:charge><c:amount>1</c:amount></c:charge>
+    <c:charge><c:amount>2</c:amount></c:charge>
+    <c:item>i</c:item>
+    <c:total/>
+    <c:other>x</c:other>
+    <c:more>y</c:more>
+  </c:line>
+</inv>

@@ -25,6 +25,7 @@ describe('create-nodes: fx-output bound to a missing node', () => {
         <fx-trigger id="add">
           <button>add</button>
           <fx-insert origin="#r" ref="c:line"></fx-insert>
+          <fx-update></fx-update>
         </fx-trigger>
       </fx-fore>
     `);
@@ -37,5 +38,6 @@ describe('create-nodes: fx-output bound to a missing node', () => {
     await waitUntil(() => lines(el).length === 2);
     await new Promise(r => setTimeout(r, 200));
     expect(lines(el)[1].querySelector('total'), 'inserted row has c:total').to.exist;
+    expect(lines(el)[1].querySelector('total').textContent, 'row 2 calculated').to.equal('42');
   });
 });
