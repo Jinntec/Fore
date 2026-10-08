@@ -1838,6 +1838,13 @@ export class FxFore extends HTMLElement {
         // Insert the new node at the start: the previous control was an attribute
         return null;
       }
+      if (referenceNode && referenceNode.nodeType !== Node.DOCUMENT_NODE) {
+        // The walk above went past the parent: the previous control is bound to the parent itself
+        // (e.g. ref=".") or lies outside of it. It is no anchor, or we'd insert next to the parent.
+        if (referenceNode.parentNode !== parentElement) return null;
+      } else if (referenceNode && referenceNode.documentElement !== parentElement) {
+        return null;
+      }
       return referenceNode;
     }
 
