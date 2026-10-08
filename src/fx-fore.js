@@ -2085,7 +2085,7 @@ export class FxFore extends HTMLElement {
      */
     const boundControls = Array.from(
       root.querySelectorAll(
-        'fx-control[ref],fx-upload[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref]',
+        'fx-control[ref],fx-upload[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref], fx-output[ref]',
       ),
     ).filter(boundEl => {
       if (boundEl.nodeName !== 'FX-REPEAT') return true;
@@ -2105,6 +2105,7 @@ export class FxFore extends HTMLElement {
 
     console.log('_initData', boundControls);
 
+    let createdNodes = false;
     for (let i = 0; i < boundControls.length; i++) {
       const bound = boundControls[i];
 
@@ -2148,6 +2149,7 @@ export class FxFore extends HTMLElement {
         if (!newNode || !parentNodeset) {
           continue;
         }
+        createdNodes = true;
         if (!this._isNodeAlreadyAttached(newNode)) {
           if (newNode.nodeType === Node.ATTRIBUTE_NODE) {
             parentNodeset.setAttributeNode(newNode);
@@ -2200,6 +2202,7 @@ export class FxFore extends HTMLElement {
       if (!newNode) {
         continue;
       }
+      createdNodes = true;
 
       if (!this._isNodeAlreadyAttached(newNode)) {
         if (newNode.nodeType === Node.ATTRIBUTE_NODE) {
@@ -2230,6 +2233,13 @@ export class FxFore extends HTMLElement {
         console.warn('create-nodes: could not resolve bound after node creation, skipping', bound);
         continue;
       }
+    }
+
+    // Binds are resolved against the nodes that exist when the model is built. Nodes created later
+    // (repeat rows, fx-include content) are unknown to e.g. `calculate` binds until the model is
+    // rebuilt. The full initData() of the initial run does that itself, right after the call.
+    if (createdNodes && root !== this && this.getModel().querySelector('fx-bind')) {
+      this.getModel().updateModel();
     }
   }
   /**
