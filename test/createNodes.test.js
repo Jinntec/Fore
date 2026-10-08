@@ -57,6 +57,29 @@ describe('createNodes', () => {
     expect(result.outerHTML).to.equal('<p class=""/>');
   });
 
+  it('returns the attribute for an attribute-only path (e.g. `@unitCode`)', () => {
+    const result = createNodes('@unitCode', baseElement, foreElement);
+    expect(result, 'The result should not be null').to.not.equal(null);
+    expect(result.nodeType).to.equal(Node.ATTRIBUTE_NODE);
+    expect(result.localName).to.equal('unitCode');
+    expect(result.value).to.equal('');
+  });
+
+  it('returns the attribute when the path leads to an attribute of an existing element', () => {
+    const qty = baseElement.ownerDocument.createElement('qty');
+    baseElement.appendChild(qty);
+    const result = createNodes('qty/@unitCode', baseElement, foreElement);
+    expect(result, 'The result should not be null').to.not.equal(null);
+    expect(result.nodeType).to.equal(Node.ATTRIBUTE_NODE);
+    expect(result.localName).to.equal('unitCode');
+    expect(result.value).to.equal('');
+  });
+
+  it('does not create an attribute for a root-level attribute comparison (`@a="b"`)', () => {
+    const result = createNodes('@a="b"', baseElement, foreElement);
+    expect(result).to.equal(null);
+  });
+
   it('can create a node with a namespace', () => {
     const xpath = 'my-prefix:p';
     foreElement.setAttribute('xmlns:my-prefix', 'my-namespace');
