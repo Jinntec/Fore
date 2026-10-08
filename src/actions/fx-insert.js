@@ -474,6 +474,41 @@ export class FxInsert extends AbstractAction {
     return originSequenceClone;
   }
 
+  /**
+   * Where a node goes if `ref` selects nothing: below the context. With a multi-step ref (`cac:TaxTotal/cac:TaxSubtotal`)
+   * the node belongs below the parent steps (`cac:TaxTotal`), which are created in create-nodes mode when
+   * they are missing too - else the new node would be appended to the context and not be selected by `ref`.
+   *
+   * @param {Node} base the context node
+   * @returns {Node} the node to append to
+   */
+  _getOrCreateParentOfEmptyTarget(base) {
+    const fore = this.getOwnerForm();
+    if (!fore?.createNodes || !base || base.nodeType !== Node.ELEMENT_NODE) return base;
+
+    // split off the last step; slashes inside predicates do not count
+    let depth = 0;
+    let lastSlash = -1;
+    String(this.ref || '')
+      .split('')
+      .forEach((char, i) => {
+        if (char === '[') depth += 1;
+        else if (char === ']') depth -= 1;
+        else if (char === '/' && depth === 0) lastSlash = i;
+      });
+    const parentRef = lastSlash > 0 ? this.ref.substring(0, lastSlash) : '';
+    if (!parentRef || /^instance\(/.test(parentRef)) return base;
+
+    const existing = evaluateXPathToFirstNode(parentRef, base, this);
+    if (existing?.nodeType === Node.ELEMENT_NODE) return existing;
+
+    const created = fore._createNodes(parentRef, base);
+    if (!created) return base;
+    if (!created.parentNode) base.appendChild(created);
+    const parent = evaluateXPathToFirstNode(parentRef, base, this);
+    return parent?.nodeType === Node.ELEMENT_NODE ? parent : base;
+  }
+
   _getInsertIndex(inscope, targetSequence) {
     if (targetSequence.length === 0) {
       return null;
@@ -598,8 +633,8 @@ export class FxInsert extends AbstractAction {
 
     if (targetSequence.length === 0) {
       if (context) {
-        insertLocationNode = context;
-        context.appendChild(originSequenceClone);
+        insertLocationNode = this._getOrCreateParentOfEmptyTarget(context);
+        insertLocationNode.appendChild(originSequenceClone);
         fore.signalChangeToElement(insertLocationNode.localName);
         fore.signalChangeToElement(originSequenceClone.localName);
         index = 1;
@@ -610,8 +645,8 @@ export class FxInsert extends AbstractAction {
         inscope.appendChild(originSequenceClone);
         index = inscope.length - 1;
       } else {
-        insertLocationNode = inscope;
-        inscope.appendChild(originSequenceClone);
+        insertLocationNode = this._getOrCreateParentOfEmptyTarget(inscope);
+        insertLocationNode.appendChild(originSequenceClone);
         index = 1;
       }
     } else {

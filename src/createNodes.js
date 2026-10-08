@@ -269,8 +269,12 @@ export default function createNodes(xpath, baseElement, foreElement) {
 
     if (parsed.isValue) {
       if (!current) {
+        if (isRoot && parsed.value !== null) {
+          // `@a="b"` on the root is a comparison, not a node to create
+          return { action: 'abort' };
+        }
         const attr = ownerDoc.createAttribute(parsed.localName);
-        attr.value = parsed.value;
+        attr.value = parsed.value ?? '';
         return {
           action: 'return',
           attr,
@@ -365,7 +369,8 @@ export default function createNodes(xpath, baseElement, foreElement) {
       case 'abort':
         return null;
       case 'return':
-        return subtreeRoot;
+        // attribute-only path (e.g. `@unitCode`): the created attr is the result
+        return result.attr ?? subtreeRoot;
       case 'continue':
         if (!current) {
           // This is the absolute root now
