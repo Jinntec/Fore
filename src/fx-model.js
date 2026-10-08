@@ -731,7 +731,10 @@ export class FxModel extends HTMLElement {
     // such item whose backing node is still attached to its instance document.
     this._prevModelItemsByPath.forEach(mi => {
       if (!mi.isSynthetic) return;
-      if (!mi.node || !mi.node.isConnected) return;
+      // XML items need their node still attached to the instance document. JSON items are backed
+      // by a lens (no node): without this they were dropped on every rebuild, leaving controls on
+      // a JSON instance (eg. the language switch) with a model item that is no longer registered.
+      if (mi.node ? !mi.node.isConnected : !mi.lens) return;
       this._indexModelItem(mi);
     });
 
