@@ -22,6 +22,55 @@ import { UndoManager } from './UndoManager.js';
  * After the cycle is run all modelItems have updated their stete to reflect latest computations.
  *
  */
+const lastStepNameCache = new Map();
+
+/**
+ * The local name the last step of a (simple) ref selects, or null if that can't be told for sure.
+ * Only plain name tests (`a/b[pred]/c:d`, `@x`, `a/@c:x`) are resolved; anything else
+ * (functions, unions, `*`, `.`, axes, ...) returns null so callers fall back to evaluating the ref.
+ *
+ * @param {string} ref
+ * @returns {string|null}
+ */
+function lastStepLocalName(ref) {
+  if (typeof ref !== 'string') return null;
+  if (lastStepNameCache.has(ref)) return lastStepNameCache.get(ref);
+  let result = null;
+  // Split on top-level '/', ignoring anything in predicates; bail out on unions/functions/axes.
+  let depth = 0;
+  let quote = null;
+  let lastSlash = -1;
+  let simple = true;
+  for (let i = 0; i < ref.length && simple; i += 1) {
+    const ch = ref[i];
+    if (quote) {
+      if (ch === quote) quote = null;
+      continue;
+    }
+    if (ch === '"' || ch === "'") {
+      quote = ch;
+    } else if (ch === '[') {
+      depth += 1;
+    } else if (ch === ']') {
+      depth -= 1;
+    } else if (depth === 0) {
+      if (ch === '/') lastSlash = i;
+      else if (ch === '|' || ch === '(' || ch === ')' || (ch === ':' && ref[i + 1] === ':'))
+        simple = false;
+    }
+  }
+  if (simple && depth === 0 && !quote) {
+    let step = ref.slice(lastSlash + 1);
+    const bracket = step.indexOf('[');
+    if (bracket !== -1) step = step.slice(0, bracket);
+    step = step.trim();
+    const m = /^@?(?:[A-Za-z_][\w.-]*:)?([A-Za-z_][\w.-]*)$/.exec(step);
+    if (m) result = m[1];
+  }
+  lastStepNameCache.set(ref, result);
+  return result;
+}
+
 export class FxModel extends HTMLElement {
   static dataChanged = false;
 
@@ -60,6 +109,13 @@ export class FxModel extends HTMLElement {
      * @type {import('./fx-bind.js').FxBind[]}
      */
     this.binds = [];
+
+    /**
+     * Set by initData() of a subtree while it triggers updateModel(): the root rebuild() re-scans
+     * for create-nodes instead of the whole form.
+     * @type {HTMLElement|null}
+     */
+    this._initDataRoot = null;
 
     this.debugInfo = {
       debugId: `model-${Math.random().toString(36).slice(2, 9)}`,
@@ -241,8 +297,16 @@ export class FxModel extends HTMLElement {
      * @type {import('./fx-bind.js').FxBind[]}
      */
     const childBinds = Array.from(bindForParent.children).filter(c => c.nodeName === 'FX-BIND');
+    const localName = elementOrAttribute.localName;
     for (const childBind of childBinds) {
       const ref = childBind.ref;
+      // Cheap pre-filter: a ref ending in a plain name test can only select nodes of that name.
+      // Without this every bind is evaluated at every level for every node looked up, which is
+      // very slow in forms with many binds (and every lazily created model item does a lookup).
+      const lastName = lastStepLocalName(ref);
+      if (lastName !== null && localName && lastName !== localName) {
+        continue;
+      }
       const matches = evaluateXPathToNodes(ref, parent, childBind);
       if (matches.includes(elementOrAttribute)) {
         return childBind;
@@ -732,7 +796,10 @@ export class FxModel extends HTMLElement {
     binds.forEach(bind => bind.init(this));
 
     if (this.formElement.createNodes) {
-      this.formElement.initData();
+      // When the rebuild was triggered by initData() of a subtree (new repeat item, included
+      // content) only that subtree can lack nodes: scanning the whole form again is wasted work.
+      const scope = this._initDataRoot;
+      this.formElement.initData(scope?.isConnected ? scope : undefined);
     }
 
     // XForms 2.0 `initial`: one-time value assignment, before any calculate runs.

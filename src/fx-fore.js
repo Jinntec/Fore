@@ -2246,8 +2246,26 @@ export class FxFore extends HTMLElement {
     // Binds are resolved against the nodes that exist when the model is built. Nodes created later
     // (repeat rows, fx-include content) are unknown to e.g. `calculate` binds until the model is
     // rebuilt. The full initData() of the initial run does that itself, right after the call.
+    // The rebuild scans for missing nodes again (create-nodes). Only the subtree we were called
+    // for can have changed, so hand it over instead of letting the model re-scan the whole form:
+    // that made every inserted repeat item cost a full-form pass (quadratic in the number of items).
     if (createdNodes && root !== this && this.getModel().querySelector('fx-bind')) {
-      this.getModel().updateModel();
+      const model = this.getModel();
+      const outerRoot = model._initDataRoot;
+      // Every rebuild scans again and may create nodes again: never let that run away
+      // (e.g. a node that is created but never satisfies the ref it was created for).
+      model._initDataDepth = (model._initDataDepth || 0) + 1;
+      if (model._initDataDepth > 5) {
+        console.warn('create-nodes: giving up after repeated node creation, check the refs', root);
+      } else {
+        model._initDataRoot = root;
+        try {
+          model.updateModel();
+        } finally {
+          model._initDataRoot = outerRoot;
+        }
+      }
+      model._initDataDepth -= 1;
     }
   }
   /**
