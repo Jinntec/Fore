@@ -268,6 +268,9 @@ export default function createNodes(xpath, baseElement, foreElement) {
           if (!alreadyAttached) {
             if (tailResult.nodeType === Node.ATTRIBUTE_NODE) {
               existingChild.setAttributeNode(tailResult);
+            } else if (typeof foreElement?._insertCreatedNode === 'function') {
+              // Honour the order of the binds below existingChild, if there are any
+              foreElement._insertCreatedNode(tailResult, existingChild);
             } else {
               existingChild.appendChild(tailResult);
             }

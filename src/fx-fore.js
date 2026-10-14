@@ -1798,6 +1798,31 @@ export class FxFore extends HTMLElement {
   }
 
   /**
+   * Attach a freshly created node below `parent`: at the position the binds below `parent` ask for,
+   * or appended when there are none.
+   *
+   * @param {Node} node
+   * @param {Element} parent
+   */
+  _insertCreatedNode(node, parent) {
+    const hasBind =
+      this.model?.getModelItem(parent)?.bind ||
+      this.model?.getBindForElement(parent) ||
+      (parent === parent.ownerDocument?.documentElement &&
+        this.model?.querySelector(':scope > fx-bind'));
+    if (!hasBind) {
+      parent.appendChild(node);
+      return;
+    }
+    const referenceNode = this._findReferenceNodeForNewElement(node, parent, null);
+    if (referenceNode) {
+      referenceNode.after(node);
+    } else {
+      parent.prepend(node);
+    }
+  }
+
+  /**
    * @summary
    * Find the reference node (the future previous sibling) for a newly created element.
    *
@@ -1825,7 +1850,17 @@ export class FxFore extends HTMLElement {
    * @returns {ChildNode}
    */
   _findReferenceNodeForNewElement(newElement, parentElement, previousControl) {
-    const bindForElement = this.model.getModelItem(parentElement)?.bind;
+    // The parent might have been created implicitly (as a step of a deeper ref): it has no model
+    // item (yet) in that case, but binds may still apply to it, so ask the model.
+    // The document element has no bind of its own: the binds that are children of the model apply
+    // to its children.
+    const bindForElement =
+      this.model.getModelItem(parentElement)?.bind ||
+      this.model.getBindForElement(parentElement) ||
+      (parentElement === parentElement.ownerDocument?.documentElement &&
+      this.model.querySelector(':scope > fx-bind')
+        ? this.model
+        : null);
     if (!bindForElement) {
       // Parent is unbound. No clue what to do with this. Insert based on previous control
       let referenceNode = previousControl?.getModelItem()?.node;
@@ -1871,38 +1906,85 @@ export class FxFore extends HTMLElement {
          */
 
         /**
-         * @type {FxBind}
+         * Map a node matched by a sibling bind to the ancestor-or-self that is a direct child of
+         * parentElement (a match might be nested several levels below it). Returns null when the
+         * node does not live under parentElement (attributes, other subtrees, JSON, ...).
          */
-        const previousBind = bindForElement.previousElementSibling;
-        if (previousBind) {
-          /**
-           * @type ChildNode[]}
-           */
-          const nodeset = previousBind.nodeset;
-          // A match from the previous bind's nodeset might be a descendant nested several levels
-          // below parentElement rather than a direct child of it. Walk up to the ancestor that IS
-          // a direct child of parentElement before using it as a `.after()` anchor - otherwise the
-          // new element would be spliced in deep inside that descendant's subtree instead of
-          // placed as a proper sibling under parentElement.
-          const lastMatchingSibling = nodeset
-            .slice()
-            .reverse()
-            .map(node => {
-              let candidate = node;
-              while (candidate?.parentNode && candidate.parentNode !== parentElement) {
-                candidate = candidate.parentNode;
-              }
-              return candidate;
-            })
-            .find(candidate => candidate?.parentNode === parentElement);
-          if (lastMatchingSibling) {
-            return lastMatchingSibling;
+        const asChildOfParent = node => {
+          if (!node || node.nodeType !== Node.ELEMENT_NODE) return null;
+          let candidate = node;
+          while (candidate.parentNode && candidate.parentNode !== parentElement) {
+            candidate = candidate.parentNode;
           }
-          // Otherwise, just default to appending... If this runs multiple times for multiple nodes
-          // it's unexpected to always prepend and get the order of children reversed from the UI.
+          return candidate.parentNode === parentElement && candidate !== newElement
+            ? candidate
+            : null;
+        };
 
-          // Do not fall back on the UI here, just keep it predictable if binds are in play
-          return parentElement.lastElementChild;
+        /*
+         * Walk the sibling binds lazily and stop at the first usable match: first backwards (insert
+         * after the last match of the nearest preceding bind that has one), then forwards (insert
+         * before the first match of the nearest following bind that has one). Only the nodesets of
+         * the siblings of this one bind are looked at, no XPath is evaluated here.
+         */
+        /**
+         * The `.nodeset` of a sibling bind goes stale when its nodes were created implicitly (as
+         * the intermediate step of a deeper ref) - only the bind of the explicitly created node is
+         * re-evaluated. So when the nodeset yields no match, look at the live children. A plain
+         * name test can only match children of that name, so most binds are dismissed without
+         * running any XPath.
+         * @returns {Element[]} matching direct children of parentElement, in document order
+         */
+        const liveMatches = bind => {
+          const ref = bind.ref;
+          const plainName = /^(?:[\w.-]+:)?([\w.-]+)$/.exec(ref || '');
+          const candidates = plainName
+            ? Array.from(parentElement.children).filter(
+                c => c !== newElement && c.localName === plainName[1],
+              )
+            : null;
+          if (candidates && candidates.length === 0) return [];
+          if (candidates && !ref.includes(':')) return candidates;
+          try {
+            return evaluateXPathToNodes(ref, parentElement, bind).filter(
+              n => n !== newElement && n.parentNode === parentElement,
+            );
+          } catch (e) {
+            return [];
+          }
+        };
+
+        /** @returns {Element[]} direct children of parentElement matched by a sibling bind */
+        const matchesOf = bind => {
+          if (bind.nodeName !== 'FX-BIND') return [];
+          const matches = [];
+          if (Array.isArray(bind.nodeset)) {
+            bind.nodeset.forEach(n => {
+              const m = asChildOfParent(n);
+              if (m && !matches.includes(m)) matches.push(m);
+            });
+          }
+          return matches.length ? matches : liveMatches(bind);
+        };
+
+        for (let b = bindForElement.previousElementSibling; b; b = b.previousElementSibling) {
+          const matches = matchesOf(b);
+          if (matches.length) return matches[matches.length - 1];
+        }
+        for (let b = bindForElement.nextElementSibling; b; b = b.nextElementSibling) {
+          const matches = matchesOf(b);
+          if (matches.length) {
+            // Callers insert *after* the reference node: return what precedes the match. Null
+            // (match is the first child) makes them prepend.
+            return matches[0].previousSibling;
+          }
+        }
+
+        if (bindForElement.previousElementSibling) {
+          // No sibling has a node yet. Do not fall back on the UI here, just keep it predictable
+          // if binds are in play: append. Note that the new element itself is the last child at
+          // this point (it is temporarily attached), so look at the one before it.
+          return newElement.previousElementSibling;
         }
       }
     } finally {
