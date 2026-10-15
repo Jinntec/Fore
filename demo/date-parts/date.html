@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Date parts</title>
+</head>
+<body>
+<!-- Loaded by demo/date-parts.html into an fx-control with initial="." :
+     the control clones the bound node into the 'incoming' instance, this Fore splits
+     the value into the 'scratch' parts and returns the joined value with fx-return. -->
+<fx-fore class="widget">
+    <fx-model>
+        <!-- filled from the outside with a clone of the bound node -->
+        <fx-instance id="incoming"></fx-instance>
+        <!-- the parts, edited by the controls below -->
+        <fx-instance id="scratch" type="html">
+            <data>
+                <year></year>
+                <month></month>
+                <day></day>
+            </data>
+        </fx-instance>
+    </fx-model>
+
+    <!-- split the incoming YYYY-MM-DD into the parts -->
+    <fx-action event="ready">
+        <fx-setvalue ref="$scratch/year" value="substring($incoming, 1, 4)"></fx-setvalue>
+        <fx-setvalue ref="$scratch/month" value="substring($incoming, 6, 2)"></fx-setvalue>
+        <fx-setvalue ref="$scratch/day" value="substring($incoming, 9, 2)"></fx-setvalue>
+    </fx-action>
+
+    <!-- join the parts and hand the new value back to the outer control -->
+    <fx-action event="value-changed">
+        <fx-setvalue ref="$incoming/*" value="$scratch/year || '-' || $scratch/month || '-' || $scratch/day"></fx-setvalue>
+        <fx-return ref="$incoming/*"></fx-return>
+    </fx-action>
+
+    <fx-control id="year" ref="$scratch/year" update-event="change">
+        <label>{instance('lang')?year}</label>
+        <select class="widget" data-cy="year">
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+            <option value="2027">2027</option>
+            <option value="2028">2028</option>
+        </select>
+    </fx-control>
+
+    <fx-control id="month" ref="$scratch/month" update-event="change">
+        <label>{instance('lang')?month}</label>
+        <select class="widget" data-cy="month">
+            <option value="01">01</option>
+            <option value="02">02</option>
+            <option value="03">03</option>
+            <option value="04">04</option>
+            <option value="05">05</option>
+            <option value="06">06</option>
+            <option value="07">07</option>
+            <option value="08">08</option>
+            <option value="09">09</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+        </select>
+    </fx-control>
+
+    <fx-control id="day" ref="$scratch/day" update-event="change">
+        <label>{instance('lang')?day}</label>
+        <select class="widget" data-cy="day">
+            <option value="01">01</option>
+            <option value="02">02</option>
+            <option value="03">03</option>
+            <option value="04">04</option>
+            <option value="05">05</option>
+            <option value="06">06</option>
+            <option value="07">07</option>
+            <option value="08">08</option>
+            <option value="09">09</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+            <option value="19">19</option>
+            <option value="20">20</option>
+            <option value="21">21</option>
+            <option value="22">22</option>
+            <option value="23">23</option>
+            <option value="24">24</option>
+            <option value="25">25</option>
+            <option value="26">26</option>
+            <option value="27">27</option>
+            <option value="28">28</option>
+            <option value="29">29</option>
+            <option value="30">30</option>
+            <option value="31">31</option>
+        </select>
+    </fx-control>
+</fx-fore>
+<script type="module" src="../../index.js"></script>
+</body>
+</html>
