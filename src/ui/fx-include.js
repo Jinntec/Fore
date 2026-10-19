@@ -118,6 +118,9 @@ export class FxInclude extends HTMLElement {
   }
 
   async _handleEvent(event) {
+    // e.g. a #hash opening a <details> before the Fore is ready: wait, or there is no model/context yet
+    const fore = this.closest('fx-fore');
+    if (fore) await FxFore.waitUntilReady(fore);
     await this.include(event);
   }
 

@@ -212,6 +212,47 @@ describe('fx-include', () => {
         expect(noteControl.hasAttribute('nonrelevant')).to.be.false;
     });
 
+    it('an event-triggered include fired before "ready" waits for ready and then creates nodes for included content', async () => {
+        const el = fixtureSync(html`
+            <div>
+                <button id="load" type="button">Load</button>
+                <fx-fore create-nodes>
+                    <fx-model>
+                        <fx-instance type="html">
+                            <data>
+                                <provenance type="found"></provenance>
+                            </data>
+                        </fx-instance>
+                    </fx-model>
+                    <fx-group ref=".">
+                        <fx-include event="click" target="#load">
+                            <template>
+                                <fx-group ref="provenance[@type='found']">
+                                    <fx-control ref="note[@type='found-date']"></fx-control>
+                                </fx-group>
+                            </template>
+                        </fx-include>
+                    </fx-group>
+                </fx-fore>
+            </div>
+        `);
+        const fore = el.querySelector('fx-fore');
+        const include = el.querySelector('fx-include');
+        const errors = [];
+        fore.addEventListener('error', e => errors.push(e.detail?.message));
+
+        // fired right away: the model is not constructed yet (like opening a <details> via #hash)
+        const includeDone = oneEvent(include, 'include-done');
+        el.querySelector('#load').click();
+        await oneEvent(fore, 'ready');
+        await includeDone;
+
+        const inst = fore.querySelector('fx-instance');
+        const provenance = inst.instanceData.documentElement.querySelector("provenance[type='found']");
+        expect(provenance.querySelector("note[type='found-date']")).to.exist;
+        expect(errors).to.deep.equal([]);
+    });
+
     it('loads external content from src and applies selector', async () => {
         const originalLoadHtml = Fore.loadHtml;
 

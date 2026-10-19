@@ -2223,7 +2223,7 @@ export class FxFore extends HTMLElement {
          * @type {ParentNode}
          */
         const parentNodeset =
-          firstNode(previousControl.nodeset) || firstNode(root.getModel().getDefaultContext());
+          firstNode(previousControl.nodeset) || firstNode(this.getModel().getDefaultContext());
         const creationContext = getCreationContext(bound, parentNodeset);
         const ref = bound.ref;
 
@@ -2262,9 +2262,9 @@ export class FxFore extends HTMLElement {
           if we lost context somehow just always assume default context and append to that
           instead of bailing out.
            */
-        parentNodeset = root.getModel().getDefaultContext();
+        parentNodeset = this.getModel().getDefaultContext();
       } else {
-        parentNodeset = firstNode(ourParent.nodeset) || root.getModel().getDefaultContext();
+        parentNodeset = firstNode(ourParent.nodeset) || this.getModel().getDefaultContext();
       }
 
       for (let j = i - 1; j > 0; --j) {
