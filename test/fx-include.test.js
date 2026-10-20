@@ -1,4 +1,4 @@
-import { expect, fixture, fixtureSync, html, oneEvent } from '@open-wc/testing';
+import { expect, fixture, fixtureSync, html, oneEvent, waitUntil } from '@open-wc/testing';
 
 import { Fore } from '../src/fore.js';
 import '../src/ui/fx-include.js';
@@ -210,6 +210,47 @@ describe('fx-include', () => {
         // normally instead of being marked nonrelevant.
         const noteControl = include.querySelector(`fx-control[ref="note[@type='found-date']"]`);
         expect(noteControl.hasAttribute('nonrelevant')).to.be.false;
+    });
+
+    it('an event-triggered include fired before "ready" waits for ready and then creates nodes for included content', async () => {
+        const el = fixtureSync(html`
+            <div>
+                <button id="load" type="button">Load</button>
+                <fx-fore create-nodes>
+                    <fx-model>
+                        <fx-instance type="html">
+                            <data>
+                                <provenance type="found"></provenance>
+                            </data>
+                        </fx-instance>
+                    </fx-model>
+                    <fx-group ref=".">
+                        <fx-include event="click" target="#load">
+                            <template>
+                                <fx-group ref="provenance[@type='found']">
+                                    <fx-control ref="note[@type='found-date']"></fx-control>
+                                </fx-group>
+                            </template>
+                        </fx-include>
+                    </fx-group>
+                </fx-fore>
+            </div>
+        `);
+        const fore = el.querySelector('fx-fore');
+        const include = el.querySelector('fx-include');
+        const errors = [];
+        fore.addEventListener('error', e => errors.push(e.detail?.message));
+
+        // fired right away: the model is not constructed yet (like opening a <details> via #hash)
+        const includeDone = oneEvent(include, 'include-done');
+        el.querySelector('#load').click();
+        await oneEvent(fore, 'ready');
+        await includeDone;
+
+        const inst = fore.querySelector('fx-instance');
+        const provenance = inst.instanceData.documentElement.querySelector("provenance[type='found']");
+        expect(provenance.querySelector("note[type='found-date']")).to.exist;
+        expect(errors).to.deep.equal([]);
     });
 
     it('loads external content from src and applies selector', async () => {
@@ -443,5 +484,75 @@ describe('fx-include', () => {
         } finally {
             Fore.loadHtml = originalLoadHtml;
         }
+    });
+
+    it('evaluates {...} template expressions of the included content right away', async () => {
+        const el = await fixture(html`
+            <fx-fore>
+                <fx-model>
+                    <fx-instance src="/base/test/empty-document.xml"></fx-instance>
+                    <fx-instance id="texts" type="json">{"greeting": "hello"}</fx-instance>
+                </fx-model>
+                <button id="load" type="button">Load</button>
+                <fx-include event="click" target="#load">
+                    <template>
+                        <section class="included" title="{instance('texts')?greeting}">
+                            <p>{instance('texts')?greeting}</p>
+                        </section>
+                    </template>
+                </fx-include>
+            </fx-fore>
+        `);
+
+        const include = el.querySelector('fx-include');
+        const done = oneEvent(include, 'include-done');
+        el.querySelector('#load').click();
+        await done;
+
+        const section = include.querySelector('.included');
+        expect(section.querySelector('p').textContent).to.equal('hello');
+        expect(section.getAttribute('title')).to.equal('hello');
+    });
+
+    it('inserts rows into a repeat that sits in an included fragment (create-nodes, origin=#repeat)', async () => {
+        const el = fixtureSync(html`
+            <fx-fore
+                create-nodes="create-nodes"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+            >
+                <fx-model>
+                    <fx-instance src="/base/test/data/ubl-empty.xml"></fx-instance>
+                </fx-model>
+                <fx-group id="outer" ref=".">
+                    <fx-include immediate>
+                        <template>
+                            <fx-repeat id="r-BG-20" ref="cac:AllowanceCharge">
+                                <template>
+                                    <fx-control ref="cac:TaxCategory/cbc:Percent"><input type="number" /></fx-control>
+                                </template>
+                            </fx-repeat>
+                            <fx-trigger id="add">
+                                <button>add</button>
+                                <fx-insert origin="#r-BG-20" ref="cac:AllowanceCharge"></fx-insert>
+                            </fx-trigger>
+                        </template>
+                    </fx-include>
+                </fx-group>
+            </fx-fore>
+        `);
+
+        const include = el.querySelector('fx-include');
+        const includeDone = oneEvent(include, 'include-done');
+        await oneEvent(el, 'ready');
+        await includeDone;
+
+        const repeat = el.querySelector('#r-BG-20');
+        const rows = () => repeat.querySelectorAll(':scope > fx-repeatitem').length;
+        const before = rows();
+
+        el.querySelector('#add button').click();
+        await waitUntil(() => rows() === before + 1);
+        expect(rows()).to.equal(before + 1);
     });
 });

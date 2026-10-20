@@ -57,6 +57,29 @@ describe('createNodes', () => {
     expect(result.outerHTML).to.equal('<p class=""/>');
   });
 
+  it('returns the attribute for an attribute-only path (e.g. `@unitCode`)', () => {
+    const result = createNodes('@unitCode', baseElement, foreElement);
+    expect(result, 'The result should not be null').to.not.equal(null);
+    expect(result.nodeType).to.equal(Node.ATTRIBUTE_NODE);
+    expect(result.localName).to.equal('unitCode');
+    expect(result.value).to.equal('');
+  });
+
+  it('returns the attribute when the path leads to an attribute of an existing element', () => {
+    const qty = baseElement.ownerDocument.createElement('qty');
+    baseElement.appendChild(qty);
+    const result = createNodes('qty/@unitCode', baseElement, foreElement);
+    expect(result, 'The result should not be null').to.not.equal(null);
+    expect(result.nodeType).to.equal(Node.ATTRIBUTE_NODE);
+    expect(result.localName).to.equal('unitCode');
+    expect(result.value).to.equal('');
+  });
+
+  it('does not create an attribute for a root-level attribute comparison (`@a="b"`)', () => {
+    const result = createNodes('@a="b"', baseElement, foreElement);
+    expect(result).to.equal(null);
+  });
+
   it('can create a node with a namespace', () => {
     const xpath = 'my-prefix:p';
     foreElement.setAttribute('xmlns:my-prefix', 'my-namespace');
@@ -175,6 +198,55 @@ describe('createNodes', () => {
       expect(result.outerHTML).to.equal(
         '<InvoiceLine xmlns="bar"><Item><AdditionalItemProperty><Name>RightType</Name><Value/></AdditionalItemProperty></Item></InvoiceLine>',
       );
+    });
+
+    describe('path comparisons in predicates', () => {
+      it('creates the path and sets the value for `a[b/c = "x"]`', () => {
+        const result = createNodes(`a[b/c = 'x']`, baseElement, foreElement);
+        expect(result).to.not.equal(null, 'The result should not be null');
+        expect(result.outerHTML).to.equal('<a><b><c>x</c></b></a>');
+      });
+
+      it('creates the path without a value for a negation `a[b/c != "x"]`', () => {
+        const result = createNodes(`a[b/c != 'x']`, baseElement, foreElement);
+        expect(result).to.not.equal(null, 'The result should not be null');
+        expect(result.outerHTML).to.equal('<a><b><c/></b></a>');
+      });
+
+      it('sets an attribute at the end of the path', () => {
+        const result = createNodes(`a[b/@d = 'x']`, baseElement, foreElement);
+        expect(result.outerHTML).to.equal('<a><b d="x"/></a>');
+      });
+
+      it('works with namespaced steps and further steps after the predicate', () => {
+        const result = createNodes(
+          `foo:Party/foo:PartyTaxScheme[foo:TaxScheme/foo:ID = 'VAT']/foo:CompanyID`,
+          baseElement,
+          foreElement,
+        );
+        expect(result).to.not.equal(null, 'The result should not be null');
+        expect(result.outerHTML).to.equal(
+          '<Party xmlns="bar"><PartyTaxScheme><TaxScheme><ID>VAT</ID></TaxScheme><CompanyID/></PartyTaxScheme></Party>',
+        );
+      });
+
+      it('evaluates an expression on the right hand side: `a[@cur = /xml/val]`', () => {
+        baseElement.appendChild(baseElement.ownerDocument.createElement('val')).append('EUR');
+        const result = createNodes(`a[@cur = /xml/val]`, baseElement, foreElement);
+        expect(result).to.not.equal(null, 'The result should not be null');
+        expect(result.outerHTML).to.equal('<a cur="EUR"/>');
+      });
+
+      it('does not create a node while the expression still has an empty value', () => {
+        baseElement.appendChild(baseElement.ownerDocument.createElement('val'));
+        const result = createNodes(`a[@cur = /xml/val]`, baseElement, foreElement);
+        expect(result).to.equal(null);
+      });
+
+      it('does not create a node if the expression selects nothing: the predicate could never hold', () => {
+        const result = createNodes(`a[@cur = /xml/missing]`, baseElement, foreElement);
+        expect(result).to.equal(null);
+      });
     });
   });
 });

@@ -3,7 +3,12 @@ import { Fore } from './fore.js';
 import './fx-instance.js';
 import { ModelItem } from './modelitem.js';
 import { parseJsonRef, getPath } from './xpath-path.js';
-import { evaluateXPath, evaluateXPathToBoolean, evaluateXPathToNodes } from './xpath-evaluation.js';
+import {
+  evaluateXPath,
+  evaluateXPathToBoolean,
+  evaluateXPathToNodes,
+  evaluateXPathToString,
+} from './xpath-evaluation.js';
 import { XPathUtil } from './xpath-util.js';
 import { getLensForNode } from './json/JSONNode.js';
 import { UndoManager } from './UndoManager.js';
@@ -17,6 +22,55 @@ import { UndoManager } from './UndoManager.js';
  * After the cycle is run all modelItems have updated their stete to reflect latest computations.
  *
  */
+const lastStepNameCache = new Map();
+
+/**
+ * The local name the last step of a (simple) ref selects, or null if that can't be told for sure.
+ * Only plain name tests (`a/b[pred]/c:d`, `@x`, `a/@c:x`) are resolved; anything else
+ * (functions, unions, `*`, `.`, axes, ...) returns null so callers fall back to evaluating the ref.
+ *
+ * @param {string} ref
+ * @returns {string|null}
+ */
+function lastStepLocalName(ref) {
+  if (typeof ref !== 'string') return null;
+  if (lastStepNameCache.has(ref)) return lastStepNameCache.get(ref);
+  let result = null;
+  // Split on top-level '/', ignoring anything in predicates; bail out on unions/functions/axes.
+  let depth = 0;
+  let quote = null;
+  let lastSlash = -1;
+  let simple = true;
+  for (let i = 0; i < ref.length && simple; i += 1) {
+    const ch = ref[i];
+    if (quote) {
+      if (ch === quote) quote = null;
+      continue;
+    }
+    if (ch === '"' || ch === "'") {
+      quote = ch;
+    } else if (ch === '[') {
+      depth += 1;
+    } else if (ch === ']') {
+      depth -= 1;
+    } else if (depth === 0) {
+      if (ch === '/') lastSlash = i;
+      else if (ch === '|' || ch === '(' || ch === ')' || (ch === ':' && ref[i + 1] === ':'))
+        simple = false;
+    }
+  }
+  if (simple && depth === 0 && !quote) {
+    let step = ref.slice(lastSlash + 1);
+    const bracket = step.indexOf('[');
+    if (bracket !== -1) step = step.slice(0, bracket);
+    step = step.trim();
+    const m = /^@?(?:[A-Za-z_][\w.-]*:)?([A-Za-z_][\w.-]*)$/.exec(step);
+    if (m) result = m[1];
+  }
+  lastStepNameCache.set(ref, result);
+  return result;
+}
+
 export class FxModel extends HTMLElement {
   static dataChanged = false;
 
@@ -38,6 +92,10 @@ export class FxModel extends HTMLElement {
     this._modelItemsByKey = new Map();
     this.defaultContext = {};
     this.changed = [];
+    /** true if any fx-bind of the current rebuild has an `initial` expression */
+    this._hasInitial = false;
+    /** @type {Set<string>} paths of model items whose `initial` was already applied */
+    this._initialDone = new Set();
 
     // this.mainGraph = new DepGraph(false);
     this.inited = false;
@@ -51,6 +109,13 @@ export class FxModel extends HTMLElement {
      * @type {import('./fx-bind.js').FxBind[]}
      */
     this.binds = [];
+
+    /**
+     * Set by initData() of a subtree while it triggers updateModel(): the root rebuild() re-scans
+     * for create-nodes instead of the whole form.
+     * @type {HTMLElement|null}
+     */
+    this._initDataRoot = null;
 
     this.debugInfo = {
       debugId: `model-${Math.random().toString(36).slice(2, 9)}`,
@@ -232,8 +297,16 @@ export class FxModel extends HTMLElement {
      * @type {import('./fx-bind.js').FxBind[]}
      */
     const childBinds = Array.from(bindForParent.children).filter(c => c.nodeName === 'FX-BIND');
+    const localName = elementOrAttribute.localName;
     for (const childBind of childBinds) {
       const ref = childBind.ref;
+      // Cheap pre-filter: a ref ending in a plain name test can only select nodes of that name.
+      // Without this every bind is evaluated at every level for every node looked up, which is
+      // very slow in forms with many binds (and every lazily created model item does a lookup).
+      const lastName = lastStepLocalName(ref);
+      if (lastName !== null && localName && lastName !== localName) {
+        continue;
+      }
       const matches = evaluateXPathToNodes(ref, parent, childBind);
       if (matches.includes(elementOrAttribute)) {
         return childBind;
@@ -543,6 +616,20 @@ export class FxModel extends HTMLElement {
     return existing;
   }
   /**
+   * True unless the author asserted with `static` on the fx-instance that nothing in the model
+   * depends on instance `id` (eg. a language file only read by controls and templates). Replacing
+   * a static instance needs a refresh but no rebuild/recalculate/revalidate. The default instance
+   * is never treated as static.
+   * @param {string} id
+   * @returns {boolean}
+   */
+  isInstanceUsedByBinds(id) {
+    const first = this.instances?.[0];
+    if (!id || !first || first.id === id) return true;
+    return !this.instances.some(i => i.id === id && i.hasAttribute('static'));
+  }
+
+  /**
    * update action triggering the update cycle
    */
   updateModel() {
@@ -666,6 +753,8 @@ export class FxModel extends HTMLElement {
       }
 
       this._deindexModelItem(mi);
+      // a node later (re-)created at this path must get its `initial` again
+      if (mi.path) this._initialDone.delete(mi.path);
     }
 
     // Recurse for XML descendants only
@@ -691,6 +780,7 @@ export class FxModel extends HTMLElement {
     this._modelItemsByPath = new Map();
     this._modelItemsByKey = new Map();
     this.binds = [];
+    this._hasInitial = false;
     // issue #125: subset of `binds` whose ref predicate reads another node - see
     // refPredicateNeedsRebuild(), which is scanned on every action-driven update and
     // should stay proportional to this (presumably rare) subset, not every bind.
@@ -706,8 +796,14 @@ export class FxModel extends HTMLElement {
     binds.forEach(bind => bind.init(this));
 
     if (this.formElement.createNodes) {
-      this.formElement.initData();
+      // When the rebuild was triggered by initData() of a subtree (new repeat item, included
+      // content) only that subtree can lack nodes: scanning the whole form again is wasted work.
+      const scope = this._initDataRoot;
+      this.formElement.initData(scope?.isConnected ? scope : undefined);
     }
+
+    // XForms 2.0 `initial`: one-time value assignment, before any calculate runs.
+    if (this._hasInitial) this._applyInitial();
 
     // Lazily created ModelItems (eg. an fx-control/fx-output whose `ref` has no
     // <fx-bind> of its own) never go through bind.init() above, so without this they'd
@@ -717,7 +813,10 @@ export class FxModel extends HTMLElement {
     // such item whose backing node is still attached to its instance document.
     this._prevModelItemsByPath.forEach(mi => {
       if (!mi.isSynthetic) return;
-      if (!mi.node || !mi.node.isConnected) return;
+      // XML items need their node still attached to the instance document. JSON items are backed
+      // by a lens (no node): without this they were dropped on every rebuild, leaving controls on
+      // a JSON instance (eg. the language switch) with a model item that is no longer registered.
+      if (mi.node ? !mi.node.isConnected : !mi.lens) return;
       this._indexModelItem(mi);
     });
 
@@ -725,6 +824,50 @@ export class FxModel extends HTMLElement {
     this._prevModelItemsByPath = null;
 
     Fore.dispatch(this, 'rebuild-done', { maingraph: this.mainGraph });
+  }
+
+  /**
+   * XForms 2.0 `initial` bind property: evaluates the expression once per model item (tracked by
+   * path in `_initialDone`, which survives rebuilds), overwriting any existing value. A failing
+   * expression yields the empty string.
+   *
+   * XML values are written as strings, JSON values keep the type of the result.
+   *
+   * Values are written silently (no notify/addChanged): this runs inside rebuild(), and a
+   * non-empty `changed` list would make the following recalculate() skip the full graph pass.
+   * Only called when at least one bind declares `initial`.
+   */
+  _applyInitial() {
+    this.modelItems.forEach(mi => {
+      const expr = mi.bind?.initial;
+      if (!expr || !mi.path || this._initialDone.has(mi.path)) return;
+      this._initialDone.add(mi.path);
+
+      if (!mi.node && !mi.lens) return;
+      const context = mi.node || mi.lens;
+
+      let value;
+      try {
+        if (mi.lens) {
+          // JSON values are typed: keep the atomic result (10 stays a number) instead of stringifying
+          const first = evaluateXPath(expr, context, this)[0];
+          value = first?.__jsonlens__ ? first.value : first;
+          if (value === undefined || value === null) value = '';
+        } else {
+          value = evaluateXPathToString(expr, context, this);
+        }
+      } catch (e) {
+        value = '';
+      }
+
+      if (mi.lens) {
+        mi.lens.set(value);
+      } else if (mi.node.nodeType === Node.ATTRIBUTE_NODE) {
+        mi.node.nodeValue = value;
+      } else {
+        mi.node.textContent = value;
+      }
+    });
   }
 
   /**
@@ -939,7 +1082,12 @@ export class FxModel extends HTMLElement {
       const context = modelItem.node || modelItem.lens;
 
       if (property === 'calculate') {
-        const compute = evaluateXPath(expr, context, this);
+        let compute = evaluateXPath(expr, context, this);
+        if (modelItem.lens && Array.isArray(compute)) {
+          // JSON values are typed: store the first atomic result (or the value of a result node)
+          const first = compute[0];
+          compute = first?.__jsonlens__ ? first.value : (first ?? '');
+        }
         modelItem.value = compute;
         modelItem.readonly = true; // calculated nodes are always readonly
         modelItem.notify(); // Notify observers directly

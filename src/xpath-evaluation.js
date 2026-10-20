@@ -17,12 +17,9 @@ import {
 
 import { XPathUtil } from './xpath-util.js';
 import { prettifyXml } from './functions/common-function.js';
-import { JSONDomFacade } from './json/JSONDomFacade.js';
 
 const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
 const createdNamespaceResolversByXPathQueryAndNode = new Map();
-
-const __jsonDomFacade = new JSONDomFacade();
 
 // ------------------------------------------------------------
 // Helpers: Fore/model/instance
@@ -95,6 +92,100 @@ function _isJsonInstance(instance) {
 
 function _isJsonNode(n) {
   return !!n && typeof n === 'object' && n.__jsonlens__ === true;
+}
+
+/**
+ * The XPath engine does not know JSON lenses: handed a lens as context item it treats it as a plain JS
+ * object and recurses through its parent/child references until the stack overflows. Expressions that
+ * are not resolved by the lens-aware lookup code are therefore evaluated against the RAW JS value of the
+ * node (string/number/boolean, or map/array which `?key` lookups understand).
+ *
+ * @param {object} node a JSON lens node
+ * @returns {*} the raw value, `null` if there is none
+ */
+function _rawJsonContext(node) {
+  const v = typeof node.getValue === 'function' ? node.getValue() : node.value;
+  return v === undefined ? null : v;
+}
+
+/**
+ * Resolves a plain XPath location path made of simple axis steps against a JSON lens node.
+ *
+ * The XPath engine cannot navigate lenses (see _rawJsonContext), and node results have to keep their
+ * lens identity, so the supported subset is resolved here via the lens API.
+ *
+ * Supported steps, separated by `/` (a leading `/` starts at the root of the lens tree):
+ *  `.`  `..`  `*`  `name`  `self::*`  `parent::*`  `child::*`  `child::name`
+ * each optionally followed by one 1-based numeric predicate, eg. `*[2]` or `child::item[1]`.
+ * Anything else (functions, comparisons, `//`, other axes, ...) is not supported.
+ *
+ * @param {string} expr
+ * @param {object} lens a JSON lens node
+ * @returns {object[]|null} the resulting lens nodes, or null if the expression is outside the subset
+ */
+function _resolveJsonAxisPath(expr, lens) {
+  const s = String(expr ?? '').trim();
+  if (!s) return null;
+
+  let nodes = [lens];
+  let rest = s;
+  if (rest.startsWith('//')) return null;
+  if (rest.startsWith('/')) {
+    let root = lens;
+    while (root.getParent && root.getParent()) root = root.getParent();
+    nodes = [root];
+    rest = rest.slice(1);
+    if (rest === '') return nodes;
+  }
+
+  const STEP = /^(\.\.|\.|(?:(?:child|parent|self)::)?(?:\*|[A-Za-z_][\w.-]*))(?:\[(\d+)\])?$/;
+  for (const raw of rest.split('/')) {
+    const m = STEP.exec(raw.trim());
+    if (!m) return null;
+    const [, test, position] = m;
+    let axis = 'child';
+    let name = test;
+    if (test === '..') {
+      axis = 'parent';
+      name = '*';
+    } else if (test === '.') {
+      axis = 'self';
+      name = '*';
+    } else if (test.includes('::')) {
+      [axis, name] = test.split('::');
+    }
+
+    let next = [];
+    nodes.forEach(n => {
+      let candidates;
+      if (axis === 'self') candidates = [n];
+      else if (axis === 'parent') candidates = n.getParent && n.getParent() ? [n.getParent()] : [];
+      else candidates = n.getChildren ? n.getChildren() : [];
+      if (name !== '*') candidates = candidates.filter(c => String(c.getKey()) === name);
+      if (position !== undefined) {
+        const picked = candidates[Number(position) - 1];
+        candidates = picked ? [picked] : [];
+      }
+      next = next.concat(candidates);
+    });
+    nodes = Array.from(new Set(next));
+  }
+  return nodes;
+}
+
+function _unsupportedJsonExpression(expr, formElement) {
+  formElement?.dispatchEvent?.(
+    new CustomEvent('error', {
+      composed: false,
+      bubbles: true,
+      detail: {
+        origin: formElement,
+        message: `Expression '${expr}' is not supported on JSON nodes (supported: ?key lookups and the steps . .. * name, optionally with a numeric predicate)`,
+        expr,
+        level: 'Error',
+      },
+    }),
+  );
 }
 
 function _getJsonRootNode(instance) {
@@ -350,7 +441,10 @@ function _resolveLookupOnMapItem(base, rest) {
 }
 
 function _looksLikeLookupExpr(expr) {
-  const s = String(expr ?? '').trim();
+  // a `?` inside a string literal (eg. 'really?') is no lookup operator
+  const s = String(expr ?? '')
+    .trim()
+    .replace(/'[^']*'|"[^"]*"/g, '""');
   return s.includes('?');
 }
 
@@ -383,6 +477,15 @@ function _isSimpleLookupExpr(expr) {
 
   // operators => not simple
   if (/[=<>!]=|[=<>]/.test(s)) return false;
+
+  // arithmetic and other whitespace separated operators (`?a + 1`, `?a and ?b`, `?a || 'x'`)
+  if (
+    /\s[-+*|]|[+|]|\s(?:div|idiv|mod|and|or|to|union|except|intersect)\s/.test(
+      s.replace(/'[^']*'|"[^"]*"/g, '""'),
+    )
+  ) {
+    return false;
+  }
 
   // function calls other than instance()/index() => not simple
   const parens = s.match(/[a-zA-Z_][\w.-]*\s*\(/g) || [];
@@ -1390,16 +1493,18 @@ export function evaluateXPath(
     }
 
     if (_isJsonNode(contextNode) && !_looksLikeLookupExpr(expr0)) {
+      const axisNodes = _resolveJsonAxisPath(expr0, contextNode);
+      if (axisNodes !== null) return axisNodes;
       const variablesInScope = getVariablesInScope(formElement);
       return fxEvaluateXPath(
         expr0,
-        contextNode,
-        domFacade ? domFacade.withInner(__jsonDomFacade) : __jsonDomFacade,
+        _rawJsonContext(contextNode),
+        domFacade,
         { ...variablesInScope, ...variables },
         fxEvaluateXPath.ALL_RESULTS_TYPE,
         {
           debug: true,
-          currentContext: { formElement, variables },
+          currentContext: { formElement, variables, jsonMode: 'raw' },
           moduleImports: { xf: XFORMS_NAMESPACE_URI },
           functionNameResolver,
           namespaceResolver: null,
@@ -1485,16 +1590,36 @@ export function evaluateXPath(
           return [resolved];
         }
 
-        return [];
+        // Complex expression containing a lookup (eg. `instance('data')?count + 1`): the engine only
+        // understands map/array items, so evaluate against the RAW value of the context node.
+        return fxEvaluateXPath(
+          expr0,
+          _rawJsonContext(contextNode),
+          domFacade,
+          { ...getVariablesInScope(formElement), ...variables },
+          fxEvaluateXPath.ALL_RESULTS_TYPE,
+          {
+            debug: true,
+            currentContext: { formElement, variables, jsonMode: 'raw' },
+            moduleImports: { xf: XFORMS_NAMESPACE_URI },
+            functionNameResolver,
+            namespaceResolver: null,
+            language: Language.XPATH_3_1_LANGUAGE,
+            xmlSerializer: new XMLSerializer(),
+            ...options,
+          },
+        );
       }
     }
 
     const namespaceResolver = createNamespaceResolverForNode(expr0, contextNode, formElement);
+    // a lens that got this far (eg. `?` in a string literal) must not reach the engine as context item
+    const evalContext = _isJsonNode(contextNode) ? _rawJsonContext(contextNode) : contextNode;
     const variablesInScope = getVariablesInScope(formElement);
 
     return fxEvaluateXPath(
       expr0,
-      contextNode,
+      evalContext,
       domFacade,
       { ...variablesInScope, ...variables },
       fxEvaluateXPath.ALL_RESULTS_TYPE,
@@ -1533,15 +1658,12 @@ export function evaluateXPathToFirstNode(xpath, contextNode, formElement) {
       return contextNode;
     }
     if (_isJsonNode(contextNode) && !_looksLikeLookupExpr(expr0)) {
-      const variablesInScope = getVariablesInScope(formElement);
-      return fxEvaluateXPathToFirstNode(expr0, contextNode, __jsonDomFacade, variablesInScope, {
-        currentContext: { formElement },
-        functionNameResolver,
-        moduleImports: { xf: XFORMS_NAMESPACE_URI },
-        namespaceResolver: null,
-        language: Language.XPATH_3_1_LANGUAGE,
-        xmlSerializer: new XMLSerializer(),
-      });
+      const resolved = _resolveJsonAxisPath(expr0, contextNode);
+      if (resolved === null) {
+        _unsupportedJsonExpression(expr0, formElement);
+        return null;
+      }
+      return resolved[0] || null;
     }
 
     if (_looksLikeLookupExpr(expr0)) {
@@ -1609,15 +1731,12 @@ export function evaluateXPathToNodes(xpath, contextNode, formElement) {
       return [contextNode];
     }
     if (_isJsonNode(contextNode) && !_looksLikeLookupExpr(expr0)) {
-      const variablesInScope = getVariablesInScope(formElement);
-      return fxEvaluateXPathToNodes(expr0, contextNode, __jsonDomFacade, variablesInScope, {
-        currentContext: { formElement },
-        functionNameResolver,
-        moduleImports: { xf: XFORMS_NAMESPACE_URI },
-        namespaceResolver: null,
-        language: Language.XPATH_3_1_LANGUAGE,
-        xmlSerializer: new XMLSerializer(),
-      });
+      const resolved = _resolveJsonAxisPath(expr0, contextNode);
+      if (resolved === null) {
+        _unsupportedJsonExpression(expr0, formElement);
+        return [];
+      }
+      return resolved;
     }
 
     if (_looksLikeLookupExpr(expr0)) {
@@ -1734,10 +1853,12 @@ export function evaluateXPathToBoolean(xpath, contextNode, formElement) {
         });
       }
 
-      // 4) Non-lookup XPath in JSON context: evaluate via JSONDomFacade
+      // 4) Non-lookup XPath in JSON context: axis paths via the lens, everything else against the raw value
+      const axisNodes = _resolveJsonAxisPath(expr0, contextNode);
+      if (axisNodes !== null) return axisNodes.length > 0;
       const variablesInScope = getVariablesInScope(formElement);
-      return fxEvaluateXPathToBoolean(expr0, contextNode, __jsonDomFacade, variablesInScope, {
-        currentContext: { formElement },
+      return fxEvaluateXPathToBoolean(expr0, _rawJsonContext(contextNode), null, variablesInScope, {
+        currentContext: { formElement, jsonMode: 'raw' },
         functionNameResolver,
         moduleImports: { xf: XFORMS_NAMESPACE_URI },
         namespaceResolver: null,
@@ -1814,14 +1935,16 @@ export function evaluateXPathToString(xpath, contextNode, formElement, domFacade
 
     // JSON context, non-lookup => evaluate via JSON facade
     if (_isJsonNode(contextNode) && !_looksLikeLookupExpr(expr0)) {
+      const axisNodes = _resolveJsonAxisPath(expr0, contextNode);
+      if (axisNodes !== null) return axisNodes.length ? stringify(axisNodes[0]) : '';
       const variablesInScope = getVariablesInScope(formElement);
       const res = fxEvaluateXPathToString(
         expr0,
-        contextNode,
-        domFacade ? domFacade.withInner(__jsonDomFacade) : __jsonDomFacade,
+        _rawJsonContext(contextNode),
+        domFacade,
         variablesInScope,
         {
-          currentContext: { formElement },
+          currentContext: { formElement, jsonMode: 'raw' },
           functionNameResolver,
           moduleImports: { xf: XFORMS_NAMESPACE_URI },
           namespaceResolver: null,
@@ -1875,16 +1998,33 @@ export function evaluateXPathToString(xpath, contextNode, formElement, domFacade
           const node = Array.isArray(resolved) ? resolved[0] : resolved;
           return stringify(node);
         }
-        // for now, keep string conversions conservative
-        return '';
+        // Complex expression containing a lookup: evaluate against the RAW value of the context node.
+        return stringify(
+          fxEvaluateXPathToString(
+            expr0,
+            _rawJsonContext(contextNode),
+            domFacade,
+            getVariablesInScope(formElement),
+            {
+              currentContext: { formElement, jsonMode: 'raw' },
+              functionNameResolver,
+              moduleImports: { xf: XFORMS_NAMESPACE_URI },
+              namespaceResolver: null,
+              language: Language.XPATH_3_1_LANGUAGE,
+              xmlSerializer: new XMLSerializer(),
+            },
+          ),
+        );
       }
     }
 
     // Normal XPath path
     const namespaceResolver = createNamespaceResolverForNode(expr0, contextNode, formElement);
+    // a lens that got this far (eg. `?` in a string literal) must not reach the engine as context item
+    const evalContext = _isJsonNode(contextNode) ? _rawJsonContext(contextNode) : contextNode;
     const variablesInScope = getVariablesInScope(formElement);
 
-    const res = fxEvaluateXPathToString(expr0, contextNode, domFacade, variablesInScope, {
+    const res = fxEvaluateXPathToString(expr0, evalContext, domFacade, variablesInScope, {
       currentContext: { formElement },
       functionNameResolver,
       moduleImports: { xf: XFORMS_NAMESPACE_URI },
@@ -1943,13 +2083,15 @@ export function evaluateXPathToStrings(xpath, contextNode, formElement, domFacad
     }
 
     if (_isJsonNode(contextNode) && !_looksLikeLookupExpr(expr0)) {
+      const axisNodes = _resolveJsonAxisPath(expr0, contextNode);
+      if (axisNodes !== null) return axisNodes.map(stringify);
       const res = fxEvaluateXPathToStrings(
         expr0,
-        contextNode,
-        domFacade ? domFacade.withInner(__jsonDomFacade) : __jsonDomFacade,
+        _rawJsonContext(contextNode),
+        domFacade,
         getVariablesInScope(formElement),
         {
-          currentContext: { formElement },
+          currentContext: { formElement, jsonMode: 'raw' },
           functionNameResolver,
           moduleImports: { xf: XFORMS_NAMESPACE_URI },
           namespaceResolver: null,
@@ -1972,15 +2114,32 @@ export function evaluateXPathToStrings(xpath, contextNode, formElement, domFacad
           const arr = Array.isArray(resolved) ? resolved : [resolved];
           return arr.map(stringify);
         }
-        return [];
+        // Complex expression containing a lookup: evaluate against the RAW value of the context node.
+        const rawRes = fxEvaluateXPathToStrings(
+          expr0,
+          _rawJsonContext(contextNode),
+          domFacade,
+          getVariablesInScope(formElement),
+          {
+            currentContext: { formElement, jsonMode: 'raw' },
+            functionNameResolver,
+            moduleImports: { xf: XFORMS_NAMESPACE_URI },
+            namespaceResolver: null,
+            language: Language.XPATH_3_1_LANGUAGE,
+            xmlSerializer: new XMLSerializer(),
+          },
+        );
+        return Array.isArray(rawRes) ? rawRes.map(stringify) : [stringify(rawRes)];
       }
     }
 
     const namespaceResolver = createNamespaceResolverForNode(expr0, contextNode, formElement);
+    // a lens that got this far (eg. `?` in a string literal) must not reach the engine as context item
+    const evalContext = _isJsonNode(contextNode) ? _rawJsonContext(contextNode) : contextNode;
 
     const res = fxEvaluateXPathToStrings(
       expr0,
-      contextNode,
+      evalContext,
       domFacade,
       getVariablesInScope(formElement),
       {
@@ -2025,14 +2184,16 @@ export function evaluateXPathToNumber(xpath, contextNode, formElement, domFacade
     }
 
     if (_isJsonNode(contextNode) && !_looksLikeLookupExpr(expr0)) {
+      const axisNodes = _resolveJsonAxisPath(expr0, contextNode);
+      if (axisNodes !== null) return axisNodes.length ? Number(axisNodes[0].value) : NaN;
       const variablesInScope = getVariablesInScope(formElement);
       return fxEvaluateXPathToNumber(
         expr0,
-        contextNode,
-        domFacade ? domFacade.withInner(__jsonDomFacade) : __jsonDomFacade,
+        _rawJsonContext(contextNode),
+        domFacade,
         variablesInScope,
         {
-          currentContext: { formElement },
+          currentContext: { formElement, jsonMode: 'raw' },
           functionNameResolver,
           moduleImports: { xf: XFORMS_NAMESPACE_URI },
           namespaceResolver: null,
@@ -2048,15 +2209,30 @@ export function evaluateXPathToNumber(xpath, contextNode, formElement, domFacade
       const instance = relativeJson ? null : _getInstanceFromFormElement(formElement, instanceId);
 
       if (relativeJson || _isJsonInstance(instance)) {
-        // numbers for JSON are not a priority for now; keep conservative
-        return NaN;
+        // Evaluate against the RAW value of the context node (see _rawJsonContext)
+        return fxEvaluateXPathToNumber(
+          expr0,
+          _rawJsonContext(contextNode),
+          domFacade,
+          getVariablesInScope(formElement),
+          {
+            currentContext: { formElement, jsonMode: 'raw' },
+            functionNameResolver,
+            moduleImports: { xf: XFORMS_NAMESPACE_URI },
+            namespaceResolver: null,
+            language: Language.XPATH_3_1_LANGUAGE,
+            xmlSerializer: new XMLSerializer(),
+          },
+        );
       }
     }
 
     const namespaceResolver = createNamespaceResolverForNode(expr0, contextNode, formElement);
+    // a lens that got this far (eg. `?` in a string literal) must not reach the engine as context item
+    const evalContext = _isJsonNode(contextNode) ? _rawJsonContext(contextNode) : contextNode;
     const variablesInScope = getVariablesInScope(formElement);
 
-    return fxEvaluateXPathToNumber(expr0, contextNode, domFacade, variablesInScope, {
+    return fxEvaluateXPathToNumber(expr0, evalContext, domFacade, variablesInScope, {
       currentContext: { formElement },
       functionNameResolver,
       moduleImports: { xf: XFORMS_NAMESPACE_URI },

@@ -17,6 +17,7 @@ const XPATH_ATTRS = [
   'ref',
   'value',
   'calculate',
+  'initial',
   'constraint',
   'required',
   'readonly',

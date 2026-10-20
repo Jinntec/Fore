@@ -27991,6 +27991,7 @@ var fore_tree_default = {
       attrs: {
         ref: null,
         calculate: null,
+        initial: null,
         constraint: null,
         readonly: null,
         required: null,

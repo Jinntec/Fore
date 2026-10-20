@@ -1357,16 +1357,23 @@ export class FxFore extends HTMLElement {
    *
    * @private
    */
-  _updateTemplateExpressions() {
+  /**
+   * Finds, stores and evaluates the template expressions (`{...}` in text and attribute values).
+   *
+   * @param {Element} [scope] only look into this element (e.g. content inserted by `fx-include`) and only
+   * evaluate the expressions found there. Defaults to the whole form.
+   */
+  _updateTemplateExpressions(scope = this) {
     const search =
       "(descendant-or-self::*!(text(), @*))[contains(., '{')][substring-after(., '{') => contains('}')][not(ancestor-or-self::*[self::fx-model or self::fx-function])]";
 
-    const tmplExpressions = evaluateXPathToNodes(search, this, this);
+    const tmplExpressions = evaluateXPathToNodes(search, scope, this);
     // console.log('template expressions found ', tmplExpressions);
 
     if (!this.storedTemplateExpressions) {
       this.storedTemplateExpressions = [];
     }
+    const newNodes = [];
 
     // console.log('######### storedTemplateExpressions', this.storedTemplateExpressions.length);
 
@@ -1389,12 +1396,19 @@ export class FxFore extends HTMLElement {
       // console.log('storedTemplateExpressionByNode', this.storedTemplateExpressionByNode);
       if (expr) {
         this.storedTemplateExpressionByNode.set(node, expr);
+        newNodes.push(node);
       }
     });
     // console.log('stored template expressions ', this.storedTemplateExpressionByNode);
 
     // TODO: Should we clean up nodes that existed but are now gone?
-    this._processTemplateExpressions();
+    if (scope === this) {
+      this._processTemplateExpressions();
+    } else {
+      newNodes.forEach(node => {
+        this._processTemplateExpression({ node, expr: this.storedTemplateExpressionByNode.get(node) });
+      });
+    }
   }
 
   _processTemplateExpressions() {
@@ -1429,15 +1443,42 @@ export class FxFore extends HTMLElement {
   }
 
   /**
+   * True for the `aria-label`/`label` attribute and the text of a direct `<label>` child of an element that is
+   * itself nonrelevant (and not inside another nonrelevant element): the name fx-control-menu shows for it.
+   *
+   * @param {Node} node attribute or text node holding a template expression
+   * @returns {boolean}
+   */
+  static _isNameOfNonrelevantElement(node) {
+    let owner;
+    if (node.nodeType === Node.ATTRIBUTE_NODE) {
+      if (node.name !== 'aria-label' && node.name !== 'label') return false;
+      owner = node.ownerElement;
+    } else if (node.nodeType === Node.TEXT_NODE && node.parentNode?.localName === 'label') {
+      owner = node.parentNode.parentElement;
+    }
+    return (
+      !!owner &&
+      owner.hasAttribute('nonrelevant') &&
+      !owner.parentElement?.closest('[nonrelevant]')
+    );
+  }
+
+  /**
    * evaluate a template expression on a node either text- or attribute node.
    * @param {string} expr The string to parse for expressions
    * @param {Node} node the node which will get updated with evaluation result
    */
   evaluateTemplateExpression(expr, node) {
-    // ### do not evaluate template expressions within nonrelevant sections
-    if (node.nodeType === Node.ATTRIBUTE_NODE && node.ownerElement.closest('[nonrelevant]')) return;
-    if (node.nodeType === Node.TEXT_NODE && node.parentNode.closest('[nonrelevant]')) return;
-    if (node.nodeType === Node.ELEMENT_NODE && node.closest('[nonrelevant]')) return;
+    // ### do not evaluate template expressions within nonrelevant sections - except the name of the
+    // nonrelevant element itself: an `on-demand` element is nonrelevant until the user picks it from
+    // fx-control-menu, which lists it by that name
+    if (!FxFore._isNameOfNonrelevantElement(node)) {
+      if (node.nodeType === Node.ATTRIBUTE_NODE && node.ownerElement.closest('[nonrelevant]'))
+        return;
+      if (node.nodeType === Node.TEXT_NODE && node.parentNode.closest('[nonrelevant]')) return;
+      if (node.nodeType === Node.ELEMENT_NODE && node.closest('[nonrelevant]')) return;
+    }
 
     // ---- IMPORTANT GUARD ----
     // Prevent JSON object/array literals in fx-insert@origin from being treated as
@@ -1473,7 +1514,12 @@ export class FxFore extends HTMLElement {
       if (match === '{}') return match;
 
       const naked = match.substring(1, match.length - 1);
-      const inscope = getInScopeContext(node, naked);
+      let inscope = getInScopeContext(node, naked);
+      if (!inscope && FxFore._isNameOfNonrelevantElement(node)) {
+        // the element is bound to a node that does not exist (that is why it is nonrelevant), so it has no context:
+        // evaluate its name against the default context
+        inscope = this.getModel().getDefaultContext();
+      }
 
       if (!inscope) {
         return match;
@@ -1752,6 +1798,31 @@ export class FxFore extends HTMLElement {
   }
 
   /**
+   * Attach a freshly created node below `parent`: at the position the binds below `parent` ask for,
+   * or appended when there are none.
+   *
+   * @param {Node} node
+   * @param {Element} parent
+   */
+  _insertCreatedNode(node, parent) {
+    const hasBind =
+      this.model?.getModelItem(parent)?.bind ||
+      this.model?.getBindForElement(parent) ||
+      (parent === parent.ownerDocument?.documentElement &&
+        this.model?.querySelector(':scope > fx-bind'));
+    if (!hasBind) {
+      parent.appendChild(node);
+      return;
+    }
+    const referenceNode = this._findReferenceNodeForNewElement(node, parent, null);
+    if (referenceNode) {
+      referenceNode.after(node);
+    } else {
+      parent.prepend(node);
+    }
+  }
+
+  /**
    * @summary
    * Find the reference node (the future previous sibling) for a newly created element.
    *
@@ -1779,7 +1850,17 @@ export class FxFore extends HTMLElement {
    * @returns {ChildNode}
    */
   _findReferenceNodeForNewElement(newElement, parentElement, previousControl) {
-    const bindForElement = this.model.getModelItem(parentElement)?.bind;
+    // The parent might have been created implicitly (as a step of a deeper ref): it has no model
+    // item (yet) in that case, but binds may still apply to it, so ask the model.
+    // The document element has no bind of its own: the binds that are children of the model apply
+    // to its children.
+    const bindForElement =
+      this.model.getModelItem(parentElement)?.bind ||
+      this.model.getBindForElement(parentElement) ||
+      (parentElement === parentElement.ownerDocument?.documentElement &&
+      this.model.querySelector(':scope > fx-bind')
+        ? this.model
+        : null);
     if (!bindForElement) {
       // Parent is unbound. No clue what to do with this. Insert based on previous control
       let referenceNode = previousControl?.getModelItem()?.node;
@@ -1790,6 +1871,13 @@ export class FxFore extends HTMLElement {
       }
       if (referenceNode?.nodeType === Node.ATTRIBUTE_NODE) {
         // Insert the new node at the start: the previous control was an attribute
+        return null;
+      }
+      if (referenceNode && referenceNode.nodeType !== Node.DOCUMENT_NODE) {
+        // The walk above went past the parent: the previous control is bound to the parent itself
+        // (e.g. ref=".") or lies outside of it. It is no anchor, or we'd insert next to the parent.
+        if (referenceNode.parentNode !== parentElement) return null;
+      } else if (referenceNode && referenceNode.documentElement !== parentElement) {
         return null;
       }
       return referenceNode;
@@ -1818,38 +1906,85 @@ export class FxFore extends HTMLElement {
          */
 
         /**
-         * @type {FxBind}
+         * Map a node matched by a sibling bind to the ancestor-or-self that is a direct child of
+         * parentElement (a match might be nested several levels below it). Returns null when the
+         * node does not live under parentElement (attributes, other subtrees, JSON, ...).
          */
-        const previousBind = bindForElement.previousElementSibling;
-        if (previousBind) {
-          /**
-           * @type ChildNode[]}
-           */
-          const nodeset = previousBind.nodeset;
-          // A match from the previous bind's nodeset might be a descendant nested several levels
-          // below parentElement rather than a direct child of it. Walk up to the ancestor that IS
-          // a direct child of parentElement before using it as a `.after()` anchor - otherwise the
-          // new element would be spliced in deep inside that descendant's subtree instead of
-          // placed as a proper sibling under parentElement.
-          const lastMatchingSibling = nodeset
-            .slice()
-            .reverse()
-            .map(node => {
-              let candidate = node;
-              while (candidate?.parentNode && candidate.parentNode !== parentElement) {
-                candidate = candidate.parentNode;
-              }
-              return candidate;
-            })
-            .find(candidate => candidate?.parentNode === parentElement);
-          if (lastMatchingSibling) {
-            return lastMatchingSibling;
+        const asChildOfParent = node => {
+          if (!node || node.nodeType !== Node.ELEMENT_NODE) return null;
+          let candidate = node;
+          while (candidate.parentNode && candidate.parentNode !== parentElement) {
+            candidate = candidate.parentNode;
           }
-          // Otherwise, just default to appending... If this runs multiple times for multiple nodes
-          // it's unexpected to always prepend and get the order of children reversed from the UI.
+          return candidate.parentNode === parentElement && candidate !== newElement
+            ? candidate
+            : null;
+        };
 
-          // Do not fall back on the UI here, just keep it predictable if binds are in play
-          return parentElement.lastElementChild;
+        /*
+         * Walk the sibling binds lazily and stop at the first usable match: first backwards (insert
+         * after the last match of the nearest preceding bind that has one), then forwards (insert
+         * before the first match of the nearest following bind that has one). Only the nodesets of
+         * the siblings of this one bind are looked at, no XPath is evaluated here.
+         */
+        /**
+         * The `.nodeset` of a sibling bind goes stale when its nodes were created implicitly (as
+         * the intermediate step of a deeper ref) - only the bind of the explicitly created node is
+         * re-evaluated. So when the nodeset yields no match, look at the live children. A plain
+         * name test can only match children of that name, so most binds are dismissed without
+         * running any XPath.
+         * @returns {Element[]} matching direct children of parentElement, in document order
+         */
+        const liveMatches = bind => {
+          const ref = bind.ref;
+          const plainName = /^(?:[\w.-]+:)?([\w.-]+)$/.exec(ref || '');
+          const candidates = plainName
+            ? Array.from(parentElement.children).filter(
+                c => c !== newElement && c.localName === plainName[1],
+              )
+            : null;
+          if (candidates && candidates.length === 0) return [];
+          if (candidates && !ref.includes(':')) return candidates;
+          try {
+            return evaluateXPathToNodes(ref, parentElement, bind).filter(
+              n => n !== newElement && n.parentNode === parentElement,
+            );
+          } catch (e) {
+            return [];
+          }
+        };
+
+        /** @returns {Element[]} direct children of parentElement matched by a sibling bind */
+        const matchesOf = bind => {
+          if (bind.nodeName !== 'FX-BIND') return [];
+          const matches = [];
+          if (Array.isArray(bind.nodeset)) {
+            bind.nodeset.forEach(n => {
+              const m = asChildOfParent(n);
+              if (m && !matches.includes(m)) matches.push(m);
+            });
+          }
+          return matches.length ? matches : liveMatches(bind);
+        };
+
+        for (let b = bindForElement.previousElementSibling; b; b = b.previousElementSibling) {
+          const matches = matchesOf(b);
+          if (matches.length) return matches[matches.length - 1];
+        }
+        for (let b = bindForElement.nextElementSibling; b; b = b.nextElementSibling) {
+          const matches = matchesOf(b);
+          if (matches.length) {
+            // Callers insert *after* the reference node: return what precedes the match. Null
+            // (match is the first child) makes them prepend.
+            return matches[0].previousSibling;
+          }
+        }
+
+        if (bindForElement.previousElementSibling) {
+          // No sibling has a node yet. Do not fall back on the UI here, just keep it predictable
+          // if binds are in play: append. Note that the new element itself is the last child at
+          // this point (it is temporarily attached), so look at the one before it.
+          return newElement.previousElementSibling;
         }
       }
     } finally {
@@ -2032,7 +2167,7 @@ export class FxFore extends HTMLElement {
      */
     const boundControls = Array.from(
       root.querySelectorAll(
-        'fx-control[ref],fx-upload[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref]',
+        'fx-control[ref],fx-upload[ref],fx-group[ref],fx-repeat[ref], fx-switch[ref], fx-output[ref]',
       ),
     ).filter(boundEl => {
       if (boundEl.nodeName !== 'FX-REPEAT') return true;
@@ -2052,6 +2187,7 @@ export class FxFore extends HTMLElement {
 
     console.log('_initData', boundControls);
 
+    let createdNodes = false;
     for (let i = 0; i < boundControls.length; i++) {
       const bound = boundControls[i];
 
@@ -2087,7 +2223,7 @@ export class FxFore extends HTMLElement {
          * @type {ParentNode}
          */
         const parentNodeset =
-          firstNode(previousControl.nodeset) || firstNode(root.getModel().getDefaultContext());
+          firstNode(previousControl.nodeset) || firstNode(this.getModel().getDefaultContext());
         const creationContext = getCreationContext(bound, parentNodeset);
         const ref = bound.ref;
 
@@ -2095,6 +2231,7 @@ export class FxFore extends HTMLElement {
         if (!newNode || !parentNodeset) {
           continue;
         }
+        createdNodes = true;
         if (!this._isNodeAlreadyAttached(newNode)) {
           if (newNode.nodeType === Node.ATTRIBUTE_NODE) {
             parentNodeset.setAttributeNode(newNode);
@@ -2119,26 +2256,34 @@ export class FxFore extends HTMLElement {
       const ourParent = XPathUtil.getParentBindingElement(bound);
       let siblingControl = null;
 
-      for (let j = i - 1; j > 0; --j) {
-        const siblingOrDescendant = boundControls[j];
-        if (siblingOrDescendant.nodeset && !('nodeType' in siblingOrDescendant.nodeset)) {
-          continue;
-        }
-        if (XPathUtil.getParentBindingElement(siblingOrDescendant) === ourParent) {
-          siblingControl = siblingOrDescendant;
-          break;
-        }
-      }
-
       let parentNodeset;
       if (!ourParent || !ourParent.nodeset) {
         /*
           if we lost context somehow just always assume default context and append to that
           instead of bailing out.
            */
-        parentNodeset = root.getModel().getDefaultContext();
+        parentNodeset = this.getModel().getDefaultContext();
       } else {
-        parentNodeset = firstNode(ourParent.nodeset) || root.getModel().getDefaultContext();
+        parentNodeset = firstNode(ourParent.nodeset) || this.getModel().getDefaultContext();
+      }
+
+      for (let j = i - 1; j > 0; --j) {
+        const siblingOrDescendant = boundControls[j];
+        if (siblingOrDescendant.nodeset && !('nodeType' in siblingOrDescendant.nodeset)) {
+          continue;
+        }
+        if (XPathUtil.getParentBindingElement(siblingOrDescendant) === ourParent) {
+          // A control bound outside of our parent node (e.g. a `$default/...` ref) is no anchor for
+          // the order of the new node: keep looking for one that is.
+          const siblingNode = siblingOrDescendant.getModelItem?.()?.node;
+          const siblingElement =
+            siblingNode?.nodeType === Node.ATTRIBUTE_NODE ? siblingNode.ownerElement : siblingNode;
+          if (siblingElement && parentNodeset?.contains && !parentNodeset.contains(siblingElement)) {
+            continue;
+          }
+          siblingControl = siblingOrDescendant;
+          break;
+        }
       }
       const ref = bound.ref;
       const creationContext = getCreationContext(bound, parentNodeset);
@@ -2147,6 +2292,7 @@ export class FxFore extends HTMLElement {
       if (!newNode) {
         continue;
       }
+      createdNodes = true;
 
       if (!this._isNodeAlreadyAttached(newNode)) {
         if (newNode.nodeType === Node.ATTRIBUTE_NODE) {
@@ -2177,6 +2323,31 @@ export class FxFore extends HTMLElement {
         console.warn('create-nodes: could not resolve bound after node creation, skipping', bound);
         continue;
       }
+    }
+
+    // Binds are resolved against the nodes that exist when the model is built. Nodes created later
+    // (repeat rows, fx-include content) are unknown to e.g. `calculate` binds until the model is
+    // rebuilt. The full initData() of the initial run does that itself, right after the call.
+    // The rebuild scans for missing nodes again (create-nodes). Only the subtree we were called
+    // for can have changed, so hand it over instead of letting the model re-scan the whole form:
+    // that made every inserted repeat item cost a full-form pass (quadratic in the number of items).
+    if (createdNodes && root !== this && this.getModel().querySelector('fx-bind')) {
+      const model = this.getModel();
+      const outerRoot = model._initDataRoot;
+      // Every rebuild scans again and may create nodes again: never let that run away
+      // (e.g. a node that is created but never satisfies the ref it was created for).
+      model._initDataDepth = (model._initDataDepth || 0) + 1;
+      if (model._initDataDepth > 5) {
+        console.warn('create-nodes: giving up after repeated node creation, check the refs', root);
+      } else {
+        model._initDataRoot = root;
+        try {
+          model.updateModel();
+        } finally {
+          model._initDataRoot = outerRoot;
+        }
+      }
+      model._initDataDepth -= 1;
     }
   }
   /**
@@ -2210,6 +2381,22 @@ export class FxFore extends HTMLElement {
       referenceNode.nodeType === Node.DOCUMENT_NODE ? referenceNode : referenceNode.ownerDocument;
 
     if (!ownerDoc) return null;
+
+    // A ref rooted at the default instance (`$default/a/b`, or `/*/a/b`) lives outside the context
+    // the caller would attach the new node to: create and attach it below the document element.
+    const rooted = /^(?:\$default|\/\*)\//.exec(xpath);
+    if (rooted) {
+      const documentElement = ownerDoc.documentElement;
+      const created = createNodes(xpath.slice(rooted[0].length), documentElement, this);
+      if (created && !this._isNodeAlreadyAttached(created)) {
+        if (created.nodeType === Node.ATTRIBUTE_NODE) {
+          documentElement.setAttributeNode(created);
+        } else {
+          documentElement.appendChild(created);
+        }
+      }
+      return created;
+    }
 
     const baseElement =
       referenceNode.nodeType === Node.DOCUMENT_NODE
