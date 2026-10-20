@@ -5,6 +5,9 @@ import getInScopeContext from '../getInScopeContext.js';
 
 /**
  * todo: review placing of value. should probably work with value attribute and not allow slotted content.
+ *
+ * @attr {'html'|'image'} [mediatype] The mediatype for the output. When set to `html` this opens
+ * the application to Cross-site Scripting (XSS). Do not use mediatype="html" with externally-provided instances
  */
 export class FxOutput extends XfAbstractControl {
   /*
@@ -105,7 +108,6 @@ export class FxOutput extends XfAbstractControl {
   }
 
   getValue() {
-    // return 'foobar';
     try {
       const inscopeContext = getInScopeContext(this, this.valueAttr);
       if (this.hasAttribute('html')) {
@@ -141,14 +143,8 @@ export class FxOutput extends XfAbstractControl {
   }
 
   async updateWidgetValue() {
-    // console.log('updateWidgetValue');
     const valueWrapper = this.shadowRoot.getElementById('value');
     valueWrapper.innerHTML = '';
-
-    // if (this.mediatype === 'markdown') {
-    //   const md = markdown(this.nodeset);
-    //   this.innerHtml = md;
-    // }
 
     if (this.mediatype === 'html') {
       // JSON instances use a lens, so modelItem.node is null — fall back to this.value
@@ -158,7 +154,7 @@ export class FxOutput extends XfAbstractControl {
           valueWrapper.append(source);
           return;
         }
-        // parse string as HTML
+        // Parse string as HTML. This is vulnerable to XSS, but that should be clear by setting the `mediatype="html"` attribute
         const tmpDoc = new DOMParser().parseFromString(source, 'text/html');
         Array.from(tmpDoc.body.childNodes).forEach(n => {
           valueWrapper.append(n);
@@ -180,7 +176,7 @@ export class FxOutput extends XfAbstractControl {
       return;
     }
 
-    valueWrapper.innerHTML = this.value;
+    valueWrapper.textContent = this.value;
   }
 
   isReadonly() {
