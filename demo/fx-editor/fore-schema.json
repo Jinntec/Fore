@@ -58,6 +58,7 @@
     "attrs": [
       { "k": "ref",        "req": true,  "ph": "/data/field", "desc": "XPath selecting the node(s) this bind constrains." },
       { "k": "calculate",  "req": false, "ph": "",            "desc": "XPath expression — result is written into the node." },
+      { "k": "initial",    "req": false, "ph": "",            "desc": "XPath expression — evaluated once at model initialization (before calculates); overwrites the node's value." },
       { "k": "required",   "req": false, "ph": "",            "desc": "XPath boolean — true() makes the field required." },
       { "k": "constraint", "req": false, "ph": "",            "desc": "XPath boolean — false() marks the value invalid." },
       { "k": "readonly",   "req": false, "ph": "",            "desc": "XPath boolean — true() prevents editing." },

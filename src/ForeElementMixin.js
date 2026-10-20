@@ -267,7 +267,12 @@ export default class ForeElementMixin extends HTMLElement {
       });
   */
       // this.nodeset = evaluateXPathToFirstNode(this.ref, inscopeContext[0], this);
-      this.nodeset = evaluateXPath(this.ref, inscopeContext[0], this, {}, {}, domFacade);
+      // An empty in-scope context (e.g. the parent bind matches no node) leaves nothing to evaluate
+      // against: evaluating with an undefined context raises XPDY0002.
+      this.nodeset =
+        inscopeContext.length === 0
+          ? []
+          : evaluateXPath(this.ref, inscopeContext[0], this, {}, {}, domFacade);
     } else {
       // this.nodeset = fx.evaluateXPathToFirstNode(this.ref, inscopeContext, null, {namespaceResolver: this.namespaceResolver});
       if (!inscopeContext) return;

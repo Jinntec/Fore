@@ -2,7 +2,7 @@ import './fx-repeatitem.js';
 
 import { Fore } from '../fore.js';
 import ForeElementMixin from '../ForeElementMixin.js';
-import { evaluateXPath } from '../xpath-evaluation.js';
+import { evaluateXPath, evaluateXPathToFirstNode } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 import { XPathUtil } from '../xpath-util.js';
 import { withDraggability } from '../withDraggability.js';
@@ -2069,21 +2069,6 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
       if (this.getOwnerForm().createNodes) {
         this.getOwnerForm().initData(repeatItem);
-
-        // `createdNodeset` is only ever read once, as an insert template for a *new* row
-        // (see fx-insert.js), so it's taken from the LAST MATERIALIZED row - cloning and
-        // clearing every earlier row's nodeset was pure waste (O(n) discarded work, e.g.
-        // 799 of 800 clones for the UNTDID 1001 codelist). It must be snapshotted AFTER
-        // initData() above, which is what actually populates create-nodes-synthesized
-        // descendants (e.g. TaxCategory/ID, TaxCategory/Percent) onto the node - cloning
-        // before that yields an empty shell. Under a size cap this may not be the true
-        // last logical nodeset entry, but it's the best representative shape available
-        // (the true last entry may never be materialized).
-        if (position === this._renderTarget && repeatItem.nodeset.nodeType) {
-          const repeatItemClone = repeatItem.nodeset.cloneNode(true);
-          this.clearTextValues(repeatItemClone);
-          this.createdNodeset = repeatItemClone;
-        }
       }
 
       if (repeatItem.index === 1) {
@@ -2094,6 +2079,129 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     }
 
     this._syncSentinels();
+  }
+
+  /**
+   * The data template for rows inserted by fx-insert (`origin="#<repeat id>"`) in create-nodes mode: a row's nodes
+   * without text values. It is derived from this repeat's own `<template>` and `ref`, never from the data that
+   * happens to be loaded: a blank row is created for `ref` and every bound control of the template creates its
+   * nodes in it (the same `initData` that completes loaded rows). So the shape of a new row is the same for every
+   * document, also when the repeat has no rows at all or the loaded rows are incomplete. Built once on demand.
+   *
+   * Only if no blank row can be created for the `ref` (no context node, `instance()` refs, ...) the last existing row
+   * is used as the fallback.
+   *
+   * @returns {Node|undefined}
+   */
+  getCreatedNodeset() {
+    if (!this.createdNodeset) {
+      const fromTemplate = this._buildRowFromTemplate();
+      if (fromTemplate) {
+        this.createdNodeset = fromTemplate;
+      } else {
+        const items = this.querySelectorAll(':scope > fx-repeatitem');
+        const last = items[items.length - 1];
+        if (last?.nodeset?.nodeType) {
+          this.createdNodeset = this._snapshotRowTemplate(last.nodeset);
+        }
+      }
+    }
+    return this.createdNodeset;
+  }
+
+  /**
+   * Creates a blank row for `ref` below a scratch copy of the context node (so no real data is touched and the
+   * namespaces of the context are in scope), renders the template into a temporary repeat item bound to it and lets
+   * `initData` create the nodes of all bound controls. The temporary item is removed again, synchronously.
+   *
+   * @returns {Node|undefined}
+   */
+  _buildRowFromTemplate() {
+    const fore = this.getOwnerForm();
+    if (!fore?.createNodes || !this.template || !this.ref) return undefined;
+
+    let item;
+    const model = fore.getModel();
+    const modelState = this._saveModelItems(model);
+    try {
+      const context = this._rowContextNode();
+      if (!context || context.nodeType !== Node.ELEMENT_NODE) return undefined;
+
+      const scratch = context.cloneNode(false);
+      // for a multi-step ref (`cac:TaxTotal/cac:TaxSubtotal`) createNodes returns the first created step, not the row
+      const created = fore._createNodes(this.ref, scratch);
+      if (!created) return undefined;
+      if (!created.parentNode) scratch.appendChild(created);
+      const blank = evaluateXPathToFirstNode(this.ref, scratch, this);
+      if (!blank || blank.nodeType !== Node.ELEMENT_NODE) return undefined;
+
+      item = this._createNewRepeatItem();
+      this.insertBefore(item, this._sentinel || null);
+      this._initVariables(item);
+      item.nodeset = blank;
+      fore.initData(item);
+      return this._snapshotRowTemplate(blank);
+    } catch (e) {
+      console.warn(`fx-repeat#${this.id}: could not create row template from <template>`, e);
+      return undefined;
+    } finally {
+      item?.remove();
+      // the throwaway row must not leave ModelItems (or index entries that shadow real ones) behind
+      this._restoreModelItems(model, modelState);
+    }
+  }
+
+  _saveModelItems(model) {
+    return {
+      items: model.modelItems.slice(),
+      byPath: new Map(model._modelItemsByPath),
+      byKey: new Map(model._modelItemsByKey),
+    };
+  }
+
+  _restoreModelItems(model, { items, byPath, byKey }) {
+    model.modelItems.length = 0;
+    model.modelItems.push(...items);
+    model._modelItemsByPath.clear();
+    byPath.forEach((mi, path) => model._modelItemsByPath.set(path, mi));
+    model._modelItemsByKey.clear();
+    byKey.forEach((mi, key) => model._modelItemsByKey.set(key, mi));
+  }
+
+  /**
+   * The node the repeat's `ref` is evaluated against: the in-scope context of the repeat.
+   * @returns {Node|undefined}
+   */
+  _rowContextNode() {
+    const inscope = getInScopeContext(this.getAttributeNode('ref') || this, this.ref);
+    const first = Array.isArray(inscope) ? inscope[0] : inscope;
+    return first?.nodeType === Node.DOCUMENT_NODE ? first.documentElement : first;
+  }
+
+  /**
+   * A copy of a row's nodes without their text values, to insert new rows from. The values the repeat's `ref`
+   * itself depends on stay: for `ref="cac:AllowanceCharge[cbc:ChargeIndicator = 'true']"` a new row must have
+   * ChargeIndicator 'true', else the repeat would not select it and the insert would seem to do nothing.
+   * Only `name = 'literal'` predicates (child element or @attribute) are restored.
+   *
+   * @param {Node} nodeset the row's node
+   * @returns {Node}
+   */
+  _snapshotRowTemplate(nodeset) {
+    const clone = nodeset.cloneNode(true);
+    this.clearTextValues(clone);
+    if (clone.nodeType !== Node.ELEMENT_NODE) return clone;
+
+    const predicate = /\[\s*(@?[\w.:-]+)\s*=\s*(['"])(.*?)\2\s*\]/g;
+    for (const [, name, , value] of String(this.ref || '').matchAll(predicate)) {
+      if (name.startsWith('@')) {
+        clone.setAttribute(name.slice(1), value);
+      } else {
+        const child = Array.from(clone.children).find(c => c.nodeName === name);
+        if (child) child.textContent = value;
+      }
+    }
+    return clone;
   }
 
   clearTextValues(node) {

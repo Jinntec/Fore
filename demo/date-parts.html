@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>Date in parts - nested Fore</title>
+    <link href="../resources/demo.css" rel="stylesheet">
+    <style>
+        fx-fore.widget {
+            display: flex;
+            gap: 1rem;
+            align-items: baseline;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+    <h1>One node, edited in parts: a date as three selects</h1>
+    <p>A single <code>YYYY-MM-DD</code> string on one node is edited by a nested Fore. The
+        <code>fx-control</code> hands its node to the sub-Fore with <code>initial="."</code> and
+        <code>src</code>; the sub-Fore (<code>date-parts/date.html</code>) splits the value into a scratch
+        instance, edits year, month and day in separate selects and returns the joined value with
+        <code>fx-return</code>. Its labels come from the outer Fore's shared <code>lang</code> instance,
+        so they follow the language switch.</p>
+    <demo-snippet>
+        <template>
+            <fx-fore>
+                <fx-model>
+                    <fx-instance type="html">
+                        <data>
+                            <event>
+                                <date>2026-10-15</date>
+                            </event>
+                        </data>
+                    </fx-instance>
+                    <!-- shared with the nested Fore -->
+                    <fx-instance id="lang" shared="true" type="json" src="date-parts/en.json"></fx-instance>
+                    <fx-submission id="s-lang" method="get" replace="instance" instance="lang"></fx-submission>
+                </fx-model>
+
+                <fx-control ref="event/date" initial="." src="date-parts/date.html">
+                    <label>Date</label>
+                </fx-control>
+
+                <p>stored value: <fx-output ref="event/date" data-cy="value"></fx-output></p>
+
+                <fx-trigger>
+                    <button data-cy="EN">EN</button>
+                    <fx-send submission="s-lang" url="date-parts/en.json"></fx-send>
+                </fx-trigger>
+                <fx-trigger>
+                    <button data-cy="DE">DE</button>
+                    <fx-send submission="s-lang" url="date-parts/de.json"></fx-send>
+                </fx-trigger>
+            </fx-fore>
+        </template>
+    </demo-snippet>
+</div>
+<script type="module" src="./demo.js"></script>
+</body>
+</html>

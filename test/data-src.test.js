@@ -148,3 +148,197 @@ describe('fx-control data-src lookup variable', () => {
     );
   });
 });
+
+/**
+ * All anonymous `<fx-instance data-src="...">` created for `data-src` lookups.
+ */
+function getDataSrcInstances(el) {
+  const model = el.querySelector('fx-model');
+  return Array.from(model.children).filter(
+    n => n.localName === 'fx-instance' && n.hasAttribute('data-src'),
+  );
+}
+
+const optionTexts = el =>
+  Array.from(el.querySelectorAll('select option')).map(o => o.textContent.trim());
+
+describe('fx-control data-src with JSON and {...} templates', () => {
+  it('loads a JSON document with data-type="json" and binds it as $src', async () => {
+    const el = await fixture(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance src="/base/test/empty-document.xml"></fx-instance>
+        </fx-model>
+        <fx-control ref=".">
+          <select
+            class="widget"
+            ref="$src?*"
+            data-src="/base/test/data-src-lang-de.json"
+            data-type="json"
+          >
+            <template>
+              <option value="{?code}">{?name}</option>
+            </template>
+          </select>
+        </fx-control>
+      </fx-fore>
+    `);
+
+    await waitUntil(() => el.querySelectorAll('select option').length > 0);
+    expect(optionTexts(el)).to.deep.equal(['Eins', 'Zwei']);
+    expect(el.querySelectorAll('select option')[1].value).to.equal('b');
+  });
+
+  it('resolves a {...} template in data-src on the first load', async () => {
+    const el = await fixture(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance src="/base/test/empty-document.xml"></fx-instance>
+          <fx-instance id="i18n" type="json">{"lang": "en"}</fx-instance>
+        </fx-model>
+        <fx-control ref=".">
+          <select
+            class="widget"
+            ref="$src?*"
+            data-src="/base/test/data-src-lang-{instance('i18n')?lang}.json"
+            data-type="json"
+          >
+            <template>
+              <option value="{?code}">{?name}</option>
+            </template>
+          </select>
+        </fx-control>
+      </fx-fore>
+    `);
+
+    await waitUntil(() => el.querySelectorAll('select option').length > 0);
+    expect(optionTexts(el)).to.deep.equal(['One', 'Two']);
+    // only the resolved URL was requested: no instance for the raw template
+    const instances = getDataSrcInstances(el);
+    expect(instances.length).to.equal(1);
+    expect(instances[0].getAttribute('src')).to.equal('/base/test/data-src-lang-en.json');
+  });
+
+  it('loads the new URL when the template result changes (instance replaced by a submission), and reuses the instance when it changes back', async () => {
+    const el = await fixture(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance src="/base/test/empty-document.xml"></fx-instance>
+          <fx-instance id="i18n" type="json">{"lang": "de"}</fx-instance>
+          <fx-submission
+            id="s-en"
+            method="get"
+            serialization="none"
+            replace="instance"
+            instance="i18n"
+            url="/base/test/data-src-ctl-en.json"
+          ></fx-submission>
+          <fx-submission
+            id="s-de"
+            method="get"
+            serialization="none"
+            replace="instance"
+            instance="i18n"
+            url="/base/test/data-src-ctl-de.json"
+          ></fx-submission>
+        </fx-model>
+        <fx-trigger id="to-en"><button>en</button><fx-send submission="s-en"></fx-send></fx-trigger>
+        <fx-trigger id="to-de"><button>de</button><fx-send submission="s-de"></fx-send></fx-trigger>
+        <fx-control ref=".">
+          <select
+            class="widget"
+            ref="$src?*"
+            data-src="/base/test/data-src-lang-{instance('i18n')?lang}.json"
+            data-type="json"
+          >
+            <template>
+              <option value="{?code}">{?name}</option>
+            </template>
+          </select>
+        </fx-control>
+      </fx-fore>
+    `);
+
+    await waitUntil(() => optionTexts(el).join() === 'Eins,Zwei');
+
+    el.querySelector('#to-en button').click();
+    await waitUntil(() => optionTexts(el).join() === 'One,Two');
+    expect(getDataSrcInstances(el).length).to.equal(2);
+
+    el.querySelector('#to-de button').click();
+    await waitUntil(() => optionTexts(el).join() === 'Eins,Zwei');
+    // back to an URL that was loaded before: the cached instance is used, no third one is created
+    expect(getDataSrcInstances(el).length).to.equal(2);
+  });
+
+  it('does not request anything while the template can not be resolved', async () => {
+    const el = await fixture(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance src="/base/test/empty-document.xml"></fx-instance>
+        </fx-model>
+        <fx-control ref=".">
+          <select
+            class="widget"
+            ref="$src?*"
+            data-src="/base/test/data-src-lang-{instance('missing')?lang}.json"
+            data-type="json"
+          >
+            <template>
+              <option value="{?code}">{?name}</option>
+            </template>
+          </select>
+        </fx-control>
+      </fx-fore>
+    `);
+
+    await new Promise(resolve => setTimeout(resolve, 500));
+    expect(getDataSrcInstances(el).length).to.equal(0);
+    expect(el.querySelectorAll('select option').length).to.equal(0);
+  });
+
+  it('builds the options of a static select once, and again only when the data-src URL changes', async () => {
+    const el = await fixture(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance src="/base/test/empty-document.xml"></fx-instance>
+          <fx-instance id="i18n" type="json">{"lang": "de"}</fx-instance>
+          <fx-submission
+            id="s-en"
+            method="get"
+            serialization="none"
+            replace="instance"
+            instance="i18n"
+            url="/base/test/data-src-ctl-en.json"
+          ></fx-submission>
+        </fx-model>
+        <fx-trigger id="to-en"><button>en</button><fx-send submission="s-en"></fx-send></fx-trigger>
+        <fx-control ref=".">
+          <select
+            class="widget"
+            static
+            ref="$src?*"
+            data-src="/base/test/data-src-lang-{instance('i18n')?lang}.json"
+            data-type="json"
+          >
+            <template>
+              <option value="{?code}">{?name}</option>
+            </template>
+          </select>
+        </fx-control>
+      </fx-fore>
+    `);
+
+    await waitUntil(() => optionTexts(el).join() === 'Eins,Zwei');
+    const before = Array.from(el.querySelectorAll('select option'));
+
+    // a forced refresh does not rebuild a static select
+    await el.refresh(true);
+    expect(Array.from(el.querySelectorAll('select option'))).to.deep.equal(before);
+
+    // a different data-src URL does
+    el.querySelector('#to-en button').click();
+    await waitUntil(() => optionTexts(el).join() === 'One,Two');
+    expect(el.querySelectorAll('select option')[0]).to.not.equal(before[0]);
+  });
+});

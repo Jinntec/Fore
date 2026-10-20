@@ -1,0 +1,5 @@
+<inv xmlns:c="urn:test:c">
+  <c:line>
+    <c:id>1</c:id>
+  </c:line>
+</inv>

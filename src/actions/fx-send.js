@@ -101,6 +101,7 @@ class FxSend extends AbstractAction {
         // into the same rebuild/recalculate (issue #373).
         submission._updateCycleDeferredToChain = false;
         this._deferInstanceReplaceUpdate = true;
+        this._replacedInstanceUnbound = submission._replacedInstanceUnbound;
       } else if (!this.getModel().inited) {
         // Model never came up during submit(), so _handleResponse() skipped its
         // inited-guarded cycle and nothing else will run one - do it here.
@@ -123,8 +124,15 @@ class FxSend extends AbstractAction {
     if (this._deferInstanceReplaceUpdate) {
       this._deferInstanceReplaceUpdate = false;
       const model = this.getModel();
-      model.changed = []; // whole instance replaced - recompute the full graph
-      model.updateModel();
+      if (this._replacedInstanceUnbound) {
+        // the replaced instance is read by no bind (eg. a language file): the graph is intact, so
+        // skip the rebuild and only fold in what the child actions changed
+        model.recalculate();
+        model.revalidate();
+      } else {
+        model.changed = []; // whole instance replaced - recompute the full graph
+        model.updateModel();
+      }
       this.getOwnerForm().refresh(true);
       this.dispatchActionPerformed();
       return;

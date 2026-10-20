@@ -14,3 +14,4 @@ CLAUDE.local.md
 .local/
 .claude/plans/
 cypress/downloads/
+/cypress/screenshots/

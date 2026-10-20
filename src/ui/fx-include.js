@@ -118,6 +118,9 @@ export class FxInclude extends HTMLElement {
   }
 
   async _handleEvent(event) {
+    // e.g. a #hash opening a <details> before the Fore is ready: wait, or there is no model/context yet
+    const fore = this.closest('fx-fore');
+    if (fore) await FxFore.waitUntilReady(fore);
     await this.include(event);
   }
 
@@ -267,6 +270,10 @@ export class FxInclude extends HTMLElement {
     }
 
     await Fore.refreshChildren(startElement, true);
+
+    // ### `{...}` in the inserted content (text and attributes) is only evaluated in the form's next full refresh,
+    // which may be a long way off: evaluate it now
+    fore?._updateTemplateExpressions?.(startElement);
   }
 
   _initForeUiDescendants(startElement) {

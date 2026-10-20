@@ -1,4 +1,4 @@
-import { createNamespaceResolver } from './xpath-evaluation.js';
+import { createNamespaceResolver, evaluateXPathToStrings } from './xpath-evaluation.js';
 /**
  * @typedef {{nameTest: string, predicates: string[]}} RawStep
  */
@@ -97,8 +97,35 @@ function extractValueTest(possibleValueTest) {
 }
 
 /**
- * @typedef {{form: 'valueTest', found: {name: string, value: string|null}} | {form: 'nested-path', found: RawStep[]}} ParsedPredicate
+ * What a path predicate is compared with: `a/b = 'x'` (literal), `@c = /Invoice/cbc:ID` (expression)
+ * or `a/b != 'x'` (the structure is created, the value can't be derived from a negation).
+ *
+ * @typedef {{operator: '='|'!=', kind: 'literal'|'expression', value: string}} Comparison
  */
+
+/**
+ * @typedef {{form: 'valueTest', found: {name: string, value: string|null}} | {form: 'nested-path', found: RawStep[], comparison: Comparison|null}} ParsedPredicate
+ */
+
+/**
+ * Split a predicate like `cac:TaxScheme/cbc:ID = 'VAT'` into a plain path and its comparison.
+ * Only a left hand side consisting of names, `/`, `@` and `:` is understood (no functions, no nested
+ * predicates), anything else is returned as null.
+ *
+ * @param {string} predicate
+ * @returns {{path: string, comparison: Comparison}|null}
+ */
+function extractPathComparison(predicate) {
+  const match = /^([\w@*:./-]+)\s*(!=|=)\s*([\s\S]+)$/.exec(predicate.trim());
+  if (!match) return null;
+  const [, path, operator, rhs] = match;
+  const rhsTrimmed = rhs.trim();
+  const literal = /^(['"])([\s\S]*)\1$/.exec(rhsTrimmed);
+  if (literal && !literal[2].includes(literal[1])) {
+    return { path, comparison: { operator, kind: 'literal', value: literal[2] } };
+  }
+  return { path, comparison: { operator, kind: 'expression', value: rhsTrimmed } };
+}
 
 /**
  * @param {string} predicate - The clean predicate string, everything between the (outer) `[` and `]`
@@ -115,12 +142,26 @@ function parsePredicate(predicate) {
     };
   }
 
+  // A path compared with a value: `a/b = 'x'`, `a/@b != 'x'` or `@c = /some/expression`
+  const pathComparison = extractPathComparison(predicate);
+  if (pathComparison) {
+    const steps = splitSteps(pathComparison.path);
+    if (steps.length) {
+      return {
+        form: 'nested-path',
+        found: steps,
+        comparison: pathComparison.comparison,
+      };
+    }
+  }
+
   // No. Is this a path?
   const nestedPath = splitSteps(predicate);
   if (nestedPath) {
     return {
       form: 'nested-path',
       found: nestedPath,
+      comparison: null,
     };
   }
   // Don't know.
@@ -227,6 +268,9 @@ export default function createNodes(xpath, baseElement, foreElement) {
           if (!alreadyAttached) {
             if (tailResult.nodeType === Node.ATTRIBUTE_NODE) {
               existingChild.setAttributeNode(tailResult);
+            } else if (typeof foreElement?._insertCreatedNode === 'function') {
+              // Honour the order of the binds below existingChild, if there are any
+              foreElement._insertCreatedNode(tailResult, existingChild);
             } else {
               existingChild.appendChild(tailResult);
             }
@@ -269,8 +313,12 @@ export default function createNodes(xpath, baseElement, foreElement) {
 
     if (parsed.isValue) {
       if (!current) {
+        if (isRoot && parsed.value !== null) {
+          // `@a="b"` on the root is a comparison, not a node to create
+          return { action: 'abort' };
+        }
         const attr = ownerDoc.createAttribute(parsed.localName);
-        attr.value = parsed.value;
+        attr.value = parsed.value ?? '';
         return {
           action: 'return',
           attr,
@@ -342,6 +390,42 @@ export default function createNodes(xpath, baseElement, foreElement) {
             subtree = result.element;
           }
         }
+
+        // `a/b = 'x'`: the path is created, give its end the value so the predicate holds.
+        // A negation (`!=`) is satisfied by the empty node.
+        const { comparison } = parsedPredicate;
+        if (comparison && comparison.operator === '=') {
+          let value = comparison.value;
+          if (comparison.kind === 'expression') {
+            let values = [];
+            try {
+              values = evaluateXPathToStrings(comparison.value, baseElement, foreElement);
+            } catch (e) {
+              values = [];
+            }
+            if (!values.length) {
+              // The comparison with an empty sequence is never true: creating this node would
+              // never satisfy the predicate (and the caller would try again, and again)
+              console.warn(
+                `Creating node for the XPath ${xpath} failed because ${comparison.value} in ${predicate} does not select anything.`,
+              );
+              return { action: 'abort' };
+            }
+            value = String(values[0] ?? '');
+            if (value === '') {
+              // The value to compare with isn't known (yet), e.g. an invoice currency that is
+              // still to be chosen. A node created now would carry a stale empty value and be
+              // orphaned (next to a second one) as soon as the value is set. Wait for it.
+              return { action: 'abort' };
+            }
+          }
+          const lastStep = nestedPath[nestedPath.length - 1];
+          if (lastStep.nameTest.startsWith('@')) {
+            subtree.setAttribute(parseName(lastStep.nameTest).localName, value);
+          } else {
+            subtree.textContent = value;
+          }
+        }
       }
     }
 
@@ -365,7 +449,8 @@ export default function createNodes(xpath, baseElement, foreElement) {
       case 'abort':
         return null;
       case 'return':
-        return subtreeRoot;
+        // attribute-only path (e.g. `@unitCode`): the created attr is the result
+        return result.attr ?? subtreeRoot;
       case 'continue':
         if (!current) {
           // This is the absolute root now

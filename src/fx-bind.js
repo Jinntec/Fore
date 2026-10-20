@@ -54,6 +54,7 @@ export class FxBind extends ForeElementMixin {
       bindType: this.bindType,
 
       calculate: this.getAttribute('calculate'),
+      initial: this.getAttribute('initial'),
       readonly: this.getAttribute('readonly'),
       required: this.getAttribute('required'),
       relevant: this.getAttribute('relevant'),
@@ -84,12 +85,14 @@ export class FxBind extends ForeElementMixin {
     this.relevant = this.getAttribute('relevant');
     this.type = this.hasAttribute('type') ? this.getAttribute('type') : FxBind.TYPE_DEFAULT;
     this.calculate = this.getAttribute('calculate');
+    this.initial = this.getAttribute('initial');
     // For self-references, just apply the facets to the parent bind
     if (this.ref === '.') {
       const parent = this.parentNode;
       if (parent instanceof FxBind) {
         // For overlapping binds, the last one wins
         parent.calculate ||= this.calculate;
+        parent.initial ||= this.initial;
         parent.readonly ||= this.readonly;
         parent.required ||= this.required;
         parent.relevant ||= this.relevant;
@@ -191,6 +194,9 @@ export class FxBind extends ForeElementMixin {
     this.bindType = modelBindType === 'html' ? 'xml' : modelBindType;
 
     model.binds.push(this);
+
+    // `initial` is a one-shot pass (see FxModel._applyInitial); flag it so models without it pay nothing.
+    if (this.initial) model._hasInitial = true;
 
     // ✅ Always evaluate nodeset first (XML + JSON)
     this._evalInContext();
@@ -305,6 +311,12 @@ export class FxBind extends ForeElementMixin {
       }
 
       refs.forEach(ref => {
+        // The XPath engine touches all siblings when it has to sort several matches in document
+        // order (eg. `../item/amount`), which includes the context node itself. A calculated node
+        // can never depend on itself - that would be reported as a cycle and break every full
+        // recalculation. (Other facets may legitimately read the node's own value.)
+        if (property === 'calculate' && ref === node) return;
+
         // `ref` may live in a different fx-instance than this bind's own `ref` (e.g. a
         // `relevant` expression that reads `instance('other')/...`). Canonicalize its path
         // using ITS OWN instance id, not the bind's -- reusing the bind's id here mislabels
