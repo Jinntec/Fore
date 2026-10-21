@@ -205,7 +205,7 @@ describe('fx-output Tests', () => {
     expect(callCount).to.equal(0, 'The XSS notifier should not have been called');
   });
 
-  it('is hardened against cross-site-scripting when the html mediatype is set', async () => {
+  it('is not hardened against cross-site-scripting when the html mediatype is set', async () => {
     // This documents the behaviour. Having a mediatype="html" means we are writing raw HTML
     let callCount = 0;
     window.xssHappened = () => {
