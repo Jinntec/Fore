@@ -154,7 +154,7 @@
            listening on submit-done directly would start concurrently instead, racing their
            row-by-row loops against each other. -->
       <fx-action event="submit-done">
-        <fx-setattribute ref="." name="ui-keep" value="true" iterate="instance('codelist')/SimpleCodeList/Row"></fx-setattribute>
+        <fx-setattribute ref="." name="ui-keep" value="'true'" iterate="instance('codelist')/SimpleCodeList/Row"></fx-setattribute>
         <!-- Reconciliation against a previously saved custom codelist (see s-load-customsource):
              only kicks in when customsource actually holds rows recorded against THIS filename.
              The reconcile-needed check lives in `iterate` itself (not a separate `if` -- execute()
@@ -189,7 +189,7 @@
     <fx-submission id="s-load-local"
                     url="" method="get" replace="instance" instance="codelist" validate="false">
       <fx-message event="submit-error">Could not load the selected local file.</fx-message>
-      <fx-setattribute ref="." name="ui-keep" value="true" iterate="instance('codelist')/SimpleCodeList/Row" event="submit-done"></fx-setattribute>
+      <fx-setattribute ref="." name="ui-keep" value="'true'" iterate="instance('codelist')/SimpleCodeList/Row" event="submit-done"></fx-setattribute>
     </fx-submission>
 
     <!-- Loads the uploaded local file into customsource FIRST, purely for inspection -- codelist
@@ -285,10 +285,10 @@
 
     <div class="bulk-actions">
       <fx-trigger id="btn-select-all"><button type="button">Select all</button>
-        <fx-setattribute ref="." name="ui-keep" value="true" iterate="instance('codelist')/SimpleCodeList/Row"></fx-setattribute>
+        <fx-setattribute ref="." name="ui-keep" value="'true'" iterate="instance('codelist')/SimpleCodeList/Row"></fx-setattribute>
       </fx-trigger>
       <fx-trigger id="btn-select-none"><button type="button">Select none</button>
-        <fx-setattribute ref="." name="ui-keep" value="false" iterate="instance('codelist')/SimpleCodeList/Row"></fx-setattribute>
+        <fx-setattribute ref="." name="ui-keep" value="'false'" iterate="instance('codelist')/SimpleCodeList/Row"></fx-setattribute>
       </fx-trigger>
       <fx-trigger id="btn-invert"><button type="button">Invert selection</button>
         <fx-setvalue ref="@ui-keep" value="if (@ui-keep = 'true') then 'false' else 'true'" iterate="instance('codelist')/SimpleCodeList/Row"></fx-setvalue>
