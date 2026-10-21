@@ -1,0 +1,3 @@
+{
+  "html": "<p>safe</p><img src=\"x\" onerror=\"window.xssHappened()\"><script>window.xssHappened()</script>"
+}

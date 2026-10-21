@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import { html, fixtureSync, expect, elementUpdated, oneEvent } from '@open-wc/testing';
+import { html, fixtureSync, expect, elementUpdated, oneEvent, aTimeout } from '@open-wc/testing';
 
 import '../index.js';
 import * as fx from 'fontoxpath';
@@ -653,6 +653,35 @@ describe('control tests', () => {
 
     expect(third.checked).to.be.true;
     expect(span.innerHTML).to.equal('radio:third');
+  });
+
+  it('is hardened against cross-site-scripting', async () => {
+    let callCount = 0;
+    window.xssHappened = () => {
+      callCount++;
+    };
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance type="html">
+            <data>
+              <payload>&lt;img src="x" onerror="window.xssHappened()"&gt;</payload>
+            </data>
+          </fx-instance>
+          <fx-bind ref="payload" constraint="string-length(.) = 1"></fx-bind>
+        </fx-model>
+        <fx-control ref="payload">
+          <fx-alert ref="."></fx-alert>
+        </fx-control>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+    const alert = el.querySelector('fx-alert');
+    await aTimeout(100);
+
+    expect(alert.textContent).to.include('<img src="x"');
+    expect(callCount).to.equal(0, 'The XSS notifier should not have been called');
   });
 
   /*

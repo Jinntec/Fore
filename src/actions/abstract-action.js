@@ -374,8 +374,17 @@ export class AbstractAction extends ForeElementMixin {
       return;
     }
 
-    // Check if 'if' condition is true - otherwise exist right away
-    if (this.ifExpr && !evaluateXPathToBoolean(this.ifExpr, getInScopeContext(this), this)) {
+    // Check if 'if' condition is true - otherwise exist right away. A parent fx-action may have
+    // evaluated the condition up front (see FxAction), in which case it is used as is.
+    let ifResult = true;
+    if (this.ifExpr) {
+      ifResult =
+        this._precomputedIf !== undefined
+          ? this._precomputedIf
+          : evaluateXPathToBoolean(this.ifExpr, getInScopeContext(this), this);
+    }
+    this._precomputedIf = undefined;
+    if (!ifResult) {
       this._finalizePerform(resolveThisEvent, acquiredOutermost);
       return;
     }

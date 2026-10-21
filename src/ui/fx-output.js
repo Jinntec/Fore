@@ -2,9 +2,18 @@ import { Fore } from '../fore.js';
 import XfAbstractControl from './abstract-control.js';
 import { evaluateXPath, evaluateXPathToStrings } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
+import { setSanitizedHtml } from '../sanitize-html.js';
 
 /**
  * todo: review placing of value. should probably work with value attribute and not allow slotted content.
+ *
+ * @attr {'html'|'image'} [mediatype] The mediatype for the output. When set to `html` the value is
+ * rendered as HTML. The markup is sanitized against Cross-site Scripting (XSS) with DOMPurify
+ * before rendering.
+ *
+ * @attr {boolean} [unsafe] When using mediatype="html", whether to directly input the HTML into the
+ * DOM without sanitation. This opens up Cross-site Scripting attacks when the instance can be
+ * changed by the user.
  */
 export class FxOutput extends XfAbstractControl {
   /*
@@ -24,6 +33,10 @@ export class FxOutput extends XfAbstractControl {
     this.valueAttr = this.hasAttribute('value') ? this.getAttribute('value') : null;
     // Outputs are always readonly!
     this.readonly = true;
+    /**
+     * Whether to unsafely directly put HTML into the DOM when mediatype is html
+     */
+    this.unsafe = false;
   }
 
   connectedCallback() {
@@ -68,6 +81,8 @@ export class FxOutput extends XfAbstractControl {
     // console.log('widget ', this.widget);
     this.mediatype = this.hasAttribute('mediatype') ? this.getAttribute('mediatype') : null;
 
+    this.unsafe = !!this.hasAttribute('unsafe');
+
     // The label is a slotted light-DOM element while the widget is a shadow-DOM <span> - an id
     // reference (for/aria-labelledby) can't cross that boundary, so derive an aria-label string
     // (which can) from the slotted label's text instead.
@@ -105,7 +120,6 @@ export class FxOutput extends XfAbstractControl {
   }
 
   getValue() {
-    // return 'foobar';
     try {
       const inscopeContext = getInScopeContext(this, this.valueAttr);
       if (this.hasAttribute('html')) {
@@ -141,28 +155,24 @@ export class FxOutput extends XfAbstractControl {
   }
 
   async updateWidgetValue() {
-    // console.log('updateWidgetValue');
     const valueWrapper = this.shadowRoot.getElementById('value');
     valueWrapper.innerHTML = '';
 
-    // if (this.mediatype === 'markdown') {
-    //   const md = markdown(this.nodeset);
-    //   this.innerHtml = md;
-    // }
-
     if (this.mediatype === 'html') {
       // JSON instances use a lens, so modelItem.node is null — fall back to this.value
-      const source = this.modelItem.node ?? this.value;
+      const source = this.modelItem?.node ?? this.value;
       if (source) {
-        if (source.nodeType) {
-          valueWrapper.append(source);
-          return;
+        // The markup is untrusted and gets sanitized against XSS before rendering. Nodes are
+        // serialized first, which also leaves the instance untouched (previously the node was
+        // moved out of the model into the widget).
+        const html = source.nodeType
+          ? new XMLSerializer().serializeToString(source)
+          : String(source);
+        if (this.unsafe) {
+          valueWrapper.innerHTML = html;
+        } else {
+          setSanitizedHtml(valueWrapper, html);
         }
-        // parse string as HTML
-        const tmpDoc = new DOMParser().parseFromString(source, 'text/html');
-        Array.from(tmpDoc.body.childNodes).forEach(n => {
-          valueWrapper.append(n);
-        });
       }
       return;
     }
@@ -180,7 +190,7 @@ export class FxOutput extends XfAbstractControl {
       return;
     }
 
-    valueWrapper.innerHTML = this.value;
+    valueWrapper.textContent = this.value;
   }
 
   isReadonly() {

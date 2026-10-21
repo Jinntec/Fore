@@ -181,7 +181,7 @@ export class FxInclude extends HTMLElement {
   }
 
   async _loadExternalFragment() {
-    const html = await Fore.loadHtml(this.src);
+    const html = await Fore.loadHtml(this.src, this);
 
     if (!html) {
       this._dispatchError(`fx-include: failed to load '${this.src}'`);

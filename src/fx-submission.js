@@ -1,4 +1,10 @@
 import { Fore } from './fore.js';
+import {
+  isSafeNavigationUrl,
+  isSameOrigin,
+  warnCrossOriginBlocked,
+  warnUnsafeNavigationBlocked,
+} from './same-origin.js';
 import { FxFore } from './fx-fore.js';
 import { Relevance } from './relevance.js';
 import { evaluateXPath } from './xpath-evaluation.js';
@@ -278,16 +284,16 @@ export class FxSubmission extends ForeElementMixin {
       if (contentType.endsWith('/xml') || contentType.endsWith('+xml')) {
         const text = await response.text();
         const xml = new DOMParser().parseFromString(text, 'application/xml');
-        await this._handleResponse(xml, resolvedUrl, contentType);
+        await this._handleResponse(xml, resolvedUrl, contentType, response.url);
       } else if (contentType.startsWith('text/')) {
         const text = await response.text();
-        await this._handleResponse(text, resolvedUrl, contentType);
+        await this._handleResponse(text, resolvedUrl, contentType, response.url);
       } else if (contentType.endsWith('/json') || contentType.endsWith('+json')) {
         const json = await response.json();
-        await this._handleResponse(json, resolvedUrl, contentType);
+        await this._handleResponse(json, resolvedUrl, contentType, response.url);
       } else if (contentType) {
         const blob = await response.blob();
-        await this._handleResponse(blob, resolvedUrl, contentType);
+        await this._handleResponse(blob, resolvedUrl, contentType, response.url);
       }
 
       await Fore.dispatch(this, 'submit-done', {});
@@ -549,9 +555,12 @@ export class FxSubmission extends ForeElementMixin {
    *
    * Please note that data might be
    * @param data
+   * @param {string} [resolvedUrl] the url that was requested
+   * @param {string} [contentType]
+   * @param {string} [finalUrl] the url the response came from, after redirects
    * @private
    */
-  async _handleResponse(data, resolvedUrl, contentType) {
+  async _handleResponse(data, resolvedUrl, contentType, finalUrl) {
     const targetInstance = this._getTargetInstance();
 
     if (this.replace === 'instance') {
@@ -653,6 +662,19 @@ export class FxSubmission extends ForeElementMixin {
       return;
     }
 
+    if (
+      (this.replace === 'all' || this.replace === 'target') &&
+      !(isSameOrigin(resolvedUrl) && isSameOrigin(finalUrl || resolvedUrl))
+    ) {
+      // the response would be written into the live page and could run script in our origin
+      const offending = isSameOrigin(resolvedUrl) ? finalUrl : resolvedUrl;
+      warnCrossOriginBlocked(this, offending);
+      Fore.dispatch(this, 'submit-error', {
+        message: `refusing replace="${this.replace}" with cross-origin response from '${offending}'. Please file an issue at https://github.com/Jinntec/Fore with your usecase.`,
+      });
+      return;
+    }
+
     if (this.replace === 'all') {
       let target = this._getProperty('target');
       if (target) {
@@ -694,6 +716,13 @@ export class FxSubmission extends ForeElementMixin {
     }
 
     if (this.replace === 'redirect') {
+      if (!isSafeNavigationUrl(data)) {
+        warnUnsafeNavigationBlocked(this, data);
+        Fore.dispatch(this, 'submit-error', {
+          message: `refusing to redirect to non-http(s) url '${data}'`,
+        });
+        return;
+      }
       window.location.href = data;
     }
   }

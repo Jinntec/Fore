@@ -40,7 +40,7 @@ export class FxAlert extends AbstractControl {
   }
 
   async updateWidgetValue() {
-    this.innerHTML = this.value;
+    this.textContent = this.value;
   }
 }
 if (!customElements.get('fx-alert')) {
