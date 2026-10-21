@@ -209,6 +209,18 @@ function _checkToggleCase(fore, errors) {
   });
 }
 
+function _checkSubmissionRef(fore, errors) {
+  fore.querySelectorAll('fx-submission[ref]').forEach(el => {
+    if (el.getAttribute('ref').trim() !== '') return;
+    errors.push({
+      element: el,
+      message:
+        '<fx-submission ref="">: an empty ref submits (and validates) the root of the default ' +
+        'instance, the same as no ref at all. Omit the attribute or use ref="." to say so.',
+    });
+  });
+}
+
 /**
  * Run all authoring checks on a given `<fx-fore>` element.
  * Returns an array of `{ element, message }` error objects.
@@ -228,5 +240,6 @@ export function checkAuthoring(fore) {
   _checkResetInstance(fore, errors);
   _checkSetfocusControl(fore, errors);
   _checkToggleCase(fore, errors);
+  _checkSubmissionRef(fore, errors);
   return errors;
 }

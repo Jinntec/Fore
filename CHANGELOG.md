@@ -3,6 +3,12 @@
 All notable changes to this project are documented here, one section per published release.
 Entries are sourced from the project's GitHub release notes. For full commit-level diffs between any two versions, see https://github.com/Jinntec/Fore/releases or compare tags directly, e.g. `https://github.com/Jinntec/Fore/compare/vX.Y.Z...vA.B.C`.
 
+## [Unreleased]
+
+### fixes
+
+* `fx-submission` with `validate="true"` now validates only the submitted data (the `ref` subtree, or the default instance root without a `ref`) instead of the whole model. Invalid nodes elsewhere no longer block the submission. JSON instances still validate the whole model. `authoring-check` flags an empty `ref=""` on `fx-submission`
+
 ## [5.2.0] - 2026-10-21
 
 ### fixes

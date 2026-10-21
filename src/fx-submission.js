@@ -132,7 +132,10 @@ export class FxSubmission extends ForeElementMixin {
     model.recalculate();
 
     if (this.validate === 'true' && this.method !== 'get') {
-      const valid = model.revalidate();
+      // only the submitted data has to be valid: the subtree selected by `ref`, which is the root
+      // of the default instance without a `ref`. JSON nodesets are no DOM nodes, so those still
+      // validate the whole model.
+      const valid = model.revalidate(this.nodeset?.nodeType ? this.nodeset : null);
       if (!valid) {
         console.log('validation failed. Submission stopped');
         this.getOwnerForm().classList.add('submit-validation-failed');
