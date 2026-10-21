@@ -3,6 +3,60 @@
 All notable changes to this project are documented here, one section per published release.
 Entries are sourced from the project's GitHub release notes. For full commit-level diffs between any two versions, see https://github.com/Jinntec/Fore/releases or compare tags directly, e.g. `https://github.com/Jinntec/Fore/compare/vX.Y.Z...vA.B.C`.
 
+## [5.2.0] - 2026-10-21
+
+### fixes
+
+* addresses a number of XSS vectors where `innerHTML` was written to with user-supplied data. Please update to this version when you can
+
+### new
+
+* `<fx-output mediatype="html">` accepts an `unsafe` attribute, which circumvents any sanitation. Only use this when the content is not user-supplied
+
+## [5.1.0] - 2026-10-20
+
+### new
+
+* `initial` on `fx-bind` provides a one-time value for newly created nodes (XForms 2.0)
+* `static` on `fx-instance` asserts no binds read the instance - replacing it via submission skips the model update cycle
+* create-nodes: support path comparisons in predicates (`a/b = 'x'`, `@c = /expr`) - the path is created and the compared value is set
+* create-nodes: support refs rooted at `$default` or `/*` - created below the document element
+* create-nodes: honor bind order for node insertion, skip out-of-parent order anchors
+* create-nodes: create nodes for `fx-output` and rebuild the model after creating nodes in a sub-tree
+* JSON lenses: resolve simple axis paths (`.`, `..`, `*`, `name`, with numeric predicates like `*[2]`)
+* template expressions in `fx-upload` `label` are evaluated and update on attribute change
+* template expressions in labels of non-relevant elements are evaluated (for `fx-control-menu` on-demand controls)
+* `fx-include` evaluates template expressions in inserted content immediately
+* `data-src` URLs with template expressions (e.g. `codes.{instance('i18n')?lang}.json`) are resolved correctly
+
+### fixes
+
+* calculate must not depend on its own node - fixes `Cyclic` error on full recalculation breaking new repeat rows
+* rebuild keeps lens-backed (JSON) synthetic model items - controls on JSON instances (e.g. language switch) no longer lose their model item
+* bind-empty-context: handle empty in-scope context in child and grandchild bindings
+* create-nodes: fix default context resolution
+* create-nodes: don't anchor new elements on a previous control outside the parent
+* create-nodes: fix insertion for empty repeats, preserve predicate values
+* `fx-include` waits for `fx-fore` readiness before handling events
+* `fx-insert` with multi-step refs creates missing parent steps
+* `fx-send` propagates `_replacedInstanceUnbound` for correct update behavior
+* `fx-submission` with `replace="instance"` on a `static` instance only refreshes UI
+* `fx-control` `data-src` handles empty nodesets gracefully, re-binds on new data
+* stale instances in `data-src` lookups are fixed
+
+### performance
+
+* model item lookup pre-filters binds by last step name - skips binds whose ref can't match
+* `initData` scoped to subtree for repeat items and `fx-include` content
+* `fx-repeat` builds row template from `<template>` instead of cloning last materialized row
+
+### chores
+
+* new `date-parts` demo: sub-fore editing parts of a complex node (e.g. YYYY-MM-DD date)
+* new `initial.html` demo
+* many new and adapted tests
+* updated bundle
+
 ## [5.0.0] - 2026-10-05
 
 ### breaking
