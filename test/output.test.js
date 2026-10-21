@@ -205,8 +205,7 @@ describe('fx-output Tests', () => {
     expect(callCount).to.equal(0, 'The XSS notifier should not have been called');
   });
 
-  it('is not hardened against cross-site-scripting when the html mediatype is set', async () => {
-    // This documents the behaviour. Having a mediatype="html" means we are writing raw HTML
+  it('is hardened against cross-site-scripting when the html mediatype is set', async () => {
     let callCount = 0;
     window.xssHappened = () => {
       callCount++;
@@ -226,8 +225,63 @@ describe('fx-output Tests', () => {
     const control = el.querySelector('fx-output');
     const value = control.shadowRoot.querySelector('#value');
 
-    expect(value.innerHTML).to.include('<img src="x" onerror="window.xssHappened()">');
+    // harmless markup is kept, the event handler is stripped
+    expect(value.innerHTML).to.include('<img src="x">');
+    expect(value.innerHTML).to.not.include('onerror');
+    expect(value.textContent).to.include('Some text!');
 
-    expect(callCount).to.equal(1, 'The XSS notifier is called');
+    expect(callCount).to.equal(0, 'The XSS notifier should not have been called');
+  });
+
+  it('is hardened against cross-site-scripting for string values with the html mediatype', async () => {
+    let callCount = 0;
+    window.xssHappened = () => {
+      callCount++;
+    };
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance id="j" type="json" src="base/test/payload.json"> </fx-instance>
+        </fx-model>
+        <fx-output ref="instance('j')?html" mediatype="html"></fx-output>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+    await aTimeout(100);
+    const control = el.querySelector('fx-output');
+    const value = control.shadowRoot.querySelector('#value');
+
+    expect(value.textContent).to.include('safe');
+    expect(value.querySelector('script')).to.not.exist;
+    expect(value.querySelector('img').getAttribute('onerror')).to.not.exist;
+
+    expect(callCount).to.equal(0, 'The XSS notifier should not have been called');
+  });
+
+  it('allows setting raw html with mediatype="html" and unsafe = true ', async () => {
+    let callCount = 0;
+    window.xssHappened = () => {
+      callCount++;
+    };
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance id="j" type="json" src="base/test/payload.json"> </fx-instance>
+        </fx-model>
+        <fx-output ref="instance('j')?html" mediatype="html" unsafe></fx-output>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+    await aTimeout(100);
+    const control = el.querySelector('fx-output');
+    const value = control.shadowRoot.querySelector('#value');
+
+    expect(value.textContent).to.include('safe');
+    expect(value.querySelector('script')).to.exist;
+    expect(value.querySelector('img').getAttribute('onerror')).to.exist;
+
+    expect(callCount).to.equal(1, 'The XSS notifier should have been called');
   });
 });
