@@ -7,6 +7,7 @@ import {
 } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 import { Fore } from '../fore.js';
+import { isSameOrigin, warnCrossOriginBlocked } from '../same-origin.js';
 import { debounce } from '../events.js';
 import { FxModel } from '../fx-model.js';
 import { FxFore } from '../fx-fore.js';
@@ -589,6 +590,14 @@ export default class FxControl extends XfAbstractControl {
       `%cControl ref="${this.ref}" is loading ${this.src}`,
       'background:#64b5f6; color:white; padding:0.5rem; display:inline-block; white-space: nowrap; border-radius:0.3rem;width:100%;',
     );
+    if (!isSameOrigin(this.src)) {
+      // the loaded fx-fore is imported into the live DOM
+      warnCrossOriginBlocked(this, this.src);
+      Fore.dispatch(this, 'error', {
+        message: `fx-control: refusing to load Fore from cross-origin url '${this.src}'. Please file an issue at https://github.com/Jinntec/Fore with your usecase.`,
+      });
+      return;
+    }
     try {
       const response = await fetch(this.src, {
         method: 'GET',
@@ -599,6 +608,14 @@ export default class FxControl extends XfAbstractControl {
         },
       });
 
+      if (!isSameOrigin(response.url || this.src)) {
+        // a same-origin url may redirect to another origin
+        warnCrossOriginBlocked(this, response.url);
+        Fore.dispatch(this, 'error', {
+          message: `fx-control: refusing Fore redirected to cross-origin url '${response.url}'. Please file an issue at https://github.com/Jinntec/Fore with your usecase.`,
+        });
+        return;
+      }
       const responseContentType = response.headers.get('content-type').toLowerCase();
       // console.log('********** responseContentType *********', responseContentType);
       let data;

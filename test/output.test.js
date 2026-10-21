@@ -1,25 +1,23 @@
-import {
-  html, fixtureSync, expect, oneEvent,
-} from '@open-wc/testing';
+import { html, fixtureSync, expect, oneEvent, aTimeout } from '@open-wc/testing';
 
 import '../index.js';
 
 describe('fx-output Tests', () => {
   it('has correct value from instance when using ref', async () => {
     const el = await fixtureSync(html`
-            <fx-fore>
-                <fx-model>
-                    <fx-instance type="html">
-                        <data>
-                            <div style="color:white;background:#333;padding:1rem;">hey there</div>
-                        </data>
-                    </fx-instance>
-                </fx-model>
-                <fx-output ref="div">
-                    <label slot="label">Content of div: </label>
-                </fx-output>
-            </fx-fore>
-        `);
+      <fx-fore>
+        <fx-model>
+          <fx-instance type="html">
+            <data>
+              <div style="color:white;background:#333;padding:1rem;">hey there</div>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <fx-output ref="div">
+          <label slot="label">Content of div: </label>
+        </fx-output>
+      </fx-fore>
+    `);
 
     await oneEvent(el, 'refresh-done');
 
@@ -37,19 +35,19 @@ describe('fx-output Tests', () => {
 
   it('has correct value from instance when using "value"', async () => {
     const el = await fixtureSync(html`
-            <fx-fore>
-                <fx-model>
-                    <fx-instance type="html">
-                        <data>
-                            <div style="color:white;background:#333;padding:1rem;">hey there</div>
-                        </data>
-                    </fx-instance>
-                </fx-model>
-                <fx-output ref="div">
-                    <label slot="label">Content of div: </label>
-                </fx-output>
-            </fx-fore>
-        `);
+      <fx-fore>
+        <fx-model>
+          <fx-instance type="html">
+            <data>
+              <div style="color:white;background:#333;padding:1rem;">hey there</div>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <fx-output ref="div">
+          <label slot="label">Content of div: </label>
+        </fx-output>
+      </fx-fore>
+    `);
 
     await oneEvent(el, 'refresh-done');
 
@@ -66,19 +64,19 @@ describe('fx-output Tests', () => {
 
   it('renders HTML of referenced node', async () => {
     const el = await fixtureSync(html`
-            <fx-fore>
-                <fx-model>
-                    <fx-instance type="html">
-                        <data>
-                            <div class="test" style="color:white;background:#333;padding:1rem;">hey there</div>
-                        </data>
-                    </fx-instance>
-                </fx-model>
-                <fx-output ref="div" mediatype="html">
-                    <label slot="label">Output bound node as HTML: </label>
-                </fx-output>
-            </fx-fore>
-        `);
+      <fx-fore>
+        <fx-model>
+          <fx-instance type="html">
+            <data>
+              <div class="test" style="color:white;background:#333;padding:1rem;">hey there</div>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <fx-output ref="div" mediatype="html">
+          <label slot="label">Output bound node as HTML: </label>
+        </fx-output>
+      </fx-fore>
+    `);
 
     await oneEvent(el, 'refresh-done');
 
@@ -102,19 +100,19 @@ describe('fx-output Tests', () => {
 
   it('renders HTML of evaluated node', async () => {
     const el = await fixtureSync(html`
-            <fx-fore>
-                <fx-model>
-                    <fx-instance type="html">
-                        <data>
-                            <div style="color:white;background:#333;padding:1rem;">hey there</div>
-                        </data>
-                    </fx-instance>
-                </fx-model>
-                <fx-output ref="div" mediatype="html">
-                    <label slot="label">Output bound node as HTML: </label>
-                </fx-output>
-            </fx-fore>
-        `);
+      <fx-fore>
+        <fx-model>
+          <fx-instance type="html">
+            <data>
+              <div style="color:white;background:#333;padding:1rem;">hey there</div>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <fx-output ref="div" mediatype="html">
+          <label slot="label">Output bound node as HTML: </label>
+        </fx-output>
+      </fx-fore>
+    `);
 
     await oneEvent(el, 'refresh-done');
 
@@ -133,22 +131,22 @@ describe('fx-output Tests', () => {
 
   it('uses context attribute', async () => {
     const el = await fixtureSync(html`
-            <fx-fore>
-                <fx-model>
-                    <fx-instance type="html">
-                        <data>
-                            <a><b>1</b></a>
-                            <b>2</b>
-                            <b>3</b>
-                        </data>
-                    </fx-instance>
-                </fx-model>
-                <div>
-                    <fx-output context="a" value="b"></fx-output>
-                    ⇒ 1
-                </div>
-            </fx-fore>
-        `);
+      <fx-fore>
+        <fx-model>
+          <fx-instance type="html">
+            <data>
+              <a><b>1</b></a>
+              <b>2</b>
+              <b>3</b>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <div>
+          <fx-output context="a" value="b"></fx-output>
+          ⇒ 1
+        </div>
+      </fx-fore>
+    `);
 
     await oneEvent(el, 'refresh-done');
 
@@ -160,17 +158,17 @@ describe('fx-output Tests', () => {
 
   it('output an image with mediatype=image', async () => {
     const el = await fixtureSync(html`
-            <fx-fore>
-                <fx-model>
-                    <fx-instance type="html">
-                        <data>
-                            <pic>base/resources/images/light7.png</pic>
-                        </data>
-                    </fx-instance>
-                </fx-model>
-                <fx-output ref="pic" mediatype="image"></fx-output>
-            </fx-fore>
-        `);
+      <fx-fore>
+        <fx-model>
+          <fx-instance type="html">
+            <data>
+              <pic>base/resources/images/light7.png</pic>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <fx-output ref="pic" mediatype="image"></fx-output>
+      </fx-fore>
+    `);
 
     await oneEvent(el, 'refresh-done');
     const control = el.querySelector('fx-output');
@@ -178,5 +176,112 @@ describe('fx-output Tests', () => {
 
     expect(img).to.exist;
     expect(img.getAttribute('src')).to.equal('base/resources/images/light7.png');
+  });
+
+  it('is hardened against cross-site-scripting when no mediatype is set', async () => {
+    let callCount = 0;
+    window.xssHappened = () => {
+      callCount++;
+    };
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance type="html">
+            <data>
+              <payload>&lt;img src="x" onerror="window.xssHappened()"&gt;</payload>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <fx-output ref="payload"></fx-output>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+    const control = el.querySelector('fx-output');
+    const value = control.shadowRoot.querySelector('#value');
+
+    expect(value.textContent).to.equal('<img src="x" onerror="window.xssHappened()">');
+
+    expect(callCount).to.equal(0, 'The XSS notifier should not have been called');
+  });
+
+  it('is hardened against cross-site-scripting when the html mediatype is set', async () => {
+    let callCount = 0;
+    window.xssHappened = () => {
+      callCount++;
+    };
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance src="base/test/payload.xml"> </fx-instance>
+        </fx-model>
+        <fx-output ref="//div" mediatype="html"></fx-output>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'instance-loaded');
+    await oneEvent(el, 'refresh-done');
+    await aTimeout(100);
+    const control = el.querySelector('fx-output');
+    const value = control.shadowRoot.querySelector('#value');
+
+    // harmless markup is kept, the event handler is stripped
+    expect(value.innerHTML).to.include('<img src="x">');
+    expect(value.innerHTML).to.not.include('onerror');
+    expect(value.textContent).to.include('Some text!');
+
+    expect(callCount).to.equal(0, 'The XSS notifier should not have been called');
+  });
+
+  it('is hardened against cross-site-scripting for string values with the html mediatype', async () => {
+    let callCount = 0;
+    window.xssHappened = () => {
+      callCount++;
+    };
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance id="j" type="json" src="base/test/payload.json"> </fx-instance>
+        </fx-model>
+        <fx-output ref="instance('j')?html" mediatype="html"></fx-output>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+    await aTimeout(100);
+    const control = el.querySelector('fx-output');
+    const value = control.shadowRoot.querySelector('#value');
+
+    expect(value.textContent).to.include('safe');
+    expect(value.querySelector('script')).to.not.exist;
+    expect(value.querySelector('img').getAttribute('onerror')).to.not.exist;
+
+    expect(callCount).to.equal(0, 'The XSS notifier should not have been called');
+  });
+
+  it('allows setting raw html with mediatype="html" and unsafe = true ', async () => {
+    let callCount = 0;
+    window.xssHappened = () => {
+      callCount++;
+    };
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance id="j" type="json" src="base/test/payload.json"> </fx-instance>
+        </fx-model>
+        <fx-output ref="instance('j')?html" mediatype="html" unsafe></fx-output>
+      </fx-fore>
+    `);
+
+    await oneEvent(el, 'refresh-done');
+    await aTimeout(100);
+    const control = el.querySelector('fx-output');
+    const value = control.shadowRoot.querySelector('#value');
+
+    expect(value.textContent).to.include('safe');
+    expect(value.querySelector('script')).to.exist;
+    expect(value.querySelector('img').getAttribute('onerror')).to.exist;
+
+    expect(callCount).to.equal(1, 'The XSS notifier should have been called');
   });
 });

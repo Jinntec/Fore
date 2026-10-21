@@ -366,7 +366,7 @@ describe('fx-switch Tests', () => {
         </fx-trigger>
         <fx-switch>
           <fx-case id="c-first">static</fx-case>
-          <fx-case id="c-loaded" src="mock://irrelevant.html"></fx-case>
+          <fx-case id="c-loaded" src="irrelevant.html"></fx-case>
         </fx-switch>
       </fx-fore>
     `);

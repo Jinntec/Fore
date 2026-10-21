@@ -3,6 +3,12 @@ import { evaluateXPathToString, resolveId } from '../xpath-evaluation.js';
 import getInScopeContext from '../getInScopeContext.js';
 import { XPathUtil } from '../xpath-util.js';
 import { Fore } from '../fore.js';
+import {
+  isSafeNavigationUrl,
+  isSameOrigin,
+  warnCrossOriginBlocked,
+  warnUnsafeNavigationBlocked,
+} from '../same-origin.js';
 
 /**
  * `fx-load`
@@ -130,6 +136,25 @@ class FxLoad extends AbstractAction {
       return;
     }
     const resolvedUrl = this.evaluateAttributeTemplateExpression(this.url, this);
+    if (this.attachTo.startsWith('#') && !isSameOrigin(resolvedUrl)) {
+      // markup from another origin would be attached to the live DOM and could run script
+      warnCrossOriginBlocked(this, resolvedUrl);
+      Fore.dispatch(this, 'error', {
+        message: `fx-load: refusing to attach content from cross-origin url '${resolvedUrl}'. Please file an issue at https://github.com/Jinntec/Fore with your usecase.`,
+      });
+      return;
+    }
+    if (
+      (this.attachTo === '_blank' || this.attachTo === '_self') &&
+      !isSafeNavigationUrl(resolvedUrl)
+    ) {
+      // e.g. a `javascript:` url would run script in our origin
+      warnUnsafeNavigationBlocked(this, resolvedUrl);
+      Fore.dispatch(this, 'error', {
+        message: `fx-load: refusing to navigate to non-http(s) url '${resolvedUrl}'`,
+      });
+      return;
+    }
     if (this.attachTo === '_blank') {
       window.open(resolvedUrl);
     }
@@ -147,6 +172,14 @@ class FxLoad extends AbstractAction {
           'Content-Type': 'text/html',
         },
       });
+      if (this.attachTo.startsWith('#') && !isSameOrigin(response.url || resolvedUrl)) {
+        // a same-origin url may redirect to another origin
+        warnCrossOriginBlocked(this, response.url);
+        Fore.dispatch(this, 'error', {
+          message: `fx-load: refusing to attach content redirected to cross-origin url '${response.url}'. Please file an issue at https://github.com/Jinntec/Fore with your usecase.`,
+        });
+        return;
+      }
       const data = await response.text();
       // console.log('data loaded: ', data);
       // const data = Fore.loadHtml(resolvedUrl);

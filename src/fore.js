@@ -6,6 +6,7 @@ import {
   evaluateXPathToNodes,
 } from './xpath-evaluation.js';
 import { XPathUtil } from './xpath-util.js';
+import { isSameOrigin, warnCrossOriginBlocked } from './same-origin.js';
 
 /**
  * Class hosting common utility functions used throughout all fore elements
@@ -52,10 +53,22 @@ export class Fore {
 
   /**
    * Loads and return a piece of HTML
+   * Only same-origin urls are loaded: the markup ends up in the live DOM, where cross-origin
+   * markup could run script (e.g. via event handler attributes).
+   *
    * @param url {String} - the Url to load from
-   * @returns {Promise<string>}
+   * @param {Element} [requester] - the element asking for the content, used in warnings
+   * @returns {Promise<string>} the markup or `undefined` if it could not be loaded or was blocked
    */
-  static async loadHtml(url) {
+  static async loadHtml(url, requester) {
+    if (!isSameOrigin(url)) {
+      warnCrossOriginBlocked(requester, url);
+      Fore.dispatch(requester ?? this, 'error', {
+        message: `refusing to load HTML from cross-origin url '${url}'. Please file an issue at https://github.com/Jinntec/Fore with your usecase.`,
+        level: 'Error',
+      });
+      return undefined;
+    }
     try {
       const response = await fetch(url, {
         method: 'GET',
@@ -65,6 +78,15 @@ export class Fore {
           'Content-Type': 'text/html',
         },
       });
+      if (!isSameOrigin(response.url || url)) {
+        // a same-origin url may redirect to another origin
+        warnCrossOriginBlocked(requester, response.url);
+        Fore.dispatch(requester ?? this, 'error', {
+          message: `refusing HTML redirected to cross-origin url '${response.url}'. Please file an issue at https://github.com/Jinntec/Fore with your usecase.`,
+          level: 'Error',
+        });
+        return undefined;
+      }
       const responseContentType = response.headers.get('content-type').toLowerCase();
       if (responseContentType.startsWith('text/html')) {
         return response.text();
@@ -99,7 +121,10 @@ export class Fore {
       });
       return null;
     }
-    const data = await Fore.loadHtml(src);
+    const data = await Fore.loadHtml(src, replace);
+    if (!data) {
+      return null;
+    }
     const parsed = new DOMParser().parseFromString(data, 'text/html');
     // const theFore = parsed.querySelector('fx-fore');
     const foreElement = parsed.querySelector(selector);

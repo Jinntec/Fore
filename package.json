@@ -37,6 +37,7 @@
   "dependencies": {
     "@jinntec/jinn-toast": "^1.1.0",
     "@picocss/pico": "^2.0.6",
+    "dompurify": "^3.4.17",
     "fontoxpath": "^3.34.0"
   },
   "devDependencies": {
