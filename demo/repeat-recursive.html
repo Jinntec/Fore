@@ -356,13 +356,13 @@
                                 <button data-cy-action="collapse" aria-label="collapse">
                                     <svg viewBox="0 0 16 16" width="14" height="14"><path d="M3 6l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                                 </button>
-                                <fx-setattribute ref="." name="collapsed" value="true"></fx-setattribute>
+                                <fx-setattribute ref="." name="collapsed" value="'true'"></fx-setattribute>
                             </fx-trigger>
                             <fx-trigger class="iconbtn twisty" title="expand" ref="self::folder">
                                 <button data-cy-action="expand" aria-label="expand">
                                     <svg viewBox="0 0 16 16" width="14" height="14"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                                 </button>
-                                <fx-setattribute ref="." name="collapsed" value="false"></fx-setattribute>
+                                <fx-setattribute ref="." name="collapsed" value="'false'"></fx-setattribute>
                             </fx-trigger>
                             <span class="twisty-spacer"></span>
                             <span class="type-icon icon-folder">
@@ -373,9 +373,9 @@
                             </span>
                             <fx-trigger class="select-trigger" title="select" activate-on-focus>
                                 <button class="name" data-cy-action="select">{@name}</button>
-                                <fx-setattribute ref="." name="ui-selected" value="false"
+                                <fx-setattribute ref="." name="ui-selected" value="'false'"
                                     iterate="instance('default')//*[@ui-selected='true']"></fx-setattribute>
-                                <fx-setattribute ref="." name="ui-selected" value="true"></fx-setattribute>
+                                <fx-setattribute ref="." name="ui-selected" value="'true'"></fx-setattribute>
                             </fx-trigger>
                             <fx-trigger class="iconbtn action add" title="add file" ref="self::folder">
                                 <button data-cy-action="add" aria-label="add file">

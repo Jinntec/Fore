@@ -1,7 +1,7 @@
 // import { FxAction } from './fx-action.js';
 import '../fx-model.js';
 import { AbstractAction } from './abstract-action.js';
-import { evaluateXPathToString } from '../xpath-evaluation.js';
+import { evaluateXPath } from '../xpath-evaluation.js';
 import { Fore } from '../fore.js';
 import getInScopeContext from '../getInScopeContext';
 import { FxBind } from '../fx-bind';
@@ -58,7 +58,20 @@ export default class FxSetattribute extends AbstractAction {
       await Fore.dispatch(this, 'error', { message: 'referenced item is not an element' });
       return;
     }
-    mi.node.setAttribute(this.attrName, this.attrValue);
+    // `value` is an XPath expression, like on fx-setvalue (quote literals: value="'true'")
+    let value = '';
+    if (this.attrValue !== '') {
+      const inscopeContext = getInScopeContext(this, this.attrValue);
+      const [result] = evaluateXPath(this.attrValue, inscopeContext, this, this.detail);
+      if (result?.nodeType === Node.ATTRIBUTE_NODE) {
+        value = result.nodeValue;
+      } else if (result?.nodeType) {
+        value = result.textContent;
+      } else if (result !== undefined && result !== null) {
+        value = String(result);
+      }
+    }
+    mi.node.setAttribute(this.attrName, value);
     const newModelItem = FxBind.createModelItem(
       `${this.ref}/@${this.attrName}`,
       mi.node.getAttributeNode(this.attrName),

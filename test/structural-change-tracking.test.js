@@ -70,7 +70,7 @@ describe('structural change tracking', () => {
           <fx-setattribute
             ref="instance('data')/item[1]"
             name="keep"
-            value="true"
+            value="'true'"
           ></fx-setattribute>
         </fx-trigger>
       </fx-fore>

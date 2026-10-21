@@ -314,7 +314,7 @@ export class FxFore extends HTMLElement {
 <!--           <slot name="errors"></slot> -->
            <jinn-toast id="message" gravity="bottom" position="left"></jinn-toast>
            <jinn-toast id="sticky" gravity="bottom" position="left" duration="-1" close="true" data-class="sticky-message"></jinn-toast>
-           <jinn-toast id="error" text="error" duration="-1" data-class="error" close="true" politeness="assertive" position="right" gravity="top" escape-markup="false"></jinn-toast>
+           <jinn-toast id="error" text="error" duration="-1" data-class="error" close="true" politeness="assertive" position="right" gravity="top"></jinn-toast>
            <jinn-toast id="warn" text="warning" duration="5000" data-class="warning" position="left" gravity="top"></jinn-toast>
            <slot id="default"></slot>
            <slot name="messages"></slot>
@@ -1406,7 +1406,10 @@ export class FxFore extends HTMLElement {
       this._processTemplateExpressions();
     } else {
       newNodes.forEach(node => {
-        this._processTemplateExpression({ node, expr: this.storedTemplateExpressionByNode.get(node) });
+        this._processTemplateExpression({
+          node,
+          expr: this.storedTemplateExpressionByNode.get(node),
+        });
       });
     }
   }
@@ -1458,9 +1461,7 @@ export class FxFore extends HTMLElement {
       owner = node.parentNode.parentElement;
     }
     return (
-      !!owner &&
-      owner.hasAttribute('nonrelevant') &&
-      !owner.parentElement?.closest('[nonrelevant]')
+      !!owner && owner.hasAttribute('nonrelevant') && !owner.parentElement?.closest('[nonrelevant]')
     );
   }
 
@@ -2236,7 +2237,11 @@ export class FxFore extends HTMLElement {
           if (newNode.nodeType === Node.ATTRIBUTE_NODE) {
             parentNodeset.setAttributeNode(newNode);
           } else {
-            const referenceNode = this._findReferenceNodeForNewElement(newNode, parentNodeset, null);
+            const referenceNode = this._findReferenceNodeForNewElement(
+              newNode,
+              parentNodeset,
+              null,
+            );
             if (referenceNode) {
               referenceNode.after(newNode);
             } else {
@@ -2278,7 +2283,11 @@ export class FxFore extends HTMLElement {
           const siblingNode = siblingOrDescendant.getModelItem?.()?.node;
           const siblingElement =
             siblingNode?.nodeType === Node.ATTRIBUTE_NODE ? siblingNode.ownerElement : siblingNode;
-          if (siblingElement && parentNodeset?.contains && !parentNodeset.contains(siblingElement)) {
+          if (
+            siblingElement &&
+            parentNodeset?.contains &&
+            !parentNodeset.contains(siblingElement)
+          ) {
             continue;
           }
           siblingControl = siblingOrDescendant;
@@ -2542,7 +2551,9 @@ export class FxFore extends HTMLElement {
       this.shadowRoot.getElementById('modalMessage').classList.add('show');
     } else if (level === 'sticky' || level === 'error' || level === 'warn') {
       // const notification = this.$.modeless;
-      this.shadowRoot.querySelector(`#${level}`).showToast(msg, this._appearanceOptions(appearance));
+      this.shadowRoot
+        .querySelector(`#${level}`)
+        .showToast(msg, this._appearanceOptions(appearance));
     } else {
       const toast = this.shadowRoot.querySelector('#message');
       toast.showToast(msg, this._appearanceOptions(appearance));

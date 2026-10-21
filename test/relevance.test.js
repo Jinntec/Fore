@@ -149,7 +149,7 @@ describe('Relevance Tests', () => {
 
         <fx-trigger id="flip">
           <button>flip</button>
-          <fx-setattribute ref="item" name="flag" value="false"></fx-setattribute>
+          <fx-setattribute ref="item" name="flag" value="'false'"></fx-setattribute>
         </fx-trigger>
       </fx-fore>
     `);

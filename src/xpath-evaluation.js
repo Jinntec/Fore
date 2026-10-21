@@ -17,6 +17,7 @@ import {
 
 import { XPathUtil } from './xpath-util.js';
 import { prettifyXml } from './functions/common-function.js';
+import { formatNumber } from './functions/format-number.js';
 
 const XFORMS_NAMESPACE_URI = 'http://www.w3.org/2002/xforms';
 const createdNamespaceResolversByXPathQueryAndNode = new Map();
@@ -2288,6 +2289,14 @@ const contextFunction = (dynamicContext, string) => {
 const currentFunction = (_dynamicContext, _string) => null;
 
 const elementFunction = (_dynamicContext, string) => document.createElement(string);
+
+// fn:format-number() is missing from FontoXPath, so it's provided here in the F&O namespace
+registerCustomXPathFunction(
+  { namespaceURI: 'http://www.w3.org/2005/xpath-functions', localName: 'format-number' },
+  ['xs:numeric?', 'xs:string'],
+  'xs:string',
+  (_dynamicContext, value, picture) => formatNumber(value === null ? NaN : Number(value), picture),
+);
 
 registerCustomXPathFunction(
   { namespaceURI: XFORMS_NAMESPACE_URI, localName: 'context' },
