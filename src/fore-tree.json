@@ -491,7 +491,8 @@
           "html",
           "image"
         ],
-        "html": null
+        "html": null,
+        "unsafe": null
       },
       "children": [
         "ACTION-ELEMENTS"
