@@ -142,6 +142,12 @@ export class FxInstance extends HTMLElement {
       this.id = effectiveId;
     } else {
       // Non-first instances are only addressable by id if explicitly provided.
+      if (explicitId === 'default') {
+        // 'default' is reserved for the first instance of the model
+        const message = `The instance with id="default" is not the first fx-instance of its fx-model. The default instance is always the first instance in a model; 'default' cannot be used as an id on any other instance.`;
+        console.error(message);
+        Fore.dispatch(this, 'message', { level: 'error', message });
+      }
       this.instanceId = explicitId || '';
       if (explicitId) {
         this.id = explicitId;
