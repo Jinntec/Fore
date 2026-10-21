@@ -19,26 +19,26 @@
     </p>
     <demo-snippet>
         <template>
-            <fx-fore>
-                <fx-model>
-                    <fx-instance type="html">
-                        <data>
-                            <date></date>
-                            <credit>100</credit>
-                            <debit>30</debit>
-                            <balance></balance>
-                        </data>
-                    </fx-instance>
-                    <fx-bind ref="date" initial="string(current-date())"></fx-bind>
-                    <fx-bind ref="balance" initial="0" calculate="../credit - ../debit"></fx-bind>
-                </fx-model>
-                <fx-group>
-                    <fx-control ref="date"><label>date (editable, set once)</label></fx-control>
-                    <fx-control ref="credit" update-event="input"><label>credit</label></fx-control>
-                    <fx-control ref="debit" update-event="input"><label>debit</label></fx-control>
-                    <p>Balance: <fx-output ref="balance"></fx-output></p>
-                </fx-group>
-            </fx-fore>
+<fx-fore>
+    <fx-model>
+        <fx-instance type="html">
+            <data>
+                <date></date>
+                <credit>100</credit>
+                <debit>30</debit>
+                <balance></balance>
+            </data>
+        </fx-instance>
+        <fx-bind ref="date" initial="string(current-date())"></fx-bind>
+        <fx-bind ref="balance" initial="0" calculate="../credit - ../debit"></fx-bind>
+    </fx-model>
+    <fx-group>
+        <fx-control ref="date"><label>date (editable, set once)</label></fx-control>
+        <fx-control ref="credit" update-event="input"><label>credit</label></fx-control>
+        <fx-control ref="debit" update-event="input"><label>debit</label></fx-control>
+        <p>Balance: <fx-output ref="balance"></fx-output></p>
+    </fx-group>
+</fx-fore>
         </template>
     </demo-snippet>
 </div>
