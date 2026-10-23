@@ -39,12 +39,6 @@ class TemplateDependencyFacade extends DependencyNotifyingDomFacade {
     return super.getPreviousSibling(node, bucket);
   }
 
-  // the parent of an attribute is its owner element (attributes have no parentNode)
-  // eslint-disable-next-line class-methods-use-this
-  getParentNode(node) {
-    return node.nodeType === Node.ATTRIBUTE_NODE ? node.ownerElement : node.parentNode;
-  }
-
   // an attribute that is not there yet is not touched at all - but it may be added
   getAttribute(node, attributeName) {
     this._onNodeTouched(node);

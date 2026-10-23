@@ -210,7 +210,8 @@ export class DependencyNotifyingDomFacade {
   getParentNode(node) {
     // Deliberately not notifying: navigating up must not register a dependency on the parent.
     if (this._inner) return this._inner.getParentNode(node);
-    return node.parentNode;
+    // an attribute has no parentNode: its parent is the element it belongs to
+    return node.nodeType === Node.ATTRIBUTE_NODE ? node.ownerElement : node.parentNode;
   }
 
   /**
