@@ -165,7 +165,9 @@ export class TemplateDependencyTracker {
    */
   record(node, contexts, touched) {
     const nodes = new Set();
-    touched.forEach(n => nodes.add(n.nodeType === Node.ATTRIBUTE_NODE ? n.ownerElement : n));
+    touched.forEach(n => {
+      if (n) nodes.add(n.nodeType === Node.ATTRIBUTE_NODE ? n.ownerElement : n);
+    });
     // a literal `{}` has no context (null)
     const real = contexts.filter(c => c !== null);
     const trackable = [...real, ...nodes].every(

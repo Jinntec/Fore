@@ -129,8 +129,8 @@ export class DependencyNotifyingDomFacade {
       this._onNodeTouched(node);
       return node.value;
     }
-    // Text node
-    this._onNodeTouched(node.parentNode);
+    // Text node (a detached one has no parent to depend on)
+    if (node.parentNode) this._onNodeTouched(node.parentNode);
     return node.data;
   }
 
