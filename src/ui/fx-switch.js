@@ -224,7 +224,7 @@ class FxSwitch extends FxContainer {
       newCase.classList.remove('deselected-case');
       newCase.inert = false;
       // Tell the owner form we might have new template expressions here
-      this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh();
+      this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh(newCase);
     } else {
       newCase.classList.add('deselected-case');
       newCase.classList.remove('selected-case');
@@ -264,7 +264,7 @@ class FxSwitch extends FxContainer {
     }
 
     // Tell the owner form we might have new template expressions here
-    this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh();
+    this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh(this.selectedCase);
     this.getOwnerForm().getModel().updateModel();
   }
 }

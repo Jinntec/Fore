@@ -8,6 +8,7 @@ import { XPathUtil } from './xpath-util.js';
 import { FxRepeatAttributes } from './ui/fx-repeat-attributes.js';
 import { FxBind } from './fx-bind.js';
 import createNodes from './createNodes.js';
+import { TemplateDependencyTracker } from './template-dependency-tracker.js';
 
 /**
  * Makes the dirty state of the form.
@@ -171,6 +172,10 @@ export class FxFore extends HTMLElement {
 
     this.ready = false;
     this.storedTemplateExpressionByNode = new Map();
+    /** decides which template expressions need to be evaluated again (see TemplateDependencyTracker) */
+    this._templateTracker = new TemplateDependencyTracker(() =>
+      (this.getModel?.()?.instances ?? []).map(instance => instance.instanceData),
+    );
 
     // Stores the outer most action handler. If an action handler is already running, all
     // updates are included in that one
@@ -347,6 +352,8 @@ export class FxFore extends HTMLElement {
     this.toRefresh = [];
     this.initialRun = true;
     this._scanForNewTemplateExpressionsNextRefresh = false;
+    /** elements that may hold new template expressions; searched instead of the whole form on the next refresh */
+    this._templateScanRoots = new Set();
     this.repeatsFromAttributesCreated = false;
     /*
     this.validateOn = this.hasAttribute('validate-on')
@@ -983,10 +990,16 @@ export class FxFore extends HTMLElement {
   /**
    * Raise a flag that there might be new template expressions under some node. This happens with
    * repeats updating (new repeat items can have new template expressions) or switches changing their case (new case = new raw HTML)
+   *
+   * @param {Element} [root] where the new expressions are (the new repeat item, the new case). Only that subtree is
+   * searched on the next refresh; without it the whole form is.
    */
-  scanForNewTemplateExpressionsNextRefresh() {
-    // TODO: also ask for the root of any new HTML: this can prevent some very deep queries.
-    this._scanForNewTemplateExpressionsNextRefresh = true;
+  scanForNewTemplateExpressionsNextRefresh(root) {
+    if (root) {
+      this._templateScanRoots.add(root);
+    } else {
+      this._scanForNewTemplateExpressionsNextRefresh = true;
+    }
   }
 
   markAsClean() {
@@ -1131,8 +1144,15 @@ export class FxFore extends HTMLElement {
       }
 
       if (force === true || this.initialRun || this._scanForNewTemplateExpressionsNextRefresh) {
+        this._templateScanRoots.clear(); // the search of the whole form covers them
         this._updateTemplateExpressions();
         this._scanForNewTemplateExpressionsNextRefresh = false;
+      } else if (this._templateScanRoots.size > 0) {
+        const roots = Array.from(this._templateScanRoots);
+        this._templateScanRoots.clear();
+        roots.forEach(root => {
+          if (root.isConnected) this._updateTemplateExpressions(root);
+        });
       }
 
       this._processTemplateExpressions();
@@ -1405,33 +1425,44 @@ export class FxFore extends HTMLElement {
     if (scope === this) {
       this._processTemplateExpressions();
     } else {
-      newNodes.forEach(node => {
-        this._processTemplateExpression({
-          node,
-          expr: this.storedTemplateExpressionByNode.get(node),
+      this._templateTracker.begin();
+      try {
+        newNodes.forEach(node => {
+          this._processTemplateExpression({
+            node,
+            expr: this.storedTemplateExpressionByNode.get(node),
+          });
         });
-      });
+      } finally {
+        this._templateTracker.end();
+      }
     }
   }
 
   _processTemplateExpressions() {
     // console.log('processing template expressions ', this.storedTemplateExpressionByNode);
-    for (const node of Array.from(this.storedTemplateExpressionByNode.keys())) {
-      if (node.nodeType === Node.ATTRIBUTE_NODE) {
-        // Attribute nodes are not contained by the document, but their owner elements are!
-        if (!XPathUtil.contains(this, node.ownerElement)) {
+    // expressions whose input did not change are skipped inside evaluateTemplateExpression
+    this._templateTracker.begin();
+    try {
+      for (const node of Array.from(this.storedTemplateExpressionByNode.keys())) {
+        if (node.nodeType === Node.ATTRIBUTE_NODE) {
+          // Attribute nodes are not contained by the document, but their owner elements are!
+          if (!XPathUtil.contains(this, node.ownerElement)) {
+            this.storedTemplateExpressionByNode.delete(node);
+            continue;
+          }
+        } else if (!XPathUtil.contains(this, node)) {
+          // For all other nodes, if this `fore` element does not contain them, they are dead
           this.storedTemplateExpressionByNode.delete(node);
           continue;
         }
-      } else if (!XPathUtil.contains(this, node)) {
-        // For all other nodes, if this `fore` element does not contain them, they are dead
-        this.storedTemplateExpressionByNode.delete(node);
-        continue;
+        this._processTemplateExpression({
+          node,
+          expr: this.storedTemplateExpressionByNode.get(node),
+        });
       }
-      this._processTemplateExpression({
-        node,
-        expr: this.storedTemplateExpressionByNode.get(node),
-      });
+    } finally {
+      this._templateTracker.end();
     }
   }
 
@@ -1475,10 +1506,15 @@ export class FxFore extends HTMLElement {
     // nonrelevant element itself: an `on-demand` element is nonrelevant until the user picks it from
     // fx-control-menu, which lists it by that name
     if (!FxFore._isNameOfNonrelevantElement(node)) {
-      if (node.nodeType === Node.ATTRIBUTE_NODE && node.ownerElement.closest('[nonrelevant]'))
+      const skipped =
+        (node.nodeType === Node.ATTRIBUTE_NODE && node.ownerElement.closest('[nonrelevant]')) ||
+        (node.nodeType === Node.TEXT_NODE && node.parentNode.closest('[nonrelevant]')) ||
+        (node.nodeType === Node.ELEMENT_NODE && node.closest('[nonrelevant]'));
+      if (skipped) {
+        // it is not evaluated now, so it must not count as up to date when it becomes relevant
+        this._templateTracker.forget(node);
         return;
-      if (node.nodeType === Node.TEXT_NODE && node.parentNode.closest('[nonrelevant]')) return;
-      if (node.nodeType === Node.ELEMENT_NODE && node.closest('[nonrelevant]')) return;
+      }
     }
 
     // ---- IMPORTANT GUARD ----
@@ -1511,11 +1547,28 @@ export class FxFore extends HTMLElement {
         ? definitionElement
         : this;
 
+    // Expressions whose result follows from the nodes they read are skipped while those did not change
+    const tracker = this._templateTracker;
+    const tracked = tracker.canTrack(String(expr ?? ''), formElement);
+    let contexts = null;
+    let touched = null;
+    let facade = null;
+    if (tracked) {
+      contexts = (String(expr ?? '').match(/{[^}]*}/g) || []).map(match =>
+        match === '{}' ? null : getInScopeContext(node, match.substring(1, match.length - 1)),
+      );
+      if (tracker.isFresh(node, contexts)) return;
+      ({ facade, touched } = tracker.createFacade());
+    }
+    let unresolved = !tracked;
+    let matchIndex = -1;
+
     const replaced = String(expr ?? '').replace(/{[^}]*}/g, match => {
+      matchIndex += 1;
       if (match === '{}') return match;
 
       const naked = match.substring(1, match.length - 1);
-      let inscope = getInScopeContext(node, naked);
+      let inscope = contexts ? contexts[matchIndex] : getInScopeContext(node, naked);
       if (!inscope && FxFore._isNameOfNonrelevantElement(node)) {
         // the element is bound to a node that does not exist (that is why it is nonrelevant), so it has no context:
         // evaluate its name against the default context
@@ -1523,6 +1576,7 @@ export class FxFore extends HTMLElement {
       }
 
       if (!inscope) {
+        unresolved = true;
         return match;
       }
 
@@ -1531,12 +1585,19 @@ export class FxFore extends HTMLElement {
         // Do NOT pass `null` as the 4th argument here.
         // Passing `null` suppresses variable collection, which hides implicit vars
         // like `$default`.
-        return evaluateXPathToString(naked, inscope, formElement);
+        return evaluateXPathToString(naked, inscope, formElement, facade);
       } catch (error) {
         console.warn('ignoring unparseable expr', error);
+        unresolved = true;
         return match;
       }
     });
+
+    if (unresolved) {
+      tracker.forget(node);
+    } else {
+      tracker.record(node, contexts, touched);
+    }
 
     // Update to the new value only if it changed (avoid iframe/image reload etc.)
     if (node.nodeType === Node.ATTRIBUTE_NODE) {
