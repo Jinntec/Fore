@@ -132,7 +132,11 @@ export class AbstractAction extends ForeElementMixin {
     if (this.hasAttribute('event')) {
       this.event = this.getAttribute('event');
     }
-    if (this.hasAttribute('defaultAction')) {
+    // 'default-action' is the documented spelling; 'defaultAction' (HTML lowercases it to 'defaultaction')
+    // keeps working for existing pages
+    if (this.hasAttribute('default-action')) {
+      this.defaultAction = this.getAttribute('default-action');
+    } else if (this.hasAttribute('defaultAction')) {
       this.defaultAction = this.getAttribute('defaultAction');
     } else {
       this.defaultAction = 'perform';

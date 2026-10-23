@@ -87,8 +87,8 @@ class FxDelete extends AbstractAction {
         continue;
       }
 
-      // Determine parent now (needed for event + safety checks)
-      const p = node.parentNode;
+      // Determine parent now (needed for event + safety checks). An attribute's parent is its owner element.
+      const p = node.nodeType === Node.ATTRIBUTE_NODE ? node.ownerElement : node.parentNode;
       if (!p) continue;
 
       // Use the guarded delete helper (checks readonly + safety)
@@ -141,7 +141,7 @@ class FxDelete extends AbstractAction {
       parent.nodeType === Node.DOCUMENT_NODE ||
       node.nodeType === Node.DOCUMENT_NODE ||
       node.nodeType === Node.DOCUMENT_FRAGMENT_NODE ||
-      node.parentNode === null
+      (node.nodeType !== Node.ATTRIBUTE_NODE && node.parentNode === null)
     ) {
       return false;
     }
@@ -151,7 +151,11 @@ class FxDelete extends AbstractAction {
     if (mi?.readonly) return false;
 
     // Execute deletion
-    parent.removeChild(node);
+    if (node.nodeType === Node.ATTRIBUTE_NODE) {
+      parent.removeAttributeNode(node);
+    } else {
+      parent.removeChild(node);
+    }
 
     // Remove ModelItems for the deleted subtree (this is what your failing tests assert)
     this.getModel().removeModelItem(node);

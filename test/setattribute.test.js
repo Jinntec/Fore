@@ -105,4 +105,40 @@ describe('setattribute tests', () => {
     expect(node.getAttribute('lit')).to.equal('plain');
     expect(node.getAttribute('empty')).to.equal('');
   });
+
+  it('computes the attribute name from {...} templates', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance type="html">
+            <data>
+              <value></value>
+              <names>
+                <n>first</n>
+                <n>second</n>
+              </names>
+            </data>
+          </fx-instance>
+        </fx-model>
+
+        <fx-repeat ref="names/n">
+          <template>
+            <fx-trigger>
+              <button>{.}</button>
+              <fx-setattribute ref="instance()/value" name="a-{.}" value="'x'"></fx-setattribute>
+            </fx-trigger>
+          </template>
+        </fx-repeat>
+        <div id="out">{value/@a-second}</div>
+      </fx-fore>
+    `);
+    await oneEvent(el, 'ready');
+
+    el.querySelectorAll('button')[1].click();
+    await oneEvent(el, 'refresh-done');
+
+    const value = el.getModel().getDefaultInstance().getDefaultContext().querySelector('value');
+    expect(value.outerHTML).to.contain('a-second="x"');
+    expect(value.hasAttribute('a-first')).to.be.false;
+  });
 });
