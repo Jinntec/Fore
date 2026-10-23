@@ -16,10 +16,16 @@ export class DependencyNotifyingDomFacade {
   /**
    * @param  onNodeTouched - onNodeTouched A function what will be executed whenever a node is 'touched' by the XPath
    * @param  inner - optional facade to delegate all accessors to (e.g. JSONDomFacade)
+   * @param  {{touchOrigin?: boolean}} [options] `touchOrigin`: also report the node a step starts from, not just what it
+   * returns. A first child, a sibling, the list of children or an attribute that is not there yet depend on the node
+   * they are read from; without it, adding one is not noticed by a read that returned something else (or nothing).
+   * Off by default: ref bindings resolve a ModelItem for every touched node, so this creates ModelItems for the
+   * parents of everything they read. Meant for consumers that only compare nodes (template expressions).
    */
-  constructor(onNodeTouched, inner = null) {
+  constructor(onNodeTouched, inner = null, options = {}) {
     this._onNodeTouched = onNodeTouched;
     this._inner = inner;
+    this._touchOrigin = !!options.touchOrigin;
   }
 
   /**
@@ -30,7 +36,9 @@ export class DependencyNotifyingDomFacade {
    * @param  inner - the facade to delegate to
    */
   withInner(inner) {
-    return new DependencyNotifyingDomFacade(this._onNodeTouched, inner);
+    return new DependencyNotifyingDomFacade(this._onNodeTouched, inner, {
+      touchOrigin: this._touchOrigin,
+    });
   }
 
   /**
@@ -91,7 +99,8 @@ export class DependencyNotifyingDomFacade {
       return this._inner.getAttribute(node, attributeName);
     }
     const attr = node.getAttributeNode(attributeName);
-    if (attr) this._onNodeTouched(attr);
+    // without the attribute, depend on the element: the attribute may be added
+    if (attr || this._touchOrigin) this._onNodeTouched(attr ?? node);
     return attr?.value ?? null;
   }
 
@@ -108,6 +117,8 @@ export class DependencyNotifyingDomFacade {
       children.forEach(child => this._onNodeTouched(child));
       return children;
     }
+    // the list of children changes when one is added, moved or removed
+    if (this._touchOrigin) this._onNodeTouched(node);
     const matchingNodes = Array.from(node.childNodes).filter(
       childNode => !bucket || getBucketsForNode(childNode).includes(bucket),
     );
@@ -147,6 +158,7 @@ export class DependencyNotifyingDomFacade {
       if (child) this._onNodeTouched(child);
       return child;
     }
+    if (this._touchOrigin) this._onNodeTouched(node);
     for (const child of node.childNodes) {
       if (!bucket || getBucketsForNode(child).includes(bucket)) {
         this._onNodeTouched(child);
@@ -169,6 +181,7 @@ export class DependencyNotifyingDomFacade {
       if (child) this._onNodeTouched(child);
       return child;
     }
+    if (this._touchOrigin) this._onNodeTouched(node);
     const children = Array.from(node.childNodes).filter(
       child => !bucket || getBucketsForNode(child).includes(bucket),
     );
@@ -190,6 +203,8 @@ export class DependencyNotifyingDomFacade {
       if (sibling) this._onNodeTouched(sibling);
       return sibling;
     }
+    // siblings are the children of the parent
+    if (this._touchOrigin && node.parentNode) this._onNodeTouched(node.parentNode);
     for (let sibling = node.nextSibling; sibling; sibling = sibling.nextSibling) {
       if (bucket && !getBucketsForNode(sibling).includes(bucket)) {
         // eslint-disable-next-line no-continue
@@ -227,6 +242,7 @@ export class DependencyNotifyingDomFacade {
       if (sibling) this._onNodeTouched(sibling);
       return sibling;
     }
+    if (this._touchOrigin && node.parentNode) this._onNodeTouched(node.parentNode);
     for (let sibling = node.previousSibling; sibling; sibling = sibling.previousSibling) {
       // eslint-disable-next-line no-continue
       if (bucket && !getBucketsForNode(sibling).includes(bucket)) continue;

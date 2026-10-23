@@ -1,4 +1,3 @@
-/* eslint-disable max-classes-per-file */
 import { DependencyNotifyingDomFacade } from './DependencyNotifyingDomFacade.js';
 
 /**
@@ -8,43 +7,6 @@ import { DependencyNotifyingDomFacade } from './DependencyNotifyingDomFacade.js'
  */
 const VOLATILE_EXPR =
   /\$|\?|\b(?:index|event|depends|context|current|element|log|logtree|parse|fore-attr|local-date|local-dateTime|position|last|random|uuid|id|doc|collection|unparsed-text)\s*\(|\bcurrent-(?:date|time|dateTime)|\b(?!(?:fn|math|map|array|xs|xf|xsl)\b)[\w-]+:[\w-]+\s*\(/;
-
-/**
- * Reports the node an XPath step is read from as touched as well, not just what it returns: a template that counts or
- * lists children has to notice that a child was added, which the child nodes themselves cannot tell.
- */
-class TemplateDependencyFacade extends DependencyNotifyingDomFacade {
-  getChildNodes(node, bucket) {
-    this._onNodeTouched(node);
-    return super.getChildNodes(node, bucket);
-  }
-
-  getFirstChild(node, bucket) {
-    this._onNodeTouched(node);
-    return super.getFirstChild(node, bucket);
-  }
-
-  getLastChild(node, bucket) {
-    this._onNodeTouched(node);
-    return super.getLastChild(node, bucket);
-  }
-
-  getNextSibling(node, bucket) {
-    if (node.parentNode) this._onNodeTouched(node.parentNode);
-    return super.getNextSibling(node, bucket);
-  }
-
-  getPreviousSibling(node, bucket) {
-    if (node.parentNode) this._onNodeTouched(node.parentNode);
-    return super.getPreviousSibling(node, bucket);
-  }
-
-  // an attribute that is not there yet is not touched at all - but it may be added
-  getAttribute(node, attributeName) {
-    this._onNodeTouched(node);
-    return super.getAttribute(node, attributeName);
-  }
-}
 
 /**
  * Lets a fx-fore skip template expressions (`{...}` in text and attributes) whose input did not change.
@@ -129,11 +91,15 @@ export class TemplateDependencyTracker {
     return !definitionElement?.closest?.('[context],[iterate]');
   }
 
-  /** @returns {{facade: TemplateDependencyFacade, touched: Set<Node>}} */
+  /** @returns {{facade: DependencyNotifyingDomFacade, touched: Set<Node>}} */
   // eslint-disable-next-line class-methods-use-this
   createFacade() {
     const touched = new Set();
-    return { facade: new TemplateDependencyFacade(node => touched.add(node)), touched };
+    // a template that counts or lists children has to notice that one was added: report where steps start from too
+    const facade = new DependencyNotifyingDomFacade(node => touched.add(node), null, {
+      touchOrigin: true,
+    });
+    return { facade, touched };
   }
 
   _isObserved(node) {
