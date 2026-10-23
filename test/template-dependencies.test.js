@@ -158,6 +158,23 @@ describe('template expression dependencies', () => {
     expect(fore.querySelector('#out').textContent).to.equal('new');
   });
 
+  it('reads the parent of an attribute context and follows its changes', async () => {
+    const fore = await setup(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance type="html"
+            ><data><item on="yes">A</item></data></fx-instance
+          >
+        </fx-model>
+        <fx-group ref="item/@on"><p id="out">{..}</p></fx-group>
+      </fx-fore>
+    `);
+    expect(fore.querySelector('#out').textContent).to.equal('A');
+    instance(fore).querySelector('item').firstChild.data = 'B';
+    await fore.refresh();
+    expect(fore.querySelector('#out').textContent).to.equal('B');
+  });
+
   it('always evaluates expressions that use variables', async () => {
     const fore = await setup(html`
       <fx-fore>
