@@ -27885,7 +27885,7 @@ var autoCloseTags2 = /* @__PURE__ */ EditorView.inputHandler.of((view, from, to,
 
 // ../../src/fore-tree.json
 var fore_tree_default = {
-  _comment: "Lives in src/ (not demo/) because it's the authoritative containment/attribute grammar for the whole fx-* element set, not a demo-only artifact - it ships with the npm package via the 'src/**/*' files entry, unlike anything under demo/. Consumed by demo/fore-codemirror/src/fore-html-mode.js (the CodeMirror linter) via a relative import, and also read by the fore-skills companion repo when regenerating its element reference. Replaces fore-schema.json + fore-structure.json + fore-categories.json (all retired). Containment is expressed positionally: a tag is legal wherever it's listed as a child (literally or via a macro) of its nearest tracked ancestor. Nothing needs a denylist - if it's not reachable from a node's children, it's invalid there, full stop. The only place position isn't enough is fx-repeat-ref, which needs a literal ancestor *path* (template > fx-repeat) because <template> is a plain HTML tag reused outside Fore too - that's the one entry in 'exceptions'. Per-tag flags beyond attrs/children: 'authorable: false' (fx-repeatitem, fx-repeat-attributes, fx-abstract-control - real tags/classes the linter should still recognize by name, but flag as an error if a user writes them literally, since they're runtime-generated from data-ref attributes or base-class-only); 'requiredChildren' (fx-repeat needs a <template> - absence should warn, not just silently permit-if-present); and 'requiredAttrs' ({all: [...], anyOf: [...], severity: 'error'|'warning'} - grounded in source: 'error' where the element's own code throws/console.errors/dispatches an error event when the attr is missing, 'warning' where it silently no-ops or falls back to a default and is merely pointless without it). Containment between the two runtime-generated repeat classes is one-directional: an fx-repeat-attributes section (data-ref) may contain an fx-repeat, but fx-repeat may never contain fx-repeat-attributes. Attribute lists were cross-checked against each class's observedAttributes/getAttribute reads, not just fore-docs (which itself was missing some of these) - fx-model.undo/undo-depth, fx-fore.keyboard-shortcuts, fx-repeat.size/virtual/focus-on-create, fx-trigger.activate-on-focus/debounce, fx-container.readonly/refresh-on-view, fx-include.selector, fx-control.as/credentials/debounce/initial/listen-on/on-demand/shadow/src/value-prop, and others were found this way. Validated against all 188 files in demo/ (see demo/fore-codemirror/_lint-demos-check.mjs, run once during integration then removed) - containment rules were widened from evidence found there: fx-fore also allows top-level actions/fx-var/nested fx-fore (action-block.html, nested-fore-instance.html), fx-connection/fx-output allow ACTION-ELEMENTS (connection.html, actions.html), fx-bind allows fx-alert (revalidate.html + fore-docs), fx-control allows fx-trigger (markdown-editor.html), fx-switch allows UI-ELEMENTS/ACTION-ELEMENTS alongside fx-case (accordion.html), action elements allow fx-var (duration.html), and fx-items/fx-alert allow static HTML-ELEMENTS content instead of always being ref-bound (radiobuttons.html). requiredAttrs was correspondingly removed from fx-group/fx-switch/fx-alert/fx-items once real demos showed them legitimately used unbound - the 'isBound() soft pattern' evidence only reliably predicts pointlessness for elements whose whole purpose IS the binding (fx-bind, fx-repeat, fx-delete), not general-purpose containers.",
+  _comment: "Lives in src/ (not demo/) because it's the authoritative containment/attribute grammar for the whole fx-* element set, not a demo-only artifact - it ships with the npm package via the 'src/**/*' files entry, unlike anything under demo/. Consumed by demo/fore-codemirror/src/fore-html-mode.js (the CodeMirror linter) via a relative import, and also read by the fore-skills companion repo when regenerating its element reference. Replaces fore-schema.json + fore-structure.json + fore-categories.json (all retired). Containment is expressed positionally: a tag is legal wherever it's listed as a child (literally or via a macro) of its nearest tracked ancestor. Nothing needs a denylist - if it's not reachable from a node's children, it's invalid there, full stop. The only place position isn't enough is fx-repeat-ref, which needs a literal ancestor *path* (template > fx-repeat) because <template> is a plain HTML tag reused outside Fore too - that's the one entry in 'exceptions'. Per-tag flags beyond attrs/children: 'authorable: false' (fx-repeatitem, fx-repeat-attributes, fx-abstract-control - real tags/classes the linter should still recognize by name, but flag as an error if a user writes them literally, since they're runtime-generated from data-ref attributes or base-class-only); 'requiredChildren' (fx-repeat needs a <template> - absence should warn, not just silently permit-if-present); and 'requiredAttrs' ({all: [...], anyOf: [...], severity: 'error'|'warning'} - grounded in source: 'error' where the element's own code throws/console.errors/dispatches an error event when the attr is missing, 'warning' where it silently no-ops or falls back to a default and is merely pointless without it). Containment between the two runtime-generated repeat classes is one-directional: an fx-repeat-attributes section (data-ref) may contain an fx-repeat, but fx-repeat may never contain fx-repeat-attributes. Attribute lists were cross-checked against each class's observedAttributes/getAttribute reads, not just fore-docs (which itself was missing some of these) - fx-model.undo/undo-depth, fx-fore.keyboard-shortcuts, fx-repeat.size/virtual/focus-on-create, fx-trigger.activate-on-focus/debounce, fx-container.readonly/refresh-on-view, fx-include.selector, fx-control.as/credentials/debounce/initial/listen-on/on-demand/shadow/src/value-prop, and others were found this way. Validated against all 188 files in demo/ (see demo/fore-codemirror/_lint-demos-check.mjs, run once during integration then removed) - containment rules were widened from evidence found there: fx-fore also allows top-level actions/fx-var/nested fx-fore (action-block.html, nested-fore-instance.html), fx-connection/fx-output allow ACTION-ELEMENTS (connection.html, actions.html), fx-bind allows fx-alert (revalidate.html + fore-docs), fx-control allows fx-trigger (markdown-editor.html), fx-switch allows UI-ELEMENTS/ACTION-ELEMENTS alongside fx-case (accordion.html), action elements allow fx-var (duration.html), and fx-items/fx-alert allow static HTML-ELEMENTS content instead of always being ref-bound (radiobuttons.html). requiredAttrs was correspondingly removed from fx-group/fx-switch/fx-alert/fx-items once real demos showed them legitimately used unbound - the 'isBound() soft pattern' evidence only reliably predicts pointlessness for elements whose whole purpose IS the binding (fx-bind, fx-repeat, fx-delete), not general-purpose containers. Attributes shared by many tags are not repeated per tag: 'attrGroups' holds them once (foreElement = ForeElementMixin's ref/context/value; action = AbstractAction's event/if/while/iterate/delay/target/phase/propagate/default-action) and a tag opts in with 'inherits' (action tags list both groups, other ForeElementMixin/UIElement-based tags list foreElement, plain HTMLElement tags like fx-fore/fx-model/fx-instance list none). The full attribute set of a tag is therefore its own 'attrs' + the attrs of every group in 'inherits' + 'htmlGlobalAttrs' (exact names and data-/aria- prefixes). 'template' carries attrs too (draggable/drop-target/drop-scope): fx-repeat reads those from its <template>, not from itself. default-action is the kebab-case spelling; the legacy camelCase defaultAction is still read by the code but deliberately not listed.",
   macros: {
     "HTML-ELEMENTS": {
       wildcard: true,
@@ -27935,6 +27935,50 @@ var fore_tree_default = {
       "fx-trigger",
       "fx-upload",
       "fx-control-menu"
+    ]
+  },
+  attrGroups: {
+    foreElement: {
+      ref: null,
+      context: null,
+      value: null
+    },
+    action: {
+      event: null,
+      if: null,
+      while: null,
+      iterate: null,
+      delay: null,
+      target: null,
+      phase: [
+        "capture",
+        "default"
+      ],
+      propagate: [
+        "stop",
+        "continue"
+      ],
+      "default-action": [
+        "cancel",
+        "perform"
+      ]
+    }
+  },
+  htmlGlobalAttrs: {
+    names: [
+      "id",
+      "class",
+      "style",
+      "title",
+      "slot",
+      "part",
+      "lang",
+      "dir",
+      "hidden"
+    ],
+    prefixes: [
+      "data-",
+      "aria-"
     ]
   },
   tree: {
@@ -28010,7 +28054,10 @@ var fore_tree_default = {
         ],
         severity: "warning"
       },
-      note: "ref defaults to '.' with no warning if absent (src/fx-bind.js:80) - valid but usually not what's intended."
+      note: "ref defaults to '.' with no warning if absent (src/fx-bind.js:80) - valid but usually not what's intended.",
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-instance": {
       attrs: {
@@ -28027,7 +28074,8 @@ var fore_tree_default = {
           "include",
           "omit"
         ],
-        shared: null
+        shared: null,
+        static: null
       },
       children: []
     },
@@ -28078,7 +28126,10 @@ var fore_tree_default = {
         ],
         severity: "error"
       },
-      note: 'logs "id is required" if absent - src/fx-submission.js:25.'
+      note: 'logs "id is required" if absent - src/fx-submission.js:25.',
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-header": {
       attrs: {
@@ -28092,7 +28143,10 @@ var fore_tree_default = {
         ],
         severity: "error"
       },
-      note: "throws in constructor if absent - src/fx-header.js:11."
+      note: "throws in constructor if absent - src/fx-header.js:11.",
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-connection": {
       attrs: {
@@ -28114,7 +28168,10 @@ var fore_tree_default = {
         ],
         severity: "warning"
       },
-      note: "_connect() silently skips creating the WebSocket if empty, no warning - src/fx-connection.js:130-137."
+      note: "_connect() silently skips creating the WebSocket if empty, no warning - src/fx-connection.js:130-137.",
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-functionlib": {
       attrs: {
@@ -28132,7 +28189,10 @@ var fore_tree_default = {
         ],
         severity: "error"
       },
-      note: 'logs "Missing required @src." and no-ops - src/functions/fx-functionlib.js:80.'
+      note: 'logs "Missing required @src." and no-ops - src/functions/fx-functionlib.js:80.',
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-function": {
       attrs: {
@@ -28147,7 +28207,10 @@ var fore_tree_default = {
         ],
         severity: "error"
       },
-      note: 'logs "signature is a required attribute" then throws calling .match() on the null signature - src/functions/registerFunction.js:30.'
+      note: 'logs "signature is a required attribute" then throws calling .match() on the null signature - src/functions/registerFunction.js:30.',
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-var": {
       attrs: {
@@ -28161,12 +28224,19 @@ var fore_tree_default = {
         ],
         severity: "warning"
       },
-      note: "unused/unreferenceable without a name, no warning."
+      note: "unused/unreferenceable without a name, no warning.",
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-construct-done": {
       attrs: {},
       children: [
         "ACTION-ELEMENTS"
+      ],
+      inherits: [
+        "foreElement",
+        "action"
       ]
     },
     "fx-group": {
@@ -28181,7 +28251,10 @@ var fore_tree_default = {
         "ACTION-ELEMENTS",
         "fx-var"
       ],
-      note: "generic isBound() = hasAttribute('ref') soft pattern - unbound just renders/does nothing useful, no warning."
+      note: "generic isBound() = hasAttribute('ref') soft pattern - unbound just renders/does nothing useful, no warning.",
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-container": {
       attrs: {
@@ -28195,7 +28268,10 @@ var fore_tree_default = {
         "ACTION-ELEMENTS",
         "fx-var"
       ],
-      note: "readonly - isReadonly() checks hasAttribute('readonly') - src/ui/fx-container.js:138."
+      note: "readonly - isReadonly() checks hasAttribute('readonly') - src/ui/fx-container.js:138.",
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-dialog": {
       attrs: {
@@ -28210,7 +28286,10 @@ var fore_tree_default = {
     },
     "fx-switch": {
       attrs: {
-        ref: null
+        ref: null,
+        appearance: [
+          "tabs"
+        ]
       },
       children: [
         "fx-case",
@@ -28218,7 +28297,10 @@ var fore_tree_default = {
         "ACTION-ELEMENTS",
         "fx-var"
       ],
-      note: "generic isBound() soft pattern, same as fx-group."
+      note: "generic isBound() soft pattern, same as fx-group.",
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-case": {
       attrs: {
@@ -28234,6 +28316,9 @@ var fore_tree_default = {
         "UI-ELEMENTS",
         "ACTION-ELEMENTS",
         "fx-var"
+      ],
+      inherits: [
+        "foreElement"
       ]
     },
     "fx-repeat": {
@@ -28260,7 +28345,10 @@ var fore_tree_default = {
         ],
         severity: "warning"
       },
-      note: "fx-repeat is meaningless without a <template> child - the linter should warn, not just permit-if-present. Does NOT accept fx-repeat-attributes as a child - that relationship runs the other way (see fx-repeat-attributes). ref has no fallback at all (not even '.') and no throw - nodeset evaluation is silently broken downstream (src/ui/fx-repeat.js:206). size (progressive-rendering row cap) and virtual (windowed virtualization) - src/ui/fx-repeat.js:176,188."
+      note: "fx-repeat is meaningless without a <template> child - the linter should warn, not just permit-if-present. Does NOT accept fx-repeat-attributes as a child - that relationship runs the other way (see fx-repeat-attributes). ref has no fallback at all (not even '.') and no throw - nodeset evaluation is silently broken downstream (src/ui/fx-repeat.js:206). size (progressive-rendering row cap) and virtual (windowed virtualization) - src/ui/fx-repeat.js:176,188.",
+      inherits: [
+        "foreElement"
+      ]
     },
     template: {
       note: "only carries this child list when it's an immediate child of fx-repeat - see 'exceptions' for how fx-repeat-ref enforces that.",
@@ -28270,7 +28358,14 @@ var fore_tree_default = {
         "ACTION-ELEMENTS",
         "fx-repeat-ref",
         "fx-var"
-      ]
+      ],
+      attrs: {
+        draggable: null,
+        "drop-target": null,
+        "drop-scope": [
+          "parent"
+        ]
+      }
     },
     "fx-repeat-attributes": {
       attrs: {
@@ -28285,7 +28380,10 @@ var fore_tree_default = {
         "fx-var"
       ],
       authorable: false,
-      note: "not written as a literal tag - synthesized at runtime for a plain HTML element carrying a data-ref attribute ('non-visible', like fx-repeatitem). That data-ref section CAN contain an fx-repeat (reachable here via UI-ELEMENTS), but the reverse is disallowed: fx-repeat itself must not contain one."
+      note: "not written as a literal tag - synthesized at runtime for a plain HTML element carrying a data-ref attribute ('non-visible', like fx-repeatitem). That data-ref section CAN contain an fx-repeat (reachable here via UI-ELEMENTS), but the reverse is disallowed: fx-repeat itself must not contain one.",
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-repeatitem": {
       attrs: {
@@ -28299,7 +28397,10 @@ var fore_tree_default = {
         "ACTION-ELEMENTS"
       ],
       authorable: false,
-      note: "generated by fx-repeat at runtime, one per iteration - never write this by hand, it'll conflict with what fx-repeat itself creates. Its content shape (html/ui/action) is still meaningful for documentation, since that's what ends up inside it."
+      note: "generated by fx-repeat at runtime, one per iteration - never write this by hand, it'll conflict with what fx-repeat itself creates. Its content shape (html/ui/action) is still meaningful for documentation, since that's what ends up inside it.",
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-repeat-ref": {
       attrs: {
@@ -28359,6 +28460,9 @@ var fore_tree_default = {
         "ACTION-ELEMENTS",
         "fx-var",
         "fx-trigger"
+      ],
+      inherits: [
+        "foreElement"
       ]
     },
     "fx-abstract-control": {
@@ -28367,7 +28471,10 @@ var fore_tree_default = {
       },
       children: [],
       authorable: false,
-      note: "base class inherited by concrete controls (fx-control, fx-output, ...) - not a tag the user ever writes directly."
+      note: "base class inherited by concrete controls (fx-control, fx-output, ...) - not a tag the user ever writes directly.",
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-output": {
       attrs: {
@@ -28377,7 +28484,8 @@ var fore_tree_default = {
           "html",
           "image"
         ],
-        html: null
+        html: null,
+        unsafe: null
       },
       children: [
         "ACTION-ELEMENTS"
@@ -28389,7 +28497,10 @@ var fore_tree_default = {
         ],
         severity: "warning"
       },
-      note: "refresh() does nothing if neither is set - src/ui/fx-output.js."
+      note: "refresh() does nothing if neither is set - src/ui/fx-output.js.",
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-trigger": {
       attrs: {
@@ -28401,7 +28512,10 @@ var fore_tree_default = {
         "ACTION-ELEMENTS",
         "fx-var"
       ],
-      note: "ref confirmed genuinely optional (only affects readonly-disable behavior) - not marked required. activate-on-focus fires the action on focus, not just click/Enter/Space - src/ui/fx-trigger.js:43."
+      note: "ref confirmed genuinely optional (only affects readonly-disable behavior) - not marked required. activate-on-focus fires the action on focus, not just click/Enter/Space - src/ui/fx-trigger.js:43.",
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-upload": {
       attrs: {
@@ -28415,6 +28529,9 @@ var fore_tree_default = {
         "fx-hint",
         "fx-alert",
         "ACTION-ELEMENTS"
+      ],
+      inherits: [
+        "foreElement"
       ]
     },
     "fx-control-menu": {
@@ -28422,11 +28539,17 @@ var fore_tree_default = {
         select: null,
         mode: null
       },
-      children: []
+      children: [],
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-hint": {
       attrs: {},
-      children: []
+      children: [],
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-alert": {
       attrs: {
@@ -28439,7 +28562,10 @@ var fore_tree_default = {
       children: [
         "HTML-ELEMENTS"
       ],
-      note: "generic isBound() soft pattern."
+      note: "generic isBound() soft pattern.",
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-items": {
       attrs: {
@@ -28449,7 +28575,10 @@ var fore_tree_default = {
       children: [
         "HTML-ELEMENTS"
       ],
-      note: "generic isBound() soft pattern."
+      note: "generic isBound() soft pattern.",
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-setvalue": {
       attrs: {
@@ -28466,7 +28595,11 @@ var fore_tree_default = {
         ],
         severity: "error"
       },
-      note: `throws "fx-setvalue must specify a 'ref' attribute" - src/actions/fx-setvalue.js:40.`
+      note: `throws "fx-setvalue must specify a 'ref' attribute" - src/actions/fx-setvalue.js:40.`,
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-insert": {
       attrs: {
@@ -28487,7 +28620,11 @@ var fore_tree_default = {
         "ACTION-ELEMENTS",
         "fx-var"
       ],
-      note: "not given a blanket requiredAttrs - ref is only required in JSON-lens mode (throws if not a lens path starting with '?', src/actions/fx-insert.js:559-562), template throws on invalid JSON when used (src/actions/fx-insert.js:128), origin just warns+falls back if it doesn't resolve (src/actions/fx-insert.js:453,459). Too mode-dependent to state as one rule."
+      note: "not given a blanket requiredAttrs - ref is only required in JSON-lens mode (throws if not a lens path starting with '?', src/actions/fx-insert.js:559-562), template throws on invalid JSON when used (src/actions/fx-insert.js:128), origin just warns+falls back if it doesn't resolve (src/actions/fx-insert.js:453,459). Too mode-dependent to state as one rule.",
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-delete": {
       attrs: {
@@ -28503,7 +28640,11 @@ var fore_tree_default = {
         ],
         severity: "warning"
       },
-      note: "defaults to '.' with no warning - src/actions/fx-delete.js."
+      note: "defaults to '.' with no warning - src/actions/fx-delete.js.",
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-send": {
       attrs: {
@@ -28523,7 +28664,11 @@ var fore_tree_default = {
         ],
         severity: "error"
       },
-      note: 'dispatches error "<fx-submission> not found" unless connection is given instead - src/actions/fx-send.js:58-77.'
+      note: 'dispatches error "<fx-submission> not found" unless connection is given instead - src/actions/fx-send.js:58-77.',
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-dispatch": {
       attrs: {
@@ -28540,7 +28685,11 @@ var fore_tree_default = {
         ],
         severity: "error"
       },
-      note: 'throws "no event specified for dispatch" - src/actions/fx-dispatch.js:45.'
+      note: 'throws "no event specified for dispatch" - src/actions/fx-dispatch.js:45.',
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-message": {
       attrs: {
@@ -28559,6 +28708,10 @@ var fore_tree_default = {
       children: [
         "ACTION-ELEMENTS",
         "fx-var"
+      ],
+      inherits: [
+        "foreElement",
+        "action"
       ]
     },
     "fx-toggle": {
@@ -28575,7 +28728,11 @@ var fore_tree_default = {
         ],
         severity: "error"
       },
-      note: `dispatches error "fx-case id not found" if the id doesn't resolve - src/actions/fx-toggle.js perform().`
+      note: `dispatches error "fx-case id not found" if the id doesn't resolve - src/actions/fx-toggle.js perform().`,
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-show": {
       attrs: {
@@ -28591,7 +28748,11 @@ var fore_tree_default = {
         ],
         severity: "error"
       },
-      note: "dispatches error event if absent, plus console.error if the id doesn't resolve - src/actions/fx-show.js:20,37."
+      note: "dispatches error event if absent, plus console.error if the id doesn't resolve - src/actions/fx-show.js:20,37.",
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-hide": {
       attrs: {
@@ -28607,7 +28768,11 @@ var fore_tree_default = {
         ],
         severity: "error"
       },
-      note: "dispatches error event if absent - src/actions/fx-hide.js:26."
+      note: "dispatches error event if absent - src/actions/fx-hide.js:26.",
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-setattribute": {
       attrs: {
@@ -28629,7 +28794,11 @@ var fore_tree_default = {
         ],
         severity: "error"
       },
-      note: 'throws if ref absent - src/actions/fx-setattribute.js:45; dispatches error "name or value not specified" if neither given - line 47.'
+      note: 'throws if ref absent - src/actions/fx-setattribute.js:45; dispatches error "name or value not specified" if neither given - line 47.',
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-load": {
       attrs: {
@@ -28651,7 +28820,11 @@ var fore_tree_default = {
         ],
         severity: "error"
       },
-      note: '_evaluateUrlExpression() throws "url not specified" if absent - src/actions/fx-load.js:200.'
+      note: '_evaluateUrlExpression() throws "url not specified" if absent - src/actions/fx-load.js:200.',
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-setfocus": {
       attrs: {
@@ -28668,7 +28841,11 @@ var fore_tree_default = {
         ],
         severity: "error"
       },
-      note: `dispatches error "Instance '...' not found" if the target can't be resolved - src/actions/fx-setfocus.js:33-39.`
+      note: `dispatches error "Instance '...' not found" if the target can't be resolved - src/actions/fx-setfocus.js:33-39.`,
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-refresh": {
       attrs: {
@@ -28680,6 +28857,10 @@ var fore_tree_default = {
       children: [
         "ACTION-ELEMENTS",
         "fx-var"
+      ],
+      inherits: [
+        "foreElement",
+        "action"
       ]
     },
     "fx-replace": {
@@ -28697,7 +28878,11 @@ var fore_tree_default = {
         ],
         severity: "warning"
       },
-      note: "evaluateXPathToFirstNode(null, ...) resolves to no target and perform() silently bails - src/actions/fx-replace.js:41-42."
+      note: "evaluateXPathToFirstNode(null, ...) resolves to no target and perform() silently bails - src/actions/fx-replace.js:41-42.",
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-toggleboolean": {
       attrs: {
@@ -28713,7 +28898,11 @@ var fore_tree_default = {
         ],
         severity: "error"
       },
-      note: "throws if absent - src/actions/fx-toggleboolean.js:43."
+      note: "throws if absent - src/actions/fx-toggleboolean.js:43.",
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-call": {
       attrs: {
@@ -28731,13 +28920,21 @@ var fore_tree_default = {
         ],
         severity: "error"
       },
-      note: "throws if neither present - src/actions/fx-call.js:41."
+      note: "throws if neither present - src/actions/fx-call.js:41.",
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-reload": {
       attrs: {},
       children: [
         "ACTION-ELEMENTS",
         "fx-var"
+      ],
+      inherits: [
+        "foreElement",
+        "action"
       ]
     },
     "fx-reset": {
@@ -28754,13 +28951,21 @@ var fore_tree_default = {
         ],
         severity: "error"
       },
-      note: 'dispatches error "instance does not exist" if absent - src/actions/fx-reset.js:25.'
+      note: 'dispatches error "instance does not exist" if absent - src/actions/fx-reset.js:25.',
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-update": {
       attrs: {},
       children: [
         "ACTION-ELEMENTS",
         "fx-var"
+      ],
+      inherits: [
+        "foreElement",
+        "action"
       ]
     },
     "fx-append": {
@@ -28778,13 +28983,21 @@ var fore_tree_default = {
         ],
         severity: "warning"
       },
-      note: "unresolved id causes a raw TypeError accessing repeat.shadowRoot rather than a Fore-level diagnostic - src/actions/fx-append.js _dataFromTemplate."
+      note: "unresolved id causes a raw TypeError accessing repeat.shadowRoot rather than a Fore-level diagnostic - src/actions/fx-append.js _dataFromTemplate.",
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-unmodified": {
       attrs: {},
       children: [
         "ACTION-ELEMENTS",
         "fx-var"
+      ],
+      inherits: [
+        "foreElement",
+        "action"
       ]
     },
     "fx-action": {
@@ -28794,6 +29007,10 @@ var fore_tree_default = {
       children: [
         "ACTION-ELEMENTS",
         "fx-var"
+      ],
+      inherits: [
+        "foreElement",
+        "action"
       ]
     },
     "fx-return": {
@@ -28801,6 +29018,10 @@ var fore_tree_default = {
       children: [
         "ACTION-ELEMENTS",
         "fx-var"
+      ],
+      inherits: [
+        "foreElement",
+        "action"
       ]
     },
     "fx-confirm": {
@@ -28817,7 +29038,11 @@ var fore_tree_default = {
         ],
         severity: "warning"
       },
-      note: 'defaults to null; window.confirm(null) shows the literal text "null" - src/actions/fx-confirm.js.'
+      note: 'defaults to null; window.confirm(null) shows the literal text "null" - src/actions/fx-confirm.js.',
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-copy": {
       attrs: {
@@ -28834,13 +29059,21 @@ var fore_tree_default = {
         ],
         severity: "error"
       },
-      note: "throws if absent - src/actions/fx-copy.js:36."
+      note: "throws if absent - src/actions/fx-copy.js:36.",
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-undo": {
       attrs: {},
       children: [
         "ACTION-ELEMENTS",
         "fx-var"
+      ],
+      inherits: [
+        "foreElement",
+        "action"
       ]
     },
     "fx-redo": {
@@ -28848,6 +29081,10 @@ var fore_tree_default = {
       children: [
         "ACTION-ELEMENTS",
         "fx-var"
+      ],
+      inherits: [
+        "foreElement",
+        "action"
       ]
     },
     "fx-commit-history": {
@@ -28855,6 +29092,10 @@ var fore_tree_default = {
       children: [
         "ACTION-ELEMENTS",
         "fx-var"
+      ],
+      inherits: [
+        "foreElement",
+        "action"
       ]
     },
     "fx-insertchild": {
@@ -28881,11 +29122,18 @@ var fore_tree_default = {
         ],
         severity: "warning"
       },
-      note: 'if absent, parent is interpolated directly into a generated <fx-insert context="${this.parent}">, becoming the literal string context="null" - silently breaks the insert with no diagnostic - src/actions/fx-insertchild.js:69-73.'
+      note: 'if absent, parent is interpolated directly into a generated <fx-insert context="${this.parent}">, becoming the literal string context="null" - silently breaks the insert with no diagnostic - src/actions/fx-insertchild.js:69-73.',
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-droptarget": {
       attrs: {},
-      children: []
+      children: [],
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-inspector": {
       attrs: {
@@ -28967,36 +29215,25 @@ var fore_tree_default = {
 };
 
 // src/fore-html-mode.js
-var { macros, tree, exceptions } = fore_tree_default;
-var GLOBAL_ATTRS = {
-  ref: null,
-  context: null,
-  value: null,
-  event: null,
-  if: null,
-  while: null,
-  iterate: null,
-  delay: null,
-  target: null,
-  phase: ["capture", "default"],
-  propagate: ["stop", "continue"],
-  "default-action": ["cancel", "perform"]
-};
-var HTML_GLOBAL_ATTRS = /* @__PURE__ */ new Set(["id", "class", "style", "title", "slot", "part", "lang", "dir", "hidden"]);
+var { macros, tree, exceptions, attrGroups, htmlGlobalAttrs } = fore_tree_default;
+var HTML_GLOBAL_NAMES = new Set(htmlGlobalAttrs.names);
+function attrsOf(tagName) {
+  const def = tree[tagName];
+  if (!def) return {};
+  return Object.assign({}, ...(def.inherits || []).map((group) => attrGroups[group]), def.attrs);
+}
 function extraTagsFromTree() {
   const extraTags = {};
-  for (const [tagName, def] of Object.entries(tree)) {
+  for (const tagName of Object.keys(tree)) {
     if (!tagName.startsWith("fx-")) continue;
-    extraTags[tagName] = { attrs: def.attrs || {} };
+    extraTags[tagName] = { attrs: attrsOf(tagName) };
   }
   return extraTags;
 }
 var EXTRA_TAGS = extraTagsFromTree();
 function isKnownAttribute(tagName, attrName) {
-  if (HTML_GLOBAL_ATTRS.has(attrName) || attrName.startsWith("data-") || attrName.startsWith("aria-")) return true;
-  if (attrName in GLOBAL_ATTRS) return true;
-  const def = tree[tagName];
-  return !!(def && def.attrs && attrName in def.attrs);
+  if (HTML_GLOBAL_NAMES.has(attrName) || htmlGlobalAttrs.prefixes.some((p) => attrName.startsWith(p))) return true;
+  return attrName in attrsOf(tagName);
 }
 function ancestorTagNames(openOrSelfClosingNode, state) {
   const names = [];
@@ -29179,8 +29416,7 @@ function foreHtml() {
   return [
     html({
       selfClosingTags: false,
-      extraTags: EXTRA_TAGS,
-      extraGlobalAttributes: GLOBAL_ATTRS
+      extraTags: EXTRA_TAGS
     }),
     linter(foreLinter, { delay: 300 }),
     lintGutter()

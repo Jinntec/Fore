@@ -3,37 +3,26 @@ import { syntaxTree } from '@codemirror/language';
 import { linter, lintGutter } from '@codemirror/lint';
 import foreTreeData from '../../../src/fore-tree.json' with { type: 'json' };
 
-const { macros, tree, exceptions } = foreTreeData;
+const { macros, tree, exceptions, attrGroups, htmlGlobalAttrs } = foreTreeData;
 
-// Attributes shared across most fx-* elements (ForeElementMixin's ref/context/value,
-// AbstractAction's event/if/while/iterate/delay/target/phase/propagate/default-action) -
-// kept global rather than repeated on all ~29 action-element entries in fore-tree.json.
-const GLOBAL_ATTRS = {
-  ref: null,
-  context: null,
-  value: null,
-  event: null,
-  if: null,
-  while: null,
-  iterate: null,
-  delay: null,
-  target: null,
-  phase: ['capture', 'default'],
-  propagate: ['stop', 'continue'],
-  'default-action': ['cancel', 'perform'],
-};
+const HTML_GLOBAL_NAMES = new Set(htmlGlobalAttrs.names);
 
-// Plain HTML global attributes that are always valid regardless of the schema,
-// so they don't get flagged as "unknown" on fx-* elements.
-const HTML_GLOBAL_ATTRS = new Set(['id', 'class', 'style', 'title', 'slot', 'part', 'lang', 'dir', 'hidden']);
+/** Full attribute set of a tag: its own 'attrs' plus those of every attrGroups entry it
+ *  'inherits' (ForeElementMixin's ref/context/value, AbstractAction's event/if/while/...) -
+ *  fore-tree.json keeps those groups once rather than repeating them on ~30 tags. */
+function attrsOf(tagName) {
+  const def = tree[tagName];
+  if (!def) return {};
+  return Object.assign({}, ...(def.inherits || []).map((group) => attrGroups[group]), def.attrs);
+}
 
 /** { tagName: { attrs } } shape @codemirror/lang-html's html() expects, derived from
- *  fore-tree.json's per-tag 'attrs' (already in the right null|string[] value shape). */
+ *  fore-tree.json (the null|string[] value shape is already what it wants). */
 function extraTagsFromTree() {
   const extraTags = {};
-  for (const [tagName, def] of Object.entries(tree)) {
+  for (const tagName of Object.keys(tree)) {
     if (!tagName.startsWith('fx-')) continue; // skip the 'template' node - it's plain HTML
-    extraTags[tagName] = { attrs: def.attrs || {} };
+    extraTags[tagName] = { attrs: attrsOf(tagName) };
   }
   return extraTags;
 }
@@ -41,10 +30,8 @@ function extraTagsFromTree() {
 const EXTRA_TAGS = extraTagsFromTree();
 
 function isKnownAttribute(tagName, attrName) {
-  if (HTML_GLOBAL_ATTRS.has(attrName) || attrName.startsWith('data-') || attrName.startsWith('aria-')) return true;
-  if (attrName in GLOBAL_ATTRS) return true;
-  const def = tree[tagName];
-  return !!(def && def.attrs && attrName in def.attrs);
+  if (HTML_GLOBAL_NAMES.has(attrName) || htmlGlobalAttrs.prefixes.some((p) => attrName.startsWith(p))) return true;
+  return attrName in attrsOf(tagName);
 }
 
 /** Tag names of every ancestor Element enclosing `tagNode`, immediate parent first
@@ -294,7 +281,6 @@ export function foreHtml() {
     html({
       selfClosingTags: false,
       extraTags: EXTRA_TAGS,
-      extraGlobalAttributes: GLOBAL_ATTRS,
     }),
     linter(foreLinter, { delay: 300 }),
     lintGutter(),
