@@ -205,8 +205,15 @@
          model.revalidate() before running the insert -- see s-add-column and btn-confirm-add-column
          below. -->
     <fx-bind ref="instance('new-column')/@Id"
+             required="true()"
              constraint="not(. = instance('codelist')/ColumnSet/Column/@Id)"
              alert="Id is required and must be unique."></fx-bind>
+    <fx-bind ref="instance('new-column')/ShortName"
+             required="true()"
+             alert="Short name is required."></fx-bind>
+    <fx-bind ref="instance('new-column')/LongName"
+             required="true()"
+             alert="Long name is required."></fx-bind>
 
     <!-- Some source genericode files (EAS's "remark", UN/ECE Rec. 21's "beschreibung", VATEX's
          "weitereBeschreibung") only emit a Value element for rows where that optional column is
@@ -323,7 +330,7 @@
          runs from submit-done, so an invalid dialog can't create a Column. All the other
          submissions in this model set validate="false" explicitly since they submit/load unrelated
          instances; this one is the only one that wants the default behavior. -->
-    <fx-submission id="s-add-column" url="#echo" method="post" replace="none">
+    <fx-submission id="s-add-column" ref="instance('new-column')" url="#echo" method="post" replace="none">
       <fx-action event="submit-done">
         <!-- context+ref together make fx-insert always append as the LAST Column
              regardless of whether ColumnSet already has children (context alone handles
