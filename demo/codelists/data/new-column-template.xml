@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Column Id="" Use="optional">
+  <ShortName></ShortName>
+  <LongName></LongName>
+  <Data Type="string"/>
+</Column>
