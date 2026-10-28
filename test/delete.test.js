@@ -515,4 +515,33 @@ describe('delete Tests', () => {
     expect(repeat.nodeset[0].textContent).to.equal('item1');
     expect(repeat.nodeset[1].textContent).to.equal('item3');
   });
+
+  it('deletes an attribute node and leaves its owner element in place', async () => {
+    const el = await fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance type="html">
+            <data>
+              <task complete="false" due="2019-02-04">Pick up Milk</task>
+            </data>
+          </fx-instance>
+        </fx-model>
+        <fx-trigger>
+          <button>remove attribute</button>
+          <fx-delete ref="task/@due"></fx-delete>
+        </fx-trigger>
+        <fx-output id="out" ref="task/@due"></fx-output>
+      </fx-fore>
+    `);
+    await oneEvent(el, 'ready');
+
+    el.querySelector('button').click();
+    await oneEvent(el, 'refresh-done');
+
+    const task = el.getModel().getDefaultInstance().getDefaultContext().querySelector('task');
+    expect(task).to.exist;
+    expect(task.hasAttribute('due')).to.be.false;
+    expect(task.getAttribute('complete')).to.equal('false');
+    expect(task.textContent).to.equal('Pick up Milk');
+  });
 });

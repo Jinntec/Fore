@@ -1,13 +1,16 @@
 // import { FxAction } from './fx-action.js';
 import '../fx-model.js';
 import { AbstractAction } from './abstract-action.js';
-import { evaluateXPath } from '../xpath-evaluation.js';
+import { evaluateXPath, evaluateXPathToString } from '../xpath-evaluation.js';
 import { Fore } from '../fore.js';
 import getInScopeContext from '../getInScopeContext';
 import { FxBind } from '../fx-bind';
 
 /**
  * `fx-setattribute` allows to create and set an attribute value in the data.
+ *
+ * `value` is an XPath expression. `name` is a literal attribute name, or may contain `{...}` XPath
+ * templates (like attribute value templates) to compute it, e.g. `name="{@name}"` inside a repeat.
  *
  * @customElement
  */
@@ -71,10 +74,15 @@ export default class FxSetattribute extends AbstractAction {
         value = String(result);
       }
     }
-    mi.node.setAttribute(this.attrName, value);
+    const attrName = this._resolveName();
+    if (!attrName) {
+      await Fore.dispatch(this, 'error', { message: 'name evaluated to an empty string' });
+      return;
+    }
+    mi.node.setAttribute(attrName, value);
     const newModelItem = FxBind.createModelItem(
-      `${this.ref}/@${this.attrName}`,
-      mi.node.getAttributeNode(this.attrName),
+      `${this.ref}/@${attrName}`,
+      mi.node.getAttributeNode(attrName),
       this,
       null,
     );
@@ -88,6 +96,15 @@ export default class FxSetattribute extends AbstractAction {
     // could have read a nonexistent attribute), so notify() alone reaches nobody.
     // Signal a structural change so refs matching the owner element re-evaluate.
     this.getOwnerForm().signalChangeToElement(mi.node.localName);
+  }
+
+  /** The attribute name: `name` as written, with every `{expr}` replaced by its string value. */
+  _resolveName() {
+    if (!this.attrName.includes('{')) return this.attrName;
+    const inscopeContext = getInScopeContext(this, this.attrName);
+    return this.attrName
+      .replace(/\{([^}]*)\}/g, (_, expr) => evaluateXPathToString(expr, inscopeContext, this))
+      .trim();
   }
 }
 

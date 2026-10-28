@@ -958,7 +958,7 @@ export default class FxControl extends XfAbstractControl {
         // updateEntry() does not know about (e.g. a `name="{$qno}"` on a generated
         // radio input). Flag them for scanning on the next fx-fore refresh, the same
         // way fx-repeat does for newly rendered repeat items.
-        this.getOwnerForm()?.scanForNewTemplateExpressionsNextRefresh();
+        this.getOwnerForm()?.scanForNewTemplateExpressionsNextRefresh(this);
       }
 
       if (this.valueProp === 'selectedOptions') {

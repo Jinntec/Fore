@@ -101,7 +101,7 @@ export class RepeatBase extends withDraggability(UIElement, false) {
         }
 
         // Tell the owner form we might have new template expressions here
-        this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh();
+        this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh(newItem);
 
         newItem.refresh(true);
       }
@@ -206,7 +206,7 @@ export class RepeatBase extends withDraggability(UIElement, false) {
     this._createModelItemsRecursively(newRepeatItem, parentModelItem);
 
     // Step 6: Notify and refresh the UI
-    this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh();
+    this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh(newRepeatItem);
 
     this.getOwnerForm().addToBatchedNotifications(newRepeatItem);
   }

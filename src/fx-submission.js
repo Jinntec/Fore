@@ -132,7 +132,10 @@ export class FxSubmission extends ForeElementMixin {
     model.recalculate();
 
     if (this.validate === 'true' && this.method !== 'get') {
-      const valid = model.revalidate();
+      // only the submitted data has to be valid: the subtree selected by `ref`, which is the root
+      // of the default instance without a `ref`. JSON nodesets are no DOM nodes, so those still
+      // validate the whole model.
+      const valid = model.revalidate(this.nodeset?.nodeType ? this.nodeset : null);
       if (!valid) {
         console.log('validation failed. Submission stopped');
         this.getOwnerForm().classList.add('submit-validation-failed');
@@ -176,7 +179,10 @@ export class FxSubmission extends ForeElementMixin {
       serialized = undefined;
     } else {
       relevant = Relevance.selectRelevant(this, instType);
-      serialized = this._serialize(instance, relevant);
+      serialized =
+        this.method.toLowerCase() === 'urlencoded-post'
+          ? this._serializeUrlencoded(relevant)
+          : this._serialize(instance, relevant);
     }
 
     if (this.method.toLowerCase() === 'get') {
@@ -256,7 +262,8 @@ export class FxSubmission extends ForeElementMixin {
 
     try {
       const response = await fetch(resolvedUrl, {
-        method: this.method,
+        // 'urlencoded-post' is Fore's name for a classic HTML form post, not an HTTP method
+        method: this.method.toLowerCase() === 'urlencoded-post' ? 'POST' : this.method,
         credentials: this.credentials,
         mode: 'cors',
         headers,
@@ -360,6 +367,27 @@ export class FxSubmission extends ForeElementMixin {
    * @param {any} data
    * @returns {string}
    */
+  /**
+   * Serializes the relevant data as a classic HTML form body (`method="urlencoded-post"`): every child element
+   * of an XML/HTML instance's root becomes a field named like the element, with its text as value; a JSON
+   * instance contributes its top-level properties.
+   *
+   * @param {Node|object} relevant the relevant data selected for submission
+   * @returns {string}
+   */
+  _serializeUrlencoded(relevant) {
+    const params = new URLSearchParams();
+    const node = relevant?.nodeType === Node.DOCUMENT_NODE ? relevant.documentElement : relevant;
+    if (node?.nodeType === Node.ELEMENT_NODE) {
+      Array.from(node.children).forEach(child => params.append(child.localName, child.textContent));
+    } else if (node && typeof node === 'object') {
+      Object.entries(this._toPlainJson(node)).forEach(([name, value]) =>
+        params.append(name, value === null || value === undefined ? '' : String(value)),
+      );
+    }
+    return params.toString();
+  }
+
   _serialize(instanceEl, data) {
     // If the caller passed an explicit "data", prefer it; otherwise serialize the instance.
     let payload = data;
@@ -515,7 +543,12 @@ export class FxSubmission extends ForeElementMixin {
 
     // ### set content-type header according to type of instance
     const instance = this.getInstance();
-    const contentType = Fore.getContentType(instance, this.serialization);
+    const contentType = Fore.getContentType(
+      instance,
+      this.method.toLowerCase() === 'urlencoded-post'
+        ? 'application/x-www-form-urlencoded'
+        : this.serialization,
+    );
     headers.append('Content-Type', contentType);
     // ### needed to overwrite browsers' setting of 'Accept' header
     if (headers.has('Accept')) {

@@ -92,6 +92,7 @@
     "format:prettier": "prettier \"**/*.js\" --write --ignore-path .eslintignore",
     "lint:pkg": "npx --yes publint@0.3",
     "docs": "wca src -f json --outFile fore-elements.json",
+    "docs:tree": "node scripts/build-tree-docs.mjs",
     "lint": "npm run lint:eslint && npm run lint:prettier && npm run lint:pkg",
     "lint:types": "tsc",
     "format": "npm run format:eslint && npm run format:prettier",

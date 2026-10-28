@@ -807,7 +807,10 @@ export class FxLens extends HTMLElement {
 
     // HTML: Fore stores HTMLCollection in instanceData; show wrapper/root from markup when available
     if (t === 'html') {
-      const wrapper = inst.firstElementChild;
+      // Prefer the live data: the markup child of <fx-instance> is only the initial source and
+      // misses everything written at runtime (initial, calculate, setvalue, ...)
+      const live = raw && raw.nodeType === 9 ? raw.documentElement : raw;
+      const wrapper = live && live.nodeType === 1 ? live : inst.firstElementChild;
       if (wrapper) {
         root.appendChild(this._xmlElementNode(wrapper, false));
       } else if (raw && typeof raw.length === 'number') {

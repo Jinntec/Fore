@@ -323,7 +323,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
 
         this._createModelItemsRecursively(newRepeatItem, parentModelItem);
 
-        fore.scanForNewTemplateExpressionsNextRefresh();
+        fore.scanForNewTemplateExpressionsNextRefresh(newRepeatItem);
         fore.addToBatchedNotifications(newRepeatItem);
       } else if (beforeWindow) {
         // Zone A: inserted above the rendered window. The rendered rows are still correct
@@ -538,7 +538,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       if (fore.createNodes) {
         fore.initData(newRepeatItem);
       }
-      fore.scanForNewTemplateExpressionsNextRefresh();
+      fore.scanForNewTemplateExpressionsNextRefresh(newRepeatItem);
       fore.addToBatchedNotifications(newRepeatItem);
 
       this._renderTarget += 1;
@@ -987,7 +987,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       if (fore.createNodes) {
         fore.initData(newItem);
       }
-      fore.scanForNewTemplateExpressionsNextRefresh();
+      fore.scanForNewTemplateExpressionsNextRefresh(newItem);
       fore.registerLazyElement(newItem);
       newItem.refresh(true);
       Fore.dispatch(this, 'item-created', { nodeset: newItem.nodeset, pos: position });
@@ -1142,7 +1142,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     for (let logicalIdx = oldEnd; logicalIdx < newEnd; logicalIdx += 1) {
       const newItem = this._materializeRepeatItem(logicalIdx + 1);
       if (fore.createNodes) fore.initData(newItem);
-      fore.scanForNewTemplateExpressionsNextRefresh();
+      fore.scanForNewTemplateExpressionsNextRefresh(newItem);
       fore.registerLazyElement(newItem);
       newItem.refresh(true);
       Fore.dispatch(this, 'item-created', { nodeset: newItem.nodeset, pos: logicalIdx + 1 });
@@ -1209,7 +1209,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
       newItem.nodeset = this.nodeset[logicalIdx];
       newItem.index = logicalIdx + 1;
       if (fore.createNodes) fore.initData(newItem);
-      fore.scanForNewTemplateExpressionsNextRefresh();
+      fore.scanForNewTemplateExpressionsNextRefresh(newItem);
       fore.registerLazyElement(newItem);
       newItem.refresh(true);
       Fore.dispatch(this, 'item-created', { nodeset: newItem.nodeset, pos: logicalIdx + 1 });
@@ -1272,7 +1272,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
     for (let li = newStart; li < newEnd; li += 1) {
       const newItem = this._materializeRepeatItem(li + 1);
       if (fore.createNodes) fore.initData(newItem);
-      fore.scanForNewTemplateExpressionsNextRefresh();
+      fore.scanForNewTemplateExpressionsNextRefresh(newItem);
       fore.registerLazyElement(newItem);
       newItem.refresh(true);
       Fore.dispatch(this, 'item-created', { nodeset: newItem.nodeset, pos: li + 1 });
@@ -1973,7 +1973,7 @@ export class FxRepeat extends withDraggability(UIElement, false) {
           this.getOwnerForm().initData(newItem);
         }
 
-        this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh();
+        this.getOwnerForm().scanForNewTemplateExpressionsNextRefresh(newItem);
 
         newItem.refresh(true);
       }

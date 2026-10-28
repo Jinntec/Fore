@@ -29,11 +29,14 @@
                 <balance></balance>
             </data>
         </fx-instance>
-        <fx-bind ref="date" initial="string(current-date())"></fx-bind>
+        <fx-bind ref="date" initial="substring(string(current-date()), 1, 10)"></fx-bind>
         <fx-bind ref="balance" initial="0" calculate="../credit - ../debit"></fx-bind>
     </fx-model>
     <fx-group>
-        <fx-control ref="date"><label>date (editable, set once)</label></fx-control>
+        <fx-control ref="date">
+            <label>date (editable, set once)</label>
+            <input type="date" class="widget">
+        </fx-control>
         <fx-control ref="credit" update-event="input"><label>credit</label></fx-control>
         <fx-control ref="debit" update-event="input"><label>debit</label></fx-control>
         <p>Balance: <fx-output ref="balance"></fx-output></p>

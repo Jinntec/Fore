@@ -1,0 +1,24 @@
+{
+  "_comment": "Hand-written additions to the generated 'docs' block of src/fore-tree.json, for what the fore-skills reference does not (yet) document. Merged over the generated text by scripts/build-tree-docs.mjs. Prefer fixing the reference; entries here are a stopgap.",
+  "tags": {
+    "template": {
+      "description": "The row template of an fx-repeat. Beside the markup it carries the repeat's drag and drop settings.",
+      "attrs": {
+        "draggable": "\"true\" makes the repeat items draggable, so they can be reordered by drag and drop.",
+        "drop-target": "Id of the repeat that items may be dropped into. Items can only move between repeats that share this id.",
+        "drop-scope": "\"parent\" restricts drops to items with the same parent node in the data, instead of comparing repeat ids. Needed for recursive trees (fx-repeat-ref)."
+      }
+    },
+    "fx-instance": {
+      "attrs": {
+        "static": "Asserts that no fx-bind, fx-var or model dependency reads this instance (e.g. a language file only read by controls and templates). Replacing its data then only refreshes the UI and skips the model's rebuild, recalculate and revalidate. Never set it on the default instance or on one that binds depend on."
+      }
+    },
+    "fx-hide": {
+      "description": "Closes a dialog.",
+      "attrs": {
+        "dialog": "Id of the dialog to close."
+      }
+    }
+  }
+}

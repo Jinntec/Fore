@@ -592,4 +592,50 @@ describe('submission tests', () => {
       });
 
     });
+
+  describe('urlencoded-post', () => {
+    let originalFetch;
+    let request;
+
+    beforeEach(() => {
+      originalFetch = window.fetch;
+      request = null;
+      window.fetch = async (url, init) => {
+        request = { url, init };
+        return new Response('{}', { status: 200, headers: { 'Content-Type': 'application/json' } });
+      };
+    });
+
+    afterEach(() => {
+      window.fetch = originalFetch;
+    });
+
+    it('sends a form body with the POST method and the form content type', async () => {
+      const el = await fixtureSync(html`
+        <fx-fore>
+          <fx-model>
+            <fx-instance type="html">
+              <data>
+                <user>admin</user>
+                <password>s e&amp;cret</password>
+              </data>
+            </fx-instance>
+            <fx-submission id="s" method="urlencoded-post" url="http://localhost/login" replace="none">
+            </fx-submission>
+          </fx-model>
+        </fx-fore>
+      `);
+      await oneEvent(el, 'ready');
+
+      await el.querySelector('#s').submit();
+
+      expect(request.init.method).to.equal('POST');
+      expect(request.init.headers.get('Content-Type')).to.equal(
+        'application/x-www-form-urlencoded; charset=UTF-8',
+      );
+      const body = new URLSearchParams(request.init.body);
+      expect(body.get('user')).to.equal('admin');
+      expect(body.get('password')).to.equal('s e&cret');
+    });
+  });
 });

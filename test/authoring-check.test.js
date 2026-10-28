@@ -316,4 +316,29 @@ describe('authoring-check Tests', () => {
     expect(checkAuthoring(fore)).to.deep.equal([]);
   });
 
+
+  it('reports fx-submission with an empty ref', () => {
+    const fore = fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-submission id="save" ref="" method="post" url="#"></fx-submission>
+        </fx-model>
+      </fx-fore>
+    `);
+    const errors = checkAuthoring(fore);
+    expect(errors.length).to.equal(1);
+    expect(errors[0].message).to.include('empty ref');
+  });
+
+  it('passes fx-submission without ref or with ref="."', () => {
+    const fore = fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-submission id="a" method="post" url="#"></fx-submission>
+          <fx-submission id="b" ref="." method="post" url="#"></fx-submission>
+        </fx-model>
+      </fx-fore>
+    `);
+    expect(checkAuthoring(fore)).to.deep.equal([]);
+  });
 });

@@ -27885,7 +27885,7 @@ var autoCloseTags2 = /* @__PURE__ */ EditorView.inputHandler.of((view, from, to,
 
 // ../../src/fore-tree.json
 var fore_tree_default = {
-  _comment: "Lives in src/ (not demo/) because it's the authoritative containment/attribute grammar for the whole fx-* element set, not a demo-only artifact - it ships with the npm package via the 'src/**/*' files entry, unlike anything under demo/. Consumed by demo/fore-codemirror/src/fore-html-mode.js (the CodeMirror linter) via a relative import, and also read by the fore-skills companion repo when regenerating its element reference. Replaces fore-schema.json + fore-structure.json + fore-categories.json (all retired). Containment is expressed positionally: a tag is legal wherever it's listed as a child (literally or via a macro) of its nearest tracked ancestor. Nothing needs a denylist - if it's not reachable from a node's children, it's invalid there, full stop. The only place position isn't enough is fx-repeat-ref, which needs a literal ancestor *path* (template > fx-repeat) because <template> is a plain HTML tag reused outside Fore too - that's the one entry in 'exceptions'. Per-tag flags beyond attrs/children: 'authorable: false' (fx-repeatitem, fx-repeat-attributes, fx-abstract-control - real tags/classes the linter should still recognize by name, but flag as an error if a user writes them literally, since they're runtime-generated from data-ref attributes or base-class-only); 'requiredChildren' (fx-repeat needs a <template> - absence should warn, not just silently permit-if-present); and 'requiredAttrs' ({all: [...], anyOf: [...], severity: 'error'|'warning'} - grounded in source: 'error' where the element's own code throws/console.errors/dispatches an error event when the attr is missing, 'warning' where it silently no-ops or falls back to a default and is merely pointless without it). Containment between the two runtime-generated repeat classes is one-directional: an fx-repeat-attributes section (data-ref) may contain an fx-repeat, but fx-repeat may never contain fx-repeat-attributes. Attribute lists were cross-checked against each class's observedAttributes/getAttribute reads, not just fore-docs (which itself was missing some of these) - fx-model.undo/undo-depth, fx-fore.keyboard-shortcuts, fx-repeat.size/virtual/focus-on-create, fx-trigger.activate-on-focus/debounce, fx-container.readonly/refresh-on-view, fx-include.selector, fx-control.as/credentials/debounce/initial/listen-on/on-demand/shadow/src/value-prop, and others were found this way. Validated against all 188 files in demo/ (see demo/fore-codemirror/_lint-demos-check.mjs, run once during integration then removed) - containment rules were widened from evidence found there: fx-fore also allows top-level actions/fx-var/nested fx-fore (action-block.html, nested-fore-instance.html), fx-connection/fx-output allow ACTION-ELEMENTS (connection.html, actions.html), fx-bind allows fx-alert (revalidate.html + fore-docs), fx-control allows fx-trigger (markdown-editor.html), fx-switch allows UI-ELEMENTS/ACTION-ELEMENTS alongside fx-case (accordion.html), action elements allow fx-var (duration.html), and fx-items/fx-alert allow static HTML-ELEMENTS content instead of always being ref-bound (radiobuttons.html). requiredAttrs was correspondingly removed from fx-group/fx-switch/fx-alert/fx-items once real demos showed them legitimately used unbound - the 'isBound() soft pattern' evidence only reliably predicts pointlessness for elements whose whole purpose IS the binding (fx-bind, fx-repeat, fx-delete), not general-purpose containers.",
+  _comment: "Lives in src/ (not demo/) because it's the authoritative containment/attribute grammar for the whole fx-* element set, not a demo-only artifact - it ships with the npm package via the 'src/**/*' files entry, unlike anything under demo/. Consumed by demo/fore-codemirror/src/fore-html-mode.js (the CodeMirror linter) via a relative import, and also read by the fore-skills companion repo when regenerating its element reference. Replaces fore-schema.json + fore-structure.json + fore-categories.json (all retired). Containment is expressed positionally: a tag is legal wherever it's listed as a child (literally or via a macro) of its nearest tracked ancestor. Nothing needs a denylist - if it's not reachable from a node's children, it's invalid there, full stop. The only place position isn't enough is fx-repeat-ref, which needs a literal ancestor *path* (template > fx-repeat) because <template> is a plain HTML tag reused outside Fore too - that's the one entry in 'exceptions'. Per-tag flags beyond attrs/children: 'authorable: false' (fx-repeatitem, fx-repeat-attributes, fx-abstract-control - real tags/classes the linter should still recognize by name, but flag as an error if a user writes them literally, since they're runtime-generated from data-ref attributes or base-class-only); 'requiredChildren' (fx-repeat needs a <template> - absence should warn, not just silently permit-if-present); and 'requiredAttrs' ({all: [...], anyOf: [...], severity: 'error'|'warning'} - grounded in source: 'error' where the element's own code throws/console.errors/dispatches an error event when the attr is missing, 'warning' where it silently no-ops or falls back to a default and is merely pointless without it). Containment between the two runtime-generated repeat classes is one-directional: an fx-repeat-attributes section (data-ref) may contain an fx-repeat, but fx-repeat may never contain fx-repeat-attributes. Attribute lists were cross-checked against each class's observedAttributes/getAttribute reads, not just fore-docs (which itself was missing some of these) - fx-model.undo/undo-depth, fx-fore.keyboard-shortcuts, fx-repeat.size/virtual/focus-on-create, fx-trigger.activate-on-focus/debounce, fx-container.readonly/refresh-on-view, fx-include.selector, fx-control.as/credentials/debounce/initial/listen-on/on-demand/shadow/src/value-prop, and others were found this way. Validated against all 188 files in demo/ (see demo/fore-codemirror/_lint-demos-check.mjs, run once during integration then removed) - containment rules were widened from evidence found there: fx-fore also allows top-level actions/fx-var/nested fx-fore (action-block.html, nested-fore-instance.html), fx-connection/fx-output allow ACTION-ELEMENTS (connection.html, actions.html), fx-bind allows fx-alert (revalidate.html + fore-docs), fx-control allows fx-trigger (markdown-editor.html), fx-switch allows UI-ELEMENTS/ACTION-ELEMENTS alongside fx-case (accordion.html), action elements allow fx-var (duration.html), and fx-items/fx-alert allow static HTML-ELEMENTS content instead of always being ref-bound (radiobuttons.html). requiredAttrs was correspondingly removed from fx-group/fx-switch/fx-alert/fx-items once real demos showed them legitimately used unbound - the 'isBound() soft pattern' evidence only reliably predicts pointlessness for elements whose whole purpose IS the binding (fx-bind, fx-repeat, fx-delete), not general-purpose containers. Attributes shared by many tags are not repeated per tag: 'attrGroups' holds them once (foreElement = ForeElementMixin's ref/context/value; action = AbstractAction's event/if/while/iterate/delay/target/phase/propagate/default-action) and a tag opts in with 'inherits' (action tags list both groups, other ForeElementMixin/UIElement-based tags list foreElement, plain HTMLElement tags like fx-fore/fx-model/fx-instance list none). The full attribute set of a tag is therefore its own 'attrs' + the attrs of every group in 'inherits' + 'htmlGlobalAttrs' (exact names and data-/aria- prefixes). 'template' carries attrs too (draggable/drop-target/drop-scope): fx-repeat reads those from its <template>, not from itself. default-action is the kebab-case spelling; the legacy camelCase defaultAction is still read by the code but deliberately not listed. 'docs' holds a short description of every element and attribute for tooltips; it is generated from the fore-skills element reference by scripts/build-tree-docs.mjs (npm run docs:tree) and is not grammar - nothing validates against it. Per element 'attrs' has the entries that element documents itself; 'shared' covers the attributes of the attrGroups. 'unique' lists children that may occur at most once per parent because the parent only looks up the first one (fx-fore: querySelector('fx-model'); fx-repeat: querySelector('template'); fx-control: querySelector('fx-alert')); an editor should not offer them again once present.",
   macros: {
     "HTML-ELEMENTS": {
       wildcard: true,
@@ -27937,6 +27937,50 @@ var fore_tree_default = {
       "fx-control-menu"
     ]
   },
+  attrGroups: {
+    foreElement: {
+      ref: null,
+      context: null,
+      value: null
+    },
+    action: {
+      event: null,
+      if: null,
+      while: null,
+      iterate: null,
+      delay: null,
+      target: null,
+      phase: [
+        "capture",
+        "default"
+      ],
+      propagate: [
+        "stop",
+        "continue"
+      ],
+      "default-action": [
+        "cancel",
+        "perform"
+      ]
+    }
+  },
+  htmlGlobalAttrs: {
+    names: [
+      "id",
+      "class",
+      "style",
+      "title",
+      "slot",
+      "part",
+      "lang",
+      "dir",
+      "hidden"
+    ],
+    prefixes: [
+      "data-",
+      "aria-"
+    ]
+  },
   tree: {
     "fx-fore": {
       attrs: {
@@ -27966,6 +28010,9 @@ var fore_tree_default = {
         "ACTION-ELEMENTS",
         "fx-var",
         "fx-fore"
+      ],
+      unique: [
+        "fx-model"
       ]
     },
     "fx-model": {
@@ -28010,7 +28057,10 @@ var fore_tree_default = {
         ],
         severity: "warning"
       },
-      note: "ref defaults to '.' with no warning if absent (src/fx-bind.js:80) - valid but usually not what's intended."
+      note: "ref defaults to '.' with no warning if absent (src/fx-bind.js:80) - valid but usually not what's intended.",
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-instance": {
       attrs: {
@@ -28027,7 +28077,8 @@ var fore_tree_default = {
           "include",
           "omit"
         ],
-        shared: null
+        shared: null,
+        static: null
       },
       children: []
     },
@@ -28078,7 +28129,10 @@ var fore_tree_default = {
         ],
         severity: "error"
       },
-      note: 'logs "id is required" if absent - src/fx-submission.js:25.'
+      note: 'logs "id is required" if absent - src/fx-submission.js:25.',
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-header": {
       attrs: {
@@ -28092,7 +28146,10 @@ var fore_tree_default = {
         ],
         severity: "error"
       },
-      note: "throws in constructor if absent - src/fx-header.js:11."
+      note: "throws in constructor if absent - src/fx-header.js:11.",
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-connection": {
       attrs: {
@@ -28114,7 +28171,10 @@ var fore_tree_default = {
         ],
         severity: "warning"
       },
-      note: "_connect() silently skips creating the WebSocket if empty, no warning - src/fx-connection.js:130-137."
+      note: "_connect() silently skips creating the WebSocket if empty, no warning - src/fx-connection.js:130-137.",
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-functionlib": {
       attrs: {
@@ -28132,7 +28192,10 @@ var fore_tree_default = {
         ],
         severity: "error"
       },
-      note: 'logs "Missing required @src." and no-ops - src/functions/fx-functionlib.js:80.'
+      note: 'logs "Missing required @src." and no-ops - src/functions/fx-functionlib.js:80.',
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-function": {
       attrs: {
@@ -28147,7 +28210,10 @@ var fore_tree_default = {
         ],
         severity: "error"
       },
-      note: 'logs "signature is a required attribute" then throws calling .match() on the null signature - src/functions/registerFunction.js:30.'
+      note: 'logs "signature is a required attribute" then throws calling .match() on the null signature - src/functions/registerFunction.js:30.',
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-var": {
       attrs: {
@@ -28161,12 +28227,19 @@ var fore_tree_default = {
         ],
         severity: "warning"
       },
-      note: "unused/unreferenceable without a name, no warning."
+      note: "unused/unreferenceable without a name, no warning.",
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-construct-done": {
       attrs: {},
       children: [
         "ACTION-ELEMENTS"
+      ],
+      inherits: [
+        "foreElement",
+        "action"
       ]
     },
     "fx-group": {
@@ -28181,7 +28254,10 @@ var fore_tree_default = {
         "ACTION-ELEMENTS",
         "fx-var"
       ],
-      note: "generic isBound() = hasAttribute('ref') soft pattern - unbound just renders/does nothing useful, no warning."
+      note: "generic isBound() = hasAttribute('ref') soft pattern - unbound just renders/does nothing useful, no warning.",
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-container": {
       attrs: {
@@ -28195,7 +28271,10 @@ var fore_tree_default = {
         "ACTION-ELEMENTS",
         "fx-var"
       ],
-      note: "readonly - isReadonly() checks hasAttribute('readonly') - src/ui/fx-container.js:138."
+      note: "readonly - isReadonly() checks hasAttribute('readonly') - src/ui/fx-container.js:138.",
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-dialog": {
       attrs: {
@@ -28210,7 +28289,10 @@ var fore_tree_default = {
     },
     "fx-switch": {
       attrs: {
-        ref: null
+        ref: null,
+        appearance: [
+          "tabs"
+        ]
       },
       children: [
         "fx-case",
@@ -28218,7 +28300,10 @@ var fore_tree_default = {
         "ACTION-ELEMENTS",
         "fx-var"
       ],
-      note: "generic isBound() soft pattern, same as fx-group."
+      note: "generic isBound() soft pattern, same as fx-group.",
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-case": {
       attrs: {
@@ -28234,6 +28319,9 @@ var fore_tree_default = {
         "UI-ELEMENTS",
         "ACTION-ELEMENTS",
         "fx-var"
+      ],
+      inherits: [
+        "foreElement"
       ]
     },
     "fx-repeat": {
@@ -28260,7 +28348,13 @@ var fore_tree_default = {
         ],
         severity: "warning"
       },
-      note: "fx-repeat is meaningless without a <template> child - the linter should warn, not just permit-if-present. Does NOT accept fx-repeat-attributes as a child - that relationship runs the other way (see fx-repeat-attributes). ref has no fallback at all (not even '.') and no throw - nodeset evaluation is silently broken downstream (src/ui/fx-repeat.js:206). size (progressive-rendering row cap) and virtual (windowed virtualization) - src/ui/fx-repeat.js:176,188."
+      note: "fx-repeat is meaningless without a <template> child - the linter should warn, not just permit-if-present. Does NOT accept fx-repeat-attributes as a child - that relationship runs the other way (see fx-repeat-attributes). ref has no fallback at all (not even '.') and no throw - nodeset evaluation is silently broken downstream (src/ui/fx-repeat.js:206). size (progressive-rendering row cap) and virtual (windowed virtualization) - src/ui/fx-repeat.js:176,188.",
+      inherits: [
+        "foreElement"
+      ],
+      unique: [
+        "template"
+      ]
     },
     template: {
       note: "only carries this child list when it's an immediate child of fx-repeat - see 'exceptions' for how fx-repeat-ref enforces that.",
@@ -28270,7 +28364,14 @@ var fore_tree_default = {
         "ACTION-ELEMENTS",
         "fx-repeat-ref",
         "fx-var"
-      ]
+      ],
+      attrs: {
+        draggable: null,
+        "drop-target": null,
+        "drop-scope": [
+          "parent"
+        ]
+      }
     },
     "fx-repeat-attributes": {
       attrs: {
@@ -28285,7 +28386,10 @@ var fore_tree_default = {
         "fx-var"
       ],
       authorable: false,
-      note: "not written as a literal tag - synthesized at runtime for a plain HTML element carrying a data-ref attribute ('non-visible', like fx-repeatitem). That data-ref section CAN contain an fx-repeat (reachable here via UI-ELEMENTS), but the reverse is disallowed: fx-repeat itself must not contain one."
+      note: "not written as a literal tag - synthesized at runtime for a plain HTML element carrying a data-ref attribute ('non-visible', like fx-repeatitem). That data-ref section CAN contain an fx-repeat (reachable here via UI-ELEMENTS), but the reverse is disallowed: fx-repeat itself must not contain one.",
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-repeatitem": {
       attrs: {
@@ -28299,7 +28403,10 @@ var fore_tree_default = {
         "ACTION-ELEMENTS"
       ],
       authorable: false,
-      note: "generated by fx-repeat at runtime, one per iteration - never write this by hand, it'll conflict with what fx-repeat itself creates. Its content shape (html/ui/action) is still meaningful for documentation, since that's what ends up inside it."
+      note: "generated by fx-repeat at runtime, one per iteration - never write this by hand, it'll conflict with what fx-repeat itself creates. Its content shape (html/ui/action) is still meaningful for documentation, since that's what ends up inside it.",
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-repeat-ref": {
       attrs: {
@@ -28359,6 +28466,12 @@ var fore_tree_default = {
         "ACTION-ELEMENTS",
         "fx-var",
         "fx-trigger"
+      ],
+      inherits: [
+        "foreElement"
+      ],
+      unique: [
+        "fx-alert"
       ]
     },
     "fx-abstract-control": {
@@ -28367,7 +28480,10 @@ var fore_tree_default = {
       },
       children: [],
       authorable: false,
-      note: "base class inherited by concrete controls (fx-control, fx-output, ...) - not a tag the user ever writes directly."
+      note: "base class inherited by concrete controls (fx-control, fx-output, ...) - not a tag the user ever writes directly.",
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-output": {
       attrs: {
@@ -28377,7 +28493,8 @@ var fore_tree_default = {
           "html",
           "image"
         ],
-        html: null
+        html: null,
+        unsafe: null
       },
       children: [
         "ACTION-ELEMENTS"
@@ -28389,7 +28506,10 @@ var fore_tree_default = {
         ],
         severity: "warning"
       },
-      note: "refresh() does nothing if neither is set - src/ui/fx-output.js."
+      note: "refresh() does nothing if neither is set - src/ui/fx-output.js.",
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-trigger": {
       attrs: {
@@ -28401,7 +28521,10 @@ var fore_tree_default = {
         "ACTION-ELEMENTS",
         "fx-var"
       ],
-      note: "ref confirmed genuinely optional (only affects readonly-disable behavior) - not marked required. activate-on-focus fires the action on focus, not just click/Enter/Space - src/ui/fx-trigger.js:43."
+      note: "ref confirmed genuinely optional (only affects readonly-disable behavior) - not marked required. activate-on-focus fires the action on focus, not just click/Enter/Space - src/ui/fx-trigger.js:43.",
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-upload": {
       attrs: {
@@ -28415,6 +28538,9 @@ var fore_tree_default = {
         "fx-hint",
         "fx-alert",
         "ACTION-ELEMENTS"
+      ],
+      inherits: [
+        "foreElement"
       ]
     },
     "fx-control-menu": {
@@ -28422,11 +28548,17 @@ var fore_tree_default = {
         select: null,
         mode: null
       },
-      children: []
+      children: [],
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-hint": {
       attrs: {},
-      children: []
+      children: [],
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-alert": {
       attrs: {
@@ -28439,7 +28571,10 @@ var fore_tree_default = {
       children: [
         "HTML-ELEMENTS"
       ],
-      note: "generic isBound() soft pattern."
+      note: "generic isBound() soft pattern.",
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-items": {
       attrs: {
@@ -28449,7 +28584,10 @@ var fore_tree_default = {
       children: [
         "HTML-ELEMENTS"
       ],
-      note: "generic isBound() soft pattern."
+      note: "generic isBound() soft pattern.",
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-setvalue": {
       attrs: {
@@ -28466,7 +28604,11 @@ var fore_tree_default = {
         ],
         severity: "error"
       },
-      note: `throws "fx-setvalue must specify a 'ref' attribute" - src/actions/fx-setvalue.js:40.`
+      note: `throws "fx-setvalue must specify a 'ref' attribute" - src/actions/fx-setvalue.js:40.`,
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-insert": {
       attrs: {
@@ -28487,7 +28629,11 @@ var fore_tree_default = {
         "ACTION-ELEMENTS",
         "fx-var"
       ],
-      note: "not given a blanket requiredAttrs - ref is only required in JSON-lens mode (throws if not a lens path starting with '?', src/actions/fx-insert.js:559-562), template throws on invalid JSON when used (src/actions/fx-insert.js:128), origin just warns+falls back if it doesn't resolve (src/actions/fx-insert.js:453,459). Too mode-dependent to state as one rule."
+      note: "not given a blanket requiredAttrs - ref is only required in JSON-lens mode (throws if not a lens path starting with '?', src/actions/fx-insert.js:559-562), template throws on invalid JSON when used (src/actions/fx-insert.js:128), origin just warns+falls back if it doesn't resolve (src/actions/fx-insert.js:453,459). Too mode-dependent to state as one rule.",
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-delete": {
       attrs: {
@@ -28503,7 +28649,11 @@ var fore_tree_default = {
         ],
         severity: "warning"
       },
-      note: "defaults to '.' with no warning - src/actions/fx-delete.js."
+      note: "defaults to '.' with no warning - src/actions/fx-delete.js.",
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-send": {
       attrs: {
@@ -28523,7 +28673,11 @@ var fore_tree_default = {
         ],
         severity: "error"
       },
-      note: 'dispatches error "<fx-submission> not found" unless connection is given instead - src/actions/fx-send.js:58-77.'
+      note: 'dispatches error "<fx-submission> not found" unless connection is given instead - src/actions/fx-send.js:58-77.',
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-dispatch": {
       attrs: {
@@ -28540,7 +28694,11 @@ var fore_tree_default = {
         ],
         severity: "error"
       },
-      note: 'throws "no event specified for dispatch" - src/actions/fx-dispatch.js:45.'
+      note: 'throws "no event specified for dispatch" - src/actions/fx-dispatch.js:45.',
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-message": {
       attrs: {
@@ -28559,6 +28717,10 @@ var fore_tree_default = {
       children: [
         "ACTION-ELEMENTS",
         "fx-var"
+      ],
+      inherits: [
+        "foreElement",
+        "action"
       ]
     },
     "fx-toggle": {
@@ -28575,7 +28737,11 @@ var fore_tree_default = {
         ],
         severity: "error"
       },
-      note: `dispatches error "fx-case id not found" if the id doesn't resolve - src/actions/fx-toggle.js perform().`
+      note: `dispatches error "fx-case id not found" if the id doesn't resolve - src/actions/fx-toggle.js perform().`,
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-show": {
       attrs: {
@@ -28591,7 +28757,11 @@ var fore_tree_default = {
         ],
         severity: "error"
       },
-      note: "dispatches error event if absent, plus console.error if the id doesn't resolve - src/actions/fx-show.js:20,37."
+      note: "dispatches error event if absent, plus console.error if the id doesn't resolve - src/actions/fx-show.js:20,37.",
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-hide": {
       attrs: {
@@ -28607,7 +28777,11 @@ var fore_tree_default = {
         ],
         severity: "error"
       },
-      note: "dispatches error event if absent - src/actions/fx-hide.js:26."
+      note: "dispatches error event if absent - src/actions/fx-hide.js:26.",
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-setattribute": {
       attrs: {
@@ -28629,7 +28803,11 @@ var fore_tree_default = {
         ],
         severity: "error"
       },
-      note: 'throws if ref absent - src/actions/fx-setattribute.js:45; dispatches error "name or value not specified" if neither given - line 47.'
+      note: 'throws if ref absent - src/actions/fx-setattribute.js:45; dispatches error "name or value not specified" if neither given - line 47.',
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-load": {
       attrs: {
@@ -28651,7 +28829,11 @@ var fore_tree_default = {
         ],
         severity: "error"
       },
-      note: '_evaluateUrlExpression() throws "url not specified" if absent - src/actions/fx-load.js:200.'
+      note: '_evaluateUrlExpression() throws "url not specified" if absent - src/actions/fx-load.js:200.',
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-setfocus": {
       attrs: {
@@ -28668,7 +28850,11 @@ var fore_tree_default = {
         ],
         severity: "error"
       },
-      note: `dispatches error "Instance '...' not found" if the target can't be resolved - src/actions/fx-setfocus.js:33-39.`
+      note: `dispatches error "Instance '...' not found" if the target can't be resolved - src/actions/fx-setfocus.js:33-39.`,
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-refresh": {
       attrs: {
@@ -28680,6 +28866,10 @@ var fore_tree_default = {
       children: [
         "ACTION-ELEMENTS",
         "fx-var"
+      ],
+      inherits: [
+        "foreElement",
+        "action"
       ]
     },
     "fx-replace": {
@@ -28697,7 +28887,11 @@ var fore_tree_default = {
         ],
         severity: "warning"
       },
-      note: "evaluateXPathToFirstNode(null, ...) resolves to no target and perform() silently bails - src/actions/fx-replace.js:41-42."
+      note: "evaluateXPathToFirstNode(null, ...) resolves to no target and perform() silently bails - src/actions/fx-replace.js:41-42.",
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-toggleboolean": {
       attrs: {
@@ -28713,7 +28907,11 @@ var fore_tree_default = {
         ],
         severity: "error"
       },
-      note: "throws if absent - src/actions/fx-toggleboolean.js:43."
+      note: "throws if absent - src/actions/fx-toggleboolean.js:43.",
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-call": {
       attrs: {
@@ -28731,13 +28929,21 @@ var fore_tree_default = {
         ],
         severity: "error"
       },
-      note: "throws if neither present - src/actions/fx-call.js:41."
+      note: "throws if neither present - src/actions/fx-call.js:41.",
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-reload": {
       attrs: {},
       children: [
         "ACTION-ELEMENTS",
         "fx-var"
+      ],
+      inherits: [
+        "foreElement",
+        "action"
       ]
     },
     "fx-reset": {
@@ -28754,13 +28960,21 @@ var fore_tree_default = {
         ],
         severity: "error"
       },
-      note: 'dispatches error "instance does not exist" if absent - src/actions/fx-reset.js:25.'
+      note: 'dispatches error "instance does not exist" if absent - src/actions/fx-reset.js:25.',
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-update": {
       attrs: {},
       children: [
         "ACTION-ELEMENTS",
         "fx-var"
+      ],
+      inherits: [
+        "foreElement",
+        "action"
       ]
     },
     "fx-append": {
@@ -28778,13 +28992,21 @@ var fore_tree_default = {
         ],
         severity: "warning"
       },
-      note: "unresolved id causes a raw TypeError accessing repeat.shadowRoot rather than a Fore-level diagnostic - src/actions/fx-append.js _dataFromTemplate."
+      note: "unresolved id causes a raw TypeError accessing repeat.shadowRoot rather than a Fore-level diagnostic - src/actions/fx-append.js _dataFromTemplate.",
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-unmodified": {
       attrs: {},
       children: [
         "ACTION-ELEMENTS",
         "fx-var"
+      ],
+      inherits: [
+        "foreElement",
+        "action"
       ]
     },
     "fx-action": {
@@ -28794,6 +29016,10 @@ var fore_tree_default = {
       children: [
         "ACTION-ELEMENTS",
         "fx-var"
+      ],
+      inherits: [
+        "foreElement",
+        "action"
       ]
     },
     "fx-return": {
@@ -28801,6 +29027,10 @@ var fore_tree_default = {
       children: [
         "ACTION-ELEMENTS",
         "fx-var"
+      ],
+      inherits: [
+        "foreElement",
+        "action"
       ]
     },
     "fx-confirm": {
@@ -28817,7 +29047,11 @@ var fore_tree_default = {
         ],
         severity: "warning"
       },
-      note: 'defaults to null; window.confirm(null) shows the literal text "null" - src/actions/fx-confirm.js.'
+      note: 'defaults to null; window.confirm(null) shows the literal text "null" - src/actions/fx-confirm.js.',
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-copy": {
       attrs: {
@@ -28834,13 +29068,21 @@ var fore_tree_default = {
         ],
         severity: "error"
       },
-      note: "throws if absent - src/actions/fx-copy.js:36."
+      note: "throws if absent - src/actions/fx-copy.js:36.",
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-undo": {
       attrs: {},
       children: [
         "ACTION-ELEMENTS",
         "fx-var"
+      ],
+      inherits: [
+        "foreElement",
+        "action"
       ]
     },
     "fx-redo": {
@@ -28848,6 +29090,10 @@ var fore_tree_default = {
       children: [
         "ACTION-ELEMENTS",
         "fx-var"
+      ],
+      inherits: [
+        "foreElement",
+        "action"
       ]
     },
     "fx-commit-history": {
@@ -28855,6 +29101,10 @@ var fore_tree_default = {
       children: [
         "ACTION-ELEMENTS",
         "fx-var"
+      ],
+      inherits: [
+        "foreElement",
+        "action"
       ]
     },
     "fx-insertchild": {
@@ -28881,11 +29131,18 @@ var fore_tree_default = {
         ],
         severity: "warning"
       },
-      note: 'if absent, parent is interpolated directly into a generated <fx-insert context="${this.parent}">, becoming the literal string context="null" - silently breaks the insert with no diagnostic - src/actions/fx-insertchild.js:69-73.'
+      note: 'if absent, parent is interpolated directly into a generated <fx-insert context="${this.parent}">, becoming the literal string context="null" - silently breaks the insert with no diagnostic - src/actions/fx-insertchild.js:69-73. With child and no origin it does not clone: it creates an empty element named child (literal, or {xpath} templates) as the first/last child (position) of parent, in parent\'s namespace - see src/actions/fx-insertchild.js. It refuses a parent that is an HTMLTemplateElement (XHTML-namespaced <template>), whose children live in .content.',
+      inherits: [
+        "foreElement",
+        "action"
+      ]
     },
     "fx-droptarget": {
       attrs: {},
-      children: []
+      children: [],
+      inherits: [
+        "foreElement"
+      ]
     },
     "fx-inspector": {
       attrs: {
@@ -28963,40 +29220,554 @@ var fore_tree_default = {
       ],
       reason: "template is a generic HTML tag also used outside Fore, so its tree node's child list alone can't guarantee this specific <template> belongs to an <fx-repeat>. This is the only rule of its kind - everything else is captured by position."
     }
+  },
+  docs: {
+    shared: {
+      ref: "XPath binding expression \u2014 selects the data node this element is bound to",
+      context: "Custom context node for XPath evaluation",
+      value: "XPath expression or text content used as the element's value",
+      event: "DOM event name to listen for",
+      if: "Boolean XPath condition \u2014 action only runs if true",
+      while: "Boolean XPath loop condition",
+      iterate: "XPath sequence to iterate over; action runs once per item",
+      delay: "Delay in ms before executing",
+      target: "ID of element to attach listener to (special: #window, #document)",
+      phase: "'capture' or 'default' (default)",
+      propagate: "'stop' or 'continue' (default)",
+      "default-action": "'cancel' or 'perform' (default)"
+    },
+    tags: {
+      "fx-fore": {
+        description: "Root element for every Fore application. Handles lifecycle, update cycle, and messaging.",
+        attrs: {
+          src: "URL of external Fore page to load",
+          selector: "CSS selector inside loaded src page (default 'fx-fore')",
+          "create-nodes": "Auto-create missing data nodes for bound UI elements",
+          "ignore-expressions": "Comma-separated node names to exclude from template expression scanning (always includes [pattern])",
+          "merge-partial": "Deprecated/inactive \u2014 currently hardcoded to false regardless of this attribute",
+          "refresh-on-view": "Enables IntersectionObserver-based lazy refresh \u2014 only refresh elements currently in viewport. Renamed from the older lazy-refresh",
+          strict: "Strict mode \u2014 dispatches error for conditions like a missing referenced instance",
+          "validate-on": "Intended to control when validation runs; currently unused in the code path",
+          version: "Version banner template string, e.g. '[VI]Version: {version} - built on {date}[/VI]'",
+          "init-on": "Event name to wait for before initializing Fore",
+          "init-on-target": "Comma-separated list of targets for init-on: self, closest, document, window, or a CSS selector",
+          "keyboard-shortcuts": "Opt-in undo/redo keyboard shortcuts (overrides native text-field undo within the form); listens on document so shortcuts keep working when focus falls back to body",
+          "show-confirmation": "Prompts a beforeunload confirmation dialog if the form is dirty",
+          "no-check": "Disables post-ready authoring checks (can also be set via ?no-check query param)",
+          "wait-for": 'Deprecated \u2014 use init-on="ready" init-on-target="..." instead'
+        }
+      },
+      "fx-model": {
+        description: "Holds instances, binds, submissions, and custom functions. Drives the recalculate/revalidate cycle.",
+        attrs: {
+          id: "Optional identifier",
+          undo: "Opt-in \u2014 enables the UndoManager for this model (src/fx-model.js:334-336)",
+          "undo-depth": "Max history size for the undo manager. Companion fx-undo/fx-redo/fx-commit-history actions read getEffectiveUndoManager() but define no attributes of their own"
+        }
+      },
+      "fx-bind": {
+        description: "Declaratively attaches constraints and computations to data nodes. Creates ModelItem objects.",
+        attrs: {
+          ref: "XPath selecting the node(s) to bind (default .)",
+          calculate: "XPath expression whose result is assigned to the bound node. Calculated nodes are always readonly",
+          constraint: "Boolean XPath \u2014 node is valid only when true",
+          readonly: "Boolean XPath \u2014 node is read-only when true",
+          required: "Boolean XPath \u2014 node is required when true",
+          relevant: "Boolean XPath \u2014 node is visible/active when true (default true())",
+          type: "XML Schema type (e.g. xs:integer, default xs:string)",
+          initial: "XPath expression evaluated once per bound node to assign a one-time value (XForms 2.0 initial), before any calculate runs; overwrites an existing value, failing expressions yield '' (5.1.0)",
+          alert: "Inline validation alert text shown when constraint fails",
+          id: "Optional bind identifier"
+        }
+      },
+      "fx-instance": {
+        description: 'Container for data. The first <fx-instance type="html"> in a model is the default instance.',
+        attrs: {
+          id: `Instance identifier; used as instance('id') in XPath. The default instance is always the first instance in the model (an id of 'default' is implied if none is given). id="default" on any other instance is an error (reported since 5.2.0)`,
+          src: "URL to load instance data from \u2014 also accepts #querystring or localStore:<key>",
+          credentials: '"same-origin" (default) | "include" | "omit"',
+          type: '"xml" (default; external src only, no inline content) | "json" | "text" | "html" (use for inline data)',
+          shared: "Marks the instance as reachable from other fx-fore scopes via instance('id')",
+          static: "Asserts that no fx-bind, fx-var or model dependency reads this instance (e.g. a language file only read by controls and templates). Replacing its data then only refreshes the UI and skips the model's rebuild, recalculate and revalidate. Never set it on the default instance or on one that binds depend on."
+        }
+      },
+      "fx-submission": {
+        description: "Wraps HTTP requests for submitting or loading data.",
+        attrs: {
+          id: "Required \u2014 used by fx-send to activate this submission",
+          url: "Request URL; supports template expressions",
+          method: "HTTP method: get (default), post, put, delete, head, urlencoded-post, consume",
+          ref: "XPath of the data node/instance to submit (what gets serialized into the request body) \u2014 read via instance attribute internally, falls back to model's default instance",
+          instance: 'Instance ID whose data is submitted, and (when replace="instance") the instance the response is put into',
+          replace: `What to do with the response: 'all' (replaces the whole page \u2014 the default, almost always wrong for API calls), 'instance', 'none', 'download', 'target', 'redirect'. fore-tree.json's own enum only lists "all" | "instance" | "none" \u2014 narrower than what the source actually implements; see final report`,
+          into: "XPath location in the target instance where the response is inserted",
+          targetref: "XPath to the node in the target instance to be replaced by the response",
+          target: `CSS selector, or '_blank' \u2014 used with replace="download"/"target"/"all"`,
+          nonrelevant: 'How to handle non-relevant nodes: "remove" (default) | "keep" | "empty"',
+          serialization: '"xml" (default) | "json" | "none"',
+          mediatype: "Media type of submitted content (default application/xml)",
+          responsemediatype: "Expected media type of response (defaults to mediatype)",
+          validate: '"true" (default) | "false" \u2014 validate before submit. Only the submitted data is validated: the ref subtree, or the root of the default instance without ref (after 5.2.0, unreleased; before that the whole model was validated, so unrelated invalid fields blocked e.g. a DELETE without ref). ref="" behaves like no ref and is flagged by the authoring check',
+          credentials: '"same-origin" (default) | "include" | "omit"'
+        }
+      },
+      "fx-var": {
+        description: "Declares an in-scope XPath variable. Available in sibling/child XPath expressions as $name.",
+        attrs: {
+          name: "Required \u2014 variable name (referenced in XPath as $name)",
+          value: "XPath expression defining the variable's value"
+        }
+      },
+      "fx-header": {
+        description: "Adds a custom HTTP header to the enclosing <fx-submission>.",
+        attrs: {
+          name: "Required \u2014 header name",
+          value: "Header value (XPath expression or text)"
+        }
+      },
+      "fx-connection": {
+        description: "Manages a persistent WebSocket connection \u2014 sending/receiving messages as JSON, XML, or text, optionally writing incoming data into a bound instance node, with an optional heartbeat ping.",
+        attrs: {
+          url: "WebSocket endpoint to connect to; reconnects automatically when changed",
+          heartbeat: "Interval in ms to send an empty keep-alive ping; 0 disables heartbeat (default)",
+          "message-format": 'Wire format for send/receive: "json" (default) | "xml" | "text"',
+          ref: "Bound node data is written to/read from (inherited, used heavily here)"
+        }
+      },
+      "fx-control": {
+        description: "Generic wrapper for interactive controls. Works with any native or third-party widget.",
+        attrs: {
+          ref: "XPath binding expression",
+          "update-event": "DOM event that triggers value sync to model (default 'blur'); special value 'enter'. fore-tree.json only enumerates these two recognized/special values \u2014 any other DOM event name (e.g. 'input', 'change') is also accepted, as seen in demos",
+          debounce: "Debounce delay in ms for update-event",
+          label: "Label text (shorthand; alternatively use a <label> child)",
+          "value-prop": `DOM property used as the widget value (default 'value'; "selectedOptions" when widget has multiple; use "checked" for checkboxes)`,
+          "listen-on": "CSS selector for a custom event target within the control",
+          "on-demand": "Defer binding until a show-control event is received",
+          initial: "XPath expression evaluated to seed an embedded Fore's initial data when using src",
+          src: "URL to load widget markup from (an embedded Fore page)",
+          credentials: '"same-origin" (default) | "include" | "omit" for src loads',
+          as: '"xml" to parse widget value as XML | "node" to bind as node',
+          shadow: "When using src, load the embedded Fore into this control's shadow DOM instead of light DOM"
+        }
+      },
+      "fx-abstract-control": {
+        description: "Internal base class \u2014 not meant to be authored directly in HTML. Provides model-item binding, refresh cycle, and required/readonly/valid/relevant state management shared by all controls (fx-control, fx-output, fx-trigger, fx-upload, fx-hint, fx-alert, fx-control-menu).",
+        attrs: {
+          as: "When 'node', binds/replaces the whole node instead of a string value"
+        }
+      },
+      "fx-output": {
+        description: "Displays data values. Always read-only.",
+        attrs: {
+          ref: "XPath binding expression for bound output",
+          value: "XPath expression for computed/evaluated output",
+          mediatype: '"html" | "image" to change rendering mode; otherwise rendered as text. With "html" the markup is sanitized against XSS (DOMPurify) since 5.2.0 \u2014 scripts, event handlers and javascript: URLs are stripped; a node value is serialized first, so the instance node is no longer moved into the widget',
+          unsafe: 'Only with mediatype="html" (5.2.0): skips sanitizing and writes the HTML straight into the DOM. Only use when the content is not user-supplied (XSS risk)',
+          html: "When set, output is treated as a node/XML result rather than a plain string"
+        }
+      },
+      "fx-trigger": {
+        description: "Wrapper for interactive elements (buttons, links) that execute actions when clicked.",
+        attrs: {
+          ref: "Optional XPath binding \u2014 confirmed genuinely optional (only affects readonly-disable behavior), not required",
+          "activate-on-focus": "Fires the action on focus, not just click/Enter/Space (src/ui/fx-trigger.js:43)",
+          debounce: "Debounce delay in ms for click handler"
+        }
+      },
+      "fx-group": {
+        description: "Groups bound UI elements under a common context node. Handles relevance for the whole group.",
+        attrs: {
+          ref: "XPath binding \u2014 all children inherit this context",
+          collapse: "Marks the group as collapsible (used with CSS)",
+          "on-demand": "Defer showing the group until explicitly activated"
+        }
+      },
+      "fx-container": {
+        description: "Internal base class, extended by fx-case, fx-group, fx-switch. Reacts only to the relevant/nonrelevant facet, not full value/validity handling. Also usable standalone as a plain relevance-reactive container.",
+        attrs: {
+          src: "Parsed but currently unused \u2014 the corresponding load logic is commented out in source",
+          readonly: "isReadonly() checks hasAttribute('readonly') (src/ui/fx-container.js:138)",
+          "refresh-on-view": "When present, skips refresh unless forced"
+        }
+      },
+      "fx-repeat": {
+        description: "Repeats its template for each node in the bound nodeset.",
+        attrs: {
+          ref: "Required \u2014 XPath nodeset; one repeat item per node. Has no fallback at all (not even .) and no throw \u2014 nodeset evaluation is silently broken downstream if absent (src/ui/fx-repeat.js:206)",
+          index: "Current 1-based selected item index (readable/settable)",
+          "focus-on-create": "CSS selector to focus after a new item is inserted",
+          size: "Progressive-rendering row cap (src/ui/fx-repeat.js:176)",
+          virtual: "Opt-in true windowed virtualization; only meaningful together with a finite size (src/ui/fx-repeat.js:188)",
+          "drop-target": "Set on the <template> element (not fx-repeat itself): CSS selector/marker for a drag-and-drop target",
+          draggable: "Set on the <template> element: enables drag reordering of repeat items",
+          "drop-scope": `Set on the <template> element: "parent" opts in to real-parentage drag/drop scoping instead of id-string-equality scoping (src/withDraggability.js). Not present in fore-tree.json's attrs list for fx-repeat \u2014 found directly in source; flagged for manual review`
+        }
+      },
+      "fx-repeat-ref": {
+        description: "Placeholder used inside an fx-repeat's <template> to recurse into a node's own matching descendants (XSLT apply-templates style), so arbitrary-depth self-similar data (trees, org charts, threaded comments, nested categories, outline structures) can be rendered with one template instead of a hand-written, depth-capped chain of nested fx-repeats. On connect it replaces itself with a synthesized fx-repeat that reuses the nearest ancestor repeat's ref (or an explicit ref override) and a clone of that ancestor's <template> \u2014 including this same placeholder, so recursion continues one level deeper wherever a materialized item's node has matching children. It terminates naturally when a leaf node's synthesized repeat evaluates its ref against zero children.",
+        attrs: {
+          ref: "Optional override \u2014 defaults to the ancestor fx-repeat's own ref if absent"
+        }
+      },
+      "fx-repeat-attributes": {
+        description: "A variant of fx-repeat for when repeat items must live inside a specific descendant marked [data-ref] (e.g. a native <ul> or <select>) rather than directly under the repeat element itself. Supports drag-and-drop reordering. That data-ref section may itself contain an fx-repeat, but the reverse is disallowed \u2014 fx-repeat may never contain an fx-repeat-attributes section.",
+        attrs: {
+          ref: "Inherited binding \u2014 the nodeset to repeat over",
+          index: "Current 1-based selected item index",
+          "focus-on-create": "Selector/marker for which element to focus when a new item is created"
+        }
+      },
+      "fx-repeatitem": {
+        description: "Internal element \u2014 created programmatically by fx-repeat/fx-repeat-attributes to wrap each instantiated row. Not meant to be authored directly; the <template> content inside fx-repeat is automatically wrapped in this element.",
+        attrs: {
+          "repeat-index": "Marks the currently selected item (set by the parent repeat)",
+          relevant: "Reflects the bound modelItem's relevant facet",
+          nonrelevant: "Reflects the bound modelItem's relevant facet"
+        }
+      },
+      "fx-switch": {
+        description: "Container that shows exactly one <fx-case> at a time.",
+        attrs: {
+          ref: "Optional binding \u2014 activates the fx-case whose name matches the bound value",
+          appearance: `"tabs" opts in to the ARIA tabs pattern (role="tablist"/"tab"/"tabpanel", aria-selected, arrow-key navigation); requires fx-trigger tab controls (each with an fx-toggle targeting a sibling fx-case) as direct children. Not present in fore-tree.json's attrs list for fx-switch \u2014 found directly in source (src/ui/fx-switch.js:36); flagged for manual review`
+        }
+      },
+      "fx-case": {
+        description: "A selectable panel within <fx-switch>. Only the selected case is rendered.",
+        attrs: {
+          id: "Identifier referenced by fx-toggle",
+          name: "Name matched against bound switch value",
+          label: "Optional label text for the case",
+          selected: "Mark as initially selected",
+          src: "URL to lazy-load markup when this case is selected",
+          selector: "CSS selector inside src (default 'fx-case')"
+        }
+      },
+      "fx-dialog": {
+        description: "Modal dialog container. Shown/hidden via fx-show/fx-hide actions.",
+        attrs: {
+          id: "Required \u2014 referenced by fx-show/fx-hide"
+        }
+      },
+      "fx-alert": {
+        description: "Displays validation error messages. Can be a child of fx-control or fx-bind; also created automatically when a bind declares an alert.",
+        attrs: {
+          ref: "Optional XPath binding for dynamic alert text"
+        }
+      },
+      "fx-hint": {
+        description: "Deprecated \u2014 use a plain <span> with a template expression instead.",
+        attrs: {}
+      },
+      "fx-include": {
+        description: "Lazy light-DOM include component. Loads markup on a configured event.",
+        attrs: {
+          event: "Event name to listen for (default 'click')",
+          target: 'Event target: "self" (default) | "document" | "window", or a CSS selector',
+          src: "External HTML file URL to load",
+          selector: "CSS selector inside the external HTML",
+          replace: "Replace <fx-include> element with loaded content",
+          immediate: "Include content immediately on connection (waits for owning fx-fore to be ready)",
+          reload: "Re-include on every matching event (clears previous content)"
+        }
+      },
+      "fx-upload": {
+        description: "Allows uploading files and embedding their content (base64 or text) into a data instance.",
+        attrs: {
+          ref: "XPath binding expression",
+          accept: "File type filter (same syntax as HTML <input accept>)",
+          filename: "XPath expression identifying the node to receive the uploaded file's name",
+          mimetype: "XPath expression identifying the node to receive the uploaded file's MIME type",
+          label: "Label text"
+        }
+      },
+      "fx-items": {
+        description: "Provides a templated list of options. Not standalone \u2014 must be used nested within an fx-control's widget slot.",
+        attrs: {
+          ref: "XPath nodeset for list items",
+          value: "XPath expression for each item's value"
+        }
+      },
+      "fx-droptarget": {
+        description: "Drag-and-drop target element. Extends ForeElementMixin with a draggability mixin; all behavior comes from that mixin.",
+        attrs: {}
+      },
+      "fx-control-menu": {
+        description: "Finds all on-demand elements within a scoped container and offers them in a popup menu (opened via a slotted <button>) so the user can activate/show them individually.",
+        attrs: {
+          select: "CSS selector identifying the scoped container of on-demand elements (falls back to the enclosing fx-repeatitem if inside a repeat)",
+          mode: "'hide-on-empty' \u2014 auto-marks empty widgets' controls as on-demand once the form is ready"
+        }
+      },
+      "fx-inspector": {
+        description: "Debugging panel that lists all live fx-instance elements within the closest fx-fore as expandable sections showing serialized instance data, updated on every refresh-done. A developer tool, not a form-authoring element.",
+        attrs: {
+          open: "Reflected \u2014 toggled by clicking the drag handle; expands the panel"
+        }
+      },
+      "fx-speech": {
+        description: "Voice input component using the Web Speech API. Guides the user field-by-field through bound fx-control elements.",
+        attrs: {
+          mode: "Input mode (default 'guided')"
+        }
+      },
+      "fx-setvalue": {
+        description: "Sets the value of a bound data node.",
+        attrs: {
+          ref: "Required \u2014 XPath of the node to set",
+          value: "XPath expression for the new value; falls back to text content"
+        }
+      },
+      "fx-insert": {
+        description: "Inserts data nodes into an instance (XML or JSON).",
+        attrs: {
+          ref: "XPath of the nodeset to insert relative to",
+          context: "Alternative XPath context node",
+          origin: "XPath, JSON-lens ref, or JSON literal used as the template value for the new node",
+          at: "Position index (default: last item in nodeset)",
+          position: '"before" | "after" (default) | "first" | "last"',
+          "keep-values": "Preserve values from origin node instead of clearing them",
+          template: "ID of a <template> element supplying JSON insert content (JSON mode only)"
+        }
+      },
+      "fx-insertchild": {
+        description: 'Inserts a new child node under an arbitrary parent XPath location \u2014 internally builds and delegates to a hidden fx-insert context="${parent}"> in its shadow DOM. Useful for context-relative insertion, e.g. from within a recursive fx-repeat-ref template where there is no single named repeat to target.',
+        attrs: {
+          parent: 'XPath of the parent node to insert into (interpolated into an internal fx-insert context="...")',
+          child: "Name of the child element to create",
+          at: "Position index (default 1)",
+          position: '"before" | "after" (default) | "first" | "last"',
+          origin: "XPath/template source for the new node's content",
+          "keep-values": "Preserve values from origin node instead of clearing them"
+        }
+      },
+      "fx-delete": {
+        description: "Removes nodes from a data instance (XML or JSON).",
+        attrs: {
+          ref: "XPath (XML) or JSON-lens path (JSON) selecting node(s) to delete (default .)"
+        }
+      },
+      "fx-send": {
+        description: "Activates a <fx-submission> or <fx-connection> element.",
+        attrs: {
+          submission: "ID of the fx-submission to activate",
+          url: "URL override for the submission",
+          target: "Target override (e.g. '_blank')",
+          connection: "ID of fx-connection to send through instead of a submission"
+        }
+      },
+      "fx-dispatch": {
+        description: "Dispatches a custom event with optional parameters.",
+        attrs: {
+          name: "Required \u2014 event name to dispatch",
+          targetid: "ID of target element to dispatch on (dispatches on document if omitted)"
+        }
+      },
+      "fx-message": {
+        description: "Displays a message to the user.",
+        attrs: {
+          event: "Event to listen for",
+          level: '"ephemeral" (default, auto-dismiss) | "sticky" (stays until dismissed) | "modal"',
+          value: "XPath expression for message content"
+        }
+      },
+      "fx-toggle": {
+        description: "Activates a specific <fx-case> within a <fx-switch>.",
+        attrs: {
+          case: "ID of the fx-case to activate"
+        }
+      },
+      "fx-show": {
+        description: "Show or hide an <fx-dialog> element.",
+        attrs: {
+          dialog: "Required \u2014 ID of the fx-dialog to show/hide"
+        }
+      },
+      "fx-setattribute": {
+        description: "Creates or sets an attribute on a data node.",
+        attrs: {
+          ref: "Required \u2014 XPath of the target element",
+          name: "Required (with value, anyOf) \u2014 attribute name to set",
+          value: `XPath expression for the attribute value (since 5.2.0 \u2014 before that it was written as literal text). Quote literals: value="'true'"; empty value="" sets an empty string`
+        }
+      },
+      "fx-load": {
+        description: "Loads a URL into the window, a new tab, or embeds HTML into the current page.",
+        attrs: {
+          url: "URL to load",
+          "attach-to": 'Target: element ID (prefixed #), "_self" (default) | "_blank", etc.',
+          replace: "Replace target content",
+          await: "Event name to wait for after loading"
+        }
+      },
+      "fx-setfocus": {
+        description: "Sets focus to a target control.",
+        attrs: {
+          control: "ID of the control to focus",
+          select: "Also select all text in the focused control"
+        }
+      },
+      "fx-refresh": {
+        description: "Triggers a UI refresh.",
+        attrs: {
+          force: "Force re-render even if data hasn't changed",
+          self: "Refresh only the closest enclosing control",
+          selector: "CSS selector identifying the element to refresh",
+          control: "ID of a control to refresh"
+        }
+      },
+      "fx-replace": {
+        description: "Replaces a data node with another.",
+        attrs: {
+          ref: "XPath of the node to replace",
+          with: "XPath of the replacement node"
+        }
+      },
+      "fx-copy": {
+        description: "Copies the string value of the bound node to the clipboard via navigator.clipboard.writeText().",
+        attrs: {
+          ref: "Required \u2014 XPath of the node/value to copy",
+          to: "Reserved for a future copy target (currently unused by perform())"
+        }
+      },
+      "fx-toggleboolean": {
+        description: "Toggles a boolean value at the bound node (switches 'true'\u2194'false').",
+        attrs: {
+          ref: "XPath of the boolean data node"
+        }
+      },
+      "fx-call": {
+        description: "Calls a named action block or XPath function.",
+        attrs: {
+          action: "ID of the action element to call",
+          function: "Name of the XPath function to call (read from the function HTML attribute)"
+        }
+      },
+      "fx-reload": {
+        description: "Reloads the current window/page.",
+        attrs: {}
+      },
+      "fx-reset": {
+        description: "Resets a named data instance back to its inline template/default data.",
+        attrs: {
+          instance: "ID of the instance to reset"
+        }
+      },
+      "fx-undo": {
+        description: "Restores the instance data of the model to the state before the last undoable action chain (requires fx-model undo). Guards against rapid double-click re-entering perform() while a prior undo is still applying.",
+        attrs: {}
+      },
+      "fx-redo": {
+        description: "Re-applies the most recently undone action chain (requires fx-model undo). Same double-click guard as fx-undo.",
+        attrs: {}
+      },
+      "fx-commit-history": {
+        description: "Closes the currently open undo-coalescing session (see UndoManager.commitCoalesced()), so the next edit \u2014 even to a field that's still focused \u2014 starts a new undo step instead of merging into the current one. Useful for forcing a checkpoint mid-edit, e.g. on Enter in a textarea, without requiring the user to blur the field. Never creates an undo step of its own \u2014 it doesn't mutate data, only draws a boundary in the history that's already there.",
+        attrs: {}
+      },
+      "fx-update": {
+        description: "Triggers the model update cycle (rebuild \u2192 recalculate \u2192 revalidate \u2192 refresh).",
+        attrs: {}
+      },
+      "fx-append": {
+        description: "Deprecated \u2014 use <fx-insert> instead. Appends an entry to a repeat.",
+        attrs: {
+          ref: "XPath of the node template to append",
+          repeat: "ID of the fx-repeat to append to"
+        }
+      },
+      "fx-construct-done": {
+        description: "Marker action that fires after model construction. Used to initialize data.",
+        attrs: {}
+      },
+      "fx-unmodified": {
+        description: "Resets the dirty/modification state of the form.",
+        attrs: {}
+      },
+      "fx-action": {
+        description: "Groups multiple actions to execute sequentially, deferring the update cycle until the whole block finishes. Can also load an external script via src.",
+        attrs: {
+          src: "Path to an external script; if set, runs the script instead of child actions"
+        }
+      },
+      "fx-return": {
+        description: `Returns from an fx-call invocation \u2014 returns the action's current nodeset up to the host Fore, similar to a submission with replace="instance".`,
+        attrs: {}
+      },
+      "fx-confirm": {
+        description: "Shows a native confirmation dialog before proceeding with nested actions (extends fx-action).",
+        attrs: {
+          message: "Text shown in the confirm dialog"
+        }
+      },
+      "fx-function": {
+        description: "Defines a custom XPath function using XPath/XQuery body.",
+        attrs: {
+          signature: "Required \u2014 XPath function signature (name and argument types)",
+          type: "Implementation type, e.g. 'text/javascript'",
+          override: "Whether this function overrides an existing one with the same signature (default 'true')"
+        }
+      },
+      "fx-functionlib": {
+        description: "Loads an external library of custom XPath functions \u2014 either a JS module exporting functions/fxFunctions, or an HTML document containing <fx-function> elements.",
+        attrs: {
+          src: "Required \u2014 URL of the function library to load",
+          prefix: "Namespace prefix applied to all registered function signatures from this library",
+          type: '"module" | "html"; auto-detected from src extension if omitted'
+        }
+      },
+      "fx-debugger": {
+        description: "Read-only debugger shell for a target <fx-fore>: renders overview panels, dependency-graph diagnostics, and a passive event/action-flow log. Explicitly out of scope per its own header comment: no mutation, no editing, no breakpoints. Auto-injected by tools/debug/auto-debugger.js (imported from index.js/index-build.js) when the page URL has a ?debug or ?debug=<fore-id> query parameter \u2014 it resolves the target fx-fore (defaulting to the first one on the page, or the one matching the given id), assigns it an id if it lacks one, and inserts one <fx-debugger> at the top of <body>.",
+        attrs: {
+          for: "Id of the target fx-fore element to attach to",
+          "gate-init": "When present, delays the target fx-fore's initialization until the debugger is ready (sets init-on/init-on-target on the target so it waits for a fx-debugger-ready-<id> event) \u2014 set automatically by the ?debug auto-injector"
+        }
+      },
+      "fx-lens": {
+        description: "Dependency-less instance viewer: a resizable, light-DOM side panel showing a collapsible tree view of XML/HTML/JSON/text fx-instance data, with per-instance open/closed state persisted to localStorage (lens-panels-keys) and panel open/width persisted under lens-open/related keys. Imported directly by demo/demo.js (so it's live across the whole curated demo suite) and by many individual demo pages. Also self-attaches: if the page URL has ?lens or ?inspect (kept for compatibility) and no <fx-lens> exists yet, one is appended automatically.",
+        attrs: {
+          open: "Reflects/controls whether the panel is expanded; toggled by clicking its .handle, and persisted across reloads"
+        }
+      },
+      template: {
+        description: "The row template of an fx-repeat. Beside the markup it carries the repeat's drag and drop settings.",
+        attrs: {
+          draggable: '"true" makes the repeat items draggable, so they can be reordered by drag and drop.',
+          "drop-target": "Id of the repeat that items may be dropped into. Items can only move between repeats that share this id.",
+          "drop-scope": '"parent" restricts drops to items with the same parent node in the data, instead of comparing repeat ids. Needed for recursive trees (fx-repeat-ref).'
+        }
+      },
+      "fx-hide": {
+        description: "Closes a dialog.",
+        attrs: {
+          dialog: "Id of the dialog to close."
+        }
+      }
+    }
   }
 };
 
 // src/fore-html-mode.js
-var { macros, tree, exceptions } = fore_tree_default;
-var GLOBAL_ATTRS = {
-  ref: null,
-  context: null,
-  value: null,
-  event: null,
-  if: null,
-  while: null,
-  iterate: null,
-  delay: null,
-  target: null,
-  phase: ["capture", "default"],
-  propagate: ["stop", "continue"],
-  "default-action": ["cancel", "perform"]
-};
-var HTML_GLOBAL_ATTRS = /* @__PURE__ */ new Set(["id", "class", "style", "title", "slot", "part", "lang", "dir", "hidden"]);
+var { macros, tree, exceptions, attrGroups, htmlGlobalAttrs } = fore_tree_default;
+var HTML_GLOBAL_NAMES = new Set(htmlGlobalAttrs.names);
+function attrsOf(tagName) {
+  const def = tree[tagName];
+  if (!def) return {};
+  return Object.assign({}, ...(def.inherits || []).map((group) => attrGroups[group]), def.attrs);
+}
 function extraTagsFromTree() {
   const extraTags = {};
-  for (const [tagName, def] of Object.entries(tree)) {
+  for (const tagName of Object.keys(tree)) {
     if (!tagName.startsWith("fx-")) continue;
-    extraTags[tagName] = { attrs: def.attrs || {} };
+    extraTags[tagName] = { attrs: attrsOf(tagName) };
   }
   return extraTags;
 }
 var EXTRA_TAGS = extraTagsFromTree();
 function isKnownAttribute(tagName, attrName) {
-  if (HTML_GLOBAL_ATTRS.has(attrName) || attrName.startsWith("data-") || attrName.startsWith("aria-")) return true;
-  if (attrName in GLOBAL_ATTRS) return true;
-  const def = tree[tagName];
-  return !!(def && def.attrs && attrName in def.attrs);
+  if (HTML_GLOBAL_NAMES.has(attrName) || htmlGlobalAttrs.prefixes.some((p) => attrName.startsWith(p))) return true;
+  return attrName in attrsOf(tagName);
 }
 function ancestorTagNames(openOrSelfClosingNode, state) {
   const names = [];
@@ -29179,8 +29950,7 @@ function foreHtml() {
   return [
     html({
       selfClosingTags: false,
-      extraTags: EXTRA_TAGS,
-      extraGlobalAttributes: GLOBAL_ATTRS
+      extraTags: EXTRA_TAGS
     }),
     linter(foreLinter, { delay: 300 }),
     lintGutter()

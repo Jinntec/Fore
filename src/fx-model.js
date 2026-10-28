@@ -1149,14 +1149,31 @@ export class FxModel extends HTMLElement {
    * todo: run browser validation API
    *
    */
-  revalidate() {
+  /**
+   * Recomputes validity (`constraint`, `required` and native widget validity).
+   *
+   * @param {Node} [scope] if given, only model items for `scope` and its descendants (and
+   *   attributes of those) are validated. Used by `fx-submission` to validate just the data it
+   *   submits. Without a scope the whole model is validated.
+   * @returns {boolean} whether everything validated is valid
+   */
+  revalidate(scope = null) {
     this.debugInfo.revalidateCount += 1;
     if (this.modelItems.length === 0) return true;
+
+    const inScope = node => {
+      if (!scope) return true;
+      if (!node) return false;
+      if (node === scope) return true;
+      const element = node.nodeType === Node.ATTRIBUTE_NODE ? node.ownerElement : node;
+      return !!element && scope.contains(element);
+    };
 
     // reset submission validation
     // this.parentNode.classList.remove('submit-validation-failed')
     let valid = true;
     this.modelItems.forEach(modelItem => {
+      if (!inScope(modelItem.node)) return;
       // console.log('validating node ', modelItem.node);
       const { bind } = modelItem;
       if (bind) {
@@ -1213,7 +1230,7 @@ export class FxModel extends HTMLElement {
     // Use querySelector instead of getWidget() to avoid DOM mutation (getWidget creates a
     // fallback input if none exists).
     this.fore.querySelectorAll('fx-control').forEach(control => {
-      if (!control.modelItem) return;
+      if (!control.modelItem || !inScope(control.modelItem.node)) return;
       const widget = control.querySelector('.widget, input');
       if (!widget?.validity) return;
       const nativeValid = this._getNativeValidity(widget);

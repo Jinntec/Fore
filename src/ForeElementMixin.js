@@ -390,9 +390,13 @@ export default class ForeElementMixin extends HTMLElement {
     // 2) Try lookup by canonical path (XML + JSON)
     const instanceId = XPathUtil.resolveInstance(this, this.ref);
 
-    // Normalize XML text node -> parent
+    // Normalize XML text node -> parent. Only when the text is all the parent holds: both then have the same value.
+    // In mixed content (text next to child elements) the parent's value is the whole subtree, so a control bound to one
+    // text node would overwrite its siblings; the text node keeps its own ModelItem there.
     let targetNode = effectiveNode;
-    if (targetNode?.nodeType === Node.TEXT_NODE) targetNode = targetNode.parentNode;
+    if (targetNode?.nodeType === Node.TEXT_NODE && !targetNode.parentNode?.children?.length) {
+      targetNode = targetNode.parentNode;
+    }
 
     let path = null;
 
