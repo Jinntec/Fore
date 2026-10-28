@@ -69,4 +69,33 @@ describe('fx-submission validate scope', () => {
     await oneEvent(fore, 'refresh-done');
     expect(await submit(fore, 'empty')).to.deep.equal(['error']);
   });
+
+  it('validates the instance a ref points into, not the default instance', async () => {
+    const fore = fixtureSync(html`
+      <fx-fore>
+        <fx-model>
+          <fx-instance type="html"><data><note></note></data></fx-instance>
+          <fx-instance id="other" type="html"><data><title></title></data></fx-instance>
+          <fx-bind ref="instance('other')/title" required="true()"></fx-bind>
+          <fx-submission id="other-ref" ref="instance('other')" url="#echo" method="post" replace="none"></fx-submission>
+        </fx-model>
+      </fx-fore>
+    `);
+    await oneEvent(fore, 'refresh-done');
+    const other = fore.getModel().getInstance('other').getDefaultContext();
+    expect(await submit(fore, 'other-ref')).to.deep.equal(['error']);
+
+    other.querySelector('title').textContent = 't';
+    expect(await submit(fore, 'other-ref')).to.deep.equal(['done']);
+  });
+
+  it('skips model items whose node is no DOM node instead of throwing', async () => {
+    const fore = fixture();
+    await oneEvent(fore, 'refresh-done');
+    const model = fore.getModel();
+    // e.g. the string-valued model items some expressions create
+    model.modelItems.push({ node: 'just a string', bind: null });
+    const scope = model.getDefaultInstance().getDefaultContext().querySelector('order');
+    expect(() => model.revalidate(scope)).to.not.throw();
+  });
 });

@@ -1165,6 +1165,8 @@ export class FxModel extends HTMLElement {
       if (!scope) return true;
       if (!node) return false;
       if (node === scope) return true;
+      // model items of JSON instances are no DOM nodes and can't be inside a DOM scope
+      if (typeof node.nodeType !== 'number') return false;
       const element = node.nodeType === Node.ATTRIBUTE_NODE ? node.ownerElement : node;
       return !!element && scope.contains(element);
     };
