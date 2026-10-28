@@ -16994,6 +16994,7 @@ class FxModel extends HTMLElement {
       if (!ee) return true;
       if (!se) return false;
       if (se === ee) return true;
+      if (typeof se.nodeType != "number") return false;
       const ce = se.nodeType === Node.ATTRIBUTE_NODE ? se.ownerElement : se;
       return !!ce && ee.contains(ce);
     };
