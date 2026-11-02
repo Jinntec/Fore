@@ -43,6 +43,13 @@ export class ModelItem {
       this.node = nodeOrLens;
     }
     this.bind = bind;
+    /**
+     * All fx-binds whose `ref` selects this node, in document order. A node may be bound
+     * several times; their type/constraint/relevant/required/readonly facets are combined
+     * (see FxModel.compute() and FxModel.revalidate()).
+     * @type {import('./fx-bind').FxBind[]}
+     */
+    this.binds = bind ? [bind] : [];
     this.instanceId = instance;
     this.fore = fore;
     this.changed = false;
@@ -65,6 +72,15 @@ export class ModelItem {
     this.dependencies = new Set();
     this.stateExpressions = {}; // e.g. { required: { expr: '../x', type: 'boolean' } }
     this.state = {}; // evaluated expression results
+  }
+
+  /**
+   * The expressions of the given facet over all binds of this node (empty ones skipped).
+   * @param {'constraint'|'relevant'|'required'|'readonly'} property
+   * @returns {string[]}
+   */
+  getFacetExpressions(property) {
+    return this.binds.map(b => b[property]).filter(Boolean);
   }
 
   /**

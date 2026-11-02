@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>Combined binds</title>
+    <link href="../resources/demo.css" rel="stylesheet">
+    <style>
+        .age-box {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            background: #fff;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #ddd;
+            min-height: 3.5rem;
+        }
+        .age-box:has(#age[nonrelevant])::after {
+            content: 'Age is not relevant - hidden';
+            color: #a33;
+            font-style: italic;
+        }
+        .opts {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem 2rem;
+        }
+        .opts fx-control {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        fieldset p {
+            margin: 0.5rem 0;
+        }
+    </style>
+</head>
+<body unresolved="unresolved">
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+
+<div class="wrapper">
+    <h1>Combined binds</h1>
+
+    <p>
+        The same node may be bound by several <code>fx-bind</code> elements.
+    </p>
+    <ul>
+        <li><code>constraint</code>, <code>relevant</code> (and <code>type</code>): <strong>all</strong> binds must hold (AND condition)</li>
+        <li><code>required</code>, <code>readonly</code>: <strong>one</strong> true bind is enough (OR condition)</li>
+    </ul>
+
+    <demo-snippet>
+    <template>
+    <fx-fore id="fx-test">
+        <fx-model>
+            <fx-instance type="html">
+                <data>
+                    <age>17</age>
+                    <locked>false</locked>
+                    <frozen>false</frozen>
+                    <needed>false</needed>
+                    <wanted>false</wanted>
+                    <showa>true</showa>
+                    <showb>true</showb>
+                </data>
+            </fx-instance>
+
+            <!-- constraint: AND -->
+            <fx-bind ref="age" constraint=". >= 18" alert="Must be 18 or older"></fx-bind>
+            <fx-bind ref="age" constraint=". &lt; 100" alert="Must be younger than 100"></fx-bind>
+
+            <!-- readonly: OR -->
+            <fx-bind ref="age" readonly="../locked = 'true'"></fx-bind>
+            <fx-bind ref="age" readonly="../frozen = 'true'"></fx-bind>
+
+            <!-- required: OR -->
+            <fx-bind ref="age" required="../needed = 'true'"></fx-bind>
+            <fx-bind ref="age" required="../wanted = 'true'"></fx-bind>
+
+            <!-- relevant: AND -->
+            <fx-bind ref="age" relevant="../showa = 'true'"></fx-bind>
+            <fx-bind ref="age" relevant="../showb = 'true'"></fx-bind>
+        </fx-model>
+
+        <fx-setfocus event="ready" control="age"></fx-setfocus>
+
+        <div class="age-box">
+            <fx-control id="age" ref="age">
+                <label>Age</label>
+            </fx-control>
+        </div>
+        <p>
+            <strong>constraint</strong> (two binds): Age must be at least 18 <em>and</em> younger than 100.
+            Type e.g. <code>5</code> or <code>150</code> and the field turns invalid; <code>50</code> is valid.
+        </p>
+        <fieldset>
+            <legend>readonly &ndash; one is enough</legend>
+            <p>When <strong>at least one</strong> of these is checked, the Age field becomes readonly. It only becomes editable again when <strong>both</strong> are unchecked.</p>
+            <div class="opts">
+            <fx-control id="locked" ref="locked" value-prop="checked" update-event="input">
+                <label for="locked-cb">locked</label>
+                <input id="locked-cb" type="checkbox" class="widget">
+            </fx-control>
+            <fx-control id="frozen" ref="frozen" value-prop="checked" update-event="input">
+                <label for="frozen-cb">frozen</label>
+                <input id="frozen-cb" type="checkbox" class="widget">
+            </fx-control>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>required &ndash; one is enough</legend>
+            <p>When <strong>at least one</strong> of these is checked, the Age field becomes required (marked with *). Clear Age to see it turn invalid. The mark disappears when <strong>both</strong> are unchecked.</p>
+            <div class="opts">
+            <fx-control id="needed" ref="needed" value-prop="checked" update-event="input">
+                <label for="needed-cb">needed</label>
+                <input id="needed-cb" type="checkbox" class="widget">
+            </fx-control>
+            <fx-control id="wanted" ref="wanted" value-prop="checked" update-event="input">
+                <label for="wanted-cb">wanted</label>
+                <input id="wanted-cb" type="checkbox" class="widget">
+            </fx-control>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>relevant &ndash; all must be true</legend>
+            <p>Both are checked at the start. When <strong>either</strong> one is unchecked, the Age field disappears (non-relevant). It only comes back when <strong>both</strong> are checked again.</p>
+            <div class="opts">
+            <fx-control id="showa" ref="showa" value-prop="checked" update-event="input">
+                <label for="showa-cb">show A</label>
+                <input id="showa-cb" type="checkbox" class="widget">
+            </fx-control>
+            <fx-control id="showb" ref="showb" value-prop="checked" update-event="input">
+                <label for="showb-cb">show B</label>
+                <input id="showb-cb" type="checkbox" class="widget">
+            </fx-control>
+            </div>
+        </fieldset>
+    </fx-fore>
+    </template>
+    </demo-snippet>
+</div>
+<script type="module" src="./demo.js"></script>
+</body>
+</html>

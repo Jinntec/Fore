@@ -261,9 +261,10 @@ export default class AbstractControl extends UIElement {
     // console.log('mip required', this.modelItem.required);
     this.widget = this.getWidget();
     const wasRequired = this.isRequired();
-    const { bind } = this.modelItem;
-    const bindDeclaresRequired =
-      typeof bind?.hasAttribute === 'function' && bind.hasAttribute('required');
+    // a node may be bound by several binds - any of them can drive `required`
+    const bindDeclaresRequired = this.modelItem.binds.some(
+      bind => typeof bind?.hasAttribute === 'function' && bind.hasAttribute('required'),
+    );
 
     if (!this.modelItem.required) {
       // Only force-clear `required` when a bind is actually driving this facet.
@@ -426,34 +427,62 @@ export default class AbstractControl extends UIElement {
           alert.style.display = 'block';
         }
 */
-        if (this.modelItem.alerts.length !== 0) {
-          const controlAlert = this.querySelector('fx-alert');
-          if (!controlAlert) {
-            const { alerts } = this.modelItem;
-            // console.log('alerts from bind: ', alerts);
-            alerts.forEach(modelAlert => {
-              const newAlert = document.createElement('fx-alert');
-              // const newAlert = document.createElement('span');
-              newAlert.id = newAlert.id || `fx-alert-${Fore.createUUID()}`;
-              newAlert.innerHTML = modelAlert;
-              this.appendChild(newAlert);
-              this._addDescribedBy(newAlert.id);
-              // newAlert.style.display = 'block';
-            });
-          } else {
-            controlAlert.id = controlAlert.id || `fx-alert-${Fore.createUUID()}`;
-            this._addDescribedBy(controlAlert.id);
-          }
-        }
+        this._syncModelAlerts();
 
         // this.dispatchEvent(new CustomEvent('invalid', {}));
         this._dispatchEvent('invalid');
       }
     }
 
+    // Which constraint fails may change while the control stays invalid: keep the alerts in step.
+    if (!isValidNow && this.isValid() === false) this._syncModelAlerts();
+
     // Ensure aria-invalid matches the current control state even if
     // we didn't enter the state-change branch above.
     this._syncAriaInvalid();
+  }
+
+  /**
+   * Renders the alerts of the model item as `fx-alert` children. Alerts created here are marked
+   * `data-model-alert` and replaced when the model item's alerts change; an `fx-alert` authored
+   * inside the control is left alone.
+   */
+  _syncModelAlerts() {
+    const { alerts } = this.modelItem;
+    if (alerts.length === 0) return;
+
+    const authored = [...this.querySelectorAll('fx-alert')].filter(
+      a => !a.hasAttribute('data-model-alert'),
+    );
+    if (authored.length !== 0) {
+      authored.forEach(a => {
+        a.id = a.id || `fx-alert-${Fore.createUUID()}`;
+        this._addDescribedBy(a.id);
+      });
+      return;
+    }
+
+    const rendered = [...this.querySelectorAll('fx-alert[data-model-alert]')];
+    if (
+      rendered.length === alerts.length &&
+      rendered.every((a, i) => a.innerHTML === alerts[i])
+    ) {
+      return;
+    }
+    const widget = this.getWidget?.() || this.widget;
+    rendered.forEach(a => {
+      const ids = (widget?.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean);
+      widget?.setAttribute('aria-describedby', ids.filter(id => id !== a.id).join(' '));
+      a.remove();
+    });
+    alerts.forEach(modelAlert => {
+      const newAlert = document.createElement('fx-alert');
+      newAlert.id = `fx-alert-${Fore.createUUID()}`;
+      newAlert.setAttribute('data-model-alert', '');
+      newAlert.innerHTML = modelAlert;
+      this.appendChild(newAlert);
+      this._addDescribedBy(newAlert.id);
+    });
   }
 
   handleRelevant() {

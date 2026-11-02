@@ -562,7 +562,7 @@ export class FxModel extends HTMLElement {
       if (mi.state) mi.state = {};
     };
 
-    const retarget = (target, source) => {
+    const retarget = (target, source, merge = false) => {
       // point to current backing node/lens
       if (source.lens) {
         this._setModelItemTarget(target, { lens: source.lens });
@@ -572,7 +572,16 @@ export class FxModel extends HTMLElement {
 
       // keep metadata current
       if (source.ref) target.ref = source.ref;
-      if (source.bind) target.bind = source.bind;
+      if (source.bind) {
+        target.bind = source.bind;
+        // a node bound by several fx-binds collects all of them; the first registration
+        // after a rebuild starts the list afresh
+        if (merge) {
+          if (!target.binds.includes(source.bind)) target.binds.push(source.bind);
+        } else {
+          target.binds = [source.bind];
+        }
+      }
       if (source.instanceId) target.instanceId = source.instanceId;
       if (source.fore) target.fore = source.fore;
 
@@ -612,7 +621,7 @@ export class FxModel extends HTMLElement {
     }
 
     // Re-target canonical item
-    retarget(existing, modelItem);
+    retarget(existing, modelItem, true);
     return existing;
   }
   /**
@@ -839,7 +848,7 @@ export class FxModel extends HTMLElement {
    */
   _applyInitial() {
     this.modelItems.forEach(mi => {
-      const expr = mi.bind?.initial;
+      const expr = mi.binds.find(b => b.initial)?.initial;
       if (!expr || !mi.path || this._initialDone.has(mi.path)) return;
       this._initialDone.add(mi.path);
 
@@ -1078,7 +1087,11 @@ export class FxModel extends HTMLElement {
     }
 
     if (modelItem && typeof path === 'string') {
-      const expr = modelItem.bind ? modelItem.bind[property] : null;
+      // calculate (and initial) belong to one bind; take the first bind declaring it
+      const expr =
+        property === 'calculate'
+          ? modelItem.binds.find(b => b.calculate)?.calculate
+          : modelItem.bind?.[property];
       const context = modelItem.node || modelItem.lens;
 
       if (property === 'calculate') {
@@ -1093,8 +1106,18 @@ export class FxModel extends HTMLElement {
         modelItem.notify(); // Notify observers directly
       } else if (property !== 'constraint' && property !== 'type') {
         // ### re-compute the Boolean value of all facets expect 'constraint' and 'type' which are handled in revalidate()
-        if (expr) {
-          const compute = evaluateXPathToBoolean(expr, context, this);
+        // Several binds on one node: relevant needs all to be true, required and readonly
+        // only one (a calculated node is always readonly).
+        const exprs = modelItem.getFacetExpressions(property);
+        if (exprs.length !== 0) {
+          const test = e => evaluateXPathToBoolean(e, context, this);
+          let compute;
+          if (property === 'relevant') {
+            compute = exprs.every(test);
+          } else {
+            compute = exprs.some(test);
+            if (property === 'readonly' && modelItem.binds.some(b => b.calculate)) compute = true;
+          }
           modelItem[property] = compute;
           // modelItem.notify(); // Notify observers directly
           this.fore.addToBatchedNotifications(modelItem);
@@ -1177,52 +1200,40 @@ export class FxModel extends HTMLElement {
     this.modelItems.forEach(modelItem => {
       if (!inScope(modelItem.node)) return;
       // console.log('validating node ', modelItem.node);
-      const { bind } = modelItem;
-      if (bind) {
-        /*
-                        todo: investigate why bind is an element when created in fx-bind.init() and an fx-bind object when
-                          created lazily.
-                        */
-        if (typeof bind.hasAttribute === 'function' && bind.hasAttribute('constraint')) {
-          const constraint = bind.getAttribute('constraint');
-          if (constraint && modelItem.node) {
-            const compute = evaluateXPathToBoolean(constraint, modelItem.node, this);
-            // console.log('modelItem validity computed: ', compute);
-            modelItem.constraint = compute;
-            // this.formElement.addToRefresh(modelItem); // let fore know that modelItem needs refresh
-            modelItem.notify(); // Notify observers directly
-            if (!compute) {
-              valid = false;
-            }
+      // A node may be bound by several fx-binds: all constraints have to be true, one
+      // required is enough.
+      const binds = modelItem.binds.filter(b => typeof b.hasAttribute === 'function');
+      if (binds.length !== 0) {
+        const constraints = binds.map(b => b.getAttribute('constraint')).filter(Boolean);
+        if (constraints.length !== 0 && modelItem.node) {
+          const failing = binds.filter(b => {
+            const c = b.getAttribute('constraint');
+            return c && !evaluateXPathToBoolean(c, modelItem.node, this);
+          });
+          const compute = failing.length === 0;
+          if (constraints.length > 1 && !compute) {
+            // several constraints: alert only for the ones that fail (plus binds without constraint)
+            modelItem.cleanAlerts();
+            binds
+              .filter(b => failing.includes(b) || !b.getAttribute('constraint'))
+              .forEach(b => {
+                const alert = b.getAlert?.();
+                if (alert) modelItem.addAlert(alert);
+              });
+          }
+          modelItem.constraint = compute;
+          modelItem.notify(); // Notify observers directly
+          if (!compute) {
+            valid = false;
           }
         }
-        if (typeof bind.hasAttribute === 'function' && bind.hasAttribute('required')) {
-          const required = bind.getAttribute('required');
-          if (required) {
-            const compute = evaluateXPathToBoolean(required, modelItem.node, this);
-            // console.log('modelItem required computed: ', compute);
-            modelItem.required = compute;
-            // this.formElement.addToRefresh(modelItem); // let fore know that modelItem needs refresh
-            modelItem.notify(); // Notify observers directly
-            if (modelItem.required && !modelItem.node.textContent) {
-              /*
-              console.log(
-                'node is required but has no value ',
-                XPathUtil.getDocPath(modelItem.node),
-              );
-*/
-              valid = false;
-            }
-            // if (!compute) valid = false;
-            /*
-                                    if (!this.modelConstructed) {
-                                      // todo: get alert from attribute or child element
-                                      const alert = bind.getAlert();
-                                      if (alert) {
-                                        modelItem.addAlert(alert);
-                                      }
-                                    }
-                        */
+        const requireds = binds.map(b => b.getAttribute('required')).filter(Boolean);
+        if (requireds.length !== 0) {
+          const compute = requireds.some(r => evaluateXPathToBoolean(r, modelItem.node, this));
+          modelItem.required = compute;
+          modelItem.notify(); // Notify observers directly
+          if (modelItem.required && !modelItem.node.textContent) {
+            valid = false;
           }
         }
       }

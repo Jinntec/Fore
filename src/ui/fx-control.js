@@ -190,6 +190,9 @@ export default class FxControl extends XfAbstractControl {
     const onBlur = () => {
       this.setValue(this._getValueOfWidget());
       this.getModel()?.getEffectiveUndoManager()?.endCoalescingSession();
+      // leaving a field marks it visited: an unchanged value that is invalid (eg. an initial
+      // one) triggers no update cycle, so show its validity state here
+      if (this.modelItem && this.getOwnerForm()?.ready) this.handleValid();
     };
 
     if (this.debounceDelay) {

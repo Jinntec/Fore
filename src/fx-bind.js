@@ -523,7 +523,9 @@ export class FxBind extends ForeElementMixin {
       newItem.addAlert(alert);
     }
 
-    this.getModel().registerModelItem(newItem);
+    // a node bound more than once resolves to the already registered item - keep this bind's alert
+    const registered = this.getModel().registerModelItem(newItem);
+    if (alert && registered) registered.addAlert(alert);
   }
 
   /**
