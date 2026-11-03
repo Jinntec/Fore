@@ -57,7 +57,7 @@
         <fx-model>
             <fx-instance type="html">
                 <data>
-                    <age>17</age>
+                    <age></age>
                     <locked>false</locked>
                     <frozen>false</frozen>
                     <needed>false</needed>
@@ -87,8 +87,9 @@
         <fx-setfocus event="ready" control="age"></fx-setfocus>
 
         <div class="age-box">
-            <fx-control id="age" ref="age">
+            <fx-control id="age" ref="age" update-event="input">
                 <label>Age</label>
+                <input placeholder="Type your age (18-100)" class="widget">
             </fx-control>
         </div>
         <p>
