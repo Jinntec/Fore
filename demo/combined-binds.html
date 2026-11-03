@@ -68,8 +68,8 @@
             </fx-instance>
 
             <!-- constraint: AND -->
-            <fx-bind ref="age" constraint=". >= 18" alert="Must be 18 or older"></fx-bind>
-            <fx-bind ref="age" constraint=". &lt; 100" alert="Must be younger than 100"></fx-bind>
+            <fx-bind ref="age" constraint="number(.) >= 18" alert="Must be 18 or older"></fx-bind>
+            <fx-bind ref="age" constraint=". = '' or number(.) &lt; 100" alert="Must be younger than 100"></fx-bind>
 
             <!-- readonly: OR -->
             <fx-bind ref="age" readonly="../locked = 'true'"></fx-bind>

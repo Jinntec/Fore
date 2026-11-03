@@ -60,6 +60,7 @@ export class FxBind extends ForeElementMixin {
       relevant: this.getAttribute('relevant'),
       constraint: this.getAttribute('constraint'),
       type: this.getAttribute('type'),
+      whitespace: this.getAttribute('whitespace'),
 
       modelItemCount: this._debugModelItemCount?.() || null,
     };
@@ -86,6 +87,7 @@ export class FxBind extends ForeElementMixin {
     this.type = this.hasAttribute('type') ? this.getAttribute('type') : FxBind.TYPE_DEFAULT;
     this.calculate = this.getAttribute('calculate');
     this.initial = this.getAttribute('initial');
+    this.whitespace = this.getAttribute('whitespace');
     // For self-references, just apply the facets to the parent bind
     if (this.ref === '.') {
       const parent = this.parentNode;
@@ -97,6 +99,7 @@ export class FxBind extends ForeElementMixin {
         parent.required ||= this.required;
         parent.relevant ||= this.relevant;
         parent.constraint ||= this.constraint;
+        parent.whitespace ||= this.whitespace;
       }
     }
   }
@@ -197,6 +200,8 @@ export class FxBind extends ForeElementMixin {
 
     // `initial` is a one-shot pass (see FxModel._applyInitial); flag it so models without it pay nothing.
     if (this.initial) model._hasInitial = true;
+    // `whitespace` is applied at the start of recalculate (see FxModel._applyWhitespace).
+    if (this.whitespace) model._hasWhitespace = true;
 
     // ✅ Always evaluate nodeset first (XML + JSON)
     this._evalInContext();

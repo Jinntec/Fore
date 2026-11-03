@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" name="viewport"/>
+    <title>Whitespace</title>
+    <link href="../resources/demo.css" rel="stylesheet">
+    <style>
+        .row {
+            display: grid;
+            grid-template-columns: 12rem 1fr 1fr;
+            gap: 0.5rem 1rem;
+            align-items: center;
+            margin: 0.4rem 0;
+        }
+        .row code.mode {
+            font-weight: bold;
+        }
+        .row textarea {
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .stored {
+            font-family: monospace;
+            background: #f4f4f4;
+            padding: 0.2rem 0.4rem;
+            white-space: pre;
+        }
+    </style>
+</head>
+<body unresolved="unresolved">
+<fore-corner href="../doc/demos.html" title="Back to Demos"></fore-corner>
+
+<div class="wrapper">
+    <h1>Whitespace</h1>
+
+    <p>
+        The <code>whitespace</code> property of <code>fx-bind</code> cleans up the string value of a node
+        whenever it changes. It is applied during <em>recalculate</em>, so a <code>calculate</code>,
+        <code>constraint</code> or any other expression that reads the node already sees the cleaned value.
+    </p>
+    <ul>
+        <li><code>preserve</code>: leave the value untouched (default)</li>
+        <li><code>remove</code>: remove all whitespace</li>
+        <li><code>trim</code>: remove leading and trailing whitespace</li>
+        <li><code>collapse</code>: replace each run of whitespace with a single space</li>
+        <li><code>normalize</code>: <code>trim</code> and <code>collapse</code> combined</li>
+    </ul>
+    <p>
+        It only applies to nodes with simple content (no child elements) and is not an expression.
+        Whitespace is any character with the Unicode property <code>WSpace=Y</code>.
+    </p>
+
+    <demo-snippet>
+    <template>
+    <fx-fore id="fx-test">
+        <fx-model>
+            <fx-instance type="html">
+                <data>
+                    <preserve>  keep   me  </preserve>
+                    <trim>  trim   me  </trim>
+                    <collapse>  collapse   me  </collapse>
+                    <normalize>  normalize   me  </normalize>
+                    <card>1234 5678 9012</card>
+                </data>
+            </fx-instance>
+
+            <fx-bind ref="preserve" whitespace="preserve"></fx-bind>
+            <fx-bind ref="trim" whitespace="trim"></fx-bind>
+            <fx-bind ref="collapse" whitespace="collapse"></fx-bind>
+            <fx-bind ref="normalize" whitespace="normalize"></fx-bind>
+            <fx-bind ref="card" whitespace="remove"></fx-bind>
+        </fx-model>
+
+        <p>Type extra spaces or line breaks into a field and leave it: the stored value (in brackets) is cleaned up.</p>
+
+        <div class="row">
+            <code class="mode">preserve</code>
+            <fx-control ref="preserve"><textarea class="widget" rows="2"></textarea></fx-control>
+            <fx-output class="stored" ref="preserve" value="concat('[', ., ']')"></fx-output>
+        </div>
+        <div class="row">
+            <code class="mode">trim</code>
+            <fx-control ref="trim"><textarea class="widget" rows="2"></textarea></fx-control>
+            <fx-output class="stored" ref="trim" value="concat('[', ., ']')"></fx-output>
+        </div>
+        <div class="row">
+            <code class="mode">collapse</code>
+            <fx-control ref="collapse"><textarea class="widget" rows="2"></textarea></fx-control>
+            <fx-output class="stored" ref="collapse" value="concat('[', ., ']')"></fx-output>
+        </div>
+        <div class="row">
+            <code class="mode">normalize</code>
+            <fx-control ref="normalize"><textarea class="widget" rows="2"></textarea></fx-control>
+            <fx-output class="stored" ref="normalize" value="concat('[', ., ']')"></fx-output>
+        </div>
+        <div class="row">
+            <code class="mode">remove</code>
+            <fx-control ref="card"><textarea class="widget" rows="2"></textarea></fx-control>
+            <fx-output class="stored" ref="card" value="concat('[', ., ']')"></fx-output>
+        </div>
+    </fx-fore>
+    </template>
+    </demo-snippet>
+</div>
+<script type="module" src="./demo.js"></script>
+</body>
+</html>

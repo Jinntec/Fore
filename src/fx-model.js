@@ -94,6 +94,7 @@ export class FxModel extends HTMLElement {
     this.changed = [];
     /** true if any fx-bind of the current rebuild has an `initial` expression */
     this._hasInitial = false;
+    this._hasWhitespace = false;
     /** @type {Set<string>} paths of model items whose `initial` was already applied */
     this._initialDone = new Set();
 
@@ -790,6 +791,7 @@ export class FxModel extends HTMLElement {
     this._modelItemsByKey = new Map();
     this.binds = [];
     this._hasInitial = false;
+    this._hasWhitespace = false;
     // issue #125: subset of `binds` whose ref predicate reads another node - see
     // refPredicateNeedsRebuild(), which is scanned on every action-driven update and
     // should stay proportional to this (presumably rare) subset, not every bind.
@@ -833,6 +835,45 @@ export class FxModel extends HTMLElement {
     this._prevModelItemsByPath = null;
 
     Fore.dispatch(this, 'rebuild-done', { maingraph: this.mainGraph });
+  }
+
+  /**
+   * XForms 2.0 `whitespace` bind property (`preserve` | `remove` | `trim` | `collapse` |
+   * `normalize`). Rewrites the string value of simple-content nodes, silently: the items are
+   * either in `changed` (and get refreshed anyway) or processed in the initial full pass.
+   * Whitespace is any character with Unicode property WSpace=Y.
+   *
+   * @param {ModelItem[]} items
+   */
+  _applyWhitespace(items) {
+    const WS = '[\\t\\n\\v\\f\\r \\u0085\\u00A0\\u1680\\u2000-\\u200A\\u2028\\u2029\\u202F\\u205F\\u3000]';
+    const ops = {
+      remove: v => v.replace(new RegExp(`${WS}+`, 'g'), ''),
+      trim: v => v.replace(new RegExp(`^${WS}+|${WS}+$`, 'g'), ''),
+      collapse: v => v.replace(new RegExp(`${WS}+`, 'g'), ' '),
+      normalize: v =>
+        v.replace(new RegExp(`${WS}+`, 'g'), ' ').replace(new RegExp(`^ | $`, 'g'), ''),
+    };
+    items.forEach(mi => {
+      const mode = mi.binds?.find(b => b.whitespace)?.whitespace;
+      const op = ops[mode];
+      if (!op) return; // `preserve` or unknown
+      const { node } = mi;
+      if (node) {
+        // simpleContent only
+        if (node.nodeType === Node.ELEMENT_NODE && node.children.length !== 0) return;
+        const old = node.nodeType === Node.ATTRIBUTE_NODE ? node.nodeValue : node.textContent;
+        const value = op(old);
+        if (value === old) return;
+        if (node.nodeType === Node.ATTRIBUTE_NODE) node.nodeValue = value;
+        else node.textContent = value;
+      } else if (mi.lens) {
+        const old = mi.lens.get();
+        if (typeof old !== 'string') return;
+        const value = op(old);
+        if (value !== old) mi.lens.set(value);
+      }
+    });
   }
 
   /**
@@ -938,6 +979,11 @@ export class FxModel extends HTMLElement {
     }
 
     this._refreshModelVariables();
+
+    // XForms 2.0 `whitespace`: normalize values before anything is calculated from them
+    if (this._hasWhitespace) {
+      this._applyWhitespace(this.changed.length !== 0 ? this.changed : this.modelItems);
+    }
 
     this.computes = 0;
 
